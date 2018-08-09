@@ -1,0 +1,10 @@
+.nav__header {
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(180deg, #0639b4, #052370);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
