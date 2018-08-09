@@ -1,0 +1,10 @@
+.menu__item {
+    width: 100%;
+    padding: .5em 1em;
+
+    color: #052370;
+    font-size: 1.05em;
+    font-weight: 300;
+    font-family: "Segoe UI";
+    border-bottom: 1px solid #f9f9f9;
+}
