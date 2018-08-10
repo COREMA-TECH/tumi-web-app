@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import './index.css';
-
 import Nav from '../Nav/';
-import Toolbar from '../Toolbar/Main';
 import MainContainer from '../MainContainer/MainContainer';
 import {Route} from 'react-router-dom';
 

@@ -8,7 +8,7 @@ const CompanyCard = props => {
                 <div className="card-image"></div>
                 <div className="card-description">
                     <p className="company-title">Company</p>
-                    <p className="company-description">Description of the company</p>
+                    <p className="company-description">Description of the company in the card</p>
                 </div>
             </div>
             <div className="card__footer">
