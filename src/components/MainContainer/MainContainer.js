@@ -12,6 +12,9 @@ class MainContainer extends Component {
                 <CompanyCard/>
                 <CompanyCard/>
                 <CompanyCard/>
+                <CompanyCard/>
+                <CompanyCard/>
+                <CompanyCard/>
             </div>
         );
     }
