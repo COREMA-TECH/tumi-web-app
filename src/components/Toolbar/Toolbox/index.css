@@ -1,16 +1,16 @@
 .toolbox {
-	margin-right: 20px;
+    margin-right: 20px;
 }
 
 .toolbox__button {
-	background: transparent;
-	font-size: 17px;
-	border: none;
-	cursor: pointer;
-	color: #0639b4;
-	padding: 6px 10px;
+    background: transparent;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    color: #0639b4;
+    padding: 6px 10px;
 }
 
 .toolbox__button:hover {
-	background: #ccc;
+    background: #ccc;
 }

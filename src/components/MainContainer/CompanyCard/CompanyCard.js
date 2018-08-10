@@ -19,5 +19,4 @@ const CompanyCard = props => {
 };
 
 
-
 export default CompanyCard;
