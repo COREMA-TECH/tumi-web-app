@@ -1,0 +1,38 @@
+.card {
+    width: 30%;
+    height: 25vh;
+    background: #ffffff;
+    box-shadow: 1px 1px 25px #ddd;
+    border-radius: 5px;
+
+    display: flex;
+    padding: .5em;
+}
+
+.card-image {
+    width: 6em;
+    height: 6em;
+
+    border-radius: 5px;
+    background: #cccccc;
+}
+
+.card-description {
+    display: flex;
+    flex-direction: column;
+    margin-left: .5em;
+}
+
+.company-title {
+    font-weight: 300;
+    font-size: 1.1em;
+    font-family: "Segoe UI";
+}
+
+.company-description {
+    font-weight: 300;
+    font-size: .95em;
+    font-family: "Segoe UI";
+    color: #555555;
+}
+
