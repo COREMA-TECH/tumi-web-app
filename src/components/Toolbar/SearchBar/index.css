@@ -1,0 +1,22 @@
+.search-bar {
+	margin-left: 20px;
+}
+
+.search-bar__input {
+	padding: 6px;
+	font-size: 17px;
+	border: none;
+}
+
+.search-bar__button {
+	background: transparent;
+	font-size: 17px;
+	border: none;
+	cursor: pointer;
+	color: white;
+	padding: 6px 10px;
+}
+
+.search-bar__button:hover {
+	background: #ccc;
+}

@@ -1,0 +1,16 @@
+.toolbox {
+	margin-right: 20px;
+}
+
+.toolbox__button {
+	background: transparent;
+	font-size: 17px;
+	border: none;
+	cursor: pointer;
+	color: white;
+	padding: 6px 10px;
+}
+
+.toolbox__button:hover {
+	background: #ccc;
+}
