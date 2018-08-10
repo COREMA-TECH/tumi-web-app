@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="13e32ab1-4394-4d37-80c6-9ebe4d836642" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/CompanyCard/CompanyCard.js" afterPath="$PROJECT_DIR$/src/components/CompanyCard/CompanyCard.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/CompanyCard/index.css" afterPath="$PROJECT_DIR$/src/components/CompanyCard/index.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Main/Main.js" afterPath="$PROJECT_DIR$/src/components/Main/Main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/MainContainer/MainContainer.js" afterPath="$PROJECT_DIR$/src/components/MainContainer/MainContainer.js" />
-    </list>
+    <list default="true" id="13e32ab1-4394-4d37-80c6-9ebe4d836642" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -124,20 +118,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="tumi-web-app" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tumi-web-app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="Main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tumi-web-app" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tumi-web-app" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="components" type="462c0819:PsiDirectoryNode" />
-              <item name="MainContainer" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -182,12 +162,12 @@
       <option name="presentableId" value="Default" />
       <updated>1533846280558</updated>
       <workItem from="1533846296197" duration="7900000" />
-      <workItem from="1533910382498" duration="9872000" />
+      <workItem from="1533910382498" duration="10474000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17772000" />
+    <option name="totallyTimeSpent" value="18374000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
