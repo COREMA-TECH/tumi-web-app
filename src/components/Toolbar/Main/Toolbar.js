@@ -6,10 +6,10 @@ import Toolbox from '../Toolbox';
 class Toolbar extends Component {
     render() {
         return (
-          <div className="toolbar__main">
-            <Search/>
-            <Toolbox/>
-          </div>
+            <div className="toolbar__main">
+                <Search/>
+                <Toolbox/>
+            </div>
         );
     }
 }
