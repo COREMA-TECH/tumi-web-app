@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 
 const UserInformation = (props) => <p className="user-information">Lauren Steven Montenegro</p>;
