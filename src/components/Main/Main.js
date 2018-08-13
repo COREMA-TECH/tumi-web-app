@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './index.css';
-import Nav from '../Nav/';
-import MainContainer from '../MainContainer/MainContainer';
+import Nav from '../Nav/Main';
+import MainContainer from '../MainContainer/Main/MainContainer';
 
 class Main extends Component {
     render() {

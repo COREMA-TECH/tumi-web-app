@@ -1,0 +1,10 @@
+.company-list {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	padding-top: 2em;
+	flex-wrap: wrap;
+	justify-content: space-around;
+	align-items: flex-start;
+	overflow: hidden;
+}

@@ -1,0 +1,12 @@
+.main-container {
+	width: 82%;
+	height: 100vh;
+}
+
+.main-container--header {
+	height: 10vh;
+}
+
+.main-container--container {
+	height: 90vh;
+}
