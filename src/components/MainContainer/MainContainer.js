@@ -1,22 +1,19 @@
 import React, {Component} from 'react';
-import CompanyCard from "./CompanyCard/CompanyCard";
 import './index.css';
 import Toolbar from "../Toolbar/Main/Toolbar";
+import CreateCompany from "../CreateCompany/CreateCompany";
+import Route from "react-router-dom/es/Route";
+import CompanyCard from "./CompanyCard/CompanyCard";
 
 class MainContainer extends Component {
     render() {
         return (
             <div className="container">
                 <Toolbar/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
-                <CompanyCard/>
+                <div className="content-main">
+                    <Route exact path="/company" component={CompanyCard}/>
+                    <Route exact path="/company/add" component={CreateCompany}/>
+                </div>
             </div>
         );
     }
