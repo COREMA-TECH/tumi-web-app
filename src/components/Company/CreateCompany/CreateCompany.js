@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FullWidthTabs from "../FullWidthTabs/FullWidthTabs";
+import FullWidthTabs from "../../FullWidthTabs/FullWidthTabs";
 import './index.css';
 
 class CreateCompany extends Component {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './index.css';
 import Toolbar from "../Toolbar/Main/Toolbar";
-import CreateCompany from "../CreateCompany/CreateCompany";
+import CreateCompany from "../Company/CreateCompany/CreateCompany";
 import Route from "react-router-dom/es/Route";
 import CompanyCard from "./CompanyCard/CompanyCard";
 
