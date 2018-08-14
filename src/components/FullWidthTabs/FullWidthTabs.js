@@ -10,7 +10,16 @@ import CreateCompanyForm from "../Company/CreateCompanyForm/CreateCompanyForm";
 
 function TabContainer({children, dir}) {
     return (
-        <Typography component="div" dir={dir} style={{border: '1px solid #ddd'}}>
+        <Typography
+            component="div"
+            dir={dir}
+            style={
+                [
+                    {
+                        border: '1px solid #ddd'
+                    }
+                ]
+            }>
             {children}
         </Typography>
     );
@@ -48,21 +57,21 @@ class FullWidthTabs extends React.Component {
             <div className={classes.root}>
                 <AppBar position="static" color="default">
                     <Tabs
-                        value={this.state.value}
-                        onChange={this.handleChange}
+                        value={this.props.item}
+                        onChange={this.props.item}
                         indicatorColor="primary"
                         textColor="primary"
                         fullWidth
                     >
-                        <Tab label="General Information"/>
-                        <Tab label="Contacts"/>
-                        <Tab label="Dapartments"/>
-                        <Tab label="Positions and Rates"/>
+                        <Tab/>
+                        <Tab/>
+                        <Tab/>
+                        <Tab/>
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={this.state.value}
+                    index={this.props.item}
                     onChangeIndex={this.handleChangeIndex}
                 >
                     <TabContainer dir={theme.direction}><CreateCompanyForm/></TabContainer>
