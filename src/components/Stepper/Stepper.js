@@ -5,8 +5,8 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import FullWidthTabs from "../FullWidthTabs/FullWidthTabs";
+import {Redirect} from "react-router-dom";
 
 const styles = theme => ({
     root: {
@@ -87,8 +87,11 @@ class HorizontalLabelPositionBelowStepper extends React.Component {
                 <div style={{padding: 15}}>
                     {this.state.activeStep === steps.length ? (
                         <div>
-                            <Typography className={classes.instructions}>All steps completed</Typography>
-                            <Button onClick={this.handleReset}>Reset</Button>
+                            <Redirect
+                                to={{
+                                    pathname: "/company"
+                                }}
+                            />
                         </div>
                     ) : (
                         <div>

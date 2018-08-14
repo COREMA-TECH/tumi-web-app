@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import CreateCompanyForm from "../Company/CreateCompanyForm/CreateCompanyForm";
 
@@ -55,29 +53,23 @@ class FullWidthTabs extends React.Component {
 
         return (
             <div className={classes.root}>
-                <AppBar position="static" color="default">
-                    <Tabs
-                        value={this.props.item}
-                        onChange={this.props.item}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        fullWidth
-                    >
-                        <Tab/>
-                        <Tab/>
-                        <Tab/>
-                        <Tab/>
-                    </Tabs>
-                </AppBar>
+                <Tabs
+                    value={this.props.item}
+                    onChange={this.props.item}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    fullWidth
+                >
+                </Tabs>
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={this.props.item}
                     onChangeIndex={this.handleChangeIndex}
                 >
-                    <TabContainer dir={theme.direction}><CreateCompanyForm/></TabContainer>
-                    <TabContainer dir={theme.direction}>Item Two</TabContainer>
-                    <TabContainer dir={theme.direction}>Item Three</TabContainer>
-                    <TabContainer dir={theme.direction}>Item Four</TabContainer>
+                    <TabContainer dir={theme.direction}><CreateCompanyForm title="General info"/></TabContainer>
+                    <TabContainer dir={theme.direction}><CreateCompanyForm title="Contacts"/></TabContainer>
+                    <TabContainer dir={theme.direction}><CreateCompanyForm title="Departments"/></TabContainer>
+                    <TabContainer dir={theme.direction}><CreateCompanyForm title="Positions and rates"/></TabContainer>
                 </SwipeableViews>
             </div>
         );

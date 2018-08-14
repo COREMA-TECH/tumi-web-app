@@ -6,7 +6,7 @@ class MyComponent extends Component {
     render() {
         return (
             <div className="create-company-form">
-
+                <p>{this.props.title}</p>
             </div>
         );
     }
