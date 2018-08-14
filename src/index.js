@@ -12,7 +12,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 // Endpoint URL
 const httpLink = createHttpLink({
-    uri: 'http://localhost:4000'
+    uri: 'http://tumiwepapp.com/graphql'
 });
 
 // To configure Apollo client with link (url) endpoint and cache option
