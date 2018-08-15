@@ -10,7 +10,12 @@ import {Redirect} from "react-router-dom";
 
 const styles = theme => ({
     root: {
-        width: '90%',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        boxShadow: '1px 2px 15px #ddd'
     },
     backButton: {
         marginRight: theme.spacing.unit,
@@ -19,6 +24,14 @@ const styles = theme => ({
         marginTop: theme.spacing.unit,
         marginBottom: theme.spacing.unit,
     },
+    bottomDivider: {
+        borderTop: '1px solid #eee',
+        width: '100%',
+        marginBottom: '20px',
+        marginTop: '50px',
+        display: 'flex',
+        justifyContent: 'center'
+    }
 });
 
 function getSteps() {
@@ -71,7 +84,12 @@ class HorizontalLabelPositionBelowStepper extends React.Component {
         const {activeStep} = this.state;
 
         return (
-            <div className={classes.root}>
+            <div
+                className={classes.root}
+                style={
+                        {borderRadius: '5px', }
+                }
+            >
                 <Stepper activeStep={activeStep} alternativeLabel>
                     {steps.map(label => {
                         return (
@@ -84,7 +102,7 @@ class HorizontalLabelPositionBelowStepper extends React.Component {
 
                 <FullWidthTabs item={this.state.activeStep}/>
 
-                <div style={{padding: 15}}>
+                <div style={{padding: 15}} className={classes.bottomDivider}>
                     {this.state.activeStep === steps.length ? (
                         <div>
                             <Redirect

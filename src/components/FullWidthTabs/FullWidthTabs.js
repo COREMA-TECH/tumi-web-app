@@ -5,6 +5,8 @@ import SwipeableViews from 'react-swipeable-views';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import CreateCompanyForm from "../Company/CreateCompanyForm/CreateCompanyForm";
+import ContactCompanyForm from "../Company/ContactCompanyForm/ContactCompanyForm";
+import DepartmentsCompanyForm from "../Company/DepartmentsCompanyForm/DepartmentsCompanyForm";
 
 function TabContainer({children, dir}) {
     return (
@@ -31,7 +33,7 @@ TabContainer.propTypes = {
 const styles = theme => ({
     root: {
         backgroundColor: theme.palette.background.paper,
-        width: 1000,
+        width: '100%',
     },
 });
 
@@ -67,8 +69,8 @@ class FullWidthTabs extends React.Component {
                     onChangeIndex={this.handleChangeIndex}
                 >
                     <TabContainer dir={theme.direction}><CreateCompanyForm title="General info"/></TabContainer>
-                    <TabContainer dir={theme.direction}><CreateCompanyForm title="Contacts"/></TabContainer>
-                    <TabContainer dir={theme.direction}><CreateCompanyForm title="Departments"/></TabContainer>
+                    <TabContainer dir={theme.direction}><ContactCompanyForm/></TabContainer>
+                    <TabContainer dir={theme.direction}><DepartmentsCompanyForm/></TabContainer>
                     <TabContainer dir={theme.direction}><CreateCompanyForm title="Positions and rates"/></TabContainer>
                 </SwipeableViews>
             </div>
