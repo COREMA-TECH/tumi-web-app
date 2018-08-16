@@ -10,6 +10,7 @@ class Container extends Component {
 			<div className="container">
 				<Route exact path="/company" component={CompanyList} />
 				<Route exact path="/company/add" component={CreateCompany} />
+				<Route exact path="/company/edit" component={CreateCompany} />
 			</div>
 		);
 	}

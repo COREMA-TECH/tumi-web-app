@@ -3,7 +3,30 @@
   <component name="ChangeListManager">
     <list default="true" id="13e32ab1-4394-4d37-80c6-9ebe4d836642" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.js" afterPath="$PROJECT_DIR$/src/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/yarn.lock" afterPath="$PROJECT_DIR$/yarn.lock" />
+ </list>
+=======
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package-lock.json" afterPath="$PROJECT_DIR$/package-lock.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/App.js" afterPath="$PROJECT_DIR$/src/components/App.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Company/CreateCompany/CreateCompany.js" afterPath="$PROJECT_DIR$/src/components/Company/CreateCompany/CreateCompany.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Company/CreateCompanyForm/CreateCompanyForm.js" afterPath="$PROJECT_DIR$/src/components/Company/CreateCompanyForm/CreateCompanyForm.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/FullWidthTabs/FullWidthTabs.js" afterPath="$PROJECT_DIR$/src/components/FullWidthTabs/FullWidthTabs.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/MainContainer/Container/Container.js" afterPath="$PROJECT_DIR$/src/components/MainContainer/Container/Container.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/MainContainer/Toolbar/Toolbox/Toolbox.js" afterPath="$PROJECT_DIR$/src/components/MainContainer/Toolbar/Toolbox/Toolbox.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/MainContainer/Toolbar/Toolbox/index.css" afterPath="$PROJECT_DIR$/src/components/MainContainer/Toolbar/Toolbox/index.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Nav/MenuItem/MenuItem.js" afterPath="$PROJECT_DIR$/src/components/Nav/MenuItem/MenuItem.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Stepper/Stepper.js" afterPath="$PROJECT_DIR$/src/components/Stepper/Stepper.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Stepper/index.css" afterPath="$PROJECT_DIR$/src/components/Stepper/index.css" />
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
     </list>
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -39,6 +62,19 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/src/components/Main/index.css.js" />
+        <option value="$PROJECT_DIR$/src/components/Main/index.js" />
+        <option value="$PROJECT_DIR$/src/components/App.css" />
+        <option value="$PROJECT_DIR$/src/components/Nav/index.js" />
+        <option value="$PROJECT_DIR$/src/components/Nav/index.css" />
+        <option value="$PROJECT_DIR$/src/components/HeaderNav/index.js" />
+        <option value="$PROJECT_DIR$/src/components/UserInformation/index.js" />
+        <option value="$PROJECT_DIR$/src/components/HeaderNav/index.css" />
+        <option value="$PROJECT_DIR$/src/components/Avatar/Avatar.js" />
+        <option value="$PROJECT_DIR$/src/components/Avatar/index.js" />
+=======
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
         <option value="$PROJECT_DIR$/src/components/HeaderNav/HeaderNav.js" />
         <option value="$PROJECT_DIR$/src/components/UserInformation/index.css" />
         <option value="$PROJECT_DIR$/src/components/Avatar/index.css" />
@@ -78,6 +114,9 @@
         <option value="$PROJECT_DIR$/src/components/MainContainer/Main/MainContainer.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/components/MainContainer/Container/Container.js" />
+<<<<<<< HEAD
+        <option value="$PROJECT_DIR$/src/index.js" />
+=======
         <option value="$PROJECT_DIR$/src/components/Company/CreateCompany/index.css" />
         <option value="$PROJECT_DIR$/src/components/Company/CreateCompanyForm/index.css" />
         <option value="$PROJECT_DIR$/src/components/Company/CreateCompany/CreateCompany.js" />
@@ -90,6 +129,7 @@
         <option value="$PROJECT_DIR$/src/components/FullWidthTabs/FullWidthTabs.js" />
         <option value="$PROJECT_DIR$/src/components/Company/DepartmentsCompanyForm/DepartmentsCompanyForm.js" />
         <option value="$PROJECT_DIR$/src/components/Company/ContactCompanyForm/ContactCompanyForm.js" />
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
       </list>
     </option>
   </component>
@@ -148,6 +188,45 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+            <path>
+              <item name="tumi-web-app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tumi-web-app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Company" type="462c0819:PsiDirectoryNode" />
+            </path>
+<<<<<<< HEAD
+=======
+>>>>>>> feature-apollo-requests
+=======
+            <path>
+              <item name="tumi-web-app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tumi-web-app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Company" type="462c0819:PsiDirectoryNode" />
+              <item name="ContactsTable" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tumi-web-app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tumi-web-app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Company" type="462c0819:PsiDirectoryNode" />
+              <item name="DepartmentsCompanyForm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tumi-web-app" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tumi-web-app" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="components" type="462c0819:PsiDirectoryNode" />
+              <item name="Stepper" type="462c0819:PsiDirectoryNode" />
+            </path>
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
           </expand>
           <select />
         </subPane>
@@ -195,14 +274,34 @@
       <updated>1533846280558</updated>
       <workItem from="1533846296197" duration="7900000" />
       <workItem from="1533910382498" duration="18401000" />
+<<<<<<< HEAD
+      <workItem from="1534171074371" duration="8797000" />
+=======
       <workItem from="1534171074371" duration="7944000" />
+<<<<<<< HEAD
       <workItem from="1534343579099" duration="23841000" />
       <workItem from="1534429218147" duration="2544000" />
+=======
+      <workItem from="1534343579099" duration="23243000" />
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="66708000" />
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+    <option name="totallyTimeSpent" value="34262000" />
+=======
+    <option name="totallyTimeSpent" value="37610000" />
+>>>>>>> feature-apollo-requests
+=======
+    <option name="totallyTimeSpent" value="63566000" />
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
   </component>
   <component name="ToolWindowManager">
     <frame x="-1928" y="-103" width="1936" height="1056" extended-state="6" />
@@ -223,6 +322,14 @@
       <window_info id="GraphQL" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32715008" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+<<<<<<< HEAD
+<<<<<<< HEAD
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20833333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+=======
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20833333" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+>>>>>>> feature-apollo-requests
+=======
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32715008" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -291,6 +398,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+<<<<<<< HEAD
         </state>
       </provider>
     </entry>
@@ -299,6 +407,23 @@
     <entry file="file://$PROJECT_DIR$/src/components/Toolbar/SearchBar/SearchBar.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Toolbar/Main/index.css" />
     <entry file="file://$PROJECT_DIR$/src/components/Toolbar/SearchBar/index.css" />
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/src/components/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
+=======
+>>>>>>> feature-apollo-requests
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Toolbar/Main/Toolbar.js" />
+    <entry file="file://$PROJECT_DIR$/src/components/Toolbar/Toolbox/index.css" />
+    <entry file="file://$PROJECT_DIR$/src/components/Toolbar/SearchBar/SearchBar.js" />
+    <entry file="file://$PROJECT_DIR$/src/components/Toolbar/Main/index.css" />
+    <entry file="file://$PROJECT_DIR$/src/components/Toolbar/SearchBar/index.css" />
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
     <entry file="file://$PROJECT_DIR$/src/components/Nav/HeaderNav/HeaderNav.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
@@ -418,7 +543,12 @@
     <entry file="file://$PROJECT_DIR$/src/components/Company/CreateCompanyForm/index.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
+<<<<<<< HEAD
+          <caret line="4" column="1" lean-forward="false" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+<<<<<<< HEAD
+=======
           <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
         </state>
       </provider>
     </entry>
@@ -427,13 +557,24 @@
         <state relative-caret-position="345">
           <caret line="15" column="3" lean-forward="false" selection-start-line="15" selection-start-column="3" selection-end-line="15" selection-end-column="3" />
           <folding />
+=======
+>>>>>>> feature-apollo-requests
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="184">
+          <caret line="10" column="10" lean-forward="true" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+=======
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+<<<<<<< HEAD
+=======
+          <folding />
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
         </state>
       </provider>
     </entry>
@@ -565,11 +706,37 @@
         <state relative-caret-position="115">
           <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding>
-            <element signature="e#0#26#0" expanded="true" />
+<<<<<<< HEAD
+            <element signature="e#0#39#0" expanded="false" />
+<<<<<<< HEAD
+=======
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="18" column="19" lean-forward="true" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="329">
+          <caret line="22" column="0" lean-forward="true" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+>>>>>>> feature-apollo-requests
+=======
+            <element signature="e#0#26#0" expanded="true" />
+>>>>>>> d6ea808e9a6f43ea7ac1e2dffa26555785f506dc
+          </folding>
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/components/App.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
@@ -577,6 +744,13 @@
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
+=======
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="19" column="14" lean-forward="false" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
+          <folding />
+>>>>>>> 515d504b28e597b980ffc356be720a19ef33dd14
         </state>
       </provider>
     </entry>
