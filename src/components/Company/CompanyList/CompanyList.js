@@ -11,9 +11,8 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 class CompanyList extends Component {
 	state = { data: [], open: false };
 
-	loadCompanies = (refetch) => {
+	loadCompanies = () => {
 		console.log('Loading companies');
-		refetch();
 	};
 	getCompaniesQuery = gql`
 		{
@@ -45,14 +44,14 @@ class CompanyList extends Component {
 	};
 	render() {
 		const LoadCompanyList = () => (
-			<Query query={this.getCompaniesQuery} notifyOnNetworkStatusChange>
+			<Query query={this.getCompaniesQuery} pollInterval={500}>
 				{({ loading, error, data, refetch, networkStatus }) => {
-					if (networkStatus === 4) return <LinearProgress />;
+					//if (networkStatus === 4) return <LinearProgress />;
 					if (loading) return <LinearProgress />;
 					if (error) return <p>Error </p>;
 					if (data.getcompanies != null && data.getcompanies.length > 0) {
 						console.log(networkStatus);
-						return <div className="company-list">{this.renderCards(data.getcompanies, refetch)}</div>;
+						return <div className="company-list">{this.renderCards(data.getcompanies)}</div>;
 					}
 					return <p>Nothing to display </p>;
 				}}
