@@ -1,83 +1,92 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import CreateCompanyForm from "../Company/CreateCompanyForm/CreateCompanyForm";
+import CreateCompanyForm from '../Company/CreateCompanyForm/CreateCompanyForm';
+import ContactCompanyForm from '../Company/ContactCompanyForm/ContactCompanyForm';
+import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/DepartmentsCompanyForm';
 
-function TabContainer({children, dir}) {
-    return (
-        <Typography component="div" dir={dir} style={{border: '1px solid #ddd'}}>
-            {children}
-        </Typography>
-    );
+function TabContainer({ children, dir }) {
+	return (
+		<Typography
+			component="div"
+			dir={dir}
+			style={[
+				{
+					border: '1px solid #ddd'
+				}
+			]}
+		>
+			{children}
+		</Typography>
+	);
 }
 
 TabContainer.propTypes = {
-    children: PropTypes.node.isRequired,
-    dir: PropTypes.string.isRequired,
+	children: PropTypes.node.isRequired,
+	dir: PropTypes.string.isRequired
 };
 
-const styles = theme => ({
-    root: {
-        backgroundColor: theme.palette.background.paper,
-        width: 1000,
-    },
+const styles = (theme) => ({
+	root: {
+		backgroundColor: theme.palette.background.paper,
+		width: '100%'
+	}
 });
 
 class FullWidthTabs extends React.Component {
-    state = {
-        value: 0,
-    };
+	state = {
+		value: 0
+	};
 
-    handleChange = (event, value) => {
-        this.setState({value});
-    };
+	handleChange = (event, value) => {
+		this.setState({ value });
+	};
 
-    handleChangeIndex = index => {
-        this.setState({value: index});
-    };
+	handleChangeIndex = (index) => {
+		this.setState({ value: index });
+	};
 
-    render() {
-        const {classes, theme} = this.props;
+	render() {
+		const { classes, theme } = this.props;
 
-        return (
-            <div className={classes.root}>
-                <AppBar position="static" color="default">
-                    <Tabs
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        fullWidth
-                    >
-                        <Tab label="General Information"/>
-                        <Tab label="Contacts"/>
-                        <Tab label="Dapartments"/>
-                        <Tab label="Positions and Rates"/>
-                    </Tabs>
-                </AppBar>
-                <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={this.state.value}
-                    onChangeIndex={this.handleChangeIndex}
-                >
-                    <TabContainer dir={theme.direction}><CreateCompanyForm/></TabContainer>
-                    <TabContainer dir={theme.direction}>Item Two</TabContainer>
-                    <TabContainer dir={theme.direction}>Item Three</TabContainer>
-                    <TabContainer dir={theme.direction}>Item Four</TabContainer>
-                </SwipeableViews>
-            </div>
-        );
-    }
+		return (
+			<div className={classes.root}>
+				<Tabs
+					value={this.props.item}
+					onChange={this.props.item}
+					indicatorColor="primary"
+					textColor="primary"
+					fullWidth
+				/>
+				<SwipeableViews
+					axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+					index={this.props.item}
+					onChangeIndex={this.handleChangeIndex}
+				>
+					<TabContainer dir={theme.direction}>
+						<CreateCompanyForm title="General info" />
+					</TabContainer>
+					<TabContainer dir={theme.direction}>
+						<ContactCompanyForm />
+					</TabContainer>
+					<TabContainer dir={theme.direction}>
+						<DepartmentsCompanyForm />
+					</TabContainer>
+					<TabContainer dir={theme.direction}>
+						<CreateCompanyForm title="Positions and rates" />
+					</TabContainer>
+				</SwipeableViews>
+			</div>
+		);
+	}
 }
 
 FullWidthTabs.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired,
+	theme: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, {withTheme: true})(FullWidthTabs);
+export default withStyles(styles, { withTheme: true })(FullWidthTabs);
