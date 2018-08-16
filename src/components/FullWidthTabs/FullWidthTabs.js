@@ -38,7 +38,7 @@ const styles = (theme) => ({
 
 class FullWidthTabs extends React.Component {
 	state = {
-		value: 0
+		value: 0,
 	};
 
 	handleChange = (event, value) => {

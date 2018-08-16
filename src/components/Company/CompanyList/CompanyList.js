@@ -14,6 +14,7 @@ class CompanyList extends Component {
 	loadCompanies = () => {
 		console.log('Loading companies');
 	};
+
 	getCompaniesQuery = gql`
 		{
 			getcompanies(Id: null, IsActive: 1) {
@@ -26,6 +27,8 @@ class CompanyList extends Component {
 			}
 		}
 	`;
+
+
 	renderCards = (data, refetch) => {
 		const source = data.map(({ Id, Code, Description, Name, ImageURL, Address }) => (
 			<CompanyCard
@@ -42,6 +45,8 @@ class CompanyList extends Component {
 		));
 		return source;
 	};
+
+
 	render() {
 		const LoadCompanyList = () => (
 			<Query query={this.getCompaniesQuery} pollInterval={500}>
