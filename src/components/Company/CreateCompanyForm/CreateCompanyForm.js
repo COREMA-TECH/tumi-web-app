@@ -9,6 +9,7 @@ import gql from "graphql-tag";
 import {Mutation, Query} from "react-apollo";
 import Select from "../../material-ui/Select";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import Redirect from "react-router-dom/es/Redirect";
 
 const styles = (theme) => ({
     container: {
@@ -157,7 +158,18 @@ class ComposedTextField extends React.Component {
             }
         `;
 
+        const UPDATE_COMPANIES = gql`
+            mutation updateCompanies($input: iParamBC!) {
+                updcompanies(input: $input) {
+                    Id
+                    Name
+                    Description
+                }
+            }
+        `;
+
         if (this.state.name === '') {
+            alert("ID " + this.props.idCompany);
             return (
                 <div className={classes.container}>
                     <Query query={this.getCompanyQuery} variables={{id: this.props.idCompany}}>
@@ -170,7 +182,7 @@ class ComposedTextField extends React.Component {
                                         name: item.Name,
                                         legalName: item.Legal_Name,
                                         startWeek: item.Start_Week,
-                                        startWeek: item.Start_Week,
+                                        endWeek: item.End_Week,
                                         description: item.Description,
                                         country: item.Country,
                                         state: item.State,
@@ -278,7 +290,8 @@ class ComposedTextField extends React.Component {
                                     if (loading) return <LinearProgress/>;
                                     if (error) return <p>Error </p>;
                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        return <Select label={"Country"} values={data.getcatalogitem} value={this.state.country}
+                                        return <Select label={"Country"} values={data.getcatalogitem}
+                                                       value={this.state.country}
                                                        update={this.updateStateCountry}/>
                                     }
                                     return <p>Nothing to display </p>;
@@ -292,7 +305,8 @@ class ComposedTextField extends React.Component {
                                     if (loading) return <LinearProgress/>;
                                     if (error) return <p>Error </p>;
                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        return <Select label={"States"} update={this.updateStateState} value={this.state.state}
+                                        return <Select label={"States"} update={this.updateStateState}
+                                                       value={this.state.state}
                                                        values={data.getcatalogitem}/>
                                     }
                                     return <p>Nothing to display </p>;
@@ -306,7 +320,8 @@ class ComposedTextField extends React.Component {
                                     if (loading) return <LinearProgress/>;
                                     if (error) return <p>Error </p>;
                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        return <Select label={"Cities"} update={this.updateStateCity} value={this.state.city}
+                                        return <Select label={"Cities"} update={this.updateStateCity}
+                                                       value={this.state.city}
                                                        values={data.getcatalogitem}/>
                                     }
                                     return <p>Nothing to display </p>;
@@ -584,7 +599,57 @@ class ComposedTextField extends React.Component {
                                         );
                                     }}
                                 >
-                                    Add Contact
+                                    Add Company
+                                </Button>
+
+                            )}
+                        </Mutation>
+
+                        <Mutation mutation={UPDATE_COMPANIES}>
+                            {(updcompanies, {loading, error}) => (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.button}
+                                    onClick={() => {
+                                        updcompanies({
+                                                variables: {
+                                                    input: {
+                                                        Id: this.props.idCompany,
+                                                        Code: "'SSAS'",
+                                                        Code01: "'SSAS'",
+                                                        Id_Company: 1,
+                                                        BusinessType: 1,
+                                                        Name: `'${this.state.name}'`,
+                                                        Description: `'${this.state.description}'`,
+                                                        Start_Week: this.state.startWeek,
+                                                        End_Week: this.state.endWeek,
+                                                        Legal_Name: `'${this.state.legalName}'`,
+                                                        Country: parseInt(this.state.country),
+                                                        State: parseInt(this.state.state),
+                                                        Region: 5,
+                                                        City: parseInt(this.state.city),
+                                                        Id_Parent: 1,
+                                                        IsActive: 1,
+                                                        User_Created: 1,
+                                                        User_Updated: 1,
+                                                        Date_Created: "'2018-08-14 16:10:25+00'",
+                                                        Date_Updated: "'2018-08-14 16:10:25+00'",
+                                                        ImageURL: `'${this.state.avatar}'`,
+                                                        Start_Date: "'2018-08-14'"
+                                                    }
+                                                }
+                                            }
+                                        );
+
+                                        (<Redirect
+                                            to={{
+                                                pathname: "/Company",
+                                            }}
+                                        />)
+                                    }}
+                                >
+                                    Edit Company
                                 </Button>
 
                             )}
