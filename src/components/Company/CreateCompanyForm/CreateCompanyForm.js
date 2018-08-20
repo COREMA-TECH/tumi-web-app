@@ -43,8 +43,8 @@ class ComposedTextField extends React.Component {
         address: '',
         optionalAddress: '',
         businessType: '',
-        country: 7,
-        state: '',
+        country: 6,
+        state: 0,
         region: '',
         city: '',
         management: '',
@@ -53,7 +53,7 @@ class ComposedTextField extends React.Component {
         startWeek: '',
         endWeek: '',
         workWeek: '',
-        avatar: '',
+        avatar: 'url',
         otherPhoneNumber: '',
         room: ''
     };
@@ -69,7 +69,7 @@ class ComposedTextField extends React.Component {
     `;
 
     getStatesQuery = gql`
-        query Dog($parent: Int!)
+        query States($parent: Int!)
         {
             getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
                 Id
@@ -81,8 +81,9 @@ class ComposedTextField extends React.Component {
 
 
     getCitiesQuery = gql`
+        query Cities($parent: Int!)
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: 140, Id_Catalog: 5) {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
                 Id
                 Name
                 IsActive
@@ -95,6 +96,19 @@ class ComposedTextField extends React.Component {
             country: id
         })
     };
+
+    updateStateState = (id) => {
+        this.setState({
+            state: id
+        })
+    };
+
+    updateStateCity = (id) => {
+        this.setState({
+            city: id
+        })
+    };
+
 
     render() {
         const {classes} = this.props;
@@ -217,20 +231,21 @@ class ComposedTextField extends React.Component {
                                 if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <Select label={"States"} values={data.getcatalogitem}/>
+                                    return <Select label={"States"} update={this.updateStateState}
+                                                   values={data.getcatalogitem}/>
                                 }
                                 return <p>Nothing to display </p>;
                             }}
                         </Query>
                     </FormControl>
                     <FormControl className={classes.formSelect}>
-                        <Query query={this.getCitiesQuery}>
+                        <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
                             {({loading, error, data, refetch, networkStatus}) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <Select label={"Cities"} values={data.getcatalogitem}/>
+                                    return <Select label={"Cities"} update={this.updateStateCity} values={data.getcatalogitem}/>
                                 }
                                 return <p>Nothing to display </p>;
                             }}
@@ -272,19 +287,20 @@ class ComposedTextField extends React.Component {
                                     inscompanies({
                                             variables: {
                                                 input: {
-                                                    Id: 45,
+                                                    Id: 150,
                                                     Code: "'SSAS'",
                                                     Code01: "'SSAS'",
                                                     Id_Company: 1,
                                                     BusinessType: 1,
                                                     Name: `'${this.state.name}'`,
                                                     Description: `'${this.state.description}'`,
-                                                    Start_Week: `'${this.state.startWeek}'`,
-                                                    End_Week: `'${this.state.endWeek}'`,
+                                                    Start_Week: this.state.startWeek,
+                                                    End_Week: this.state.endWeek,
                                                     Legal_Name: `'${this.state.legalName}'`,
-                                                    Country: `'${this.state.country}'`,
-                                                    State: `'${this.state.state}'`,
-                                                    City: `'${this.state.city}'`,
+                                                    Country: parseInt(this.state.country),
+                                                    State: parseInt(this.state.state),
+                                                    Region: 5,
+                                                    City: parseInt(this.state.city),
                                                     Id_Parent: 1,
                                                     IsActive: 1,
                                                     User_Created: 1,
