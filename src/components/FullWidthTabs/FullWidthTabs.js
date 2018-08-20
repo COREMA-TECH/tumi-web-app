@@ -71,7 +71,7 @@ class FullWidthTabs extends React.Component {
                     onChangeIndex={this.handleChangeIndex}
                 >
                     <TabContainer dir={theme.direction}>
-                        <CreateCompanyForm title="General info"/>
+                        <CreateCompanyForm title="General info" idCompany={this.props.idCompany}/>
                     </TabContainer>
                     <TabContainer dir={theme.direction}>
                         <ContactCompanyForm/>

@@ -91,6 +91,37 @@ class ComposedTextField extends React.Component {
         }
     `;
 
+    //Query to get data of a specific company using the id received by props
+    getCompanyQuery = gql`
+        query getCompany($id: Int!)
+        {
+            getcompanies(Id: $id, IsActive: 1) {
+                Id
+                Code
+                Code01
+                Id_Company
+                BusinessType
+                Name
+                Description
+                Start_Week
+                End_Week
+                Start_Date
+                Legal_Name
+                Country
+                State
+                Region
+                City
+                Id_Parent
+                IsActive
+                User_Created
+                User_Updated
+                Date_Created
+                Date_Updated
+                ImageURL
+            }
+        }
+    `;
+
     updateStateCountry = (id) => {
         this.setState({
             country: id
@@ -110,219 +141,458 @@ class ComposedTextField extends React.Component {
     };
 
 
+    componentWillMount() {
+
+    }
+
     render() {
         const {classes} = this.props;
         const ADD_TODO = gql`
             mutation insertCompanies($input: iParamBC!) {
                 inscompanies(input: $input) {
                     Id
+                    Name
+                    Description
                 }
             }
         `;
 
-        return (
-            <div className={classes.container}>
-                <div className={classes.divStyle}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Company Name</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.name}
-                            onChange={(text) => this.setState({name: text.target.value})}
-                        />
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Legal Name</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.legalName}
-                            onChange={(text) => this.setState({legalName: text.target.value})}
-                        />
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Description</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.description}
-                            onChange={(text) => this.setState({description: text.target.value})}
-                        />
-                    </FormControl>
-                </div>
+        if (this.state.name === '') {
+            return (
+                <div className={classes.container}>
+                    <Query query={this.getCompanyQuery} variables={{id: this.props.idCompany}}>
+                        {({loading, error, data, refetch,}) => {
+                            if (loading) return <LinearProgress/>;
+                            if (error) return <p>Error </p>;
+                            if (data.getcompanies != null && data.getcompanies.length > 0) {
+                                data.getcompanies.map(item => {
+                                    this.setState({
+                                        name: item.Name,
+                                        legalName: item.Legal_Name,
+                                        startWeek: item.Start_Week,
+                                        startWeek: item.Start_Week,
+                                        description: item.Description,
+                                        country: item.Country,
+                                        state: item.State,
+                                        city: item.City,
+                                    })
+                                });
 
-                <div className={classes.divStyle}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Management Company</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.management}
-                            onChange={(text) => this.setState({management: text.target.value})}
-                        />
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.phoneNumber}
-                            onChange={(text) => this.setState({phoneNumber: text.target.value})}
-                        />
-                    </FormControl>
+                                return true;
+                            }
+                            return <p>Nothing to display </p>;
+                        }}
+                    </Query>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Company Name</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.name}
+                                onChange={(text) => this.setState({name: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Legal Name</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.legalName}
+                                onChange={(text) => this.setState({legalName: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Description</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.description}
+                                onChange={(text) => this.setState({description: text.target.value})}
+                            />
+                        </FormControl>
+                    </div>
 
-                </div>
-                <div className={classes.divStyle}>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Start Date</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.startWeek}
-                            onChange={(text) => this.setState({startWeek: text.target.value})}
-                        />
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">End Week</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.endWeek}
-                            onChange={(text) => this.setState({endWeek: text.target.value})}
-                        />
-                    </FormControl>
-                </div>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Management Company</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.management}
+                                onChange={(text) => this.setState({management: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.phoneNumber}
+                                onChange={(text) => this.setState({phoneNumber: text.target.value})}
+                            />
+                        </FormControl>
 
-                <div className={classes.divStyle}>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <h4>Address</h4>
-                    <FormControl className={[classes.formControl, classes.addressControl]}>
-                        <InputLabel htmlFor="name-simple">Address No. 1</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.address}
-                            onChange={(text) => this.setState({address: text.target.value})}
-                        />
-                    </FormControl>
-                    <FormControl className={[classes.formControl, classes.addressControl]}>
-                        <InputLabel htmlFor="name-simple">Address No. 2</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.optionalAddress}
-                            onChange={(text) => this.setState({optionalAddress: text.target.value})}
-                        />
-                    </FormControl>
-                </div>
-                <div className={classes.divStyle}>
-                    <FormControl className={classes.formSelect}>
-                        <Query query={this.getCountriesQuery}>
-                            {({loading, error, data, refetch, networkStatus}) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <Select label={"Country"} values={data.getcatalogitem}
-                                                   update={this.updateStateCountry}/>
-                                }
-                                return <p>Nothing to display </p>;
-                            }}
-                        </Query>
-                    </FormControl>
-                    <FormControl className={classes.formSelect}>
-                        <Query query={this.getStatesQuery} variables={{parent: this.state.country}}>
-                            {({loading, error, data, refetch, networkStatus}) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <Select label={"States"} update={this.updateStateState}
-                                                   values={data.getcatalogitem}/>
-                                }
-                                return <p>Nothing to display </p>;
-                            }}
-                        </Query>
-                    </FormControl>
-                    <FormControl className={classes.formSelect}>
-                        <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
-                            {({loading, error, data, refetch, networkStatus}) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <Select label={"Cities"} update={this.updateStateCity} values={data.getcatalogitem}/>
-                                }
-                                return <p>Nothing to display </p>;
-                            }}
-                        </Query>
-                    </FormControl>
-                </div>
+                    </div>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Start Date</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.startWeek}
+                                onChange={(text) => this.setState({startWeek: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">End Week</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.endWeek}
+                                onChange={(text) => this.setState({endWeek: text.target.value})}
+                            />
+                        </FormControl>
+                    </div>
 
-                <div className={classes.divStyle}>
-                    <br/>
-                    <br/>
-                    <h4>Others</h4>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.otherPhoneNumber}
-                            onChange={(text) => this.setState({
-                                otherPhoneNumber: text.target.value
-                            })}
-                        />
-                    </FormControl>
-                    <FormControl className={classes.formControl}>
-                        <InputLabel htmlFor="name-simple">Rooms</InputLabel>
-                        <Input
-                            id="name-simple"
-                            value={this.state.room}
-                            onChange={(text) => this.setState({
-                                room: text.target.value
-                            })}
-                        />
-                    </FormControl>
-                    <Mutation mutation={ADD_TODO}>
-                        {(inscompanies, {loading, error}) => (
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                onClick={() => {
-                                    inscompanies({
-                                            variables: {
-                                                input: {
-                                                    Id: 150,
-                                                    Code: "'SSAS'",
-                                                    Code01: "'SSAS'",
-                                                    Id_Company: 1,
-                                                    BusinessType: 1,
-                                                    Name: `'${this.state.name}'`,
-                                                    Description: `'${this.state.description}'`,
-                                                    Start_Week: this.state.startWeek,
-                                                    End_Week: this.state.endWeek,
-                                                    Legal_Name: `'${this.state.legalName}'`,
-                                                    Country: parseInt(this.state.country),
-                                                    State: parseInt(this.state.state),
-                                                    Region: 5,
-                                                    City: parseInt(this.state.city),
-                                                    Id_Parent: 1,
-                                                    IsActive: 1,
-                                                    User_Created: 1,
-                                                    User_Updated: 1,
-                                                    Date_Created: "'2018-08-14 16:10:25+00'",
-                                                    Date_Updated: "'2018-08-14 16:10:25+00'",
-                                                    ImageURL: `'${this.state.avatar}'`,
-                                                    Start_Date: "'2018-08-14'"
+                    <div className={classes.divStyle}>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <h4>Address</h4>
+                        <FormControl className={[classes.formControl, classes.addressControl]}>
+                            <InputLabel htmlFor="name-simple">Address No. 1</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.address}
+                                onChange={(text) => this.setState({address: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={[classes.formControl, classes.addressControl]}>
+                            <InputLabel htmlFor="name-simple">Address No. 2</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.optionalAddress}
+                                onChange={(text) => this.setState({optionalAddress: text.target.value})}
+                            />
+                        </FormControl>
+                    </div>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formSelect}>
+                            <Query query={this.getCountriesQuery}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        return <Select label={"Country"} values={data.getcatalogitem} value={this.state.country}
+                                                       update={this.updateStateCountry}/>
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </FormControl>
+                        <FormControl className={classes.formSelect}>
+                            <Query query={this.getStatesQuery} variables={{parent: this.state.country}}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        return <Select label={"States"} update={this.updateStateState} value={this.state.state}
+                                                       values={data.getcatalogitem}/>
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </FormControl>
+                        <FormControl className={classes.formSelect}>
+                            <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        return <Select label={"Cities"} update={this.updateStateCity} value={this.state.city}
+                                                       values={data.getcatalogitem}/>
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </FormControl>
+                    </div>
+
+
+                    <div className={classes.divStyle}>
+                        <br/>
+                        <br/>
+                        <h4>Others</h4>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.otherPhoneNumber}
+                                onChange={(text) => this.setState({
+                                    otherPhoneNumber: text.target.value
+                                })}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Rooms</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.room}
+                                onChange={(text) => this.setState({
+                                    room: text.target.value
+                                })}
+                            />
+                        </FormControl>
+                        <Mutation mutation={ADD_TODO}>
+                            {(inscompanies, {loading, error}) => (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.button}
+                                    onClick={() => {
+                                        inscompanies({
+                                                variables: {
+                                                    input: {
+                                                        Id: 150,
+                                                        Code: "'SSAS'",
+                                                        Code01: "'SSAS'",
+                                                        Id_Company: 1,
+                                                        BusinessType: 1,
+                                                        Name: `'${this.state.name}'`,
+                                                        Description: `'${this.state.description}'`,
+                                                        Start_Week: this.state.startWeek,
+                                                        End_Week: this.state.endWeek,
+                                                        Legal_Name: `'${this.state.legalName}'`,
+                                                        Country: parseInt(this.state.country),
+                                                        State: parseInt(this.state.state),
+                                                        Region: 5,
+                                                        City: parseInt(this.state.city),
+                                                        Id_Parent: 1,
+                                                        IsActive: 1,
+                                                        User_Created: 1,
+                                                        User_Updated: 1,
+                                                        Date_Created: "'2018-08-14 16:10:25+00'",
+                                                        Date_Updated: "'2018-08-14 16:10:25+00'",
+                                                        ImageURL: `'${this.state.avatar}'`,
+                                                        Start_Date: "'2018-08-14'"
+                                                    }
                                                 }
                                             }
-                                        }
-                                    );
-                                }}
-                            >
-                                Add Contact
-                            </Button>
+                                        );
+                                    }}
+                                >
+                                    Add Contact
+                                </Button>
 
-                        )}
-                    </Mutation>
+                            )}
+                        </Mutation>
+                    </div>
                 </div>
-            </div>
-        );
+            )
+        } else {
+            return (
+                <div className={classes.container}>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Company Name</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.name}
+                                onChange={(text) => this.setState({name: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Legal Name</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.legalName}
+                                onChange={(text) => this.setState({legalName: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Description</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.description}
+                                onChange={(text) => this.setState({description: text.target.value})}
+                            />
+                        </FormControl>
+                    </div>
+
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Management Company</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.management}
+                                onChange={(text) => this.setState({management: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.phoneNumber}
+                                onChange={(text) => this.setState({phoneNumber: text.target.value})}
+                            />
+                        </FormControl>
+
+                    </div>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Start Date</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.startWeek}
+                                onChange={(text) => this.setState({startWeek: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">End Week</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.endWeek}
+                                onChange={(text) => this.setState({endWeek: text.target.value})}
+                            />
+                        </FormControl>
+                    </div>
+
+                    <div className={classes.divStyle}>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <h4>Address</h4>
+                        <FormControl className={[classes.formControl, classes.addressControl]}>
+                            <InputLabel htmlFor="name-simple">Address No. 1</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.address}
+                                onChange={(text) => this.setState({address: text.target.value})}
+                            />
+                        </FormControl>
+                        <FormControl className={[classes.formControl, classes.addressControl]}>
+                            <InputLabel htmlFor="name-simple">Address No. 2</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.optionalAddress}
+                                onChange={(text) => this.setState({optionalAddress: text.target.value})}
+                            />
+                        </FormControl>
+                    </div>
+                    <div className={classes.divStyle}>
+                        <FormControl className={classes.formSelect}>
+                            <Query query={this.getCountriesQuery}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        return <Select label={"Country"} values={data.getcatalogitem}
+                                                       update={this.updateStateCountry}/>
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </FormControl>
+                        <FormControl className={classes.formSelect}>
+                            <Query query={this.getStatesQuery} variables={{parent: this.state.country}}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        return <Select label={"States"} update={this.updateStateState}
+                                                       values={data.getcatalogitem}/>
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </FormControl>
+                        <FormControl className={classes.formSelect}>
+                            <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        return <Select label={"Cities"} update={this.updateStateCity}
+                                                       values={data.getcatalogitem}/>
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </FormControl>
+                    </div>
+
+
+                    <div className={classes.divStyle}>
+                        <br/>
+                        <br/>
+                        <h4>Others</h4>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.otherPhoneNumber}
+                                onChange={(text) => this.setState({
+                                    otherPhoneNumber: text.target.value
+                                })}
+                            />
+                        </FormControl>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel htmlFor="name-simple">Rooms</InputLabel>
+                            <Input
+                                id="name-simple"
+                                value={this.state.room}
+                                onChange={(text) => this.setState({
+                                    room: text.target.value
+                                })}
+                            />
+                        </FormControl>
+                        <Mutation mutation={ADD_TODO}>
+                            {(inscompanies, {loading, error}) => (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.button}
+                                    onClick={() => {
+                                        inscompanies({
+                                                variables: {
+                                                    input: {
+                                                        Id: 150,
+                                                        Code: "'SSAS'",
+                                                        Code01: "'SSAS'",
+                                                        Id_Company: 1,
+                                                        BusinessType: 1,
+                                                        Name: `'${this.state.name}'`,
+                                                        Description: `'${this.state.description}'`,
+                                                        Start_Week: this.state.startWeek,
+                                                        End_Week: this.state.endWeek,
+                                                        Legal_Name: `'${this.state.legalName}'`,
+                                                        Country: parseInt(this.state.country),
+                                                        State: parseInt(this.state.state),
+                                                        Region: 5,
+                                                        City: parseInt(this.state.city),
+                                                        Id_Parent: 1,
+                                                        IsActive: 1,
+                                                        User_Created: 1,
+                                                        User_Updated: 1,
+                                                        Date_Created: "'2018-08-14 16:10:25+00'",
+                                                        Date_Updated: "'2018-08-14 16:10:25+00'",
+                                                        ImageURL: `'${this.state.avatar}'`,
+                                                        Start_Date: "'2018-08-14'"
+                                                    }
+                                                }
+                                            }
+                                        );
+                                    }}
+                                >
+                                    Add Contact
+                                </Button>
+
+                            )}
+                        </Mutation>
+                    </div>
+                </div>
+            )
+        }
     }
 }
 

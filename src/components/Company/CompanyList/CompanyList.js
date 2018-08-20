@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import CompanyCard from '../CompanyCard/';
 import './index.css';
 import gql from 'graphql-tag';
 import {Query} from 'react-apollo';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import CompanyCard from "../CompanyCard/CompanyCard";
 
 class CompanyList extends Component {
     state = {data: [], open: false};
@@ -26,19 +26,24 @@ class CompanyList extends Component {
     `;
 
     renderCards = (data, refetch) => {
-        const source = data.map(({Id, Code, Description, Name, ImageURL, Address}) => (
-            <CompanyCard
-                key={Id}
-                idCompany={Id}
-                code={Code}
-                imageUrl={ImageURL}
-                title={Name}
-                description={Description}
-                address={Address}
-                loadCompanies={() => this.loadCompanies(refetch)}
-                open={this.state.open}
-            />
-        ));
+        const source = data.map(({Id, Code, Description, Name, ImageURL, Address}) => {
+                console.log("El valor del ID de la compañía es: " + Id);
+
+                return (
+                    <CompanyCard
+                        key={Id}
+                        idCompany={Id}
+                        code={Code}
+                        imageUrl={ImageURL}
+                        title={Name}
+                        description={Description}
+                        address={Address}
+                        loadCompanies={() => this.loadCompanies(refetch)}
+                        open={this.state.open}
+                    />
+                )
+            }
+        );
         return source;
     };
 

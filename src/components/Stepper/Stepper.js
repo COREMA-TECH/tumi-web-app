@@ -100,7 +100,7 @@ class HorizontalLabelPositionBelowStepper extends React.Component {
                     })}
                 </Stepper>
 
-                <FullWidthTabs item={this.state.activeStep} />
+                <FullWidthTabs item={this.state.activeStep} idCompany={this.props.idCompany} />
 
                 <div style={{padding: 15}} className={classes.bottomDivider}>
                     {this.state.activeStep === steps.length ? (
