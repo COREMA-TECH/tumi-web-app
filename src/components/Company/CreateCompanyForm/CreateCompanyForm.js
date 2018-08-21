@@ -10,6 +10,7 @@ import {Mutation, Query} from "react-apollo";
 import Select from "../../material-ui/Select";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import Switch from "../../material-ui/Switch";
+import SelectCompany from "../../material-ui/SelectCompany";
 
 const styles = (theme) => ({
     container: {
@@ -74,6 +75,14 @@ class ComposedTextField extends React.Component {
         active: 0
     };
 
+    getCompany = gql`
+        {
+            getcompanies(Id: null, IsActive: 1) {
+                Id
+                Name
+            }
+        }
+    `;
 
     getCountriesQuery = gql`
         {
@@ -276,12 +285,22 @@ class ComposedTextField extends React.Component {
                         </FormControl>
 
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="name-simple">Management Company</InputLabel>
-                            <Input
-                                id="name-simple"
-                                value={this.state.management}
-                                onChange={(text) => this.setState({management: text.target.value})}
-                            />
+                            <Query query={this.getCompany}>
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcompanies != null && data.getcompanies.length > 0) {
+                                        return (
+                                            <SelectCompany
+                                            label={"Management"}
+                                            values={data.getcompanies}
+                                            idCompany={this.props.idCompany} />
+                                        )
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
                         </FormControl>
                     </div>
 

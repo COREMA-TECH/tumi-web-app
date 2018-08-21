@@ -61,7 +61,11 @@ class ControlledOpenSelect extends React.Component {
                         </MenuItem>
                         {
                             this.props.values.map(item => {
-                                return <MenuItem key={uuidv4()} value={item.Id}>{item.Name}</MenuItem>
+                                if(this.props.idCompany === item.Id){
+                                    // Nothing
+                                } else {
+                                    return <MenuItem key={uuidv4()} value={item.Id}>{item.Name}</MenuItem>
+                                }
                             })
                         }
 
