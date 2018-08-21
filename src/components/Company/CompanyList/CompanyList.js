@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import CompanyCard from '../CompanyCard/';
 import './index.css';
-import ApolloClient from 'apollo-boost';
 import gql from 'graphql-tag';
-import { ApolloProvider } from 'react-apollo';
 import { Query } from 'react-apollo';
-import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 class CompanyList extends Component {
@@ -22,7 +19,7 @@ class CompanyList extends Component {
 				Name
 				Description
 				ImageURL
-				Address
+				Address: Location
 			}
 		}
 	`;
@@ -50,7 +47,6 @@ class CompanyList extends Component {
 					if (loading) return <LinearProgress />;
 					if (error) return <p>Error </p>;
 					if (data.getcompanies != null && data.getcompanies.length > 0) {
-						console.log(networkStatus);
 						return <div className="company-list">{this.renderCards(data.getcompanies)}</div>;
 					}
 					return <p>Nothing to display </p>;

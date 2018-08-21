@@ -8,8 +8,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
 
-import purple from '@material-ui/core/colors/purple';
-
 function Transition(props) {
 	return <Slide direction="up" {...props} />;
 }

@@ -1,10 +1,8 @@
 import React from 'react';
 import './index.css';
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
-import Icon from '@material-ui/core/Icon';
 import EditIcon from '@material-ui/icons/Edit';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
