@@ -9,7 +9,8 @@ import gql from 'graphql-tag';
 import { Mutation, Query } from 'react-apollo';
 import Select from '../../material-ui/Select';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import Redirect from 'react-router-dom/es/Redirect';
+import Switch from '../../material-ui/Switch';
+import SelectCompany from '../../material-ui/SelectCompany';
 
 const styles = (theme) => ({
 	container: {
@@ -23,6 +24,11 @@ const styles = (theme) => ({
 		margin: theme.spacing.unit,
 		width: '30%'
 	},
+	formControlInline: {
+		display: 'flex',
+		justifyContent: 'flex-start',
+		alignItems: 'center'
+	},
 	addressControl: {
 		width: '47%'
 	},
@@ -32,6 +38,9 @@ const styles = (theme) => ({
 	},
 	divStyle: {
 		width: '80%'
+	},
+	title: {
+		display: 'inline'
 	}
 });
 
@@ -56,8 +65,24 @@ class ComposedTextField extends React.Component {
 		workWeek: '',
 		avatar: 'url',
 		otherPhoneNumber: '',
-		room: ''
+		room: '',
+		rate: '',
+		fax: '',
+		phonePrefix: '505',
+		email: '',
+		code: '',
+		code01: '',
+		active: 0
 	};
+
+	getCompany = gql`
+		{
+			getcompanies(Id: null, IsActive: 1) {
+				Id
+				Name
+			}
+		}
+	`;
 
 	getCountriesQuery = gql`
 		{
@@ -106,7 +131,8 @@ class ComposedTextField extends React.Component {
 				Legal_Name
 				Country
 				State
-				Region
+				Zipcode
+				Fax
 				City
 				Id_Parent
 				IsActive
@@ -115,6 +141,11 @@ class ComposedTextField extends React.Component {
 				Date_Created
 				Date_Updated
 				ImageURL
+				Rate
+				Location
+				Location01
+				Primary_Email
+				Phone_Number
 			}
 		}
 	`;
@@ -162,32 +193,45 @@ class ComposedTextField extends React.Component {
 		`;
 
 		if (this.state.name === '') {
-			//lert("ID " + this.props.idCompany);
+			return (
+				<Query query={this.getCompanyQuery} variables={{ id: this.props.idCompany }}>
+					{({ loading, error, data, refetch }) => {
+						if (loading) return <LinearProgress />;
+						if (error) return <p>Error </p>;
+						if (data.getcompanies != null && data.getcompanies.length > 0) {
+							data.getcompanies.map((item) => {
+								this.setState({
+									name: item.Name.trim(),
+									legalName: item.Legal_Name.trim(),
+									startWeek: item.Start_Week,
+									endWeek: item.End_Week,
+									description: item.Description.trim(),
+									country: item.Country,
+									state: item.State,
+									city: item.City,
+									rate: item.Rate,
+									address: item.Location.trim(),
+									optionalAddress: item.Location01.trim(),
+									email: item.Primary_Email.trim(),
+									phoneNumber: item.Phone_Number.trim(),
+									code: item.Code.trim(),
+									code01: item.Code01.trim(),
+									zipCode: item.Zipcode,
+									fax: item.Fax,
+									startDate: item.Start_Date.trim(),
+									active: item.IsActive
+								});
+							});
+
+							return true;
+						}
+						return <p>Nothing to display </p>;
+					}}
+				</Query>
+			);
+		} else {
 			return (
 				<div className={classes.container}>
-					<Query query={this.getCompanyQuery} variables={{ id: this.props.idCompany }}>
-						{({ loading, error, data, refetch }) => {
-							if (loading) return <LinearProgress />;
-							if (error) return <p>Error </p>;
-							if (data.getcompanies != null && data.getcompanies.length > 0) {
-								data.getcompanies.map((item) => {
-									this.setState({
-										name: item.Name,
-										legalName: item.Legal_Name,
-										startWeek: item.Start_Week,
-										endWeek: item.End_Week,
-										description: item.Description,
-										country: item.Country,
-										state: item.State,
-										city: item.City
-									});
-								});
-
-								return true;
-							}
-							return <p>Nothing to display </p>;
-						}}
-					</Query>
 					<div className={classes.divStyle}>
 						<FormControl className={classes.formControl}>
 							<InputLabel htmlFor="name-simple">Company Name</InputLabel>
@@ -217,13 +261,53 @@ class ComposedTextField extends React.Component {
 
 					<div className={classes.divStyle}>
 						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Management Company</InputLabel>
+							<InputLabel htmlFor="name-simple">Tumi Code</InputLabel>
 							<Input
 								id="name-simple"
-								value={this.state.management}
-								onChange={(text) => this.setState({ management: text.target.value })}
+								value={this.state.code}
+								onChange={(text) => this.setState({ code: text.target.value })}
 							/>
 						</FormControl>
+						<FormControl className={classes.formControl}>
+							<InputLabel htmlFor="name-simple">Hotel Code</InputLabel>
+							<Input
+								id="name-simple"
+								value={this.state.code01}
+								onChange={(text) => this.setState({ code01: text.target.value })}
+							/>
+						</FormControl>
+
+						<FormControl className={classes.formControl}>
+							<Query query={this.getCompany}>
+								{({ loading, error, data, refetch, networkStatus }) => {
+									//if (networkStatus === 4) return <LinearProgress />;
+									if (loading) return <LinearProgress />;
+									if (error) return <p>Error </p>;
+									if (data.getcompanies != null && data.getcompanies.length > 0) {
+										return (
+											<SelectCompany
+												label={'Management'}
+												values={data.getcompanies}
+												idCompany={this.props.idCompany}
+											/>
+										);
+									}
+									return <p>Nothing to display </p>;
+								}}
+							</Query>
+						</FormControl>
+					</div>
+
+					<div className={classes.divStyle}>
+						<FormControl className={classes.formControl}>
+							<InputLabel htmlFor="name-simple">Zip Code</InputLabel>
+							<Input
+								id="name-simple"
+								value={this.state.zipCode}
+								onChange={(text) => this.setState({ zipCode: text.target.value })}
+							/>
+						</FormControl>
+
 						<FormControl className={classes.formControl}>
 							<InputLabel htmlFor="name-simple">Phone Number</InputLabel>
 							<Input
@@ -232,10 +316,29 @@ class ComposedTextField extends React.Component {
 								onChange={(text) => this.setState({ phoneNumber: text.target.value })}
 							/>
 						</FormControl>
+
+						<FormControl className={classes.formControl}>
+							<InputLabel htmlFor="name-simple">Fax</InputLabel>
+							<Input
+								id="name-simple"
+								value={this.state.fax}
+								onChange={(text) => this.setState({ fax: text.target.value })}
+							/>
+						</FormControl>
 					</div>
+
 					<div className={classes.divStyle}>
 						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Start Date</InputLabel>
+							<InputLabel htmlFor="name-simple">Email</InputLabel>
+							<Input
+								id="name-simple"
+								value={this.state.email}
+								onChange={(text) => this.setState({ email: text.target.value })}
+							/>
+						</FormControl>
+
+						<FormControl className={classes.formControl}>
+							<InputLabel htmlFor="name-simple">Start Week</InputLabel>
 							<Input
 								id="name-simple"
 								value={this.state.startWeek}
@@ -253,28 +356,38 @@ class ComposedTextField extends React.Component {
 					</div>
 
 					<div className={classes.divStyle}>
+						<FormControl className={classes.formControl}>
+							<InputLabel htmlFor="name-simple">Start Date</InputLabel>
+							<Input
+								id="name-simple"
+								value={this.state.startDate}
+								onChange={(text) => this.setState({ startDate: text.target.value })}
+							/>
+						</FormControl>
+						<FormControl className={classes.formControl}>
+							<InputLabel htmlFor="name-simple">Rate</InputLabel>
+							<Input
+								id="name-simple"
+								value={this.state.rate}
+								onChange={(text) => this.setState({ rate: text.target.value })}
+							/>
+						</FormControl>
+
+						<FormControl className={classes.formControl}>
+							<span className={classes.formControlInline}>
+								{' '}
+								Is Active: <Switch value={this.state.active} />
+							</span>
+						</FormControl>
+					</div>
+
+					<div className={classes.divStyle}>
 						<br />
 						<br />
 						<br />
 						<h4>Address</h4>
-						<FormControl className={[ classes.formControl, classes.addressControl ]}>
-							<InputLabel htmlFor="name-simple">Address No. 1</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.address}
-								onChange={(text) => this.setState({ address: text.target.value })}
-							/>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.addressControl ]}>
-							<InputLabel htmlFor="name-simple">Address No. 2</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.optionalAddress}
-								onChange={(text) => this.setState({ optionalAddress: text.target.value })}
-							/>
-						</FormControl>
-					</div>
-					<div className={classes.divStyle}>
+						<br />
+
 						<FormControl className={classes.formSelect}>
 							<Query query={this.getCountriesQuery}>
 								{({ loading, error, data, refetch, networkStatus }) => {
@@ -338,147 +451,6 @@ class ComposedTextField extends React.Component {
 					</div>
 
 					<div className={classes.divStyle}>
-						<br />
-						<br />
-						<h4>Others</h4>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Phone Number</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.otherPhoneNumber}
-								onChange={(text) =>
-									this.setState({
-										otherPhoneNumber: text.target.value
-									})}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Rooms</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.room}
-								onChange={(text) =>
-									this.setState({
-										room: text.target.value
-									})}
-							/>
-						</FormControl>
-						<Mutation mutation={ADD_TODO}>
-							{(inscompanies, { loading, error }) => (
-								<Button
-									variant="contained"
-									color="primary"
-									className={classes.button}
-									onClick={() => {
-										inscompanies({
-											variables: {
-												input: {
-													Id: 150,
-													Code: "'SSAS'",
-													Code01: "'SSAS'",
-													Id_Company: 1,
-													BusinessType: 1,
-													Name: `'${this.state.name}'`,
-													Description: `'${this.state.description}'`,
-													Start_Week: this.state.startWeek,
-													End_Week: this.state.endWeek,
-													Legal_Name: `'${this.state.legalName}'`,
-													Country: parseInt(this.state.country),
-													State: parseInt(this.state.state),
-													Region: 5,
-													City: parseInt(this.state.city),
-													Id_Parent: 1,
-													IsActive: 1,
-													User_Created: 1,
-													User_Updated: 1,
-													Date_Created: "'2018-08-14 16:10:25+00'",
-													Date_Updated: "'2018-08-14 16:10:25+00'",
-													ImageURL: `'${this.state.avatar}'`,
-													Start_Date: "'2018-08-14'"
-												}
-											}
-										});
-									}}
-								>
-									Add Contact
-								</Button>
-							)}
-						</Mutation>
-					</div>
-				</div>
-			);
-		} else {
-			return (
-				<div className={classes.container}>
-					<div className={classes.divStyle}>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Company Name</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.name}
-								onChange={(text) => this.setState({ name: text.target.value })}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Legal Name</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.legalName}
-								onChange={(text) => this.setState({ legalName: text.target.value })}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Description</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.description}
-								onChange={(text) => this.setState({ description: text.target.value })}
-							/>
-						</FormControl>
-					</div>
-
-					<div className={classes.divStyle}>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Management Company</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.management}
-								onChange={(text) => this.setState({ management: text.target.value })}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Phone Number</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.phoneNumber}
-								onChange={(text) => this.setState({ phoneNumber: text.target.value })}
-							/>
-						</FormControl>
-					</div>
-					<div className={classes.divStyle}>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">Start Date</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.startWeek}
-								onChange={(text) => this.setState({ startWeek: text.target.value })}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<InputLabel htmlFor="name-simple">End Week</InputLabel>
-							<Input
-								id="name-simple"
-								value={this.state.endWeek}
-								onChange={(text) => this.setState({ endWeek: text.target.value })}
-							/>
-						</FormControl>
-					</div>
-
-					<div className={classes.divStyle}>
-						<br />
-						<br />
-						<br />
-						<h4>Address</h4>
 						<FormControl className={[ classes.formControl, classes.addressControl ]}>
 							<InputLabel htmlFor="name-simple">Address No. 1</InputLabel>
 							<Input
@@ -496,65 +468,6 @@ class ComposedTextField extends React.Component {
 							/>
 						</FormControl>
 					</div>
-					<div className={classes.divStyle}>
-						<FormControl className={classes.formSelect}>
-							<Query query={this.getCountriesQuery}>
-								{({ loading, error, data, refetch, networkStatus }) => {
-									//if (networkStatus === 4) return <LinearProgress />;
-									if (loading) return <LinearProgress />;
-									if (error) return <p>Error </p>;
-									if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-										return (
-											<Select
-												label={'Country'}
-												values={data.getcatalogitem}
-												update={this.updateStateCountry}
-											/>
-										);
-									}
-									return <p>Nothing to display </p>;
-								}}
-							</Query>
-						</FormControl>
-						<FormControl className={classes.formSelect}>
-							<Query query={this.getStatesQuery} variables={{ parent: this.state.country }}>
-								{({ loading, error, data, refetch, networkStatus }) => {
-									//if (networkStatus === 4) return <LinearProgress />;
-									if (loading) return <LinearProgress />;
-									if (error) return <p>Error </p>;
-									if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-										return (
-											<Select
-												label={'States'}
-												update={this.updateStateState}
-												values={data.getcatalogitem}
-											/>
-										);
-									}
-									return <p>Nothing to display </p>;
-								}}
-							</Query>
-						</FormControl>
-						<FormControl className={classes.formSelect}>
-							<Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
-								{({ loading, error, data, refetch, networkStatus }) => {
-									//if (networkStatus === 4) return <LinearProgress />;
-									if (loading) return <LinearProgress />;
-									if (error) return <p>Error </p>;
-									if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-										return (
-											<Select
-												label={'Cities'}
-												update={this.updateStateCity}
-												values={data.getcatalogitem}
-											/>
-										);
-									}
-									return <p>Nothing to display </p>;
-								}}
-							</Query>
-						</FormControl>
-					</div>
 
 					<div className={classes.divStyle}>
 						<br />
@@ -593,10 +506,12 @@ class ComposedTextField extends React.Component {
 											variables: {
 												input: {
 													Id: 150,
-													Code: "'SSAS'",
-													Code01: "'SSAS'",
+													Code: `'${this.state.Code}'`,
+													Code01: `'${this.state.Code01}'`,
 													Id_Company: 1,
 													BusinessType: 1,
+													Location: `'${this.state.address}'`,
+													Location01: `'${this.state.optionalAddress}'`,
 													Name: `'${this.state.name}'`,
 													Description: `'${this.state.description}'`,
 													Start_Week: this.state.startWeek,
@@ -604,7 +519,12 @@ class ComposedTextField extends React.Component {
 													Legal_Name: `'${this.state.legalName}'`,
 													Country: parseInt(this.state.country),
 													State: parseInt(this.state.state),
-													Region: 5,
+													Rate: parseFloat(this.state.rate),
+													Zipcode: parseInt(this.state.zipCode),
+													Fax: `'${this.state.fax}'`,
+													Primary_Email: `'${this.state.email}'`,
+													Phone_Number: `'${this.state.phoneNumber}'`,
+													Phone_Prefix: `'${this.state.phonePrefix}'`,
 													City: parseInt(this.state.city),
 													Id_Parent: 1,
 													IsActive: 1,
@@ -613,7 +533,7 @@ class ComposedTextField extends React.Component {
 													Date_Created: "'2018-08-14 16:10:25+00'",
 													Date_Updated: "'2018-08-14 16:10:25+00'",
 													ImageURL: `'${this.state.avatar}'`,
-													Start_Date: "'2018-08-14'"
+													Start_Date: `'${this.state.startDate}'`
 												}
 											}
 										});
@@ -635,10 +555,12 @@ class ComposedTextField extends React.Component {
 											variables: {
 												input: {
 													Id: this.props.idCompany,
-													Code: "'SSAS'",
-													Code01: "'SSAS'",
+													Code: `'${this.state.Code}'`,
+													Code01: `'${this.state.Code01}'`,
 													Id_Company: 1,
 													BusinessType: 1,
+													Location: `'${this.state.address}'`,
+													Location01: `'${this.state.optionalAddress}'`,
 													Name: `'${this.state.name}'`,
 													Description: `'${this.state.description}'`,
 													Start_Week: this.state.startWeek,
@@ -646,7 +568,12 @@ class ComposedTextField extends React.Component {
 													Legal_Name: `'${this.state.legalName}'`,
 													Country: parseInt(this.state.country),
 													State: parseInt(this.state.state),
-													Region: 5,
+													Rate: parseFloat(this.state.rate),
+													Zipcode: parseInt(this.state.zipCode),
+													Fax: `'${this.state.fax}'`,
+													Primary_Email: `'${this.state.email}'`,
+													Phone_Number: `'${this.state.phoneNumber}'`,
+													Phone_Prefix: `'${this.state.phonePrefix}'`,
 													City: parseInt(this.state.city),
 													Id_Parent: 1,
 													IsActive: 1,
@@ -655,16 +582,10 @@ class ComposedTextField extends React.Component {
 													Date_Created: "'2018-08-14 16:10:25+00'",
 													Date_Updated: "'2018-08-14 16:10:25+00'",
 													ImageURL: `'${this.state.avatar}'`,
-													Start_Date: "'2018-08-14'"
+													Start_Date: `'${this.state.startDate}'`
 												}
 											}
 										});
-
-										<Redirect
-											to={{
-												pathname: '/Company'
-											}}
-										/>;
 									}}
 								>
 									Edit Company
