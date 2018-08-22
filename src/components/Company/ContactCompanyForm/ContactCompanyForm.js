@@ -244,12 +244,10 @@ class ContactCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		console.log('will mount');
 		this.loadContacts();
 		this.loadTypes();
 	}
 	loadContacts = () => {
-		console.log('getting contacts');
 		this.props.client
 			.query({
 				query: this.GET_CONTACTS,
@@ -257,7 +255,6 @@ class ContactCompanyForm extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				console.log('got contacts:', data.data.getcontacts);
 				if (data.data.getcontacts != null && data.data.getcontacts.length > 0) {
 					this.setState({
 						data: data.data.getcontacts
