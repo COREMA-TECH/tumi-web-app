@@ -51,7 +51,7 @@ class ContactCompanyForm extends React.Component {
                         <InputLabel htmlFor="name-simple">Name</InputLabel>
                         <Input
                             id="name-simple"
-                            value={this.state.username}
+                            value={this.state.department}
                             onChange={(text) => this.setState({username: text.target.value})}
                         />
                     </FormControl>
@@ -59,7 +59,7 @@ class ContactCompanyForm extends React.Component {
                         <InputLabel htmlFor="name-simple">Email</InputLabel>
                         <Input
                             id="name-simple"
-                            value={this.state.email}
+                            value={this.state.position}
                             onChange={(text) => this.setState({email: text.target.value})}
                         />
                     </FormControl>
@@ -68,7 +68,7 @@ class ContactCompanyForm extends React.Component {
                         <InputLabel htmlFor="name-simple">Phone Number</InputLabel>
                         <Input
                             id="name-simple"
-                            value={this.state.number}
+                            value={this.state.billRate}
                             onChange={(text) => this.setState({number: text.target.value})}
                         />
                     </FormControl>
@@ -76,7 +76,7 @@ class ContactCompanyForm extends React.Component {
                         <InputLabel htmlFor="name-simple">Kind Of Contact</InputLabel>
                         <Input
                             id="name-simple"
-                            value={this.state.kind}
+                            value={this.state.payRate}
                             onChange={(text) => this.setState({kind: text.target.value})}
                         />
                     </FormControl>

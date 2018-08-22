@@ -60,10 +60,10 @@ function CustomizedTable(props) {
             <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
-                        <CustomTableCell numeric>Name</CustomTableCell>
-                        <CustomTableCell numeric>Email</CustomTableCell>
-                        <CustomTableCell numeric>Number</CustomTableCell>
-                        <CustomTableCell numeric>Kind</CustomTableCell>
+                        <CustomTableCell numeric>Department</CustomTableCell>
+                        <CustomTableCell numeric>Positions</CustomTableCell>
+                        <CustomTableCell numeric>Bill Rate</CustomTableCell>
+                        <CustomTableCell numeric>Pay Rate</CustomTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import CreateCompanyForm from '../Company/CreateCompanyForm/CreateCompanyForm';
 import ContactCompanyForm from '../Company/ContactCompanyForm/ContactCompanyForm';
 import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/DepartmentsCompanyForm';
+import PositionsCompanyForm from "../Company/PositionsCompanyForm/PositionsCompanyForm";
 
 function TabContainer({children, dir}) {
     return (
@@ -80,7 +81,7 @@ class FullWidthTabs extends React.Component {
                         <DepartmentsCompanyForm/>
                     </TabContainer>
                     <TabContainer dir={theme.direction}>
-                        <CreateCompanyForm title="Positions and rates"/>
+                        <PositionsCompanyForm/>
                     </TabContainer>
                 </SwipeableViews>
             </div>
