@@ -49,6 +49,10 @@ class FullWidthTabs extends React.Component {
 		this.setState({ value: index });
 	};
 
+	handleText = (message) => {
+		alert(message);
+	};
+
 	render() {
 		const { classes, theme } = this.props;
 
@@ -67,7 +71,7 @@ class FullWidthTabs extends React.Component {
 					onChangeIndex={this.handleChangeIndex}
 				>
 					<TabContainer dir={theme.direction}>
-						<CreateCompanyForm title="General info" />
+						<CreateCompanyForm title="General info" idCompany={this.props.idCompany} />
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
 						<ContactCompanyForm idCompany={this.props.idCompany} />

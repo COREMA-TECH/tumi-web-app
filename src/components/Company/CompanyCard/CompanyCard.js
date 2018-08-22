@@ -23,6 +23,7 @@ class CompanyCard extends React.Component {
 	handleConfirm = () => {
 		this.setState({ open: false });
 	};
+
 	render() {
 		const deleteCompany = gql`
 			mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
@@ -78,6 +79,7 @@ class CompanyCard extends React.Component {
 									handleClose={this.handleClose}
 									handleConfirm={() => {
 										delcompanies({ variables: { Id: this.props.idCompany, IsActive: 0 } });
+
 										this.setState({ open: false });
 										this.props.loadCompanies();
 									}}

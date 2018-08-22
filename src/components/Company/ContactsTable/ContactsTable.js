@@ -180,7 +180,7 @@ class CustomizedTable extends React.Component {
 										<Tooltip title="Delete">
 											<IconButton
 												onClick={() => {
-													return this.props.onDeleteHandler(row.id);
+													return this.props.onDeleteHandler(row.idSearch);
 												}}
 											>
 												<DeleteIcon color="primary" />

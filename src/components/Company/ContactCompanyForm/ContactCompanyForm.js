@@ -4,17 +4,15 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import Button from '@material-ui/core/Button';
 import ContactsTable from '../ContactsTable/ContactsTable';
 import FormErrors from './FormErrors';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
-import { Query } from 'react-apollo';
+
 import AlertDialogSlide from '../../Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
-
+import Button from '@material-ui/core/Button';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -45,6 +43,7 @@ class ContactCompanyForm extends React.Component {
 		query getcontacts($IdEntity: Int) {
 			getcontacts(IsActive: 1, Id_Entity: $IdEntity) {
 				id: Id
+				idSearch: Id
 				username: Full_Name
 				email: Electronic_Address
 				number: Phone_Number
@@ -147,19 +146,19 @@ class ContactCompanyForm extends React.Component {
 	onBlurHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
+		this.setState({ [name]: value.trim() }, this.validateField(name, value));
+	}
+	onTypeChangeHandler(e) {
+		const name = e.target.name;
+		const value = e.target.value;
+		this.setState({ [name]: value });
 		this.validateField(name, value);
 	}
 	validateAllFields() {
-		let fieldValidationErrors = '';
-		let emailValid = false;
-		let usernameValid = false;
-		let numberValid = false;
-		let typeValid = false;
-
-		emailValid = this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-		usernameValid = this.state.username.length >= 6;
-		numberValid = this.state.number.length >= 6;
-		typeValid = this.state.type != null && this.state.type != 0;
+		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+		let usernameValid = this.state.username.trim().length >= 6;
+		let numberValid = this.state.number.trim().length >= 6;
+		let typeValid = this.state.type != null && this.state.type != 0;
 
 		this.setState(
 			{
@@ -179,13 +178,13 @@ class ContactCompanyForm extends React.Component {
 
 		switch (fieldName) {
 			case 'email':
-				emailValid = value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+				emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 				break;
 			case 'username':
-				usernameValid = value.length >= 6;
+				usernameValid = value.trim().length >= 6;
 				break;
 			case 'number':
-				numberValid = value.length >= 6;
+				numberValid = value.trim().length >= 6;
 				break;
 			case 'type':
 				typeValid = value != null && value != 0;
@@ -221,10 +220,10 @@ class ContactCompanyForm extends React.Component {
 
 		this.resetState();
 	};
-	onEditHandler = ({ id, username, email, number, type }) => {
+	onEditHandler = ({ id, idSearch, username, email, number, type }) => {
 		this.setState(
 			{
-				idToEdit: id,
+				idToEdit: idSearch,
 				username: username.trim(),
 				email: email.trim(),
 				number: number.trim(),
@@ -241,9 +240,8 @@ class ContactCompanyForm extends React.Component {
 			}
 		);
 	};
-	onDeleteHandler = (id) => {
-		this.setState({ idToDelete: id });
-		this.setState({ opendialog: true });
+	onDeleteHandler = (idSearch) => {
+		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
 		console.log('will mount');
@@ -251,6 +249,7 @@ class ContactCompanyForm extends React.Component {
 		this.loadTypes();
 	}
 	loadContacts = () => {
+		console.log('getting contacts');
 		this.props.client
 			.query({
 				query: this.GET_CONTACTS,
@@ -258,6 +257,7 @@ class ContactCompanyForm extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
+				console.log('got contacts:', data.data.getcontacts);
 				if (data.data.getcontacts != null && data.data.getcontacts.length > 0) {
 					this.setState({
 						data: data.data.getcontacts
@@ -280,23 +280,34 @@ class ContactCompanyForm extends React.Component {
 			})
 			.catch((error) => console.error(error));
 	};
-	insertContactsDummy = () => {
-		let id = this.GENERATE_ID();
+	getObjectToInsertAndUpdate = () => {
+		let id = 0;
+		let idSearch = this.GENERATE_ID();
+		let query = this.INSERT_CONTACTS;
 
 		if (this.state.idToEdit != null) {
-			id = this.state.idToEdit;
+			const items = [ ...this.state.data ];
+			const index = items.findIndex((element) => element.idSearch == this.state.idToEdit);
+			id = items[index].id;
+			query = this.UPDATE_CONTACTS;
 		}
 		let item = {
 			id: id,
+			idSearch: idSearch,
 			username: this.state.username,
 			email: this.state.email,
 			number: this.state.number,
 			type: this.state.type
 		};
+		return { item: item, query: query, id: id };
+	};
+
+	insertContactsDummy = () => {
+		const { item } = this.getObjectToInsertAndUpdate();
 
 		if (this.state.idToEdit != null) {
 			const items = [ ...this.state.data ];
-			const index = items.findIndex((element) => element.id == this.state.idToEdit);
+			const index = items.findIndex((element) => element.idSearch == this.state.idToEdit);
 			items[index] = { ...item };
 			this.setState({ data: items });
 		} else {
@@ -307,21 +318,10 @@ class ContactCompanyForm extends React.Component {
 		}
 		this.resetState();
 	};
-	insertContacts = () => {
-		let id = this.GENERATE_ID();
-		let query = this.INSERT_CONTACTS;
 
-		if (this.state.idToEdit != null) {
-			id = this.state.idToEdit;
-			query = this.UPDATE_CONTACTS;
-		}
-		let item = {
-			id: id,
-			username: this.state.username,
-			email: this.state.email,
-			number: this.state.number,
-			type: this.state.type
-		};
+	insertContacts = () => {
+		const { query, item, id } = this.getObjectToInsertAndUpdate();
+
 		this.props.client
 			.mutate({
 				mutation: query,
@@ -344,7 +344,7 @@ class ContactCompanyForm extends React.Component {
 			.then((data) => {
 				if (this.state.idToEdit != null) {
 					const items = [ ...this.state.data ];
-					const index = items.findIndex((element) => element.id == this.state.idToEdit);
+					const index = items.findIndex((element) => element.idSearch == this.state.idToEdit);
 					items[index] = { ...item };
 					this.setState({ data: items });
 				} else {
@@ -362,7 +362,7 @@ class ContactCompanyForm extends React.Component {
 
 		const addContactHandler = () => {
 			this.validateAllFields();
-			if (this.state.formValid) this.insertContactsDummy();
+			if (this.state.formValid) this.insertContacts();
 		};
 
 		const cancelContactHandler = () => {
@@ -420,8 +420,7 @@ class ContactCompanyForm extends React.Component {
 								name="type"
 								error={!this.state.typeValid}
 								value={this.state.type}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
+								onChange={(event) => this.onTypeChangeHandler(event)}
 								helperText="Please select the title"
 								margin="normal"
 							>

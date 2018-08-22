@@ -10,6 +10,7 @@ class CreateCompany extends Component {
 			idCompany: this.props.location.state.idCompany
 		};
 	}
+
 	render() {
 		return (
 			<div className="create-company-container">
