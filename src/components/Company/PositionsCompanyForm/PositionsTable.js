@@ -7,6 +7,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import IconButton from "@material-ui/core/es/IconButton/IconButton";
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const uuidv4 = require('uuid/v4');
 
@@ -64,6 +66,7 @@ function CustomizedTable(props) {
                         <CustomTableCell numeric>Positions</CustomTableCell>
                         <CustomTableCell numeric>Bill Rate</CustomTableCell>
                         <CustomTableCell numeric>Pay Rate</CustomTableCell>
+                        <CustomTableCell numeric>Eliminar</CustomTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -74,6 +77,13 @@ function CustomizedTable(props) {
                                 <CustomTableCell numeric>{row.position}</CustomTableCell>
                                 <CustomTableCell numeric>{row.billRate}</CustomTableCell>
                                 <CustomTableCell numeric>{row.payRate}</CustomTableCell>
+                                <CustomTableCell numeric><IconButton
+                                    onClick={() => {
+
+                                    }}
+                                >
+                                    <DeleteIcon color="primary" />
+                                </IconButton></CustomTableCell>
                             </TableRow>
                         );
                     })}

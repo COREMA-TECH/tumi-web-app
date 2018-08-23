@@ -169,7 +169,7 @@ class ComposedTextField extends React.Component {
     };
 
     updateStateActive = (active) => {
-        if(active){
+        if (active) {
             this.setState({
                 active: 1
             });
@@ -195,7 +195,7 @@ class ComposedTextField extends React.Component {
     };
 
 
-    validateAllState(){
+    validateAllState() {
         return (
             this.state.name === '' ||
             this.state.legalName === '' ||
@@ -208,7 +208,7 @@ class ComposedTextField extends React.Component {
             this.state.email === '' ||
             this.state.phoneNumber === '' ||
             this.state.code === '' ||
-            this.state.code01 === ''  ||
+            this.state.code01 === '' ||
             this.state.fax === '' ||
             this.state.startDate === '' ||
             this.state.avatar === '' ||
@@ -511,7 +511,7 @@ class ComposedTextField extends React.Component {
                         </FormControl>
 
                         <FormControl className={classes.formControl}>
-                            <span className={classes.formControlInline}> Is Active:   <Switch
+                            <span className={classes.formControlInline}>Active:   <Switch
                                 value={this.state.active}
                                 update={this.updateStateActive}
                             />

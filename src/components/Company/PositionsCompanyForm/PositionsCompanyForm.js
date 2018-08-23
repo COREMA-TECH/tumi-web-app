@@ -41,6 +41,7 @@ class PositionsCompanyForm extends React.Component {
     state = {
         name: '',
         data: [],
+        idPosition: 1,
         department: '',
         position: '',
         billRate: '',
@@ -62,6 +63,14 @@ class PositionsCompanyForm extends React.Component {
             department: id
         });
     };
+
+    validateAllState() {
+        return (
+            this.state.department === '' ||
+            this.state.billRate === '' ||
+            this.state.payRate === '' ||
+            this.state.position === '');
+    }
 
     render() {
         const {classes} = this.props;
@@ -132,67 +141,59 @@ class PositionsCompanyForm extends React.Component {
                             }
                         />
                     </FormControl>
+                    <Mutation mutation={ADD_POSITION}>
+                        {(insposition, {loading, error}) => (
+                            <Button variant="contained"
+                                    color="primary"
+                                    disabled={this.validateAllState()}
+                                    className={classes.button}
+                                    onClick={
+                                        () => {
+                                            insposition({
+                                                    variables: {
+                                                        "input": {
+                                                            "Id": 0,
+                                                            "Id_Entity": 1,
+                                                            "Id_Department": parseInt(this.state.department),
+                                                            "Position": `'${this.state.position}'`,
+                                                            "Bill_Rate": parseFloat(this.state.billRate),
+                                                            "Pay_Rate": parseFloat(this.state.payRate),
+                                                            "IsActive": 1,
+                                                            "User_Created": 1,
+                                                            "User_Updated": 1,
+                                                            "Date_Created": "'2018-08-14 16:10:25+00'",
+                                                            "Date_Updated": "'2018-08-14 16:10:25+00'"
+                                                        }
+                                                    }
+                                                }
+                                            );
 
-                    <Button variant="contained" color="primary" className={classes.button} onClick={
-                        () => {
-                            let item = {
-                                department: this.state.department,
-                                position: this.state.position,
-                                billRate: this.state.billRate,
-                                payRate: this.state.payRate
-                            };
+                                            let item = {
+                                                department: this.state.department,
+                                                position: this.state.position,
+                                                billRate: this.state.billRate,
+                                                payRate: this.state.payRate
+                                            };
 
-                            this.setState(prevState => ({
-                                data: [item, ...prevState.data],
-                                position: '',
-                                billRate: '',
-                                payRate: ''
-                            }));
-                        }
-                    }>
-                        Add Position
-                    </Button>
+                                            this.setState(prevState => ({
+                                                data: [item, ...prevState.data],
+                                                position: '',
+                                                billRate: '',
+                                                payRate: ''
+                                            }));
+                                        }
+                                    }>
+                                Add Position
+                            </Button>
 
-
+                        )}
+                    </Mutation>
                 </div>
                 <div className={classes.divStyle}>
                     <PositionsTable data={this.state.data}/>
                 </div>
-
-
                 <br/><br/><br/><br/><br/>
-                <Mutation mutation={ADD_POSITION}>
-                    {(insposition, {loading, error}) => (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                            onClick={() => {
-                                insposition({
-                                        variables: {
-                                            "input": {
-                                                "Id": 0,
-                                                "Id_Entity": 1,
-                                                "Id_Department": parseInt(this.state.department),
-                                                "Position": `'${this.state.position}'`,
-                                                "Bill_Rate": parseFloat(this.state.billRate),
-                                                "Pay_Rate": parseFloat(this.state.payRate),
-                                                "IsActive": 1,
-                                                "User_Created": 1,
-                                                "User_Updated": 1,
-                                                "Date_Created": "'2018-08-14 16:10:25+00'",
-                                                "Date_Updated": "'2018-08-14 16:10:25+00'"
-                                            }
-                                        }
-                                    }
-                                );
-                            }}
-                        >
-                            Add
-                        </Button>
 
-                    )}
-                </Mutation>
             </div>
         );
     }
