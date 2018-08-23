@@ -77,13 +77,15 @@ function CustomizedTable(props) {
                                 <CustomTableCell numeric>{row.position}</CustomTableCell>
                                 <CustomTableCell numeric>{row.billRate}</CustomTableCell>
                                 <CustomTableCell numeric>{row.payRate}</CustomTableCell>
-                                <CustomTableCell numeric><IconButton
-                                    onClick={() => {
-
-                                    }}
-                                >
-                                    <DeleteIcon color="primary" />
-                                </IconButton></CustomTableCell>
+                                <CustomTableCell numeric>
+                                    <IconButton
+                                        onClick={() => {
+                                            props.delete()
+                                        }}
+                                    >
+                                        <DeleteIcon color="primary"/>
+                                    </IconButton>
+                                </CustomTableCell>
                             </TableRow>
                         );
                     })}

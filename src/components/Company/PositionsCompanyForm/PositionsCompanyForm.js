@@ -64,10 +64,11 @@ class PositionsCompanyForm extends React.Component {
         });
     };
 
-    deletePositionById = (id) => {
+    deletePositionById = () => {
         //Write mutation to delete the position
 
-
+        // this.props.client
+        //     .mutate()
     };
 
 
@@ -77,7 +78,8 @@ class PositionsCompanyForm extends React.Component {
             this.state.department === '' ||
             this.state.billRate === '' ||
             this.state.payRate === '' ||
-            this.state.position === '');
+            this.state.position === ''
+        );
     }
 
     render() {
@@ -198,7 +200,7 @@ class PositionsCompanyForm extends React.Component {
                     </Mutation>
                 </div>
                 <div className={classes.divStyle}>
-                    <PositionsTable data={this.state.data}/>
+                    <PositionsTable data={this.state.data} delete={this.deletePositionById}/>
                 </div>
                 <br/><br/><br/><br/><br/>
 

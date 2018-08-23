@@ -20,7 +20,8 @@ function DatePickers(props) {
     const { classes } = props;
 
     return (
-        <form className={classes.container} noValidate>
+        <form className="select-large" noValidate>
+
             <TextField
                 id="date"
                 label="Start Date"
@@ -29,7 +30,7 @@ function DatePickers(props) {
                     props.update(event.target.value)
                 )}
                 defaultValue="2018-08-24"
-                className={classes.textField}
+                className="select-large"
                 InputLabelProps={{
                     shrink: true,
                 }}

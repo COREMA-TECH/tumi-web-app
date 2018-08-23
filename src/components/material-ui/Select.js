@@ -52,9 +52,10 @@ class ControlledOpenSelect extends React.Component {
 
         return (
             <form autoComplete="off">
-                <FormControl className={classes.formControl}>
+                <FormControl className="select-large">
                     <InputLabel htmlFor="demo-controlled-open-select">{this.props.label}</InputLabel>
                     <Select
+                        className="select-large"
                         open={this.state.open}
                         onClose={this.handleClose}
                         onOpen={this.handleOpen}
