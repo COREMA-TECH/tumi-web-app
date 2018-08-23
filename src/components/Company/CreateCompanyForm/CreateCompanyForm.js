@@ -5,12 +5,12 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-import gql from "graphql-tag";
-import {Mutation, Query} from "react-apollo";
-import Select from "../../material-ui/Select";
-import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
-import Switch from "../../material-ui/Switch";
-import SelectCompany from "../../material-ui/SelectCompany";
+import gql from 'graphql-tag';
+import {Mutation, Query} from 'react-apollo';
+import Select from '../../material-ui/Select';
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import Switch from '../../material-ui/Switch';
+import SelectCompany from '../../material-ui/SelectCompany';
 
 const styles = (theme) => ({
     container: {

@@ -39,7 +39,7 @@ const styles = (theme) => ({
 
 class FullWidthTabs extends React.Component {
     state = {
-        value: 0,
+        value: 0
     };
 
     handleChange = (event, value) => {
@@ -51,7 +51,7 @@ class FullWidthTabs extends React.Component {
     };
 
     handleText = (message) => {
-        alert(message)
+        alert(message);
     };
 
     render() {
