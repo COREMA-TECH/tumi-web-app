@@ -11,6 +11,7 @@ import Select from '../../material-ui/Select';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Switch from '../../material-ui/Switch';
 import SelectCompany from '../../material-ui/SelectCompany';
+import DatePicker from "../../material-ui/DatePicker";
 
 const styles = (theme) => ({
     container: {
@@ -194,6 +195,11 @@ class ComposedTextField extends React.Component {
         })
     };
 
+    updateStateStartDate = (value) => {
+        this.setState({
+            startDate: value
+        })
+    };
 
     validateAllState() {
         return (
@@ -488,12 +494,8 @@ class ComposedTextField extends React.Component {
                         </FormControl>
 
                         <FormControl className={classes.formControl}>
-                            <InputLabel htmlFor="name-simple">Start Date</InputLabel>
-                            <Input
-                                required={true}
-                                id="name-simple"
-                                value={this.state.startDate}
-                                onChange={(text) => this.setState({startDate: text.target.value})}
+                            <DatePicker
+                                update={this.updateStateStartDate}
                             />
                         </FormControl>
                     </div>
@@ -585,7 +587,7 @@ class ComposedTextField extends React.Component {
                                                         Date_Created: "'2018-08-14 16:10:25+00'",
                                                         Date_Updated: "'2018-08-14 16:10:25+00'",
                                                         ImageURL: `'${this.state.avatar}'`,
-                                                        Start_Date: `'2018-08-14'`
+                                                        Start_Date: `'${this.state.startDate}'`
                                                     }
                                                 }
                                             }
@@ -637,7 +639,7 @@ class ComposedTextField extends React.Component {
                                                         Date_Created: "'2018-08-14 16:10:25+00'",
                                                         Date_Updated: "'2018-08-14 16:10:25+00'",
                                                         ImageURL: `'${this.state.avatar}'`,
-                                                        Start_Date: `'2018-08-14'`
+                                                        Start_Date: `'${this.state.startDate}'`
                                                     }
                                                 }
                                             }

@@ -70,6 +70,8 @@ class PositionsCompanyForm extends React.Component {
 
     };
 
+
+
     validateAllState() {
         return (
             this.state.department === '' ||
