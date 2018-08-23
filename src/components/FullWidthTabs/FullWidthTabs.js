@@ -60,7 +60,7 @@ class FullWidthTabs extends React.Component {
 			<div className={classes.root}>
 				<Tabs
 					value={this.props.item}
-					onChange={this.props.item}
+					//onChange={this.props.item}
 					indicatorColor="primary"
 					textColor="primary"
 					fullWidth
@@ -71,16 +71,19 @@ class FullWidthTabs extends React.Component {
 					onChangeIndex={this.handleChangeIndex}
 				>
 					<TabContainer dir={theme.direction}>
-						<CreateCompanyForm title="General info" idCompany={this.props.idCompany} />
+						<div />
+						{/*	<CreateCompanyForm title="General info" idCompany={this.props.idCompany} />*/}
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
 						<ContactCompanyForm idCompany={this.props.idCompany} />
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<DepartmentsCompanyForm />
+						<div />
+						{/*<DepartmentsCompanyForm />*/}
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<CreateCompanyForm title="Positions and rates" />
+						<div />
+						{/*<CreateCompanyForm title="Positions and rates" />*/}
 					</TabContainer>
 				</SwipeableViews>
 			</div>

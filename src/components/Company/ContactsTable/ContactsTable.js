@@ -157,6 +157,8 @@ class CustomizedTable extends React.Component {
 						<TableRow>
 							<CustomTableCell />
 							<CustomTableCell>Name</CustomTableCell>
+							<CustomTableCell>Department</CustomTableCell>
+							<CustomTableCell>Supervisor</CustomTableCell>
 							<CustomTableCell>Email</CustomTableCell>
 							<CustomTableCell numeric>Number</CustomTableCell>
 							<CustomTableCell>Title</CustomTableCell>
@@ -188,11 +190,43 @@ class CustomizedTable extends React.Component {
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell>{row.username}</CustomTableCell>
+									<CustomTableCell>
+										<TextField
+											id="department"
+											select
+											name="department"
+											value={row.idDepartment}
+											margin="normal"
+											disabled
+										>
+											{this.props.departments.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
+												</MenuItem>
+											))}
+										</TextField>
+									</CustomTableCell>
+									<CustomTableCell>
+										<TextField
+											id="supervisor"
+											select
+											name="supervisor"
+											value={row.idSupervisor}
+											margin="normal"
+											disabled
+										>
+											{this.props.data.map(({ id, username }) => (
+												<MenuItem key={id} value={id} name={username}>
+													{username}
+												</MenuItem>
+											))}
+										</TextField>
+									</CustomTableCell>
 									<CustomTableCell>{row.email}</CustomTableCell>
 									<CustomTableCell numeric>{row.number}</CustomTableCell>
 									<CustomTableCell>
 										<TextField
-											id="select-type"
+											id="type"
 											select
 											name="type"
 											value={row.type}
