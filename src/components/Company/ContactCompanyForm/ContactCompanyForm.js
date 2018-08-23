@@ -9,10 +9,17 @@ import FormErrors from './FormErrors';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import gql from 'graphql-tag';
-
+import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from '../../Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
+import classNames from 'classnames';
+import CheckIcon from '@material-ui/icons/Check';
+import AddIcon from '@material-ui/icons/Add';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import SaveIcon from '@material-ui/icons/Save';
+import ClearIcon from '@material-ui/icons/Clear';
+import Tooltip from '@material-ui/core/Tooltip';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -21,6 +28,10 @@ const styles = (theme) => ({
 		flexWrap: 'wrap',
 		marginBottom: '30px'
 	},
+	root: {
+		display: 'flex',
+		alignItems: 'center'
+	},
 	formControl: {
 		margin: theme.spacing.unit,
 		width: '18%'
@@ -28,7 +39,7 @@ const styles = (theme) => ({
 	numberControl: {
 		//width: '10%'
 	},
-	usernameControl: {
+	firstnameControl: {
 		//width: '12%'
 	},
 	emailControl: {
@@ -50,6 +61,31 @@ const styles = (theme) => ({
 	},
 	input: {
 		display: 'none'
+	},
+	wrapper: {
+		margin: theme.spacing.unit,
+		position: 'relative'
+	},
+	buttonSuccess: {
+		backgroundColor: green[500],
+		'&:hover': {
+			backgroundColor: green[700]
+		}
+	},
+	fabProgress: {
+		color: green[500],
+		position: 'absolute',
+		top: -6,
+		left: -6,
+		zIndex: 1
+	},
+	buttonProgress: {
+		color: green[500],
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12
 	}
 });
 
@@ -59,7 +95,9 @@ class ContactCompanyForm extends React.Component {
 			getcontacts(IsActive: 1, Id_Entity: $IdEntity) {
 				id: Id
 				idSearch: Id
-				username: Full_Name
+				firstname: First_Name
+				middlename: Middle_Name
+				lastname: Last_Name
 				email: Electronic_Address
 				number: Phone_Number
 				type: Contact_Type
@@ -81,7 +119,7 @@ class ContactCompanyForm extends React.Component {
 		query getsupervisor($Id: Int, $Id_Entity: Int) {
 			getsupervisor(IsActive: 1, Id_Entity: $Id_Entity, Id: $Id) {
 				id: Id
-				username: Full_Name
+				firstname: Full_Name
 			}
 		}
 	`;
@@ -98,7 +136,6 @@ class ContactCompanyForm extends React.Component {
 		mutation inscontacts($input: iParamC!) {
 			inscontacts(input: $input) {
 				Id
-				Full_Name
 			}
 		}
 	`;
@@ -107,7 +144,6 @@ class ContactCompanyForm extends React.Component {
 		mutation updcontacts($input: iParamC!) {
 			updcontacts(input: $input) {
 				Id
-				Full_Name
 			}
 		}
 	`;
@@ -116,7 +152,6 @@ class ContactCompanyForm extends React.Component {
 		mutation delcontacts($Id: Int!) {
 			delcontacts(Id: $Id, IsActive: 0) {
 				Id
-				Full_Name
 			}
 		}
 	`;
@@ -128,19 +163,25 @@ class ContactCompanyForm extends React.Component {
 		id: '',
 		idToDelete: null,
 		idToEdit: null,
-		username: '',
+		firstname: '',
+		middlename: '',
+		lastname: '',
 		email: '',
 		number: '',
 		type: '',
-		idSupervisor: 0,
+		idSupervisor: '',
 		idDepartment: 0,
-		usernameValid: false,
+		firstnameValid: false,
+		middlenameValid: false,
+		lastnameValid: false,
 		emailValid: false,
 		numberValid: false,
 		typeValid: false,
 		idDepartmentValid: false,
-		idSupervisorValid: true,
-		usernameHasValue: false,
+		idSupervisorValid: false,
+		firstnameHasValue: false,
+		middlenameHasValue: false,
+		lastnameHasValue: false,
 		emailHasValue: false,
 		numberHasValue: false,
 		typeHasValue: false,
@@ -149,8 +190,12 @@ class ContactCompanyForm extends React.Component {
 		formValid: false,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
-		enableCancelButton: false
+		enableCancelButton: false,
+		openSnackbar: true,
+		loading: false,
+		success: false
 	};
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -158,13 +203,14 @@ class ContactCompanyForm extends React.Component {
 			idCompany: this.props.idCompany,
 			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
-			supervisors: [ { id: -1, username: 'Nothing' } ],
+			supervisors: [],
 			...this.DEFAULT_STATE
 		};
+		this.onEditHandler = this.onEditHandler.bind(this);
 	}
 	focusTextInput() {
-		//document.getElementById('username').focus();
-		//document.getElementById('username').select();
+		document.getElementById('firstname').focus();
+		document.getElementById('firstname').select();
 	}
 	componentDidMount() {
 		this.resetState();
@@ -174,9 +220,15 @@ class ContactCompanyForm extends React.Component {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
 	resetState = () => {
-		this.setState({
-			...this.DEFAULT_STATE
-		});
+		this.setState(
+			{
+				...this.DEFAULT_STATE
+			},
+			() => {
+				this.loadSupervisors();
+				this.focusTextInput();
+			}
+		);
 	};
 	handleClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -188,31 +240,35 @@ class ContactCompanyForm extends React.Component {
 	onChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
-		this.setState({ [name]: value });
+		//this.setState({ [name]: value });
+		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	onBlurHandler(e) {
-		const name = e.target.name;
-		const value = e.target.value;
-		this.setState({ [name]: value.trim() }, this.validateField(name, value));
+		//const name = e.target.name;
+		//const value = e.target.value;
+		//this.setState({ [name]: value.trim() }, this.validateField(name, value));
 	}
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
-		this.setState({ [name]: value });
-		this.validateField(name, value);
+		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
 		let emailHasValue = this.state.email.trim() == '';
-		let usernameHasValue = this.state.username.trim() == '';
+		let firstnameHasValue = this.state.firstname.trim() == '';
+		let middlenameHasValue = this.state.middlename.trim() == '';
+		let lastnameHasValue = this.state.lastname.trim() == '';
 		let numberHasValue = this.state.number.trim() == '';
-		let typeHasValue = this.state.type == null || (this.state.type == 0 && this.state.type == '');
+		let typeHasValue = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentHasValue =
-			this.state.idDepartment == null || (this.state.idDepartment == 0 && this.state.idDepartment == '');
+			this.state.idDepartment !== null && this.state.idDepartment !== 0 && !this.state.idDepartment !== '';
 		let idSupervisorHasValue =
-			this.state.idSupervisor == null || (this.state.idSupervisor == 0 && this.state.idSupervisor == '');
+			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
 		return (
 			emailHasValue &&
-			usernameHasValue &&
+			firstnameHasValue &&
+			middlenameHasValue &&
+			lastnameHasValue &&
 			numberHasValue &&
 			typeHasValue &&
 			idDepartmentHasValue &&
@@ -221,90 +277,102 @@ class ContactCompanyForm extends React.Component {
 	};
 	validateAllFields() {
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-		let usernameValid = this.state.username.trim().length >= 6;
-		let numberValid = this.state.number.trim().length >= 6;
-		let typeValid = this.state.type != null && this.state.type != 0;
-		let idDepartmentValid = this.state.idDepartment != null && this.state.idDepartment != 0;
-		let idSupervisorValid = this.state.idSupervisor != null && this.state.idSupervisor != -1;
+		let firstnameValid = this.state.firstname.trim().length >= 2;
+		let middlenameValid = this.state.middlename.trim().length >= 2;
+		let lastnameValid = this.state.lastname.trim().length >= 2;
+		let numberValid = this.state.number.trim().length >= 2;
+		let typeValid = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
+		let idDepartmentValid =
+			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
+		let idSupervisorValid =
+			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
 		this.setState(
 			{
-				emailValid: emailValid,
-				usernameValid: usernameValid,
-				numberValid: numberValid,
-				typeValid: typeValid,
-				idDepartmentValid: idDepartmentValid,
-				idSupervisorValid: idSupervisorValid
+				emailValid,
+				firstnameValid,
+				middlenameValid,
+				lastnameValid,
+				numberValid,
+				typeValid,
+				idDepartmentValid,
+				idSupervisorValid
 			},
 			this.validateForm
 		);
 	}
 	validateField(fieldName, value) {
 		let emailValid = this.state.emailValid;
-		let usernameValid = this.state.usernameValid;
+		let firstnameValid = this.state.firstnameValid;
+		let middlenameValid = this.state.middlenameValid;
+		let lastnameValid = this.state.lastnameValid;
 		let numberValid = this.state.numberValid;
 		let typeValid = this.state.typeValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
 		let idSupervisorValid = this.state.idSupervisorValid;
 
 		let emailHasValue = this.state.emailHasValue;
-		let usernameHasValue = this.state.usernameHasValue;
+		let firstnameHasValue = this.state.firstnameHasValue;
+		let middlenameHasValue = this.state.middlenameHasValue;
+		let lastnameHasValue = this.state.lastnameHasValue;
 		let numberHasValue = this.state.numberHasValue;
 		let typeHasValue = this.state.typeHasValue;
 		let idDepartmentHasValue = this.state.idDepartmentHasValue;
-		let idSupervisorHasValue = this.state.idSupervisor;
+		let idSupervisorHasValue = this.state.idSupervisorHasValue;
 
 		switch (fieldName) {
 			case 'email':
 				emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-				emailHasValue = !this.state.email.trim() == '';
+				emailHasValue = value.trim() != '';
 				break;
-			case 'username':
-				usernameValid = value.trim().length >= 6;
-				usernameHasValue = !this.state.username.trim() == '';
+			case 'firstname':
+				firstnameValid = value.trim().length >= 2;
+				firstnameHasValue = value.trim() != '';
+				break;
+			case 'middlename':
+				middlenameValid = value.trim().length >= 2;
+				middlenameHasValue = value.trim() != '';
+				break;
+			case 'lastname':
+				lastnameValid = value.trim().length >= 2;
+				lastnameHasValue = value.trim() != '';
 				break;
 			case 'number':
-				numberValid = value.trim().length >= 6;
-				numberHasValue = !this.state.number.trim() == '';
+				numberValid = value.trim().length >= 2;
+				numberHasValue = value.trim() != '';
 				break;
 			case 'type':
-				typeValid = value != null && value != 0;
-				typeHasValue = !(this.state.type == null || (this.state.type == 0 && this.state.type == ''));
-				console.log('type:', value);
-				console.log('Type has value: ', typeHasValue);
+				typeValid = value !== null && value !== 0 && value !== '';
+				typeHasValue = value !== null && value !== 0 && value !== '';
 				break;
 			case 'idDepartment':
-				idDepartmentValid = value != null && value != 0;
-				idDepartmentHasValue = !(
-					this.state.idDepartment == null ||
-					(this.state.idDepartment == 0 && this.state.idDepartment == '')
-				);
-
+				idDepartmentValid = value !== null && value !== 0 && value !== '';
+				idDepartmentHasValue = value !== null && value !== 0 && value !== '';
 				break;
 			case 'idSupervisor':
-				idSupervisorValid = value != null && value != -1;
-				idSupervisorHasValue = !(
-					this.state.idSupervisor == null ||
-					(this.state.idSupervisor == 0 && this.state.idSupervisor == '')
-				);
-
+				idSupervisorValid = value !== null && value !== -1 && value !== '';
+				idSupervisorHasValue = value !== null && value !== -1 && value !== '';
 				break;
 			default:
 				break;
 		}
 		this.setState(
 			{
-				emailValid: emailValid,
-				usernameValid: usernameValid,
-				numberValid: numberValid,
-				typeValid: typeValid,
-				idDepartmentValid: idDepartmentValid,
-				idSupervisorValid: idSupervisorValid,
-				emailHasValue: emailHasValue,
-				usernameHasValue: usernameHasValue,
-				numberHasValue: numberHasValue,
-				typeHasValue: typeHasValue,
-				idDepartmentHasValue: idDepartmentHasValue,
-				idSupervisorHasValue: idSupervisorHasValue
+				emailValid,
+				firstnameValid,
+				middlenameValid,
+				lastnameValid,
+				numberValid,
+				typeValid,
+				idDepartmentValid,
+				idSupervisorValid,
+				emailHasValue,
+				firstnameHasValue,
+				middlenameHasValue,
+				lastnameHasValue,
+				numberHasValue,
+				typeHasValue,
+				idDepartmentHasValue,
+				idSupervisorHasValue
 			},
 			this.validateForm
 		);
@@ -314,14 +382,18 @@ class ContactCompanyForm extends React.Component {
 		this.setState({
 			formValid:
 				this.state.emailValid &&
-				this.state.usernameValid &&
+				this.state.firstnameValid &&
+				this.state.middlenameValid &&
+				this.state.lastnameValid &&
 				this.state.numberValid &&
 				this.state.typeValid &&
 				this.state.idDepartmentValid &&
 				this.state.idSupervisorValid,
 			enableCancelButton:
 				this.state.emailHasValue ||
-				this.state.usernameHasValue ||
+				this.state.firstnameHasValue ||
+				this.state.middlenameHasValue ||
+				this.state.lastnameHasValue ||
 				this.state.numberHasValue ||
 				this.state.typeHasValue ||
 				this.state.idDepartmentHasValue ||
@@ -335,11 +407,24 @@ class ContactCompanyForm extends React.Component {
 	handleConfirmAlertDialog = () => {
 		this.deleteContacts();
 	};
-	onEditHandler = ({ idSearch, idSupervisor, idDepartment, username, email, number, type }) => {
+	onEditHandler = ({
+		idSearch,
+		idSupervisor,
+		idDepartment,
+		firstname,
+		middlename,
+		lastname,
+		email,
+		number,
+		type
+	}) => {
+		console.log('editando: ');
 		this.setState(
 			{
 				idToEdit: idSearch,
-				username: username.trim(),
+				firstname: firstname.trim(),
+				middlename: middlename.trim(),
+				lastname: lastname.trim(),
 				email: email.trim(),
 				number: number.trim(),
 				idSupervisor: idSupervisor,
@@ -347,14 +432,17 @@ class ContactCompanyForm extends React.Component {
 				type: type,
 				formValid: true,
 				emailValid: true,
-				usernameValid: true,
+				firstnameValid: true,
+				middlenameValid: true,
+				lastnameValid: true,
 				typeValid: true,
 				idDepartmentValid: true,
 				idSupervisorValid: true,
-
 				enableCancelButton: true,
 				emailHasValue: true,
-				usernameHasValue: true,
+				firstnameHasValue: true,
+				middlenameHasValue: true,
+				lastnameHasValue: true,
 				typeHasValue: true,
 				idDepartmentHasValue: true,
 				idSupervisorHasValue: true,
@@ -378,6 +466,17 @@ class ContactCompanyForm extends React.Component {
 		this.loadDepartments();
 		this.loadSupervisors();
 	}
+	getObjectToInsertAndUpdate = () => {
+		let id = 0;
+		let query = this.INSERT_CONTACTS_QUERY;
+		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
+
+		if (isEdition) {
+			query = this.UPDATE_CONTACTS_QUERY;
+		}
+
+		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
+	};
 	loadContacts = () => {
 		this.props.client
 			.query({
@@ -386,14 +485,26 @@ class ContactCompanyForm extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				if (data.data.getcontacts != null && data.data.getcontacts.length > 0) {
-					this.setState({
-						data: data.data.getcontacts
-					});
+				if (data.data.getcontacts != null) {
+					this.setState(
+						{
+							data: data.data.getcontacts
+						},
+						() => {
+							this.resetState();
+						}
+					);
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading contacts: getcontacts not exists in query data'
+					);
 				}
-				this.resetState();
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => {
+				console.log('Error: Loading contacts: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading contacts: ' + error);
+			});
 	};
 	loadSupervisors = (idContact = 0) => {
 		this.props.client
@@ -403,13 +514,21 @@ class ContactCompanyForm extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				if (data.data.getsupervisor != null && data.data.getsupervisor.length > 0) {
+				if (data.data.getsupervisor != null) {
 					this.setState({
 						supervisors: data.data.getsupervisor
 					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading supervisors: getsupervisor not exists in query data'
+					);
 				}
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => {
+				console.log('Error: Loading supervisors: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading supervisors: ' + error);
+			});
 	};
 	loadTypes = () => {
 		this.props.client
@@ -417,13 +536,21 @@ class ContactCompanyForm extends React.Component {
 				query: this.GET_TYPES_QUERY
 			})
 			.then((data) => {
-				if (data.data.getcatalogitem != null && data.data.getcatalogitem.length > 0) {
+				if (data.data.getcatalogitem != null) {
 					this.setState({
 						types: data.data.getcatalogitem
 					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading types: getcatalogitem not exists in query data'
+					);
 				}
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => {
+				console.log('Error: Loading types: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading types: ' + error);
+			});
 	};
 	loadDepartments = () => {
 		this.props.client
@@ -431,57 +558,30 @@ class ContactCompanyForm extends React.Component {
 				query: this.GET_DEPARTMENTS_QUERY
 			})
 			.then((data) => {
-				if (data.data.getcatalogitem != null && data.data.getcatalogitem.length > 0) {
+				if (data.data.getcatalogitem != null) {
 					this.setState({
 						departments: data.data.getcatalogitem
 					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading departments: getcatalogitem not exists in query data'
+					);
 				}
 			})
-			.catch((error) => console.error(error));
-	};
-	getObjectToInsertAndUpdate = () => {
-		let id = 0;
-		let idSearch = this.GENERATE_ID();
-		let query = this.INSERT_CONTACTS_QUERY;
-
-		if (this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0) {
-			const items = [ ...this.state.data ];
-			const index = items.findIndex((element) => element.idSearch == this.state.idToEdit);
-			id = items[index].id;
-			query = this.UPDATE_CONTACTS_QUERY;
-		}
-		let item = {
-			id: id,
-			idSearch: idSearch,
-			username: this.state.username,
-			email: this.state.email,
-			number: this.state.number,
-			type: this.state.type,
-			idSupervisor: this.state.idSupervisor,
-			idDepartment: this.state.idDepartment
-		};
-		return { item: item, query: query, id: id };
-	};
-
-	insertContactsDummy = () => {
-		const { item } = this.getObjectToInsertAndUpdate();
-
-		if (this.state.idToEdit != null) {
-			const items = [ ...this.state.data ];
-			const index = items.findIndex((element) => element.idSearch == this.state.idToEdit);
-			items[index] = { ...item };
-			this.setState({ data: items });
-		} else {
-			this.setState((prevState) => ({
-				data: prevState.data.concat(item),
-				data: [ item, ...prevState.data ]
-			}));
-		}
-		this.resetState();
+			.catch((error) => {
+				console.log('Error: Loading departments: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
+			});
 	};
 
 	insertContacts = () => {
-		const { query, item, id } = this.getObjectToInsertAndUpdate();
+		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
+
+		this.setState({
+			success: false,
+			loading: true
+		});
 
 		this.props.client
 			.mutate({
@@ -490,7 +590,9 @@ class ContactCompanyForm extends React.Component {
 					input: {
 						Id: id,
 						Id_Entity: this.state.idCompany,
-						Full_Name: `'${this.state.username}'`,
+						First_Name: `'${this.state.firstname}'`,
+						Middle_Name: `'${this.state.middlename}'`,
+						Last_Name: `'${this.state.lastname}'`,
 						Electronic_Address: `'${this.state.email}'`,
 						Phone_Number: `'${this.state.number}'`,
 						Contact_Type: this.state.type,
@@ -505,28 +607,21 @@ class ContactCompanyForm extends React.Component {
 				}
 			})
 			.then((data) => {
-				const items = [ ...this.state.data ];
-				const index = items.findIndex((element) => element.idSearch == this.state.idToEdit);
-
-				//Only Editing current record
-				if (this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0) {
-					items[index] = { ...item };
-					this.setState({ data: items });
-				} else {
-					//Inserting new record and update cache record with id from database
-
-					item.id = data.data.inscontacts.Id;
-					item.idSearch = data.data.inscontacts.Id;
-					items[index] = { ...item };
-
-					this.setState((prevState) => ({
-						data: prevState.data.concat(item),
-						data: [ item, ...prevState.data ]
-					}));
-				}
+				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
+				this.loadContacts();
 				this.resetState();
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => {
+				console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
+				this.props.handleOpenSnackbar(
+					'error',
+					isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+				);
+				this.setState({
+					success: false,
+					loading: false
+				});
+			});
 	};
 	deleteContacts = (id) => {
 		this.props.client
@@ -537,25 +632,41 @@ class ContactCompanyForm extends React.Component {
 				}
 			})
 			.then((data) => {
-				const contacts = this.state.data.filter((row) => row.id !== this.state.idToDelete);
-
-				this.setState({ data: contacts });
-
+				this.props.handleOpenSnackbar('success', 'Contact Deleted!');
+				this.loadContacts();
 				this.resetState();
 			})
-			.catch((error) => console.error(error));
+			.catch((error) => {
+				console.log('Error: Deleting Contact: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
+			});
+	};
+
+	addContactHandler = () => {
+		this.setState(
+			{
+				success: false,
+				loading: true
+			},
+			() => {
+				this.validateAllFields();
+				if (this.state.formValid) this.insertContacts();
+			}
+		);
+	};
+
+	cancelContactHandler = () => {
+		this.resetState();
 	};
 	render() {
+		console.log('render');
+		const { loading, success } = this.state;
 		const { classes } = this.props;
 
-		const addContactHandler = () => {
-			this.validateAllFields();
-			if (this.state.formValid) this.insertContacts();
-		};
+		const buttonClassname = classNames({
+			[classes.buttonSuccess]: success
+		});
 
-		const cancelContactHandler = () => {
-			this.resetState();
-		};
 		return (
 			<div className={classes.container}>
 				<AlertDialogSlide
@@ -565,14 +676,38 @@ class ContactCompanyForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[ classes.formControl, classes.usernameControl ].join(' ')}>
-						<InputLabel htmlFor="name-simple">Name</InputLabel>
+					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
+						<InputLabel htmlFor="firstname">First Name</InputLabel>
 						<Input
-							id="username"
-							name="username"
+							id="firstname"
+							name="firstname"
 							className={classes.resize}
-							error={!this.state.usernameValid}
-							value={this.state.username}
+							error={!this.state.firstnameValid}
+							value={this.state.firstname}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
+						<InputLabel htmlFor="middlename">Middle Name</InputLabel>
+						<Input
+							id="middlename"
+							name="middlename"
+							className={classes.resize}
+							error={!this.state.middlenameValid}
+							value={this.state.middlename}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
+						<InputLabel htmlFor="lastname">Last Name</InputLabel>
+						<Input
+							id="lastname"
+							name="lastname"
+							className={classes.resize}
+							error={!this.state.lastnameValid}
+							value={this.state.lastname}
 							onBlur={(event) => this.onBlurHandler(event)}
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
@@ -616,16 +751,20 @@ class ContactCompanyForm extends React.Component {
 							helperText="Supervisor"
 							margin="normal"
 						>
-							{this.state.supervisors.map(({ id, username }) => (
-								<MenuItem key={id} value={id} name={username}>
-									{username}
+							{' '}
+							<MenuItem key={0} value={0} name="None">
+								None
+							</MenuItem>
+							{this.state.supervisors.map(({ id, firstname }) => (
+								<MenuItem key={id} value={id} name={firstname}>
+									{firstname}
 								</MenuItem>
 							))}
 						</TextField>
 					</FormControl>
 
 					<FormControl className={[ classes.formControl, classes.emailControl ].join(' ')}>
-						<InputLabel htmlFor="name-simple">Email</InputLabel>
+						<InputLabel htmlFor="email">Email</InputLabel>
 						<Input
 							id="email"
 							name="email"
@@ -638,7 +777,7 @@ class ContactCompanyForm extends React.Component {
 					</FormControl>
 
 					<FormControl className={[ classes.formControl, classes.numberControl ].join(' ')}>
-						<InputLabel htmlFor="name-simple">Phone</InputLabel>
+						<InputLabel htmlFor="number">Phone</InputLabel>
 						<Input
 							id="number"
 							name="number"
@@ -673,24 +812,60 @@ class ContactCompanyForm extends React.Component {
 							))}
 						</TextField>
 					</FormControl>
-					<Button
-						disabled={!this.state.formValid}
-						variant="contained"
-						color="primary"
-						className={classes.button}
-						onClick={addContactHandler}
-					>
-						{this.state.buttonTitle}
-					</Button>
-					<Button
-						disabled={!this.state.enableCancelButton}
-						variant="contained"
-						color="secondary"
-						className={classes.button}
-						onClick={cancelContactHandler}
-					>
-						Cancel
-					</Button>
+					<div className={classes.root}>
+						<div className={classes.wrapper}>
+							<Tooltip
+								title={
+									this.state.idToEdit != null &&
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Save Changes'
+									) : (
+										'Insert Record'
+									)
+								}
+							>
+								<div>
+									<Button
+										disabled={!this.state.formValid}
+										variant="fab"
+										color="primary"
+										className={buttonClassname}
+										onClick={this.addContactHandler}
+									>
+										{success ? (
+											<CheckIcon />
+										) : this.state.idToEdit != null &&
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											<SaveIcon />
+										) : (
+											<AddIcon />
+										)}
+									</Button>
+								</div>
+							</Tooltip>
+							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+						</div>
+					</div>
+
+					<div className={classes.root}>
+						<div className={classes.wrapper}>
+							<Tooltip title={'Cancel Operation'}>
+								<div>
+									<Button
+										disabled={!this.state.enableCancelButton}
+										variant="fab"
+										color="secondary"
+										className={buttonClassname}
+										onClick={this.cancelContactHandler}
+									>
+										<ClearIcon />
+									</Button>
+								</div>
+							</Tooltip>
+						</div>
+					</div>
 				</div>
 				<div className={classes.divStyle}>
 					<ContactsTable

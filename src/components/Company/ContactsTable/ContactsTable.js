@@ -26,6 +26,9 @@ const actionsStyles = (theme) => ({
 		flexShrink: 0,
 		color: theme.palette.text.secondary,
 		marginLeft: theme.spacing.unit * 2.5
+	},
+	paddingDefault: {
+		padding: '40px 24px 40px 16px'
 	}
 });
 
@@ -106,8 +109,8 @@ const CustomTableCell = withStyles((theme) => ({
 const styles = (theme) => ({
 	root: {
 		width: '100%',
-		marginTop: theme.spacing.unit * 3
-		//	overflowX: 'auto'
+		marginTop: theme.spacing.unit * 3,
+		overflowX: 'auto'
 	},
 	table: {
 		minWidth: 500
@@ -155,12 +158,15 @@ class CustomizedTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell />
-							<CustomTableCell>Name</CustomTableCell>
+							<CustomTableCell padding="none" />
+							<CustomTableCell padding="none" />
+							<CustomTableCell>First Name</CustomTableCell>
+							<CustomTableCell>Middle Name</CustomTableCell>
+							<CustomTableCell>Last Name</CustomTableCell>
 							<CustomTableCell>Department</CustomTableCell>
 							<CustomTableCell>Supervisor</CustomTableCell>
 							<CustomTableCell>Email</CustomTableCell>
-							<CustomTableCell numeric>Number</CustomTableCell>
+							<CustomTableCell>Phone Number</CustomTableCell>
 							<CustomTableCell>Title</CustomTableCell>
 						</TableRow>
 					</TableHead>
@@ -168,7 +174,7 @@ class CustomizedTable extends React.Component {
 						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
 								<TableRow hover className={classes.row} key={uuidv4()}>
-									<CustomTableCell component="th" scope="row" padding="none">
+									<CustomTableCell component="th" padding="none">
 										{' '}
 										<Tooltip title="Edit">
 											<IconButton
@@ -179,6 +185,8 @@ class CustomizedTable extends React.Component {
 												<EditIcon color="primary" />
 											</IconButton>
 										</Tooltip>
+									</CustomTableCell>
+									<CustomTableCell component="th" padding="none">
 										<Tooltip title="Delete">
 											<IconButton
 												onClick={() => {
@@ -189,7 +197,9 @@ class CustomizedTable extends React.Component {
 											</IconButton>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell>{row.username}</CustomTableCell>
+									<CustomTableCell>{row.firstname}</CustomTableCell>
+									<CustomTableCell>{row.middlename}</CustomTableCell>
+									<CustomTableCell>{row.lastname}</CustomTableCell>
 									<CustomTableCell>
 										<TextField
 											id="department"
@@ -215,15 +225,18 @@ class CustomizedTable extends React.Component {
 											margin="normal"
 											disabled
 										>
-											{this.props.data.map(({ id, username }) => (
-												<MenuItem key={id} value={id} name={username}>
-													{username}
+											<MenuItem key={0} value={0} name="None">
+												None
+											</MenuItem>
+											{this.props.data.map(({ id, firstname }) => (
+												<MenuItem key={id} value={id} name={firstname}>
+													{firstname}
 												</MenuItem>
 											))}
 										</TextField>
 									</CustomTableCell>
 									<CustomTableCell>{row.email}</CustomTableCell>
-									<CustomTableCell numeric>{row.number}</CustomTableCell>
+									<CustomTableCell>{row.number}</CustomTableCell>
 									<CustomTableCell>
 										<TextField
 											id="type"
@@ -243,18 +256,26 @@ class CustomizedTable extends React.Component {
 								</TableRow>
 							);
 						})}
+
+						{emptyRows > 0 && (
+							<TableRow style={{ height: 48 * emptyRows }}>
+								<TableCell colSpan={11} />
+							</TableRow>
+						)}
 					</TableBody>
 					<TableFooter>
 						<TableRow>
-							<TablePagination
-								colSpan={3}
-								count={items.length}
-								rowsPerPage={rowsPerPage}
-								page={page}
-								onChangePage={this.handleChangePage}
-								onChangeRowsPerPage={this.handleChangeRowsPerPage}
-								ActionsComponent={TablePaginationActionsWrapped}
-							/>
+							{items.length > 0 && (
+								<TablePagination
+									colSpan={3}
+									count={items.length}
+									rowsPerPage={rowsPerPage}
+									page={page}
+									onChangePage={this.handleChangePage}
+									onChangeRowsPerPage={this.handleChangeRowsPerPage}
+									ActionsComponent={TablePaginationActionsWrapped}
+								/>
+							)}
 						</TableRow>
 					</TableFooter>
 				</Table>

@@ -7,7 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import CreateCompanyForm from '../Company/CreateCompanyForm/CreateCompanyForm';
 import ContactCompanyForm from '../Company/ContactCompanyForm/ContactCompanyForm';
 import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/DepartmentsCompanyForm';
-
+import { Snackbar } from '@material-ui/core';
+import { MySnackbarContentWrapper } from '../Generic/SnackBar';
 function TabContainer({ children, dir }) {
 	return (
 		<Typography
@@ -38,7 +39,10 @@ const styles = (theme) => ({
 
 class FullWidthTabs extends React.Component {
 	state = {
-		value: 0
+		value: 0,
+		openSnackbar: false,
+		variantSnackbar: 'info',
+		messageSnackbar: 'Dummy text!'
 	};
 
 	handleChange = (event, value) => {
@@ -52,12 +56,40 @@ class FullWidthTabs extends React.Component {
 	handleText = (message) => {
 		alert(message);
 	};
+	handleCloseSnackbar = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
 
+		this.setState({ openSnackbar: false });
+	};
+	handleOpenSnackbar = (variant, message) => {
+		this.setState({
+			openSnackbar: true,
+			variantSnackbar: variant,
+			messageSnackbar: message
+		});
+	};
 	render() {
 		const { classes, theme } = this.props;
 
 		return (
 			<div className={classes.root}>
+				<Snackbar
+					anchorOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					open={this.state.openSnackbar}
+					autoHideDuration={3000}
+					onClose={this.handleCloseSnackbar}
+				>
+					<MySnackbarContentWrapper
+						onClose={this.handleCloseSnackbar}
+						variant={this.state.variantSnackbar}
+						message={this.state.messageSnackbar}
+					/>
+				</Snackbar>
 				<Tabs
 					value={this.props.item}
 					//onChange={this.props.item}
@@ -75,7 +107,10 @@ class FullWidthTabs extends React.Component {
 						{/*	<CreateCompanyForm title="General info" idCompany={this.props.idCompany} />*/}
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<ContactCompanyForm idCompany={this.props.idCompany} />
+						<ContactCompanyForm
+							idCompany={this.props.idCompany}
+							handleOpenSnackbar={this.handleOpenSnackbar}
+						/>
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
 						<div />
