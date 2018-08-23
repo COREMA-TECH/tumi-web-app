@@ -64,6 +64,12 @@ class PositionsCompanyForm extends React.Component {
         });
     };
 
+    deletePositionById = (id) => {
+        //Write mutation to delete the position
+
+
+    };
+
     validateAllState() {
         return (
             this.state.department === '' ||

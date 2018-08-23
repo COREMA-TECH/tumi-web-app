@@ -585,7 +585,7 @@ class ComposedTextField extends React.Component {
                                                         Date_Created: "'2018-08-14 16:10:25+00'",
                                                         Date_Updated: "'2018-08-14 16:10:25+00'",
                                                         ImageURL: `'${this.state.avatar}'`,
-                                                        Start_Date: `'${this.state.startDate}'`
+                                                        Start_Date: `'2018-08-14'`
                                                     }
                                                 }
                                             }
@@ -637,7 +637,7 @@ class ComposedTextField extends React.Component {
                                                         Date_Created: "'2018-08-14 16:10:25+00'",
                                                         Date_Updated: "'2018-08-14 16:10:25+00'",
                                                         ImageURL: `'${this.state.avatar}'`,
-                                                        Start_Date: `'${this.state.startDate}'`
+                                                        Start_Date: `'2018-08-14'`
                                                     }
                                                 }
                                             }
