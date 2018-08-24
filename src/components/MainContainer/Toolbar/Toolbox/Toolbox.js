@@ -3,76 +3,103 @@ import './index.css';
 
 import IconButton from '@material-ui/core/IconButton';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import SettingsIcon from '@material-ui/icons/Settings';
 import Badge from '@material-ui/core/Badge';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
+import Switch from '@material-ui/core/Switch';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import Menu from '@material-ui/core/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 class Toolbox extends Component {
 	state = {
-		open: false
+		open: false,
+		anchorElUser: null,
+		anchorElNotification: null
 	};
 
-	handleToggle = () => {
-		this.setState((state) => ({ open: !state.open }));
+	handleMenuUser = (event) => {
+		console.log(event.currentTarget);
+		this.setState({ anchorElUser: event.currentTarget, anchorElNotification: null });
 	};
 
-	handleClose = (event) => {
-		if (this.anchorEl.contains(event.target)) {
-			return;
-		}
-		this.setState({ open: false });
+	handleCloseUser = () => {
+		this.setState({ anchorElUser: null, anchorElNotification: null });
+	};
+
+	handleMenuNotifications = (event) => {
+		console.log(event.currentTarget);
+		this.setState({ anchorElNotification: event.currentTarget, anchorElUser: null });
+	};
+
+	handleCloseNotification = () => {
+		this.setState({ anchorElNotification: null, anchorElUser: null });
 	};
 
 	render() {
-		const { open } = this.state;
+		const { anchorElUser, anchorElNotification } = this.state;
+		const openUser = Boolean(anchorElUser);
+		const openNotification = Boolean(anchorElNotification);
 		return (
-			<div className="toolbox">
-				<IconButton>
-					<SettingsIcon color="primary" />
-				</IconButton>
-				<IconButton
-					buttonRef={(node) => {
-						this.anchorEl = node;
-					}}
-					aria-owns={open ? 'menu-list-grow' : null}
-					aria-haspopup="true"
-					onClick={this.handleToggle}
-				>
-					<Badge badgeContent={4} color="secondary">
-						<NotificationsIcon color="primary" />
-					</Badge>
-				</IconButton>
-				<Popper
-					modifiers={{ preventOverflow: { enabled: false } }}
-					placement="left"
-					open={open}
-					transition
-					disablePortal
-				>
-					{({ TransitionProps, placement }) => (
-						<Grow
-							{...TransitionProps}
-							id="menu-list-grow"
-							style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-						>
-							<Paper>
-								<ClickAwayListener onClickAway={this.handleClose}>
-									<MenuList>
-										<MenuItem onClick={this.handleClose}>User</MenuItem>
-										<MenuItem onClick={this.handleClose}>My account</MenuItem>
-										<MenuItem onClick={this.handleClose}>Logout</MenuItem>
-									</MenuList>
-								</ClickAwayListener>
-							</Paper>
-						</Grow>
-					)}
-				</Popper>
-			</div>
+			<React.Fragment>
+				<div id="menuUser">
+					<IconButton
+						aria-owns={openUser ? 'user-appbar' : null}
+						aria-haspopup="true"
+						onClick={this.handleMenuUser}
+						color="inherit"
+					>
+						<AccountCircle color="primary" />
+					</IconButton>
+					<Menu
+						id="user-appbar"
+						anchorEl={anchorElUser}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'right'
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right'
+						}}
+						open={openUser}
+						onClose={this.handleCloseUser}
+					>
+						<MenuItem onClick={this.handleCloseUser}>Profile</MenuItem>
+						<MenuItem onClick={this.handleCloseUser}>My account</MenuItem>
+					</Menu>
+				</div>
+				<div id="notificationMenu">
+					<IconButton
+						aria-owns={openNotification ? 'notification-appbar' : null}
+						aria-haspopup="true"
+						onClick={this.handleMenuNotifications}
+						color="inherit"
+					>
+						<Badge badgeContent={4} color="secondary">
+							<NotificationsIcon color="primary" />
+						</Badge>
+					</IconButton>
+					<Menu
+						id="notification-appbar"
+						anchorEl={anchorElNotification}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'right'
+						}}
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right'
+						}}
+						open={openNotification}
+						onClose={this.handleCloseNotification}
+					>
+						<MenuItem onClick={this.handleCloseNotification}>Notification 01</MenuItem>
+						<MenuItem onClick={this.handleCloseNotification}>Notification 02</MenuItem>
+					</Menu>
+				</div>
+			</React.Fragment>
 		);
 	}
 }
