@@ -1,0 +1,36 @@
+.card-form-company {
+    width: 30%;
+    min-height: 60vh;
+
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 20px #ccc;
+    border-radius: 10px;
+}
+
+.card-form-header {
+    margin-top: .8em;
+    margin-bottom: .8em;
+    width: 50%;
+    height: 3vh;
+    padding: .3em;
+    background: linear-gradient(90deg, #052370, #0639b4);
+    clip-path: polygon(0 0, 100% 0%, 85% 100%, 0 100%);
+    font-family: "Segoe UI";
+    font-size: 1.2em;
+    color: #fff;
+    font-weight: 300;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.card-form-body {
+    width: 100%;
+    padding: 2em;
+
+    display: flex;
+    flex-direction: column;
+}
+

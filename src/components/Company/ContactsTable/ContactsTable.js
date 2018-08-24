@@ -91,6 +91,7 @@ TablePaginationActions.propTypes = {
 const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
 
 let counter = 0;
+
 function createData(name, calories, fat) {
 	counter += 1;
 	return { id: counter, name, calories, fat };
@@ -147,6 +148,7 @@ class CustomizedTable extends React.Component {
 	handleChangeRowsPerPage = (event) => {
 		this.setState({ rowsPerPage: event.target.value });
 	};
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;

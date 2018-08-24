@@ -681,6 +681,7 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="firstname"
 							name="firstname"
+							inputProps={{ maxLength: 15 }}
 							className={classes.resize}
 							error={!this.state.firstnameValid}
 							value={this.state.firstname}
@@ -693,6 +694,7 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="middlename"
 							name="middlename"
+							inputProps={{ maxLength: 15 }}
 							className={classes.resize}
 							error={!this.state.middlenameValid}
 							value={this.state.middlename}
@@ -705,6 +707,7 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="lastname"
 							name="lastname"
+							inputProps={{ maxLength: 20 }}
 							className={classes.resize}
 							error={!this.state.lastnameValid}
 							value={this.state.lastname}
@@ -768,6 +771,7 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="email"
 							name="email"
+							inputProps={{ maxLength: 30 }}
 							className={classes.resize}
 							error={!this.state.emailValid}
 							value={this.state.email}
@@ -781,6 +785,7 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="number"
 							name="number"
+							inputProps={{ maxLength: 15 }}
 							className={classes.resize}
 							error={!this.state.numberValid}
 							value={this.state.number}

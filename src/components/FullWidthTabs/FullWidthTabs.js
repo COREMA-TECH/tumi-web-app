@@ -9,6 +9,7 @@ import ContactCompanyForm from '../Company/ContactCompanyForm/ContactCompanyForm
 import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/DepartmentsCompanyForm';
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from '../Generic/SnackBar';
+import PositionsCompanyForm from '../Company/PositionsCompanyForm/PositionsCompanyForm';
 function TabContainer({ children, dir }) {
 	return (
 		<Typography
@@ -104,7 +105,7 @@ class FullWidthTabs extends React.Component {
 				>
 					<TabContainer dir={theme.direction}>
 						<div />
-						{/*	<CreateCompanyForm title="General info" idCompany={this.props.idCompany} />*/}
+						<CreateCompanyForm title="General info" idCompany={this.props.idCompany} />
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
 						<ContactCompanyForm
@@ -113,12 +114,10 @@ class FullWidthTabs extends React.Component {
 						/>
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<div />
-						{/*<DepartmentsCompanyForm />*/}
+						<DepartmentsCompanyForm />
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<div />
-						{/*<CreateCompanyForm title="Positions and rates" />*/}
+						<PositionsCompanyForm />
 					</TabContainer>
 				</SwipeableViews>
 			</div>

@@ -33,6 +33,8 @@ const styles = theme => ({
     },
 });
 
+
+
 class ContactCompanyForm extends React.Component {
     state = {
         name: '',
@@ -40,6 +42,8 @@ class ContactCompanyForm extends React.Component {
         code: '',
         description: '',
     };
+
+
 
     handleChange = event => {
         this.setState({name: event.target.value});
@@ -89,6 +93,26 @@ class ContactCompanyForm extends React.Component {
                 <div className={classes.divStyle}>
                     <DepartmentsTable data={this.state.data}/>
                 </div>
+
+
+                <br/><br/><br/><br/><br/>
+                <Button variant="contained" color="primary" className={classes.button} onClick={
+                    () => {
+                        var item = {
+                            code: this.state.code,
+                            description: this.state.description,
+                        };
+
+                        this.setState(prevState => ({
+                            // data: prevState.data.concat(item),
+                            data: [item, ...prevState.data],
+                            code: '',
+                            description: '',
+                        }));
+                    }
+                }>
+                    Add Department
+                </Button>
             </div>
         );
     }

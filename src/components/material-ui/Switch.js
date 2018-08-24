@@ -9,6 +9,7 @@ class Switches extends React.Component {
 
     handleChange = name => event => {
         this.setState({ [name]: event.target.checked });
+        this.props.update(event.target.checked);
     };
 
     render() {

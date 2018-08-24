@@ -27,7 +27,16 @@ class ControlledOpenSelect extends React.Component {
 
     handleChange = event => {
         this.setState({[event.target.name]: event.target.value});
-        this.props.update(event.target.value);
+
+        if(this.props.label === "Departments") {
+            this.props.values.map(item => {
+                if(event.target.value === item.Id){
+                    this.props.update(item.Name);
+                }
+            })
+        } else {
+            this.props.update(event.target.value);
+        }
     };
 
     handleClose = () => {
@@ -43,9 +52,10 @@ class ControlledOpenSelect extends React.Component {
 
         return (
             <form autoComplete="off">
-                <FormControl className={classes.formControl}>
+                <FormControl className="select-large">
                     <InputLabel htmlFor="demo-controlled-open-select">{this.props.label}</InputLabel>
                     <Select
+                        className="select-large"
                         open={this.state.open}
                         onClose={this.handleClose}
                         onOpen={this.handleOpen}
