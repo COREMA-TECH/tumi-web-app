@@ -4,8 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import ContactsTable from '../ContactsTable/ContactsTable';
-import FormErrors from './FormErrors';
+import ContactsTable from './ContactsTable';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import gql from 'graphql-tag';
@@ -26,30 +25,31 @@ const styles = (theme) => ({
 		justifyContent: 'center',
 		alignItems: 'center',
 		flexWrap: 'wrap',
-		marginBottom: '30px'
+		marginBottom: '30px',
+		width: '100%'
 	},
 	root: {
 		display: 'flex',
 		alignItems: 'center'
 	},
 	formControl: {
-		margin: theme.spacing.unit,
-		width: '18%'
+		margin: theme.spacing.unit
+		//width: '100px'
 	},
 	numberControl: {
-		//width: '10%'
+		//width: '200px'
 	},
-	firstnameControl: {
-		//width: '12%'
+	nameControl: {
+		//width: '100px'
 	},
 	emailControl: {
-		//width: '12%'
+		//width: '200px'
 	},
-	typeControl: {
-		//width: '12%'
+	comboControl: {
+		//width: '200px'
 	},
 	resize: {
-		//fontSize: 14
+		//width: '200px'
 	},
 	divStyle: {
 		width: '80%',
@@ -193,7 +193,8 @@ class ContactCompanyForm extends React.Component {
 		enableCancelButton: false,
 		openSnackbar: true,
 		loading: false,
-		success: false
+		success: false,
+		loadingConfirm: false
 	};
 
 	constructor(props) {
@@ -204,6 +205,7 @@ class ContactCompanyForm extends React.Component {
 			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
+			allSupervisors: [],
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -226,6 +228,7 @@ class ContactCompanyForm extends React.Component {
 			},
 			() => {
 				this.loadSupervisors();
+				this.loadAllSupervisors();
 				this.focusTextInput();
 			}
 		);
@@ -418,7 +421,6 @@ class ContactCompanyForm extends React.Component {
 		number,
 		type
 	}) => {
-		console.log('editando: ');
 		this.setState(
 			{
 				idToEdit: idSearch,
@@ -465,6 +467,7 @@ class ContactCompanyForm extends React.Component {
 		this.loadTypes();
 		this.loadDepartments();
 		this.loadSupervisors();
+		this.loadAllSupervisors();
 	}
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
@@ -530,6 +533,32 @@ class ContactCompanyForm extends React.Component {
 				this.props.handleOpenSnackbar('error', 'Error: Loading supervisors: ' + error);
 			});
 	};
+
+	loadAllSupervisors = () => {
+		this.props.client
+			.query({
+				query: this.GET_SUPERVISORS_QUERY,
+				variables: { Id_Entity: this.state.idCompany, Id: 0 },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getsupervisor != null) {
+					this.setState({
+						allSupervisors: data.data.getsupervisor
+					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading [all] supervisors: getsupervisor not exists in query data'
+					);
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading [all] supervisors: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading [all] supervisors: ' + error);
+			});
+	};
+
 	loadTypes = () => {
 		this.props.client
 			.query({
@@ -578,68 +607,81 @@ class ContactCompanyForm extends React.Component {
 	insertContacts = () => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
-		this.setState({
-			success: false,
-			loading: true
-		});
-
-		this.props.client
-			.mutate({
-				mutation: query,
-				variables: {
-					input: {
-						Id: id,
-						Id_Entity: this.state.idCompany,
-						First_Name: `'${this.state.firstname}'`,
-						Middle_Name: `'${this.state.middlename}'`,
-						Last_Name: `'${this.state.lastname}'`,
-						Electronic_Address: `'${this.state.email}'`,
-						Phone_Number: `'${this.state.number}'`,
-						Contact_Type: this.state.type,
-						Id_Deparment: this.state.idDepartment,
-						Id_Supervisor: this.state.idSupervisor,
-						IsActive: 1,
-						User_Created: 1,
-						User_Updated: 1,
-						Date_Created: "'2018-08-14 16:10:25+00'",
-						Date_Updated: "'2018-08-14 16:10:25+00'"
-					}
-				}
-			})
-			.then((data) => {
-				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-				this.loadContacts();
-				this.resetState();
-			})
-			.catch((error) => {
-				console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
-				this.props.handleOpenSnackbar(
-					'error',
-					isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
-				);
-				this.setState({
-					success: false,
-					loading: false
-				});
-			});
+		this.setState(
+			{
+				success: false,
+				loading: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: query,
+						variables: {
+							input: {
+								Id: id,
+								Id_Entity: this.state.idCompany,
+								First_Name: `'${this.state.firstname}'`,
+								Middle_Name: `'${this.state.middlename}'`,
+								Last_Name: `'${this.state.lastname}'`,
+								Electronic_Address: `'${this.state.email}'`,
+								Phone_Number: `'${this.state.number}'`,
+								Contact_Type: this.state.type,
+								Id_Deparment: this.state.idDepartment,
+								Id_Supervisor: this.state.idSupervisor,
+								IsActive: 1,
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-08-14 16:10:25+00'",
+								Date_Updated: "'2018-08-14 16:10:25+00'"
+							}
+						}
+					})
+					.then((data) => {
+						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
+						this.loadContacts();
+						this.resetState();
+					})
+					.catch((error) => {
+						console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
+						this.props.handleOpenSnackbar(
+							'error',
+							isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+						);
+						this.setState({
+							success: false,
+							loading: false
+						});
+					});
+			}
+		);
 	};
 	deleteContacts = (id) => {
-		this.props.client
-			.mutate({
-				mutation: this.DELETE_CONTACTS_QUERY,
-				variables: {
-					Id: this.state.idToDelete
-				}
-			})
-			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Contact Deleted!');
-				this.loadContacts();
-				this.resetState();
-			})
-			.catch((error) => {
-				console.log('Error: Deleting Contact: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
-			});
+		this.setState(
+			{
+				loadingConfirm: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: this.DELETE_CONTACTS_QUERY,
+						variables: {
+							Id: this.state.idToDelete
+						}
+					})
+					.then((data) => {
+						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
+						this.loadContacts();
+						this.resetState();
+					})
+					.catch((error) => {
+						console.log('Error: Deleting Contact: ', error);
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
+						this.setState({
+							loadingConfirm: false
+						});
+					});
+			}
+		);
 	};
 
 	addContactHandler = () => {
@@ -651,6 +693,15 @@ class ContactCompanyForm extends React.Component {
 			() => {
 				this.validateAllFields();
 				if (this.state.formValid) this.insertContacts();
+				else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Saving Information: You must to fill all required fields'
+					);
+					this.setState({
+						loading: false
+					});
+				}
 			}
 		);
 	};
@@ -659,7 +710,6 @@ class ContactCompanyForm extends React.Component {
 		this.resetState();
 	};
 	render() {
-		console.log('render');
 		const { loading, success } = this.state;
 		const { classes } = this.props;
 
@@ -673,15 +723,21 @@ class ContactCompanyForm extends React.Component {
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
 					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="firstname">First Name</InputLabel>
 						<Input
 							id="firstname"
 							name="firstname"
-							inputProps={{ maxLength: 15 }}
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.nameControl
+								}
+							}}
 							className={classes.resize}
 							error={!this.state.firstnameValid}
 							value={this.state.firstname}
@@ -689,12 +745,17 @@ class ContactCompanyForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="middlename">Middle Name</InputLabel>
 						<Input
 							id="middlename"
 							name="middlename"
-							inputProps={{ maxLength: 15 }}
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.nameControl
+								}
+							}}
 							className={classes.resize}
 							error={!this.state.middlenameValid}
 							value={this.state.middlename}
@@ -702,12 +763,17 @@ class ContactCompanyForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="lastname">Last Name</InputLabel>
 						<Input
 							id="lastname"
 							name="lastname"
-							inputProps={{ maxLength: 20 }}
+							inputProps={{
+								maxLength: 20,
+								classes: {
+									input: classes.nameControl
+								}
+							}}
 							className={classes.resize}
 							error={!this.state.lastnameValid}
 							value={this.state.lastname}
@@ -715,7 +781,7 @@ class ContactCompanyForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.typeControl ].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.comboControl ].join(' ')}>
 						<TextField
 							id="idDepartment"
 							select
@@ -724,7 +790,7 @@ class ContactCompanyForm extends React.Component {
 							value={this.state.idDepartment}
 							InputProps={{
 								classes: {
-									input: classes.resize
+									input: classes.comboControl
 								}
 							}}
 							onChange={(event) => this.onSelectChangeHandler(event)}
@@ -738,7 +804,7 @@ class ContactCompanyForm extends React.Component {
 							))}
 						</TextField>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.typeControl ].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.comboControl ].join(' ')}>
 						<TextField
 							id="idSupervisor"
 							select
@@ -747,7 +813,7 @@ class ContactCompanyForm extends React.Component {
 							value={this.state.idSupervisor}
 							InputProps={{
 								classes: {
-									input: classes.resize
+									input: classes.comboControl
 								}
 							}}
 							onChange={(event) => this.onSelectChangeHandler(event)}
@@ -771,7 +837,12 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="email"
 							name="email"
-							inputProps={{ maxLength: 30 }}
+							inputProps={{
+								maxLength: 30,
+								classes: {
+									input: classes.emailControl
+								}
+							}}
 							className={classes.resize}
 							error={!this.state.emailValid}
 							value={this.state.email}
@@ -785,7 +856,12 @@ class ContactCompanyForm extends React.Component {
 						<Input
 							id="number"
 							name="number"
-							inputProps={{ maxLength: 15 }}
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.numberControl
+								}
+							}}
 							className={classes.resize}
 							error={!this.state.numberValid}
 							value={this.state.number}
@@ -794,7 +870,7 @@ class ContactCompanyForm extends React.Component {
 						/>
 					</FormControl>
 
-					<FormControl className={[ classes.formControl, classes.typeControl ].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.comboControl ].join(' ')}>
 						<TextField
 							id="type"
 							select
@@ -803,7 +879,7 @@ class ContactCompanyForm extends React.Component {
 							value={this.state.type}
 							InputProps={{
 								classes: {
-									input: classes.resize
+									input: classes.comboControl
 								}
 							}}
 							onChange={(event) => this.onSelectChangeHandler(event)}
@@ -832,7 +908,8 @@ class ContactCompanyForm extends React.Component {
 							>
 								<div>
 									<Button
-										disabled={!this.state.formValid}
+										disabled={this.state.loading}
+										//	disabled={!this.state.formValid}
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
@@ -859,7 +936,7 @@ class ContactCompanyForm extends React.Component {
 							<Tooltip title={'Cancel Operation'}>
 								<div>
 									<Button
-										disabled={!this.state.enableCancelButton}
+										disabled={this.state.loading || !this.state.enableCancelButton}
 										variant="fab"
 										color="secondary"
 										className={buttonClassname}
@@ -876,7 +953,8 @@ class ContactCompanyForm extends React.Component {
 					<ContactsTable
 						data={this.state.data}
 						types={this.state.types}
-						supervisors={this.state.supervisors}
+						loading={this.state.loading}
+						supervisors={this.state.allSupervisors}
 						departments={this.state.departments}
 						onEditHandler={this.onEditHandler}
 						onDeleteHandler={this.onDeleteHandler}

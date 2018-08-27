@@ -136,7 +136,7 @@ const styles = (theme) => ({
 
 let id = 0;
 
-class CustomizedTable extends React.Component {
+class ContactsTable extends React.Component {
 	state = {
 		page: 0,
 		rowsPerPage: 5
@@ -154,7 +154,7 @@ class CustomizedTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+		console.log('Loading');
 		return (
 			<Paper className={classes.root}>
 				<Table className={classes.table}>
@@ -179,24 +179,30 @@ class CustomizedTable extends React.Component {
 									<CustomTableCell component="th" padding="none">
 										{' '}
 										<Tooltip title="Edit">
-											<IconButton
-												onClick={() => {
-													return this.props.onEditHandler({ ...row });
-												}}
-											>
-												<EditIcon color="primary" />
-											</IconButton>
+											<div>
+												<IconButton
+													disabled={this.props.loading}
+													onClick={() => {
+														return this.props.onEditHandler({ ...row });
+													}}
+												>
+													<EditIcon color="primary" />
+												</IconButton>
+											</div>
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell component="th" padding="none">
 										<Tooltip title="Delete">
-											<IconButton
-												onClick={() => {
-													return this.props.onDeleteHandler(row.idSearch);
-												}}
-											>
-												<DeleteIcon color="primary" />
-											</IconButton>
+											<div>
+												<IconButton
+													disabled={this.props.loading}
+													onClick={() => {
+														return this.props.onDeleteHandler(row.idSearch);
+													}}
+												>
+													<DeleteIcon color="primary" />
+												</IconButton>
+											</div>
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell>{row.firstname}</CustomTableCell>
@@ -286,8 +292,8 @@ class CustomizedTable extends React.Component {
 	}
 }
 
-CustomizedTable.propTypes = {
+ContactsTable.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(CustomizedTable);
+export default withStyles(styles)(ContactsTable);

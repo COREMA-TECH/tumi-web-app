@@ -1,5 +1,7 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,41 +9,96 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
+
+const styles = (theme) => ({
+	root: {
+		display: 'flex',
+		alignItems: 'center'
+	},
+	wrapper: {
+		margin: theme.spacing.unit,
+		position: 'relative'
+	},
+	buttonSuccess: {
+		backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			backgroundColor: green[700]
+		}
+	},
+	fabProgress: {
+		color: green[500],
+		position: 'absolute',
+		top: -6,
+		left: -6,
+		zIndex: 1
+	},
+	buttonProgress: {
+		color: green[500],
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12
+	}
+});
 
 function Transition(props) {
-    return <Slide direction="up" {...props} />;
+	return <Slide direction="up" {...props} />;
 }
 
 class AlertDialogSlide extends React.Component {
-    state = {
-        open: this.props.open
-    };
+	timer = null;
 
-    render(props) {
-        return (
-            <Dialog
-                open={this.props.open}
-                TransitionComponent={Transition}
-                keepMounted
-                onClose={this.props.handleClose}
-                aria-labelledby="alert-dialog-slide-title"
-                aria-describedby="alert-dialog-slide-description"
-            >
-                <DialogTitle id="alert-dialog-slide-title">{'Confirm action?'}</DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-slide-description">{this.props.content}</DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.props.handleConfirm} color="primary" variant="contained">
-                        Accept
-                    </Button>
-                    <Button onClick={this.props.handleClose} color="secondary" variant="contained">
-                        Cancel
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
-    }
+	state = {
+		open: this.props.open
+	};
+
+	componentWillUnmount() {
+		clearTimeout(this.timer);
+	}
+
+	render() {
+		const { classes } = this.props;
+		return (
+			<Dialog
+				open={this.props.open}
+				TransitionComponent={Transition}
+				keepMounted
+				onClose={this.props.handleClose}
+				aria-labelledby="alert-dialog-slide-title"
+				aria-describedby="alert-dialog-slide-description"
+			>
+				<DialogTitle id="alert-dialog-slide-title">{'Confirm action?'}</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-slide-description">{this.props.content}</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<div className={classes.wrapper}>
+						<Button
+							onClick={this.props.handleConfirm}
+							variant="contained"
+							className={classes.buttonSuccess}
+							disabled={this.props.loadingConfirm}
+						>
+							Accept
+						</Button>
+
+						{this.props.loadingConfirm && <CircularProgress size={24} className={classes.buttonProgress} />}
+					</div>
+					<Button onClick={this.props.handleClose} color="secondary" variant="contained">
+						Cancel
+					</Button>
+				</DialogActions>
+			</Dialog>
+		);
+	}
 }
 
-export default AlertDialogSlide;
+AlertDialogSlide.propTypes = {
+	classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(AlertDialogSlide);

@@ -6,7 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import CreateCompanyForm from '../Company/CreateCompanyForm/CreateCompanyForm';
 import ContactCompanyForm from '../Company/ContactCompanyForm/ContactCompanyForm';
-import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/DepartmentsCompanyForm';
+import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/';
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from '../Generic/SnackBar';
 import PositionsCompanyForm from '../Company/PositionsCompanyForm/PositionsCompanyForm';
@@ -114,10 +114,16 @@ class FullWidthTabs extends React.Component {
 						/>
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<DepartmentsCompanyForm />
+						<DepartmentsCompanyForm
+							idCompany={this.props.idCompany}
+							handleOpenSnackbar={this.handleOpenSnackbar}
+						/>
 					</TabContainer>
 					<TabContainer dir={theme.direction}>
-						<PositionsCompanyForm />
+						<PositionsCompanyForm
+							idCompany={this.props.idCompany}
+							handleOpenSnackbar={this.handleOpenSnackbar}
+						/>
 					</TabContainer>
 				</SwipeableViews>
 			</div>
