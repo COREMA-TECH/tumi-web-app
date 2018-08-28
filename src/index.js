@@ -13,7 +13,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 // Endpoint URL
 const httpLink = createHttpLink({
 	//uri: 'https://morning-lake-18657.herokuapp.com/graphql'
-	uri: 'http://192.168.0.102:3000/graphql'
+	uri: 'http://192.168.0.102:4000/graphql'
 });
 
 // To configure Apollo client with link (url) endpoint and cache option
