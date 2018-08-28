@@ -257,24 +257,24 @@ class ContactCompanyForm extends React.Component {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let emailHasValue = this.state.email.trim() == '';
-		let firstnameHasValue = this.state.firstname.trim() == '';
-		let middlenameHasValue = this.state.middlename.trim() == '';
-		let lastnameHasValue = this.state.lastname.trim() == '';
-		let numberHasValue = this.state.number.trim() == '';
+		let emailHasValue = this.state.email.trim() != '';
+		let firstnameHasValue = this.state.firstname.trim() != '';
+		let middlenameHasValue = this.state.middlename.trim() != '';
+		let lastnameHasValue = this.state.lastname.trim() != '';
+		let numberHasValue = this.state.number.trim() != '';
 		let typeHasValue = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentHasValue =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && !this.state.idDepartment !== '';
 		let idSupervisorHasValue =
 			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
 		return (
-			emailHasValue &&
-			firstnameHasValue &&
-			middlenameHasValue &&
-			lastnameHasValue &&
-			numberHasValue &&
-			typeHasValue &&
-			idDepartmentHasValue &&
+			emailHasValue ||
+			firstnameHasValue ||
+			middlenameHasValue ||
+			lastnameHasValue ||
+			numberHasValue ||
+			typeHasValue ||
+			idDepartmentHasValue ||
 			idSupervisorHasValue
 		);
 	};

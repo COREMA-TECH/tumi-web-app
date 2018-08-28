@@ -9,7 +9,7 @@ import ContactCompanyForm from '../Company/ContactCompanyForm/ContactCompanyForm
 import DepartmentsCompanyForm from '../Company/DepartmentsCompanyForm/';
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from '../Generic/SnackBar';
-import PositionsCompanyForm from '../Company/PositionsCompanyForm/PositionsCompanyForm';
+import PositionsCompanyForm from '../Company/PositionsCompanyForm/';
 function TabContainer({ children, dir }) {
 	return (
 		<Typography
