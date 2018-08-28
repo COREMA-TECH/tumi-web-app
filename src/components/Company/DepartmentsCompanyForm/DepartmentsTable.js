@@ -154,7 +154,7 @@ class DepartmentsTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-		console.log('Loading');
+
 		return (
 			<Paper className={classes.root}>
 				<Table className={classes.table}>

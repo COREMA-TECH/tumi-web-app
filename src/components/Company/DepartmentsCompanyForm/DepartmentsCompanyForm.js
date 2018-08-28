@@ -197,10 +197,10 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let codeHasValue = this.state.code.trim() == '';
-		let descriptionHasValue = this.state.description.trim() == '';
+		let codeHasValue = this.state.code.trim() != '';
+		let descriptionHasValue = this.state.description.trim() != '';
 
-		return codeHasValue && descriptionHasValue;
+		return codeHasValue || descriptionHasValue;
 	};
 	validateAllFields() {
 		let codeValid = this.state.code.trim().length >= 2;
@@ -389,7 +389,6 @@ class DepartmentsCompanyForm extends React.Component {
 				loadingConfirm: true
 			},
 			() => {
-				console.log('Id To delete: ', this.state.idToDelete);
 				this.props.client
 					.mutate({
 						mutation: this.DELETE_DEPARTMENTS_QUERY,
