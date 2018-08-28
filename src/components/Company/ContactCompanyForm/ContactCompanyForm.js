@@ -257,11 +257,11 @@ class ContactCompanyForm extends React.Component {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let emailHasValue = this.state.email.trim() != '';
-		let firstnameHasValue = this.state.firstname.trim() != '';
-		let middlenameHasValue = this.state.middlename.trim() != '';
-		let lastnameHasValue = this.state.lastname.trim() != '';
-		let numberHasValue = this.state.number.trim() != '';
+		let emailHasValue = this.state.email != '';
+		let firstnameHasValue = this.state.firstname != '';
+		let middlenameHasValue = this.state.middlename != '';
+		let lastnameHasValue = this.state.lastname != '';
+		let numberHasValue = this.state.number != '';
 		let typeHasValue = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentHasValue =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && !this.state.idDepartment !== '';
@@ -325,23 +325,23 @@ class ContactCompanyForm extends React.Component {
 		switch (fieldName) {
 			case 'email':
 				emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-				emailHasValue = value.trim() != '';
+				emailHasValue = value != '';
 				break;
 			case 'firstname':
 				firstnameValid = value.trim().length >= 2;
-				firstnameHasValue = value.trim() != '';
+				firstnameHasValue = value != '';
 				break;
 			case 'middlename':
 				middlenameValid = value.trim().length >= 2;
-				middlenameHasValue = value.trim() != '';
+				middlenameHasValue = value != '';
 				break;
 			case 'lastname':
 				lastnameValid = value.trim().length >= 2;
-				lastnameHasValue = value.trim() != '';
+				lastnameHasValue = value != '';
 				break;
 			case 'number':
 				numberValid = value.trim().length >= 2;
-				numberHasValue = value.trim() != '';
+				numberHasValue = value != '';
 				break;
 			case 'type':
 				typeValid = value !== null && value !== 0 && value !== '';

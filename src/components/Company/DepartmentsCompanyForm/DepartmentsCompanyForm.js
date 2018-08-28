@@ -197,8 +197,8 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let codeHasValue = this.state.code.trim() != '';
-		let descriptionHasValue = this.state.description.trim() != '';
+		let codeHasValue = this.state.code != '';
+		let descriptionHasValue = this.state.description != '';
 
 		return codeHasValue || descriptionHasValue;
 	};
@@ -223,11 +223,11 @@ class DepartmentsCompanyForm extends React.Component {
 		switch (fieldName) {
 			case 'code':
 				codeValid = value.trim().length >= 2;
-				codeHasValue = value.trim() != '';
+				codeHasValue = value != '';
 				break;
 			case 'description':
 				descriptionValid = value.trim().length >= 2;
-				descriptionHasValue = value.trim() != '';
+				descriptionHasValue = value != '';
 				break;
 			default:
 				break;
