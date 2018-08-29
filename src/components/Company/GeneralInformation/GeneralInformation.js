@@ -127,6 +127,16 @@ class GeneralInformation extends Component {
         }
     `;
 
+    /**********************************************************
+     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
+     **********************************************************/
+
+
+
+    /**********************************************************
+     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
+     **********************************************************/
+
 
     /**
      * Events of the component
@@ -138,7 +148,6 @@ class GeneralInformation extends Component {
     handleClose = () => {
         this.setState({open: false});
     };
-
     /**
      * End of the events
      */
@@ -150,6 +159,7 @@ class GeneralInformation extends Component {
      * @returns {XML} component
      */
     render() {
+
         /**
          * If the data is not loaded, make the Query to get company information by id
          */

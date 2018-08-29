@@ -198,6 +198,8 @@ class ComposedTextField extends React.Component {
         })
     };
 
+
+
     validateAllState() {
         return (
             this.state.name === '' ||

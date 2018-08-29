@@ -62,6 +62,7 @@ const styles = theme => ({
 class CustomizedTabs extends React.Component {
     state = {
         value: 0,
+        item: 4
     };
 
     handleChange = (event, value) => {
@@ -95,7 +96,7 @@ class CustomizedTabs extends React.Component {
                         label="Departments"
                     />
                 </Tabs>
-                {value === 0 && <GeneralInformation idCompany={this.props.idCompany}/>}
+                {value === 0 && <GeneralInformation idCompany={this.props.idCompany} item={this.state.item}/>}
 
 
                 <div className="advanced-tab-options">
@@ -112,16 +113,14 @@ class CustomizedTabs extends React.Component {
                         () => {
                             if (this.state.value < 2){
                                 // If current tab is 0 - CREATE COMPANY MUTATION should be execute
-                                if(this.state.value === 0) {
-
-                                }
 
                                 this.setState(prevState => ({
+                                    item: prevState.value,
                                     value: (prevState.value + 1)
                                 }))
                             }
                         }
-                    }>Next</span>
+                    }>{this.state.value < 2 ? 'Next' : 'Finish'}</span>
                 </div>
             </div>
         );
