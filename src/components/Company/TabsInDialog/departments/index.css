@@ -1,0 +1,12 @@
+.department-form {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    padding: 3em;
+}
+
+.department-form input {
+    margin: .5em;
+}

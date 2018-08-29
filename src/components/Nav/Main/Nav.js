@@ -7,7 +7,6 @@ class Nav extends Component {
 	render() {
 		return (
 			<div className="nav">
-				<HeaderNav />
 				<Menu />
 			</div>
 		);

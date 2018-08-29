@@ -1,0 +1,27 @@
+.input-file-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-file-container .input-form--file,
+.input-file-container .input-form--file-button {
+    border-radius: 5px 0 0 5px;
+    padding: .2em;
+    font-size: 1em;
+    outline: none;
+}
+
+.input-file-container .input-form--file-button {
+    border-radius:0 5px 5px 0;
+    padding: .2em 1.5em;
+    background: #D20A90;
+    color: #fff;
+    font-weight: 300;
+    font-family: Segoe UI;
+    border: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

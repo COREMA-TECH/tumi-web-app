@@ -1,61 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-
+import Button from '@material-ui/core/Button';
+import './index.css';
 const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
-    button: {
-        display: 'block',
-        marginTop: theme.spacing.unit * 2,
-    },
     formControl: {
-        margin: theme.spacing.unit,
-        minWidth: '60%',
+        minWidth: 180,
+        background: '#fff'
+    },
+    select: {
+        border: '1px solid #E6E6E6',
+        borderRadius: '5px',
+        zIndex: 1000
     },
 });
 
 class ControlledOpenSelect extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
     state = {
         age: '',
         open: false,
     };
 
     handleChange = event => {
-        this.setState({[event.target.name]: event.target.value});
-
-        // if(this.props.label === "Departments") {
-        //     this.props.values.map(item => {
-        //         if(event.target.value === item.Id){
-        //             this.props.update(item.Name);
-        //         }
-        //     })
-        // } else {
-        //     this.props.update(event.target.value);
-        // }
+        this.setState({ [event.target.name]: event.target.value });
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     handleOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
 
         return (
             <form autoComplete="off">
-                <FormControl className="select-large">
-                    <InputLabel htmlFor="demo-controlled-open-select">{this.props.label}</InputLabel>
+                <FormControl className="select-form-customized default">
                     <Select
-                        className="select-large"
+                        className={classes.select}
                         open={this.state.open}
                         onClose={this.handleClose}
                         onOpen={this.handleOpen}
@@ -63,18 +58,16 @@ class ControlledOpenSelect extends React.Component {
                         onChange={this.handleChange}
                         inputProps={{
                             name: 'age',
-                            id: 'demo-controlled-open-select',
                         }}
                     >
-                        <MenuItem value={this.props.label}>
+                        <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
                         {
-                            this.props.values.map(item => {
+                            this.props.data.map(item => {
                                 return <MenuItem key={uuidv4()} value={item.Id}>{item.Name}</MenuItem>
                             })
                         }
-
                     </Select>
                 </FormControl>
             </form>

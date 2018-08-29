@@ -8,6 +8,7 @@ class MainContainer extends Component {
         return (
             <div className="main-container">
                 <div className="main-container--header">
+                    <span className="main-container__title">Company Information</span>
                     <Toolbar/>
                 </div>
                 <div className="main-container--container">

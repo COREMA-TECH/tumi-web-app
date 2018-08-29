@@ -11,8 +11,6 @@ import Select from "../../material-ui/Select";
 import './index.css';
 import DatePicker from "../../material-ui/DatePicker";
 import Switch from "../../material-ui/Switch";
-import Mutation from "react-apollo/Mutation";
-import Button from "@material-ui/core/es/Button/Button";
 
 const styles = (theme) => ({
     container: {
@@ -31,10 +29,7 @@ const styles = (theme) => ({
         margin: theme.spacing.unit,
         width: '23%',
     },
-    formControlInline: {
-
-
-    },
+    formControlInline: {},
     addressControl: {
         width: '47%'
     },
@@ -77,6 +72,7 @@ class ComposedTextField extends React.Component {
         room: '',
         rate: '',
         fax: '',
+        zipCode: '',
         phonePrefix: '505',
         email: '',
         code: '',
@@ -107,7 +103,7 @@ class ComposedTextField extends React.Component {
     getStatesQuery = gql`
         query States($parent: Int!)
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: 6, Id_Catalog: 3) {
                 Id
                 Name
                 IsActive
@@ -119,7 +115,7 @@ class ComposedTextField extends React.Component {
     getCitiesQuery = gql`
         query Cities($parent: Int!)
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: 140, Id_Catalog: 5) {
                 Id
                 Name
                 IsActive
@@ -551,7 +547,7 @@ class ComposedTextField extends React.Component {
                             </FormControl>
 
                             <div className="container-row">
-                                <span className="is-active" >
+                                <span className="is-active">
                                     <span>Active:</span>
                                         <Switch
                                             value={this.state.active}

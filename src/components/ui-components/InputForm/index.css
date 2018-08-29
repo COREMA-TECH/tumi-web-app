@@ -1,0 +1,14 @@
+.input-form {
+    width: 220px;
+    padding: .5em;
+
+    border: 1px solid #E6E6E6;
+    border-radius: 5px;
+
+    outline: none;
+    transition: all .450s;
+}
+
+.input-form:focus {
+    border: 1px solid #3DA2C7;
+}
