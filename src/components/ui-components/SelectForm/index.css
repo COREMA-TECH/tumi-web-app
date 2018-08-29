@@ -2,3 +2,7 @@
     width: 220px !important;
     padding: 0 !important;
 }
+
+.select-form-customized__item {
+    padding: 5px !important;
+}

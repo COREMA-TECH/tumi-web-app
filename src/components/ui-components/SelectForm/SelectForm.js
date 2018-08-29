@@ -17,7 +17,6 @@ const styles = theme => ({
     select: {
         border: '1px solid #E6E6E6',
         borderRadius: '5px',
-        zIndex: 1000
     },
 });
 
@@ -33,6 +32,16 @@ class ControlledOpenSelect extends React.Component {
 
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value });
+
+        // if(this.props.label === "Departments") {
+        //     this.props.values.map(item => {
+        //         if(event.target.value === item.Id){
+        //             this.props.update(item.Name);
+        //         }
+        //     })
+        // } else {
+        //     this.props.update(event.target.value);
+        // }
     };
 
     handleClose = () => {
@@ -60,12 +69,12 @@ class ControlledOpenSelect extends React.Component {
                             name: 'age',
                         }}
                     >
-                        <MenuItem value="">
+                        <MenuItem value="" className="select-form-customized__item">
                             <em>None</em>
                         </MenuItem>
                         {
                             this.props.data.map(item => {
-                                return <MenuItem key={uuidv4()} value={item.Id}>{item.Name}</MenuItem>
+                                return <MenuItem className="select-form-customized__item" key={uuidv4()} value={item.Id}>{item.Name}</MenuItem>
                             })
                         }
                     </Select>

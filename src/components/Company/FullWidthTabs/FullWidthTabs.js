@@ -4,6 +4,7 @@ import {withStyles} from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import GeneralInformation from "../GeneralInformation/GeneralInformation";
+import './index.css';
 
 const styles = theme => ({
     root: {
@@ -18,10 +19,10 @@ const styles = theme => ({
         borderRadius: '25px 25px 0px 0px',
         marginLeft: '5px',
         marginRight: '5px',
-        height: '3px'
+        height: '3px',
     },
     tabRoot: {
-        fontSize: '28px',
+        fontSize: '32px',
         textTransform: 'initial',
         minWidth: 72,
         fontWeight: theme.typography.fontWeightRegular,
@@ -50,7 +51,8 @@ const styles = theme => ({
             color: '#3DA2C7',
         },
     },
-    tabSelected: {},
+    tabSelected: {
+    },
     typography: {
         padding: theme.spacing.unit * 3,
 
@@ -64,8 +66,6 @@ class CustomizedTabs extends React.Component {
 
     handleChange = (event, value) => {
         this.setState({value});
-        console.log("Value:   " + value);
-
     };
 
     render() {
@@ -95,11 +95,33 @@ class CustomizedTabs extends React.Component {
                         label="Departments"
                     />
                 </Tabs>
-                {value === 0 && <GeneralInformation />}
+                {value === 0 && <GeneralInformation idCompany={this.props.idCompany}/>}
+
 
                 <div className="advanced-tab-options">
-                    <span>Back</span>
-                    <span>Next</span>
+                    <span className="options-button options-button--back" onClick={
+                        () => {
+                            if (this.state.value !== 0){
+                                this.setState(prevState => ({
+                                    value: (prevState.value - 1)
+                                }))
+                            }
+                        }
+                    }>Back</span>
+                    <span className="options-button options-button--next" onClick={
+                        () => {
+                            if (this.state.value < 2){
+                                // If current tab is 0 - CREATE COMPANY MUTATION should be execute
+                                if(this.state.value === 0) {
+
+                                }
+
+                                this.setState(prevState => ({
+                                    value: (prevState.value + 1)
+                                }))
+                            }
+                        }
+                    }>Next</span>
                 </div>
             </div>
         );

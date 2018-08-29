@@ -12,3 +12,8 @@
 .input-form:focus {
     border: 1px solid #3DA2C7;
 }
+
+.input-form--textarea {
+    width: 320px;
+    height: 8vh;
+}

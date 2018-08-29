@@ -15,7 +15,7 @@ class CompanyList extends Component {
 
 	getCompaniesQuery = gql`
 		{
-			getcompanies(Id: null, IsActive: 1) {
+            getbusinesscompanies(Id: null, IsActive: 1) {
 				Id
 				Code
 				Name
@@ -66,7 +66,7 @@ class CompanyList extends Component {
 					//if (networkStatus === 4) return <LinearProgress />;
 					if (loading) return <LinearProgress />;
 					if (error) return <p>Error </p>;
-					if (data.getcompanies != null && data.getcompanies.length > 0) {
+					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
 						console.log(networkStatus);
 						return (
 							<div className="company-list">
@@ -79,7 +79,7 @@ class CompanyList extends Component {
                                         Add Company
 									</button>
 								</div>
-								{this.renderCards(data.getcompanies)}
+								{this.renderCards(data.getbusinesscompanies)}
 							</div>
 						);
 					}

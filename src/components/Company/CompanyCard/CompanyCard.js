@@ -73,21 +73,6 @@ class CompanyCard extends React.Component {
 								<DeleteIcon>send</DeleteIcon>
 							</Button>
 						</div>
-						<Mutation mutation={deleteCompany}>
-							{(delcompanies, { loading, error }) => (
-								<AlertDialogSlide
-									handleClose={this.handleClose}
-									handleConfirm={() => {
-										delcompanies({ variables: { Id: this.props.idCompany, IsActive: 0 } });
-
-										this.setState({ open: false });
-										this.props.loadCompanies();
-									}}
-									open={this.state.open}
-									content="Do you really want to continue whit this operation?"
-								/>
-							)}
-						</Mutation>
 					</div>
 				)}
 			/>

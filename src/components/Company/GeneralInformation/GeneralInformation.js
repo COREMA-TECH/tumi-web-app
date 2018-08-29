@@ -153,9 +153,9 @@ class GeneralInformation extends Component {
         /**
          * If the data is not loaded, make the Query to get company information by id
          */
-        if (this.state.loaded === false) {
+        if (this.state.loaded === false && this.props.idCompany !== 0) {
             return (
-                <Query query={this.getCompanyQuery} variables={{id: 26}}>
+                <Query query={this.getCompanyQuery} variables={{id: this.props.idCompany}}>
                     {({loading, error, data, refetch,}) => {
                         if (loading) return <LinearProgress/>;
                         if (error) return <p>Error </p>;
@@ -354,12 +354,9 @@ class GeneralInformation extends Component {
                             </div>
                         </div>
                         <DialogActions className="dialog-footer">
-                            <Button onClick={this.handleClose} color="secondary">
-                                Cancel
-                            </Button>
-                            <Button onClick={this.handleClose} color="primary">
-                                Next
-                            </Button>
+                            <div className="contract-footer">
+                                <div className="contract-next-button">Save</div>
+                            </div>
                         </DialogActions>
                     </div>
                 </Dialog>
