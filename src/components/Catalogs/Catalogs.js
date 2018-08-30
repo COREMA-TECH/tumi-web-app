@@ -116,8 +116,8 @@ class Catalogs extends React.Component {
 		}
 	`;
 	GET_CATALOG_ITEMS_QUERY = gql`
-		{
-			getcatalogitem(IsActive: 1) {
+		query getcatalogitem($Id_Catalog: Int) {
+			getcatalogitem(IsActive: 1, Id_Catalog: $Id_Catalog) {
 				Id
 				Id_Catalog
 				Id_Parent
@@ -163,20 +163,18 @@ class Catalogs extends React.Component {
 		id: '',
 		idToDelete: null,
 		idToEdit: null,
-		idCatalog: '',
+
 		idParent: '',
 		name: '',
 		displayLabel: '',
 		description: '',
 		value: '',
 
-		idCatalogValid: false,
 		idParentValid: false,
 		nameValid: false,
 		displayLabelValid: false,
 		descriptionValid: false,
 
-		idCatalogHasValue: false,
 		idParentHasValue: false,
 		nameHasValue: false,
 		displayLabelHasValue: false,
@@ -187,10 +185,7 @@ class Catalogs extends React.Component {
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
-		loadingData: false,
-		loadingCatalogs: false,
-		loadingParents: false,
-		loadingAllParents: false,
+
 		loading: false,
 		success: false,
 		loadingConfirm: false
@@ -201,11 +196,18 @@ class Catalogs extends React.Component {
 		this.state = {
 			data: [],
 			catalogs: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
+			idCatalog: 0,
+			idCatalogHasValue: true,
+			idCatalogValid: true,
 			parents: [],
 			allparents: [],
 			openSnackbar: false,
 			variantSnackbar: '',
 			messageSnackbar: '',
+			loadingData: true,
+			loadingCatalogs: true,
+			loadingParents: true,
+			loadingAllParents: true,
 			idCompany: this.props.idCompany,
 			loadingData: false,
 			...this.DEFAULT_STATE
@@ -229,7 +231,6 @@ class Catalogs extends React.Component {
 				...this.DEFAULT_STATE
 			},
 			() => {
-				this.loadParents();
 				this.loadAllParents();
 				this.focusTextInput();
 			}
@@ -257,7 +258,9 @@ class Catalogs extends React.Component {
 		const name = e.target.name;
 		const value = e.target.value;
 		this.setState({ [name]: value }, this.validateField(name, value));
-		if (name == 'idCatalog') this.loadParents(value, 0);
+		if (name == 'idCatalog') {
+			this.loadParents(value, 0), this.loadCatalogsItems(value);
+		}
 	}
 	enableCancelButton = () => {
 		let idCatalogHasValue = this.state.idCatalog !== null && this.state.idCatalog !== '';
@@ -379,6 +382,7 @@ class Catalogs extends React.Component {
 		this.deleteCatalogItem();
 	};
 	onEditHandler = ({ Id, Id_Catalog, Id_Parent, Name, DisplayLabel, Description, Value }) => {
+		console.log(Id_Parent);
 		this.setState(
 			{
 				idToEdit: Id,
@@ -407,7 +411,7 @@ class Catalogs extends React.Component {
 				buttonTitle: this.TITLE_EDIT
 			},
 			() => {
-				this.loadParents(Id_Catalog, Id);
+				this.loadParents(Id_Catalog, Id, Id_Parent);
 				this.focusTextInput();
 			}
 		);
@@ -419,7 +423,6 @@ class Catalogs extends React.Component {
 	componentWillMount() {
 		this.loadCatalogs();
 		this.loadCatalogsItems();
-		this.loadParents();
 		this.loadAllParents();
 	}
 
@@ -431,13 +434,20 @@ class Catalogs extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
+				console.log(data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0);
+				let idCatalog = data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0;
 				if (data.data.getcatalog != null) {
 					this.setState(
 						{
-							catalogs: data.data.getcatalog
+							catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
+							idCatalog: idCatalog,
+							idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
+							idCatalogValid: data.data.getcatalog.length > 0 ? true : false
 						},
 						() => {
-							this.resetState();
+							this.loadParents(idCatalog);
+							this.loadCatalogsItems(data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0);
+							this.setState({ loadingData: false }, this.resetState());
 						}
 					);
 				} else {
@@ -452,11 +462,13 @@ class Catalogs extends React.Component {
 			});
 	};
 
-	loadCatalogsItems = () => {
+	loadCatalogsItems = (idCatalog = 0) => {
+		console.log(idCatalog);
 		this.setState({ loadingCatalogs: true });
 		this.props.client
 			.query({
 				query: this.GET_CATALOG_ITEMS_QUERY,
+				variables: { Id_Catalog: idCatalog },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
@@ -466,7 +478,7 @@ class Catalogs extends React.Component {
 							data: data.data.getcatalogitem
 						},
 						() => {
-							this.resetState();
+							this.setState({ loadingCatalogs: false }, this.resetState());
 						}
 					);
 				} else {
@@ -483,7 +495,7 @@ class Catalogs extends React.Component {
 				this.setState({ loadingCatalogs: false });
 			});
 	};
-	loadParents = (idCatalog = -1, id = 0) => {
+	loadParents = (idCatalog = -1, id = 0, idParent = -1) => {
 		this.setState({ loadingParents: true });
 		this.props.client
 			.query({
@@ -492,10 +504,14 @@ class Catalogs extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
+				console.log(data.data.getparentcatalogitem);
 				if (data.data.getparentcatalogitem != null) {
 					this.setState({
 						parents: data.data.getparentcatalogitem,
-						loadingParents: false
+						loadingParents: false,
+						idParent: idParent,
+						idParentHasValue: idParent > -1,
+						idParentValid: idParent > -1
 					});
 				} else {
 					this.handleOpenSnackbar(
@@ -589,7 +605,7 @@ class Catalogs extends React.Component {
 							'success',
 							isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
 						);
-						this.loadCatalogsItems();
+						this.loadCatalogsItems(this.state.idCatalog);
 						this.resetState();
 					})
 					.catch((error) => {
@@ -611,7 +627,7 @@ class Catalogs extends React.Component {
 			}
 		);
 	};
-	deleteCatalogItem = (id) => {
+	deleteCatalogItem = () => {
 		this.setState(
 			{
 				loadingConfirm: true
@@ -626,7 +642,7 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.handleOpenSnackbar('success', 'Catalog Item Deleted!');
-						this.loadCatalogsItems();
+						this.loadCatalogsItems(this.state.idCatalog);
 						this.resetState();
 					})
 					.catch((error) => {

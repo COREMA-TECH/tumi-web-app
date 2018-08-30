@@ -441,6 +441,9 @@ class CatalogsTable extends React.Component {
 												margin="normal"
 												disabled
 											>
+												<MenuItem key={0} value={0} name="None">
+													<em>None</em>
+												</MenuItem>
 												{this.props.parents.map(({ Id, DisplayLabel }) => (
 													<MenuItem key={Id} value={Id} name={DisplayLabel}>
 														{DisplayLabel}
