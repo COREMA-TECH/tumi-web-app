@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './index.css';
 import InputForm from "../../ui-components/InputForm/InputForm";
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import TabsInDialog from "../TabsInDialog/TabsInDialog";
@@ -132,7 +131,6 @@ class GeneralInformation extends Component {
      **********************************************************/
 
 
-
     /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
@@ -148,6 +146,7 @@ class GeneralInformation extends Component {
     handleClose = () => {
         this.setState({open: false});
     };
+
     /**
      * End of the events
      */
