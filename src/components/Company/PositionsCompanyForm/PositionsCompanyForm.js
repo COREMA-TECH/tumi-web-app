@@ -89,7 +89,7 @@ function TextMaskCustom(props) {
 		<MaskedInput
 			{...other}
 			ref={inputRef}
-			mask={[ '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/ ]}
+			mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
 			placeholderChar={'\u2000'}
 			showMask
 		/>
@@ -587,7 +587,7 @@ class PositionsCompanyForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
 						<TextField
 							id="idDepartment"
 							select
@@ -610,7 +610,7 @@ class PositionsCompanyForm extends React.Component {
 							))}
 						</TextField>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
 						<InputLabel htmlFor="position">Title</InputLabel>
 						<Input
 							id="position"
@@ -628,7 +628,7 @@ class PositionsCompanyForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
 						<InputLabel htmlFor="payrate">Pay Rate</InputLabel>
 						<Input
 							id="payrate"
@@ -645,7 +645,7 @@ class PositionsCompanyForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
+					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
 						<InputLabel htmlFor="billrate">Bill Rate</InputLabel>
 						<Input
 							id="billrate"
@@ -668,12 +668,12 @@ class PositionsCompanyForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 								}
 							>
 								<div>
@@ -688,12 +688,12 @@ class PositionsCompanyForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+													<SaveIcon />
+												) : (
+													<AddIcon />
+												)}
 									</Button>
 								</div>
 							</Tooltip>
