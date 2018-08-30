@@ -6,6 +6,7 @@ import CreateCompany from '../../Company/CreateCompany/CreateCompany';
 import CreateRole from '../../Security/Roles';
 import CreateForms from '../../Security/Forms';
 import CreateUsers from '../../Security/Users';
+import Catalogs from '../../Catalogs/Catalogs';
 
 class Container extends Component {
 	render() {
@@ -17,6 +18,7 @@ class Container extends Component {
 				<Route exact path="/Roles" component={CreateRole} />
 				<Route exact path="/Forms" component={CreateForms} />
 				<Route exact path="/Users" component={CreateUsers} />
+				<Route exact path="/catalogs" component={Catalogs} />
 			</div>
 		);
 	}

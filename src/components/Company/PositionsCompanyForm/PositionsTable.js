@@ -133,6 +133,9 @@ const styles = (theme) => ({
 		position: 'absolute',
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 3
+	},
+	numberControl: {
+		textAlign: 'right'
 	}
 });
 
@@ -160,6 +163,7 @@ function NumberFormatCustom(props) {
 	return (
 		<NumberFormat
 			{...other}
+			style={{ textAlign: 'right', width: '100%' }}
 			getInputRef={inputRef}
 			onValueChange={(values) => {
 				onChange({
@@ -210,10 +214,11 @@ class PositionsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" />
 							<CustomTableCell padding="none" />
-							<CustomTableCell>Department</CustomTableCell>
+							<CustomTableCell padding="none">Department</CustomTableCell>
 							<CustomTableCell>Title</CustomTableCell>
 							<CustomTableCell>Bill Rate</CustomTableCell>
 							<CustomTableCell>Pay Rate</CustomTableCell>
+							<CustomTableCell padding="none">Shift</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -249,7 +254,7 @@ class PositionsTable extends React.Component {
 											</div>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell>
+									<CustomTableCell padding="none" style={{ width: '200px' }}>
 										<TextField
 											id="department"
 											select
@@ -257,6 +262,7 @@ class PositionsTable extends React.Component {
 											value={row.Id_Department}
 											margin="normal"
 											disabled
+											style={{ width: '100%' }}
 										>
 											{this.props.departments.map(({ Id, Description }) => (
 												<MenuItem key={Id} value={Id} name={Description}>
@@ -266,27 +272,44 @@ class PositionsTable extends React.Component {
 										</TextField>
 									</CustomTableCell>
 									<CustomTableCell>{row.Position}</CustomTableCell>
-									<CustomTableCell numeric style={{ width: '150px' }}>
+									<CustomTableCell style={{ width: '180px' }}>
 										<TextField
 											className={classes.formControl}
-											label="Pay Rate"
 											value={row.Pay_Rate}
 											id="payrate"
+											disabled
 											InputProps={{
 												inputComponent: NumberFormatCustom
 											}}
 										/>
 									</CustomTableCell>
-									<CustomTableCell numeric style={{ width: '150px' }}>
+									<CustomTableCell style={{ width: '180px' }}>
 										<TextField
 											className={classes.formControl}
-											label="Bill Rate"
 											value={row.Bill_Rate}
 											id="billrate"
+											disabled
 											InputProps={{
 												inputComponent: NumberFormatCustom
 											}}
 										/>
+									</CustomTableCell>
+									<CustomTableCell padding="none" style={{ width: '100px' }}>
+										<TextField
+											id="shift"
+											select
+											name="shift"
+											value={row.Shift}
+											margin="normal"
+											disabled
+											style={{ width: '100%' }}
+										>
+											{this.props.shifts.map(({ Id, Description }) => (
+												<MenuItem key={Id} value={Id} name={Description}>
+													{Description}
+												</MenuItem>
+											))}
+										</TextField>
 									</CustomTableCell>
 								</TableRow>
 							);
