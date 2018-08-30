@@ -218,6 +218,7 @@ class PositionsTable extends React.Component {
 							<CustomTableCell>Title</CustomTableCell>
 							<CustomTableCell>Bill Rate</CustomTableCell>
 							<CustomTableCell>Pay Rate</CustomTableCell>
+							<CustomTableCell padding="none">Shift</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -292,6 +293,23 @@ class PositionsTable extends React.Component {
 												inputComponent: NumberFormatCustom
 											}}
 										/>
+									</CustomTableCell>
+									<CustomTableCell padding="none" style={{ width: '100px' }}>
+										<TextField
+											id="shift"
+											select
+											name="shift"
+											value={row.Shift}
+											margin="normal"
+											disabled
+											style={{ width: '100%' }}
+										>
+											{this.props.shifts.map(({ Id, Description }) => (
+												<MenuItem key={Id} value={Id} name={Description}>
+													{Description}
+												</MenuItem>
+											))}
+										</TextField>
 									</CustomTableCell>
 								</TableRow>
 							);

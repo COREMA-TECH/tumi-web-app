@@ -639,6 +639,8 @@ class ContactCompanyForm extends React.Component {
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
 						this.loadContacts();
+						this.loadAllSupervisors();
+						this.loadSupervisors();
 						this.resetState();
 					})
 					.catch((error) => {
@@ -671,6 +673,8 @@ class ContactCompanyForm extends React.Component {
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
 						this.loadContacts();
+						this.loadAllSupervisors();
+						this.loadSupervisors();
 						this.resetState();
 					})
 					.catch((error) => {
@@ -822,7 +826,7 @@ class ContactCompanyForm extends React.Component {
 						>
 							{' '}
 							<MenuItem key={0} value={0} name="None">
-								None
+								<em>None</em>
 							</MenuItem>
 							{this.state.supervisors.map(({ id, firstname }) => (
 								<MenuItem key={id} value={id} name={firstname}>

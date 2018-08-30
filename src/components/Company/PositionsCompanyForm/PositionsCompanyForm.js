@@ -44,6 +44,10 @@ const styles = (theme) => ({
 		width: '200px',
 		paddingRight: '0px'
 	},
+	shiftControl: {
+		width: '100px',
+		paddingRight: '0px'
+	},
 	resize: {
 		//width: '200px'
 	},
@@ -136,6 +140,7 @@ class PositionsCompanyForm extends React.Component {
 				Position
 				Bill_Rate
 				Pay_Rate
+				Shift
 				IsActive
 			}
 		}
@@ -186,16 +191,19 @@ class PositionsCompanyForm extends React.Component {
 		position: '',
 		billrate: 0,
 		payrate: 0,
+		shift: '',
 
 		idDepartmentValid: false,
 		positionValid: false,
 		billrateValid: false,
 		payrateValid: false,
+		shiftValid: false,
 
 		idDepartmentHasValue: false,
 		positionHasValue: false,
 		billrateHasValue: false,
 		payrateHasValue: false,
+		shiftHasValue: false,
 
 		formValid: false,
 		opendialog: false,
@@ -211,7 +219,12 @@ class PositionsCompanyForm extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			departments: [],
+			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
+			shifts: [
+				{ Id: 'T', Description: 'AM/PM' },
+				{ Id: 'A', Description: 'AM' },
+				{ Id: 'P', Description: 'PM' }
+			],
 			idCompany: this.props.idCompany,
 			companyRate: 37,
 			...this.DEFAULT_STATE
@@ -322,14 +335,16 @@ class PositionsCompanyForm extends React.Component {
 		let positionHasValue = this.state.position != '';
 		let billrateHasValue = this.state.billrate != 0;
 		let payrateHasValue = this.state.payrate != 0;
+		let shiftHasValue = this.state.shift != '';
 		let idDepartmentHasValue = this.state.idDepartment !== null && this.state.idDepartment !== '';
 
-		return positionHasValue || billrateHasValue || payrateHasValue || idDepartmentHasValue;
+		return positionHasValue || billrateHasValue || payrateHasValue || idDepartmentHasValue || shiftHasValue;
 	};
-	validateAllFields() {
+	validateAllFields(func) {
 		let positionValid = this.state.position.trim().length >= 5;
 		let billrateValid = this.state.billrate != 0 && this.state.billrate != '';
 		let payrateValid = this.state.payrate != 0 && this.state.payrate != '';
+		let shiftValid = this.state.shift != '';
 
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
@@ -339,9 +354,10 @@ class PositionsCompanyForm extends React.Component {
 				positionValid,
 				billrateValid,
 				payrateValid,
-				idDepartmentValid
+				idDepartmentValid,
+				shiftValid
 			},
-			this.validateForm
+			this.validateForm(func)
 		);
 	}
 	validateField(fieldName, value) {
@@ -349,11 +365,13 @@ class PositionsCompanyForm extends React.Component {
 		let payrateValid = this.state.payrateValid;
 		let billrateValid = this.state.billrateValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
+		let shiftValid = this.state.shiftValid;
 
 		let positionHasValue = this.state.postionHasValue;
 		let payrateHasValue = this.state.payrateHasValue;
 		let billrateHasValue = this.state.billrateHasValue;
 		let idDepartmentHasValue = this.state.departmentHasValue;
+		let shiftHasValue = this.state.shiftHasValue;
 
 		switch (fieldName) {
 			case 'position':
@@ -372,6 +390,10 @@ class PositionsCompanyForm extends React.Component {
 				idDepartmentValid = value !== null && value !== 0 && value !== '';
 				idDepartmentHasValue = value !== null && value !== '';
 				break;
+			case 'shift':
+				shiftValid = value != '';
+				shiftHasValue = value != '';
+				break;
 			default:
 				break;
 		}
@@ -381,29 +403,38 @@ class PositionsCompanyForm extends React.Component {
 				payrateValid,
 				billrateValid,
 				idDepartmentValid,
+				shiftValid,
 
 				positionHasValue,
 				payrateHasValue,
 				billrateHasValue,
-				idDepartmentHasValue
+				idDepartmentHasValue,
+				shiftHasValue
 			},
 			this.validateForm
 		);
 	}
 
-	validateForm() {
-		this.setState({
-			formValid:
-				this.state.positionValid &&
-				this.state.payrateValid &&
-				this.state.billrateValid &&
-				this.state.idDepartmentValid,
-			enableCancelButton:
-				this.state.positionHasValue ||
-				this.state.payrateHasValue ||
-				this.state.billrateHasValue ||
-				this.state.idDepartmentHasValue
-		});
+	validateForm(func=()=>{}) {
+		this.setState(
+			{
+				formValid:
+					this.state.positionValid &&
+					this.state.payrateValid &&
+					this.state.billrateValid &&
+					this.state.idDepartmentValid &&
+					this.state.shiftValid,
+				enableCancelButton:
+					this.state.positionHasValue ||
+					this.state.payrateHasValue ||
+					this.state.billrateHasValue ||
+					this.state.idDepartmentHasValue ||
+					this.state.shiftHasValue
+			},
+			() => {
+				func();
+			}
+		);
 	}
 
 	handleCloseAlertDialog = () => {
@@ -412,7 +443,7 @@ class PositionsCompanyForm extends React.Component {
 	handleConfirmAlertDialog = () => {
 		this.deletePostion();
 	};
-	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate }) => {
+	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift }) => {
 		this.setState(
 			{
 				idToEdit: Id,
@@ -420,18 +451,21 @@ class PositionsCompanyForm extends React.Component {
 				idDepartment: Id_Department,
 				billrate: Bill_Rate,
 				payrate: Pay_Rate,
+				shift: Shift,
 
 				formValid: true,
 				positionValid: true,
 				idDepartmentValid: true,
 				billrateValid: true,
 				payrateValid: true,
+				shiftValid: true,
 
 				enableCancelButton: true,
 				positionHasValue: true,
 				idDepartmentHasValue: true,
 				billrateHasValue: true,
 				payrateHasValue: true,
+				shiftHasValue: true,
 
 				buttonTitle: this.TITLE_EDIT
 			},
@@ -535,6 +569,7 @@ class PositionsCompanyForm extends React.Component {
 								Position: `'${this.state.position}'`,
 								Bill_Rate: this.state.billrate,
 								Pay_Rate: this.state.payrate,
+								Shift: `'${this.state.shift}'`,
 								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
@@ -608,17 +643,18 @@ class PositionsCompanyForm extends React.Component {
 				loading: true
 			},
 			() => {
-				this.validateAllFields();
-				if (this.state.formValid) this.insertPosition();
-				else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Saving Information: You must to fill all required fields'
-					);
-					this.setState({
-						loading: false
-					});
-				}
+				this.validateAllFields(() => {
+					if (this.state.formValid) this.insertPosition();
+					else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Saving Information: You must to fill all required fields'
+						);
+						this.setState({
+							loading: false
+						});
+					}
+				});
 			}
 		);
 	};
@@ -720,7 +756,29 @@ class PositionsCompanyForm extends React.Component {
 							onChange={this.onNumberChangeHandler('billrate')}
 						/>
 					</FormControl>
-
+					<FormControl className={[ classes.formControl, classes.shiftControl ].join(' ')}>
+						<TextField
+							id="shift"
+							select
+							name="shift"
+							error={!this.state.shiftValid}
+							value={this.state.shift}
+							InputProps={{
+								classes: {
+									input: classes.shiftControl
+								}
+							}}
+							onChange={(event) => this.onSelectChangeHandler(event)}
+							helperText="Shift"
+							margin="normal"
+						>
+							{this.state.shifts.map(({ Id, Description }) => (
+								<MenuItem key={Id} value={Id} name={Description}>
+									{Description}
+								</MenuItem>
+							))}
+						</TextField>
+					</FormControl>
 					<div className={classes.root}>
 						<div className={classes.wrapper}>
 							<Tooltip
@@ -782,6 +840,7 @@ class PositionsCompanyForm extends React.Component {
 						data={this.state.data}
 						departments={this.state.departments}
 						loading={this.state.loading}
+						shifts={this.state.shifts}
 						onEditHandler={this.onEditHandler}
 						onDeleteHandler={this.onDeleteHandler}
 					/>
