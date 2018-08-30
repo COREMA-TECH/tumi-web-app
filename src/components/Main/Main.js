@@ -9,7 +9,7 @@ class Main extends Component {
     render() {
         return (
             <div className="main">
-                <Route path="/login" component={Login}/>
+                {/*<Route path="/login" component={Login}/>*/}
                 <Nav/>
                 <MainContainer/>
             </div>

@@ -69,6 +69,26 @@ class CustomizedTabs extends React.Component {
         this.setState({value});
     };
 
+    backHandleChange = () => {
+        if (this.state.value !== 0){
+            this.setState(prevState => ({
+                value: (prevState.value - 1)
+            }))
+        }
+    };
+
+    nextHandleChange = () => {
+        if (this.state.value < 2){
+            // If current tab is 0 - CREATE COMPANY MUTATION should be execute
+
+            this.setState(prevState => ({
+                item: prevState.value,
+                value: (prevState.value + 1)
+            }))
+        }
+    };
+
+
     render() {
         const {classes} = this.props;
         const {value} = this.state;
@@ -96,32 +116,18 @@ class CustomizedTabs extends React.Component {
                         label="Departments"
                     />
                 </Tabs>
-                {value === 0 && <GeneralInformation idCompany={this.props.idCompany} item={this.state.item}/>}
+                {
+                    value === 0 && <GeneralInformation
+                        idCompany={this.props.idCompany}
+                        item={this.state.item}
+                        next={this.nextHandleChange}
+                        back={this.backHandleChange}
+                        valueTab={this.state.value}
+                    />
+                }
 
 
-                <div className="advanced-tab-options">
-                    <span className="options-button options-button--back" onClick={
-                        () => {
-                            if (this.state.value !== 0){
-                                this.setState(prevState => ({
-                                    value: (prevState.value - 1)
-                                }))
-                            }
-                        }
-                    }>Back</span>
-                    <span className="options-button options-button--next" onClick={
-                        () => {
-                            if (this.state.value < 2){
-                                // If current tab is 0 - CREATE COMPANY MUTATION should be execute
 
-                                this.setState(prevState => ({
-                                    item: prevState.value,
-                                    value: (prevState.value + 1)
-                                }))
-                            }
-                        }
-                    }>{this.state.value < 2 ? 'Next' : 'Finish'}</span>
-                </div>
             </div>
         );
     }

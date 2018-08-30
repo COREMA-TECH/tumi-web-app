@@ -10,6 +10,7 @@ import SelectForm from "../../ui-components/SelectForm/SelectForm";
 import Query from "react-apollo/Query";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import days from '../../../data/days.json';
+import withApollo from "react-apollo/withApollo";
 
 class GeneralInformation extends Component {
     state = {
@@ -45,7 +46,7 @@ class GeneralInformation extends Component {
         code: '',
         code01: '',
         active: 0
-    }
+    };
 
     /**
      *  QUERIES to get the countries, cities and states
@@ -129,8 +130,61 @@ class GeneralInformation extends Component {
     /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
      **********************************************************/
+    ADD_COMPANY = gql`
+        mutation insertCompanies($input: iParamBC!) {
+            insbusinesscompanies(input: $input) {
+                Id
+                Name
+                Description
+            }
+        }
+    `;
 
-
+    insertCompany = () => {
+        //Create the mutation using apollo global client
+        this.props.client
+            .mutate({
+                // Pass the mutation structure
+                mutation: this.ADD_COMPANY,
+                variables: {
+                    input: {
+                        Id: 150,
+                        Code: `'${this.state.Code}'`,
+                        Code01: `'${this.state.Code01}'`,
+                        Id_Company: 1,
+                        BusinessType: 1,
+                        Location: `'${this.state.address}'`,
+                        Location01: `'${this.state.optionalAddress}'`,
+                        Name: `'${this.state.name}'`,
+                        Description: `'${this.state.description}'`,
+                        Start_Week: this.state.startWeek,
+                        End_Week: this.state.endWeek,
+                        Legal_Name: `'${this.state.legalName}'`,
+                        Country: parseInt(this.state.country),
+                        State: parseInt(this.state.state),
+                        Rate: parseFloat(this.state.rate),
+                        Zipcode: parseInt(this.state.zipCode),
+                        Fax: `'${this.state.fax}'`,
+                        Primary_Email: `'${this.state.position}'`,
+                        Phone_Number: `'${this.state.phoneNumber}'`,
+                        Phone_Prefix: `'${this.state.phonePrefix}'`,
+                        City: parseInt(this.state.city),
+                        Id_Parent: 1,
+                        IsActive: parseInt(this.state.active),
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: "'2018-08-14'",
+                        Date_Updated: "'2018-08-14'",
+                        ImageURL: `'${this.state.avatar}'`,
+                        Start_Date: "'2018-08-14'"
+                    }
+                }
+            })
+            .then((data) => {
+                console.log("Server data response is: " + data);
+            })
+            .catch((err) => console.log("The error is: " + err));
+    };
     /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
@@ -347,6 +401,23 @@ class GeneralInformation extends Component {
                         </div>
                     </div>
                 </div>
+                <div className="advanced-tab-options">
+                    <span className="options-button options-button--back" onClick={
+                        () => {
+                            this.props.back();
+                        }
+                    }>Back</span>
+                    <span className="options-button options-button--next" onClick={
+                        () => {
+                            // When the user click Next button, open second tab
+                            this.props.next();
+
+                            // Then make request mutation to create the company with general information
+                            this.insertCompany();
+                        }
+                    }>{this.props.valueTab < 2 ? 'Next' : 'Finish'}</span>
+                </div>
+
                 <Dialog
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -376,4 +447,4 @@ class GeneralInformation extends Component {
 
 GeneralInformation.propTypes = {};
 
-export default GeneralInformation;
+export default withApollo(GeneralInformation);
