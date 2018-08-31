@@ -472,7 +472,7 @@ class RolesForm extends React.Component {
 				else {
 					this.handleOpenSnackbar(
 						'error',
-						'Error: Saving Information: You must to fill all required fields'
+						'Error: Saving Information: You must fill all the required fields'
 					);
 					this.setState({
 						loading: false

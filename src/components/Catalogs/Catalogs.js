@@ -209,7 +209,7 @@ class Catalogs extends React.Component {
 			loadingParents: true,
 			loadingAllParents: true,
 			idCompany: this.props.idCompany,
-			loadingData: false,
+
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -666,7 +666,7 @@ class Catalogs extends React.Component {
 				this.validateAllFields();
 				if (this.state.formValid) this.insertCatalogItem();
 				else {
-					this.handleOpenSnackbar('error', 'Error: Saving Information: You must to fill all required fields');
+					this.handleOpenSnackbar('error', 'Error: Saving Information: You must fill all the required fields');
 					this.setState({
 						loading: false
 					});

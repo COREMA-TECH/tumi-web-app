@@ -1,3 +1,3 @@
-import UsersForm from './UsersForm';
+import Users from './Users';
 
-export default UsersForm;
+export default Users;
