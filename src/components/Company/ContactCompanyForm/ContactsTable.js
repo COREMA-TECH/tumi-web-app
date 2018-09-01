@@ -148,7 +148,20 @@ class ContactsTable extends React.Component {
 	handleChangeRowsPerPage = (event) => {
 		this.setState({ rowsPerPage: event.target.value });
 	};
-
+	shouldComponentUpdate(nextProps, nextState) {
+		if (this.props.data !== nextProps.data) {
+			return true;
+		}
+		if (
+			this.state.page !== nextState.page ||
+			this.state.rowsPerPage !== nextState.rowsPerPage //||
+			//this.state.order !== nextState.order ||
+			//this.state.orderBy !== nextState.orderBy
+		) {
+			return true;
+		}
+		return false;
+	}
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;

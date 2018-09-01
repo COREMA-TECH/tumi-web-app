@@ -26,6 +26,13 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import './index.css';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -43,20 +50,20 @@ const styles = (theme) => ({
 		margin: theme.spacing.unit
 		//width: '100px'
 	},
-	contactControl: { width: '300px', paddingRight: '0px' },
-	rolControl: { width: '200px', paddingRight: '0px' },
-	languageControl: { width: '200px', paddingRight: '0px' },
+	contactControl: { width: '535px', paddingRight: '0px' },
+	rolControl: { width: '260px', paddingRight: '0px' },
+	languageControl: { width: '260px', paddingRight: '0px' },
 	usernameControl: {
-		width: '200px'
+		width: '150px'
 	},
 	fullnameControl: {
 		width: '300px'
 	},
 	emailControl: {
-		width: '250px'
+		width: '350px'
 	},
 	numberControl: {
-		width: '100px'
+		//width: '150px'
 	},
 	passwordControl: {
 		width: '120px'
@@ -66,9 +73,21 @@ const styles = (theme) => ({
 		//width: '200px'
 	},
 	divStyle: {
-		width: '80%',
+		width: '100%',
 		display: 'flex'
 		//justifyContent: 'space-around'
+	},
+	divStyleColumns: {
+		width: '100%',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-around'
+	},
+	divAddButton: {
+		display: 'flex',
+		justifyContent: 'end',
+		width: '100%',
+		heigth: '60px'
 	},
 	button: {
 		margin: theme.spacing.unit
@@ -220,14 +239,15 @@ class Catalogs extends React.Component {
 
 		loading: false,
 		success: false,
-		loadingConfirm: false
+		loadingConfirm: false,
+		openModal: false
 	};
 
 	constructor(props) {
 		super(props);
 		this.state = {
 			data: [],
-			contacts: [ { Id: 0, Name: 'Nothing' } ],
+			contacts: [],
 			roles: [ { Id: 0, Name: 'Nothing' } ],
 			languages: [ { Id: 0, Name: 'Nothing' } ],
 
@@ -246,8 +266,10 @@ class Catalogs extends React.Component {
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
 	focusTextInput() {
-		document.getElementById('username').focus();
-		document.getElementById('username').select();
+		if (document.getElementById('username') != null) {
+			document.getElementById('username').focus();
+			document.getElementById('username').select();
+		}
 	}
 	componentDidMount() {
 		this.resetState();
@@ -504,7 +526,7 @@ class Catalogs extends React.Component {
 				numberHasValue: true,
 				passwordHasValue: true,
 				idLanguageHasValue: true,
-
+				openModal: true,
 				buttonTitle: this.TITLE_EDIT
 			},
 			() => {
@@ -776,12 +798,31 @@ class Catalogs extends React.Component {
 		this.setState({ openSnackbar: false });
 	};
 	handleCheckedChange = (name) => (event) => {
-		this.setState({ [name]: event.target.checked }, this.validateForm);
+		if (name == 'isAdmin' && event.target.checked)
+			this.setState(
+				{
+					[name]: event.target.checked,
+					allowEdit: true,
+					allowInsert: true,
+					allowDelete: true,
+					allowExport: true
+				},
+				this.validateForm
+			);
+		else this.setState({ [name]: event.target.checked }, this.validateForm);
 	};
+	handleClickOpenModal = () => {
+		this.setState({ openModal: true });
+	};
+
+	handleCloseModal = () => {
+		this.setState({ openModal: false });
+	};
+
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
-
+		const { fullScreen } = this.props;
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
@@ -815,57 +856,72 @@ class Catalogs extends React.Component {
 							message={this.state.messageSnackbar}
 						/>
 					</Snackbar>
-					<div className={classes.divStyle}>
-						<FormControl
-							className={[ classes.formControl, classes.contactControl ].join(' ')}
-							disabled={this.state.loadingContacts}
-						>
-							<TextField
-								id="idContact"
-								disabled={this.state.loadingContacts}
-								select
-								name="idContact"
-								error={!this.state.idContactValid}
-								value={this.state.idContact}
-								InputProps={{
-									classes: {
-										input: classes.contactControl
-									}
-								}}
-								onChange={(event) => this.onSelectChangeHandler(event)}
-								helperText="Contact"
-								margin="normal"
-							>
-								{' '}
-								<MenuItem key={0} value={0} name="None">
-									<em>None</em>
-								</MenuItem>
-								{this.state.contacts.map(({ Id, Name }) => (
-									<MenuItem key={Id} value={Id} name={Name}>
-										{Name}
-									</MenuItem>
-								))}
-							</TextField>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.usernameControl ].join(' ')}>
-							<InputLabel htmlFor="username">User</InputLabel>
-							<Input
-								id="username"
-								name="username"
-								inputProps={{
-									maxLength: 10,
-									classes: {
-										input: classes.usernameControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.usernameValid}
-								value={this.state.username}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-						{/*<FormControl className={[ classes.formControl, classes.fullnameControl ].join(' ')}>
+					<Dialog
+						fullScreen={fullScreen}
+						open={this.state.openModal}
+						onClose={this.cancelUserHandler}
+						aria-labelledby="responsive-dialog-title"
+					>
+						<DialogTitle id="responsive-dialog-title">
+							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
+								'Edit  User'
+							) : (
+								'Create User'
+							)}
+						</DialogTitle>
+						<DialogContent>
+							<div className={classes.divStyleColumns}>
+								<FormControl
+									className={[ classes.formControl, classes.contactControl ].join(' ')}
+									disabled={this.state.loadingContacts}
+								>
+									<TextField
+										id="idContact"
+										disabled={this.state.loadingContacts}
+										select
+										name="idContact"
+										error={!this.state.idContactValid}
+										value={this.state.idContact}
+										InputProps={{
+											classes: {
+												input: classes.contactControl
+											}
+										}}
+										onChange={(event) => this.onSelectChangeHandler(event)}
+										helperText="Contact"
+										margin="normal"
+									>
+										{' '}
+										<MenuItem key={0} value={0} name="None">
+											<em>None</em>
+										</MenuItem>
+										{this.state.contacts.map(({ Id, Name }) => (
+											<MenuItem key={Id} value={Id} name={Name}>
+												{Name}
+											</MenuItem>
+										))}
+									</TextField>
+								</FormControl>
+								<div className={classes.divStyle}>
+									<FormControl className={[ classes.formControl, classes.usernameControl ].join(' ')}>
+										<InputLabel htmlFor="username">User</InputLabel>
+										<Input
+											id="username"
+											name="username"
+											inputProps={{
+												maxLength: 10,
+												classes: {
+													input: classes.usernameControl
+												}
+											}}
+											className={classes.resize}
+											error={!this.state.usernameValid}
+											value={this.state.username}
+											onBlur={(event) => this.onBlurHandler(event)}
+											onChange={(event) => this.onChangeHandler(event)}
+										/>
+									</FormControl>
+									{/*<FormControl className={[ classes.formControl, classes.fullnameControl ].join(' ')}>
 							<InputLabel htmlFor="fullname">Full Name</InputLabel>
 							<Input
 								id="fullname"
@@ -883,211 +939,226 @@ class Catalogs extends React.Component {
 								onChange={(event) => this.onChangeHandler(event)}
 							/>
 							</FormControl>*/}
-						<FormControl className={[ classes.formControl, classes.emailControl ].join(' ')}>
-							<InputLabel htmlFor="email">Email</InputLabel>
-							<Input
-								id="email"
-								name="email"
-								inputProps={{
-									maxLength: 30,
-									classes: {
-										input: classes.emailControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.emailValid}
-								value={this.state.email}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.numberControl ].join(' ')}>
-							<InputLabel htmlFor="number">Phone</InputLabel>
-							<Input
-								id="number"
-								name="number"
-								inputProps={{
-									maxLength: 15,
-									classes: {
-										input: classes.numberControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.numberValid}
-								value={this.state.number}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-					</div>
-					<div className={classes.divStyle}>
-						<FormControl
-							className={[ classes.formControl, classes.rolControl ].join(' ')}
-							disabled={this.state.loadingRoles}
-						>
-							<TextField
-								disabled={this.state.loadingRoles}
-								id="idRol"
-								select
-								name="idRol"
-								error={!this.state.idRolValid}
-								value={this.state.idRol}
-								InputProps={{
-									classes: {
-										input: classes.rolControl
-									}
-								}}
-								onChange={(event) => this.onSelectChangeHandler(event)}
-								helperText="Rol"
-								margin="normal"
-							>
-								{' '}
-								{this.state.roles.map(({ Id, Name }) => (
-									<MenuItem key={Id} value={Id} name={Name}>
-										{Name}
-									</MenuItem>
-								))}
-							</TextField>
-						</FormControl>
-						<FormControl
-							className={[ classes.formControl, classes.languageControl ].join(' ')}
-							disabled={this.state.loadingLanguages}
-						>
-							<TextField
-								disabled={this.state.loadingLanguages}
-								id="idLanguage"
-								select
-								name="idLanguage"
-								error={!this.state.idLanguageValid}
-								value={this.state.idLanguage}
-								InputProps={{
-									classes: {
-										input: classes.languageControl
-									}
-								}}
-								onChange={(event) => this.onSelectChangeHandler(event)}
-								helperText="Language"
-								margin="normal"
-							>
-								{' '}
-								{this.state.languages.map(({ Id, Name }) => (
-									<MenuItem key={Id} value={Id} name={Name}>
-										{Name}
-									</MenuItem>
-								))}
-							</TextField>
-						</FormControl>
-
-						<FormControlLabel
-							control={
-								<Switch
-									id="isAdmin"
-									checked={this.state.isAdmin}
-									onChange={this.handleCheckedChange('isAdmin')}
-									value="isAdmin"
-								/>
-							}
-							label="Is Admin"
-						/>
-						<FormControlLabel
-							control={
-								<Switch
-									id="allowInsert"
-									checked={this.state.allowInsert}
-									onChange={this.handleCheckedChange('allowInsert')}
-									value="allowInsert"
-								/>
-							}
-							label="Allow Create"
-						/>
-						<FormControlLabel
-							control={
-								<Switch
-									id="allowEdit"
-									checked={this.state.allowEdit}
-									onChange={this.handleCheckedChange('allowEdit')}
-									value="allowEdit"
-								/>
-							}
-							label="Allow Edit"
-						/>
-						<FormControlLabel
-							control={
-								<Switch
-									id="allowDelete"
-									checked={this.state.allowDelete}
-									onChange={this.handleCheckedChange('allowDelete')}
-									value="allowDelete"
-								/>
-							}
-							label="Allow Delete"
-						/>
-						<FormControlLabel
-							control={
-								<Switch
-									id="allowExport"
-									checked={this.state.allowExport}
-									onChange={this.handleCheckedChange('allowExport')}
-									value="allowExport"
-								/>
-							}
-							label="Allow Export"
-						/>
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip
-									title={
-										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
-									}
-								>
-									<div>
-										<Button
-											disabled={this.state.loading}
-											//	disabled={!this.state.formValid}
-											variant="fab"
-											color="primary"
-											className={buttonClassname}
-											onClick={this.addUserHandler}
+									<FormControl className={[ classes.formControl, classes.emailControl ].join(' ')}>
+										<InputLabel htmlFor="email">Email</InputLabel>
+										<Input
+											id="email"
+											name="email"
+											inputProps={{
+												maxLength: 30,
+												classes: {
+													input: classes.emailControl
+												}
+											}}
+											className={classes.resize}
+											error={!this.state.emailValid}
+											value={this.state.email}
+											onBlur={(event) => this.onBlurHandler(event)}
+											onChange={(event) => this.onChangeHandler(event)}
+										/>
+									</FormControl>
+									<FormControl className={[ classes.formControl, classes.numberControl ].join(' ')}>
+										<InputLabel htmlFor="number">Phone</InputLabel>
+										<Input
+											id="number"
+											name="number"
+											inputProps={{
+												maxLength: 15,
+												classes: {
+													input: classes.numberControl
+												}
+											}}
+											className={classes.resize}
+											error={!this.state.numberValid}
+											value={this.state.number}
+											onBlur={(event) => this.onBlurHandler(event)}
+											onChange={(event) => this.onChangeHandler(event)}
+										/>
+									</FormControl>
+								</div>
+								<div className={classes.divStyle}>
+									<FormControl
+										className={[ classes.formControl, classes.rolControl ].join(' ')}
+										disabled={this.state.loadingRoles}
+									>
+										<TextField
+											disabled={this.state.loadingRoles}
+											id="idRol"
+											select
+											name="idRol"
+											error={!this.state.idRolValid}
+											value={this.state.idRol}
+											InputProps={{
+												classes: {
+													input: classes.rolControl
+												}
+											}}
+											onChange={(event) => this.onSelectChangeHandler(event)}
+											helperText="Rol"
+											margin="normal"
 										>
-											{success ? (
-												<CheckIcon />
-											) : this.state.idToEdit != null &&
+											{' '}
+											{this.state.roles.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
+												</MenuItem>
+											))}
+										</TextField>
+									</FormControl>
+									<FormControl
+										className={[ classes.formControl, classes.languageControl ].join(' ')}
+										disabled={this.state.loadingLanguages}
+									>
+										<TextField
+											disabled={this.state.loadingLanguages}
+											id="idLanguage"
+											select
+											name="idLanguage"
+											error={!this.state.idLanguageValid}
+											value={this.state.idLanguage}
+											InputProps={{
+												classes: {
+													input: classes.languageControl
+												}
+											}}
+											onChange={(event) => this.onSelectChangeHandler(event)}
+											helperText="Language"
+											margin="normal"
+										>
+											{' '}
+											{this.state.languages.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
+												</MenuItem>
+											))}
+										</TextField>
+									</FormControl>
+								</div>
+
+								<div className={classes.divStyle}>
+									<FormControlLabel
+										control={
+											<Switch
+												id="isAdmin"
+												checked={this.state.isAdmin}
+												onChange={this.handleCheckedChange('isAdmin')}
+												value="isAdmin"
+											/>
+										}
+										label="Is Admin"
+									/>
+									<FormControlLabel
+										control={
+											<Switch
+												id="allowInsert"
+												checked={this.state.allowInsert}
+												onChange={this.handleCheckedChange('allowInsert')}
+												value="allowInsert"
+											/>
+										}
+										label="Allow Create"
+									/>
+									<FormControlLabel
+										control={
+											<Switch
+												id="allowEdit"
+												checked={this.state.allowEdit}
+												onChange={this.handleCheckedChange('allowEdit')}
+												value="allowEdit"
+											/>
+										}
+										label="Allow Edit"
+									/>
+									<FormControlLabel
+										control={
+											<Switch
+												id="allowDelete"
+												checked={this.state.allowDelete}
+												onChange={this.handleCheckedChange('allowDelete')}
+												value="allowDelete"
+											/>
+										}
+										label="Allow Delete"
+									/>
+								</div>
+								<FormControlLabel
+									style={{ width: 'fit-content' }}
+									control={
+										<Switch
+											id="allowExport"
+											checked={this.state.allowExport}
+											onChange={this.handleCheckedChange('allowExport')}
+											value="allowExport"
+										/>
+									}
+									label="Allow Export"
+								/>
+							</div>
+						</DialogContent>
+						<DialogActions style={{ margin: '16px 10px' }}>
+							<div className={classes.root}>
+								<div className={classes.wrapper}>
+									<Tooltip
+										title={
+											this.state.idToEdit != null &&
 											this.state.idToEdit != '' &&
 											this.state.idToEdit != 0 ? (
-												<SaveIcon />
+												'Save Changes'
 											) : (
-												<AddIcon />
-											)}
-										</Button>
-									</div>
-								</Tooltip>
-								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+												'Insert Record'
+											)
+										}
+									>
+										<div>
+											<Button
+												disabled={this.state.loading}
+												//	disabled={!this.state.formValid}
+												variant="fab"
+												color="primary"
+												className={buttonClassname}
+												onClick={this.addUserHandler}
+											>
+												{success ? <CheckIcon /> : <SaveIcon />}
+											</Button>
+										</div>
+									</Tooltip>
+									{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+								</div>
 							</div>
-						</div>
+							<div className={classes.root}>
+								<div className={classes.wrapper}>
+									<Tooltip title={'Cancel Operation'}>
+										<div>
+											<Button
+												//disabled={this.state.loading || !this.state.enableCancelButton}
+												variant="fab"
+												color="secondary"
+												className={buttonClassname}
+												onClick={this.cancelUserHandler}
+											>
+												<ClearIcon />
+											</Button>
+										</div>
+									</Tooltip>
+								</div>
+							</div>
+						</DialogActions>
+					</Dialog>
 
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip title={'Cancel Operation'}>
-									<div>
-										<Button
-											disabled={this.state.loading || !this.state.enableCancelButton}
-											variant="fab"
-											color="secondary"
-											className={buttonClassname}
-											onClick={this.cancelUserHandler}
-										>
-											<ClearIcon />
-										</Button>
-									</div>
-								</Tooltip>
-							</div>
-						</div>
+					<div className="users__header">
+						<button
+							className="add-user"
+							onClick={this.handleClickOpenModal}
+							disabled={
+								this.state.loadingData ||
+								this.state.loadingContacts ||
+								this.state.loadingRoles ||
+								this.state.loadingLanguages
+							}
+						>
+							{' '}
+							Add User{' '}
+						</button>
 					</div>
 					<div className={classes.divStyle}>
 						<UsersTable
@@ -1107,7 +1178,8 @@ class Catalogs extends React.Component {
 }
 
 Catalogs.propTypes = {
+	fullScreen: PropTypes.bool.isRequired,
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(Catalogs));
+export default withStyles(styles)(withApollo(withMobileDialog()(Catalogs)));

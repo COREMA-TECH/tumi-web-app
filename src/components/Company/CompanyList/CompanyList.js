@@ -14,7 +14,7 @@ class CompanyList extends Component {
 
 	getCompaniesQuery = gql`
 		{
-			getbusinesscompanies(Id: null, IsActive: 1) {
+			getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
 				Id
 				Code
 				Name

@@ -17,7 +17,7 @@ class Search extends Component {
 		return (
 			<div className={classes.flex}>
 				<input type="text" placeholder="Search.." name="search" className="search-bar__input" />
-				<IconButton c color="inherit">
+				<IconButton color="inherit">
 					<div>
 						<SearchIcon color="primary" />
 					</div>
