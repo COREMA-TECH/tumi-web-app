@@ -9,10 +9,10 @@ class Container extends Component {
     render() {
         return (
             <div className="container">
-                <Route exact path="/contract" component={Contract}/>
-                <Route exact path="/company" component={CompanyList}/>
-                <Route exact path="/company/add" component={CreateCompany}/>
-                <Route exact path="/company/edit" component={CreateCompany}/>
+                <Route exact path="/home/contract" component={Contract}/>
+                <Route exact path="/home/company" component={CompanyList}/>
+                <Route exact path="/home/company/add" component={CreateCompany}/>
+                <Route exact path="/home/company/edit" component={CreateCompany}/>
             </div>
         );
     }

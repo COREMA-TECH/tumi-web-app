@@ -9,7 +9,7 @@ class Main extends Component {
     render() {
         return (
             <div>
-                <Route path="/" component={Login}/>
+                <Route path="/login" component={Login}/>
                 <PrivateRoute path="/home" component={Private}/>
             </div>
         );
