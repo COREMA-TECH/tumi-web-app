@@ -55,7 +55,7 @@ class CompanyList extends Component {
 	};
 
 	redirect(){
-	    this.props.history.push("/Company/add");
+	    this.props.history.push("/home/Company/add");
     }
 
 	render() {

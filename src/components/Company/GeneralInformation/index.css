@@ -213,7 +213,7 @@
 }
 
 .dialog {
-    width: 70vw !important;
+    width: fit-content;
     height: 80vh;
 
     display: flex;

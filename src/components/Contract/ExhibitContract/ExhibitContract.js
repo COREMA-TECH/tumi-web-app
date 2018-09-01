@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
 import './index.css';
-import InputForm from "../../ui-components/InputForm/InputForm";
 import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
-import ContactsTable from "../../Company/ContactsTable/ContactsTable";
 
 class ExhibitContract extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -17,7 +15,6 @@ class ExhibitContract extends Component {
             exhibitF: '',
         }
     }
-
 
     render() {
         return (
@@ -154,7 +151,16 @@ class ExhibitContract extends Component {
                         </div>
 
                         <div className="contract-footer">
-                            <div className="contract-next-button">Save</div>
+                            <div
+                                className="contract-next-button"
+                                onClick={
+                                    () => {
+                                        // Insert Exhibits
+                                    }
+                                }
+                            >
+                                Save
+                            </div>
                         </div>
                     </div>
                 </div>

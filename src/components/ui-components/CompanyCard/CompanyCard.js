@@ -31,7 +31,7 @@ class CompanyCard extends React.Component {
                 render={({history}) => (
                     <div className="company-card" onClick={() => {
                         history.push({
-                            pathname: '/company/edit',
+                            pathname: '/home/company/edit',
                             state: {idCompany: this.props.idCompany}
                         });
                     }}>
