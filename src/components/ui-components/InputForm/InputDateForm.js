@@ -1,30 +1,30 @@
 import React, {Component} from 'react';
 import './index.css';
 
-class TextAreaForm extends Component {
+class InputDateForm extends Component {
     render() {
         {
             if (this.props.placeholder) {
                 return (
-                    <textarea type="text"
+                    <input type="date"
                            value={this.props.value}
-                           className="input-form input-form--textarea"
+                           className="input-form"
                            placeholder={this.props.placeholder}
                            onChange={(event) => {
-                                  this.props.change(event.target.value);
-                                }
+                               this.props.change(event.target.value);
+                           }
                            }
                     />
                 )
             } else {
                 return (
-                    <textarea
-                        type="text"
+                    <input
+                        type="date"
                         value={this.props.value}
-                        className="input-form input-form--textarea"
+                        className="input-form"
                         onChange={(event) => {
                             this.props.change(event.target.value);
-                            }
+                        }
                         }
                     />
                 )
@@ -33,4 +33,4 @@ class TextAreaForm extends Component {
     }
 }
 
-export default TextAreaForm;
+export default InputDateForm;

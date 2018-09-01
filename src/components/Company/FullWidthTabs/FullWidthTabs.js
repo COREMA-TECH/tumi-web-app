@@ -125,7 +125,7 @@ class CustomizedTabs extends React.Component {
                         valueTab={this.state.value}
                     />
                 }
-                
+
             </div>
         );
     }

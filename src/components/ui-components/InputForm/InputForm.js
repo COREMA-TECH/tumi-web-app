@@ -10,10 +10,9 @@ class InputForm extends Component {
                            value={this.props.value}
                            className="input-form"
                            placeholder={this.props.placeholder}
-                           onChange={(text) => {
-                                    //Send the text
-
-                                }
+                           onChange={(event) => {
+                               this.props.change(event.target.value);
+                           }
                            }
                     />
                 )
@@ -23,9 +22,8 @@ class InputForm extends Component {
                         type="text"
                         value={this.props.value}
                         className="input-form"
-                        onChange={(text) => {
-                                // Send the text
-
+                        onChange={(event) => {
+                                this.props.change(event.target.value);
                             }
                         }
                     />

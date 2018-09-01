@@ -42,6 +42,8 @@ class ControlledOpenSelect extends React.Component {
         // } else {
         //     this.props.update(event.target.value);
         // }
+
+        this.props.update(event.target.value);
     };
 
     handleClose = () => {

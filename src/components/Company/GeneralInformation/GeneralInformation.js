@@ -14,6 +14,7 @@ import withApollo from "react-apollo/withApollo";
 
 class GeneralInformation extends Component {
     state = {
+        inputEnabled: true,
         open: false,
         scroll: 'paper',
         completedInput: false,
@@ -43,9 +44,10 @@ class GeneralInformation extends Component {
         zipCode: '',
         phonePrefix: '505',
         email: '',
-        code: '',
-        code01: '',
-        active: 0
+        Code: '',
+        Code01: '',
+        active: 0,
+        suite: 0
     };
 
     /**
@@ -94,7 +96,7 @@ class GeneralInformation extends Component {
     getCompanyQuery = gql`
         query getCompany($id: Int!)
         {
-            getbusinesscompanies(Id: $id, IsActive: 1) {
+            getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'") {
                 Id
                 Code
                 Code01
@@ -122,7 +124,8 @@ class GeneralInformation extends Component {
                 Location,
                 Location01,
                 Primary_Email,
-                Phone_Number
+                Phone_Number,
+                Suite
             }
         }
     `;
@@ -150,7 +153,7 @@ class GeneralInformation extends Component {
                     input: {
                         Id: 150,
                         Code: `'${this.state.Code}'`,
-                        Code01: `'${this.state.Code01}'`,
+                        Code01: `'${this.state.Code}'`,
                         Id_Company: 1,
                         BusinessType: 1,
                         Location: `'${this.state.address}'`,
@@ -190,6 +193,75 @@ class GeneralInformation extends Component {
      **********************************************************/
 
 
+    /**********************************************************
+     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
+     **********************************************************/
+    UPDATE_COMPANY = gql`
+        mutation updateCompanies($input: iParamBC!) {
+            updbusinesscompanies(input: $input) {
+                Id
+                Name
+                Description
+            }
+        }
+    `;
+
+    updateCompany = (companyId) => {
+        //Create the mutation using apollo global client
+        this.props.client
+            .mutate({
+                // Pass the mutation structure
+                mutation: this.UPDATE_COMPANY,
+                variables: {
+                    input: {
+                        Id: companyId,
+                        Code: `'${this.state.Code}'`,
+                        Code01: `'${this.state.Code}'`,
+                        Id_Contract: 1,
+                        Id_Company: 1,
+                        BusinessType: 1,
+                        Location: `'${this.state.address}'`,
+                        Location01: `'${this.state.optionalAddress}'`,
+                        Name: `'${this.state.legalName}'`,
+                        Description: `'${this.state.description}'`,
+                        Start_Week: this.state.startWeek,
+                        End_Week: this.state.endWeek,
+                        Legal_Name: `'${this.state.legalName}'`,
+                        Country: parseInt(this.state.country),
+                        State: parseInt(this.state.state),
+                        Rate: parseFloat(this.state.rate),
+                        Zipcode: parseInt(this.state.zipCode),
+                        Fax: `'${this.state.fax}'`,
+                        Primary_Email: `'${this.state.legalName}'`,
+                        Phone_Number: `'${this.state.phoneNumber}'`,
+                        Phone_Prefix: `'${this.state.phonePrefix}'`,
+                        City: parseInt(this.state.city),
+                        Id_Parent: 1,
+                        IsActive: parseInt(this.state.active),
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: "'2018-08-14'",
+                        Date_Updated: "'2018-08-14'",
+                        ImageURL: `'${this.state.avatar}'`,
+                        Start_Date: "'2018-08-14'",
+                        Contract_URL: "'firebase url'",
+                        Insurace_URL: "'firebase url'",
+                        Other_URL: "'firebase url'",
+                        Other01_URL: "'firebase url'",
+                        Suite: parseInt(this.state.suite),
+                        Contract_Status: "'C'",
+                    }
+                }
+            })
+            .then((data) => {
+                console.log("Server data response is: " + data);
+            })
+            .catch((err) => console.log("The error is: " + err));
+    };
+    /**********************************************************
+     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
+     **********************************************************/
+
     /**
      * Events of the component
      */
@@ -206,13 +278,21 @@ class GeneralInformation extends Component {
      */
 
 
+    componentWillMount() {
+        if (window.location.pathname === '/company/edit') {
+            this.setState({
+                inputEnabled: false
+            })
+        }
+    }
+
+
     /**
      * Return the component
      *
      * @returns {XML} component
      */
     render() {
-
         /**
          * If the data is not loaded, make the Query to get company information by id
          */
@@ -234,7 +314,6 @@ class GeneralInformation extends Component {
                                     address: item.Location.trim(),
                                     optionalAddress: item.Location01.trim(),
 
-
                                     country: item.Country,
                                     state: item.State,
                                     city: item.City,
@@ -243,8 +322,8 @@ class GeneralInformation extends Component {
                                     email: item.Primary_Email.trim(),
                                     phoneNumber: item.Phone_Number.trim(),
 
-                                    code: item.Code.trim(),
-                                    code01: item.Code01.trim(),
+                                    Code: item.Code.trim(),
+                                    Code01: item.Code01.trim(),
                                     zipCode: item.Zipcode,
                                     fax: item.Fax,
                                     startDate: item.Start_Date.trim(),
@@ -267,32 +346,92 @@ class GeneralInformation extends Component {
                 <div className="general-information__header">
                     <div className="input-container">
                         <span className="input-label">Markup</span>
-                        <InputForm/>
+                        <InputForm
+                            value={this.state.rate}
+                            change={(text) => {
+                                this.setState({
+                                    rate: text
+                                })
+                            }}/>
                     </div>
                     <div className="input-container">
                         <span className="input-label">Company Code</span>
-                        <InputForm/>
+                        <InputForm
+                            value={this.state.Code}
+                            change={(text) => {
+                                this.setState({
+                                    Code: text,
+                                });
+                            }}/>
                     </div>
                 </div>
+                {
+                    window.location.pathname === '/company/edit' ? (
+                        <div className="options-company">
+                            <button className="edit-company-button" onClick={
+                                () => {
+                                    if (this.state.inputEnabled) {
+                                        this.setState({
+                                            inputEnabled: false
+                                        })
+                                    } else {
+                                        this.setState({
+                                            inputEnabled: true
+                                        })
+                                    }
+                                }
+                            }>{this.state.inputEnabled ? 'Cancelar' : 'Edit Company'}
+                            </button>
+                        </div>
+                    ) : ''
+                }
                 <div className="general-information__content">
                     <div className="card-form-company">
                         <div className="card-form-header grey">General Information</div>
                         <div className="card-form-body">
                             <div className="card-form-row">
                                 <span className="input-label primary">Company Name</span>
-                                <InputForm value={this.state.name}/>
+                                <InputForm
+                                    value={this.state.name}
+                                    change={(text) => {
+                                        this.setState({
+                                            name: text
+                                        })
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Address</span>
-                                <InputForm value={this.state.address}/>
+                                <InputForm
+                                    value={this.state.address}
+                                    change={(text) => {
+                                        this.setState({
+                                            address: text
+                                        })
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Address 2</span>
-                                <InputForm value={this.state.optionalAddress}/>
+                                <InputForm
+                                    value={this.state.optionalAddress}
+                                    change={(text) => {
+                                        this.setState({
+                                            optionalAddress: text
+                                        });
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Suite</span>
-                                <InputForm value={this.state.rate}/>
+                                <InputForm
+                                    value={this.state.suite}
+                                    change={(text) => {
+                                        this.setState({
+                                            suite: text
+                                        })
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Countries</span>
@@ -343,15 +482,36 @@ class GeneralInformation extends Component {
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Zip Code</span>
-                                <InputForm value={this.state.zipCode}/>
+                                <InputForm
+                                    value={this.state.zipCode}
+                                    change={(text) => {
+                                        this.setState({
+                                            zipCode: text
+                                        })
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Phone Number</span>
-                                <InputForm value={this.state.phoneNumber}/>
+                                <InputForm
+                                    value={this.state.phoneNumber}
+                                    change={(text) => {
+                                        this.setState({
+                                            phoneNumber: text
+                                        })
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Fax Week</span>
-                                <InputForm value={this.state.fax}/>
+                                <InputForm
+                                    value={this.state.fax}
+                                    change={(text) => {
+                                        this.setState({
+                                            fax: text
+                                        })
+                                    }}
+                                />
                             </div>
 
                         </div>
@@ -361,7 +521,14 @@ class GeneralInformation extends Component {
                         <div className="card-form-body">
                             <div className="card-form-row">
                                 <span className="input-label primary">Contract Start Date</span>
-                                <InputForm value={this.state.startDate}/>
+                                <InputForm
+                                    value={this.state.startDate}
+                                    change={(text) => {
+                                        this.setState({
+                                            startDate: text
+                                        })
+                                    }}
+                                />
                             </div>
                             <div className="card-form-row">
                                 <span className="input-label primary">Week Start</span>
@@ -401,22 +568,32 @@ class GeneralInformation extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="advanced-tab-options">
+                {
+                    this.state.inputEnabled ? (
+                        <div className="advanced-tab-options">
                     <span className="options-button options-button--back" onClick={
                         () => {
                             this.props.back();
                         }
                     }>Back</span>
-                    <span className="options-button options-button--next" onClick={
-                        () => {
-                            // When the user click Next button, open second tab
-                            this.props.next();
+                            <span className="options-button options-button--next" onClick={
+                                () => {
+                                    // When the user click Next button, open second tab
+                                    this.props.next();
 
-                            // Then make request mutation to create the company with general information
-                            this.insertCompany();
-                        }
-                    }>{this.props.valueTab < 2 ? 'Next' : 'Finish'}</span>
-                </div>
+                                    // Then make request mutation to create OR update the company with general information
+                                    if (window.location.pathname === '/Company/add') {
+                                        this.insertCompany();
+                                    } else if (window.location.pathname === '/company/edit') {
+                                        //Update Company with: this.props.idCompany [ company id received by props]
+                                        this.updateCompany(this.props.idCompany);
+                                    }
+                                }
+                            }>{this.props.valueTab < 2 ? 'Next' : 'Finish'}</span>
+                        </div>
+                    ) : ''
+                }
+
 
                 <Dialog
                     open={this.state.open}

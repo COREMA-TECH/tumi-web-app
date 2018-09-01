@@ -5,6 +5,20 @@ import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
 import ContactsTable from "../../Company/ContactsTable/ContactsTable";
 
 class ExhibitContract extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            exhibitA: '',
+            exhibitB: '',
+            exhibitC: '',
+            exhibitD: '',
+            exhibitE: '',
+            exhibitF: '',
+        }
+    }
+
+
     render() {
         return (
             <div className="contract-container">
@@ -26,14 +40,21 @@ class ExhibitContract extends Component {
                             <div className="contract-body-row__content">
                                 <div className="contract-body-row__header">
                                     <span className="contract-body__subtitle">
-                                      Exhibit C
+                                      Exhibit B
                                     </span>
                                 </div>
                                 <div className="contract-body-row__form">
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm />
+                                            <TextAreaForm
+                                                value={this.state.exhibitB}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        exhibitB: text
+                                                    })
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +70,14 @@ class ExhibitContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm />
+                                            <TextAreaForm
+                                                value={this.state.exhibitC}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        exhibitC: text
+                                                    })
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +93,14 @@ class ExhibitContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm />
+                                            <TextAreaForm
+                                                value={this.state.exhibitD}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        exhibitD: text
+                                                    })
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -81,7 +116,14 @@ class ExhibitContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm />
+                                            <TextAreaForm
+                                                value={this.state.exhibitE}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        exhibitE: text
+                                                    })
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -97,7 +139,14 @@ class ExhibitContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm />
+                                            <TextAreaForm
+                                                value={this.state.exhibitF}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        exhibitF: text
+                                                    })
+                                                }}
+                                            />
                                         </div>
                                     </div>
                                 </div>
