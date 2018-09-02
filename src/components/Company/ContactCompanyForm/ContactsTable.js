@@ -149,7 +149,11 @@ class ContactsTable extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.data !== nextProps.data) {
+		if (this.props.data !== nextProps.data||
+			this.state.types !== nextState.tyes ||
+			this.state.loading !== nextState.loading ||
+			this.state.supervisors !== nextState.supervisors ||
+			this.state.departments !== nextState.departments ) {
 			return true;
 		}
 		if (

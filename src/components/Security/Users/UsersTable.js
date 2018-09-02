@@ -373,7 +373,12 @@ class UsersTable extends React.Component {
 		else return items;
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.data !== nextProps.data) {
+		if (this.props.data !== nextProps.data||
+		this.props.contacts !== nextProps.contacts||
+		this.props.roles !== nextProps.roles||
+		this.props.languages !== nextProps.languages||
+		this.props.loading !== nextProps.loading) {
+			
 			return true;
 		}
 		if (

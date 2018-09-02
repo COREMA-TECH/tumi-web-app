@@ -200,7 +200,12 @@ class PositionsTable extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.data !== nextProps.data) {
+		if (
+			this.props.data !== nextProps.data ||
+			this.props.departments !== nextProps.departments ||
+			this.props.loading !== nextProps.loading ||
+			this.props.shifts !== nextProps.shifts
+		) {
 			return true;
 		}
 		if (

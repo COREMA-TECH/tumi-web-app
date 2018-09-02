@@ -351,7 +351,12 @@ class CatalogsTable extends React.Component {
 	};
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.data !== nextProps.data) {
+		if (
+			this.props.data !== nextProps.data ||
+			this.props.catalogs !== nextProps.catalogs ||
+			this.props.parents !== nextProps.parents ||
+			this.props.loading !== nextProps.loading
+		) {
 			return true;
 		}
 		if (

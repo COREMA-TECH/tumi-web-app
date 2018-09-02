@@ -149,7 +149,7 @@ class DepartmentsTable extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.data !== nextProps.data) {
+		if (this.props.data !== nextProps.data || this.props.loading !== nextProps.loading) {
 			return true;
 		}
 		if (
