@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import './index.css';
 import InputForm from "../../ui-components/InputForm/InputForm";
 import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
-import data from '../../../data/days.json';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from "../../ui-components/SelectForm/SelectForm";
@@ -11,12 +10,15 @@ import withApollo from "react-apollo/withApollo";
 import InputDateForm from "../../ui-components/InputForm/InputDateForm";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import Query from "react-apollo/Query";
+import AccountDialog from "../../ui-components/AccountDialog/AccountDialog";
 
 class NewContract extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            open: true,
+            scroll: 'paper',
             Id: '',
             Id_Company: '',
             Contract_Name: '',
@@ -33,10 +35,10 @@ class NewContract extends Component {
             Company_Signed_Date: '',
             Id_User_Billing_Contact: '',
             Billing_Street: '',
-            Billing_City: '',
-            Billing_State: '',
+            Billing_City: 0,
+            Billing_State: 0,
             Billing_Zip_Code: '',
-            Billing_Country: '',
+            Billing_Country: 6,
             Contract_Terms: '',
             Exhibit_B: '',
             Exhibit_C: '',
@@ -62,7 +64,25 @@ class NewContract extends Component {
         })
     };
 
+    updateCountry = (id) => {
+        this.setState({
+            Billing_Country: id
+        })
+    };
+
     updateProvidence = (id) => {
+        this.setState({
+            Billing_State: id
+        });
+    };
+
+    updateCity = (id) => {
+        this.setState({
+            Billing_City: id
+        })
+    };
+
+    updateCompany = (id) => {
 
     };
 
@@ -71,6 +91,22 @@ class NewContract extends Component {
             Owner_Expiration_Notification: id
         })
     };
+
+
+    /**
+     * Events of the component
+     */
+    handleClickOpen = scroll => () => {
+        this.setState({open: true, scroll});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
+    /**
+     * End of the events
+     */
 
 
     /**************************************
@@ -166,6 +202,18 @@ class NewContract extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
+    /**
+     * QUERY to get companies
+     */
+    getCompaniesQuery = gql`
+        {
+            getcompanies(Id: null, IsActive: 1) {
+                Id
+                Name
+            }
+        }
+    `;
+
 
     /**
      *  QUERIES to get the countries, cities and states
@@ -245,14 +293,7 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Account Name</span>
-                                            <InputForm
-                                                value={this.state.Account_Name}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Account_Name: text
-                                                    })
-                                                }}
-                                            />
+                                            <AccountDialog/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed By</span>
@@ -388,7 +429,7 @@ class NewContract extends Component {
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log("Data of cities" + data.getcatalogitem);
-                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateCountry} />
                                                     }
                                                     return <p>Nothing to display </p>;
                                                 }}
@@ -398,7 +439,7 @@ class NewContract extends Component {
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing State / Providence</span>
 
-                                            <Query query={this.getStatesQuery} variables={{parent: 6}}>
+                                            <Query query={this.getStatesQuery} variables={{parent: this.state.Billing_Country}}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (loading) return <LinearProgress/>;
@@ -414,14 +455,14 @@ class NewContract extends Component {
 
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing City</span>
-                                            <Query query={this.getCitiesQuery} variables={{parent: 140}}>
+                                            <Query query={this.getCitiesQuery} variables={{parent: this.state.Billing_State}}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log("Data of cities" + data.getcatalogitem);
-                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateCity} />
                                                     }
                                                     return <p>Nothing to display </p>;
                                                 }}

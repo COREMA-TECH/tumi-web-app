@@ -25,3 +25,10 @@
     justify-content: center;
     align-items: center;
 }
+
+
+.input-file-container .primary-button {
+    background: #3DA2C7;
+    cursor: pointer;
+    padding: .2em .5em;
+}
