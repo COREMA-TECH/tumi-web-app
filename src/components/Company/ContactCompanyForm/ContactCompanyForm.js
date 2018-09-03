@@ -214,7 +214,7 @@ class ContactcontactForm extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			idcontact: this.props.idcontact,
+			idCompany: this.props.idCompany,
 			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
@@ -520,10 +520,11 @@ class ContactcontactForm extends React.Component {
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
 	loadContacts = () => {
+		console.log('Id Entitiy: ', this.state.idCompany);
 		this.props.client
 			.query({
 				query: this.GET_CONTACTS_QUERY,
-				variables: { IdEntity: this.state.idcontact },
+				variables: { IdEntity: this.state.idCompany },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
