@@ -219,11 +219,13 @@ class ContactcontactForm extends React.Component {
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
 			allSupervisors: [],
+			inputEnabled: true,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
 	focusTextInput() {
+		console.log('Input:', document.getElementById('firstname'));
 		if (document.getElementById('firstname') != null) {
 			document.getElementById('firstname').focus();
 			document.getElementById('firstname').select();
@@ -493,6 +495,13 @@ class ContactcontactForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
+		if (window.location.pathname === '/company/edit') {
+			this.setState(
+				{
+					//inputEnabled: false
+				}
+			);
+		}
 		this.loadContacts();
 		this.loadTypes();
 		this.loadDepartments();
@@ -751,19 +760,34 @@ class ContactcontactForm extends React.Component {
 		this.setState({ openModal: false });
 	};
 	updateSupervisor = (id) => {
-		this.setState({
-			idSupervisor: id
-		});
+		this.setState(
+			{
+				idSupervisor: id
+			},
+			() => {
+				this.validateField('idSupervisor', id);
+			}
+		);
 	};
 	updateDepartment = (id) => {
-		this.setState({
-			idDepartment: id
-		});
+		this.setState(
+			{
+				idDepartment: id
+			},
+			() => {
+				this.validateField('idDepartment', id);
+			}
+		);
 	};
 	updateType = (id) => {
-		this.setState({
-			type: id
-		});
+		this.setState(
+			{
+				type: id
+			},
+			() => {
+				this.validateField('type', id);
+			}
+		);
 	};
 	render() {
 		const { loading, success } = this.state;
@@ -775,6 +799,13 @@ class ContactcontactForm extends React.Component {
 
 		return (
 			<div className="contact-tab">
+				<AlertDialogSlide
+					handleClose={this.handleCloseAlertDialog}
+					handleConfirm={this.handleConfirmAlertDialog}
+					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingConfirm}
+					content="Do you really want to continue whit this operation?"
+				/>
 				<div className="contact__header">
 					<button className="add-contact" onClick={this.handleClickOpenModal}>
 						{' '}
@@ -784,11 +815,11 @@ class ContactcontactForm extends React.Component {
 				<Dialog
 					fullScreen={fullScreen}
 					open={this.state.openModal}
-					onClose={this.cancelUserHandler}
+					onClose={this.cancelContactHandler}
 					aria-labelledby="responsive-dialog-title"
 				>
-					<DialogContent style={{ width: 500 }}>
-						<div className="card-form-header yellow">
+					<DialogTitle style={{ padding: '0px' }}>
+						<div className="card-form-header orange">
 							{' '}
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Contact'
@@ -796,7 +827,9 @@ class ContactcontactForm extends React.Component {
 								'Create Contact'
 							)}
 						</div>
-						<div className="card-form-contact">
+					</DialogTitle>
+					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
+						<div className="">
 							<div className="card-form-body">
 								<div className="card-form-row">
 									<span className="input-label primary">First Name</span>
@@ -834,63 +867,25 @@ class ContactcontactForm extends React.Component {
 								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">Department</span>
-									<SelectForm data={this.state.departments} update={this.updateDepartment} />
-									{/*   <FormControl className={[ classes.formControl, classes.comboControl ].join(' ')}>
-										<TextField
-											id="idDepartment"
-											select
-											name="idDepartment"
-											error={!this.state.idDepartmentValid}
-											value={this.state.idDepartment}
-											InputProps={{
-												classes: {
-													input: classes.comboControl
-												}
-											}}
-											onChange={(event) => this.onSelectChangeHandler(event)}
-											helperText="Department"
-											margin="normal"
-										>
-											{this.state.departments.map(({ Id, Name }) => (
-												<MenuItem key={Id} value={Id} name={Name}>
-													{Name}
-												</MenuItem>
-											))}
-										</TextField>
-                                        </FormControl>*/}
+									<SelectForm
+										name="department"
+										data={this.state.departments}
+										error={!this.state.idDepartmentValid}
+										update={this.updateDepartment}
+										showNone={false}
+										value={this.state.idDepartment}
+									/>
 								</div>
 
 								<div className="card-form-row">
 									<span className="input-label primary">Supervisor</span>
-									<SelectForm data={this.state.supervisors} update={this.updateSupervisor} />
-
-									{/*	<FormControl className={[ classes.formControl, classes.comboControl ].join(' ')}>
-										<TextField
-											id="idSupervisor"
-											select
-											name="idSupervisor"
-											error={!this.state.idSupervisorValid}
-											value={this.state.idSupervisor}
-											InputProps={{
-												classes: {
-													input: classes.comboControl
-												}
-											}}
-											onChange={(event) => this.onSelectChangeHandler(event)}
-											helperText="Supervisor"
-											margin="normal"
-										>
-											{' '}
-											<MenuItem key={0} value={0} name="None">
-												<em>None</em>
-											</MenuItem>
-											{this.state.supervisors.map(({ id, firstname }) => (
-												<MenuItem key={id} value={id} name={firstname}>
-													{firstname}
-												</MenuItem>
-											))}
-										</TextField>
-                                        </FormControl>*/}
+									<SelectForm
+										name="supervisor"
+										data={this.state.supervisors}
+										update={this.updateSupervisor}
+										value={this.state.idSupervisor}
+										error={!this.state.idSupervisorValid}
+									/>
 								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">Email</span>
@@ -916,31 +911,14 @@ class ContactcontactForm extends React.Component {
 								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">Title</span>
-									<SelectForm data={this.state.types} update={this.updateType} />
-
-									{/*  <FormControl className={[ classes.formControl, classes.comboControl ].join(' ')}>
-										<TextField
-											id="type"
-											select
-											name="type"
-											error={!this.state.typeValid}
-											value={this.state.type}
-											InputProps={{
-												classes: {
-													input: classes.comboControl
-												}
-											}}
-											onChange={(event) => this.onSelectChangeHandler(event)}
-											helperText="Title"
-											margin="normal"
-										>
-											{this.state.types.map(({ Id, Name }) => (
-												<MenuItem key={Id} value={Id} name={Name}>
-													{Name}
-												</MenuItem>
-											))}
-										</TextField>
-                                        </FormControl>*/}
+									<SelectForm
+										name="title"
+										data={this.state.types}
+										update={this.updateType}
+										showNone={false}
+										value={this.state.type}
+										error={!this.state.typeValid}
+									/>
 								</div>
 							</div>
 						</div>
@@ -995,14 +973,6 @@ class ContactcontactForm extends React.Component {
 					</DialogActions>
 				</Dialog>
 				<div className={classes.container}>
-					<AlertDialogSlide
-						handleClose={this.handleCloseAlertDialog}
-						handleConfirm={this.handleConfirmAlertDialog}
-						open={this.state.opendialog}
-						loadingConfirm={this.state.loadingConfirm}
-						content="Do you really want to continue whit this operation?"
-					/>
-
 					<div className={classes.divStyle}>
 						<ContactsTable
 							data={this.state.data}
@@ -1015,6 +985,29 @@ class ContactcontactForm extends React.Component {
 						/>
 					</div>
 				</div>
+				{this.state.inputEnabled ? (
+					<div className="advanced-tab-options">
+						<span
+							className="options-button options-button--back"
+							onClick={() => {
+								this.props.back();
+							}}
+						>
+							Back
+						</span>
+						<span
+							className="options-button options-button--next"
+							onClick={() => {
+								// When the user click Next button, open second tab
+								this.props.next();
+							}}
+						>
+							{this.props.valueTab < 2 ? 'Next' : 'Finish'}
+						</span>
+					</div>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}

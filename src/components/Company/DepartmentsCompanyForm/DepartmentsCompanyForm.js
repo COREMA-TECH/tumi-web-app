@@ -151,6 +151,7 @@ class DepartmentsCompanyForm extends React.Component {
 		this.state = {
 			data: [],
 			idCompany: this.props.idCompany,
+			inputEnabled: true,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -287,6 +288,13 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
+		if (window.location.pathname === '/company/edit') {
+			this.setState(
+				{
+					//inputEnabled: false
+				}
+			);
+		}
 		this.loadDepartments();
 	}
 
@@ -462,6 +470,7 @@ class DepartmentsCompanyForm extends React.Component {
 				<div className="department__header">
 					<div className="input-container">
 						<span className="input-label">Code</span>
+
 						<InputForm
 							id="code"
 							name="code"
@@ -473,14 +482,16 @@ class DepartmentsCompanyForm extends React.Component {
 					</div>
 					<div className="input-container">
 						<span className="input-label">Description</span>
-						<InputForm
-							id="description"
-							name="description"
-							maxLength="15"
-							error={!this.state.descriptionValid}
-							value={this.state.description}
-							change={(value) => this.onDescriptionChangeHandler(value)}
-						/>
+						<div className="input-form-description ">
+							<InputForm
+								id="description"
+								name="description"
+								maxLength="15"
+								error={!this.state.descriptionValid}
+								value={this.state.description}
+								change={(value) => this.onDescriptionChangeHandler(value)}
+							/>
+						</div>
 					</div>
 					<div className={classes.root}>
 						<div className={classes.wrapper}>
@@ -546,7 +557,7 @@ class DepartmentsCompanyForm extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div className="department__content">
+				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<DepartmentsTable
 							data={this.state.data}
@@ -556,6 +567,29 @@ class DepartmentsCompanyForm extends React.Component {
 						/>
 					</div>
 				</div>
+				{this.state.inputEnabled ? (
+					<div className="advanced-tab-options">
+						<span
+							className="options-button options-button--back"
+							onClick={() => {
+								this.props.back();
+							}}
+						>
+							Back
+						</span>
+						<span
+							className="options-button options-button--next"
+							onClick={() => {
+								// When the user click Next button, open second tab
+								this.props.next();
+							}}
+						>
+							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
+						</span>
+					</div>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}

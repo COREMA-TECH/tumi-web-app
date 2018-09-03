@@ -21,7 +21,10 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
-
+import InputForm from '../../ui-components/InputForm/InputForm';
+import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import Select from '@material-ui/core/Select';
+import './index.css';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -52,7 +55,7 @@ const styles = (theme) => ({
 		//width: '200px'
 	},
 	divStyle: {
-		width: '80%',
+		width: '95%',
 		display: 'flex'
 		//justifyContent: 'space-around'
 	},
@@ -146,6 +149,14 @@ class PositionsCompanyForm extends React.Component {
 		}
 	`;
 
+	GET_RATE_QUERY = gql`
+		query getbusinesscompanies($Id: Int) {
+			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null) {
+				Rate
+			}
+		}
+	`;
+
 	GET_DEPARTMENTS_QUERY = gql`
 		{
 			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
@@ -225,8 +236,10 @@ class PositionsCompanyForm extends React.Component {
 				{ Id: 'A', Description: 'AM' },
 				{ Id: 'P', Description: 'PM' }
 			],
+
 			idCompany: this.props.idCompany,
-			companyRate: 37,
+			companyRate: 0,
+			inputEnabled: true,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -481,6 +494,13 @@ class PositionsCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
+		if (window.location.pathname === '/company/edit') {
+			this.setState(
+				{
+					//inputEnabled: false
+				}
+			);
+		}
 		this.loadDepartments();
 		this.loadPositions();
 	}
@@ -524,6 +544,7 @@ class PositionsCompanyForm extends React.Component {
 							data: data.data.getposition
 						},
 						() => {
+							this.getRate();
 							this.resetState();
 						}
 					);
@@ -567,7 +588,7 @@ class PositionsCompanyForm extends React.Component {
 							input: {
 								Id: id,
 								Id_Entity: this.props.idCompany,
-								Id_Contract: 14,
+								Id_Contract: this.props.idContract,
 								Id_Department: this.state.idDepartment,
 								Position: `'${this.state.position}'`,
 								Bill_Rate: this.state.billrate,
@@ -661,7 +682,30 @@ class PositionsCompanyForm extends React.Component {
 			}
 		);
 	};
-
+	getRate = () => {
+		this.props.client
+			.query({
+				query: this.GET_RATE_QUERY,
+				variables: { Id: this.state.idCompany },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getbusinesscompanies != null) {
+					this.setState({
+						companyRate: data.data.getbusinesscompanies[0].Rate
+					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading Company Rate: getbusinesscompanies not exists in query data'
+					);
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading Company Rate: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading Company Rate: ' + error);
+			});
+	};
 	cancelDepartmentHandler = () => {
 		this.resetState();
 	};
@@ -674,7 +718,7 @@ class PositionsCompanyForm extends React.Component {
 		});
 
 		return (
-			<div className={classes.container}>
+			<div className="position_tab">
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -682,29 +726,23 @@ class PositionsCompanyForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className={classes.divStyle}>
+				<div className="position__header">
 					<FormControl className={[ classes.formControl, classes.departmentControl ].join(' ')}>
-						<TextField
+						<InputLabel htmlFor="demo-controlled-open-select">Department</InputLabel>
+						<Select
 							id="idDepartment"
-							select
 							name="idDepartment"
 							error={!this.state.idDepartmentValid}
 							value={this.state.idDepartment}
-							InputProps={{
-								classes: {
-									input: classes.departmentControl
-								}
-							}}
 							onChange={(event) => this.onSelectChangeHandler(event)}
-							helperText="Department"
-							margin="normal"
+							//	margin="normal"
 						>
 							{this.state.departments.map(({ Id, Description }) => (
 								<MenuItem key={Id} value={Id} name={Description}>
 									{Description}
 								</MenuItem>
 							))}
-						</TextField>
+						</Select>
 					</FormControl>
 					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
 						<InputLabel htmlFor="position">Title</InputLabel>
@@ -752,7 +790,6 @@ class PositionsCompanyForm extends React.Component {
 								}
 							}}
 							inputComponent={NumberFormatCustom}
-							defaultValue="0"
 							className={classes.resize}
 							error={!this.state.billrateValid}
 							value={this.state.billrate}
@@ -760,28 +797,24 @@ class PositionsCompanyForm extends React.Component {
 						/>
 					</FormControl>
 					<FormControl className={[ classes.formControl, classes.shiftControl ].join(' ')}>
-						<TextField
+						<InputLabel htmlFor="demo-controlled-open-select">Shift</InputLabel>
+						<Select
 							id="shift"
-							select
 							name="shift"
 							error={!this.state.shiftValid}
 							value={this.state.shift}
-							InputProps={{
-								classes: {
-									input: classes.shiftControl
-								}
-							}}
 							onChange={(event) => this.onSelectChangeHandler(event)}
-							helperText="Shift"
-							margin="normal"
+							//helperText="Shift"
+							//margin="normal"
 						>
 							{this.state.shifts.map(({ Id, Description }) => (
 								<MenuItem key={Id} value={Id} name={Description}>
 									{Description}
 								</MenuItem>
 							))}
-						</TextField>
+						</Select>
 					</FormControl>
+
 					<div className={classes.root}>
 						<div className={classes.wrapper}>
 							<Tooltip
@@ -797,6 +830,10 @@ class PositionsCompanyForm extends React.Component {
 							>
 								<div>
 									<Button
+										style={{
+											width: '35px',
+											height: '35px'
+										}}
 										disabled={this.state.loading}
 										//	disabled={!this.state.formValid}
 										variant="fab"
@@ -816,7 +853,7 @@ class PositionsCompanyForm extends React.Component {
 									</Button>
 								</div>
 							</Tooltip>
-							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+							{loading && <CircularProgress size={45} className={classes.fabProgress} />}
 						</div>
 					</div>
 
@@ -825,6 +862,10 @@ class PositionsCompanyForm extends React.Component {
 							<Tooltip title={'Cancel Operation'}>
 								<div>
 									<Button
+										style={{
+											width: '35px',
+											height: '35px'
+										}}
 										disabled={this.state.loading || !this.state.enableCancelButton}
 										variant="fab"
 										color="secondary"
@@ -838,16 +879,41 @@ class PositionsCompanyForm extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div className={classes.divStyle}>
-					<PositionsTable
-						data={this.state.data}
-						departments={this.state.departments}
-						loading={this.state.loading}
-						shifts={this.state.shifts}
-						onEditHandler={this.onEditHandler}
-						onDeleteHandler={this.onDeleteHandler}
-					/>
+				<div className={classes.container}>
+					<div className={classes.divStyle}>
+						<PositionsTable
+							data={this.state.data}
+							departments={this.state.departments}
+							loading={this.state.loading}
+							shifts={this.state.shifts}
+							onEditHandler={this.onEditHandler}
+							onDeleteHandler={this.onDeleteHandler}
+						/>
+					</div>
 				</div>
+				{this.state.inputEnabled ? (
+					<div className="advanced-tab-options">
+						<span
+							className="options-button options-button--back"
+							onClick={() => {
+								this.props.back();
+							}}
+						>
+							Back
+						</span>
+						<span
+							className="options-button options-button--next"
+							onClick={() => {
+								// When the user click Next button, open second tab
+								this.props.next();
+							}}
+						>
+							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
+						</span>
+					</div>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}

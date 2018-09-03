@@ -85,7 +85,7 @@ class CustomizedTabs extends React.Component {
 	};
 
 	nextHandleChange = () => {
-		if (this.state.value < 2) {
+		if (this.state.value < 3) {
 			// If current tab is 0 - CREATE COMPANY MUTATION should be execute
 
 			this.setState((prevState) => ({
@@ -133,6 +133,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<PositionsCompanyForm
 						idCompany={this.props.idCompany}
+						idContract={this.props.idContract}
 						handleOpenSnackbar={this.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}

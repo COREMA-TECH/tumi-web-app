@@ -154,10 +154,10 @@ class ContactsTable extends React.Component {
 	shouldComponentUpdate(nextProps, nextState) {
 		if (
 			this.props.data !== nextProps.data ||
-			this.state.types !== nextState.tyes ||
-			this.state.loading !== nextState.loading ||
-			this.state.supervisors !== nextState.supervisors ||
-			this.state.departments !== nextState.departments
+			this.props.types !== nextProps.types ||
+			this.props.loading !== nextProps.loading ||
+			this.props.supervisors !== nextProps.supervisors ||
+			this.props.departments !== nextProps.departments
 		) {
 			return true;
 		}
@@ -176,7 +176,7 @@ class ContactsTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+		console.log('Rendered');
 		return (
 			<Paper className={classes.root}>
 				<Table className={classes.table}>
@@ -258,9 +258,9 @@ class ContactsTable extends React.Component {
 											<MenuItem key={0} value={0} name="None">
 												None
 											</MenuItem>
-											{this.props.data.map(({ id, firstname }) => (
-												<MenuItem key={id} value={id} name={firstname}>
-													{firstname}
+											{this.props.supervisors.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
 												</MenuItem>
 											))}
 										</TextField>
