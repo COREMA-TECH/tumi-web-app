@@ -56,7 +56,7 @@ class CompanyCard extends React.Component {
 								onClick={() => {
 									history.push({
 										pathname: '/company/edit',
-										state: { idCompany: this.props.idCompany }
+										state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
 									});
 								}}
 							>

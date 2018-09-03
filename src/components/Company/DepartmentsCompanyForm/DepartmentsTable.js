@@ -19,8 +19,6 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
-import MaskedInput from 'react-text-mask';
-import NumberFormat from 'react-number-format';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -134,66 +132,17 @@ const styles = (theme) => ({
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 3
 	},
-	numberControl: {
-		textAlign: 'right'
-	},
 	th: {
 		backgroundColor: '#3da2c7'
 	}
 });
 
-function TextMaskCustom(props) {
-	const { inputRef, ...other } = props;
-
-	return (
-		<MaskedInput
-			{...other}
-			ref={inputRef}
-			mask={[ '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/ ]}
-			placeholderChar={'\u2000'}
-			showMask
-		/>
-	);
-}
-
-TextMaskCustom.propTypes = {
-	inputRef: PropTypes.func.isRequired
-};
-
-function NumberFormatCustom(props) {
-	const { inputRef, onChange, ...other } = props;
-
-	return (
-		<NumberFormat
-			{...other}
-			style={{ textAlign: 'right', width: '100%' }}
-			getInputRef={inputRef}
-			onValueChange={(values) => {
-				onChange({
-					target: {
-						value: values.value
-					}
-				});
-			}}
-			thousandSeparator
-			//prefix="$"
-		/>
-	);
-}
-
-NumberFormatCustom.propTypes = {
-	inputRef: PropTypes.func.isRequired,
-	onChange: PropTypes.func.isRequired
-};
-
 let id = 0;
 
-class PositionsTable extends React.Component {
+class DepartmentsTable extends React.Component {
 	state = {
 		page: 0,
 		rowsPerPage: 5
-		//textmask: '(1  )    -    ',
-		//numberformat: '1320'
 	};
 	handleChangePage = (event, page) => {
 		this.setState({ page });
@@ -203,18 +152,13 @@ class PositionsTable extends React.Component {
 		this.setState({ rowsPerPage: event.target.value });
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		if (
-			this.props.data !== nextProps.data ||
-			this.props.departments !== nextProps.departments ||
-			this.props.loading !== nextProps.loading ||
-			this.props.shifts !== nextProps.shifts
-		) {
+		if (this.props.data !== nextProps.data || this.props.loading !== nextProps.loading) {
 			return true;
 		}
 		if (
 			this.state.page !== nextState.page ||
 			this.state.rowsPerPage !== nextState.rowsPerPage //||
-			//this.state.order !== nextState.order ||
+			//	this.state.order !== nextState.order ||
 			//this.state.orderBy !== nextState.orderBy
 		) {
 			return true;
@@ -226,7 +170,6 @@ class PositionsTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-		const { textmask, numberformat } = this.state;
 
 		return (
 			<Paper className={classes.root}>
@@ -235,15 +178,8 @@ class PositionsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th}>
-								Department
-							</CustomTableCell>
-							<CustomTableCell className={classes.th}>Title</CustomTableCell>
-							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
-							<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
-							<CustomTableCell padding="none" className={classes.th}>
-								Shift
-							</CustomTableCell>
+							<CustomTableCell className={classes.th}>Code</CustomTableCell>
+							<CustomTableCell className={classes.th}>Description</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -279,70 +215,15 @@ class PositionsTable extends React.Component {
 											</div>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell padding="none" style={{ width: '200px' }}>
-										<TextField
-											id="department"
-											select
-											name="department"
-											value={row.Id_Department}
-											margin="normal"
-											disabled
-											style={{ width: '100%' }}
-										>
-											{this.props.departments.map(({ Id, Description }) => (
-												<MenuItem key={Id} value={Id} name={Description}>
-													{Description}
-												</MenuItem>
-											))}
-										</TextField>
-									</CustomTableCell>
-									<CustomTableCell>{row.Position}</CustomTableCell>
-									<CustomTableCell style={{ width: '180px' }}>
-										<TextField
-											className={classes.formControl}
-											value={row.Pay_Rate}
-											id="payrate"
-											disabled
-											InputProps={{
-												inputComponent: NumberFormatCustom
-											}}
-										/>
-									</CustomTableCell>
-									<CustomTableCell style={{ width: '180px' }}>
-										<TextField
-											className={classes.formControl}
-											value={row.Bill_Rate}
-											id="billrate"
-											disabled
-											InputProps={{
-												inputComponent: NumberFormatCustom
-											}}
-										/>
-									</CustomTableCell>
-									<CustomTableCell padding="none" style={{ width: '100px' }}>
-										<TextField
-											id="shift"
-											select
-											name="shift"
-											value={row.Shift}
-											margin="normal"
-											disabled
-											style={{ width: '100%' }}
-										>
-											{this.props.shifts.map(({ Id, Description }) => (
-												<MenuItem key={Id} value={Id} name={Description}>
-													{Description}
-												</MenuItem>
-											))}
-										</TextField>
-									</CustomTableCell>
+									<CustomTableCell style={{ width: '150px' }}>{row.Code}</CustomTableCell>
+									<CustomTableCell>{row.Description}</CustomTableCell>
 								</TableRow>
 							);
 						})}
 
 						{emptyRows > 0 && (
 							<TableRow style={{ height: 48 * emptyRows }}>
-								<TableCell colSpan={6} />
+								<TableCell colSpan={4} />
 							</TableRow>
 						)}
 					</TableBody>
@@ -367,8 +248,8 @@ class PositionsTable extends React.Component {
 	}
 }
 
-PositionsTable.propTypes = {
+DepartmentsTable.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(PositionsTable);
+export default withStyles(styles)(DepartmentsTable);

@@ -1,34 +1,43 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
-import FullWithTabs from './../FullWidthTabs/FullWidthTabs'
+import FullWithTabs from './../FullWidthTabs/FullWidthTabs';
 
 class CreateCompany extends Component {
-    constructor(props) {
-        super(props);
-    }
+	constructor(props) {
+		super(props);
+	}
 
-    componentWillMount(){
+	componentWillMount() {}
 
-    }
+	checkId() {
+		let id;
 
-    checkId(){
-        let id;
+		// If the props id doesn't exist, id = 0
+		try {
+			return this.props.location.state.idCompany;
+		} catch (error) {
+			return 0;
+		}
+	}
 
-        // If the props id doesn't exist, id = 0
-        try {
-            return this.props.location.state.idCompany
-        } catch (error){
-            return 0
-        }
-    }
+	checkIdContract() {
+		let id;
 
-    render() {
-        return (
-            <div className="create-company-container">
-                <FullWithTabs idCompany={this.checkId()}/>
-            </div>
-        );
-    }
+		// If the props id doesn't exist, id = 0
+		try {
+			return this.props.location.state.idContract;
+		} catch (error) {
+			return 0;
+		}
+	}
+
+	render() {
+		return (
+			<div className="create-company-container">
+				<FullWithTabs idCompany={this.checkId()} idContract={this.checkIdContract()} />
+			</div>
+		);
+	}
 }
 
 export default CreateCompany;

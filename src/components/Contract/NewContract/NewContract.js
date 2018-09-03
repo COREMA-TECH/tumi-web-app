@@ -9,6 +9,8 @@ import SelectForm from "../../ui-components/SelectForm/SelectForm";
 import {gql} from "apollo-boost";
 import withApollo from "react-apollo/withApollo";
 import InputDateForm from "../../ui-components/InputForm/InputDateForm";
+import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import Query from "react-apollo/Query";
 
 class NewContract extends Component {
     constructor(props) {
@@ -164,6 +166,45 @@ class NewContract extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
+
+    /**
+     *  QUERIES to get the countries, cities and states
+     */
+    getCountriesQuery = gql`
+        {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
+
+    getStatesQuery = gql`
+        query States($parent: Int!)
+        {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
+
+
+    getCitiesQuery = gql`
+        query Cities($parent: Int!)
+        {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
+    /**
+     *  End of the countries, cities and states queries
+     */
 
     render() {
         return (
@@ -337,20 +378,54 @@ class NewContract extends Component {
                                                 }}
                                             />
                                         </div>
+
                                         <div className="card-form-row">
-                                            <span className="input-label primary">Billing City</span>
-                                            <InputForm
-                                                value={this.state.Billing_City}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Billing_City: text
-                                                    })
+                                            <span className="input-label primary">Billing Country</span>
+                                            <Query query={this.getCountriesQuery}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log("Data of cities" + data.getcatalogitem);
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                    }
+                                                    return <p>Nothing to display </p>;
                                                 }}
-                                            />
+                                            </Query>
                                         </div>
+
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing State / Providence</span>
-                                            <SelectForm data={data} update={this.updateProvidence} />
+
+                                            <Query query={this.getStatesQuery} variables={{parent: 6}}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log("Data of cities" + data.getcatalogitem);
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                    }
+                                                    return <p>Nothing to display </p>;
+                                                }}
+                                            </Query>
+                                        </div>
+
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Billing City</span>
+                                            <Query query={this.getCitiesQuery} variables={{parent: 140}}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log("Data of cities" + data.getcatalogitem);
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                    }
+                                                    return <p>Nothing to display </p>;
+                                                }}
+                                            </Query>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing Zip Code / Postal Code</span>
@@ -359,17 +434,6 @@ class NewContract extends Component {
                                                 change={(text) => {
                                                     this.setState({
                                                         Billing_Zip_Code: text
-                                                    })
-                                                }}
-                                            />
-                                        </div>
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Billing Country</span>
-                                            <InputForm
-                                                value={this.state.Billing_Country}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Billing_Country: text
                                                     })
                                                 }}
                                             />

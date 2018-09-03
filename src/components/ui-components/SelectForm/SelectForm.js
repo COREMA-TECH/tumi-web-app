@@ -9,85 +9,95 @@ import Button from '@material-ui/core/Button';
 import './index.css';
 const uuidv4 = require('uuid/v4');
 
-const styles = theme => ({
-    formControl: {
-        minWidth: 180,
-        background: '#fff'
-    },
-    select: {
-        border: '1px solid #E6E6E6',
-        borderRadius: '5px',
-    },
+const styles = (theme) => ({
+	formControl: {
+		minWidth: 180,
+		background: '#fff'
+	},
+	select: {
+		border: '1px solid #E6E6E6',
+		borderRadius: '5px'
+	},
+	selectError: {
+		border: '1px solid #E6E6E6',
+		borderRadius: '5px',
+		borderBottom: '1px solid',
+		borderBottomColor: 'red'
+	}
 });
 
 class ControlledOpenSelect extends React.Component {
-    constructor(props){
-        super(props);
-    }
+	constructor(props) {
+		super(props);
 
-    state = {
-        age: '',
-        open: false,
-    };
+		if (props.showNone != null) this.state = { showNone: props.showNone };
+	}
 
-    handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
+	state = {
+		age: '',
+		open: false,
+		showNone: true
+	};
 
-        // if(this.props.label === "Departments") {
-        //     this.props.values.map(item => {
-        //         if(event.target.value === item.Id){
-        //             this.props.update(item.Name);
-        //         }
-        //     })
-        // } else {
-        //     this.props.update(event.target.value);
-        // }
+	handleChange = (event) => {
+		this.setState({ [event.target.name]: event.target.value });
 
-        this.props.update(event.target.value);
-    };
+		this.props.update(event.target.value);
+	};
 
-    handleClose = () => {
-        this.setState({ open: false });
-    };
+	handleClose = () => {
+		this.setState({ open: false });
+	};
 
-    handleOpen = () => {
-        this.setState({ open: true });
-    };
+	handleOpen = () => {
+		this.setState({ open: true });
+	};
 
-    render() {
-        const { classes } = this.props;
-
-        return (
-            <form autoComplete="off">
-                <FormControl className="select-form-customized default">
-                    <Select
-                        className={classes.select}
-                        open={this.state.open}
-                        onClose={this.handleClose}
-                        onOpen={this.handleOpen}
-                        value={this.state.age}
-                        onChange={this.handleChange}
-                        inputProps={{
-                            name: 'age',
-                        }}
-                    >
-                        <MenuItem value="" className="select-form-customized__item">
-                            <em>None</em>
-                        </MenuItem>
-                        {
-                            this.props.data.map(item => {
-                                return <MenuItem className="select-form-customized__item" key={uuidv4()} value={item.Id}>{item.Name}</MenuItem>
-                            })
-                        }
-                    </Select>
-                </FormControl>
-            </form>
-        );
-    }
+	render() {
+		const { classes } = this.props;
+		console.log(this.props.error);
+		return (
+			<form autoComplete="off">
+				<FormControl className="select-form-customized default">
+					<Select
+						className={this.props.error ? classes.selectError : classes.select}
+						name={this.props.name}
+						id={this.props.id}
+						open={this.state.open}
+						onClose={this.handleClose}
+						onOpen={this.handleOpen}
+						value={this.props.value}
+						onChange={this.handleChange}
+						inputProps={{
+							name: 'age'
+						}}
+					>
+						{this.state.showNone && (
+							<MenuItem key={0} value={0} name="None" className="select-form-customized__item ">
+								<em>None</em>
+							</MenuItem>
+						)}
+						{this.props.data.map((item) => {
+							return (
+								<MenuItem
+									key={item.Id}
+									value={item.Id}
+									name={item.Name}
+									className="select-form-customized__item"
+								>
+									{item.Name}
+								</MenuItem>
+							);
+						})}
+					</Select>
+				</FormControl>
+			</form>
+		);
+	}
 }
 
 ControlledOpenSelect.propTypes = {
-    classes: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ControlledOpenSelect);
