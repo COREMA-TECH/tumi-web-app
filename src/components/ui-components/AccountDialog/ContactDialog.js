@@ -213,7 +213,7 @@ class SimpleDialogDemo extends React.Component {
     idCustomerSelected = value => {
         //TODO: PASARLO AL COMPONENTE PADRE
 
-        alert(value);
+        this.props.update(value);
     };
 
 
