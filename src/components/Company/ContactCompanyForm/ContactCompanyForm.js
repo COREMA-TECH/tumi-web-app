@@ -553,7 +553,7 @@ class ContactcontactForm extends React.Component {
 		this.props.client
 			.query({
 				query: this.GET_SUPERVISORS_QUERY,
-				variables: { Id_Entity: this.state.idcontact, Id: idContact },
+				variables: { Id_Entity: this.state.idCompany, Id: idContact },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
@@ -578,7 +578,7 @@ class ContactcontactForm extends React.Component {
 		this.props.client
 			.query({
 				query: this.GET_SUPERVISORS_QUERY,
-				variables: { Id_Entity: this.state.idcontact, Id: 0 },
+				variables: { Id_Entity: this.state.idCompany, Id: 0 },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
