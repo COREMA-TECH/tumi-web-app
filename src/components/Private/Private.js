@@ -5,8 +5,6 @@ import MainContainer from "../MainContainer/Main/MainContainer";
 class Private extends Component {
     constructor(props) {
         super(props);
-
-        alert("Component");
     }
 
     render() {

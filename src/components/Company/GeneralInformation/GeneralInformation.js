@@ -279,7 +279,7 @@ class GeneralInformation extends Component {
 
 
     componentWillMount() {
-        if (window.location.pathname === '/company/edit') {
+        if (window.location.pathname === '/home/home/company/edit') {
             this.setState({
                 inputEnabled: false
             })
@@ -366,7 +366,7 @@ class GeneralInformation extends Component {
                     </div>
                 </div>
                 {
-                    window.location.pathname === '/company/edit' ? (
+                    window.location.pathname === '/home/company/edit' ? (
                         <div className="options-company">
                             <button className="edit-company-button" onClick={
                                 () => {
@@ -584,7 +584,7 @@ class GeneralInformation extends Component {
                                     // Then make request mutation to create OR update the company with general information
                                     if (window.location.pathname === '/Company/add') {
                                         this.insertCompany();
-                                    } else if (window.location.pathname === '/company/edit') {
+                                    } else if (window.location.pathname === '/home/company/edit') {
                                         //Update Company with: this.props.idCompany [ company id received by props]
                                         this.updateCompany(this.props.idCompany);
                                     }

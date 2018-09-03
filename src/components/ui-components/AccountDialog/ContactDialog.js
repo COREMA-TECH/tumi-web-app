@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -26,11 +26,10 @@ const styles = {
     },
 };
 
-class SimpleDialog extends Component {
+class SimpleDialog extends React.Component {
     state = {
         newCompany: '',
-        createdCompany: false,
-        data: []
+        createdCompany: false
     };
 
 
@@ -50,55 +49,41 @@ class SimpleDialog extends Component {
         }
     `;
 
+    ADD_CONTRACT = gql`
+        mutation inscontacts($input: iParamC) {
+            inscontacts(input: $input) {
+                Id
+            }
+        }
+    `;
+
     insertCompany = () => {
-        //Create the mutation using apollo global client
         this.props.client
             .mutate({
                 // Pass the mutation structure
-                mutation: this.ADD_COMPANY,
+                mutation: this.ADD_CONTRACT,
                 variables: {
                     input: {
                         Id: 150,
-                        Code: `''`,
-                        Code01: `''`,
-                        Id_Company: 1,
-                        Id_Contract: 1,
-                        BusinessType: 1,
-                        Location: `''`,
-                        Location01: `''`,
-                        Name: `'${this.state.newCompany}'`,
-                        Description: `''`,
-                        Start_Week: 0,
-                        End_Week: 0,
-                        Legal_Name: `''`,
-                        Country: 6,
-                        State: 10,
-                        Rate: parseFloat(0),
-                        Zipcode: parseInt(50),
-                        Fax: `''`,
-                        Primary_Email: `''`,
-                        Phone_Number: `''`,
-                        Phone_Prefix: `''`,
-                        City: parseInt(140),
-                        Id_Parent: 1,
-                        IsActive: parseInt(1),
+                        Id_Entity: parseInt(this.props.idContact),
+                        First_Name: `'${this.state.newCompany}'`,
+                        Middle_Name: "''",
+                        Last_Name: "''",
+                        Electronic_Address: "''",
+                        Phone_Number: "''",
+                        Contact_Type: 1,
+                        IsActive: 1,
                         User_Created: 1,
                         User_Updated: 1,
                         Date_Created: "'2018-08-14'",
                         Date_Updated: "'2018-08-14'",
-                        ImageURL: `''`,
-                        Start_Date: "'2018-08-14'",
-                        Contract_URL: "'firebase url'",
-                        Insurace_URL: "'firebase url'",
-                        Other_URL: "'firebase url'",
-                        Other01_URL: "'firebase url'",
-                        Suite: parseInt(10),
-                        Contract_Status: "'C'",
+                        Id_Supervisor: 1,
+                        Id_Deparment: 1,
                     }
                 }
             })
             .then((data) => {
-                console.log("Server data response is: " + data);
+                console.log("Server data contact created" + data);
             })
             .catch((err) => console.log("The error is: " + err));
     };
@@ -129,45 +114,25 @@ class SimpleDialog extends Component {
         }
     `;
 
-    getCompanies = () => {
-        this.props.client.query({
-            query: this.getContactsQuery
-        })
-            .then(item => {
-                this.setState(prevState => ({
-                    data: item
-                }))
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    };
-
-    componentWillMount() {
-        this.getCompanies();
-    }
-
     render() {
         const {classes, onClose, selectedValue, ...other} = this.props;
-
-
         return (
             <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
-                <DialogTitle id="simple-dialog-title">Select an Account</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Select a Customer</DialogTitle>
                 <div>
                     <List>
-                        <Query query={this.getCompaniesQuery}>
+                        <Query query={this.getContactsQuery} variables={{Id_Entity: parseInt(this.props.idContact)}}>
                             {({loading, error, data, refetch, networkStatus}) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
-                                if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-                                    console.log("Data of cities" + data.getbusinesscompanies);
+                                if (data.getcontacts != null && data.getcontacts.length > 0) {
+                                    console.log("Data of cities" + data.getcontacts);
                                     //return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
                                     return (
-                                        data.getbusinesscompanies.map((item) => (
+                                        data.getcontacts.map((item) => (
                                             <ListItem button onClick={() => {
-                                                this.handleListItemClick(item.Name);
+                                                this.handleListItemClick(item.First_Name);
                                                 this.props.onId(item.Id);
                                             }}
                                                       key={item.Id}>
@@ -176,7 +141,7 @@ class SimpleDialog extends Component {
                                                         <PersonIcon/>
                                                     </Avatar>
                                                 </ListItemAvatar>
-                                                <ListItemText primary={item.Name}/>
+                                                <ListItemText primary={item.First_Name}/>
                                             </ListItem>
                                         ))
                                     )
@@ -184,15 +149,11 @@ class SimpleDialog extends Component {
                                 return <p>Nothing to display </p>;
                             }}
                         </Query>
+
                         <div className="add-account-in-dialog">
                             <ListItem button onClick={() => {
                                 this.insertCompany();
-                                this.setState({
-                                    newCompany: '',
-                                    createdCompany: true
-                                });
-                            }}
-                                      className="add-account-in-dialog--button">
+                            }} className="add-account-in-dialog--button">
                                 <ListItemAvatar>
                                     <Avatar>
                                         <AddIcon/>
@@ -200,7 +161,7 @@ class SimpleDialog extends Component {
                                 </ListItemAvatar>
                             </ListItem>
                             <div className="card-form-row">
-                                <span className="input-label primary">Account Name</span>
+                                <span className="input-label primary">Customer Signed By</span>
                                 <InputForm
                                     value={this.state.newCompany}
                                     change={(text) => {
@@ -244,7 +205,15 @@ class SimpleDialogDemo extends React.Component {
 
     idCompanySelected = value => {
         //TODO: PASARLO AL COMPONENTE PADRE
+
         this.props.update(value);
+    };
+
+
+    idCustomerSelected = value => {
+        //TODO: PASARLO AL COMPONENTE PADRE
+
+        alert(value);
     };
 
 
@@ -265,7 +234,8 @@ class SimpleDialogDemo extends React.Component {
                     selectedValue={this.state.selectedValue}
                     open={this.state.open}
                     onClose={this.handleClose}
-                    onId={this.idCompanySelected}
+                    onId={this.idCustomerSelected}
+                    idContact={this.props.idContact}
                 />
             </div>
         );

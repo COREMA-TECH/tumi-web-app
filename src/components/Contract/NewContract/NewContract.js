@@ -11,6 +11,7 @@ import InputDateForm from "../../ui-components/InputForm/InputDateForm";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import Query from "react-apollo/Query";
 import AccountDialog from "../../ui-components/AccountDialog/AccountDialog";
+import ContactDialog from "../../ui-components/AccountDialog/ContactDialog";
 
 class NewContract extends Component {
     constructor(props) {
@@ -94,9 +95,17 @@ class NewContract extends Component {
 
     updateIdCompany = (id) => {
         this.setState({
-            Owner_Expiration_Notification: id
-        })
+            Id_Entity: id
+        });
     };
+
+    updateIdContact = (id) => {
+        this.setState({
+            Id_User_Signed: id
+        });
+    };
+
+
 
 
     /**
@@ -138,8 +147,8 @@ class NewContract extends Component {
                         Id_Company: 1,
                         Contract_Name: `'${this.state.Contract_Name}'`,
                         Contrat_Owner: `'${this.state.Contrat_Owner}'`,
-                        Id_Entity: 1,
-                        Id_User_Signed: 1,
+                        Id_Entity: parseInt(this.state.Id_Entity),
+                        Id_User_Signed: parseInt(this.state.Id_User_Signed),
                         User_Signed_Title: `'${this.state.User_Signed_Title}'`,
                         Signed_Date: `'${this.state.Signed_Date}'`,
                         Contract_Status: `'${this.state.Contract_Status}'`,
@@ -269,18 +278,11 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Account Name</span>
-                                            <AccountDialog/>
+                                            <AccountDialog update={this.updateIdCompany}/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed By</span>
-                                            <InputForm
-                                                value={this.state.Id_User_Signed}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Id_User_Signed: text
-                                                    })
-                                                }}
-                                            />
+                                            <ContactDialog idContact={this.state.Id_Entity} update={this.updateIdContact}/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed Title</span>
