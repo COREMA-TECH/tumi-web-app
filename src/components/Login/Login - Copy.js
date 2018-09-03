@@ -11,18 +11,6 @@ import AlertDialogSlide from '../Generic/AlertDialogSlide';
 import { MySnackbarContentWrapper } from '../Generic/SnackBar';
 import { Snackbar } from '@material-ui/core';
 
-import './images/icons/favicon.ico';
-import './vendor/bootstrap/css/bootstrap.min.css';
-import './fonts/font-awesome-4.7.0/css/font-awesome.min.css';
-import './fonts/iconic/css/material-design-iconic-font.min.css';
-import './vendor/animate/animate.css';
-import './vendor/css-hamburgers/hamburgers.min.css';
-import './vendor/animsition/css/animsition.min.css';
-import './vendor/select2/select2.min.css';
-import './vendor/daterangepicker/daterangepicker.css';
-import './css/util.css';
-import './css/main.css';
-
 class Login extends Component {
    // var result;
     constructor(props) {
@@ -73,7 +61,7 @@ class Login extends Component {
             .then((data) => {
                 if (data.data.getvalid_users.length == 1) {
                    console.log( "entramos en al true");                   
-                   window.location.href = "http://192.168.0.103:3000/home";
+                   window.location.href = "/home";
                 } else {
                     console.log( "entramos en al false");     
                         this.handleOpenSnackbar(
@@ -111,7 +99,7 @@ class Login extends Component {
             return (
                 <Redirect
                     to={{
-                        pathname: "192.168.0.103:3000/home",
+                        pathname: "/home",
                         state: { logged: true }
                     }}
                 />
@@ -137,11 +125,9 @@ class Login extends Component {
                         message={this.state.messageSnackbar}
                     />
                 </Snackbar>
-        <div class="limiter">
-            <div class="container-login100" >
                 <div className="login-form">
                     <div className="login-form__header">
-                        <span class="login100-form-title">Tumi</span>
+                        <span>Tumi</span>
                     </div>
                     <form onSubmit={this.handleSubmit} className="login-form__content">
                         <InputForm
@@ -164,31 +150,9 @@ class Login extends Component {
                             }}
                         />
                         <input type="submit" className="login-button" value="Login"/>
-
-                    <div class="txt1 text-center p-t-54 p-b-20">
-                        <span>
-                            Or Sign Up Using
-                        </span>
-                    </div>
-
-                    <div class="flex-c-m">
-                        <a href="#" class="login100-social-item bg1">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-
-                        <a href="#" class="login100-social-item bg2">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-
-                        <a href="#" class="login100-social-item bg3">
-                            <i class="fa fa-google"></i>
-                        </a>
-                    </div>
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
         );
     }
 }
