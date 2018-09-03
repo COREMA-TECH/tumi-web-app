@@ -1,0 +1,279 @@
+.contact-tab {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.contact__header {
+	width: 100%;
+	height: 6vh;
+	background: #ffffff;
+	border-bottom: 3px solid #7e7e7e;
+
+	padding: 1.5em;
+
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.contact__header .add-contact {
+	padding: .35em 1em;
+	border-radius: 25px;
+	background: linear-gradient(90deg, #3da2c7, #0092bd);
+	color: #ffffff;
+	font-family: "Segoe UI";
+	font-size: 1em;
+	font-weight: 300;
+	transition: all .250s;
+	border: none;
+	outline: none;
+
+	margin: .2em;
+}
+
+.contact__header .add-contact:hover {
+	cursor: pointer;
+	box-shadow: 1px 1px 15px #bbb;
+}
+.options-contact {
+	width: 100%;
+	height: 6vh;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+
+	padding: 1.5em 3em;
+}
+
+.options-contact .edit-contact-button {
+	padding: .3em 1.5em;
+	color: #555555;
+	background: rgba(126, 126, 126, 0.05);
+	border-radius: 25px;
+	border: 1px solid #bbbbbb;
+
+	outline: none;
+	font-weight: 300;
+	font-size: 1em;
+	font-family: "Segoe UI";
+	cursor: pointer;
+
+	box-shadow: 1px 1px 15px #eee;
+
+	transition: all .250s;
+}
+
+.options-contact .edit-contact-button:hover {
+	box-shadow: 1px 1px 7px #eee;
+}
+
+.card-form-header {
+	margin-top: .8em;
+	margin-bottom: .8em;
+	width: 50%;
+	height: 3vh;
+	padding: .3em;
+	background: linear-gradient(90deg, #052370, #0639b4);
+	clip-path: polygon(0 0, 100% 0%, 85% 100%, 0 100%);
+	font-family: "Segoe UI";
+	font-size: 1.2em;
+	color: #fff;
+	font-weight: 300;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+
+.contact__content {
+	width: 100%;
+	display: flex;
+
+	justify-content: space-around;
+	align-items: center;
+	padding: 1.5em;
+}
+
+.card-form-contact {
+	width: 100%;
+	min-height: 70vh;
+
+	display: flex;
+	flex-direction: column;
+	box-shadow: 1px 1px 20px #ccc;
+	border-radius: 30px;
+	overflow: hidden;
+}
+
+.card-form-body {
+	width: 100%;
+	min-height: 40%;
+	padding: 2em 0em;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.card-form-footer {
+	display: flex;
+	justify-content: flex-end;
+	padding: 1em;
+}
+
+.card-form-row {
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	padding: .7em;
+}
+
+.card-form-row--center {
+	width: 100%;
+	justify-content: center;
+
+	font-family: "Segoe UI";
+	font-size: 1em;
+	font-weight: 300;
+}
+
+.card-form-row--center span {
+	margin-right: 10px;
+
+	width: 20% !important;
+}
+
+.input-container {
+	min-width: 15vw;
+	padding: .25em;
+	border-radius: 5px;
+	border: 1px solid #e6e6e6;
+	background: #f5f7f9;
+	display: flex;
+	margin-right: 1em;
+}
+
+.input-container .input-form {
+	width: 100% !important;
+}
+
+.input-label {
+	margin-right: 12px;
+	font-family: "Segoe UI";
+	font-size: 1em;
+	font-weight: 300;
+	min-width: 40%;
+
+	display: flex;
+	justify-content: flex-end;
+}
+
+.primary {
+	color: #3da2c7;
+}
+
+.orange {
+	background: #e96f1b;
+}
+
+.yellow {
+	background: #ffc61a;
+}
+
+.grey {
+	background: #7e7e7e;
+}
+
+.divider-text {
+	color: #3da2c7;
+	padding-top: 3em;
+	padding-bottom: 1.5em;
+	font-weight: 400;
+	font-size: 1em;
+	font-family: "Segoe UI";
+
+	position: relative;
+	width: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.divider-text::after,
+.divider-text::before {
+	content: '';
+	display: block;
+	width: 10em;
+	height: 1px;
+	background: #e6e6e6;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.add-property {
+	padding: .2em .8em !important;
+	border-radius: 25px !important;
+	background: rgba(210, 10, 144, .05) !important;
+	color: rgb(210, 10, 144) !important;
+	font-family: "Segoe UI" !important;
+	font-size: 1em !important;
+	font-weight: 300 !important;
+
+	transition: all .250s !important;
+}
+
+.add-property:hover {
+	cursor: pointer;
+	background: rgba(210, 10, 144, .08);
+}
+
+.dialog {
+	width: fit-content;
+	height: 80vh;
+
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.dialog-header {
+	width: 100%;
+	height: 10%;
+	z-index: 1;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background: rgba(197, 197, 197, .15) !important;
+	color: #0092bd !important;
+	font-family: "Segoe UI";
+	font-size: 1.4em;
+	font-weight: 300;
+}
+
+.dialog-body {
+	width: 100%;
+	height: 82%;
+}
+
+.dialog-footer {
+	width: 100%;
+	height: 8%;
+
+	box-shadow: 1px -1px 10px #eee;
+	background: #ffffff;
+
+	padding: .1em .5em;
+	margin: 0 !important;
+
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.MuiDialog-paperWidthSm-41 {
+	max-width: none !important;
+}
