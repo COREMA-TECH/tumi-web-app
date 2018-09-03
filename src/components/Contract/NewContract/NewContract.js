@@ -92,6 +92,12 @@ class NewContract extends Component {
         })
     };
 
+    updateIdCompany = (id) => {
+        this.setState({
+            Owner_Expiration_Notification: id
+        })
+    };
+
 
     /**
      * Events of the component
@@ -116,36 +122,6 @@ class NewContract extends Component {
         mutation inscontracts($input: iContracts!) {
             inscontracts(input: $input) {
                 Id
-                Id_Company
-                Contract_Name
-                Contrat_Owner
-                Id_Entity
-                Id_User_Signed
-                User_Signed_Title
-                Signed_Date
-                Contract_Status
-                Contract_Start_Date
-                Contract_Term
-                Owner_Expiration_Notification
-                Company_Signed
-                Company_Signed_Date
-                Id_User_Billing_Contact
-                Billing_Street
-                Billing_City
-                Billing_State
-                Billing_Zip_Code
-                Billing_Country
-                Contract_Terms
-                Exhibit_B
-                Exhibit_C
-                Exhibit_D
-                Exhibit_E
-                Exhibit_F
-                IsActive
-                User_Created
-                User_Updated
-                Date_Created
-                Date_Updated
             }
         }
     `;
@@ -192,8 +168,8 @@ class NewContract extends Component {
                     }
                 }
             })
-            .then((data) => {
-                console.log("Server data response is: " + data);
+            .then(({data}) => {
+                console.log("Server data response is: " + data.inscontracts);
             })
             .catch((err) => console.log("The error is: " + err));
     };

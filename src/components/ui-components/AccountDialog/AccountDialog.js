@@ -63,7 +63,10 @@ class SimpleDialog extends React.Component {
                                     //return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
                                     return (
                                         data.getcompanies.map((item) => (
-                                            <ListItem button onClick={() => this.handleListItemClick(item.Name)}
+                                            <ListItem button onClick={() => {
+                                                this.handleListItemClick(item.Name);
+                                                this.props.onId(item.Id);
+                                            }}
                                                       key={item.Id}>
                                                 <ListItemAvatar>
                                                     <Avatar className={classes.avatar}>
@@ -117,6 +120,12 @@ class SimpleDialogDemo extends React.Component {
         this.setState({selectedValue: value, open: false});
     };
 
+    idCompanySelected = value => {
+        //TODO: PASARLO AL COMPONENTE PADRE
+
+        alert(value);
+    };
+
     render() {
         return (
             <div>
@@ -134,6 +143,7 @@ class SimpleDialogDemo extends React.Component {
                     selectedValue={this.state.selectedValue}
                     open={this.state.open}
                     onClose={this.handleClose}
+                    onId={this.idCompanySelected}
                 />
             </div>
         );
