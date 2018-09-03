@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './index.css';
 import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
+import withApollo from "react-apollo/withApollo";
+import {gql} from "apollo-boost";
 
 class ExhibitContract extends Component {
     constructor(props) {
@@ -15,6 +17,40 @@ class ExhibitContract extends Component {
             exhibitF: '',
         }
     }
+
+    ADD_EXHIBIT = gql`
+        mutation updcontracstexhibit($Id: Int, $Exhibit_B: String, $Exhibit_C: String, $Exhibit_D: String, $Exhibit_E: String,  $Exhibit_F: String) {
+            updcontracstexhibit(
+                Id: $Id,
+                Exhibit_B: $Exhibit_B,
+                Exhibit_C: $Exhibit_C,
+                Exhibit_D: $Exhibit_D,
+                Exhibit_E: $Exhibit_E,
+                Exhibit_F: $Exhibit_F){
+                Id
+                Exhibit_B
+                Exhibit_C
+                Exhibit_D
+                Exhibit_E
+                Exhibit_F
+            }
+        }
+    `;
+
+    insertExhibit = () => {
+        this.props.client
+            .mutate({
+                mutation: this.ADD_EXHIBIT,
+                variables: {
+                    Id: 16,
+                    Exhibit_B: `'${this.state.exhibitB}'`,
+                    Exhibit_C: `'${this.state.exhibitC}'`,
+                    Exhibit_D: `'${this.state.exhibitD}'`,
+                    Exhibit_E: `'${this.state.exhibitE}'`,
+                    Exhibit_F: `'${this.state.exhibitF}'`,
+                }
+            })
+    };
 
     render() {
         return (
@@ -156,6 +192,7 @@ class ExhibitContract extends Component {
                                 onClick={
                                     () => {
                                         // Insert Exhibits
+                                        this.insertExhibit();
                                     }
                                 }
                             >
@@ -169,4 +206,4 @@ class ExhibitContract extends Component {
     }
 }
 
-export default ExhibitContract;
+export default withApollo(ExhibitContract);

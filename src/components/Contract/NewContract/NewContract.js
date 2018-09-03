@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import './index.css';
 import InputForm from "../../ui-components/InputForm/InputForm";
 import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
-import data from '../../../data/days.json';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from "../../ui-components/SelectForm/SelectForm";
@@ -11,12 +10,16 @@ import withApollo from "react-apollo/withApollo";
 import InputDateForm from "../../ui-components/InputForm/InputDateForm";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import Query from "react-apollo/Query";
+import AccountDialog from "../../ui-components/AccountDialog/AccountDialog";
+import ContactDialog from "../../ui-components/AccountDialog/ContactDialog";
 
 class NewContract extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            open: true,
+            scroll: 'paper',
             Id: '',
             Id_Company: '',
             Contract_Name: '',
@@ -33,10 +36,10 @@ class NewContract extends Component {
             Company_Signed_Date: '',
             Id_User_Billing_Contact: '',
             Billing_Street: '',
-            Billing_City: '',
-            Billing_State: '',
+            Billing_City: 0,
+            Billing_State: 0,
             Billing_Zip_Code: '',
-            Billing_Country: '',
+            Billing_Country: 6,
             Contract_Terms: '',
             Exhibit_B: '',
             Exhibit_C: '',
@@ -62,7 +65,25 @@ class NewContract extends Component {
         })
     };
 
+    updateCountry = (id) => {
+        this.setState({
+            Billing_Country: id
+        })
+    };
+
     updateProvidence = (id) => {
+        this.setState({
+            Billing_State: id
+        });
+    };
+
+    updateCity = (id) => {
+        this.setState({
+            Billing_City: id
+        })
+    };
+
+    updateCompany = (id) => {
 
     };
 
@@ -72,6 +93,36 @@ class NewContract extends Component {
         })
     };
 
+    updateIdCompany = (id) => {
+        this.setState({
+            Id_Entity: id
+        });
+    };
+
+    updateIdContact = (id) => {
+        this.setState({
+            Id_User_Signed: id
+        });
+    };
+
+
+
+
+    /**
+     * Events of the component
+     */
+    handleClickOpen = scroll => () => {
+        this.setState({open: true, scroll});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
+    /**
+     * End of the events
+     */
+
 
     /**************************************
      *   MUTATION TO CREATE NEW CONTRACT  *
@@ -80,36 +131,6 @@ class NewContract extends Component {
         mutation inscontracts($input: iContracts!) {
             inscontracts(input: $input) {
                 Id
-                Id_Company
-                Contract_Name
-                Contrat_Owner
-                Id_Entity
-                Id_User_Signed
-                User_Signed_Title
-                Signed_Date
-                Contract_Status
-                Contract_Start_Date
-                Contract_Term
-                Owner_Expiration_Notification
-                Company_Signed
-                Company_Signed_Date
-                Id_User_Billing_Contact
-                Billing_Street
-                Billing_City
-                Billing_State
-                Billing_Zip_Code
-                Billing_Country
-                Contract_Terms
-                Exhibit_B
-                Exhibit_C
-                Exhibit_D
-                Exhibit_E
-                Exhibit_F
-                IsActive
-                User_Created
-                User_Updated
-                Date_Created
-                Date_Updated
             }
         }
     `;
@@ -126,8 +147,8 @@ class NewContract extends Component {
                         Id_Company: 1,
                         Contract_Name: `'${this.state.Contract_Name}'`,
                         Contrat_Owner: `'${this.state.Contrat_Owner}'`,
-                        Id_Entity: 1,
-                        Id_User_Signed: 1,
+                        Id_Entity: parseInt(this.state.Id_Entity),
+                        Id_User_Signed: parseInt(this.state.Id_User_Signed),
                         User_Signed_Title: `'${this.state.User_Signed_Title}'`,
                         Signed_Date: `'${this.state.Signed_Date}'`,
                         Contract_Status: `'${this.state.Contract_Status}'`,
@@ -156,8 +177,8 @@ class NewContract extends Component {
                     }
                 }
             })
-            .then((data) => {
-                console.log("Server data response is: " + data);
+            .then(({data}) => {
+                console.log("Server data response is: " + data.inscontracts);
             })
             .catch((err) => console.log("The error is: " + err));
     };
@@ -165,6 +186,18 @@ class NewContract extends Component {
     /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
+
+    /**
+     * QUERY to get companies
+     */
+    getCompaniesQuery = gql`
+        {
+            getcompanies(Id: null, IsActive: 1) {
+                Id
+                Name
+            }
+        }
+    `;
 
 
     /**
@@ -245,25 +278,11 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Account Name</span>
-                                            <InputForm
-                                                value={this.state.Account_Name}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Account_Name: text
-                                                    })
-                                                }}
-                                            />
+                                            <AccountDialog update={this.updateIdCompany}/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed By</span>
-                                            <InputForm
-                                                value={this.state.Id_User_Signed}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Id_User_Signed: text
-                                                    })
-                                                }}
-                                            />
+                                            <ContactDialog idContact={this.state.Id_Entity} update={this.updateIdContact}/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed Title</span>
@@ -388,7 +407,7 @@ class NewContract extends Component {
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log("Data of cities" + data.getcatalogitem);
-                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateCountry} />
                                                     }
                                                     return <p>Nothing to display </p>;
                                                 }}
@@ -398,7 +417,7 @@ class NewContract extends Component {
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing State / Providence</span>
 
-                                            <Query query={this.getStatesQuery} variables={{parent: 6}}>
+                                            <Query query={this.getStatesQuery} variables={{parent: this.state.Billing_Country}}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (loading) return <LinearProgress/>;
@@ -414,14 +433,14 @@ class NewContract extends Component {
 
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing City</span>
-                                            <Query query={this.getCitiesQuery} variables={{parent: 140}}>
+                                            <Query query={this.getCitiesQuery} variables={{parent: this.state.Billing_State}}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log("Data of cities" + data.getcatalogitem);
-                                                        return <SelectForm data={data.getcatalogitem} update={this.updateProvidence} />
+                                                        return <SelectForm data={data.getcatalogitem} update={this.updateCity} />
                                                     }
                                                     return <p>Nothing to display </p>;
                                                 }}
