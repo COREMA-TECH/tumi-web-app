@@ -140,6 +140,7 @@ iframe {
   font-size: 14px;
   line-height: 1.5;
   color: #666666;
+  text-align: center;
 }
 
 .txt2 {
@@ -210,7 +211,7 @@ iframe {
 [ Input ]*/
 
 .wrap-input100 {
-  width: 100%;
+  width: 80%;
   position: relative;
   border-bottom: 2px solid #d9d9d9;
 }
@@ -458,6 +459,61 @@ iframe {
   height: 50px;
   border-radius: 50%;
   margin: 5px;
+}
+
+.login100-social-item_bg1 {
+  font-size: 25px;
+  color: #fff;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 5px;
+  background-color: #3b5998;
+}
+
+.login100-social-item_bg2 {
+  font-size: 25px;
+  color: #fff;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 5px;
+  background-color: #1da1f2;
+}
+
+.login100-social-item_bg3 {
+  font-size: 25px;
+  color: #fff;
+
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 5px;
+  background-color: #ea4335;
+
 }
 
 .login100-social-item:hover {
