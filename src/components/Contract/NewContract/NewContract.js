@@ -170,6 +170,7 @@ class NewContract extends Component {
 			})
 			.then(({ data }) => {
 				console.log('Server data response is: ' + data.inscontracts);
+				this.props.update(data.inscontracts.Id);
 			})
 			.catch((err) => console.log('The error is: ' + err));
 	};

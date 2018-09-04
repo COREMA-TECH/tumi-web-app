@@ -61,12 +61,18 @@ const styles = theme => ({
 class Contract extends React.Component {
     state = {
         value: 0,
+        contractId: 0
     };
 
     handleChange = (event, value) => {
         this.setState({value});
-        console.log("Value:   " + value);
+    };
 
+    updateContractId = id => {
+        this.setState({
+            contractId: id,
+            value: 1
+        })
     };
 
     render() {
@@ -91,8 +97,8 @@ class Contract extends React.Component {
                         label="Exhibit"
                     />
                 </Tabs>
-                {value === 0 && <NewContract/>}
-                {value === 1 && <ExhibitContract/>}
+                {value === 0 && <NewContract update={this.updateContractId}/>}
+                {value === 1 && <ExhibitContract  contractId={this.state.contractId}/>}
             </div>
         );
     }

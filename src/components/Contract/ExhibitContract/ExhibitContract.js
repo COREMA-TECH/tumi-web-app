@@ -55,7 +55,7 @@ class ExhibitContract extends Component {
 		this.props.client.mutate({
 			mutation: this.ADD_EXHIBIT,
 			variables: {
-				Id: 16,
+				Id: parseInt(this.props.contractId),
 				Exhibit_B: `'${this.state.exhibitB}'`,
 				Exhibit_C: `'${this.state.exhibitC}'`,
 				Exhibit_D: `'${this.state.exhibitD}'`,
@@ -64,6 +64,7 @@ class ExhibitContract extends Component {
 			}
 		});
 	};
+
 	handleCloseSnackbar = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
@@ -71,6 +72,7 @@ class ExhibitContract extends Component {
 
 		this.setState({ openSnackbar: false });
 	};
+
 	handleOpenSnackbar = (variant, message) => {
 		this.setState({
 			openSnackbar: true,
@@ -78,6 +80,7 @@ class ExhibitContract extends Component {
 			messageSnackbar: message
 		});
 	};
+
 	render() {
 		return (
 			<div className="contract-container">
