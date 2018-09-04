@@ -95,6 +95,12 @@ class CustomizedTabs extends React.Component {
 		}
 	};
 
+	toggleStepper = () => {
+		this.setState({
+			showStepper: !this.state.showStepper
+		});
+	};
+
 	showSelectedTab = (value) => {
 		switch (value) {
 			case 0:
@@ -105,6 +111,8 @@ class CustomizedTabs extends React.Component {
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
 						valueTab={this.state.value}
+						showStepper={this.state.showStepper}
+						toggleStepper={this.toggleStepper}
 					/>
 				);
 			case 1:
@@ -116,6 +124,8 @@ class CustomizedTabs extends React.Component {
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
 						valueTab={this.state.value}
+						showStepper={this.state.showStepper}
+						toggleStepper={this.toggleStepper}
 					/>
 				);
 			case 2:
@@ -127,6 +137,8 @@ class CustomizedTabs extends React.Component {
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
 						valueTab={this.state.value}
+						showStepper={this.state.showStepper}
+						toggleStepper={this.toggleStepper}
 					/>
 				);
 			case 3:
@@ -139,6 +151,8 @@ class CustomizedTabs extends React.Component {
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
 						valueTab={this.state.value}
+						showStepper={this.state.showStepper}
+						toggleStepper={this.toggleStepper}
 					/>
 				);
 		}
