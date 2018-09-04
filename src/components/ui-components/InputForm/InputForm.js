@@ -12,6 +12,7 @@ class InputForm extends Component {
 						name={this.props.name}
 						value={this.props.value}
 						className={this.props.error ? 'input-form _invalid' : 'input-form'}
+						maxLength={this.props.maxLength}
 						placeholder={this.props.placeholder}
 						onChange={(event) => {
 							this.props.change(event.target.value);
@@ -26,6 +27,7 @@ class InputForm extends Component {
 						name={this.props.name}
 						value={this.props.value}
 						className={this.props.error ? 'input-form _invalid' : 'input-form'}
+						maxLength={this.props.maxLength}
 						onChange={(event) => {
 							this.props.change(event.target.value);
 						}}

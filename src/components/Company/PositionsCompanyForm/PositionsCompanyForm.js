@@ -891,7 +891,7 @@ class PositionsCompanyForm extends React.Component {
 						/>
 					</div>
 				</div>
-				{this.state.inputEnabled ? (
+				{this.props.showStepper ? (
 					<div className="advanced-tab-options">
 						<span
 							className="options-button options-button--back"

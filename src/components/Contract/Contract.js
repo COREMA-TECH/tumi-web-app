@@ -61,12 +61,25 @@ const styles = theme => ({
 class Contract extends React.Component {
     state = {
         value: 0,
+        contractId: 0,
+        companyId: 0
     };
 
     handleChange = (event, value) => {
         this.setState({value});
-        console.log("Value:   " + value);
+    };
 
+    updateContractId = id => {
+        this.setState({
+            contractId: id,
+            value: 1
+        })
+    };
+
+    updateCompanyId = id => {
+        this.setState({
+            companyId: id,
+        })
     };
 
     render() {
@@ -86,13 +99,14 @@ class Contract extends React.Component {
                         label="New Contract"
                     />
                     <Tab
+                        disabled
                         disableRipple
                         classes={{root: classes.tabRoot, selected: classes.tabSelected}}
                         label="Exhibit"
                     />
                 </Tabs>
-                {value === 0 && <NewContract/>}
-                {value === 1 && <ExhibitContract/>}
+                {value === 0 && <NewContract update={this.updateContractId} updateCompanyId={this.updateCompanyId}/>}
+                {value === 1 && <ExhibitContract  contractId={this.state.contractId} companyId={this.state.companyId}/>}
             </div>
         );
     }

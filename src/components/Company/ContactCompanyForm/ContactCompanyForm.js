@@ -214,7 +214,7 @@ class ContactcontactForm extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			idcontact: this.props.idcontact,
+			idCompany: this.props.idCompany,
 			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
@@ -520,10 +520,11 @@ class ContactcontactForm extends React.Component {
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
 	loadContacts = () => {
+		console.log('Id Entitiy: ', this.state.idCompany);
 		this.props.client
 			.query({
 				query: this.GET_CONTACTS_QUERY,
-				variables: { IdEntity: this.state.idcontact },
+				variables: { IdEntity: this.state.idCompany },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
@@ -552,7 +553,7 @@ class ContactcontactForm extends React.Component {
 		this.props.client
 			.query({
 				query: this.GET_SUPERVISORS_QUERY,
-				variables: { Id_Entity: this.state.idcontact, Id: idContact },
+				variables: { Id_Entity: this.state.idCompany, Id: idContact },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
@@ -577,7 +578,7 @@ class ContactcontactForm extends React.Component {
 		this.props.client
 			.query({
 				query: this.GET_SUPERVISORS_QUERY,
-				variables: { Id_Entity: this.state.idcontact, Id: 0 },
+				variables: { Id_Entity: this.state.idCompany, Id: 0 },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
@@ -985,7 +986,7 @@ class ContactcontactForm extends React.Component {
 						/>
 					</div>
 				</div>
-				{this.state.inputEnabled ? (
+				{this.props.showStepper ? (
 					<div className="advanced-tab-options">
 						<span
 							className="options-button options-button--back"
