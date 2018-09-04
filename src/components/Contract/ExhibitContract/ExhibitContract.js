@@ -82,7 +82,7 @@ class ExhibitContract extends Component {
 	};
 
 	render() {
-		return (
+	    return (
 			<div className="contract-container">
 				<Snackbar
 					anchorOrigin={{
@@ -108,8 +108,8 @@ class ExhibitContract extends Component {
 								</div>
 								<div className="contract-body-row__form contract-body-row__form--lg">
 									<PositionsCompanyForm
-										idCompany={this.props.idCompany}
-										idContract={this.props.idContract}
+										idCompany={this.props.companyId}
+										idContract={this.props.contractId}
 										handleOpenSnackbar={this.handleOpenSnackbar}
 										showStepper={false}
 									/>

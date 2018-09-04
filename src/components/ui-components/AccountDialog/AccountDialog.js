@@ -156,7 +156,10 @@ class SimpleDialog extends Component {
                 <DialogTitle id="simple-dialog-title">Select an Account</DialogTitle>
                 <div>
                     <List>
-                        <Query query={this.getCompaniesQuery}>
+                        <Query
+                            query={this.getCompaniesQuery}
+                            pollInterval={500}
+                        >
                             {({loading, error, data, refetch, networkStatus}) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress/>;
@@ -169,6 +172,7 @@ class SimpleDialog extends Component {
                                             <ListItem button onClick={() => {
                                                 this.handleListItemClick(item.Name);
                                                 this.props.onId(item.Id);
+                                                this.props.onItemValue(item.Name);
                                             }}
                                                       key={item.Id}>
                                                 <ListItemAvatar>
@@ -247,6 +251,10 @@ class SimpleDialogDemo extends React.Component {
         this.props.update(value);
     };
 
+    nameCompanySelected = value => {
+        this.props.updateCompanySignedBy(value);
+    };
+
 
     render() {
         return (
@@ -266,6 +274,7 @@ class SimpleDialogDemo extends React.Component {
                     open={this.state.open}
                     onClose={this.handleClose}
                     onId={this.idCompanySelected}
+                    onItemValue={this.nameCompanySelected}
                 />
             </div>
         );

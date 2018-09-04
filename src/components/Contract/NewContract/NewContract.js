@@ -92,6 +92,8 @@ class NewContract extends Component {
 		this.setState({
 			Id_Entity: id
 		});
+
+        this.props.updateCompanyId(id);
 	};
 
 	updateIdContact = (id) => {
@@ -185,8 +187,9 @@ class NewContract extends Component {
 	getCompaniesQuery = gql`
 		{
 			getcompanies(Id: null, IsActive: 1) {
-				Id
-				Name
+                Id
+                Name
+                LegalName
 			}
 		}
 	`;
@@ -263,7 +266,13 @@ class NewContract extends Component {
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Account Name</span>
-											<AccountDialog update={this.updateIdCompany} />
+											<AccountDialog update={this.updateIdCompany} updateCompanySignedBy={
+												(value) => {
+													this.setState({
+                                                        Company_Signed: value.trim()
+													})
+												}
+											}/>
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Customer Signed By</span>
@@ -342,9 +351,7 @@ class NewContract extends Component {
 											<InputForm
 												value={this.state.Company_Signed}
 												change={(text) => {
-													this.setState({
-														Company_Signed: text
-													});
+
 												}}
 											/>
 										</div>

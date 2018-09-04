@@ -121,7 +121,10 @@ class SimpleDialog extends React.Component {
                 <DialogTitle id="simple-dialog-title">Select a Customer</DialogTitle>
                 <div>
                     <List>
-                        <Query query={this.getContactsQuery} variables={{Id_Entity: parseInt(this.props.idContact)}}>
+                        <Query query={this.getContactsQuery}
+                               pollInterval={500}
+                               variables={{Id_Entity: parseInt(this.props.idContact)}}
+                        >
                             {({loading, error, data, refetch, networkStatus}) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress/>;
