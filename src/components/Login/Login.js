@@ -14,6 +14,7 @@ import { Snackbar } from '@material-ui/core';
 import './images/icons/favicon.ico';
 import './images/login.png';
 import './fonts/iconic/css/material-design-iconic-font.min.css';
+import './fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 import './vendor/animate/animate.css';
 import './vendor/css-hamburgers/hamburgers.min.css';
 import './vendor/animsition/css/animsition.min.css';
