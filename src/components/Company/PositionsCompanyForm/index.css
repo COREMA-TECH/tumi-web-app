@@ -129,6 +129,11 @@
 	padding: .7em;
 }
 
+.card-form-row--vertical {
+	flex-direction: column !important;
+	align-items: center;
+}
+
 .card-form-row--center {
 	width: 100%;
 	justify-content: center;
@@ -167,6 +172,11 @@
 
 	display: flex;
 	justify-content: flex-end;
+}
+
+
+.input-label--center {
+	justify-content: center;
 }
 
 .primary {

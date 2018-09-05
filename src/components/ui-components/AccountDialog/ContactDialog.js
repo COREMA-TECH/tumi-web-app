@@ -28,7 +28,11 @@ const styles = {
 
 class SimpleDialog extends React.Component {
     state = {
-        newCompany: '',
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
         createdCompany: false
     };
 
@@ -66,11 +70,11 @@ class SimpleDialog extends React.Component {
                     input: {
                         Id: 150,
                         Id_Entity: parseInt(this.props.idContact),
-                        First_Name: `'${this.state.newCompany}'`,
-                        Middle_Name: "''",
+                        First_Name: `'${this.state.firstName}'`,
+                        Middle_Name: `'${this.state.middleName}'`,
                         Last_Name: "''",
-                        Electronic_Address: "''",
-                        Phone_Number: "''",
+                        Electronic_Address: `'${this.state.email}'`,
+                        Phone_Number: `'${this.state.phoneNumber}'`,
                         Contact_Type: 1,
                         IsActive: 1,
                         User_Created: 1,
@@ -117,59 +121,97 @@ class SimpleDialog extends React.Component {
     render() {
         const {classes, onClose, selectedValue, ...other} = this.props;
         return (
-            <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+            <Dialog
+                contentStyle={{width: "100%", maxWidth: "none"}}
+                className="dialog-contact" onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
                 <DialogTitle id="simple-dialog-title">Select a Customer</DialogTitle>
                 <div>
                     <List>
-                        <Query query={this.getContactsQuery}
-                               pollInterval={500}
-                               variables={{Id_Entity: parseInt(this.props.idContact)}}
-                        >
-                            {({loading, error, data, refetch, networkStatus}) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
-                                if (error) return <p>Error </p>;
-                                if (data.getcontacts != null && data.getcontacts.length > 0) {
-                                    console.log("Data of cities" + data.getcontacts);
-                                    //return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
-                                    return (
-                                        data.getcontacts.map((item) => (
-                                            <ListItem button onClick={() => {
-                                                this.handleListItemClick(item.First_Name);
-                                                this.props.onId(item.Id);
-                                            }}
-                                                      key={item.Id}>
-                                                <ListItemAvatar>
-                                                    <Avatar className={classes.avatar}>
-                                                        <PersonIcon/>
-                                                    </Avatar>
-                                                </ListItemAvatar>
-                                                <ListItemText primary={item.First_Name}/>
-                                            </ListItem>
-                                        ))
-                                    )
-                                }
-                                return <p>Nothing to display </p>;
-                            }}
-                        </Query>
+                        <div className="list-item-container-scroll">
+                            <Query query={this.getContactsQuery}
+                                   pollInterval={500}
+                                   variables={{Id_Entity: parseInt(this.props.idContact)}}
+                            >
+                                {({loading, error, data, refetch, networkStatus}) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress/>;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcontacts != null && data.getcontacts.length > 0) {
+                                        console.log("Data of cities" + data.getcontacts);
+                                        //return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
+                                        return (
+                                            data.getcontacts.map((item) => (
 
-                        <div className="add-account-in-dialog">
+                                                <ListItem button onClick={() => {
+                                                    this.handleListItemClick(item.First_Name.trim());
+                                                    this.props.onId(item.Id);
+                                                }}
+                                                          key={item.Id}>
+                                                    <ListItemAvatar>
+                                                        <Avatar className={classes.avatar}>
+                                                            <PersonIcon/>
+                                                        </Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={item.First_Name}/>
+                                                </ListItem>
+                                            ))
+                                        )
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+
+                        </div>
+
+                        <div className="add-account-in-dialog add-account-in-dialog--vertical">
                             <ListItem button onClick={() => {
                                 this.insertCompany();
-                            }} className="add-account-in-dialog--button">
+                            }} className="add-account-in-dialog--button ">
                                 <ListItemAvatar>
                                     <Avatar>
                                         <AddIcon/>
                                     </Avatar>
                                 </ListItemAvatar>
                             </ListItem>
-                            <div className="card-form-row">
-                                <span className="input-label primary">Customer Signed By</span>
+                            <div className="card-form-row card-form-row--vertical">
+                                <span className="input-label input-label--center primary">Customer Signed By</span>
+                                <br/>
                                 <InputForm
-                                    value={this.state.newCompany}
+                                    placeholder="First Name"
+                                    value={this.state.firstName}
                                     change={(text) => {
                                         this.setState({
-                                            newCompany: text
+                                            firstName: text
+                                        })
+                                    }}
+                                />
+                                <br/>
+                                <InputForm
+                                    placeholder="Middle Name"
+                                    value={this.state.middleName}
+                                    change={(text) => {
+                                        this.setState({
+                                            middleName: text
+                                        })
+                                    }}
+                                />
+                                <br/>
+                                <InputForm
+                                    placeholder="Email"
+                                    value={this.state.email}
+                                    change={(text) => {
+                                        this.setState({
+                                            email: text
+                                        })
+                                    }}
+                                />
+                                <br/>
+                                <InputForm
+                                    placeholder="Phone Number"
+                                    value={this.state.phoneNumber}
+                                    change={(text) => {
+                                        this.setState({
+                                            phoneNumber: text
                                         })
                                     }}
                                 />

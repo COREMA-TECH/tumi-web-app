@@ -157,6 +157,8 @@ class CustomizedTabs extends React.Component {
 				);
 		}
 	};
+
+
 	handleCloseSnackbar = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
@@ -164,6 +166,7 @@ class CustomizedTabs extends React.Component {
 
 		this.setState({ openSnackbar: false });
 	};
+
 	handleOpenSnackbar = (variant, message) => {
 		this.setState({
 			openSnackbar: true,
