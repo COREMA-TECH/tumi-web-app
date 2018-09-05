@@ -224,6 +224,7 @@ class ContactcontactForm extends React.Component {
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
+
 	focusTextInput() {
 		console.log('Input:', document.getElementById('firstname'));
 		if (document.getElementById('firstname') != null) {

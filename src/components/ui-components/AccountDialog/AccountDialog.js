@@ -28,7 +28,7 @@ const styles = {
 
 class SimpleDialog extends Component {
     state = {
-        newCompany: '',
+        firstName: '',
         createdCompany: false,
         data: []
     };
@@ -66,7 +66,7 @@ class SimpleDialog extends Component {
                         BusinessType: 1,
                         Location: `''`,
                         Location01: `''`,
-                        Name: `'${this.state.newCompany}'`,
+                        Name: `'${this.state.firstName}'`,
                         Description: `''`,
                         Start_Week: 0,
                         End_Week: 0,
@@ -192,7 +192,7 @@ class SimpleDialog extends Component {
                             <ListItem button onClick={() => {
                                 this.insertCompany();
                                 this.setState({
-                                    newCompany: '',
+                                    firstName: '',
                                     createdCompany: true
                                 });
                             }}
@@ -206,10 +206,10 @@ class SimpleDialog extends Component {
                             <div className="card-form-row">
                                 <span className="input-label primary">Account Name</span>
                                 <InputForm
-                                    value={this.state.newCompany}
+                                    value={this.state.firstName}
                                     change={(text) => {
                                         this.setState({
-                                            newCompany: text
+                                            firstName: text
                                         })
                                     }}
                                 />

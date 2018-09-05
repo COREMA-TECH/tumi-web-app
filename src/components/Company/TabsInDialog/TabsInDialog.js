@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
@@ -6,6 +6,11 @@ import Tab from '@material-ui/core/Tab';
 import GeneralInforProperty from './GeneralInforProperty';
 import ContactsProperty from "./Contacts/ContactsProperty";
 import DepartmentsProperty from "./departments/DepartmentsProperty";
+import ContactCompanyForm from "../ContactCompanyForm/ContactCompanyForm";
+import Snackbar from "@material-ui/core/es/Snackbar/Snackbar";
+import {MySnackbarContentWrapper} from "../../Generic/SnackBar";
+import DepartmentsCompanyForm from "../DepartmentsCompanyForm/DepartmentsCompanyForm";
+import PositionsCompanyForm from "../PositionsCompanyForm/PositionsCompanyForm";
 
 const styles = theme => ({
     root: {
@@ -61,7 +66,7 @@ const styles = theme => ({
     },
 });
 
-class CustomizedTabs extends React.Component {
+class CustomizedTabs extends Component {
     state = {
         value: 0,
     };
@@ -70,12 +75,43 @@ class CustomizedTabs extends React.Component {
         this.setState({value});
     };
 
+    handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ openSnackbar: false });
+    };
+
+    handleOpenSnackbar = (variant, message) => {
+        this.setState({
+            openSnackbar: true,
+            variantSnackbar: variant,
+            messageSnackbar: message
+        });
+    };
+
     render() {
         const {classes} = this.props;
         const {value} = this.state;
 
         return (
             <div className={classes.root}>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center'
+                    }}
+                    open={this.state.openSnackbar}
+                    autoHideDuration={3000}
+                    onClose={this.handleCloseSnackbar}
+                >
+                    <MySnackbarContentWrapper
+                        onClose={this.handleCloseSnackbar}
+                        variant={this.state.variantSnackbar}
+                        message={this.state.messageSnackbar}
+                    />
+                </Snackbar>
                 <Tabs
                     value={value}
                     onChange={this.handleChange}
@@ -96,10 +132,50 @@ class CustomizedTabs extends React.Component {
                         classes={{root: classes.tabRoot, selected: classes.tabSelected}}
                         label="Departments"
                     />
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="Positions"
+                    />
                 </Tabs>
-                {value === 0 && <GeneralInforProperty/>}
-                {value === 1 && <ContactsProperty/>}
-                {value === 2 && <DepartmentsProperty/>}
+                {value === 0 && <GeneralInforProperty idCompany={this.props.idCompany}/>}
+                {value === 1 && (
+                    <ContactCompanyForm
+                        idCompany={this.props.idCompany}
+                        handleOpenSnackbar={this.handleOpenSnackbar}
+                        item={this.state.item}
+                        next={this.nextHandleChange}
+                        back={this.backHandleChange}
+                        valueTab={this.state.value}
+                        showStepper={this.state.showStepper}
+                        toggleStepper={this.toggleStepper}
+                    />
+                )}
+                {value === 2 && (
+                    <DepartmentsCompanyForm
+                        idCompany={this.props.idCompany}
+                        handleOpenSnackbar={this.handleOpenSnackbar}
+                        item={this.state.item}
+                        next={this.nextHandleChange}
+                        back={this.backHandleChange}
+                        valueTab={this.state.value}
+                        showStepper={this.state.showStepper}
+                        toggleStepper={this.toggleStepper}
+                    />
+                )}
+                {value === 3 && (
+                    <PositionsCompanyForm
+                        idCompany={this.props.idCompany}
+                        idContract={1}
+                        handleOpenSnackbar={this.handleOpenSnackbar}
+                        item={this.state.item}
+                        next={this.nextHandleChange}
+                        back={this.backHandleChange}
+                        valueTab={this.state.value}
+                        showStepper={this.state.showStepper}
+                        toggleStepper={this.toggleStepper}
+                    />
+                )}
             </div>
         );
     }
