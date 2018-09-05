@@ -24,6 +24,7 @@ import NumberFormat from 'react-number-format';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import Select from '@material-ui/core/Select';
+import ShiftsData from '../../../data/shitfs.json';
 import './index.css';
 const styles = (theme) => ({
 	container: {
@@ -228,14 +229,11 @@ class PositionsCompanyForm extends React.Component {
 
 	constructor(props) {
 		super(props);
+		console.log('ShiftData', ShiftsData);
 		this.state = {
 			data: [],
 			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
-			shifts: [
-				{ Id: 'T', Description: 'AM/PM' },
-				{ Id: 'A', Description: 'AM' },
-				{ Id: 'P', Description: 'PM' }
-			],
+			shifts: ShiftsData,
 
 			idCompany: this.props.idCompany,
 			companyRate: 0,
