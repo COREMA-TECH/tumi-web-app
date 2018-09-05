@@ -20,6 +20,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import InputForm from '../../ui-components/InputForm/InputForm';
 
 import './index.css';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',

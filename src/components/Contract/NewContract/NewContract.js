@@ -1,17 +1,17 @@
 import React, {Component} from 'react';
 import './index.css';
-import InputForm from '../../ui-components/InputForm/InputForm';
-import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import {gql} from 'apollo-boost';
-import withApollo from 'react-apollo/withApollo';
-import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import Query from 'react-apollo/Query';
-import AccountDialog from '../../ui-components/AccountDialog/AccountDialog';
-import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
+import InputForm from "../../ui-components/InputForm/InputForm";
+import AccountDialog from "../../ui-components/AccountDialog/AccountDialog";
+import ContactDialog from "../../ui-components/AccountDialog/ContactDialog";
+import InputDateForm from "../../ui-components/InputForm/InputDateForm";
+import Query from "react-apollo/Query";
+import withApollo from "react-apollo/withApollo";
+import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
 
 class NewContract extends Component {
     constructor(props) {
@@ -194,6 +194,7 @@ class NewContract extends Component {
     /**
      * QUERY to get companies
      */
+
     getCompaniesQuery = gql`
         {
             getcompanies(Id: null, IsActive: 1) {
@@ -277,13 +278,14 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Account Name</span>
-                                            <AccountDialog update={this.updateIdCompany} updateCompanySignedBy={
-                                                (value) => {
+                                            <AccountDialog
+                                                update={this.updateIdCompany}
+                                                updateCompanySignedBy={(value) => {
                                                     this.setState({
                                                         Company_Signed: value.trim()
-                                                    })
-                                                }
-                                            }/>
+                                                    });
+                                                }}
+                                            />
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed By</span>
@@ -359,12 +361,8 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Company Signed By</span>
-                                            <InputForm
-                                                value={this.state.Company_Signed}
-                                                change={(text) => {
-
-                                                }}
-                                            />
+                                            <InputForm value={this.state.Company_Signed} change={(text) => {
+                                            }}/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Company Signed Date</span>
@@ -389,10 +387,13 @@ class NewContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing Name</span>
-
-                                            <ContactDialog
-                                                idContact={this.state.Id_Entity}
-                                                update={this.updateId_User_Billing_Contact}
+                                            <InputForm
+                                                value={this.state.Id_User_Billing_Contact}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        Id_User_Billing_Contact: text
+                                                    });
+                                                }}
                                             />
                                         </div>
                                         <div className="card-form-row">
