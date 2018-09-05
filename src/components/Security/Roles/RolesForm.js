@@ -4,10 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import DepartmentsTable from './DepartmentsTable';
+import RolesTable from './RolesTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from '../../Generic/AlertDialogSlide';
+import AlertDialogSlide from '../../../components/Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -17,9 +17,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import InputForm from '../../ui-components/InputForm/InputForm';
-
-import './index.css';
+import { Snackbar } from '@material-ui/core';
+import { MySnackbarContentWrapper } from '../../../components/Generic/SnackBar';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = (theme) => ({
 	container: {
@@ -38,7 +39,7 @@ const styles = (theme) => ({
 		margin: theme.spacing.unit
 		//width: '100px'
 	},
-	codeControl: {
+	id_companyControl: {
 		//width: '200px'
 	},
 	descriptionControl: {
@@ -49,7 +50,7 @@ const styles = (theme) => ({
 		//width: '200px'
 	},
 	divStyle: {
-		width: '95%',
+		width: '80%',
 		display: 'flex'
 		//justifyContent: 'space-around'
 	},
@@ -86,62 +87,73 @@ const styles = (theme) => ({
 	}
 });
 
-class DepartmentsCompanyForm extends React.Component {
-	GET_DEPARTMENTS_QUERY = gql`
-		{
-			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
-				Id
-				Code: Name
-				Description
-				IsActive
+class RolesForm extends React.Component {
+	GET_COMPANY_QUERY = gql`
+			query getcompanies {
+				getcompanies(IsActive:1)
+				{
+					Id
+					Name
+				}
 			}
-		}
 	`;
-	INSERT_DEPARTMENTS_QUERY = gql`
-		mutation inscatalogitem($input: iParamCI!) {
-			inscatalogitem(input: $input) {
+
+	GET_ROLES_QUERY = gql`
+			query getroles {
+				getroles(IsActive:1)
+				{
+					Id
+					Id_Company
+					Description
+					IsActive
+				}
+			}
+	`;
+	INSERT_ROLES_QUERY = gql`
+		mutation insroles($input: iRoles!) {
+			insroles(input: $input) {
 				Id
 			}
 		}
 	`;
 
-	UPDATE_DEPARTMENTS_QUERY = gql`
-		mutation updcatalogitem($input: iParamCI!) {
-			updcatalogitem(input: $input) {
+	UPDATE_ROLES_QUERY = gql`
+		mutation updroles($input: iRoles!) {
+			updroles(input: $input) {
 				Id
 			}
 		}
 	`;
 
-	DELETE_DEPARTMENTS_QUERY = gql`
-		mutation delcatalogitem($Id: Int!) {
-			delcatalogitem(Id: $Id, IsActive: 0) {
+	DELETE_ROLES_QUERY = gql`
+		mutation delroles($Id: Int!) {
+			delroles(Id: $Id, IsActive: 0) {
 				Id
 			}
 		}
 	`;
 
-	TITLE_ADD = 'Add Department';
-	TITLE_EDIT = 'Update Department';
+	TITLE_ADD = 'Add Roles';
+	TITLE_EDIT = 'Update Roles';
 
 	DEFAULT_STATE = {
 		id: '',
 		idToDelete: null,
 		idToEdit: null,
-		code: '',
+		id_company: '',
 		description: '',
 
-		codeValid: false,
+		id_companyValid: false,
 		descriptionValid: false,
 
-		codeHasValue: false,
+		id_companyHasValue: false,
 		descriptionHasValue: false,
 
 		formValid: false,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
-		openSnackbar: true,
+		//openSnackbar: false,
 		loading: false,
 		success: false,
 		loadingConfirm: false
@@ -151,17 +163,20 @@ class DepartmentsCompanyForm extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			idCompany: this.props.idCompany,
-			inputEnabled: true,
+			company: [],
+			openSnackbar: false,
+			variantSnackbar: 'info',
+			messageSnackbar: 'Dummy text!',
+
+
+			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
 	focusTextInput() {
-		if (document.getElementById('code') != null) {
-			document.getElementById('code').focus();
-			document.getElementById('code').select();
-		}
+		document.getElementById('id_company').focus();
+		document.getElementById('id_company').select();
 	}
 	componentDidMount() {
 		this.resetState();
@@ -187,11 +202,11 @@ class DepartmentsCompanyForm extends React.Component {
 
 		this.setState({ open: false });
 	};
-	onCodeChangeHandler(value) {
-		this.setState({ code: value }, this.validateField('code', value));
-	}
-	onDescriptionChangeHandler(value) {
-		this.setState({ description: value }, this.validateField('description', value));
+	onChangeHandler(e) {
+		const name = e.target.name;
+		const value = e.target.value;
+		//this.setState({ [name]: value });
+		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	onBlurHandler(e) {
 		//const name = e.target.name;
@@ -201,49 +216,50 @@ class DepartmentsCompanyForm extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
+		console.log("onSelectChangeHandler", name, value);
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let codeHasValue = this.state.code != '';
-		let descriptionHasValue = this.state.description != '';
+		let id_companyHasValue = this.state.code.trim() != '';
+		let descriptionHasValue = this.state.description.trim() != '';
 
-		return codeHasValue || descriptionHasValue;
+		return descriptionHasValue;
 	};
 	validateAllFields() {
-		let codeValid = this.state.code.trim().length >= 2;
+		let id_companyValid = this.state.id_company;
 		let descriptionValid = this.state.description.trim().length >= 2;
 		this.setState(
 			{
-				codeValid,
+				id_companyValid,
 				descriptionValid
 			},
 			this.validateForm
 		);
 	}
 	validateField(fieldName, value) {
-		let codeValid = this.state.codeValid;
+		let id_companyValid = this.state.id_companyValid;
 		let descriptionValid = this.state.descriptionValid;
 
-		let codeHasValue = this.state.codeHasValue;
+		let id_companyHasValue = this.state.id_companyHasValue;
 		let descriptionHasValue = this.state.descriptionHasValue;
 
 		switch (fieldName) {
-			case 'code':
-				codeValid = value.trim().length >= 2;
-				codeHasValue = value != '';
+			case 'id_company':
+				id_companyValid = value !== null && value !== 0 && value !== '';
+				id_companyHasValue = value !== null && value !== '';
 				break;
 			case 'description':
 				descriptionValid = value.trim().length >= 2;
-				descriptionHasValue = value != '';
+				descriptionHasValue = value.trim() != '';
 				break;
 			default:
 				break;
 		}
 		this.setState(
 			{
-				codeValid,
+				id_companyValid,
 				descriptionValid,
-				codeHasValue,
+				id_companyHasValue,
 				descriptionHasValue
 			},
 			this.validateForm
@@ -252,8 +268,8 @@ class DepartmentsCompanyForm extends React.Component {
 
 	validateForm() {
 		this.setState({
-			formValid: this.state.codeValid && this.state.descriptionValid,
-			enableCancelButton: this.state.codeHasValue || this.state.descriptionHasValue
+			formValid: this.state.descriptionValid,
+			enableCancelButton: this.state.descriptionHasValue
 		});
 	}
 
@@ -261,20 +277,20 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ opendialog: false });
 	};
 	handleConfirmAlertDialog = () => {
-		this.deleteDepartment();
+		this.deleteRoles();
 	};
-	onEditHandler = ({ Id, Code, Description }) => {
+	onEditHandler = ({ Id, Id_Company, Description }) => {
 		this.setState(
 			{
 				idToEdit: Id,
-				code: Code.trim(),
+				id_company: Id_Company,
 				description: Description.trim(),
 				formValid: true,
-				codeValid: true,
+				id_companyValid: true,
 				descriptionValid: true,
 
 				enableCancelButton: true,
-				codeHasValue: true,
+				id_companyHasValue: true,
 				descriptionHasValue: true,
 
 				buttonTitle: this.TITLE_EDIT
@@ -289,57 +305,82 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		if (window.location.pathname === '/company/edit') {
-			this.setState(
-				{
-					//inputEnabled: false
-				}
-			);
-		}
-		this.loadDepartments();
+		this.loadRoles();
+		this.loadCompanies();
 	}
 
-	loadDepartments = () => {
+	loadRoles = () => {
 		this.props.client
 			.query({
-				query: this.GET_DEPARTMENTS_QUERY,
-				variables: { IdEntity: this.state.idCompany },
+				query: this.GET_ROLES_QUERY,
+				variables: {},
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				if (data.data.getcatalogitem != null) {
+				if (data.data.getroles != null) {
 					this.setState(
 						{
-							data: data.data.getcatalogitem
+							data: data.data.getroles
 						},
 						() => {
 							this.resetState();
 						}
 					);
 				} else {
-					this.props.handleOpenSnackbar(
+					this.handleOpenSnackbar(
 						'error',
-						'Error: Loading departments: getcatalogitem not exists in query data'
+						'Error: Loading roles: getroles not exists in query data'
 					);
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading departments: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
+				console.log('Error: Loading roles: ', error);
+				this.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
 			});
 	};
+
+	loadCompanies = () => {
+		this.props.client
+			.query({
+				query: this.GET_COMPANY_QUERY,
+				variables: {},
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getcompanies != null) {
+					this.setState(
+						{
+							company: data.data.getcompanies
+						},
+						() => {
+							this.resetState();
+						}
+					);
+				} else {
+					this.handleOpenSnackbar(
+						'error',
+						'Error: Loading Companies: getCompany not exists in query data'
+					);
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading Companies: ', error);
+				this.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
+			});
+	};
+
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
-		let query = this.INSERT_DEPARTMENTS_QUERY;
+		let query = this.INSERT_ROLES_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
 		if (isEdition) {
-			query = this.UPDATE_DEPARTMENTS_QUERY;
+			query = this.UPDATE_ROLES_QUERY;
 		}
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	insertDepartment = () => {
+	insertRoles = () => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
 		this.setState(
@@ -354,16 +395,8 @@ class DepartmentsCompanyForm extends React.Component {
 						variables: {
 							input: {
 								Id: id,
-								Id_Catalog: 8,
-								Id_Parent: 0,
-								Name: `'${this.state.code}'`,
-								DisplayLabel: `'${this.state.description}'`,
+								Id_Company: this.state.id_company,
 								Description: `'${this.state.description}'`,
-								Value: null,
-								Value01: null,
-								Value02: null,
-								Value03: null,
-								Value04: null,
 								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
@@ -373,21 +406,22 @@ class DepartmentsCompanyForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.props.handleOpenSnackbar(
+						console.log("Guardando");
+						this.handleOpenSnackbar(
 							'success',
-							isEdition ? 'Department Updated!' : 'Department Inserted!'
+							isEdition ? 'Roles Updated!' : 'Roles Inserted!'
 						);
-						this.loadDepartments();
+						this.loadRoles();
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log(
-							isEdition ? 'Error: Updating Department: ' : 'Error: Inserting Department: ',
+							isEdition ? 'Error: Updating Roles: ' : 'Error: Inserting Roles: ',
 							error
 						);
-						this.props.handleOpenSnackbar(
+						this.handleOpenSnackbar(
 							'error',
-							isEdition ? 'Error: Updating Department: ' + error : 'Error: Inserting Department: ' + error
+							isEdition ? 'Error: Updating Roles: ' + error : 'Error: Inserting Roles: ' + error
 						);
 						this.setState({
 							success: false,
@@ -397,7 +431,7 @@ class DepartmentsCompanyForm extends React.Component {
 			}
 		);
 	};
-	deleteDepartment = (id) => {
+	deleteRoles = (id) => {
 		this.setState(
 			{
 				loadingConfirm: true
@@ -405,19 +439,19 @@ class DepartmentsCompanyForm extends React.Component {
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_DEPARTMENTS_QUERY,
+						mutation: this.DELETE_ROLES_QUERY,
 						variables: {
 							Id: this.state.idToDelete
 						}
 					})
 					.then((data) => {
-						this.props.handleOpenSnackbar('success', 'Department Deleted!');
-						this.loadDepartments();
+						this.handleOpenSnackbar('success', 'Role Deleted!');
+						this.loadRoles();
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Department: ', error);
-						this.props.handleOpenSnackbar('error', 'Error: Deleting Department: ' + error);
+						console.log('Error: Deleting Role: ', error);
+						this.handleOpenSnackbar('error', 'Error: Deleting Role: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -426,7 +460,7 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	};
 
-	addDepartmenttHandler = () => {
+	addRolesHandler = () => {
 		this.setState(
 			{
 				success: false,
@@ -434,9 +468,9 @@ class DepartmentsCompanyForm extends React.Component {
 			},
 			() => {
 				this.validateAllFields();
-				if (this.state.formValid) this.insertDepartment();
+				if (this.state.formValid) this.insertRoles();
 				else {
-					this.props.handleOpenSnackbar(
+					this.handleOpenSnackbar(
 						'error',
 						'Error: Saving Information: You must fill all the required fields'
 					);
@@ -448,8 +482,16 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	};
 
-	cancelDepartmentHandler = () => {
+	cancelRolesHandler = () => {
 		this.resetState();
+	};
+	handleOpenSnackbar = (variant, message) => {
+		console.log("handleOpenSnackbar etamos aqui!!!!!");
+		this.setState({
+			openSnackbar: true,
+			variantSnackbar: variant,
+			messageSnackbar: message
+		});
 	};
 	render() {
 		const { loading, success } = this.state;
@@ -459,8 +501,24 @@ class DepartmentsCompanyForm extends React.Component {
 			[classes.buttonSuccess]: success
 		});
 
+		console.log(this.state.openSnackbar);
 		return (
-			<div className="department_tab">
+			<div className={classes.container}>
+				<Snackbar
+					anchorOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					open={this.state.openSnackbar}
+					autoHideDuration={3000}
+					onClose={this.handleCloseSnackbar}
+				>
+					<MySnackbarContentWrapper
+						onClose={this.handleCloseSnackbar}
+						variant={this.state.variantSnackbar}
+						message={this.state.messageSnackbar}
+					/>
+				</Snackbar>
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -468,71 +526,84 @@ class DepartmentsCompanyForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className="department__header">
-					<div className="input-container">
-						<span className="input-label">Code</span>
-
-						<InputForm
-							id="code"
-							name="code"
-							maxLength="10"
-							error={!this.state.codeValid}
-							value={this.state.code}
-							change={(value) => this.onCodeChangeHandler(value)}
+				<div className={classes.divStyle}>
+					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
+						<TextField
+							id="id_company"
+							select
+							name="id_company"
+							error={!this.state.id_companyValid}
+							value={this.state.id_company}
+							InputProps={{
+								classes: {
+									input: classes.inputControl
+								}
+							}}
+							onChange={(event) => this.onSelectChangeHandler(event)}
+							helperText="Company"
+							margin="normal"
+						>
+							{this.state.company.map(({ Id, Name }) => (
+								<MenuItem key={Id} value={Id} name={Name}>
+									{Name}
+								</MenuItem>
+							))}
+						</TextField>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="description">Description</InputLabel>
+						<Input
+							id="description"
+							name="description"
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.descriptionControl
+								}
+							}}
+							className={classes.resize}
+							error={!this.state.descriptionValid}
+							value={this.state.description}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
 						/>
-					</div>
-					<div className="input-container">
-						<span className="input-label">Description</span>
-						<div className="input-form-description ">
-							<InputForm
-								id="description"
-								name="description"
-								maxLength="15"
-								error={!this.state.descriptionValid}
-								value={this.state.description}
-								change={(value) => this.onDescriptionChangeHandler(value)}
-							/>
-						</div>
-					</div>
+					</FormControl>
+
 					<div className={classes.root}>
 						<div className={classes.wrapper}>
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 								}
 							>
 								<div>
 									<Button
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
 										disabled={this.state.loading}
 										//	disabled={!this.state.formValid}
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
-										onClick={this.addDepartmenttHandler}
+										onClick={this.addRolesHandler}
 									>
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+													<SaveIcon />
+												) : (
+													<AddIcon />
+												)}
 									</Button>
 								</div>
 							</Tooltip>
-							{loading && <CircularProgress size={45} className={classes.fabProgress} />}
+							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 						</div>
 					</div>
 
@@ -545,11 +616,7 @@ class DepartmentsCompanyForm extends React.Component {
 										variant="fab"
 										color="secondary"
 										className={buttonClassname}
-										onClick={this.cancelDepartmentHandler}
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
+										onClick={this.cancelRolesHandler}
 									>
 										<ClearIcon />
 									</Button>
@@ -558,46 +625,22 @@ class DepartmentsCompanyForm extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div className={classes.container}>
-					<div className={classes.divStyle}>
-						<DepartmentsTable
-							data={this.state.data}
-							loading={this.state.loading}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-						/>
-					</div>
+				<div className={classes.divStyle}>
+					<RolesTable
+						data={this.state.data}
+						company={this.state.company}
+						loading={this.state.loading}
+						onEditHandler={this.onEditHandler}
+						onDeleteHandler={this.onDeleteHandler}
+					/>
 				</div>
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--back"
-							onClick={() => {
-								this.props.back();
-							}}
-						>
-							Back
-						</span>
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// When the user click Next button, open second tab
-								this.props.next();
-							}}
-						>
-							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
-						</span>
-					</div>
-				) : (
-					''
-				)}
 			</div>
 		);
 	}
 }
 
-DepartmentsCompanyForm.propTypes = {
+RolesForm.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(DepartmentsCompanyForm));
+export default withStyles(styles)(withApollo(RolesForm));

@@ -19,6 +19,7 @@
 		"react-router-dom": "^4.3.1",
 		"react-scripts": "1.1.4",
 		"react-select": "^2.0.0",
+		"react-signature-canvas": "^1.0.0-alpha.1",
 		"react-swipeable-views": "^0.12.16",
 		"react-text-mask": "^5.4.3",
 		"uuid": "^3.3.2"

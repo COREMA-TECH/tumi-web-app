@@ -111,7 +111,7 @@ class Login extends Component {
             return (
                 <Redirect
                     to={{
-                        pathname: "192.168.0.102:5000/home",
+                        pathname: "localhost/home",
                         state: { logged: true }
                     }}
                 />

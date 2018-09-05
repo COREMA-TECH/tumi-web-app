@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import DepartmentsTable from './DepartmentsTable';
+import FormsTable from './FormsTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from '../../Generic/AlertDialogSlide';
@@ -17,9 +17,10 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import InputForm from '../../ui-components/InputForm/InputForm';
-
-import './index.css';
+import { Snackbar } from '@material-ui/core';
+import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = (theme) => ({
 	container: {
@@ -38,7 +39,7 @@ const styles = (theme) => ({
 		margin: theme.spacing.unit
 		//width: '100px'
 	},
-	codeControl: {
+	id_companyControl: {
 		//width: '200px'
 	},
 	descriptionControl: {
@@ -49,7 +50,7 @@ const styles = (theme) => ({
 		//width: '200px'
 	},
 	divStyle: {
-		width: '95%',
+		width: '80%',
 		display: 'flex'
 		//justifyContent: 'space-around'
 	},
@@ -86,62 +87,68 @@ const styles = (theme) => ({
 	}
 });
 
-class DepartmentsCompanyForm extends React.Component {
-	GET_DEPARTMENTS_QUERY = gql`
-		{
-			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
-				Id
-				Code: Name
-				Description
-				IsActive
+class FormsForm extends React.Component {
+	GET_FORMS_QUERY = gql`
+			query getforms {
+				getforms(IsActive:1)
+				{
+					Id
+					Code
+					Name
+					Value
+					Value01
+					Value02
+					Value03
+					Value04
+					IsActive
+				}
 			}
-		}
 	`;
-	INSERT_DEPARTMENTS_QUERY = gql`
-		mutation inscatalogitem($input: iParamCI!) {
-			inscatalogitem(input: $input) {
-				Id
-			}
-		}
-	`;
-
-	UPDATE_DEPARTMENTS_QUERY = gql`
-		mutation updcatalogitem($input: iParamCI!) {
-			updcatalogitem(input: $input) {
+	INSERT_FORMS_QUERY = gql`
+		mutation insforms($input: iForms!) {
+			insforms(input: $input) {
 				Id
 			}
 		}
 	`;
 
-	DELETE_DEPARTMENTS_QUERY = gql`
-		mutation delcatalogitem($Id: Int!) {
-			delcatalogitem(Id: $Id, IsActive: 0) {
+	UPDATE_FORMS_QUERY = gql`
+		mutation updforms($input: iForms!) {
+			updforms(input: $input) {
 				Id
 			}
 		}
 	`;
 
-	TITLE_ADD = 'Add Department';
-	TITLE_EDIT = 'Update Department';
+	DELETE_FORMS_QUERY = gql`
+		mutation delforms($Id: Int!) {
+			delforms(Id: $Id, IsActive: 0) {
+				Id
+			}
+		}
+	`;
+
+	TITLE_ADD = 'Add Forms';
+	TITLE_EDIT = 'Update Forms';
 
 	DEFAULT_STATE = {
 		id: '',
 		idToDelete: null,
 		idToEdit: null,
-		code: '',
-		description: '',
+		Code: '',
+		Name: '',
 
 		codeValid: false,
-		descriptionValid: false,
+		nameValid: false,
 
 		codeHasValue: false,
-		descriptionHasValue: false,
+		nameHasValue: false,
 
 		formValid: false,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
-		openSnackbar: true,
+		//openSnackbar: false,
 		loading: false,
 		success: false,
 		loadingConfirm: false
@@ -151,17 +158,20 @@ class DepartmentsCompanyForm extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			idCompany: this.props.idCompany,
-			inputEnabled: true,
+			forms: [],
+			openSnackbar: false,
+			variantSnackbar: 'info',
+			messageSnackbar: 'Dummy text!',
+
+
+			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
 	focusTextInput() {
-		if (document.getElementById('code') != null) {
-			document.getElementById('code').focus();
-			document.getElementById('code').select();
-		}
+		document.getElementById('code').focus();
+		document.getElementById('code').select();
 	}
 	componentDidMount() {
 		this.resetState();
@@ -187,11 +197,11 @@ class DepartmentsCompanyForm extends React.Component {
 
 		this.setState({ open: false });
 	};
-	onCodeChangeHandler(value) {
-		this.setState({ code: value }, this.validateField('code', value));
-	}
-	onDescriptionChangeHandler(value) {
-		this.setState({ description: value }, this.validateField('description', value));
+	onChangeHandler(e) {
+		const name = e.target.name;
+		const value = e.target.value;
+		//this.setState({ [name]: value });
+		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	onBlurHandler(e) {
 		//const name = e.target.name;
@@ -201,40 +211,41 @@ class DepartmentsCompanyForm extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
+		console.log("onSelectChangeHandler", name, value);
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let codeHasValue = this.state.code != '';
-		let descriptionHasValue = this.state.description != '';
+		let codeHasValue = this.state.code.trim() != '';
+		let nameHasValue = this.state.name.trim() != '';
 
-		return codeHasValue || descriptionHasValue;
+		return nameHasValue;
 	};
 	validateAllFields() {
-		let codeValid = this.state.code.trim().length >= 2;
-		let descriptionValid = this.state.description.trim().length >= 2;
+		let codeValid = this.state.code;
+		let nameValid = this.state.name.trim().length >= 2;
 		this.setState(
 			{
 				codeValid,
-				descriptionValid
+				nameValid
 			},
 			this.validateForm
 		);
 	}
 	validateField(fieldName, value) {
 		let codeValid = this.state.codeValid;
-		let descriptionValid = this.state.descriptionValid;
+		let nameValid = this.state.nameValid;
 
 		let codeHasValue = this.state.codeHasValue;
-		let descriptionHasValue = this.state.descriptionHasValue;
+		let nameHasValue = this.state.nameHasValue;
 
 		switch (fieldName) {
 			case 'code':
 				codeValid = value.trim().length >= 2;
-				codeHasValue = value != '';
+				codeHasValue = value.trim() != '';
 				break;
-			case 'description':
-				descriptionValid = value.trim().length >= 2;
-				descriptionHasValue = value != '';
+			case 'name':
+				nameValid = value.trim().length >= 2;
+				nameHasValue = value.trim() != '';
 				break;
 			default:
 				break;
@@ -242,9 +253,9 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState(
 			{
 				codeValid,
-				descriptionValid,
+				nameValid,
 				codeHasValue,
-				descriptionHasValue
+				nameHasValue
 			},
 			this.validateForm
 		);
@@ -252,8 +263,8 @@ class DepartmentsCompanyForm extends React.Component {
 
 	validateForm() {
 		this.setState({
-			formValid: this.state.codeValid && this.state.descriptionValid,
-			enableCancelButton: this.state.codeHasValue || this.state.descriptionHasValue
+			formValid: this.state.name,
+			enableCancelButton: this.state.nameHasValue
 		});
 	}
 
@@ -261,21 +272,21 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ opendialog: false });
 	};
 	handleConfirmAlertDialog = () => {
-		this.deleteDepartment();
+		this.deleteForms();
 	};
-	onEditHandler = ({ Id, Code, Description }) => {
+	onEditHandler = ({ Id, Code, Name }) => {
 		this.setState(
 			{
 				idToEdit: Id,
 				code: Code.trim(),
-				description: Description.trim(),
+				name: Name.trim(),
 				formValid: true,
 				codeValid: true,
-				descriptionValid: true,
+				nameValid: true,
 
 				enableCancelButton: true,
 				codeHasValue: true,
-				descriptionHasValue: true,
+				nameHasValue: true,
 
 				buttonTitle: this.TITLE_EDIT
 			},
@@ -289,57 +300,82 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		if (window.location.pathname === '/company/edit') {
-			this.setState(
-				{
-					//inputEnabled: false
-				}
-			);
-		}
-		this.loadDepartments();
+		this.loadForms();
+		//this.loadCompanies();
 	}
 
-	loadDepartments = () => {
+	loadForms = () => {
 		this.props.client
 			.query({
-				query: this.GET_DEPARTMENTS_QUERY,
-				variables: { IdEntity: this.state.idCompany },
+				query: this.GET_FORMS_QUERY,
+				variables: {},
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				if (data.data.getcatalogitem != null) {
+				if (data.data.getforms != null) {
 					this.setState(
 						{
-							data: data.data.getcatalogitem
+							data: data.data.getforms
 						},
 						() => {
 							this.resetState();
 						}
 					);
 				} else {
-					this.props.handleOpenSnackbar(
+					this.handleOpenSnackbar(
 						'error',
-						'Error: Loading departments: getcatalogitem not exists in query data'
+						'Error: Loading forms: getforms not exists in query data'
 					);
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading departments: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
+				console.log('Error: Loading forms: ', error);
+				this.handleOpenSnackbar('error', 'Error: Loading forms: ' + error);
 			});
 	};
+
+	/*	loadCompanies = () => {
+			this.props.client
+				.query({
+					query: this.GET_COMPANY_QUERY,
+					variables: {},
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getcompanies != null) {
+						this.setState(
+							{
+								company: data.data.getcompanies
+							},
+							() => {
+								this.resetState();
+							}
+						);
+					} else {
+						this.handleOpenSnackbar(
+							'error',
+							'Error: Loading Companies: getCompany not exists in query data'
+						);
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading Companies: ', error);
+					this.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
+				});
+		};*/
+
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
-		let query = this.INSERT_DEPARTMENTS_QUERY;
+		let query = this.INSERT_FORMS_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
 		if (isEdition) {
-			query = this.UPDATE_DEPARTMENTS_QUERY;
+			query = this.UPDATE_FORMS_QUERY;
 		}
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	insertDepartment = () => {
+	insertForms = () => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
 		this.setState(
@@ -354,12 +390,9 @@ class DepartmentsCompanyForm extends React.Component {
 						variables: {
 							input: {
 								Id: id,
-								Id_Catalog: 8,
-								Id_Parent: 0,
-								Name: `'${this.state.code}'`,
-								DisplayLabel: `'${this.state.description}'`,
-								Description: `'${this.state.description}'`,
-								Value: null,
+								Code: `'${this.state.code}'`,
+								Name: `'${this.state.name}'`,
+								Value: `'${this.state.value}'`,
 								Value01: null,
 								Value02: null,
 								Value03: null,
@@ -373,21 +406,22 @@ class DepartmentsCompanyForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.props.handleOpenSnackbar(
+						console.log("Guardando");
+						this.handleOpenSnackbar(
 							'success',
-							isEdition ? 'Department Updated!' : 'Department Inserted!'
+							isEdition ? 'Forms Updated!' : 'Forms Inserted!'
 						);
-						this.loadDepartments();
+						this.loadForms();
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log(
-							isEdition ? 'Error: Updating Department: ' : 'Error: Inserting Department: ',
+							isEdition ? 'Error: Updating Forms: ' : 'Error: Inserting Forms: ',
 							error
 						);
-						this.props.handleOpenSnackbar(
+						this.handleOpenSnackbar(
 							'error',
-							isEdition ? 'Error: Updating Department: ' + error : 'Error: Inserting Department: ' + error
+							isEdition ? 'Error: Updating Forms: ' + error : 'Error: Inserting Forms: ' + error
 						);
 						this.setState({
 							success: false,
@@ -397,7 +431,7 @@ class DepartmentsCompanyForm extends React.Component {
 			}
 		);
 	};
-	deleteDepartment = (id) => {
+	deleteForms = (id) => {
 		this.setState(
 			{
 				loadingConfirm: true
@@ -405,19 +439,19 @@ class DepartmentsCompanyForm extends React.Component {
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_DEPARTMENTS_QUERY,
+						mutation: this.DELETE_FORMS_QUERY,
 						variables: {
 							Id: this.state.idToDelete
 						}
 					})
 					.then((data) => {
-						this.props.handleOpenSnackbar('success', 'Department Deleted!');
-						this.loadDepartments();
+						this.handleOpenSnackbar('success', 'Form Deleted!');
+						this.loadForms();
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Department: ', error);
-						this.props.handleOpenSnackbar('error', 'Error: Deleting Department: ' + error);
+						console.log('Error: Deleting Forms: ', error);
+						this.handleOpenSnackbar('error', 'Error: Deleting Form: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -426,7 +460,7 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	};
 
-	addDepartmenttHandler = () => {
+	addFormsHandler = () => {
 		this.setState(
 			{
 				success: false,
@@ -434,9 +468,9 @@ class DepartmentsCompanyForm extends React.Component {
 			},
 			() => {
 				this.validateAllFields();
-				if (this.state.formValid) this.insertDepartment();
+				if (this.state.formValid) this.insertForms();
 				else {
-					this.props.handleOpenSnackbar(
+					this.handleOpenSnackbar(
 						'error',
 						'Error: Saving Information: You must fill all the required fields'
 					);
@@ -448,8 +482,15 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	};
 
-	cancelDepartmentHandler = () => {
+	cancelFormsHandler = () => {
 		this.resetState();
+	};
+	handleOpenSnackbar = (variant, message) => {
+		this.setState({
+			openSnackbar: true,
+			variantSnackbar: variant,
+			messageSnackbar: message
+		});
 	};
 	render() {
 		const { loading, success } = this.state;
@@ -459,8 +500,24 @@ class DepartmentsCompanyForm extends React.Component {
 			[classes.buttonSuccess]: success
 		});
 
+		console.log(this.state.openSnackbar);
 		return (
-			<div className="department_tab">
+			<div className={classes.container}>
+				<Snackbar
+					anchorOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					open={this.state.openSnackbar}
+					autoHideDuration={3000}
+					onClose={this.handleCloseSnackbar}
+				>
+					<MySnackbarContentWrapper
+						onClose={this.handleCloseSnackbar}
+						variant={this.state.variantSnackbar}
+						message={this.state.messageSnackbar}
+					/>
+				</Snackbar>
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -468,71 +525,96 @@ class DepartmentsCompanyForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className="department__header">
-					<div className="input-container">
-						<span className="input-label">Code</span>
-
-						<InputForm
+				<div className={classes.divStyle}>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="code">Code</InputLabel>
+						<Input
 							id="code"
 							name="code"
-							maxLength="10"
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.codeControl
+								}
+							}}
+							className={classes.resize}
 							error={!this.state.codeValid}
 							value={this.state.code}
-							change={(value) => this.onCodeChangeHandler(value)}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
 						/>
-					</div>
-					<div className="input-container">
-						<span className="input-label">Description</span>
-						<div className="input-form-description ">
-							<InputForm
-								id="description"
-								name="description"
-								maxLength="15"
-								error={!this.state.descriptionValid}
-								value={this.state.description}
-								change={(value) => this.onDescriptionChangeHandler(value)}
-							/>
-						</div>
-					</div>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="name">Name</InputLabel>
+						<Input
+							id="name"
+							name="name"
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.nameControl
+								}
+							}}
+							className={classes.resize}
+							error={!this.state.nameValid}
+							value={this.state.name}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+						<InputLabel htmlFor="value">Value</InputLabel>
+						<Input
+							id="value"
+							name="value"
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.valueControl
+								}
+							}}
+							className={classes.resize}
+							error={!this.state.valueValid}
+							value={this.state.value}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
 					<div className={classes.root}>
 						<div className={classes.wrapper}>
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 								}
 							>
 								<div>
 									<Button
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
 										disabled={this.state.loading}
 										//	disabled={!this.state.formValid}
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
-										onClick={this.addDepartmenttHandler}
+										onClick={this.addFormsHandler}
 									>
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+													<SaveIcon />
+												) : (
+													<AddIcon />
+												)}
 									</Button>
 								</div>
 							</Tooltip>
-							{loading && <CircularProgress size={45} className={classes.fabProgress} />}
+							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 						</div>
 					</div>
 
@@ -545,11 +627,7 @@ class DepartmentsCompanyForm extends React.Component {
 										variant="fab"
 										color="secondary"
 										className={buttonClassname}
-										onClick={this.cancelDepartmentHandler}
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
+										onClick={this.cancelFormsHandler}
 									>
 										<ClearIcon />
 									</Button>
@@ -558,46 +636,22 @@ class DepartmentsCompanyForm extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div className={classes.container}>
-					<div className={classes.divStyle}>
-						<DepartmentsTable
-							data={this.state.data}
-							loading={this.state.loading}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-						/>
-					</div>
+				<div className={classes.divStyle}>
+					<FormsTable
+						data={this.state.data}
+						//company={this.state.company}
+						loading={this.state.loading}
+						onEditHandler={this.onEditHandler}
+						onDeleteHandler={this.onDeleteHandler}
+					/>
 				</div>
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--back"
-							onClick={() => {
-								this.props.back();
-							}}
-						>
-							Back
-						</span>
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// When the user click Next button, open second tab
-								this.props.next();
-							}}
-						>
-							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
-						</span>
-					</div>
-				) : (
-					''
-				)}
 			</div>
 		);
 	}
 }
 
-DepartmentsCompanyForm.propTypes = {
+FormsForm.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(DepartmentsCompanyForm));
+export default withStyles(styles)(withApollo(FormsForm));
