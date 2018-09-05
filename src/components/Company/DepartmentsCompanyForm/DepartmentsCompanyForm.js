@@ -131,13 +131,13 @@ class DepartmentsCompanyForm extends React.Component {
 		code: '',
 		description: '',
 
-		codeValid: false,
-		descriptionValid: false,
+		codeValid: true,
+		descriptionValid: true,
 
 		codeHasValue: false,
 		descriptionHasValue: false,
 
-		formValid: false,
+		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
@@ -209,7 +209,7 @@ class DepartmentsCompanyForm extends React.Component {
 
 		return codeHasValue || descriptionHasValue;
 	};
-	validateAllFields() {
+	validateAllFields(func) {
 		let codeValid = this.state.code.trim().length >= 2;
 		let descriptionValid = this.state.description.trim().length >= 2;
 		this.setState(
@@ -217,7 +217,9 @@ class DepartmentsCompanyForm extends React.Component {
 				codeValid,
 				descriptionValid
 			},
-			this.validateForm
+			() => {
+				this.validateForm(func);
+			}
 		);
 	}
 	validateField(fieldName, value) {
@@ -250,11 +252,14 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm() {
-		this.setState({
-			formValid: this.state.codeValid && this.state.descriptionValid,
-			enableCancelButton: this.state.codeHasValue || this.state.descriptionHasValue
-		});
+	validateForm(func = () => {}) {
+		this.setState(
+			{
+				formValid: this.state.codeValid && this.state.descriptionValid,
+				enableCancelButton: this.state.codeHasValue || this.state.descriptionHasValue
+			},
+			func
+		);
 	}
 
 	handleCloseAlertDialog = () => {
@@ -433,17 +438,18 @@ class DepartmentsCompanyForm extends React.Component {
 				loading: true
 			},
 			() => {
-				this.validateAllFields();
-				if (this.state.formValid) this.insertDepartment();
-				else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Saving Information: You must fill all the required fields'
-					);
-					this.setState({
-						loading: false
-					});
-				}
+				this.validateAllFields(() => {
+					if (this.state.formValid) this.insertDepartment();
+					else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Saving Information: You must fill all the required fields'
+						);
+						this.setState({
+							loading: false
+						});
+					}
+				});
 			}
 		);
 	};

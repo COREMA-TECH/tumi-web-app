@@ -86,6 +86,7 @@ class EnhancedTableHead extends React.Component {
 									numeric={row.numeric}
 									padding={row.disablePadding ? 'none' : 'default'}
 									sortDirection={orderBy === row.id ? order : false}
+									style={{ backgroundColor: '#3da2c7' }}
 								>
 									{row.label}
 								</TableCell>
@@ -98,6 +99,7 @@ class EnhancedTableHead extends React.Component {
 								numeric={row.numeric}
 								padding={row.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === row.id ? order : false}
+								style={{ backgroundColor: '#3da2c7', color: '#3da2c7' }}
 							>
 								<Tooltip
 									title="Sort"

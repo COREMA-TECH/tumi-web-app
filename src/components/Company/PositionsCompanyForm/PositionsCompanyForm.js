@@ -205,11 +205,11 @@ class PositionsCompanyForm extends React.Component {
 		payrate: 0,
 		shift: '',
 
-		idDepartmentValid: false,
-		positionValid: false,
-		billrateValid: false,
-		payrateValid: false,
-		shiftValid: false,
+		idDepartmentValid: true,
+		positionValid: true,
+		billrateValid: true,
+		payrateValid: true,
+		shiftValid: true,
 
 		idDepartmentHasValue: false,
 		positionHasValue: false,
@@ -217,7 +217,7 @@ class PositionsCompanyForm extends React.Component {
 		payrateHasValue: false,
 		shiftHasValue: false,
 
-		formValid: false,
+		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
@@ -284,7 +284,7 @@ class PositionsCompanyForm extends React.Component {
 		var billrateHasValue = this.state.billrateHasValue;
 
 		if (value == '') return;
-		console.log('Passed');
+
 		switch (name) {
 			case 'payrate':
 				secondName = 'billrate';
@@ -370,7 +370,9 @@ class PositionsCompanyForm extends React.Component {
 				idDepartmentValid,
 				shiftValid
 			},
-			this.validateForm(func)
+			() => {
+				this.validateForm(func);
+			}
 		);
 	}
 	validateField(fieldName, value) {
@@ -444,9 +446,7 @@ class PositionsCompanyForm extends React.Component {
 					this.state.idDepartmentHasValue ||
 					this.state.shiftHasValue
 			},
-			() => {
-				func();
-			}
+			func
 		);
 	}
 

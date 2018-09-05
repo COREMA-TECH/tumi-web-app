@@ -22,7 +22,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from '../Generic/SnackBar';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import Select from '@material-ui/core/Select';
 
+import './index.css';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -57,7 +59,7 @@ const styles = (theme) => ({
 		//width: '200px'
 	},
 	divStyle: {
-		width: '80%',
+		width: '95%',
 		display: 'flex'
 		//justifyContent: 'space-around'
 	},
@@ -170,10 +172,10 @@ class Catalogs extends React.Component {
 		description: '',
 		value: '',
 
-		idParentValid: false,
-		nameValid: false,
-		displayLabelValid: false,
-		descriptionValid: false,
+		idParentValid: true,
+		nameValid: true,
+		displayLabelValid: true,
+		descriptionValid: true,
 
 		idParentHasValue: false,
 		nameHasValue: false,
@@ -181,7 +183,7 @@ class Catalogs extends React.Component {
 		descriptionHasValue: false,
 		valueHasValue: false,
 
-		formValid: false,
+		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
@@ -257,9 +259,25 @@ class Catalogs extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
+		var parent = 0;
+		switch (value) {
+			case 5: //City
+				parent = 3; //State
+				break;
+			case 3: //State
+				parent = 2; //Country
+				break;
+			case 2: //Country
+				parent = -1; //No Parent
+				break;
+			default:
+				parent: value;
+				break;
+		}
 		this.setState({ [name]: value }, this.validateField(name, value));
 		if (name == 'idCatalog') {
-			this.loadParents(value, 0), this.loadCatalogsItems(value);
+			this.loadParents(parent, 0, 0);
+			this.loadCatalogsItems(value);
 		}
 	}
 	enableCancelButton = () => {
@@ -279,7 +297,7 @@ class Catalogs extends React.Component {
 			idParentHasValue
 		);
 	};
-	validateAllFields() {
+	validateAllFields(func) {
 		let idCatalogValid = this.state.idCatalog !== null && this.state.idCatalog !== 0 && this.state.idCatalog !== '';
 		let idParentValid = this.state.idParent !== null && this.state.idParent !== -1 && this.state.idParent !== '';
 		let nameValid = this.state.name.trim().length >= 2;
@@ -294,7 +312,9 @@ class Catalogs extends React.Component {
 				displayLabelValid,
 				descriptionValid
 			},
-			this.validateForm
+			() => {
+				this.validateForm(func);
+			}
 		);
 	}
 	validateField(fieldName, value) {
@@ -357,22 +377,25 @@ class Catalogs extends React.Component {
 		);
 	}
 
-	validateForm() {
-		this.setState({
-			formValid:
-				this.state.idCatalogValid &&
-				this.state.idParentValid &&
-				this.state.nameValid &&
-				this.state.displayLabelValid &&
-				this.state.descriptionValid,
-			enableCancelButton:
-				this.state.idCatalogHasValue ||
-				this.state.idParentHasValue ||
-				this.state.nameHasValue ||
-				this.state.displayLabelHasValue ||
-				this.state.descriptionHasValue ||
-				this.state.valueHasValue
-		});
+	validateForm(func = () => {}) {
+		this.setState(
+			{
+				formValid:
+					this.state.idCatalogValid &&
+					this.state.idParentValid &&
+					this.state.nameValid &&
+					this.state.displayLabelValid &&
+					this.state.descriptionValid,
+				enableCancelButton:
+					this.state.idCatalogHasValue ||
+					this.state.idParentHasValue ||
+					this.state.nameHasValue ||
+					this.state.displayLabelHasValue ||
+					this.state.descriptionHasValue ||
+					this.state.valueHasValue
+			},
+			func
+		);
 	}
 
 	handleCloseAlertDialog = () => {
@@ -382,7 +405,6 @@ class Catalogs extends React.Component {
 		this.deleteCatalogItem();
 	};
 	onEditHandler = ({ Id, Id_Catalog, Id_Parent, Name, DisplayLabel, Description, Value }) => {
-		console.log(Id_Parent);
 		this.setState(
 			{
 				idToEdit: Id,
@@ -411,7 +433,22 @@ class Catalogs extends React.Component {
 				buttonTitle: this.TITLE_EDIT
 			},
 			() => {
-				this.loadParents(Id_Catalog, Id, Id_Parent);
+				var parent = 0;
+				switch (Id_Catalog) {
+					case 5: //City
+						parent = 3; //State
+						break;
+					case 3: //State
+						parent = 2; //Country
+						break;
+					case 2: //Country
+						parent = -1; //No Parent
+						break;
+					default:
+						parent: Id_Catalog;
+						break;
+				}
+				this.loadParents(parent, Id, Id_Parent);
 				this.focusTextInput();
 			}
 		);
@@ -463,7 +500,6 @@ class Catalogs extends React.Component {
 	};
 
 	loadCatalogsItems = (idCatalog = 0) => {
-		console.log(idCatalog);
 		this.setState({ loadingCatalogs: true });
 		this.props.client
 			.query({
@@ -496,6 +532,7 @@ class Catalogs extends React.Component {
 			});
 	};
 	loadParents = (idCatalog = -1, id = 0, idParent = -1) => {
+		console.log('Load Parent - Id Catalog: ', idCatalog);
 		this.setState({ loadingParents: true });
 		this.props.client
 			.query({
@@ -504,7 +541,6 @@ class Catalogs extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				console.log(data.data.getparentcatalogitem);
 				if (data.data.getparentcatalogitem != null) {
 					this.setState({
 						parents: data.data.getparentcatalogitem,
@@ -663,14 +699,18 @@ class Catalogs extends React.Component {
 				loading: true
 			},
 			() => {
-				this.validateAllFields();
-				if (this.state.formValid) this.insertCatalogItem();
-				else {
-					this.handleOpenSnackbar('error', 'Error: Saving Information: You must fill all the required fields');
-					this.setState({
-						loading: false
-					});
-				}
+				this.validateAllFields(() => {
+					if (this.state.formValid) this.insertCatalogItem();
+					else {
+						this.handleOpenSnackbar(
+							'error',
+							'Error: Saving Information: You must fill all the required fields'
+						);
+						this.setState({
+							loading: false
+						});
+					}
+				});
 			}
 		);
 	};
@@ -701,220 +741,225 @@ class Catalogs extends React.Component {
 		});
 
 		return (
-			<React.Fragment>
+			<div className="catalog_tab">
 				{(this.state.loadingData ||
 					this.state.loadingParents ||
 					this.state.loadingAllParents ||
 					this.state.loadingCatalogs) && <LinearProgress />}
-				<div className={classes.container}>
-					<AlertDialogSlide
-						handleClose={this.handleCloseAlertDialog}
-						handleConfirm={this.handleConfirmAlertDialog}
-						open={this.state.opendialog}
-						loadingConfirm={this.state.loadingConfirm}
-						content="Do you really want to continue whit this operation?"
-					/>
-					<Snackbar
-						anchorOrigin={{
-							vertical: 'top',
-							horizontal: 'center'
-						}}
-						open={this.state.openSnackbar}
-						autoHideDuration={3000}
+
+				<AlertDialogSlide
+					handleClose={this.handleCloseAlertDialog}
+					handleConfirm={this.handleConfirmAlertDialog}
+					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingConfirm}
+					content="Do you really want to continue whit this operation?"
+				/>
+				<Snackbar
+					anchorOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					open={this.state.openSnackbar}
+					autoHideDuration={3000}
+					onClose={this.handleCloseSnackbar}
+				>
+					<MySnackbarContentWrapper
 						onClose={this.handleCloseSnackbar}
+						variant={this.state.variantSnackbar}
+						message={this.state.messageSnackbar}
+					/>
+				</Snackbar>
+				<div className="position__header">
+					<FormControl
+						className={[ classes.formControl, classes.catalogControl ].join(' ')}
+						disabled={this.state.loadingCatalogs}
 					>
-						<MySnackbarContentWrapper
-							onClose={this.handleCloseSnackbar}
-							variant={this.state.variantSnackbar}
-							message={this.state.messageSnackbar}
-						/>
-					</Snackbar>
-					<div className={classes.divStyle}>
-						<FormControl
-							className={[ classes.formControl, classes.catalogControl ].join(' ')}
+						<InputLabel htmlFor="demo-controlled-open-select">Department</InputLabel>
+						<Select
+							id="idCatalog"
 							disabled={this.state.loadingCatalogs}
+							name="idCatalog"
+							error={!this.state.idCatalogValid}
+							value={this.state.idCatalog}
+							InputProps={{
+								classes: {
+									input: classes.catalogControl
+								}
+							}}
+							onChange={(event) => this.onSelectChangeHandler(event)}
 						>
-							<TextField
-								id="idCatalog"
-								disabled={this.state.loadingCatalogs}
-								select
-								name="idCatalog"
-								error={!this.state.idCatalogValid}
-								value={this.state.idCatalog}
-								InputProps={{
-									classes: {
-										input: classes.catalogControl
-									}
-								}}
-								onChange={(event) => this.onSelectChangeHandler(event)}
-								helperText="Catalog"
-								margin="normal"
-							>
-								{this.state.catalogs.map(({ Id, Description }) => (
-									<MenuItem key={Id} value={Id} name={Description}>
-										{Description}
-									</MenuItem>
-								))}
-							</TextField>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
-							<InputLabel htmlFor="name">Name</InputLabel>
-							<Input
-								id="name"
-								name="name"
-								inputProps={{
-									maxLength: 15,
-									classes: {
-										input: classes.nameControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.nameValid}
-								value={this.state.name}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.displayLabelControl ].join(' ')}>
-							<InputLabel htmlFor="displayLabel">Display Label</InputLabel>
-							<Input
-								id="displayLabel"
-								name="displayLabel"
-								inputProps={{
-									maxLength: 15,
-									classes: {
-										input: classes.displayLabelControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.displayLabelValid}
-								value={this.state.displayLabel}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.descriptionControl ].join(' ')}>
-							<InputLabel htmlFor="description">Description</InputLabel>
-							<Input
-								id="description"
-								name="description"
-								inputProps={{
-									maxLength: 25,
-									classes: {
-										input: classes.descriptionControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.descriptionValid}
-								value={this.state.description}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-						<FormControl
-							className={[ classes.formControl, classes.parentControl ].join(' ')}
-							disabled={this.state.loadingParents}
-						>
-							<TextField
-								disabled={this.state.loadingParents}
-								id="idParent"
-								select
-								name="idParent"
-								error={!this.state.idParentValid}
-								value={this.state.idParent}
-								InputProps={{
-									classes: {
-										input: classes.parentControl
-									}
-								}}
-								onChange={(event) => this.onSelectChangeHandler(event)}
-								helperText="Parent"
-								margin="normal"
-							>
-								{' '}
-								<MenuItem key={0} value={0} name="None">
-									<em>None</em>
+							{this.state.catalogs.map(({ Id, Description }) => (
+								<MenuItem key={Id} value={Id} name={Description}>
+									{Description}
 								</MenuItem>
-								{this.state.parents.map(({ Id, DisplayLabel }) => (
-									<MenuItem key={Id} value={Id} name={DisplayLabel}>
-										{DisplayLabel}
-									</MenuItem>
-								))}
-							</TextField>
-						</FormControl>
-						<FormControl className={[ classes.formControl, classes.valueControl ].join(' ')}>
-							<InputLabel htmlFor="value">Value</InputLabel>
-							<Input
-								id="value"
-								name="value"
-								inputProps={{
-									maxLength: 25,
-									classes: {
-										input: classes.valueControl
-									}
-								}}
-								className={classes.resize}
-								value={this.state.value}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-						</FormControl>
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip
-									title={
-										this.state.idToEdit != null &&
+							))}
+						</Select>
+					</FormControl>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
+						<InputLabel htmlFor="name">Name</InputLabel>
+						<Input
+							id="name"
+							name="name"
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.nameControl
+								}
+							}}
+							className={classes.resize}
+							error={!this.state.nameValid}
+							value={this.state.name}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl className={[ classes.formControl, classes.displayLabelControl ].join(' ')}>
+						<InputLabel htmlFor="displayLabel">Display Label</InputLabel>
+						<Input
+							id="displayLabel"
+							name="displayLabel"
+							inputProps={{
+								maxLength: 15,
+								classes: {
+									input: classes.displayLabelControl
+								}
+							}}
+							className={classes.resize}
+							error={!this.state.displayLabelValid}
+							value={this.state.displayLabel}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl className={[ classes.formControl, classes.descriptionControl ].join(' ')}>
+						<InputLabel htmlFor="description">Description</InputLabel>
+						<Input
+							id="description"
+							name="description"
+							inputProps={{
+								maxLength: 25,
+								classes: {
+									input: classes.descriptionControl
+								}
+							}}
+							className={classes.resize}
+							error={!this.state.descriptionValid}
+							value={this.state.description}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<FormControl
+						className={[ classes.formControl, classes.parentControl ].join(' ')}
+						disabled={this.state.loadingParents}
+					>
+						<InputLabel htmlFor="demo-controlled-open-select">Parent</InputLabel>
+						<Select
+							disabled={this.state.loadingParents}
+							id="idParent"
+							name="idParent"
+							error={!this.state.idParentValid}
+							value={this.state.idParent}
+							InputProps={{
+								classes: {
+									input: classes.parentControl
+								}
+							}}
+							onChange={(event) => this.onSelectChangeHandler(event)}
+						>
+							{' '}
+							<MenuItem key={0} value={0} name="None">
+								<em>None</em>
+							</MenuItem>
+							{this.state.parents.map(({ Id, DisplayLabel }) => (
+								<MenuItem key={Id} value={Id} name={DisplayLabel}>
+									{DisplayLabel}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
+					<FormControl className={[ classes.formControl, classes.valueControl ].join(' ')}>
+						<InputLabel htmlFor="value">Value</InputLabel>
+						<Input
+							id="value"
+							name="value"
+							inputProps={{
+								maxLength: 25,
+								classes: {
+									input: classes.valueControl
+								}
+							}}
+							className={classes.resize}
+							value={this.state.value}
+							onBlur={(event) => this.onBlurHandler(event)}
+							onChange={(event) => this.onChangeHandler(event)}
+						/>
+					</FormControl>
+					<div className={classes.root}>
+						<div className={classes.wrapper}>
+							<Tooltip
+								title={
+									this.state.idToEdit != null &&
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Save Changes'
+									) : (
+										'Insert Record'
+									)
+								}
+							>
+								<div>
+									<Button
+										style={{
+											width: '35px',
+											height: '35px'
+										}}
+										disabled={this.state.loading}
+										//	disabled={!this.state.formValid}
+										variant="fab"
+										color="primary"
+										className={buttonClassname}
+										onClick={this.addCatalogItemHandler}
+									>
+										{success ? (
+											<CheckIcon />
+										) : this.state.idToEdit != null &&
 										this.state.idToEdit != '' &&
 										this.state.idToEdit != 0 ? (
-											'Save Changes'
+											<SaveIcon />
 										) : (
-											'Insert Record'
-										)
-									}
-								>
-									<div>
-										<Button
-											disabled={this.state.loading}
-											//	disabled={!this.state.formValid}
-											variant="fab"
-											color="primary"
-											className={buttonClassname}
-											onClick={this.addCatalogItemHandler}
-										>
-											{success ? (
-												<CheckIcon />
-											) : this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												<SaveIcon />
-											) : (
-												<AddIcon />
-											)}
-										</Button>
-									</div>
-								</Tooltip>
-								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
-							</div>
-						</div>
-
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip title={'Cancel Operation'}>
-									<div>
-										<Button
-											disabled={this.state.loading || !this.state.enableCancelButton}
-											variant="fab"
-											color="secondary"
-											className={buttonClassname}
-											onClick={this.cancelCatalogItemHandler}
-										>
-											<ClearIcon />
-										</Button>
-									</div>
-								</Tooltip>
-							</div>
+											<AddIcon />
+										)}
+									</Button>
+								</div>
+							</Tooltip>
+							{loading && <CircularProgress size={45} className={classes.fabProgress} />}
 						</div>
 					</div>
+
+					<div className={classes.root}>
+						<div className={classes.wrapper}>
+							<Tooltip title={'Cancel Operation'}>
+								<div>
+									<Button
+										style={{
+											width: '35px',
+											height: '35px'
+										}}
+										disabled={this.state.loading || !this.state.enableCancelButton}
+										variant="fab"
+										color="secondary"
+										className={buttonClassname}
+										onClick={this.cancelCatalogItemHandler}
+									>
+										<ClearIcon />
+									</Button>
+								</div>
+							</Tooltip>
+						</div>
+					</div>
+				</div>
+				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<CatalogsTable
 							data={this.state.data}
@@ -926,7 +971,7 @@ class Catalogs extends React.Component {
 						/>
 					</div>
 				</div>
-			</React.Fragment>
+			</div>
 		);
 	}
 }

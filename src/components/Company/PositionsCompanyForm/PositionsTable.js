@@ -235,9 +235,7 @@ class PositionsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th}>
-								Department
-							</CustomTableCell>
+							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
 							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
 							<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
@@ -279,7 +277,7 @@ class PositionsTable extends React.Component {
 											</div>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell padding="none" style={{ width: '200px' }}>
+									<CustomTableCell style={{ width: '200px' }}>
 										<TextField
 											id="department"
 											select

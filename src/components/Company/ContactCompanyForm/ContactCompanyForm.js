@@ -183,14 +183,16 @@ class ContactcontactForm extends React.Component {
 		type: '',
 		idSupervisor: '',
 		idDepartment: 0,
-		firstnameValid: false,
-		middlenameValid: false,
-		lastnameValid: false,
-		emailValid: false,
-		numberValid: false,
-		typeValid: false,
-		idDepartmentValid: false,
-		idSupervisorValid: false,
+
+		firstnameValid: true,
+		middlenameValid: true,
+		lastnameValid: true,
+		emailValid: true,
+		numberValid: true,
+		typeValid: true,
+		idDepartmentValid: true,
+		idSupervisorValid: true,
+
 		firstnameHasValue: false,
 		middlenameHasValue: false,
 		lastnameHasValue: false,
@@ -199,7 +201,8 @@ class ContactcontactForm extends React.Component {
 		typeHasValue: false,
 		idSupervisorHasValue: false,
 		idDepartmentHasValue: false,
-		formValid: false,
+
+		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
@@ -925,7 +928,7 @@ class ContactcontactForm extends React.Component {
 							</div>
 						</div>
 					</DialogContent>
-					<DialogActions style={{ margin: '16px 10px' }}>
+					<DialogActions style={{ margin: '20px 20px' }}>
 						<div className={classes.root}>
 							<div className={classes.wrapper}>
 								<Tooltip

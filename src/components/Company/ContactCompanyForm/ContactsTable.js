@@ -198,7 +198,7 @@ class ContactsTable extends React.Component {
 						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
 								<TableRow hover className={classes.row} key={uuidv4()}>
-									<CustomTableCell component="th" padding="none">
+									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										{' '}
 										<Tooltip title="Edit">
 											<div>
@@ -213,7 +213,7 @@ class ContactsTable extends React.Component {
 											</div>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell component="th" padding="none">
+									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										<Tooltip title="Delete">
 											<div>
 												<IconButton

@@ -91,6 +91,7 @@ class EnhancedTableHead extends React.Component {
 									numeric={row.numeric}
 									padding={row.disablePadding ? 'none' : 'default'}
 									sortDirection={orderBy === row.id ? order : false}
+									style={{ backgroundColor: '#3da2c7' }}
 								>
 									{row.label}
 								</TableCell>
@@ -104,11 +105,11 @@ class EnhancedTableHead extends React.Component {
 						) {
 							return (
 								<TableCell
-									style={{ color: 'white' }}
 									key={row.id}
 									numeric={row.numeric}
 									sortDirection={orderBy === row.id ? order : false}
 									padding="checkbox"
+									style={{ backgroundColor: '#3da2c7', color: '#3da2c7' }}
 								>
 									{row.label}
 								</TableCell>
@@ -121,6 +122,7 @@ class EnhancedTableHead extends React.Component {
 								numeric={row.numeric}
 								padding={row.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === row.id ? order : false}
+								style={{ backgroundColor: '#3da2c7' }}
 							>
 								<Tooltip
 									title="Sort"
@@ -337,6 +339,10 @@ const styles = (theme) => ({
 		position: 'absolute',
 		bottom: theme.spacing.unit * 2,
 		right: theme.spacing.unit * 3
+	},
+
+	th: {
+		backgroundColor: '#3da2c7'
 	}
 });
 
@@ -373,12 +379,13 @@ class UsersTable extends React.Component {
 		else return items;
 	};
 	shouldComponentUpdate(nextProps, nextState) {
-		if (this.props.data !== nextProps.data||
-		this.props.contacts !== nextProps.contacts||
-		this.props.roles !== nextProps.roles||
-		this.props.languages !== nextProps.languages||
-		this.props.loading !== nextProps.loading) {
-			
+		if (
+			this.props.data !== nextProps.data ||
+			this.props.contacts !== nextProps.contacts ||
+			this.props.roles !== nextProps.roles ||
+			this.props.languages !== nextProps.languages ||
+			this.props.loading !== nextProps.loading
+		) {
 			return true;
 		}
 		if (

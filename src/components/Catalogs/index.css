@@ -1,10 +1,10 @@
-.users-tab {
+.catalog-tab {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 }
 
-.users__header {
+.catalog__header {
 	width: 100%;
 	height: 6vh;
 	background: #ffffff;
@@ -13,11 +13,11 @@
 	padding: 1.5em;
 
 	display: flex;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	align-items: center;
 }
 
-.users__header .add-users {
+.catalog__header .add-catalog {
 	padding: .35em 1em;
 	border-radius: 25px;
 	background: linear-gradient(90deg, #3da2c7, #0092bd);
@@ -32,11 +32,11 @@
 	margin: .2em;
 }
 
-.users__header .add-users:hover {
+.catalog__header .add-catalog:hover {
 	cursor: pointer;
 	box-shadow: 1px 1px 15px #bbb;
 }
-.options-users {
+.options-catalog {
 	width: 100%;
 	height: 6vh;
 	display: flex;
@@ -46,7 +46,7 @@
 	padding: 1.5em 3em;
 }
 
-.options-users .edit-users-button {
+.options-catalog .edit-catalog-button {
 	padding: .3em 1.5em;
 	color: #555555;
 	background: rgba(126, 126, 126, 0.05);
@@ -64,7 +64,7 @@
 	transition: all .250s;
 }
 
-.options-users .edit-users-button:hover {
+.options-catalog .edit-catalog-button:hover {
 	box-shadow: 1px 1px 7px #eee;
 }
 
@@ -86,7 +86,7 @@
 	overflow: hidden;
 }
 
-.users__content {
+.catalog__content {
 	width: 100%;
 	display: flex;
 
@@ -95,7 +95,7 @@
 	padding: 1.5em;
 }
 
-.card-form-users {
+.card-form-catalog {
 	width: 100%;
 	min-height: 70vh;
 
@@ -127,6 +127,11 @@
 	display: flex;
 	justify-content: flex-start;
 	padding: .7em;
+}
+
+.card-form-row--vertical {
+	flex-direction: column !important;
+	align-items: center;
 }
 
 .card-form-row--center {
@@ -169,6 +174,10 @@
 	justify-content: flex-end;
 }
 
+.input-label--center {
+	justify-content: center;
+}
+
 .primary {
 	color: #3da2c7;
 }
@@ -193,7 +202,7 @@
 	font-size: 1em;
 	font-family: "Segoe UI";
 
-	position: relative;
+	catalog: relative;
 	width: 100%;
 
 	display: flex;

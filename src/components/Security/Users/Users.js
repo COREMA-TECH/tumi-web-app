@@ -73,7 +73,7 @@ const styles = (theme) => ({
 		//width: '200px'
 	},
 	divStyle: {
-		width: '100%',
+		width: '95%',
 		display: 'flex'
 		//justifyContent: 'space-around'
 	},
@@ -86,7 +86,7 @@ const styles = (theme) => ({
 	divAddButton: {
 		display: 'flex',
 		justifyContent: 'end',
-		width: '100%',
+		width: '95%',
 		heigth: '60px'
 	},
 	button: {
@@ -214,14 +214,14 @@ class Catalogs extends React.Component {
 		allowDelete: false,
 		allowExport: false,
 
-		idContactValid: false,
-		usernameValid: false,
+		idContactValid: true,
+		usernameValid: true,
 		//fullnameValid: false,
 		passwordValid: true,
-		emailValid: false,
-		numberValid: false,
-		idRolValid: false,
-		idLanguageValid: false,
+		emailValid: true,
+		numberValid: true,
+		idRolValid: true,
+		idLanguageValid: true,
 
 		idContactHasValue: false,
 		usernameHasValue: false,
@@ -232,7 +232,7 @@ class Catalogs extends React.Component {
 		idRolHasValue: false,
 		idLanguageHasValue: false,
 
-		formValid: false,
+		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
@@ -336,7 +336,7 @@ class Catalogs extends React.Component {
 			idLanguageHasValue
 		);
 	};
-	validateAllFields() {
+	validateAllFields(func) {
 		let idContactValid =
 			this.state.idContact !== null && this.state.idContact !== -1 && this.state.idContact !== '';
 		let usernameValid = this.state.username.trim().length >= 5 && this.state.username.trim().indexOf(' ') < 0;
@@ -358,7 +358,9 @@ class Catalogs extends React.Component {
 				idRolValid,
 				idLanguageValid
 			},
-			this.validateForm
+			() => {
+				this.validateForm(func);
+			}
 		);
 	}
 	validateField(fieldName, value) {
@@ -440,32 +442,35 @@ class Catalogs extends React.Component {
 		);
 	}
 
-	validateForm() {
-		this.setState({
-			formValid:
-				this.state.idContactValid &&
-				this.state.usernameValid &&
-				//this.state.fullnameValid &&
-				this.state.emailValid &&
-				this.state.numberValid &&
-				this.state.passwordValid &&
-				this.state.idRolValid &&
-				this.state.idLanguageValid,
-			enableCancelButton:
-				this.state.idContactHasValue ||
-				this.state.usernameHasValue ||
-				//this.state.fullnameHasValue ||
-				this.state.emailHasValue ||
-				this.state.numberHasValue ||
-				this.state.passwordHasValue ||
-				this.state.idRolHasValue ||
-				this.state.idLanguageHasValue ||
-				this.state.isAdmin ||
-				this.state.allowInsert ||
-				this.state.allowEdit ||
-				this.state.allowDelete ||
-				this.state.allowExport
-		});
+	validateForm(func = () => {}) {
+		this.setState(
+			{
+				formValid:
+					this.state.idContactValid &&
+					this.state.usernameValid &&
+					//this.state.fullnameValid &&
+					this.state.emailValid &&
+					this.state.numberValid &&
+					this.state.passwordValid &&
+					this.state.idRolValid &&
+					this.state.idLanguageValid,
+				enableCancelButton:
+					this.state.idContactHasValue ||
+					this.state.usernameHasValue ||
+					//this.state.fullnameHasValue ||
+					this.state.emailHasValue ||
+					this.state.numberHasValue ||
+					this.state.passwordHasValue ||
+					this.state.idRolHasValue ||
+					this.state.idLanguageHasValue ||
+					this.state.isAdmin ||
+					this.state.allowInsert ||
+					this.state.allowEdit ||
+					this.state.allowDelete ||
+					this.state.allowExport
+			},
+			func
+		);
 	}
 
 	handleCloseAlertDialog = () => {
@@ -765,17 +770,18 @@ class Catalogs extends React.Component {
 				loading: true
 			},
 			() => {
-				this.validateAllFields();
-				if (this.state.formValid) this.insertUser();
-				else {
-					this.handleOpenSnackbar(
-						'error',
-						'Error: Saving Information: You must fill all the required fields'
-					);
-					this.setState({
-						loading: false
-					});
-				}
+				this.validateAllFields(() => {
+					if (this.state.formValid) this.insertUser();
+					else {
+						this.handleOpenSnackbar(
+							'error',
+							'Error: Saving Information: You must fill all the required fields'
+						);
+						this.setState({
+							loading: false
+						});
+					}
+				});
 			}
 		);
 	};
@@ -828,7 +834,7 @@ class Catalogs extends React.Component {
 		});
 
 		return (
-			<React.Fragment>
+			<div className="users_tab">
 				{(this.state.loadingData ||
 					this.state.loadingContacts ||
 					this.state.loadingRoles ||
@@ -1147,7 +1153,7 @@ class Catalogs extends React.Component {
 
 					<div className="users__header">
 						<button
-							className="add-user"
+							className="add-users"
 							onClick={this.handleClickOpenModal}
 							disabled={
 								this.state.loadingData ||
@@ -1172,7 +1178,7 @@ class Catalogs extends React.Component {
 						/>
 					</div>
 				</div>
-			</React.Fragment>
+			</div>
 		);
 	}
 }
