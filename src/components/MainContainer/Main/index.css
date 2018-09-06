@@ -1,12 +1,42 @@
 .main-container {
-	width: 82%;
+	width: 96%;
 	height: 100vh;
 }
 
 .main-container--header {
-	height: 10vh;
+	height: 8vh;
+	background: #0092BD;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-bottom: 1px solid #0092BD;
+
+	z-index: 30;
 }
 
 .main-container--container {
-	height: 90vh;
+	height: 92vh;
+	overflow-y: auto;
+}
+
+.main-container--container::-webkit-scrollbar {
+	width: 10px;
+}
+
+/* Track */
+.main-container--container::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+/* Handle */
+.main-container--container::-webkit-scrollbar-thumb {
+	background: #aaa;
+	border-radius: 5px;
+	height: 30px;
+}
+
+/* Handle on hover */
+.main-container--container::-webkit-scrollbar-thumb:hover {
+	background: #555;
 }

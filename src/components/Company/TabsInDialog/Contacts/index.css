@@ -1,0 +1,18 @@
+.contact-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 3em;
+}
+
+.contact-form input{
+    color: #999999;
+    font-size: .85em;
+    font-weight: 300;
+    font-family: "Segoe UI";
+}
+
+contact-form-row {
+    margin: .5em;
+}

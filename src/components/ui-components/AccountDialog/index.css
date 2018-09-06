@@ -1,0 +1,52 @@
+.add-account-in-dialog{
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+
+    margin-top: 2.5em;
+    background: #f9f9f9;
+
+}
+
+.add-account-in-dialog--vertical {
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-account-in-dialog--button {
+    border-radius: 5px !important;
+
+    padding: .5em 1.5em;
+    width: fit-content !important;
+
+    font-family: "Segoe UI";
+    font-size: 1.1em;
+}
+
+.list-item-container-scroll {
+    width: 550px;
+    height: 25vh !important;
+    overflow-y: auto;
+}
+
+/* width */
+.list-item-container-scroll.list-item-container-scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+.list-item-container-scroll::-webkit-scrollbar-track {
+    background: #dddddd;
+}
+
+/* Handle */
+.list-item-container-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 50px;
+}
+
+/* Handle on hover */
+.list-item-container-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

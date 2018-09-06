@@ -1,0 +1,13 @@
+.select-form-customized {
+	width: 280px !important;
+	padding: 0 !important;
+}
+
+.select-form-customized__item {
+	padding: 5px !important;
+}
+
+._invalid {
+	border-bottom: 1px solid;
+	border-bottom-color: red;
+}

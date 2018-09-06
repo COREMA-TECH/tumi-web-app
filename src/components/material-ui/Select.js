@@ -28,15 +28,15 @@ class ControlledOpenSelect extends React.Component {
     handleChange = event => {
         this.setState({[event.target.name]: event.target.value});
 
-        if(this.props.label === "Departments") {
-            this.props.values.map(item => {
-                if(event.target.value === item.Id){
-                    this.props.update(item.Name);
-                }
-            })
-        } else {
-            this.props.update(event.target.value);
-        }
+        // if(this.props.label === "Departments") {
+        //     this.props.values.map(item => {
+        //         if(event.target.value === item.Id){
+        //             this.props.update(item.Name);
+        //         }
+        //     })
+        // } else {
+        //     this.props.update(event.target.value);
+        // }
     };
 
     handleClose = () => {

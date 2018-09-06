@@ -1,0 +1,89 @@
+.signature-container {
+	border-radius: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: center;
+}
+
+.signature-header {
+	margin-top: 15px;
+	width: 100%;
+	text-align: center;
+	font-size: 2.3em;
+	font-weight: 300;
+	outline: none;
+	font-family: "Segoe UI";
+	height: 70px;
+	background-color: white;
+}
+.signature-content {
+	width: 100%;
+	height: 80vh;
+	border-style: solid;
+	border-width: 1px;
+	min-height: 400px;
+	border-color: gainsboro;
+	padding-left: 15px;
+}
+.signature-information {
+	width: 100%;
+	height: 100%;
+
+	font-size: 0.8em;
+	font-weight: 400;
+	outline: none;
+	font-family: "Segoe UI";
+	resize: none;
+}
+.signature-footer {
+	display: flex;
+
+	width: 100%;
+	justify-content: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.signature-input {
+	margin-top: 15px;
+
+	transition: 1s all ease-in-out;
+	background-color: rgba(255, 255, 255, 0.2);
+
+	box-shadow: 1px 1px 20px #ccc;
+	border-radius: 10px;
+	background: #bbbbbb;
+}
+
+.signature-button-root {
+	display: flex;
+	align-items: center;
+	padding: 0px 15px;
+}
+.signature-button-wrapper {
+	position: relative;
+}
+
+.signature-input:hover {
+	background-color: rgba(255, 255, 255, 0.7);
+}
+.signature-button-wrapper {
+	display: block;
+}
+
+.card-form-header {
+	margin-top: .8em;
+	margin-bottom: .8em;
+	width: 50%;
+	height: 3vh;
+	padding: .3em;
+	background: linear-gradient(90deg, #052370, #0639b4);
+	clip-path: polygon(0 0, 100% 0%, 85% 100%, 0 100%);
+	font-family: "Segoe UI";
+	font-size: 1.2em;
+	color: #fff;
+	font-weight: 300;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}

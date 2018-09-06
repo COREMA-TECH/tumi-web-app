@@ -1,20 +1,40 @@
 import React, { Component } from 'react';
 import './index.css';
-import Stepper from '../../Stepper/Stepper';
+import FullWithTabs from './../FullWidthTabs/FullWidthTabs';
 
 class CreateCompany extends Component {
 	constructor(props) {
 		super(props);
+	}
 
-		this.state = {
-			idCompany: this.props.location.state.idCompany
-		};
+	componentWillMount() {}
+
+	checkId() {
+		let id;
+
+		// If the props id doesn't exist, id = 0
+		try {
+			return this.props.location.state.idCompany;
+		} catch (error) {
+			return 0;
+		}
+	}
+
+	checkIdContract() {
+		let id;
+
+		// If the props id doesn't exist, id = 0
+		try {
+			return this.props.location.state.idContract;
+		} catch (error) {
+			return 0;
+		}
 	}
 
 	render() {
 		return (
 			<div className="create-company-container">
-				<Stepper idCompany={this.state.idCompany} />
+				<FullWithTabs idCompany={this.checkId()} idContract={this.checkIdContract()} />
 			</div>
 		);
 	}

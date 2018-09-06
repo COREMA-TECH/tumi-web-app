@@ -4,8 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import ContactsTable from '../ContactsTable/ContactsTable';
-import FormErrors from './FormErrors';
+import ContactsTable from './ContactsTable';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import gql from 'graphql-tag';
@@ -20,39 +19,52 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
+import InputForm from '../../ui-components/InputForm/InputForm';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import InputFile from '../../ui-components/InputFile/InputFile';
+import days from '../../../data/days.json';
+import SelectForm from '../../ui-components/SelectForm/SelectForm';
+
+import './index.css';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
 		flexWrap: 'wrap',
-		marginBottom: '30px'
+		marginBottom: '30px',
+		width: '100%'
 	},
 	root: {
 		display: 'flex',
 		alignItems: 'center'
 	},
 	formControl: {
-		margin: theme.spacing.unit,
-		width: '18%'
+		margin: theme.spacing.unit
+		//width: '100px'
 	},
 	numberControl: {
-		//width: '10%'
+		//width: '200px'
 	},
-	firstnameControl: {
-		//width: '12%'
+	nameControl: {
+		//width: '100px'
 	},
 	emailControl: {
-		//width: '12%'
+		//width: '200px'
 	},
-	typeControl: {
-		//width: '12%'
+	comboControl: {
+		//width: '200px'
 	},
 	resize: {
-		//fontSize: 14
+		//width: '200px'
 	},
 	divStyle: {
-		width: '80%',
+		width: '95%',
 		display: 'flex',
 		justifyContent: 'space-around'
 	},
@@ -89,7 +101,7 @@ const styles = (theme) => ({
 	}
 });
 
-class ContactCompanyForm extends React.Component {
+class ContactcontactForm extends React.Component {
 	GET_CONTACTS_QUERY = gql`
 		query getcontacts($IdEntity: Int) {
 			getcontacts(IsActive: 1, Id_Entity: $IdEntity) {
@@ -118,8 +130,8 @@ class ContactCompanyForm extends React.Component {
 	GET_SUPERVISORS_QUERY = gql`
 		query getsupervisor($Id: Int, $Id_Entity: Int) {
 			getsupervisor(IsActive: 1, Id_Entity: $Id_Entity, Id: $Id) {
-				id: Id
-				firstname: Full_Name
+				Id: Id
+				Name: Full_Name
 			}
 		}
 	`;
@@ -171,14 +183,16 @@ class ContactCompanyForm extends React.Component {
 		type: '',
 		idSupervisor: '',
 		idDepartment: 0,
-		firstnameValid: false,
-		middlenameValid: false,
-		lastnameValid: false,
-		emailValid: false,
-		numberValid: false,
-		typeValid: false,
-		idDepartmentValid: false,
-		idSupervisorValid: false,
+
+		firstnameValid: true,
+		middlenameValid: true,
+		lastnameValid: true,
+		emailValid: true,
+		numberValid: true,
+		typeValid: true,
+		idDepartmentValid: true,
+		idSupervisorValid: true,
+
 		firstnameHasValue: false,
 		middlenameHasValue: false,
 		lastnameHasValue: false,
@@ -187,13 +201,16 @@ class ContactCompanyForm extends React.Component {
 		typeHasValue: false,
 		idSupervisorHasValue: false,
 		idDepartmentHasValue: false,
-		formValid: false,
+
+		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
 		enableCancelButton: false,
 		openSnackbar: true,
 		loading: false,
-		success: false
+		success: false,
+		loadingConfirm: false,
+		openModal: false
 	};
 
 	constructor(props) {
@@ -204,13 +221,18 @@ class ContactCompanyForm extends React.Component {
 			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
+			allSupervisors: [],
+			inputEnabled: true,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
 	}
+
 	focusTextInput() {
-		document.getElementById('firstname').focus();
-		document.getElementById('firstname').select();
+		if (document.getElementById('firstname') != null) {
+			document.getElementById('firstname').focus();
+			document.getElementById('firstname').select();
+		}
 	}
 	componentDidMount() {
 		this.resetState();
@@ -226,6 +248,7 @@ class ContactCompanyForm extends React.Component {
 			},
 			() => {
 				this.loadSupervisors();
+				this.loadAllSupervisors();
 				this.focusTextInput();
 			}
 		);
@@ -237,11 +260,20 @@ class ContactCompanyForm extends React.Component {
 
 		this.setState({ open: false });
 	};
-	onChangeHandler(e) {
-		const name = e.target.name;
-		const value = e.target.value;
-		//this.setState({ [name]: value });
-		this.setState({ [name]: value }, this.validateField(name, value));
+	onFirstNameChangeHandler(value) {
+		this.setState({ firstname: value }, this.validateField('firstname', value));
+	}
+	onMiddleNameChangeHandler(value) {
+		this.setState({ middlename: value }, this.validateField('middlename', value));
+	}
+	onLastNameChangeHandler(value) {
+		this.setState({ lastname: value }, this.validateField('lastname', value));
+	}
+	onEmailChangeHandler(value) {
+		this.setState({ email: value }, this.validateField('email', value));
+	}
+	onNumberChangeHandler(value) {
+		this.setState({ number: value }, this.validateField('number', value));
 	}
 	onBlurHandler(e) {
 		//const name = e.target.name;
@@ -254,28 +286,28 @@ class ContactCompanyForm extends React.Component {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
-		let emailHasValue = this.state.email.trim() == '';
-		let firstnameHasValue = this.state.firstname.trim() == '';
-		let middlenameHasValue = this.state.middlename.trim() == '';
-		let lastnameHasValue = this.state.lastname.trim() == '';
-		let numberHasValue = this.state.number.trim() == '';
+		let emailHasValue = this.state.email != '';
+		let firstnameHasValue = this.state.firstname != '';
+		let middlenameHasValue = this.state.middlename != '';
+		let lastnameHasValue = this.state.lastname != '';
+		let numberHasValue = this.state.number != '';
 		let typeHasValue = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentHasValue =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && !this.state.idDepartment !== '';
 		let idSupervisorHasValue =
 			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
 		return (
-			emailHasValue &&
-			firstnameHasValue &&
-			middlenameHasValue &&
-			lastnameHasValue &&
-			numberHasValue &&
-			typeHasValue &&
-			idDepartmentHasValue &&
+			emailHasValue ||
+			firstnameHasValue ||
+			middlenameHasValue ||
+			lastnameHasValue ||
+			numberHasValue ||
+			typeHasValue ||
+			idDepartmentHasValue ||
 			idSupervisorHasValue
 		);
 	};
-	validateAllFields() {
+	validateAllFields(fun) {
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 		let firstnameValid = this.state.firstname.trim().length >= 2;
 		let middlenameValid = this.state.middlename.trim().length >= 2;
@@ -297,7 +329,9 @@ class ContactCompanyForm extends React.Component {
 				idDepartmentValid,
 				idSupervisorValid
 			},
-			this.validateForm
+			() => {
+				this.validateForm(fun);
+			}
 		);
 	}
 	validateField(fieldName, value) {
@@ -322,23 +356,23 @@ class ContactCompanyForm extends React.Component {
 		switch (fieldName) {
 			case 'email':
 				emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-				emailHasValue = value.trim() != '';
+				emailHasValue = value != '';
 				break;
 			case 'firstname':
 				firstnameValid = value.trim().length >= 2;
-				firstnameHasValue = value.trim() != '';
+				firstnameHasValue = value != '';
 				break;
 			case 'middlename':
 				middlenameValid = value.trim().length >= 2;
-				middlenameHasValue = value.trim() != '';
+				middlenameHasValue = value != '';
 				break;
 			case 'lastname':
 				lastnameValid = value.trim().length >= 2;
-				lastnameHasValue = value.trim() != '';
+				lastnameHasValue = value != '';
 				break;
 			case 'number':
 				numberValid = value.trim().length >= 2;
-				numberHasValue = value.trim() != '';
+				numberHasValue = value != '';
 				break;
 			case 'type':
 				typeValid = value !== null && value !== 0 && value !== '';
@@ -378,27 +412,30 @@ class ContactCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm() {
-		this.setState({
-			formValid:
-				this.state.emailValid &&
-				this.state.firstnameValid &&
-				this.state.middlenameValid &&
-				this.state.lastnameValid &&
-				this.state.numberValid &&
-				this.state.typeValid &&
-				this.state.idDepartmentValid &&
-				this.state.idSupervisorValid,
-			enableCancelButton:
-				this.state.emailHasValue ||
-				this.state.firstnameHasValue ||
-				this.state.middlenameHasValue ||
-				this.state.lastnameHasValue ||
-				this.state.numberHasValue ||
-				this.state.typeHasValue ||
-				this.state.idDepartmentHasValue ||
-				this.state.idSupervisorHasValue
-		});
+	validateForm(func = () => {}) {
+		this.setState(
+			{
+				formValid:
+					this.state.emailValid &&
+					this.state.firstnameValid &&
+					this.state.middlenameValid &&
+					this.state.lastnameValid &&
+					this.state.numberValid &&
+					this.state.typeValid &&
+					this.state.idDepartmentValid &&
+					this.state.idSupervisorValid,
+				enableCancelButton:
+					this.state.emailHasValue ||
+					this.state.firstnameHasValue ||
+					this.state.middlenameHasValue ||
+					this.state.lastnameHasValue ||
+					this.state.numberHasValue ||
+					this.state.typeHasValue ||
+					this.state.idDepartmentHasValue ||
+					this.state.idSupervisorHasValue
+			},
+			func
+		);
 	}
 
 	handleCloseAlertDialog = () => {
@@ -418,7 +455,6 @@ class ContactCompanyForm extends React.Component {
 		number,
 		type
 	}) => {
-		console.log('editando: ');
 		this.setState(
 			{
 				idToEdit: idSearch,
@@ -448,7 +484,8 @@ class ContactCompanyForm extends React.Component {
 				idSupervisorHasValue: true,
 
 				numberValid: true,
-				buttonTitle: this.TITLE_EDIT
+				buttonTitle: this.TITLE_EDIT,
+				openModal: true
 			},
 			() => {
 				this.loadSupervisors(idSearch);
@@ -461,10 +498,18 @@ class ContactCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
+		if (window.location.pathname === '/company/edit') {
+			this.setState(
+				{
+					//inputEnabled: false
+				}
+			);
+		}
 		this.loadContacts();
 		this.loadTypes();
 		this.loadDepartments();
 		this.loadSupervisors();
+		this.loadAllSupervisors();
 	}
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
@@ -478,6 +523,7 @@ class ContactCompanyForm extends React.Component {
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
 	loadContacts = () => {
+		console.log('Id Entitiy: ', this.state.idCompany);
 		this.props.client
 			.query({
 				query: this.GET_CONTACTS_QUERY,
@@ -530,6 +576,32 @@ class ContactCompanyForm extends React.Component {
 				this.props.handleOpenSnackbar('error', 'Error: Loading supervisors: ' + error);
 			});
 	};
+
+	loadAllSupervisors = () => {
+		this.props.client
+			.query({
+				query: this.GET_SUPERVISORS_QUERY,
+				variables: { Id_Entity: this.state.idCompany, Id: 0 },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getsupervisor != null) {
+					this.setState({
+						allSupervisors: data.data.getsupervisor
+					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading [all] supervisors: getsupervisor not exists in query data'
+					);
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading [all] supervisors: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading [all] supervisors: ' + error);
+			});
+	};
+
 	loadTypes = () => {
 		this.props.client
 			.query({
@@ -578,68 +650,85 @@ class ContactCompanyForm extends React.Component {
 	insertContacts = () => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
-		this.setState({
-			success: false,
-			loading: true
-		});
-
-		this.props.client
-			.mutate({
-				mutation: query,
-				variables: {
-					input: {
-						Id: id,
-						Id_Entity: this.state.idCompany,
-						First_Name: `'${this.state.firstname}'`,
-						Middle_Name: `'${this.state.middlename}'`,
-						Last_Name: `'${this.state.lastname}'`,
-						Electronic_Address: `'${this.state.email}'`,
-						Phone_Number: `'${this.state.number}'`,
-						Contact_Type: this.state.type,
-						Id_Deparment: this.state.idDepartment,
-						Id_Supervisor: this.state.idSupervisor,
-						IsActive: 1,
-						User_Created: 1,
-						User_Updated: 1,
-						Date_Created: "'2018-08-14 16:10:25+00'",
-						Date_Updated: "'2018-08-14 16:10:25+00'"
-					}
-				}
-			})
-			.then((data) => {
-				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-				this.loadContacts();
-				this.resetState();
-			})
-			.catch((error) => {
-				console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
-				this.props.handleOpenSnackbar(
-					'error',
-					isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
-				);
-				this.setState({
-					success: false,
-					loading: false
-				});
-			});
+		this.setState(
+			{
+				success: false,
+				loading: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: query,
+						variables: {
+							input: {
+								Id: id,
+								Id_Entity: this.props.idCompany,
+								First_Name: `'${this.state.firstname}'`,
+								Middle_Name: `'${this.state.middlename}'`,
+								Last_Name: `'${this.state.lastname}'`,
+								Electronic_Address: `'${this.state.email}'`,
+								Phone_Number: `'${this.state.number}'`,
+								Contact_Type: this.state.type,
+								Id_Deparment: this.state.idDepartment,
+								Id_Supervisor: this.state.idSupervisor,
+								IsActive: 1,
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-08-14 16:10:25+00'",
+								Date_Updated: "'2018-08-14 16:10:25+00'"
+							}
+						}
+					})
+					.then((data) => {
+						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
+						this.loadContacts();
+						this.loadAllSupervisors();
+						this.loadSupervisors();
+						this.resetState();
+					})
+					.catch((error) => {
+						console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
+						this.props.handleOpenSnackbar(
+							'error',
+							isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+						);
+						this.setState({
+							success: false,
+							loading: false
+						});
+					});
+			}
+		);
 	};
 	deleteContacts = (id) => {
-		this.props.client
-			.mutate({
-				mutation: this.DELETE_CONTACTS_QUERY,
-				variables: {
-					Id: this.state.idToDelete
-				}
-			})
-			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Contact Deleted!');
-				this.loadContacts();
-				this.resetState();
-			})
-			.catch((error) => {
-				console.log('Error: Deleting Contact: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
-			});
+		this.setState(
+			{
+				loadingConfirm: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: this.DELETE_CONTACTS_QUERY,
+						variables: {
+							Id: this.state.idToDelete
+						}
+					})
+					.then((data) => {
+						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
+						this.loadContacts();
+						this.loadAllSupervisors();
+						this.loadSupervisors();
+						this.resetState();
+					})
+					.catch((error) => {
+						console.log('Error: Deleting Contact: ', error);
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
+						this.setState({
+							loadingConfirm: false
+						});
+					});
+			}
+		);
 	};
 
 	addContactHandler = () => {
@@ -649,8 +738,18 @@ class ContactCompanyForm extends React.Component {
 				loading: true
 			},
 			() => {
-				this.validateAllFields();
-				if (this.state.formValid) this.insertContacts();
+				this.validateAllFields(() => {
+					if (this.state.formValid) this.insertContacts();
+					else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Saving Information: You must fill all the required fields'
+						);
+						this.setState({
+							loading: false
+						});
+					}
+				});
 			}
 		);
 	};
@@ -658,237 +757,269 @@ class ContactCompanyForm extends React.Component {
 	cancelContactHandler = () => {
 		this.resetState();
 	};
+	handleClickOpenModal = () => {
+		this.setState({ openModal: true });
+	};
+	handleCloseModal = () => {
+		this.setState({ openModal: false });
+	};
+	updateSupervisor = (id) => {
+		this.setState(
+			{
+				idSupervisor: id
+			},
+			() => {
+				this.validateField('idSupervisor', id);
+			}
+		);
+	};
+	updateDepartment = (id) => {
+		this.setState(
+			{
+				idDepartment: id
+			},
+			() => {
+				this.validateField('idDepartment', id);
+			}
+		);
+	};
+	updateType = (id) => {
+		this.setState(
+			{
+				type: id
+			},
+			() => {
+				this.validateField('type', id);
+			}
+		);
+	};
 	render() {
-		console.log('render');
 		const { loading, success } = this.state;
 		const { classes } = this.props;
-
+		const { fullScreen } = this.props;
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
 
 		return (
-			<div className={classes.container}>
+			<div className="contact-tab">
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
 					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className={classes.divStyle}>
-					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
-						<InputLabel htmlFor="firstname">First Name</InputLabel>
-						<Input
-							id="firstname"
-							name="firstname"
-							inputProps={{ maxLength: 15 }}
-							className={classes.resize}
-							error={!this.state.firstnameValid}
-							value={this.state.firstname}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
-						<InputLabel htmlFor="middlename">Middle Name</InputLabel>
-						<Input
-							id="middlename"
-							name="middlename"
-							inputProps={{ maxLength: 15 }}
-							className={classes.resize}
-							error={!this.state.middlenameValid}
-							value={this.state.middlename}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.firstnameControl ].join(' ')}>
-						<InputLabel htmlFor="lastname">Last Name</InputLabel>
-						<Input
-							id="lastname"
-							name="lastname"
-							inputProps={{ maxLength: 20 }}
-							className={classes.resize}
-							error={!this.state.lastnameValid}
-							value={this.state.lastname}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.typeControl ].join(' ')}>
-						<TextField
-							id="idDepartment"
-							select
-							name="idDepartment"
-							error={!this.state.idDepartmentValid}
-							value={this.state.idDepartment}
-							InputProps={{
-								classes: {
-									input: classes.resize
-								}
-							}}
-							onChange={(event) => this.onSelectChangeHandler(event)}
-							helperText="Department"
-							margin="normal"
-						>
-							{this.state.departments.map(({ Id, Name }) => (
-								<MenuItem key={Id} value={Id} name={Name}>
-									{Name}
-								</MenuItem>
-							))}
-						</TextField>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.typeControl ].join(' ')}>
-						<TextField
-							id="idSupervisor"
-							select
-							name="idSupervisor"
-							error={!this.state.idSupervisorValid}
-							value={this.state.idSupervisor}
-							InputProps={{
-								classes: {
-									input: classes.resize
-								}
-							}}
-							onChange={(event) => this.onSelectChangeHandler(event)}
-							helperText="Supervisor"
-							margin="normal"
-						>
+				<div className="contact__header">
+					<button className="add-contact" onClick={this.handleClickOpenModal}>
+						{' '}
+						Add Contact{' '}
+					</button>
+				</div>
+				<Dialog
+					fullScreen={fullScreen}
+					open={this.state.openModal}
+					onClose={this.cancelContactHandler}
+					aria-labelledby="responsive-dialog-title"
+				>
+					<DialogTitle style={{ padding: '0px' }}>
+						<div className="card-form-header orange">
 							{' '}
-							<MenuItem key={0} value={0} name="None">
-								None
-							</MenuItem>
-							{this.state.supervisors.map(({ id, firstname }) => (
-								<MenuItem key={id} value={id} name={firstname}>
-									{firstname}
-								</MenuItem>
-							))}
-						</TextField>
-					</FormControl>
+							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
+								'Edit  Contact'
+							) : (
+								'Create Contact'
+							)}
+						</div>
+					</DialogTitle>
+					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
+						<div className="">
+							<div className="card-form-body">
+								<div className="card-form-row">
+									<span className="input-label primary">First Name</span>
+									<InputForm
+										id="firstname"
+										name="firstname"
+										maxLength="15"
+										value={this.state.firstname}
+										error={!this.state.firstnameValid}
+										change={(value) => this.onFirstNameChangeHandler(value)}
+									/>
+								</div>
+								<div className="card-form-row">
+									<span className="input-label primary">Middle Name</span>
+									<InputForm
+										id="middlename"
+										name="middlename"
+										maxLength="15"
+										error={!this.state.middlenameValid}
+										value={this.state.middlename}
+										change={(value) => this.onMiddleNameChangeHandler(value)}
+									/>
+								</div>
 
-					<FormControl className={[ classes.formControl, classes.emailControl ].join(' ')}>
-						<InputLabel htmlFor="email">Email</InputLabel>
-						<Input
-							id="email"
-							name="email"
-							inputProps={{ maxLength: 30 }}
-							className={classes.resize}
-							error={!this.state.emailValid}
-							value={this.state.email}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
+								<div className="card-form-row">
+									<span className="input-label primary">Last Name</span>
+									<InputForm
+										id="lastname"
+										name="lastname"
+										maxLength="20"
+										error={!this.state.lastnameValid}
+										value={this.state.lastname}
+										change={(value) => this.onLastNameChangeHandler(value)}
+									/>
+								</div>
+								<div className="card-form-row">
+									<span className="input-label primary">Department</span>
+									<SelectForm
+										name="department"
+										data={this.state.departments}
+										error={!this.state.idDepartmentValid}
+										update={this.updateDepartment}
+										showNone={false}
+										value={this.state.idDepartment}
+									/>
+								</div>
 
-					<FormControl className={[ classes.formControl, classes.numberControl ].join(' ')}>
-						<InputLabel htmlFor="number">Phone</InputLabel>
-						<Input
-							id="number"
-							name="number"
-							inputProps={{ maxLength: 15 }}
-							className={classes.resize}
-							error={!this.state.numberValid}
-							value={this.state.number}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-
-					<FormControl className={[ classes.formControl, classes.typeControl ].join(' ')}>
-						<TextField
-							id="type"
-							select
-							name="type"
-							error={!this.state.typeValid}
-							value={this.state.type}
-							InputProps={{
-								classes: {
-									input: classes.resize
-								}
-							}}
-							onChange={(event) => this.onSelectChangeHandler(event)}
-							helperText="Title"
-							margin="normal"
-						>
-							{this.state.types.map(({ Id, Name }) => (
-								<MenuItem key={Id} value={Id} name={Name}>
-									{Name}
-								</MenuItem>
-							))}
-						</TextField>
-					</FormControl>
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip
-								title={
-									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
-								}
-							>
-								<div>
-									<Button
-										disabled={!this.state.formValid}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.addContactHandler}
-									>
-										{success ? (
-											<CheckIcon />
-										) : this.state.idToEdit != null &&
+								<div className="card-form-row">
+									<span className="input-label primary">Supervisor</span>
+									<SelectForm
+										name="supervisor"
+										data={this.state.supervisors}
+										update={this.updateSupervisor}
+										value={this.state.idSupervisor}
+										error={!this.state.idSupervisorValid}
+									/>
+								</div>
+								<div className="card-form-row">
+									<span className="input-label primary">Email</span>
+									<InputForm
+										id="email"
+										name="email"
+										maxLength="30"
+										error={!this.state.emailValid}
+										value={this.state.email}
+										change={(value) => this.onEmailChangeHandler(value)}
+									/>
+								</div>
+								<div className="card-form-row">
+									<span className="input-label primary">Phone Number</span>
+									<InputForm
+										id="number"
+										name="number"
+										maxLength="15"
+										error={!this.state.numberValid}
+										value={this.state.number}
+										change={(value) => this.onNumberChangeHandler(value)}
+									/>
+								</div>
+								<div className="card-form-row">
+									<span className="input-label primary">Title</span>
+									<SelectForm
+										name="title"
+										data={this.state.types}
+										update={this.updateType}
+										showNone={false}
+										value={this.state.type}
+										error={!this.state.typeValid}
+									/>
+								</div>
+							</div>
+						</div>
+					</DialogContent>
+					<DialogActions style={{ margin: '20px 20px' }}>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								<Tooltip
+									title={
+										this.state.idToEdit != null &&
 										this.state.idToEdit != '' &&
 										this.state.idToEdit != 0 ? (
-											<SaveIcon />
+											'Save Changes'
 										) : (
-											<AddIcon />
-										)}
-									</Button>
-								</div>
-							</Tooltip>
-							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+											'Insert Record'
+										)
+									}
+								>
+									<div>
+										<Button
+											disabled={this.state.loading}
+											//	disabled={!this.state.formValid}
+											variant="fab"
+											color="primary"
+											className={buttonClassname}
+											onClick={this.addContactHandler}
+										>
+											{success ? <CheckIcon /> : <SaveIcon />}
+										</Button>
+									</div>
+								</Tooltip>
+								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+							</div>
 						</div>
-					</div>
-
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip title={'Cancel Operation'}>
-								<div>
-									<Button
-										disabled={!this.state.enableCancelButton}
-										variant="fab"
-										color="secondary"
-										className={buttonClassname}
-										onClick={this.cancelContactHandler}
-									>
-										<ClearIcon />
-									</Button>
-								</div>
-							</Tooltip>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								<Tooltip title={'Cancel Operation'}>
+									<div>
+										<Button
+											//disabled={this.state.loading || !this.state.enableCancelButton}
+											variant="fab"
+											color="secondary"
+											className={buttonClassname}
+											onClick={this.cancelContactHandler}
+										>
+											<ClearIcon />
+										</Button>
+									</div>
+								</Tooltip>
+							</div>
 						</div>
+					</DialogActions>
+				</Dialog>
+				<div className={classes.container}>
+					<div className={classes.divStyle}>
+						<ContactsTable
+							data={this.state.data}
+							types={this.state.types}
+							loading={this.state.loading}
+							supervisors={this.state.allSupervisors}
+							departments={this.state.departments}
+							onEditHandler={this.onEditHandler}
+							onDeleteHandler={this.onDeleteHandler}
+						/>
 					</div>
 				</div>
-				<div className={classes.divStyle}>
-					<ContactsTable
-						data={this.state.data}
-						types={this.state.types}
-						supervisors={this.state.supervisors}
-						departments={this.state.departments}
-						onEditHandler={this.onEditHandler}
-						onDeleteHandler={this.onDeleteHandler}
-					/>
-				</div>
+				{this.props.showStepper ? (
+					<div className="advanced-tab-options">
+						<span
+							className="options-button options-button--back"
+							onClick={() => {
+								this.props.back();
+							}}
+						>
+							Back
+						</span>
+						<span
+							className="options-button options-button--next"
+							onClick={() => {
+								// When the user click Next button, open second tab
+								this.props.next();
+							}}
+						>
+							{this.props.valueTab < 2 ? 'Next' : 'Finish'}
+						</span>
+					</div>
+				) : (
+					''
+				)}
 			</div>
 		);
 	}
 }
 
-ContactCompanyForm.propTypes = {
-	classes: PropTypes.object.isRequired
+ContactcontactForm.propTypes = {
+	classes: PropTypes.object.isRequired,
+	fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(ContactCompanyForm));
+export default withStyles(styles)(withApollo(withMobileDialog()(ContactcontactForm)));
