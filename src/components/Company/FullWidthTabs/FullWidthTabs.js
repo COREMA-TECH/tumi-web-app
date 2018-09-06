@@ -69,7 +69,8 @@ class CustomizedTabs extends React.Component {
 		item: 4,
 		openSnackbar: false,
 		variantSnackbar: 'info',
-		messageSnackbar: 'Dummy text!'
+		messageSnackbar: 'Dummy text!',
+		activateTabs: true
 	};
 
 	handleChange = (event, value) => {
@@ -97,7 +98,8 @@ class CustomizedTabs extends React.Component {
 
 	toggleStepper = () => {
 		this.setState({
-			showStepper: !this.state.showStepper
+			showStepper: !this.state.showStepper,
+			activateTabs: !this.state.activateTabs
 		});
 	};
 
@@ -107,6 +109,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<GeneralInformation
 						idCompany={this.props.idCompany}
+						handleOpenSnackbar={this.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -158,7 +161,6 @@ class CustomizedTabs extends React.Component {
 		}
 	};
 
-
 	handleCloseSnackbar = (event, reason) => {
 		if (reason === 'clickaway') {
 			return;
@@ -174,6 +176,7 @@ class CustomizedTabs extends React.Component {
 			messageSnackbar: message
 		});
 	};
+
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;
@@ -209,16 +212,19 @@ class CustomizedTabs extends React.Component {
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Contacts"
+						disabled={!this.state.activateTabs}
 					/>
 					<Tab
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Departments"
+						disabled={!this.state.activateTabs}
 					/>
 					<Tab
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Positions and Rates"
+						disabled={!this.state.activateTabs}
 					/>
 				</Tabs>
 				{this.showSelectedTab(value)}

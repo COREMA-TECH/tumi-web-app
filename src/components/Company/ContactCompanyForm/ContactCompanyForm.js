@@ -229,7 +229,6 @@ class ContactcontactForm extends React.Component {
 	}
 
 	focusTextInput() {
-		console.log('Input:', document.getElementById('firstname'));
 		if (document.getElementById('firstname') != null) {
 			document.getElementById('firstname').focus();
 			document.getElementById('firstname').select();
