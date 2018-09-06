@@ -941,6 +941,7 @@ class GeneralInformation extends Component {
 							<div className="card-form-row">
 								<span className="input-label primary">Suite</span>
 								<InputForm
+								type="number"
 									value={this.state.suite}
 									change={(text) => {
 										this.updateInput(text, 'suite');
@@ -992,6 +993,7 @@ class GeneralInformation extends Component {
 									}}
 									error={!this.state.zipCodeValid}
 									maxLength="10"
+									type="number"
 								/>
 							</div>
 							<div className="card-form-row">

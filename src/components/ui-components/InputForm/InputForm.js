@@ -7,7 +7,7 @@ class InputForm extends Component {
 			if (this.props.placeholder) {
 				return (
 					<input
-						type="text"
+						type={this.props.type}
 						id={this.props.id}
 						name={this.props.name}
 						value={this.props.value}
@@ -22,7 +22,7 @@ class InputForm extends Component {
 			} else {
 				return (
 					<input
-						type="text"
+						type={this.props.type}
 						id={this.props.id}
 						name={this.props.name}
 						value={this.props.value}
