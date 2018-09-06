@@ -1,13 +1,48 @@
 .upload-image {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
 }
 
 .avatar-uploaded {
     width: 12vh;
     height: 12vh;
-    border-radius: 15px;
+    border-radius: 50%;
     background: #ddd;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    cursor: pointer !important;
+}
+
+.btn {
+    border: 1px solid #41afd7;
+    color: #41afd7;
+    background-color: white;
+    padding: .3em 1.2em;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 300;
+
+    transition: all .250s;
+}
+
+
+.upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+}
+
+
+input[type=file]::-webkit-file-upload-button {
+    cursor: pointer;
 }

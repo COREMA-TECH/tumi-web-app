@@ -7,6 +7,7 @@ import Query from "react-apollo/Query";
 import days from '../../../data/days.json';
 import withApollo from "react-apollo/withApollo";
 import InputDateForm from "../../ui-components/InputForm/InputDateForm";
+import ImageUpload from "../../ui-components/ImageUpload/ImageUpload";
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -266,6 +267,14 @@ class GeneralInfoProperty extends Component {
                 <div className="general-information__content management-content">
                     <div className="dialog-row management-card">
                         <div className="card-form-row">
+                            <ImageUpload updateAvatar={(url) => {
+                                this.setState({
+                                    avatar: url
+                                })
+                            }}/>
+                        </div>
+                        <br/><br/>
+                        <div className="card-form-row">
                             <span className="input-label primary">Company Name</span>
                             <InputForm
                                 value={this.state.name}
@@ -332,16 +341,17 @@ class GeneralInfoProperty extends Component {
                                 }}
                             />
                         </div>
+                        <br/><br/>
+                        <div className="contract-footer--bottom">
+                            <div className="contract-next-button" onClick={
+                                () => {
+                                    this.insertCompany();
+                                }
+                            }>Save</div>
+                        </div>
                     </div>
                 </div>
 
-                <div className="contract-footer--bottom">
-                    <div className="contract-next-button" onClick={
-                        () => {
-                            this.insertCompany();
-                        }
-                    }>Save</div>
-                </div>
             </div>
         );
         // return (

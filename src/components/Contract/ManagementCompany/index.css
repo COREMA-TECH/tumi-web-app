@@ -27,7 +27,7 @@
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 10px;
-    height: 45vh;
+    min-height: 45vh;
     padding: 2em;
     box-shadow: 1px 1px 15px #ddd;
     justify-content: center;

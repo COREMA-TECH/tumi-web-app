@@ -214,7 +214,7 @@ class ContactcontactForm extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			idCompany: this.props.idCompany,
+			idCompany: parseInt(this.props.idCompany),
 			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],

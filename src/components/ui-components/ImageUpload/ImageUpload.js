@@ -2,10 +2,11 @@ import React, {Component} from 'react';
 import firebase from 'firebase';
 import './index.css';
 import CircularProgress from "../../material-ui/CircularProgress";
+
 const uuidv4 = require('uuid/v4');
 
 class ImageUpload extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -47,6 +48,8 @@ class ImageUpload extends Component {
                 this.setState({
                     fileURL: url,
                     loading: false
+                }, () => {
+                    this.props.updateAvatar(this.state.fileURL);
                 })
             })
 
@@ -54,14 +57,17 @@ class ImageUpload extends Component {
     }
 
 
-
     render() {
 
-        if(this.state.loading) {
+        if (this.state.loading) {
             return (
                 <div className="upload-image">
-                    <CircularProgress />
-                    <input className="file-upload" type="file" onChange={this.handleUpload}/>
+                    <CircularProgress/>
+                    <br/><br/>
+                    <div className="upload-btn-wrapper">
+                        <button className="btn">Select Avatar</button>
+                        <input type="file" name="myfile" onChange={this.handleUpload}/>
+                    </div>
                 </div>
             );
         }
@@ -70,8 +76,13 @@ class ImageUpload extends Component {
             <div className="upload-image">
                 <img className="avatar-uploaded" src={this.state.fileURL} alt="Company Avatar"/>
                 <br/>
-                <input className="file-upload" type="file" onChange={this.handleUpload}/>
+                <div className="upload-btn-wrapper">
+                    <button className="btn">Select Avatar</button>
+                    <input type="file" name="myfile" onChange={this.handleUpload}/>
+                </div>
             </div>
+
+
         );
     }
 }

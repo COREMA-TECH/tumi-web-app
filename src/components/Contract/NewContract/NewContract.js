@@ -195,7 +195,7 @@ class NewContract extends Component {
             .then(({data}) => {
                 this.setState({
                     Contract_Name: data.getcontracts[0].Contract_Name,
-                    Contrat_Owner: data.getcontracts[0].Contrat_Owner,
+                    Contract_Owner: data.getcontracts[0].Contrat_Owner,
                     Id_Entity: data.getcontracts[0].Id_Entity,
                     Id_User_Signed: data.getcontracts[0].Id_User_Signed,
                     User_Signed_Title: data.getcontracts[0].User_Signed_Title,
