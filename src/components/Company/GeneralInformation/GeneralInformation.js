@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import './index.css';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import InputFile from '../../ui-components/InputFile/InputFile';
 import { gql } from 'apollo-boost';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
@@ -941,7 +944,7 @@ class GeneralInformation extends Component {
 							<div className="card-form-row">
 								<span className="input-label primary">Suite</span>
 								<InputForm
-								type="number"
+									type="number"
 									value={this.state.suite}
 									change={(text) => {
 										this.updateInput(text, 'suite');
@@ -1130,21 +1133,24 @@ class GeneralInformation extends Component {
 					contentStyle={{ width: '100%', maxWidth: 'none' }}
 					autoScrollBodyContent={false}
 				>
-					<div className="dialog">
-						<div className="dialog-header">Property Information</div>
-						<div className="dialog-body">
-							<div>
-								{this.state.propertyClick ? (
-									//Si el click es en una property : pasar el id de esa property
-									<TabsInDialog idCompany={this.state.idProperty} />
-								) : (
-									//Si el click no es en esa property : pasar el Id en nulo
-									//para que no cargue niguna información relacionada con ese Id
-									<TabsInDialog idCompany={this.props.idCompany} />
-								)}
+					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
+
+					<DialogContent>
+						<div className="dialog">
+							<div className="dialog-body">
+								<div>
+									{this.state.propertyClick ? (
+										//Si el click es en una property : pasar el id de esa property
+										<TabsInDialog idCompany={this.state.idProperty} />
+									) : (
+										//Si el click no es en esa property : pasar el Id en nulo
+										//para que no cargue niguna información relacionada con ese Id
+										<TabsInDialog idCompany={this.props.idCompany} />
+									)}
+								</div>
 							</div>
 						</div>
-					</div>
+					</DialogContent>
 				</Dialog>
 			</div>
 		);
