@@ -229,7 +229,7 @@ class PositionsCompanyForm extends React.Component {
 
 	constructor(props) {
 		super(props);
-		console.log('ShiftData', ShiftsData);
+		
 		this.state = {
 			data: [],
 			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],

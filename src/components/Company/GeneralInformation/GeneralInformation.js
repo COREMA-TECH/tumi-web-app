@@ -214,10 +214,51 @@ class GeneralInformation extends Component {
 			}
 		);
 	};
+
+	loadCompanyProperties = () => {
+		this.setState(
+			{
+				loadingCompanyProperties: true
+			},
+			() => {
+				this.props.client
+					.query({
+						query: this.GET_COMPANY_PROPERTY_QUERY,
+						variables: { Id_Parent: parseInt(this.props.idCompany) },
+						fetchPolicy: 'no-cache'
+					})
+					.then((data) => {
+						if (data.data.getbusinesscompanies != null) {
+							this.setState({
+								companyProperties: data.data.getbusinesscompanies,
+								loadingCompanyProperties: false
+							});
+						} else {
+							this.props.handleOpenSnackbar(
+								'error',
+								'Error: Loading company properties: getbusinesscompanies not exists in query data'
+							);
+
+							this.setState({
+								loadingCompanyProperties: false
+							});
+						}
+					})
+					.catch((error) => {
+						console.log('Error: Loading company properties: ', error);
+						this.props.handleOpenSnackbar('error', 'Error: Loading company properties: ' + error);
+						this.setState({
+							loadingCompanyProperties: false
+						});
+					});
+			}
+		);
+	};
+
 	/**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
      **********************************************************/
-	ADD_COMPANY = gql`
+	ADD_COMPANY_QUERY = gql`
 		mutation insertCompanies($input: iParamBC!) {
 			insbusinesscompanies(input: $input) {
 				Id
@@ -227,7 +268,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	getCompanyQueryProperty = gql`
+	GET_COMPANY_PROPERTY_QUERY = gql`
 		query getCompany($Id_Parent: Int!) {
 			getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'", Id_Parent: $Id_Parent) {
 				Id
@@ -268,7 +309,7 @@ class GeneralInformation extends Component {
 		this.props.client
 			.mutate({
 				// Pass the mutation structure
-				mutation: this.ADD_COMPANY,
+				mutation: this.ADD_COMPANY_QUERY,
 				variables: {
 					input: {
 						Id: 150,
@@ -545,6 +586,7 @@ class GeneralInformation extends Component {
 					this.loadCompany(() => {
 						this.loadCities();
 						this.loadStates();
+						this.loadCompanyProperties();
 					});
 				}
 			);
@@ -560,12 +602,14 @@ class GeneralInformation extends Component {
 			countries: [],
 			states: [],
 			cities: [],
+			companyProperties: [],
 			country: 0,
 			state: 0,
 			city: 0,
 			loadingCountries: true,
 			loadingCities: true,
-			loadingStates: true
+			loadingStates: true,
+			loadingCompanyProperties: true
 		};
 	}
 	updateCountry = (id) => {
@@ -812,7 +856,8 @@ class GeneralInformation extends Component {
 				{(this.state.loading ||
 					this.state.loadingCities ||
 					this.state.loadingCountries ||
-					this.state.loadingStates) && <LinearProgress />}
+					this.state.loadingStates ||
+					this.state.loadingCompanyProperties) && <LinearProgress />}
 
 				<div className="general-information__header">
 					<div className="input-container">
@@ -1033,31 +1078,18 @@ class GeneralInformation extends Component {
 								<li className="header-elements">Property Code</li>
 								<li className="header-elements">Property Name</li>
 							</div>
-							<Query
-								query={this.getCompanyQueryProperty}
-								variables={{ Id_Parent: parseInt(this.props.idCompany) }}
-								pollInterval={500}
-							>
-								{({ loading, error, data, refetch }) => {
-									if (loading) return <LinearProgress />;
-									if (error) return <p>Error </p>;
-									if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-										return data.getbusinesscompanies.map((item) => (
-											<div className="table-elements">
-												<div
-													title="Watch Property"
-													className="table__item"
-													onClick={this.handleClickOpen('paper', true, item.Id)}
-												>
-													<li>{item.Code}</li>
-													<li>{item.Name}</li>
-												</div>
-											</div>
-										));
-									}
-									return <p>Nothing to display </p>;
-								}}
-							</Query>
+							{this.state.companyProperties.map((item) => (
+								<div className="table-elements">
+									<div
+										title="Watch Property"
+										className="table__item"
+										onClick={this.handleClickOpen('paper', true, item.Id)}
+									>
+										<li>{item.Code}</li>
+										<li>{item.Name}</li>
+									</div>
+								</div>
+							))}
 						</div>
 						<div className="card-form-footer">
 							<span className="add-property" onClick={this.handleClickOpen('paper', false, 0)}>

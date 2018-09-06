@@ -139,7 +139,7 @@ class ContactcontactForm extends React.Component {
 		{
 			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
 				Id
-				Name
+				Name: DisplayLabel
 				IsActive
 			}
 		}

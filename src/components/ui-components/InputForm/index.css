@@ -8,6 +8,9 @@
 	outline: none;
 	transition: all .450s;
 }
+.input-form-date {
+	font: 400 13px Arial;
+}
 
 ._invalid {
 	border-bottom: 1px solid;

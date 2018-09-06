@@ -9,7 +9,9 @@ class InputDateForm extends Component {
 					<input
 						type="date"
 						value={this.props.value}
-						className={this.props.error ? 'input-form _invalid' : 'input-form'}
+						className={
+							this.props.error ? 'input-form input-form-date _invalid' : 'input-form input-form-date'
+						}
 						placeholder={this.props.placeholder}
 						onChange={(event) => {
 							this.props.change(event.target.value);
@@ -21,7 +23,9 @@ class InputDateForm extends Component {
 					<input
 						type="date"
 						value={this.props.value}
-						className={this.props.error ? 'input-form _invalid' : 'input-form'}
+						className={
+							this.props.error ? 'input-form input-form-date _invalid' : 'input-form input-form-date'
+						}
 						onChange={(event) => {
 							this.props.change(event.target.value);
 						}}
