@@ -1,0 +1,13 @@
+.upload-image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatar-uploaded {
+    width: 12vh;
+    height: 12vh;
+    border-radius: 15px;
+    background: #ddd;
+}

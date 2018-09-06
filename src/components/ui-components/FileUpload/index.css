@@ -1,0 +1,19 @@
+.file-upload {
+    position: relative;
+
+    background: #000000;
+    color: #000000;
+}
+
+.file-upload:before {
+    content: '';
+    display: block;
+
+    width: 10%;
+    height: 100%;
+    background: red;
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+}

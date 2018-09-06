@@ -138,3 +138,8 @@ body {
         box-shadow: 1px 1px ;
     }
 }
+
+
+.hidden {
+    display: none;
+}

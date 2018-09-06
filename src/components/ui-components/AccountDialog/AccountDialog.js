@@ -109,9 +109,10 @@ class SimpleDialog extends Component {
      */
     getCompaniesQuery = gql`
         {
-            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null) {
+            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
                 Id
                 Name
+                Id_Company
             }
         }
     `;
@@ -172,7 +173,7 @@ class SimpleDialog extends Component {
                                             <ListItem button onClick={() => {
                                                 this.handleListItemClick(item.Name);
                                                 this.props.onId(item.Id);
-                                                this.props.onItemValue(item.Name);
+                                                this.props.onItemValue(parseInt(item.Id_Company));
                                             }}
                                                       key={item.Id}>
                                                 <ListItemAvatar>
@@ -252,7 +253,7 @@ class SimpleDialogDemo extends React.Component {
     };
 
     nameCompanySelected = value => {
-        this.props.updateCompanySignedBy(value);
+
     };
 
 
@@ -274,7 +275,9 @@ class SimpleDialogDemo extends React.Component {
                     open={this.state.open}
                     onClose={this.handleClose}
                     onId={this.idCompanySelected}
-                    onItemValue={this.nameCompanySelected}
+                    onItemValue={(id) => {
+                        this.props.updateCompanySignedBy(id);
+                    }}
                 />
             </div>
         );

@@ -1,17 +1,19 @@
 import React, {Component} from 'react';
 import './index.css';
+import InputForm from '../../ui-components/InputForm/InputForm';
+import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import {gql} from 'apollo-boost';
+import withApollo from 'react-apollo/withApollo';
+import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import InputForm from "../../ui-components/InputForm/InputForm";
-import AccountDialog from "../../ui-components/AccountDialog/AccountDialog";
-import ContactDialog from "../../ui-components/AccountDialog/ContactDialog";
-import InputDateForm from "../../ui-components/InputForm/InputDateForm";
-import Query from "react-apollo/Query";
-import withApollo from "react-apollo/withApollo";
-import TextAreaForm from "../../ui-components/InputForm/TextAreaForm";
+import Query from 'react-apollo/Query';
+import AccountDialog from '../../ui-components/AccountDialog/AccountDialog';
+import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
+import SelectFormContractTemplate from "../../ui-components/SelectForm/SelectFormContractTemplate";
+
 
 class NewContract extends Component {
     constructor(props) {
@@ -24,6 +26,8 @@ class NewContract extends Component {
             Id_Company: '',
             Contract_Name: '',
             Contrat_Owner: '',
+            contractTemplate: '',
+            contractExpiration: '',
             Id_Entity: '',
             Id_User_Signed: '',
             User_Signed_Title: '',
@@ -32,7 +36,7 @@ class NewContract extends Component {
             Contract_Start_Date: '',
             Contract_Term: '',
             Owner_Expiration_Notification: '',
-            Company_Signed: '',
+            Company_Signed: 0,
             Company_Signed_Date: '',
             Id_User_Billing_Contact: '',
             Billing_Street: '',
@@ -46,16 +50,20 @@ class NewContract extends Component {
             Exhibit_D: '',
             Exhibit_E: '',
             Exhibit_F: '',
-            IsActive: '',
+            IsActive: 0,
             User_Created: '',
             User_Updated: '',
             Date_Created: '',
-            Date_Updated: ''
+            Date_Updated: '',
+            CompanySignedName: '',
+            open: false,
+            scroll: 'paper',
         };
     }
 
-    componentWillMount() {
-    }
+    handleClose = () => {
+        this.setState({open: false});
+    };
 
     updateStatus = (id) => {
         this.setState({
@@ -81,9 +89,6 @@ class NewContract extends Component {
         });
     };
 
-    updateCompany = (id) => {
-    };
-
     updateOwnerExpirationNotification = (id) => {
         this.setState({
             Owner_Expiration_Notification: id
@@ -96,14 +101,6 @@ class NewContract extends Component {
         });
 
         this.props.updateCompanyId(id);
-    };
-
-    updateId_User_Billing_Contact = (id) => {
-        this.setState({
-            Id_User_Billing_Contact: id
-        });
-
-        alert(this.state.Id_User_Billing_Contact);
     };
 
     updateIdContact = (id) => {
@@ -138,6 +135,16 @@ class NewContract extends Component {
         }
     `;
 
+    GET_CONTRACT = gql`
+        {
+            getcontracttemplate(Id: null, IsActive: 1) {
+                Id
+                Name
+                Contract_Template
+            }
+        }
+    `;
+
     insertContract = () => {
         //Create the mutation using apollo global client
         this.props.client
@@ -157,6 +164,7 @@ class NewContract extends Component {
                         Contract_Status: `'${this.state.Contract_Status}'`,
                         Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
                         Contract_Term: 1,
+                        Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
                         Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
                         Company_Signed: `'${this.state.Company_Signed}'`,
                         Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
@@ -194,16 +202,33 @@ class NewContract extends Component {
     /**
      * QUERY to get companies
      */
-
     getCompaniesQuery = gql`
-        {
-            getcompanies(Id: null, IsActive: 1) {
+        query getcompanies($Id: Int!){
+            getcompanies(Id: $Id, IsActive: 1) {
                 Id
                 Name
                 LegalName
             }
         }
     `;
+
+
+    getCompanies = (id) => {
+        this.props.client.query({
+            query: this.getCompaniesQuery,
+            variables: {
+                Id: id
+            }
+        })
+            .then(({data}) => {
+                this.setState({
+                    CompanySignedName: data.getcompanies[0].LegalName
+                })
+            })
+            .catch((error) => {
+                alert(error);
+            })
+    };
 
     /**
      *  QUERIES to get the countries, cities and states
@@ -237,10 +262,20 @@ class NewContract extends Component {
             }
         }
     `;
-
     /**
      *  End of the countries, cities and states queries
      */
+
+
+    getContractTermsQuery = gql`
+        {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
 
     render() {
         return (
@@ -256,6 +291,7 @@ class NewContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Name</span>
+
                                             <InputForm
                                                 value={this.state.Contract_Name}
                                                 change={(text) => {
@@ -277,15 +313,41 @@ class NewContract extends Component {
                                             />
                                         </div>
                                         <div className="card-form-row">
-                                            <span className="input-label primary">Account Name</span>
-                                            <AccountDialog
-                                                update={this.updateIdCompany}
-                                                updateCompanySignedBy={(value) => {
-                                                    this.setState({
-                                                        Company_Signed: value.trim()
-                                                    });
+                                            <span className="input-label primary">Contract Template</span>
+                                            <Query query={this.GET_CONTRACT}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcontracttemplate != null && data.getcontracttemplate.length > 0) {
+                                                        return (
+                                                            <SelectFormContractTemplate
+                                                                data={data.getcontracttemplate}
+                                                                update={(value) => {
+                                                                    this.setState({
+                                                                        Contract_Terms: value
+                                                                    });
+                                                                }}
+                                                                value={this.state.Contract_Terms}
+                                                            />
+                                                        );
+                                                    }
+                                                    return <p>Nothing to display </p>;
                                                 }}
-                                            />
+                                            </Query>
+                                        </div>
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Management Company</span>
+                                            <AccountDialog update={this.updateIdCompany} updateCompanySignedBy={
+                                                (value) => {
+
+                                                    this.setState({
+                                                        Company_Signed: value
+                                                    }, () => {
+                                                        this.getCompanies(this.state.Company_Signed);
+                                                    });
+                                                }
+                                            }/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed By</span>
@@ -342,15 +404,46 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Term (months)</span>
-                                            <InputForm
-                                                value={this.state.Contract_Term}
+
+                                            <Query
+                                                query={this.getContractTermsQuery}
+                                            >
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log('Data of cities' + data.getcatalogitem);
+                                                        return (
+                                                            <SelectForm
+                                                                data={data.getcatalogitem}
+                                                                update={(text) => {
+                                                                    this.setState({
+                                                                        Contract_Term: text
+                                                                    });
+                                                                }}
+                                                                value={this.state.Contract_Term}
+                                                            />
+                                                        );
+                                                    }
+                                                    return <p>Nothing to display </p>;
+                                                }}
+                                            </Query>
+                                        </div>
+
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Contract Expiration Date</span>
+                                            <InputDateForm
+                                                value={this.state.contractExpiration}
                                                 change={(text) => {
                                                     this.setState({
-                                                        Contract_Term: text
+                                                        contractExpiration: text
                                                     });
                                                 }}
                                             />
+
                                         </div>
+
                                         <div className="card-form-row">
                                             <span className="input-label primary">Owner Expiration Notice</span>
                                             <SelectForm
@@ -361,8 +454,14 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Company Signed By</span>
-                                            <InputForm value={this.state.Company_Signed} change={(text) => {
-                                            }}/>
+
+                                            <InputForm
+                                                value={this.state.CompanySignedName}
+                                                change={(text) => {
+
+                                                }}
+                                            />
+
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Company Signed Date</span>
@@ -387,12 +486,12 @@ class NewContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing Name</span>
-                                            <InputForm
-                                                value={this.state.Id_User_Billing_Contact}
-                                                change={(text) => {
+                                            <ContactDialog
+                                                idContact={this.state.Id_Entity}
+                                                update={(id) => {
                                                     this.setState({
-                                                        Id_User_Billing_Contact: text
-                                                    });
+                                                        Id_User_Billing_Contact: id
+                                                    })
                                                 }}
                                             />
                                         </div>
@@ -495,7 +594,7 @@ class NewContract extends Component {
                                 </div>
                             </div>
 
-                            <div className="contract-body-row__content">
+                            <div className="contract-body-row__content hidden">
                                 <div className="contract-body-row__header">
                                     <span className="contract-body__subtitle">Contract Information</span>
                                 </div>
@@ -530,6 +629,23 @@ class NewContract extends Component {
                         </div>
                     </div>
                 </div>
+
+                {/*<Dialog*/}
+                {/*open={this.state.open}*/}
+                {/*onClose={this.handleClose}*/}
+                {/*scroll={this.state.scroll}*/}
+                {/*aria-labelledby="scroll-dialog-title"*/}
+                {/*className="dialog-full"*/}
+                {/*contentStyle={{width: "100%", maxWidth: "none"}}*/}
+                {/*autoScrollBodyContent={false}*/}
+                {/*>*/}
+                {/*<div className="dialog">*/}
+                {/*<div className="dialog-header">Property Information</div>*/}
+                {/*<div className="dialog-body">*/}
+
+                {/*</div>*/}
+                {/*</div>*/}
+                {/*</Dialog>*/}
             </div>
         );
     }
