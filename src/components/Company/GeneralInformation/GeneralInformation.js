@@ -10,7 +10,7 @@ import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
-
+import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 class GeneralInformation extends Component {
 	state = {
 		inputEnabled: true,
@@ -187,8 +187,8 @@ class GeneralInformation extends Component {
 									fax: item.Fax,
 									startDate: item.Start_Date.trim(),
 									active: item.IsActive,
-                                    suite: item.Suite,
-                                    ...this.DEFAULT_STATUS 
+									suite: item.Suite,
+									...this.DEFAULT_STATUS
 								},
 								func
 							);
@@ -382,6 +382,7 @@ class GeneralInformation extends Component {
 				.then((data) => {
 					this.props.handleOpenSnackbar('success', 'General Information Updated!');
 					// When the user click Next button, open second tab
+					this.props.toggleStepper();
 					this.props.next();
 				})
 				.catch((error) => {
@@ -446,7 +447,6 @@ class GeneralInformation extends Component {
 		this.state = { ...this.DEFAULT_STATUS };
 	}
 	updateState = (id) => {
-	
 		this.setState(
 			{
 				state: id
@@ -876,12 +876,11 @@ class GeneralInformation extends Component {
 						<div className="card-form-body">
 							<div className="card-form-row">
 								<span className="input-label primary">Contract Start Date</span>
-								<InputForm
+								<InputDateForm
 									value={this.state.startDate}
 									change={(text) => {
 										this.updateInput(text, 'startDate');
 									}}
-									error={!this.state.startDateValid}
 								/>
 							</div>
 							<div className="card-form-row">

@@ -99,7 +99,6 @@ class Contract extends React.Component {
                         label="New Contract"
                     />
                     <Tab
-                        disabled
                         disableRipple
                         classes={{root: classes.tabRoot, selected: classes.tabSelected}}
                         label="Exhibit"

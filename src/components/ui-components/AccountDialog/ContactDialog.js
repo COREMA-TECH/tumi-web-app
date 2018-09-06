@@ -197,6 +197,16 @@ class SimpleDialog extends React.Component {
                                 />
                                 <br/>
                                 <InputForm
+                                    placeholder="Last Name"
+                                    value={this.state.lastName}
+                                    change={(text) => {
+                                        this.setState({
+                                            lastName: text
+                                        })
+                                    }}
+                                />
+                                <br/>
+                                <InputForm
                                     placeholder="Email"
                                     value={this.state.email}
                                     change={(text) => {
