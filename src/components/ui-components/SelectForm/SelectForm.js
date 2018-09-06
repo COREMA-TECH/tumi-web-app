@@ -71,6 +71,7 @@ class ControlledOpenSelect extends React.Component {
 						inputProps={{
 							name: 'age'
 						}}
+						disabled={this.props.disabled}
 					>
 						{this.state.showNone && (
 							<MenuItem key={0} value={0} name="None" className="select-form-customized__item ">

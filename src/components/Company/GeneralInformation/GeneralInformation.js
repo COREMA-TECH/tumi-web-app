@@ -25,10 +25,8 @@ class GeneralInformation extends Component {
 		address: '',
 		optionalAddress: '',
 		businessType: '',
-		country: 6,
-		state: 0,
 		region: '',
-		city: '',
+
 		management: '',
 		phoneNumber: '',
 		startDate: '',
@@ -53,6 +51,7 @@ class GeneralInformation extends Component {
 		openSnackbar: false,
 		variantSnackbar: 'info',
 		messageSnackbar: 'Dummy text!',
+
 		...this.DEFAULT_STATUS
 	};
 
@@ -76,7 +75,7 @@ class GeneralInformation extends Component {
 	/**
      *  QUERIES to get the countries, cities and states
      */
-	getCountriesQuery = gql`
+	GET_COUNTRIES_QUERY = gql`
 		{
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
 				Id
@@ -86,7 +85,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	getStatesQuery = gql`
+	GET_STATES_QUERY = gql`
 		query States($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
 				Id
@@ -96,7 +95,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	getCitiesQuery = gql`
+	GET_CITIES_QUERY = gql`
 		query Cities($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
 				Id
@@ -147,6 +146,7 @@ class GeneralInformation extends Component {
 			}
 		}
 	`;
+
 	loadCompany = (func = () => {}) => {
 		this.setState(
 			{
@@ -162,6 +162,7 @@ class GeneralInformation extends Component {
 					.then((data) => {
 						if (data.data.getbusinesscompanies != null) {
 							var item = data.data.getbusinesscompanies[0];
+
 							this.setState(
 								{
 									loading: false,
@@ -197,6 +198,7 @@ class GeneralInformation extends Component {
 								'error',
 								'Error: Loading company information: getbusinesscompanies not exists in query data'
 							);
+
 							this.setState({
 								loading: false
 							});
@@ -369,7 +371,7 @@ class GeneralInformation extends Component {
 							Date_Created: "'2018-08-14'",
 							Date_Updated: "'2018-08-14'",
 							ImageURL: `'${this.state.avatar}'`,
-							Start_Date: "'2018-08-14'",
+							Start_Date: `'${this.state.startDate}'`,
 							Contract_URL: "'firebase url'",
 							Insurace_URL: "'firebase url'",
 							Other_URL: "'firebase url'",
@@ -399,6 +401,107 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
+	loadCountries = () => {
+		this.setState({
+			loadingCountries: true
+		});
+		this.props.client
+			.query({
+				query: this.GET_COUNTRIES_QUERY,
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getcatalogitem != null) {
+					this.setState({
+						countries: data.data.getcatalogitem,
+						loadingCountries: false
+					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading countries: getcatalogitem not exists in query data'
+					);
+					this.setState({
+						loadingCountries: false
+					});
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading countries: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading countries: ' + error);
+				this.setState({
+					loadingCountries: false
+				});
+			});
+	};
+	loadStates = () => {
+		this.setState({
+			loadingStates: true
+		});
+		this.props.client
+			.query({
+				query: this.GET_STATES_QUERY,
+				variables: { parent: this.state.country },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getcatalogitem != null) {
+					this.setState({
+						states: data.data.getcatalogitem,
+						loadingStates: false
+					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading states: getcatalogitem not exists in query data'
+					);
+					this.setState({
+						loadingStates: false
+					});
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading states: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading states: ' + error);
+				this.setState({
+					loadingStates: false
+				});
+			});
+	};
+	loadCities = () => {
+		this.setState({
+			loadingCities: true
+		});
+		this.props.client
+			.query({
+				query: this.GET_CITIES_QUERY,
+				variables: { parent: this.state.state },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getcatalogitem != null) {
+					this.setState({
+						cities: data.data.getcatalogitem,
+						loadingCities: false
+					});
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading cities: getcatalogitem not exists in query data'
+					);
+					this.setState({
+						loadingCities: false
+					});
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading cities: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading cities: ' + error);
+				this.setState({
+					loadingCities: false
+				});
+			});
+	};
 	/**
      * Events of the component
      */
@@ -438,21 +541,56 @@ class GeneralInformation extends Component {
 				{
 					inputEnabled: false
 				},
-				this.loadCompany
+				() => {
+					this.loadCompany(() => {
+						this.loadCities();
+						this.loadStates();
+					});
+				}
 			);
+			this.loadCountries();
+			this.loadStates();
+			this.loadCities();
 		}
 	}
 	constructor(props) {
 		super(props);
-		this.state = { ...this.DEFAULT_STATUS };
+		this.state = {
+			...this.DEFAULT_STATUS,
+			countries: [],
+			states: [],
+			cities: [],
+			country: 0,
+			state: 0,
+			city: 0,
+			loadingCountries: true,
+			loadingCities: true,
+			loadingStates: true
+		};
 	}
+	updateCountry = (id) => {
+		this.setState(
+			{
+				country: id,
+				state: 0,
+				city: 0
+			},
+			() => {
+				this.validateField('country', id);
+				this.loadStates();
+				this.loadCities();
+			}
+		);
+	};
 	updateState = (id) => {
 		this.setState(
 			{
-				state: id
+				state: id,
+				city: 0
 			},
 			() => {
 				this.validateField('state', id);
+				this.loadCities();
 			}
 		);
 	};
@@ -464,17 +602,6 @@ class GeneralInformation extends Component {
 			},
 			() => {
 				this.validateField('city', id);
-			}
-		);
-	};
-
-	updateCountry = (id) => {
-		this.setState(
-			{
-				country: id
-			},
-			() => {
-				this.validateField('country', id);
 			}
 		);
 	};
@@ -682,7 +809,10 @@ class GeneralInformation extends Component {
          */
 		return (
 			<div className="general-information-tab">
-				{this.state.loading && <LinearProgress />}
+				{(this.state.loading ||
+					this.state.loadingCities ||
+					this.state.loadingCountries ||
+					this.state.loadingStates) && <LinearProgress />}
 
 				<div className="general-information__header">
 					<div className="input-container">
@@ -711,9 +841,12 @@ class GeneralInformation extends Component {
 				{window.location.pathname === '/home/company/edit' ? (
 					<div className="options-company">
 						<button
+							disabled={this.state.loading}
 							className="edit-company-button"
 							onClick={() => {
 								this.loadCompany(() => {
+									this.loadCities();
+									this.loadStates();
 									this.props.toggleStepper();
 								});
 							}}
@@ -773,69 +906,37 @@ class GeneralInformation extends Component {
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">Countries</span>
-								<Query query={this.getCountriesQuery}>
-									{({ loading, error, data, refetch, networkStatus }) => {
-										//if (networkStatus === 4) return <LinearProgress />;
-										if (loading) return <LinearProgress />;
-										if (error) return <p>Error </p>;
-										if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-											return (
-												<SelectForm
-													name="country"
-													data={data.getcatalogitem}
-													error={!this.state.countryValid}
-													update={this.updateCountry}
-													value={this.state.country}
-												/>
-											);
-										}
-										return <p>Nothing to display </p>;
-									}}
-								</Query>
+
+								<SelectForm
+									name="country"
+									disabled={this.state.loadingCountries}
+									data={this.state.countries}
+									update={this.updateCountry}
+									error={!this.state.countryValid}
+									value={this.state.country}
+								/>
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">State</span>
-								<Query query={this.getStatesQuery} variables={{ parent: this.state.country }}>
-									{({ loading, error, data, refetch, networkStatus }) => {
-										//if (networkStatus === 4) return <LinearProgress />;
-										if (loading) return <LinearProgress />;
-										if (error) return <p>Error </p>;
-										if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-											return (
-												<SelectForm
-													name="state"
-													data={data.getcatalogitem}
-													error={!this.state.stateValid}
-													update={this.updateState}
-													value={this.state.state}
-												/>
-											);
-										}
-										return <p>Nothing to display </p>;
-									}}
-								</Query>
+								<SelectForm
+									name="state"
+									disabled={this.state.loadingStates}
+									data={this.state.states}
+									update={this.updateState}
+									error={!this.state.stateValid}
+									value={this.state.state}
+								/>
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">City</span>
-								<Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
-									{({ loading, error, data, refetch, networkStatus }) => {
-										//if (networkStatus === 4) return <LinearProgress />;
-										if (loading) return <LinearProgress />;
-										if (error) return <p>Error </p>;
-										if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-											return (
-												<SelectForm
-													name="city"
-													data={data.getcatalogitem}
-													error={!this.state.cityValid}
-													update={this.updateCity}
-													value={this.state.city}
-												/>
-											);
-										}
-										return <p>Nothing to display </p>;
-									}}
-								</Query>
+								<SelectForm
+									name="city"
+									disabled={this.state.loadingCities}
+									data={this.state.cities}
+									update={this.updateCity}
+									error={!this.state.cityValid}
+									value={this.state.city}
+								/>
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">Zip Code</span>
@@ -881,6 +982,7 @@ class GeneralInformation extends Component {
 									change={(text) => {
 										this.updateInput(text, 'startDate');
 									}}
+									error={!this.state.startDateValid}
 								/>
 							</div>
 							<div className="card-form-row">
