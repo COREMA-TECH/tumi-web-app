@@ -1,8 +1,5 @@
 .file-upload {
     position: relative;
-
-    background: #000000;
-    color: #000000;
 }
 
 .file-upload:before {
@@ -11,9 +8,17 @@
 
     width: 10%;
     height: 100%;
-    background: red;
     
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.file-upload-button {
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+}
+
+.button-file-upload {
+    border-radius: 5px;
 }

@@ -58,12 +58,9 @@ class NewContract extends Component {
             CompanySignedName: '',
             open: false,
             scroll: 'paper',
+            managementDialog: false
         };
     }
-
-    handleClose = () => {
-        this.setState({open: false});
-    };
 
     updateStatus = (id) => {
         this.setState({
@@ -144,6 +141,83 @@ class NewContract extends Component {
             }
         }
     `;
+
+    GET_CONTRACT_BY_ID = gql`
+        query getContractById($Id: Int!){
+            getcontracts(Id: $Id, IsActive: 1) {
+                Id
+                Id_Company
+                Contract_Name
+                Contrat_Owner
+                Id_Entity
+                Id_User_Signed
+                User_Signed_Title
+                Signed_Date
+                Contract_Status
+                Contract_Start_Date
+                Contract_Term
+                Owner_Expiration_Notification
+                Company_Signed
+                Company_Signed_Date
+                Id_User_Billing_Contact
+                Billing_Street
+                Billing_City
+                Billing_State
+                Billing_Zip_Code
+                Billing_Country
+                Contract_Terms
+                Exhibit_B
+                Exhibit_C
+                Exhibit_D
+                Exhibit_E
+                Exhibit_F
+                IsActive
+                User_Created
+                User_Updated
+                Date_Created
+                Date_Updated
+                Client_Signature
+                Company_Signature
+                Contract_Expiration_Date
+            }
+        }
+    `;
+
+    // To get the data by a specific contact using the ID
+    getContractData = (id) => {
+        this.props.client
+            .query({
+                query: this.GET_CONTRACT_BY_ID,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(({data}) => {
+                this.setState({
+                    Contract_Name: data.getcontracts[0].Contract_Name,
+                    Contrat_Owner: data.getcontracts[0].Contrat_Owner,
+                    Id_Entity: data.getcontracts[0].Id_Entity,
+                    Id_User_Signed: data.getcontracts[0].Id_User_Signed,
+                    User_Signed_Title: data.getcontracts[0].User_Signed_Title,
+                    Signed_Date: data.getcontracts[0].Signed_Date,
+                    Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
+                    contractExpiration: data.getcontracts[0].Contract_Expiration_Date,
+                    Owner_Expiration_Notification: data.getcontracts[0].Owner_Expiration_Notification,
+                    Company_Signed_Date: data.getcontracts[0].Company_Signed_Date,
+                    Billing_Street: data.getcontracts[0].Billing_Street,
+                    Billing_City: data.getcontracts[0].Billing_City,
+                    Billing_State: data.getcontracts[0].Billing_State,
+                    Billing_Country: data.getcontracts[0].Billing_Country,
+                    Billing_Zip_Code: data.getcontracts[0].Billing_Zip_Code,
+                    Contract_Terms: data.getcontracts[0].Contract_Terms,
+                    IsActive: data.getcontracts[0].IsActive,
+                    Date_Created: data.getcontracts[0].Date_Created,
+                    Date_Updated: data.getcontracts[0].Date_Updated,
+                })
+            })
+            .catch(err => console.log(err));
+    };
+
 
     insertContract = () => {
         //Create the mutation using apollo global client
@@ -276,6 +350,36 @@ class NewContract extends Component {
             }
         }
     `;
+
+    componentWillMount() {
+        alert(this.props.contractId)
+
+        if (this.props.contractId !== 0) {
+            this.getContractData(this.props.contractId);
+        }
+    }
+
+
+    /***
+     * Events fo the dialog
+     *
+     */
+    /**
+     * Events of the component
+     */
+    handleClickOpen = (scroll, boolValue, id) => () => {
+        this.setState({
+            propertyClick: boolValue,
+            idProperty: id
+        });
+
+        this.setState({open: true, scroll});
+    };
+
+    handleClose = () => {
+        this.setState({open: false});
+    };
+
 
     render() {
         return (
@@ -629,23 +733,6 @@ class NewContract extends Component {
                         </div>
                     </div>
                 </div>
-
-                {/*<Dialog*/}
-                {/*open={this.state.open}*/}
-                {/*onClose={this.handleClose}*/}
-                {/*scroll={this.state.scroll}*/}
-                {/*aria-labelledby="scroll-dialog-title"*/}
-                {/*className="dialog-full"*/}
-                {/*contentStyle={{width: "100%", maxWidth: "none"}}*/}
-                {/*autoScrollBodyContent={false}*/}
-                {/*>*/}
-                {/*<div className="dialog">*/}
-                {/*<div className="dialog-header">Property Information</div>*/}
-                {/*<div className="dialog-body">*/}
-
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</Dialog>*/}
             </div>
         );
     }

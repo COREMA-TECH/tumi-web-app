@@ -114,6 +114,7 @@ class SimpleDialog extends React.Component {
             getcontacts(Id: null, IsActive: 1, Id_Entity: $Id_Entity) {
                 Id
                 First_Name
+                Last_Name
             }
         }
     `;
@@ -143,7 +144,7 @@ class SimpleDialog extends React.Component {
                                             data.getcontacts.map((item) => (
 
                                                 <ListItem button onClick={() => {
-                                                    this.handleListItemClick(item.First_Name.trim());
+                                                    this.handleListItemClick(item.First_Name.trim() + " " + item.Last_Name.trim());
                                                     this.props.onId(item.Id);
                                                 }}
                                                           key={item.Id}>
@@ -152,7 +153,7 @@ class SimpleDialog extends React.Component {
                                                             <PersonIcon/>
                                                         </Avatar>
                                                     </ListItemAvatar>
-                                                    <ListItemText primary={item.First_Name}/>
+                                                    <ListItemText primary={item.First_Name + item.Last_Name}/>
                                                 </ListItem>
                                             ))
                                         )

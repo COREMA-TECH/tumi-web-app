@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import firebase from 'firebase';
 import './index.css';
 
+
 class FileUpload extends Component {
     constructor(props){
         super(props);
