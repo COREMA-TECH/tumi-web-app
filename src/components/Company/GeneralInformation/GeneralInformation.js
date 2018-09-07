@@ -14,6 +14,7 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
+import FileUpload from "../../ui-components/FileUpload/FileUpload";
 class GeneralInformation extends Component {
 	state = {
 		inputEnabled: true,
@@ -1060,19 +1061,27 @@ class GeneralInformation extends Component {
 							<div className="divider-text">Documents</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Contract</span>
-								<InputFile />
+								<FileUpload updateURL={(url) => {
+
+								}}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Insurance</span>
-								<InputFile />
+								<FileUpload updateURL={(url) => {
+
+                                }}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Other 1</span>
-								<InputFile />
+								<FileUpload updateURL={(url) => {
+
+                                }}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Other 2</span>
-								<InputFile />
+								<FileUpload updateURL={(url) => {
+
+                                }}/>
 							</div>
 						</div>
 					</div>
