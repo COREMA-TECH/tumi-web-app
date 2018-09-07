@@ -91,13 +91,13 @@ class CompanyList extends Component {
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
 						return (
 							<div className="company-list">
-								<ImageUpload update={(url) => {
-									alert(url);
-								}}/>
+                                {/*<ImageUpload update={(url) => {*/}
+									{/*alert(url);*/}
+                                {/*}}/>*/}
 
-								<FileUpload update={(url) => {
-                                    alert(url);
-                                }}/>
+                                {/*<FileUpload update={(url) => {*/}
+                                    {/*alert(url);*/}
+                                {/*}}/>*/}
 								<div className="company-list__header">
 									<button
 										onClick={() => {
@@ -110,7 +110,7 @@ class CompanyList extends Component {
 									</button>
 								</div>
 
-								{/*{this.renderCards(data.getbusinesscompanies)}*/}
+								{this.renderCards(data.getbusinesscompanies)}
 							</div>
 						);
 					}

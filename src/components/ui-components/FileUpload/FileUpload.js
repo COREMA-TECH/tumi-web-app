@@ -48,6 +48,8 @@ class FileUpload extends Component {
                         uploadValue: 100,
                         fileURL: url
                     });
+                }, () => {
+                    this.props.updateURL(this.state.fileURL);
                 });
             }
         );
@@ -56,9 +58,9 @@ class FileUpload extends Component {
     render() {
         return (
             <div className="upload-file">
-                <input type="text" disabled value={this.state.fileName}/>
+                <input className="input-name-file" type="text" value={this.state.fileName}/>
                 <div className="upload-btn-wrapper">
-                    <button className="btn">Select File</button>
+                    <button className="btn btn-file">Select File</button>
                     <input type="file" name="myfile" onChange={this.handleUpload}/>
                 </div>
             </div>
