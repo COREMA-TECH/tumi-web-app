@@ -16,49 +16,6 @@ import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 import FileUpload from "../../ui-components/FileUpload/FileUpload";
 class GeneralInformation extends Component {
-	state = {
-		inputEnabled: true,
-		open: false,
-		scroll: 'paper',
-		completedInput: false,
-		loading: false,
-		name: '',
-		legalName: '',
-		description: '',
-		location: '',
-		address: '',
-		optionalAddress: '',
-		businessType: '',
-		region: '',
-
-		management: '',
-		phoneNumber: '',
-		startDate: '',
-		startWeek: '',
-		endWeek: '',
-		workWeek: '',
-		avatar: 'url',
-		otherPhoneNumber: '',
-		room: '',
-		rate: '',
-		fax: '',
-		zipCode: '',
-		phonePrefix: '505',
-		email: '',
-		Code: '',
-		Code01: '',
-		active: 0,
-		suite: 0,
-		dialogTabValue: 1,
-		propertyClick: false,
-		idProperty: 0,
-		openSnackbar: false,
-		variantSnackbar: 'info',
-		messageSnackbar: 'Dummy text!',
-
-		...this.DEFAULT_STATUS
-	};
-
 	DEFAULT_STATUS = {
 		codeValid: true,
 		addressValid: true,
@@ -602,6 +559,44 @@ class GeneralInformation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			inputEnabled: true,
+			open: false,
+			scroll: 'paper',
+			completedInput: false,
+			loading: false,
+			name: '',
+			legalName: '',
+			description: '',
+			location: '',
+			address: '',
+			optionalAddress: '',
+			businessType: '',
+			region: '',
+
+			management: '',
+			phoneNumber: '',
+			startDate: '',
+			startWeek: '',
+			endWeek: '',
+			workWeek: '',
+			avatar: 'url',
+			otherPhoneNumber: '',
+			room: '',
+			rate: '',
+			fax: '',
+			zipCode: '',
+			phonePrefix: '505',
+			email: '',
+			Code: '',
+			Code01: '',
+			active: 0,
+			suite: 0,
+			dialogTabValue: 1,
+			propertyClick: false,
+			idProperty: 0,
+			openSnackbar: false,
+			variantSnackbar: 'info',
+			messageSnackbar: 'Dummy text!',
 			...this.DEFAULT_STATUS,
 			countries: [],
 			states: [],
@@ -1138,27 +1133,25 @@ class GeneralInformation extends Component {
 					onClose={this.handleClose}
 					scroll={this.state.scroll}
 					aria-labelledby="scroll-dialog-title"
-					className="dialog-full"
-					contentStyle={{ width: '100%', maxWidth: 'none' }}
-					autoScrollBodyContent={false}
+					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
 
 					<DialogContent>
-						<div className="dialog">
-							<div className="dialog-body">
-								<div>
-									{this.state.propertyClick ? (
-										//Si el click es en una property : pasar el id de esa property
-										<TabsInDialog idCompany={this.state.idProperty} />
-									) : (
-										//Si el click no es en esa property : pasar el Id en nulo
-										//para que no cargue niguna información relacionada con ese Id
-										<TabsInDialog idCompany={this.props.idCompany} />
-									)}
-								</div>
-							</div>
-						</div>
+						{this.state.propertyClick ? (
+							//Si el click es en una property : pasar el id de esa property
+							<TabsInDialog
+								idCompany={this.state.idProperty}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
+						) : (
+							//Si el click no es en esa property : pasar el Id en nulo
+							//para que no cargue niguna información relacionada con ese Id
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
+						)}
 					</DialogContent>
 				</Dialog>
 			</div>
