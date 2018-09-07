@@ -1129,21 +1129,25 @@ class GeneralInformation extends Component {
 					onClose={this.handleClose}
 					scroll={this.state.scroll}
 					aria-labelledby="scroll-dialog-title"
-					className="dialog-full"
-					contentStyle={{ width: '100%', maxWidth: 'none' }}
-					autoScrollBodyContent={false}
-					fullScreen
+
+				fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
 
 					<DialogContent>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
-							<TabsInDialog idCompany={this.state.idProperty} />
+							<TabsInDialog
+								idCompany={this.state.idProperty}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
 						) : (
 							//Si el click no es en esa property : pasar el Id en nulo
 							//para que no cargue niguna información relacionada con ese Id
-							<TabsInDialog idCompany={this.props.idCompany} />
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
 						)}
 					</DialogContent>
 				</Dialog>

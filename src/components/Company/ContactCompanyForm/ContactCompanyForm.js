@@ -523,7 +523,6 @@ class ContactcontactForm extends React.Component {
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
 	loadContacts = () => {
-		console.log('Id Entitiy: ', this.state.idCompany);
 		this.props.client
 			.query({
 				query: this.GET_CONTACTS_QUERY,
