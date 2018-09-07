@@ -608,7 +608,12 @@ class GeneralInformation extends Component {
 			loadingCountries: true,
 			loadingCities: true,
 			loadingStates: true,
-			loadingCompanyProperties: true
+			loadingCompanyProperties: true,
+
+			contractURL: '',
+			insuranceURL: '',
+			otherURL: '',
+			other01URL: '',
 		};
 	}
 	updateCountry = (id) => {
@@ -1057,25 +1062,33 @@ class GeneralInformation extends Component {
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Contract</span>
 								<FileUpload updateURL={(url) => {
-
+									this.setState({
+										contractURL: url
+									})
 								}}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Insurance</span>
 								<FileUpload updateURL={(url) => {
-
+                                    this.setState({
+                                        insuranceURL: url
+                                    })
                                 }}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Other 1</span>
 								<FileUpload updateURL={(url) => {
-
+                                    this.setState({
+                                        otherURL: url
+                                    })
                                 }}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Other 2</span>
 								<FileUpload updateURL={(url) => {
-
+                                    this.setState({
+										other01URL: url
+                                    })
                                 }}/>
 							</div>
 						</div>

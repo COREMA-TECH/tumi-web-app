@@ -60,7 +60,7 @@ class FileUpload extends Component {
             <div className="upload-file">
                 <input className="input-name-file" type="text" value={this.state.fileName}/>
                 <div className="upload-btn-wrapper">
-                    <button className="btn btn-file">Select File</button>
+                    <button className="btn btn-file"><span className="icon-attach"></span></button>
                     <input type="file" name="myfile" onChange={this.handleUpload}/>
                 </div>
             </div>

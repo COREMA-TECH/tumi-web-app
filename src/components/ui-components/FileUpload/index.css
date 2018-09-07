@@ -38,6 +38,10 @@
 	background-color: #D20A90;
 	border-radius: 0 5px 5px 0;
 	border-color: #ffffff;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .input-name-file {
