@@ -9,14 +9,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
 import blue from '@material-ui/core/colors/blue';
 import Query from "react-apollo/Query";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import {gql} from "apollo-boost";
-import InputForm from "../InputForm/InputForm";
 import './index.css';
 import withApollo from "react-apollo/withApollo";
+import ContactFormContract from "../../Contract/ContactFormContract/ContactFormDialog";
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const styles = {
@@ -114,6 +113,7 @@ class SimpleDialog extends React.Component {
             getcontacts(Id: null, IsActive: 1, Id_Entity: $Id_Entity) {
                 Id
                 First_Name
+                Last_Name
             }
         }
     `;
@@ -143,7 +143,7 @@ class SimpleDialog extends React.Component {
                                             data.getcontacts.map((item) => (
 
                                                 <ListItem button onClick={() => {
-                                                    this.handleListItemClick(item.First_Name.trim());
+                                                    this.handleListItemClick(item.First_Name.trim() + " " + item.Last_Name.trim());
                                                     this.props.onId(item.Id);
                                                 }}
                                                           key={item.Id}>
@@ -152,7 +152,7 @@ class SimpleDialog extends React.Component {
                                                             <PersonIcon/>
                                                         </Avatar>
                                                     </ListItemAvatar>
-                                                    <ListItemText primary={item.First_Name}/>
+                                                    <ListItemText primary={item.First_Name + item.Last_Name}/>
                                                 </ListItem>
                                             ))
                                         )
@@ -162,72 +162,9 @@ class SimpleDialog extends React.Component {
                             </Query>
 
                         </div>
-
-                        <div className="add-account-in-dialog add-account-in-dialog--vertical">
-                            <ListItem button onClick={() => {
-                                this.insertCompany();
-                            }} className="add-account-in-dialog--button ">
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <AddIcon/>
-                                    </Avatar>
-                                </ListItemAvatar>
-                            </ListItem>
-                            <div className="card-form-row card-form-row--vertical">
-                                <span className="input-label input-label--center primary">Customer Signed By</span>
-                                <br/>
-                                <InputForm
-                                    placeholder="First Name"
-                                    value={this.state.firstName}
-                                    change={(text) => {
-                                        this.setState({
-                                            firstName: text
-                                        })
-                                    }}
-                                />
-                                <br/>
-                                <InputForm
-                                    placeholder="Middle Name"
-                                    value={this.state.middleName}
-                                    change={(text) => {
-                                        this.setState({
-                                            middleName: text
-                                        })
-                                    }}
-                                />
-                                <br/>
-                                <InputForm
-                                    placeholder="Last Name"
-                                    value={this.state.lastName}
-                                    change={(text) => {
-                                        this.setState({
-                                            lastName: text
-                                        })
-                                    }}
-                                />
-                                <br/>
-                                <InputForm
-                                    placeholder="Email"
-                                    value={this.state.email}
-                                    change={(text) => {
-                                        this.setState({
-                                            email: text
-                                        })
-                                    }}
-                                />
-                                <br/>
-                                <InputForm
-                                    placeholder="Phone Number"
-                                    value={this.state.phoneNumber}
-                                    change={(text) => {
-                                        this.setState({
-                                            phoneNumber: text
-                                        })
-                                    }}
-                                />
-                            </div>
-                        </div>
                     </List>
+
+                    <ContactFormContract idContact={this.props.idContact}/>
                 </div>
             </Dialog>
         );
@@ -267,6 +204,7 @@ class SimpleDialogDemo extends React.Component {
 
     idCustomerSelected = value => {
         //TODO: PASARLO AL COMPONENTE PADRE
+      
 
         this.props.update(value);
     };

@@ -70,8 +70,8 @@ class Contract extends React.Component {
 
 	updateContractId = (id) => {
 		this.setState({
-			contractId: id
-			//  value: 1
+			contractId: id,
+			value: 1
 		});
 	};
 
@@ -103,7 +103,13 @@ class Contract extends React.Component {
 						label="Exhibit"
 					/>
 				</Tabs>
-				{value === 0 && <NewContract update={this.updateContractId} updateCompanyId={this.updateCompanyId} />}
+				{value === 0 && (
+					<NewContract
+						contractId={this.state.contractId}
+						update={this.updateContractId}
+						updateCompanyId={this.updateCompanyId}
+					/>
+				)}
 				{value === 1 && <ExhibitContract contractId={this.state.contractId} companyId={this.state.companyId} />}
 			</div>
 		);

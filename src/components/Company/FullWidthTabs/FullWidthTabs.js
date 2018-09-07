@@ -177,6 +177,13 @@ class CustomizedTabs extends React.Component {
 		});
 	};
 
+	handleOpenSnackbar = (variant, message) => {
+		this.setState({
+			openSnackbar: true,
+			variantSnackbar: variant,
+			messageSnackbar: message
+		});
+	};
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;

@@ -284,7 +284,6 @@ class PositionsCompanyForm extends React.Component {
 		var billrateHasValue = this.state.billrateHasValue;
 
 		if (value == '') return;
-
 		switch (name) {
 			case 'payrate':
 				secondName = 'billrate';

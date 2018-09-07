@@ -17,6 +17,7 @@ import {gql} from "apollo-boost";
 import InputForm from "../InputForm/InputForm";
 import './index.css';
 import withApollo from "react-apollo/withApollo";
+import ManagementCompanyDialog from "../../Contract/ManagementCompany/ManagementCompanyDialog";
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const styles = {
@@ -154,7 +155,7 @@ class SimpleDialog extends Component {
 
         return (
             <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
-                <DialogTitle id="simple-dialog-title">Select an Account</DialogTitle>
+                <DialogTitle id="simple-dialog-title">Select a Management Company</DialogTitle>
                 <div>
                     <List>
                         <Query
@@ -189,34 +190,8 @@ class SimpleDialog extends Component {
                                 return <p>Nothing to display </p>;
                             }}
                         </Query>
-                        <div className="add-account-in-dialog">
-                            <ListItem button onClick={() => {
-                                this.insertCompany();
-                                this.setState({
-                                    firstName: '',
-                                    createdCompany: true
-                                });
-                            }}
-                                      className="add-account-in-dialog--button">
-                                <ListItemAvatar>
-                                    <Avatar>
-                                        <AddIcon/>
-                                    </Avatar>
-                                </ListItemAvatar>
-                            </ListItem>
-                            <div className="card-form-row">
-                                <span className="input-label primary">Account Name</span>
-                                <InputForm
-                                    value={this.state.firstName}
-                                    change={(text) => {
-                                        this.setState({
-                                            firstName: text
-                                        })
-                                    }}
-                                />
-                            </div>
-                        </div>
                     </List>
+                    <ManagementCompanyDialog/>
                 </div>
             </Dialog>
         );
@@ -269,6 +244,8 @@ class SimpleDialogDemo extends React.Component {
                     <span className="input-form--file-button primary-button" onClick={this.handleClickOpen}>
                         <span className="icon-drop"></span>
                     </span>
+
+
                 </div>
                 <SimpleDialogWrapped
                     selectedValue={this.state.selectedValue}
