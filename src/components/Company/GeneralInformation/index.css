@@ -278,6 +278,13 @@
 
 @media (min-width: 1024px) {
 	.card-form-company {
+		width: 70%;
+	}
+}
+
+
+@media (min-width: 1280px) {
+	.card-form-company {
 		width: 30%;
 	}
 }
