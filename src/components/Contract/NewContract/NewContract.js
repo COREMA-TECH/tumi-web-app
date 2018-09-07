@@ -57,7 +57,8 @@ class NewContract extends Component {
 			CompanySignedName: '',
 			open: false,
 			scroll: 'paper',
-			managementDialog: false
+			managementDialog: false,
+            Electronic_Address: '',
 		};
 	}
 
@@ -256,7 +257,9 @@ class NewContract extends Component {
 						User_Created: 1,
 						User_Updated: 1,
 						Date_Created: "'2018-08-14'",
-						Date_Updated: "'2018-08-14'"
+						Date_Updated: "'2018-08-14'",
+                        Electronic_Address: `'${this.state.Electronic_Address}'`,
+                        Primary_Email: `'${this.state.Primary_Email}'`,
 					}
 				}
 			})
@@ -280,6 +283,7 @@ class NewContract extends Component {
 				Id
 				Name
 				LegalName
+                Primary_Email
 			}
 		}
 	`;
@@ -294,7 +298,8 @@ class NewContract extends Component {
 			})
 			.then(({ data }) => {
 				this.setState({
-					CompanySignedName: data.getcompanies[0].LegalName
+					CompanySignedName: data.getcompanies[0].LegalName,
+                    Primary_Email: data.getcompanies[0].Primary_Email
 				});
 			})
 			.catch((error) => {
@@ -457,6 +462,11 @@ class NewContract extends Component {
 											<ContactDialog
 												idContact={this.state.Id_Entity}
 												update={this.updateIdContact}
+												updateEmailContact={(email) => {
+													this.setState({
+                                                        Electronic_Address: email
+													});
+												}}
 											/>
 										</div>
 										<div className="card-form-row">
@@ -587,6 +597,9 @@ class NewContract extends Component {
 														Id_User_Billing_Contact: id
 													});
 												}}
+												updateEmailContact={(email) => {
+
+                                                }}
 											/>
 										</div>
 										<div className="card-form-row">

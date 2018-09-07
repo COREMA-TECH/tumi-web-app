@@ -22,3 +22,10 @@
 .button-file-upload {
 	border-radius: 5px;
 }
+
+.upload-file {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
