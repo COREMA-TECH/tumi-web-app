@@ -1132,24 +1132,19 @@ class GeneralInformation extends Component {
 					className="dialog-full"
 					contentStyle={{ width: '100%', maxWidth: 'none' }}
 					autoScrollBodyContent={false}
+					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
 
 					<DialogContent>
-						<div className="dialog">
-							<div className="dialog-body">
-								<div>
-									{this.state.propertyClick ? (
-										//Si el click es en una property : pasar el id de esa property
-										<TabsInDialog idCompany={this.state.idProperty} />
-									) : (
-										//Si el click no es en esa property : pasar el Id en nulo
-										//para que no cargue niguna información relacionada con ese Id
-										<TabsInDialog idCompany={this.props.idCompany} />
-									)}
-								</div>
-							</div>
-						</div>
+						{this.state.propertyClick ? (
+							//Si el click es en una property : pasar el id de esa property
+							<TabsInDialog idCompany={this.state.idProperty} />
+						) : (
+							//Si el click no es en esa property : pasar el Id en nulo
+							//para que no cargue niguna información relacionada con ese Id
+							<TabsInDialog idCompany={this.props.idCompany} />
+						)}
 					</DialogContent>
 				</Dialog>
 			</div>
