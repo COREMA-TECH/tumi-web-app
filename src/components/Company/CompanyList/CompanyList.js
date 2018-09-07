@@ -5,6 +5,7 @@ import { Query } from 'react-apollo';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CompanyCard from '../../ui-components/CompanyCard/CompanyCard';
 import ImageUpload from '../../ui-components/ImageUpload/ImageUpload';
+import FileUpload from "../../ui-components/FileUpload/FileUpload";
 
 class CompanyList extends Component {
 	state = { data: [], open: false };
@@ -90,9 +91,13 @@ class CompanyList extends Component {
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
 						return (
 							<div className="company-list">
-								{/*<ImageUpload update={(url) => {*/}
-								{/*alert(url);*/}
-								{/*}}/>*/}
+                                {/*<ImageUpload update={(url) => {*/}
+									{/*alert(url);*/}
+                                {/*}}/>*/}
+
+                                {/*<FileUpload update={(url) => {*/}
+                                    {/*alert(url);*/}
+                                {/*}}/>*/}
 								<div className="company-list__header">
 									<button
 										onClick={() => {

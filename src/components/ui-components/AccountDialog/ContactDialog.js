@@ -114,6 +114,7 @@ class SimpleDialog extends React.Component {
                 Id
                 First_Name
                 Last_Name
+                Electronic_Address
             }
         }
     `;
@@ -145,6 +146,7 @@ class SimpleDialog extends React.Component {
                                                 <ListItem button onClick={() => {
                                                     this.handleListItemClick(item.First_Name.trim() + " " + item.Last_Name.trim());
                                                     this.props.onId(item.Id);
+                                                    this.props.updateEmailContact(item.Electronic_Address)
                                                 }}
                                                           key={item.Id}>
                                                     <ListItemAvatar>
@@ -209,6 +211,9 @@ class SimpleDialogDemo extends React.Component {
         this.props.update(value);
     };
 
+    emailCompanySelected = value => {
+        this.props.updateEmailContact(value)
+    };
 
     render() {
         return (
@@ -228,6 +233,7 @@ class SimpleDialogDemo extends React.Component {
                     open={this.state.open}
                     onClose={this.handleClose}
                     onId={this.idCustomerSelected}
+                    updateEmailContact={this.emailCompanySelected}
                     idContact={this.props.idContact}
                 />
             </div>
