@@ -15,49 +15,6 @@ import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 class GeneralInformation extends Component {
-	state = {
-		inputEnabled: true,
-		open: false,
-		scroll: 'paper',
-		completedInput: false,
-		loading: false,
-		name: '',
-		legalName: '',
-		description: '',
-		location: '',
-		address: '',
-		optionalAddress: '',
-		businessType: '',
-		region: '',
-
-		management: '',
-		phoneNumber: '',
-		startDate: '',
-		startWeek: '',
-		endWeek: '',
-		workWeek: '',
-		avatar: 'url',
-		otherPhoneNumber: '',
-		room: '',
-		rate: '',
-		fax: '',
-		zipCode: '',
-		phonePrefix: '505',
-		email: '',
-		Code: '',
-		Code01: '',
-		active: 0,
-		suite: 0,
-		dialogTabValue: 1,
-		propertyClick: false,
-		idProperty: 0,
-		openSnackbar: false,
-		variantSnackbar: 'info',
-		messageSnackbar: 'Dummy text!',
-
-		...this.DEFAULT_STATUS
-	};
-
 	DEFAULT_STATUS = {
 		codeValid: true,
 		addressValid: true,
@@ -601,6 +558,44 @@ class GeneralInformation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			inputEnabled: true,
+			open: false,
+			scroll: 'paper',
+			completedInput: false,
+			loading: false,
+			name: '',
+			legalName: '',
+			description: '',
+			location: '',
+			address: '',
+			optionalAddress: '',
+			businessType: '',
+			region: '',
+
+			management: '',
+			phoneNumber: '',
+			startDate: '',
+			startWeek: '',
+			endWeek: '',
+			workWeek: '',
+			avatar: 'url',
+			otherPhoneNumber: '',
+			room: '',
+			rate: '',
+			fax: '',
+			zipCode: '',
+			phonePrefix: '505',
+			email: '',
+			Code: '',
+			Code01: '',
+			active: 0,
+			suite: 0,
+			dialogTabValue: 1,
+			propertyClick: false,
+			idProperty: 0,
+			openSnackbar: false,
+			variantSnackbar: 'info',
+			messageSnackbar: 'Dummy text!',
 			...this.DEFAULT_STATUS,
 			countries: [],
 			states: [],
@@ -1129,8 +1124,7 @@ class GeneralInformation extends Component {
 					onClose={this.handleClose}
 					scroll={this.state.scroll}
 					aria-labelledby="scroll-dialog-title"
-
-				fullScreen
+					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
 
