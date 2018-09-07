@@ -56,8 +56,6 @@ class FileUpload extends Component {
     }
 
     render() {
-        alert
-
         return (
             <div className="upload-file">
                 <input className="input-name-file" type="text" value={this.state.fileName}/>

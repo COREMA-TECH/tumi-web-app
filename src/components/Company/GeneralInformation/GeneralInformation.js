@@ -1062,12 +1062,9 @@ class GeneralInformation extends Component {
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Contract</span>
 								<FileUpload updateURL={(url) => {
-									alert("LA URL recibida como parámetro es: " + url);
 									this.setState({
 										contractURL: url
-									}, () => {
-                                        alert("URL Value: " + this.state.contractURL)
-                                    })
+									})
 								}}/>
 							</div>
 							<div className="card-form-row card-form-row--center">
