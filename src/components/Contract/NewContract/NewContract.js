@@ -303,7 +303,7 @@ class NewContract extends Component {
 				});
 			})
 			.catch((error) => {
-				alert(error);
+				console.log(error);
 			});
 	};
 
