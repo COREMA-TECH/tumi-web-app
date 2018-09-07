@@ -374,10 +374,10 @@ class GeneralInformation extends Component {
 							Date_Updated: "'2018-08-14'",
 							ImageURL: `'${this.state.avatar}'`,
 							Start_Date: `'${this.state.startDate}'`,
-							Contract_URL: "'firebase url'",
-							Insurace_URL: "'firebase url'",
-							Other_URL: "'firebase url'",
-							Other01_URL: "'firebase url'",
+							Contract_URL: `'${this.state.contractURL}'`,
+							Insurace_URL: `'${this.state.insuranceURL}'`,
+							Other_URL: `'${this.state.otherURL}'`,
+							Other01_URL: `'${this.state.other01URL}'`,
 							Suite: parseInt(this.state.suite),
 							Contract_Status: "'C'"
 						}
