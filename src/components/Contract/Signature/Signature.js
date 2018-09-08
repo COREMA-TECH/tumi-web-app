@@ -100,7 +100,7 @@ class Signature extends React.Component {
 		canvas.width = canvas.offsetWidth * ratio;
 		canvas.height = canvas.offsetHeight * ratio;
 		canvas.getContext('2d').scale(ratio, ratio);
-
+		this.sigPad.fromDataURL(this.state.signature);
 		// This library does not listen for canvas changes, so after the canvas is automatically
 		// cleared by the browser, SignaturePad#isEmpty might still return false, even though the
 		// canvas looks empty, because the internal data of this library wasn't cleared. To make sure
@@ -209,8 +209,8 @@ class Signature extends React.Component {
 		this.loadAgreement();
 	}
 	componentDidMount() {
-		//	window.addEventListener('resize', this.resizeCanvas.bind(this));
-		//	this.resizeCanvas();
+		window.addEventListener('resize', this.resizeCanvas.bind(this));
+		this.resizeCanvas();
 	}
 	render() {
 		const { classes } = this.props;
@@ -247,17 +247,19 @@ class Signature extends React.Component {
 						placeholder={this.props.placeholder}
 					/>
 				</div>
-				<h1 className="signature-header"> Signature</h1>
-				<SignaturePad
-					ref={(ref) => {
-						this.sigPad = ref;
-					}}
-					clearOnResize={false}
-					id="signingSurface"
-					canvas={<canvas id="signingCanvas" ref="signingCanvas" />}
-					canvasProps={{ width: 500, height: 300, className: 'signature-input', id: 'signingCanvas' }}
-				/>
 
+				<h1 className="signature-header"> Signature</h1>
+				<div className="signaturePad-container">
+					<SignaturePad
+						ref={(ref) => {
+							this.sigPad = ref;
+						}}
+						clearOnResize={false}
+						id="signingSurface"
+						canvas={<canvas id="signingCanvas" ref="signingCanvas" />}
+						canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
+					/>
+				</div>
 				<div className="signature-footer">
 					<div className="signature-button">
 						<Tooltip title={'Clear'}>
