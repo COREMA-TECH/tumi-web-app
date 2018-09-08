@@ -22,9 +22,6 @@ class FileUpload extends Component {
         // Build the reference based in the filename
         const storageRef = firebase.storage().ref(`/files/${file.name}`);
 
-        this.setState({
-            fileName: file.name
-        });
 
         // Send the reference and save the file in Firebase Storage
         const task = storageRef.put(file);
@@ -47,9 +44,12 @@ class FileUpload extends Component {
                     this.setState({
                         uploadValue: 100,
                         fileURL: url
+                    },  () => {
+                        this.setState({
+                            fileName: file.name
+                        });
+                        this.props.updateURL(this.state.fileURL);
                     });
-                }, () => {
-                    this.props.updateURL(this.state.fileURL);
                 });
             }
         );

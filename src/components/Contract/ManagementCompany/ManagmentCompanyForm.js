@@ -1,12 +1,7 @@
 import React, {Component} from 'react';
 import InputForm from "../../ui-components/InputForm/InputForm";
 import {gql} from "apollo-boost";
-import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
-import SelectForm from "../../ui-components/SelectForm/SelectForm";
-import Query from "react-apollo/Query";
-import days from '../../../data/days.json';
 import withApollo from "react-apollo/withApollo";
-import InputDateForm from "../../ui-components/InputForm/InputDateForm";
 import ImageUpload from "../../ui-components/ImageUpload/ImageUpload";
 
 class GeneralInfoProperty extends Component {
@@ -257,6 +252,7 @@ class GeneralInfoProperty extends Component {
             })
             .catch((err) => console.log('The error is: ' + err));
     };
+
     /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
@@ -347,7 +343,8 @@ class GeneralInfoProperty extends Component {
                                 () => {
                                     this.insertCompany();
                                 }
-                            }>Save</div>
+                            }>Save
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -398,4 +395,4 @@ class GeneralInfoProperty extends Component {
 
 GeneralInfoProperty.propTypes = {};
 
-export default  withApollo(GeneralInfoProperty);
+export default withApollo(GeneralInfoProperty);
