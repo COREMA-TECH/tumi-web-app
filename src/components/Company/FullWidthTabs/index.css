@@ -34,13 +34,13 @@
 }
 
 .options-button--next {
-    background: rgba(61, 162, 199, 0.1);
-    color: #41afd7;
+    background: #41afd7;
+    color: #ffffff;
 }
 
 .options-button--back:hover {
     background: rgba(126, 126, 126, 0.2);
 }
 .options-button--next:hover {
-    background: rgba(61, 162, 199, 0.2);
+    background: #0092BD;
 }

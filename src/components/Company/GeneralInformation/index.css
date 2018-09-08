@@ -1,290 +1,326 @@
 @media (min-width: 320px) {
-	.general-information-tab {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-	}
+    .general-information-tab {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
 
-	.general-information__header {
-		width: 100%;
-		height: 6vh;
-		background: #ffffff;
-		border-bottom: 3px solid #7e7e7e;
+    .general-information__header {
+        width: 100%;
+        min-height: 6vh;
+        background: #ffffff;
+        border-bottom: 3px solid #7e7e7e;
 
-		padding: 1.5em;
+        padding: 1.5em;
 
-		display: flex;
-		justify-content: flex-start;
-		align-items: center;
-	}
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        box-sizing: border-box;
+    }
 
-	.options-company {
-		width: 100%;
-		height: 6vh;
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
+    .options-company {
+        width: 100%;
+        height: 6vh;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
 
-		padding: 1.5em 3em;
-	}
+        padding: 1.5em 3em;
+    }
 
-	.options-company .edit-company-button {
-		padding: .3em 1.5em;
-		color: #555555;
-		background: rgba(126, 126, 126, 0.05);
-		border-radius: 25px;
-		border: 1px solid #bbbbbb;
+    .options-company .edit-company-button {
+        padding: .3em .8em;
+        color: #ffffff;
+        background: #0092bd;
+        border-radius: 25px;
+        border: 1px solid #0092bd;
 
-		outline: none;
-		font-weight: 300;
-		font-size: 1em;
-		font-family: "Segoe UI";
-		cursor: pointer;
+        outline: none;
+        font-weight: 300;
+        font-size: 1em;
+        font-family: "Segoe UI";
+        cursor: pointer;
 
-		box-shadow: 1px 1px 15px #eee;
+        box-shadow: 1px 1px 15px #eee;
+        transition: all .250s;
+        margin: 10px;
+    }
 
-		transition: all .250s;
-	}
+    .options-company .edit-company-button:hover {
+        box-shadow: 1px 1px 7px #aaa;
+    }
 
-	.options-company .edit-company-button:hover {
-		box-shadow: 1px 1px 7px #eee;
-	}
+    .card-form-header {
+        margin-top: .8em;
+        margin-bottom: .8em;
+        width: 80%;
+        height: 35px !important;
+        padding: .3em;
+        background: linear-gradient(90deg, #052370, #0639b4);
+        clip-path: polygon(0 0, 100% 0%, 85% 100%, 0 100%);
+        font-family: "Segoe UI";
+        font-size: 1.2em;
+        color: #fff;
+        font-weight: 300;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
 
-	.card-form-header {
-		margin-top: .8em;
-		margin-bottom: .8em;
-		width: 50%;
-		height: 35px !important;
-		padding: .3em;
-		background: linear-gradient(90deg, #052370, #0639b4);
-		clip-path: polygon(0 0, 100% 0%, 85% 100%, 0 100%);
-		font-family: "Segoe UI";
-		font-size: 1.2em;
-		color: #fff;
-		font-weight: 300;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		overflow: hidden;
-	}
+    .general-information__content {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
 
-	.general-information__content {
-		width: 100%;
-		display: flex;
-		flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding: 1.5em;
+    }
 
-		justify-content: space-around;
-		align-items: center;
-		padding: 1.5em;
-	}
+    .card-form-company {
+        width: 100%;
+        min-height: 70vh;
 
-	.card-form-company {
-		width: 100%;
-		min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 1px 1px 20px #ccc;
+        border-radius: 30px;
+        overflow: hidden;
 
-		display: flex;
-		flex-direction: column;
-		box-shadow: 1px 1px 20px #ccc;
-		border-radius: 30px;
-		overflow: hidden;
+        margin-bottom: 10px;
+    }
 
-		margin-bottom: 10px;
-	}
+    .card-form-body {
+        width: 100%;
+        min-height: 40%;
+        padding: 2em 0em;
 
-	.card-form-body {
-		width: 100%;
-		min-height: 40%;
-		padding: 2em 0em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
+    .card-form-footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 1em;
+    }
 
-	.card-form-footer {
-		display: flex;
-		justify-content: flex-end;
-		padding: 1em;
-	}
+    .general-information__content .card-form-row {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: .7em;
+    }
 
-	.card-form-row {
-		width: 100%;
-		display: flex;
-		justify-content: flex-start;
-		padding: .7em;
-	}
+    .card-form-row--center {
+        width: 100%;
+        justify-content: center;
 
-	.card-form-row--center {
-		width: 100%;
-		justify-content: center;
+        font-family: "Segoe UI";
+        font-size: 1em;
+        font-weight: 300;
+    }
 
-		font-family: "Segoe UI";
-		font-size: 1em;
-		font-weight: 300;
-	}
+    .card-form-row--center span {
+        margin-right: 10px;
 
-	.card-form-row--center span {
-		margin-right: 10px;
+        width: 20% !important;
+    }
 
-		width: 20% !important;
-	}
+    .input-container {
+        width: 100%;
+        padding: .25em;
+        border-radius: 5px;
+        border: 1px solid #e6e6e6;
+        background: #f5f7f9;
+        display: flex;
+        margin: .2em;
+        margin-right: 1em;
+    }
 
-	.input-container {
-		min-width: 15vw;
-		padding: .25em;
-		border-radius: 5px;
-		border: 1px solid #e6e6e6;
-		background: #f5f7f9;
-		display: flex;
-		margin-right: 1em;
-	}
+    .input-container .input-form {
+        width: 100% !important;
+    }
 
-	.input-container .input-form {
-		width: 100% !important;
-	}
+    .card-form-row .input-label {
+        margin-right: 12px;
+        font-family: "Segoe UI";
+        font-size: 1em;
+        font-weight: 300;
+        min-width: 280px;
+        margin: 0;
+        margin-bottom: 4px;
 
-	.input-label {
-		margin-right: 12px;
-		font-family: "Segoe UI";
-		font-size: 1em;
-		font-weight: 300;
-		min-width: 40%;
+        display: flex;
+        justify-content: flex-start;
+    }
 
-		display: flex;
-		justify-content: flex-end;
-	}
+    .primary {
+        color: #3da2c7;
+    }
 
-	.primary {
-		color: #3da2c7;
-	}
+    .orange {
+        background: #e96f1b !important;
+    }
 
-	.orange {
-		background: #e96f1b;
-	}
+    .yellow {
+        background: #ffc61a !important;
+    }
 
-	.yellow {
-		background: #ffc61a;
-	}
+    .grey {
+        background: #7e7e7e !important;
+    }
 
-	.grey {
-		background: #7e7e7e;
-	}
+    .divider-text {
+        color: #3da2c7;
+        padding-top: 3em;
+        padding-bottom: 1.5em;
+        font-weight: 400;
+        font-size: 1em;
+        font-family: "Segoe UI";
 
-	.divider-text {
-		color: #3da2c7;
-		padding-top: 3em;
-		padding-bottom: 1.5em;
-		font-weight: 400;
-		font-size: 1em;
-		font-family: "Segoe UI";
+        position: relative;
+        width: 100%;
 
-		position: relative;
-		width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+    .divider-text::after,
+    .divider-text::before {
+        content: '';
+        display: block;
+        width: 10em;
+        height: 1px;
+        background: #e6e6e6;
+        margin-left: 15px;
+        margin-right: 15px;
+    }
 
-	.divider-text::after,
-	.divider-text::before {
-		content: '';
-		display: block;
-		width: 10em;
-		height: 1px;
-		background: #e6e6e6;
-		margin-left: 15px;
-		margin-right: 15px;
-	}
+    .add-property {
+        padding: .2em .8em !important;
+        border-radius: 25px !important;
+        background: rgba(210, 10, 144, .05) !important;
+        color: rgb(210, 10, 144) !important;
+        font-family: "Segoe UI" !important;
+        font-size: 1em !important;
+        font-weight: 300 !important;
 
-	.add-property {
-		padding: .2em .8em !important;
-		border-radius: 25px !important;
-		background: rgba(210, 10, 144, .05) !important;
-		color: rgb(210, 10, 144) !important;
-		font-family: "Segoe UI" !important;
-		font-size: 1em !important;
-		font-weight: 300 !important;
+        transition: all .250s !important;
+    }
 
-		transition: all .250s !important;
-	}
+    .add-property:hover {
+        cursor: pointer;
+        background: rgba(210, 10, 144, .08);
+    }
 
-	.add-property:hover {
-		cursor: pointer;
-		background: rgba(210, 10, 144, .08);
-	}
+    /*.dialog-full:nth-child(2) {*/
+    /*max-width: none !important;*/
+    /*}*/
+    .dialog {
+        width: 90vw !important;
+        height: 80vh;
 
-	/*.dialog-full:nth-child(2) {*/
-	/*max-width: none !important;*/
-	/*}*/
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
 
-	.dialog {
-		width: 90vw !important;
-		height: 80vh;
+    .dialog-header {
+        width: 100%;
+        height: 10%;
+        z-index: 1;
 
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-	}
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-	.dialog-header {
-		width: 100%;
-		height: 10%;
-		z-index: 1;
+        background: rgba(197, 197, 197, .15) !important;
+        color: #0092bd !important;
+        font-family: "Segoe UI";
+        font-size: 1.4em;
+        font-weight: 300;
+    }
 
-		display: flex;
-		justify-content: center;
-		align-items: center;
+    .dialog-body {
+        width: 100%;
+        height: 82%;
+    }
 
-		background: rgba(197, 197, 197, .15) !important;
-		color: #0092bd !important;
-		font-family: "Segoe UI";
-		font-size: 1.4em;
-		font-weight: 300;
-	}
+    .dialog-footer {
+        width: 100%;
+        height: 8%;
 
-	.dialog-body {
-		width: 100%;
-		height: 82%;
-	}
+        box-shadow: 1px -1px 10px #eee;
+        background: #ffffff;
 
-	.dialog-footer {
-		width: 100%;
-		height: 8%;
+        padding: .1em .5em;
+        margin: 0 !important;
 
-		box-shadow: 1px -1px 10px #eee;
-		background: #ffffff;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
 
-		padding: .1em .5em;
-		margin: 0 !important;
+    .contract-footer--bottom {
+        position: sticky;
+        bottom: 0;
+        left: 0;
 
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-	}
-
-	.contract-footer--bottom {
-		position: sticky;
-		bottom: 0;
-		left: 0;
-
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: .5em;
-	}
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: .5em;
+    }
 }
 
-@media (min-width: 1024px) {
-	.card-form-company {
-		width: 70%;
-	}
-}
+@media (min-width: 760px) {
+    .input-container {
+        width: 25%;
+    }
 
+    .card-form-company {
+        width: 85%;
+    }
+
+    .card-form-header {
+        width: 90%;
+    }
+
+    .general-information__header {
+        min-height: 4vh;
+
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .general-information__content .card-form-row {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .card-form-row .input-label {
+        justify-content: flex-end;
+
+        min-width: 35%;
+        margin-right: 5px;
+    }
+}
 
 @media (min-width: 1280px) {
-	.card-form-company {
-		width: 30%;
-	}
+    .card-form-company {
+        width: 32%;
+    }
 }
