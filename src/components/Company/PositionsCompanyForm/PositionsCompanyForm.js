@@ -25,6 +25,14 @@ import InputForm from '../../ui-components/InputForm/InputForm';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import Select from '@material-ui/core/Select';
 import ShiftsData from '../../../data/shitfs.json';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+
 import './index.css';
 const styles = (theme) => ({
 	container: {
@@ -163,7 +171,7 @@ class PositionsCompanyForm extends React.Component {
 			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
 				Id
 				Code: Name
-				Description
+				Name: Description
 				IsActive
 			}
 		}
@@ -224,12 +232,13 @@ class PositionsCompanyForm extends React.Component {
 		openSnackbar: true,
 		loading: false,
 		success: false,
-		loadingConfirm: false
+		loadingConfirm: false,
+		openModal: false
 	};
 
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			data: [],
 			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
@@ -238,6 +247,7 @@ class PositionsCompanyForm extends React.Component {
 			idCompany: this.props.idCompany,
 			companyRate: 0,
 			inputEnabled: true,
+
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -272,8 +282,7 @@ class PositionsCompanyForm extends React.Component {
 
 		this.setState({ open: false });
 	};
-	onNumberChangeHandler = (name) => (event) => {
-		let value = event.target.value;
+	onNumberChangeHandler(value, name) {
 		var secondName = 'payrate';
 		var secondValue = 0;
 
@@ -326,13 +335,11 @@ class PositionsCompanyForm extends React.Component {
 				});
 			}
 		);
-	};
-	onChangeHandler(e) {
-		const name = e.target.name;
-		const value = e.target.value;
-
+	}
+	onChangeHandler(value, name) {
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
+
 	onBlurHandler(e) {
 		//const name = e.target.name;
 		//const value = e.target.value;
@@ -343,6 +350,16 @@ class PositionsCompanyForm extends React.Component {
 		const value = e.target.value;
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
+	updateSelect = (id, name) => {
+		this.setState(
+			{
+				[name]: id
+			},
+			() => {
+				this.validateField(name, id);
+			}
+		);
+	};
 	enableCancelButton = () => {
 		let positionHasValue = this.state.position != '';
 		let billrateHasValue = this.state.billrate != 0;
@@ -479,7 +496,8 @@ class PositionsCompanyForm extends React.Component {
 				payrateHasValue: true,
 				shiftHasValue: true,
 
-				buttonTitle: this.TITLE_EDIT
+				buttonTitle: this.TITLE_EDIT,
+				openModal: true
 			},
 			() => {
 				this.focusTextInput();
@@ -503,59 +521,69 @@ class PositionsCompanyForm extends React.Component {
 	}
 
 	loadDepartments = () => {
-		this.props.client
-			.query({
-				query: this.GET_DEPARTMENTS_QUERY,
-				variables: { IdEntity: this.state.idCompany },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState({
-						departments: data.data.getcatalogitem
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading departments: getcatalogitem not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading departments: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
-			});
+		this.setState({ loadingDepartments: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_DEPARTMENTS_QUERY,
+					variables: { IdEntity: this.state.idCompany },
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getcatalogitem != null) {
+						this.setState({
+							departments: data.data.getcatalogitem,
+							loadingDepartments: false
+						});
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading departments: getcatalogitem not exists in query data'
+						);
+						this.setState({ loadingDepartments: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading departments: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
+					this.setState({ loadingDepartments: false });
+				});
+		});
 	};
 
 	loadPositions = () => {
-		this.props.client
-			.query({
-				query: this.GET_POSTIONS_QUERY,
-				variables: { Id_Entity: this.state.idCompany },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getposition != null) {
-					this.setState(
-						{
-							data: data.data.getposition
-						},
-						() => {
-							this.getRate();
-							this.resetState();
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading positions and rates: getposition not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading positions: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading positions and rates: ' + error);
-			});
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_POSTIONS_QUERY,
+					variables: { Id_Entity: this.state.idCompany },
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getposition != null) {
+						this.setState(
+							{
+								data: data.data.getposition,
+								loadingData: false
+							},
+							() => {
+								this.getRate();
+								this.resetState();
+							}
+						);
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading positions and rates: getposition not exists in query data'
+						);
+						this.setState({ loadingData: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading positions: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading positions and rates: ' + error);
+					this.setState({ loadingData: false });
+				});
+		});
 	};
 
 	getObjectToInsertAndUpdate = () => {
@@ -706,16 +734,24 @@ class PositionsCompanyForm extends React.Component {
 	cancelDepartmentHandler = () => {
 		this.resetState();
 	};
+
+	handleClickOpenModal = () => {
+		this.setState({ openModal: true });
+	};
+	handleCloseModal = () => {
+		this.setState({ openModal: false });
+	};
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
-
+		const { fullScreen } = this.props;
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
 
 		return (
 			<div className="position_tab">
+				{(this.state.loadingData || this.state.loadingDepartments) && <LinearProgress />}
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -724,158 +760,146 @@ class PositionsCompanyForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className="position__header">
-					<FormControl className={[ classes.formControl, classes.departmentControl ].join(' ')}>
-						<InputLabel htmlFor="demo-controlled-open-select">Department</InputLabel>
-						<Select
-							id="idDepartment"
-							name="idDepartment"
-							error={!this.state.idDepartmentValid}
-							value={this.state.idDepartment}
-							onChange={(event) => this.onSelectChangeHandler(event)}
-							//	margin="normal"
-						>
-							{this.state.departments.map(({ Id, Description }) => (
-								<MenuItem key={Id} value={Id} name={Description}>
-									{Description}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
-						<InputLabel htmlFor="position">Title</InputLabel>
-						<Input
-							id="position"
-							name="position"
-							inputProps={{
-								maxLength: 50,
-								classes: {
-									input: classes.inputControl
-								}
-							}}
-							className={classes.resize}
-							error={!this.state.positionValid}
-							value={this.state.position}
-							onBlur={(event) => this.onBlurHandler(event)}
-							onChange={(event) => this.onChangeHandler(event)}
-						/>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
-						<InputLabel htmlFor="payrate">Pay Rate</InputLabel>
-						<Input
-							id="payrate"
-							name="payrate"
-							inputProps={{
-								classes: {
-									input: classes.inputControl
-								}
-							}}
-							inputComponent={NumberFormatCustom}
-							className={classes.resize}
-							error={!this.state.payrateValid}
-							value={this.state.payrate}
-							onChange={this.onNumberChangeHandler('payrate')}
-						/>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
-						<InputLabel htmlFor="billrate">Bill Rate</InputLabel>
-						<Input
-							id="billrate"
-							name="billrate"
-							inputProps={{
-								classes: {
-									input: classes.inputControl
-								}
-							}}
-							inputComponent={NumberFormatCustom}
-							className={classes.resize}
-							error={!this.state.billrateValid}
-							value={this.state.billrate}
-							onChange={this.onNumberChangeHandler('billrate')}
-						/>
-					</FormControl>
-					<FormControl className={[ classes.formControl, classes.shiftControl ].join(' ')}>
-						<InputLabel htmlFor="demo-controlled-open-select">Shift</InputLabel>
-						<Select
-							id="shift"
-							name="shift"
-							error={!this.state.shiftValid}
-							value={this.state.shift}
-							onChange={(event) => this.onSelectChangeHandler(event)}
-							//helperText="Shift"
-							//margin="normal"
-						>
-							{this.state.shifts.map(({ Id, Description }) => (
-								<MenuItem key={Id} value={Id} name={Description}>
-									{Description}
-								</MenuItem>
-							))}
-						</Select>
-					</FormControl>
+					<button className="add-position" onClick={this.handleClickOpenModal}>
+						{' '}
+						Add Rates{' '}
+					</button>
+				</div>
+				<Dialog
+					fullScreen={fullScreen}
+					open={this.state.openModal}
+					onClose={this.cancelDepartmentHandler}
+					aria-labelledby="responsive-dialog-title"
+				>
+					<DialogTitle style={{ padding: '0px' }}>
+						<div className="card-form-header orange">
+							{' '}
+							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
+								'Edit  Position/Rate'
+							) : (
+								'Create Position/Rate'
+							)}
+						</div>
+					</DialogTitle>
+					<DialogContent style={{ minWidth: 550, padding: '0px' }}>
+						<div className="card-form-body">
+							<div className="card-form-row">
+								<span className="input-label primary">Department</span>
+								<SelectForm
+									id="idDepartment"
+									name="idDepartment"
+									data={this.state.departments}
+									update={(id) => {
+										this.updateSelect(id, 'idDepartment');
+									}}
+									showNone={false}
+									error={!this.state.idDepartmentValid}
+									value={this.state.idDepartment}
+								/>
+							</div>
+							<div className="card-form-row">
+								<span className="input-label primary">Title</span>
+								<InputForm
+									id="position"
+									name="position"
+									maxLength="50"
+									value={this.state.position}
+									error={!this.state.positionValid}
+									change={(value) => this.onChangeHandler(value, 'position')}
+								/>
+							</div>
+							<div className="card-form-row">
+								<span className="input-label primary">Pay Rate</span>
 
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip
-								title={
-									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
-								}
-							>
-								<div>
-									<Button
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
-										disabled={this.state.loading}
-										//	disabled={!this.state.formValid}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.addPositionHandler}
-									>
-										{success ? (
-											<CheckIcon />
-										) : this.state.idToEdit != null &&
+								<InputForm
+									id="payrate"
+									name="payrate"
+									maxLength="10"
+									error={!this.state.payrateValid}
+									value={this.state.payrate}
+									type="number"
+									change={(text) => this.onNumberChangeHandler(text, 'payrate')}
+								/>
+							</div>
+
+							<div className="card-form-row">
+								<span className="input-label primary">Bill Rate</span>
+								<InputForm
+									id="billrate"
+									name="billrate"
+									maxLength="10"
+									error={!this.state.billrateValid}
+									value={this.state.billrate}
+									type="number"
+									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
+								/>
+							</div>
+							<div className="card-form-row">
+								<span className="input-label primary">Shift</span>
+								<SelectForm
+									id="shift"
+									name="shift"
+									data={this.state.shifts}
+									update={(id) => {
+										this.updateSelect(id, 'shift');
+									}}
+									showNone={false}
+									error={!this.state.shiftValid}
+									value={this.state.shift}
+								/>
+							</div>
+						</div>
+					</DialogContent>
+					<DialogActions style={{ margin: '20px 20px' }}>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								<Tooltip
+									title={
+										this.state.idToEdit != null &&
 										this.state.idToEdit != '' &&
 										this.state.idToEdit != 0 ? (
-											<SaveIcon />
+											'Save Changes'
 										) : (
-											<AddIcon />
-										)}
-									</Button>
-								</div>
-							</Tooltip>
-							{loading && <CircularProgress size={45} className={classes.fabProgress} />}
+											'Insert Record'
+										)
+									}
+								>
+									<div>
+										<Button
+											disabled={this.state.loading}
+											//	disabled={!this.state.formValid}
+											variant="fab"
+											color="primary"
+											className={buttonClassname}
+											onClick={this.addPositionHandler}
+										>
+											{success ? <CheckIcon /> : <SaveIcon />}
+										</Button>
+									</div>
+								</Tooltip>
+								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+							</div>
 						</div>
-					</div>
 
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip title={'Cancel Operation'}>
-								<div>
-									<Button
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
-										disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="secondary"
-										className={buttonClassname}
-										onClick={this.cancelDepartmentHandler}
-									>
-										<ClearIcon />
-									</Button>
-								</div>
-							</Tooltip>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								<Tooltip title={'Cancel Operation'}>
+									<div>
+										<Button
+											//	disabled={this.state.loading || !this.state.enableCancelButton}
+											variant="fab"
+											color="secondary"
+											className={buttonClassname}
+											onClick={this.cancelDepartmentHandler}
+										>
+											<ClearIcon />
+										</Button>
+									</div>
+								</Tooltip>
+							</div>
 						</div>
-					</div>
-				</div>
+					</DialogActions>
+				</Dialog>
 				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<PositionsTable
@@ -917,7 +941,8 @@ class PositionsCompanyForm extends React.Component {
 }
 
 PositionsCompanyForm.propTypes = {
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
+	fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(PositionsCompanyForm));
+export default withStyles(styles)(withApollo(withMobileDialog()(PositionsCompanyForm)));

@@ -4,36 +4,27 @@ import './index.css';
 class InputForm extends Component {
 	render() {
 		{
-			if (this.props.placeholder) {
-				return (
-					<input
-						type={this.props.type}
-						id={this.props.id}
-						name={this.props.name}
-						value={this.props.value}
-						className={this.props.error ? 'input-form _invalid' : 'input-form'}
-						maxLength={this.props.maxLength}
-						placeholder={this.props.placeholder}
-						onChange={(event) => {
-							this.props.change(event.target.value);
-						}}
-					/>
-				);
-			} else {
-				return (
-					<input
-						type={this.props.type}
-						id={this.props.id}
-						name={this.props.name}
-						value={this.props.value}
-						className={this.props.error ? 'input-form _invalid' : 'input-form'}
-						maxLength={this.props.maxLength}
-						onChange={(event) => {
-							this.props.change(event.target.value);
-						}}
-					/>
-				);
-			}
+			return (
+				<input
+					type={this.props.type}
+					id={this.props.id}
+					name={this.props.name}
+					value={this.props.value}
+					className={this.props.error ? 'input-form _invalid' : 'input-form'}
+					maxLength={this.props.maxLength}
+					placeholder={this.props.placeholder && ''}
+					onChange={(event) => {
+						if (event.target.value.toString().length > this.props.maxLength) return false;
+						if (this.props.type == 'number') {
+							if (event.target.value == '') event.target.value = 0;
+							else {
+								event.target.value = parseFloat(event.target.value);
+							}
+						}
+						this.props.change(event.target.value);
+					}}
+				/>
+			);
 		}
 	}
 }

@@ -32,6 +32,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+
+import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import InputForm from '../../ui-components/InputForm/InputForm';
 import './index.css';
 const styles = (theme) => ({
 	container: {
@@ -81,7 +84,8 @@ const styles = (theme) => ({
 		width: '100%',
 		display: 'flex',
 		flexDirection: 'column',
-		justifyContent: 'space-around'
+		justifyContent: 'space-around',
+		paddingLeft: '40px'
 	},
 	divAddButton: {
 		display: 'flex',
@@ -295,13 +299,9 @@ class Catalogs extends React.Component {
 
 		this.setState({ open: false });
 	};
-	onChangeHandler(e) {
-		const name = e.target.name;
-		const value = e.target.value;
-		//this.setState({ [name]: value });
-		this.setState({ [name]: value }, () => {
-			this.validateField(name, value);
-		});
+
+	onChangeHandler(value, name) {
+		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	onBlurHandler(e) {
 		//const name = e.target.name;
@@ -315,6 +315,18 @@ class Catalogs extends React.Component {
 			this.validateField(name, value);
 		});
 	}
+
+	updateSelect = (id, name) => {
+		this.setState(
+			{
+				[name]: id
+			},
+			() => {
+				this.validateField(name, id);
+			}
+		);
+	};
+
 	enableCancelButton = () => {
 		let idContactHasValue = this.state.idContact !== null && this.state.idContact !== '';
 		let usernameHasValue = this.state.username != '';
@@ -839,333 +851,251 @@ class Catalogs extends React.Component {
 					this.state.loadingContacts ||
 					this.state.loadingRoles ||
 					this.state.loadingLanguages) && <LinearProgress />}
-				<div className={classes.container}>
-					<AlertDialogSlide
-						handleClose={this.handleCloseAlertDialog}
-						handleConfirm={this.handleConfirmAlertDialog}
-						open={this.state.opendialog}
-						loadingConfirm={this.state.loadingConfirm}
-						content="Do you really want to continue whit this operation?"
-					/>
-					<Snackbar
-						anchorOrigin={{
-							vertical: 'top',
-							horizontal: 'center'
-						}}
-						open={this.state.openSnackbar}
-						autoHideDuration={3000}
+
+				<AlertDialogSlide
+					handleClose={this.handleCloseAlertDialog}
+					handleConfirm={this.handleConfirmAlertDialog}
+					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingConfirm}
+					content="Do you really want to continue whit this operation?"
+				/>
+				<Snackbar
+					anchorOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					open={this.state.openSnackbar}
+					autoHideDuration={3000}
+					onClose={this.handleCloseSnackbar}
+				>
+					<MySnackbarContentWrapper
 						onClose={this.handleCloseSnackbar}
-					>
-						<MySnackbarContentWrapper
-							onClose={this.handleCloseSnackbar}
-							variant={this.state.variantSnackbar}
-							message={this.state.messageSnackbar}
-						/>
-					</Snackbar>
-					<Dialog
-						fullScreen={fullScreen}
-						open={this.state.openModal}
-						onClose={this.cancelUserHandler}
-						aria-labelledby="responsive-dialog-title"
-					>
-						<DialogTitle id="responsive-dialog-title">
+						variant={this.state.variantSnackbar}
+						message={this.state.messageSnackbar}
+					/>
+				</Snackbar>
+				<Dialog
+					fullScreen={fullScreen}
+					open={this.state.openModal}
+					onClose={this.cancelUserHandler}
+					aria-labelledby="responsive-dialog-title"
+				>
+					<DialogTitle id="responsive-dialog-title">
+						<div className="card-form-header orange">
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  User'
 							) : (
 								'Create User'
 							)}
-						</DialogTitle>
-						<DialogContent>
-							<div className={classes.divStyleColumns}>
-								<FormControl
-									className={[ classes.formControl, classes.contactControl ].join(' ')}
-									disabled={this.state.loadingContacts}
-								>
-									<TextField
-										id="idContact"
-										disabled={this.state.loadingContacts}
-										select
-										name="idContact"
-										error={!this.state.idContactValid}
-										value={this.state.idContact}
-										InputProps={{
-											classes: {
-												input: classes.contactControl
-											}
-										}}
-										onChange={(event) => this.onSelectChangeHandler(event)}
-										helperText="Contact"
-										margin="normal"
-									>
-										{' '}
-										<MenuItem key={0} value={0} name="None">
-											<em>None</em>
-										</MenuItem>
-										{this.state.contacts.map(({ Id, Name }) => (
-											<MenuItem key={Id} value={Id} name={Name}>
-												{Name}
-											</MenuItem>
-										))}
-									</TextField>
-								</FormControl>
-								<div className={classes.divStyle}>
-									<FormControl className={[ classes.formControl, classes.usernameControl ].join(' ')}>
-										<InputLabel htmlFor="username">User</InputLabel>
-										<Input
-											id="username"
-											name="username"
-											inputProps={{
-												maxLength: 10,
-												classes: {
-													input: classes.usernameControl
-												}
-											}}
-											className={classes.resize}
-											error={!this.state.usernameValid}
-											value={this.state.username}
-											onBlur={(event) => this.onBlurHandler(event)}
-											onChange={(event) => this.onChangeHandler(event)}
-										/>
-									</FormControl>
-									{/*<FormControl className={[ classes.formControl, classes.fullnameControl ].join(' ')}>
-							<InputLabel htmlFor="fullname">Full Name</InputLabel>
-							<Input
-								id="fullname"
-								name="fullname"
-								inputProps={{
-									maxLength: 50,
-									classes: {
-										input: classes.fullnameControl
-									}
-								}}
-								className={classes.resize}
-								error={!this.state.fullnameValid}
-								value={this.state.fullname}
-								onBlur={(event) => this.onBlurHandler(event)}
-								onChange={(event) => this.onChangeHandler(event)}
-							/>
-							</FormControl>*/}
-									<FormControl className={[ classes.formControl, classes.emailControl ].join(' ')}>
-										<InputLabel htmlFor="email">Email</InputLabel>
-										<Input
-											id="email"
-											name="email"
-											inputProps={{
-												maxLength: 30,
-												classes: {
-													input: classes.emailControl
-												}
-											}}
-											className={classes.resize}
-											error={!this.state.emailValid}
-											value={this.state.email}
-											onBlur={(event) => this.onBlurHandler(event)}
-											onChange={(event) => this.onChangeHandler(event)}
-										/>
-									</FormControl>
-									<FormControl className={[ classes.formControl, classes.numberControl ].join(' ')}>
-										<InputLabel htmlFor="number">Phone</InputLabel>
-										<Input
-											id="number"
-											name="number"
-											inputProps={{
-												maxLength: 15,
-												classes: {
-													input: classes.numberControl
-												}
-											}}
-											className={classes.resize}
-											error={!this.state.numberValid}
-											value={this.state.number}
-											onBlur={(event) => this.onBlurHandler(event)}
-											onChange={(event) => this.onChangeHandler(event)}
-										/>
-									</FormControl>
-								</div>
-								<div className={classes.divStyle}>
-									<FormControl
-										className={[ classes.formControl, classes.rolControl ].join(' ')}
-										disabled={this.state.loadingRoles}
-									>
-										<TextField
-											disabled={this.state.loadingRoles}
-											id="idRol"
-											select
-											name="idRol"
-											error={!this.state.idRolValid}
-											value={this.state.idRol}
-											InputProps={{
-												classes: {
-													input: classes.rolControl
-												}
-											}}
-											onChange={(event) => this.onSelectChangeHandler(event)}
-											helperText="Rol"
-											margin="normal"
-										>
-											{' '}
-											{this.state.roles.map(({ Id, Name }) => (
-												<MenuItem key={Id} value={Id} name={Name}>
-													{Name}
-												</MenuItem>
-											))}
-										</TextField>
-									</FormControl>
-									<FormControl
-										className={[ classes.formControl, classes.languageControl ].join(' ')}
-										disabled={this.state.loadingLanguages}
-									>
-										<TextField
-											disabled={this.state.loadingLanguages}
-											id="idLanguage"
-											select
-											name="idLanguage"
-											error={!this.state.idLanguageValid}
-											value={this.state.idLanguage}
-											InputProps={{
-												classes: {
-													input: classes.languageControl
-												}
-											}}
-											onChange={(event) => this.onSelectChangeHandler(event)}
-											helperText="Language"
-											margin="normal"
-										>
-											{' '}
-											{this.state.languages.map(({ Id, Name }) => (
-												<MenuItem key={Id} value={Id} name={Name}>
-													{Name}
-												</MenuItem>
-											))}
-										</TextField>
-									</FormControl>
-								</div>
-
-								<div className={classes.divStyle}>
-									<FormControlLabel
-										control={
-											<Switch
-												id="isAdmin"
-												checked={this.state.isAdmin}
-												onChange={this.handleCheckedChange('isAdmin')}
-												value="isAdmin"
-											/>
-										}
-										label="Is Admin"
-									/>
-									<FormControlLabel
-										control={
-											<Switch
-												id="allowInsert"
-												checked={this.state.allowInsert}
-												onChange={this.handleCheckedChange('allowInsert')}
-												value="allowInsert"
-											/>
-										}
-										label="Allow Create"
-									/>
-									<FormControlLabel
-										control={
-											<Switch
-												id="allowEdit"
-												checked={this.state.allowEdit}
-												onChange={this.handleCheckedChange('allowEdit')}
-												value="allowEdit"
-											/>
-										}
-										label="Allow Edit"
-									/>
-									<FormControlLabel
-										control={
-											<Switch
-												id="allowDelete"
-												checked={this.state.allowDelete}
-												onChange={this.handleCheckedChange('allowDelete')}
-												value="allowDelete"
-											/>
-										}
-										label="Allow Delete"
-									/>
-								</div>
-								<FormControlLabel
-									style={{ width: 'fit-content' }}
-									control={
-										<Switch
-											id="allowExport"
-											checked={this.state.allowExport}
-											onChange={this.handleCheckedChange('allowExport')}
-											value="allowExport"
-										/>
-									}
-									label="Allow Export"
+						</div>
+					</DialogTitle>
+					<DialogContent style={{ width: 600 }}>
+						<div className="card-form-body">
+							<div className="card-form-row">
+								<span className="input-label primary">Contact</span>
+								<SelectForm
+									id="idContact"
+									name="idContact"
+									data={this.state.contacts}
+									update={(id) => {
+										this.updateSelect(id, 'idContact');
+									}}
+									showNone={true}
+									error={!this.state.idContactValid}
+									value={this.state.idContact}
 								/>
 							</div>
-						</DialogContent>
-						<DialogActions style={{ margin: '16px 10px' }}>
-							<div className={classes.root}>
-								<div className={classes.wrapper}>
-									<Tooltip
-										title={
-											this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												'Save Changes'
-											) : (
-												'Insert Record'
-											)
-										}
-									>
-										<div>
-											<Button
-												disabled={this.state.loading}
-												//	disabled={!this.state.formValid}
-												variant="fab"
-												color="primary"
-												className={buttonClassname}
-												onClick={this.addUserHandler}
-											>
-												{success ? <CheckIcon /> : <SaveIcon />}
-											</Button>
-										</div>
-									</Tooltip>
-									{loading && <CircularProgress size={68} className={classes.fabProgress} />}
-								</div>
+							<div className="card-form-row">
+								<span className="input-label primary">User</span>
+								<InputForm
+									id="username"
+									name="username"
+									maxLength="10"
+									value={this.state.username}
+									error={!this.state.usernameValid}
+									change={(value) => this.onChangeHandler(value, 'username')}
+								/>
 							</div>
-							<div className={classes.root}>
-								<div className={classes.wrapper}>
-									<Tooltip title={'Cancel Operation'}>
-										<div>
-											<Button
-												//disabled={this.state.loading || !this.state.enableCancelButton}
-												variant="fab"
-												color="secondary"
-												className={buttonClassname}
-												onClick={this.cancelUserHandler}
-											>
-												<ClearIcon />
-											</Button>
-										</div>
-									</Tooltip>
-								</div>
+							<div className="card-form-row">
+								<span className="input-label primary">Email</span>
+								<InputForm
+									id="email"
+									name="email"
+									maxLength="30"
+									value={this.state.email}
+									error={!this.state.emailValid}
+									change={(value) => this.onChangeHandler(value, 'email')}
+								/>
 							</div>
-						</DialogActions>
-					</Dialog>
+							<div className="card-form-row">
+								<span className="input-label primary">Phone</span>
+								<InputForm
+									id="number"
+									name="number"
+									maxLength="15"
+									value={this.state.number}
+									error={!this.state.numberValid}
+									change={(value) => this.onChangeHandler(value, 'number')}
+								/>
+							</div>
+							<div className="card-form-row">
+								<span className="input-label primary">Rol</span>
+								<SelectForm
+									id="idRol"
+									name="idRol"
+									data={this.state.roles}
+									update={(id) => {
+										this.updateSelect(id, 'idRol');
+									}}
+									showNone={false}
+									error={!this.state.idRolValid}
+									value={this.state.idRol}
+									disabled={this.state.loadingRoles}
+								/>
+							</div>
+							<div className="card-form-row">
+								<span className="input-label primary">Language</span>
+								<SelectForm
+									id="idRol"
+									name="idRol"
+									data={this.state.languages}
+									update={(id) => {
+										this.updateSelect(id, 'idLanguage');
+									}}
+									showNone={false}
+									error={!this.state.idLanguageValid}
+									value={this.state.idLanguage}
+									disabled={this.state.loadingLanguages}
+								/>
+							</div>
+						</div>
+						<div className={classes.divStyleColumns}>
+							<div className={classes.divStyle}>
+								<FormControlLabel
+									control={
+										<Switch
+											id="isAdmin"
+											checked={this.state.isAdmin}
+											onChange={this.handleCheckedChange('isAdmin')}
+											value="isAdmin"
+										/>
+									}
+									label="Is Admin"
+								/>
+								<FormControlLabel
+									control={
+										<Switch
+											id="allowInsert"
+											checked={this.state.allowInsert}
+											onChange={this.handleCheckedChange('allowInsert')}
+											value="allowInsert"
+										/>
+									}
+									label="Allow Create"
+								/>
+								<FormControlLabel
+									control={
+										<Switch
+											id="allowEdit"
+											checked={this.state.allowEdit}
+											onChange={this.handleCheckedChange('allowEdit')}
+											value="allowEdit"
+										/>
+									}
+									label="Allow Edit"
+								/>
+								<FormControlLabel
+									control={
+										<Switch
+											id="allowDelete"
+											checked={this.state.allowDelete}
+											onChange={this.handleCheckedChange('allowDelete')}
+											value="allowDelete"
+										/>
+									}
+									label="Allow Delete"
+								/>
+							</div>
+							<FormControlLabel
+								style={{ width: 'fit-content' }}
+								control={
+									<Switch
+										id="allowExport"
+										checked={this.state.allowExport}
+										onChange={this.handleCheckedChange('allowExport')}
+										value="allowExport"
+									/>
+								}
+								label="Allow Export"
+							/>
+						</div>
+					</DialogContent>
+					<DialogActions style={{ margin: '16px 10px' }}>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								<Tooltip
+									title={
+										this.state.idToEdit != null &&
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
+									}
+								>
+									<div>
+										<Button
+											disabled={this.state.loading}
+											//	disabled={!this.state.formValid}
+											variant="fab"
+											color="primary"
+											className={buttonClassname}
+											onClick={this.addUserHandler}
+										>
+											{success ? <CheckIcon /> : <SaveIcon />}
+										</Button>
+									</div>
+								</Tooltip>
+								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+							</div>
+						</div>
+						<div className={classes.root}>
+							<div className={classes.wrapper}>
+								<Tooltip title={'Cancel Operation'}>
+									<div>
+										<Button
+											//disabled={this.state.loading || !this.state.enableCancelButton}
+											variant="fab"
+											color="secondary"
+											className={buttonClassname}
+											onClick={this.cancelUserHandler}
+										>
+											<ClearIcon />
+										</Button>
+									</div>
+								</Tooltip>
+							</div>
+						</div>
+					</DialogActions>
+				</Dialog>
 
-					<div className="users__header">
-						<button
-							className="add-users"
-							onClick={this.handleClickOpenModal}
-							disabled={
-								this.state.loadingData ||
-								this.state.loadingContacts ||
-								this.state.loadingRoles ||
-								this.state.loadingLanguages
-							}
-						>
-							{' '}
-							Add User{' '}
-						</button>
-					</div>
+				<div className="users__header">
+					<button
+						className="add-users"
+						onClick={this.handleClickOpenModal}
+						disabled={
+							this.state.loadingData ||
+							this.state.loadingContacts ||
+							this.state.loadingRoles ||
+							this.state.loadingLanguages
+						}
+					>
+						{' '}
+						Add User{' '}
+					</button>
+				</div>
+				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<UsersTable
 							data={this.state.data}

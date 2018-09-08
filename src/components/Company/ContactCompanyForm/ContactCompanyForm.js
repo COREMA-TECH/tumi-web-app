@@ -29,6 +29,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import InputFile from '../../ui-components/InputFile/InputFile';
 import days from '../../../data/days.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
 import './index.css';
 const styles = (theme) => ({
@@ -223,6 +224,12 @@ class ContactcontactForm extends React.Component {
 			supervisors: [],
 			allSupervisors: [],
 			inputEnabled: true,
+			loadingData: false,
+			loadingDepartments: false,
+			loadingSupervisor: false,
+			loadingAllSupervisors: false,
+			loadingTypes: false,
+
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -523,127 +530,152 @@ class ContactcontactForm extends React.Component {
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
 	loadContacts = () => {
-		this.props.client
-			.query({
-				query: this.GET_CONTACTS_QUERY,
-				variables: { IdEntity: this.state.idCompany },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcontacts != null) {
-					this.setState(
-						{
-							data: data.data.getcontacts
-						},
-						() => {
-							this.resetState();
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading contacts: getcontacts not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading contacts: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading contacts: ' + error);
-			});
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_CONTACTS_QUERY,
+					variables: { IdEntity: this.state.idCompany },
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getcontacts != null) {
+						this.setState(
+							{
+								data: data.data.getcontacts,
+								loadingData: false
+							},
+							() => {
+								this.resetState();
+							}
+						);
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading contacts: getcontacts not exists in query data'
+						);
+						this.setState({ loadingData: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading contacts: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading contacts: ' + error);
+					this.setState({ loadingData: false });
+				});
+		});
 	};
 	loadSupervisors = (idContact = 0) => {
-		this.props.client
-			.query({
-				query: this.GET_SUPERVISORS_QUERY,
-				variables: { Id_Entity: this.state.idCompany, Id: idContact },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getsupervisor != null) {
-					this.setState({
-						supervisors: data.data.getsupervisor
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading supervisors: getsupervisor not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading supervisors: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading supervisors: ' + error);
-			});
+		this.setState({ loadingSupervisor: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_SUPERVISORS_QUERY,
+					variables: { Id_Entity: this.state.idCompany, Id: idContact },
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getsupervisor != null) {
+						this.setState({
+							supervisors: data.data.getsupervisor,
+							loadingSupervisor: false
+						});
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading supervisors: getsupervisor not exists in query data'
+						);
+						this.setState({ loadingSupervisor: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading supervisors: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading supervisors: ' + error);
+					this.setState({ loadingSupervisor: false });
+				});
+		});
 	};
 
 	loadAllSupervisors = () => {
-		this.props.client
-			.query({
-				query: this.GET_SUPERVISORS_QUERY,
-				variables: { Id_Entity: this.state.idCompany, Id: 0 },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getsupervisor != null) {
-					this.setState({
-						allSupervisors: data.data.getsupervisor
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading [all] supervisors: getsupervisor not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading [all] supervisors: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading [all] supervisors: ' + error);
-			});
+		this.setState({ loadingAllSupervisors: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_SUPERVISORS_QUERY,
+					variables: { Id_Entity: this.state.idCompany, Id: 0 },
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getsupervisor != null) {
+						this.setState({
+							allSupervisors: data.data.getsupervisor,
+							loadingAllSupervisors: false
+						});
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading [all] supervisors: getsupervisor not exists in query data'
+						);
+						this.setState({ loadingAllSupervisors: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading [all] supervisors: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading [all] supervisors: ' + error);
+					this.setState({ loadingAllSupervisors: false });
+				});
+		});
 	};
 
 	loadTypes = () => {
-		this.props.client
-			.query({
-				query: this.GET_TYPES_QUERY
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState({
-						types: data.data.getcatalogitem
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading types: getcatalogitem not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading types: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading types: ' + error);
-			});
+		this.setState({ loadingTypes: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_TYPES_QUERY
+				})
+				.then((data) => {
+					if (data.data.getcatalogitem != null) {
+						this.setState({
+							types: data.data.getcatalogitem,
+							loadingTypes: false
+						});
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading types: getcatalogitem not exists in query data'
+						);
+						this.setState({ loadingTypes: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading types: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading types: ' + error);
+					this.setState({ loadingTypes: false });
+				});
+		});
 	};
 	loadDepartments = () => {
-		this.props.client
-			.query({
-				query: this.GET_DEPARTMENTS_QUERY
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState({
-						departments: data.data.getcatalogitem
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading departments: getcatalogitem not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading departments: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
-			});
+		this.setState({ loadingDepartments: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_DEPARTMENTS_QUERY
+				})
+				.then((data) => {
+					if (data.data.getcatalogitem != null) {
+						this.setState({
+							departments: data.data.getcatalogitem,
+							loadingDepartments: false
+						});
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading departments: getcatalogitem not exists in query data'
+						);
+						this.setState({ loadingDepartments: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading departments: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
+					this.setState({ loadingDepartments: false });
+				});
+		});
 	};
 
 	insertContacts = () => {
@@ -802,6 +834,12 @@ class ContactcontactForm extends React.Component {
 
 		return (
 			<div className="contact-tab">
+				{(this.state.loadingData ||
+					this.state.loadingDepartments ||
+					this.state.loadingSupervisor ||
+					this.state.loadingAllSupervisors ||
+					this.state.loadingTypes) && <LinearProgress />}
+
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}

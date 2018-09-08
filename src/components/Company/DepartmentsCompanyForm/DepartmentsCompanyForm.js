@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
 import DepartmentsTable from './DepartmentsTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
@@ -18,6 +15,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 import InputForm from '../../ui-components/InputForm/InputForm';
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
 import './index.css';
 
@@ -153,6 +151,7 @@ class DepartmentsCompanyForm extends React.Component {
 			data: [],
 			idCompany: this.props.idCompany,
 			inputEnabled: true,
+			loadingData: false,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -305,33 +304,38 @@ class DepartmentsCompanyForm extends React.Component {
 	}
 
 	loadDepartments = () => {
-		this.props.client
-			.query({
-				query: this.GET_DEPARTMENTS_QUERY,
-				variables: { IdEntity: this.state.idCompany },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState(
-						{
-							data: data.data.getcatalogitem
-						},
-						() => {
-							this.resetState();
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading departments: getcatalogitem not exists in query data'
-					);
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading departments: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
-			});
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_DEPARTMENTS_QUERY,
+					variables: { IdEntity: this.state.idCompany },
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getcatalogitem != null) {
+						this.setState(
+							{
+								data: data.data.getcatalogitem,
+								loadingData: false
+							},
+							() => {
+								this.resetState();
+							}
+						);
+					} else {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error: Loading departments: getcatalogitem not exists in query data'
+						);
+						this.setState({ loadingData: false });
+					}
+				})
+				.catch((error) => {
+					console.log('Error: Loading departments: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
+					this.setState({ loadingData: false });
+				});
+		});
 	};
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
@@ -467,6 +471,7 @@ class DepartmentsCompanyForm extends React.Component {
 
 		return (
 			<div className="department_tab">
+				{this.state.loadingData && <LinearProgress />}
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}

@@ -19,6 +19,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
+import Select from '@material-ui/core/Select';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -231,29 +232,29 @@ class ContactsTable extends React.Component {
 									<CustomTableCell>{row.middlename}</CustomTableCell>
 									<CustomTableCell>{row.lastname}</CustomTableCell>
 									<CustomTableCell>
-										<TextField
+										<Select
 											id="department"
-											select
 											name="department"
 											value={row.idDepartment}
-											margin="normal"
 											disabled
+											IconComponent="div"
+											disableUnderline={true}
 										>
 											{this.props.departments.map(({ Id, Name }) => (
 												<MenuItem key={Id} value={Id} name={Name}>
 													{Name}
 												</MenuItem>
 											))}
-										</TextField>
+										</Select>
 									</CustomTableCell>
 									<CustomTableCell>
-										<TextField
+										<Select
 											id="supervisor"
-											select
 											name="supervisor"
 											value={row.idSupervisor}
-											margin="normal"
 											disabled
+											IconComponent="div"
+											disableUnderline={true}
 										>
 											<MenuItem key={0} value={0} name="None">
 												None
@@ -263,25 +264,25 @@ class ContactsTable extends React.Component {
 													{Name}
 												</MenuItem>
 											))}
-										</TextField>
+										</Select>
 									</CustomTableCell>
 									<CustomTableCell>{row.email}</CustomTableCell>
 									<CustomTableCell>{row.number}</CustomTableCell>
 									<CustomTableCell>
-										<TextField
+										<Select
 											id="type"
-											select
 											name="type"
 											value={row.type}
-											margin="normal"
 											disabled
+											IconComponent="div"
+											disableUnderline={true}
 										>
 											{this.props.types.map(({ Id, Name }) => (
 												<MenuItem key={Id} value={Id} name={Name}>
 													{Name}
 												</MenuItem>
 											))}
-										</TextField>
+										</Select>
 									</CustomTableCell>
 								</TableRow>
 							);

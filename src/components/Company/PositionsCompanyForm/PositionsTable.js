@@ -21,6 +21,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
 import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
+import Select from '@material-ui/core/Select';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -278,21 +279,21 @@ class PositionsTable extends React.Component {
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell style={{ width: '200px' }}>
-										<TextField
+										<Select
 											id="department"
-											select
 											name="department"
 											value={row.Id_Department}
-											margin="normal"
-											disabled
 											style={{ width: '100%' }}
+											disableUnderline={true}
+											disabled
+											IconComponent="div"
 										>
-											{this.props.departments.map(({ Id, Description }) => (
-												<MenuItem key={Id} value={Id} name={Description}>
-													{Description}
+											{this.props.departments.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
 												</MenuItem>
 											))}
-										</TextField>
+										</Select>
 									</CustomTableCell>
 									<CustomTableCell>{row.Position}</CustomTableCell>
 									<CustomTableCell style={{ width: '180px' }}>
@@ -300,9 +301,10 @@ class PositionsTable extends React.Component {
 											className={classes.formControl}
 											value={row.Pay_Rate}
 											id="payrate"
-											disabled
+											readOnly
 											InputProps={{
-												inputComponent: NumberFormatCustom
+												inputComponent: NumberFormatCustom,
+												disableUnderline: true
 											}}
 										/>
 									</CustomTableCell>
@@ -311,28 +313,29 @@ class PositionsTable extends React.Component {
 											className={classes.formControl}
 											value={row.Bill_Rate}
 											id="billrate"
-											disabled
+											readOnly
 											InputProps={{
-												inputComponent: NumberFormatCustom
+												inputComponent: NumberFormatCustom,
+												disableUnderline: true
 											}}
 										/>
 									</CustomTableCell>
 									<CustomTableCell padding="none" style={{ width: '100px' }}>
-										<TextField
+										<Select
 											id="shift"
-											select
 											name="shift"
 											value={row.Shift}
-											margin="normal"
 											disabled
 											style={{ width: '100%' }}
+											disableUnderline={true}
+											IconComponent="div"
 										>
-											{this.props.shifts.map(({ Id, Description }) => (
-												<MenuItem key={Id} value={Id} name={Description}>
-													{Description}
+											{this.props.shifts.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
 												</MenuItem>
 											))}
-										</TextField>
+										</Select>
 									</CustomTableCell>
 								</TableRow>
 							);

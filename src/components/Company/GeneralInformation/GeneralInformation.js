@@ -14,7 +14,7 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
-import FileUpload from "../../ui-components/FileUpload/FileUpload";
+import FileUpload from '../../ui-components/FileUpload/FileUpload';
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
 		codeValid: true,
@@ -613,7 +613,7 @@ class GeneralInformation extends Component {
 			contractURL: '',
 			insuranceURL: '',
 			otherURL: '',
-			other01URL: '',
+			other01URL: ''
 		};
 	}
 	updateCountry = (id) => {
@@ -867,6 +867,7 @@ class GeneralInformation extends Component {
 					<div className="input-container">
 						<span className="input-label">Markup</span>
 						<InputForm
+							type="number"
 							value={this.state.rate}
 							change={(text) => {
 								this.updateInput(text, 'rate');
@@ -1014,11 +1015,12 @@ class GeneralInformation extends Component {
 							<div className="card-form-row">
 								<span className="input-label primary">Fax</span>
 								<InputForm
+									type="number"
 									value={this.state.fax}
 									change={(text) => {
 										this.updateInput(text, 'fax');
 									}}
-									maxLength="20"
+									maxLength="15"
 								/>
 							</div>
 						</div>
@@ -1061,35 +1063,43 @@ class GeneralInformation extends Component {
 							<div className="divider-text">Documents</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Contract</span>
-								<FileUpload updateURL={(url) => {
-									this.setState({
-										contractURL: url
-									})
-								}}/>
+								<FileUpload
+									updateURL={(url) => {
+										this.setState({
+											contractURL: url
+										});
+									}}
+								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Insurance</span>
-								<FileUpload updateURL={(url) => {
-                                    this.setState({
-                                        insuranceURL: url
-                                    })
-                                }}/>
+								<FileUpload
+									updateURL={(url) => {
+										this.setState({
+											insuranceURL: url
+										});
+									}}
+								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Other 1</span>
-								<FileUpload updateURL={(url) => {
-                                    this.setState({
-                                        otherURL: url
-                                    })
-                                }}/>
+								<FileUpload
+									updateURL={(url) => {
+										this.setState({
+											otherURL: url
+										});
+									}}
+								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Other 2</span>
-								<FileUpload updateURL={(url) => {
-                                    this.setState({
-										other01URL: url
-                                    })
-                                }}/>
+								<FileUpload
+									updateURL={(url) => {
+										this.setState({
+											other01URL: url
+										});
+									}}
+								/>
 							</div>
 						</div>
 					</div>
@@ -1156,6 +1166,7 @@ class GeneralInformation extends Component {
 							<TabsInDialog
 								idCompany={this.state.idProperty}
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
+								handleClose={this.handleClose}
 							/>
 						) : (
 							//Si el click no es en esa property : pasar el Id en nulo
@@ -1163,6 +1174,7 @@ class GeneralInformation extends Component {
 							<TabsInDialog
 								idCompany={this.props.idCompany}
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
+								handleClose={this.handleClose}
 							/>
 						)}
 					</DialogContent>

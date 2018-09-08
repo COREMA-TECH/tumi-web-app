@@ -27,7 +27,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import classNames from 'classnames';
-
+import Select from '@material-ui/core/Select';
 //let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
 	counter += 1;
@@ -436,32 +436,32 @@ class CatalogsTable extends React.Component {
 											</Tooltip>
 										</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
-											<TextField
+											<Select
 												id="catalog"
-												select
 												name="catalog"
 												value={row.Id_Catalog}
-												margin="normal"
 												disabled
+												IconComponent="div"
+												disableUnderline={true}
 											>
 												{this.props.catalogs.map(({ Id, Description }) => (
 													<MenuItem key={Id} value={Id} name={Description}>
 														{Description}
 													</MenuItem>
 												))}
-											</TextField>
+											</Select>
 										</CustomTableCell>
 										<CustomTableCell>{row.Name}</CustomTableCell>
 										<CustomTableCell style={{ width: '200px' }}>{row.DisplayLabel}</CustomTableCell>
 										<CustomTableCell style={{ width: '200px' }}>{row.Description}</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
-											<TextField
+											<Select
 												id="parent"
-												select
 												name="parent"
 												value={row.Id_Parent}
-												margin="normal"
 												disabled
+												IconComponent="div"
+												disableUnderline={true}
 											>
 												<MenuItem key={0} value={0} name="None">
 													<em>None</em>
@@ -471,7 +471,7 @@ class CatalogsTable extends React.Component {
 														{DisplayLabel}
 													</MenuItem>
 												))}
-											</TextField>
+											</Select>
 										</CustomTableCell>
 										<CustomTableCell>{row.Value}</CustomTableCell>
 									</TableRow>

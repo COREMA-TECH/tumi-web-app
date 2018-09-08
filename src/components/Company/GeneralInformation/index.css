@@ -260,8 +260,9 @@
 }
 
 .contract-footer--bottom {
-	position: sticky;
-	bottom: 0;
+	position: absolute;
+	bottom: 20px;
+
 	left: 0;
 
 	width: 100%;

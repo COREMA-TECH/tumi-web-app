@@ -27,7 +27,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import classNames from 'classnames';
-
+import Select from '@material-ui/core/Select';
 //let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
 	counter += 1;
@@ -463,13 +463,13 @@ class UsersTable extends React.Component {
 											</Tooltip>
 										</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
-											<TextField
+											<Select
 												id="Id_Contact"
-												select
 												name="Id_Contact"
 												value={row.Id_Contact}
-												margin="normal"
 												disabled
+												IconComponent="div"
+												disableUnderline={true}
 											>
 												{' '}
 												<MenuItem key={0} value={0} name="None">
@@ -480,7 +480,7 @@ class UsersTable extends React.Component {
 														{Name}
 													</MenuItem>
 												))}
-											</TextField>
+											</Select>
 										</CustomTableCell>
 										<CustomTableCell>{row.Code_User}</CustomTableCell>
 										{/*<CustomTableCell style={{ width: '200px' }}>{row.Full_Name}</CustomTableCell>*/}
@@ -489,36 +489,36 @@ class UsersTable extends React.Component {
 										</CustomTableCell>
 										<CustomTableCell>{row.Phone_Number}</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
-											<TextField
+											<Select
 												id="Id_Roles"
-												select
 												name="Id_Roles"
 												value={row.Id_Roles}
-												margin="normal"
 												disabled
+												IconComponent="div"
+												disableUnderline={true}
 											>
 												{this.props.roles.map(({ Id, Name }) => (
 													<MenuItem key={Id} value={Id} name={Name}>
 														{Name}
 													</MenuItem>
 												))}
-											</TextField>
+											</Select>
 										</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
-											<TextField
+											<Select
 												id="Id_Language"
-												select
 												name="Id_Language"
 												value={row.Id_Language}
-												margin="normal"
 												disabled
+												IconComponent="div"
+												disableUnderline={true}
 											>
 												{this.props.languages.map(({ Id, Name }) => (
 													<MenuItem key={Id} value={Id} name={Name}>
 														{Name}
 													</MenuItem>
 												))}
-											</TextField>
+											</Select>
 										</CustomTableCell>
 										<TableCell padding="checkbox">
 											<Checkbox checked={row.IsAdmin == 1} />

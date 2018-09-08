@@ -105,7 +105,9 @@ class CustomizedTabs extends Component {
 						label="Positions"
 					/>
 				</Tabs>
-				{value === 0 && <GeneralInforProperty idCompany={this.props.idCompany} />}
+				{value === 0 && (
+					<GeneralInforProperty idCompany={this.props.idCompany} handleClose={this.props.handleClose} />
+				)}
 				{value === 1 && (
 					<ContactCompanyForm
 						idCompany={this.props.idCompany}
