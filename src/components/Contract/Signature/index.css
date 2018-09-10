@@ -3,6 +3,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 	text-align: center;
+	min-width: 380px;
 }
 
 .signature-header {
@@ -25,9 +26,27 @@
 	border-color: gainsboro;
 	padding-left: 15px;
 }
-.signaturePad-container {
+
+.signaturePad-MainContainer {
+	justify-content: center;
+	display: flex;
 	width: 100%;
 }
+
+.signaturePad-container {
+	max-width: 700px;
+}
+@media (max-width: 700px) {
+	.signaturePad-container {
+		width: 95%;
+	}
+}
+@media (min-width: 701px) {
+	.signaturePad-container {
+		width: 75%;
+	}
+}
+
 .signature-information {
 	width: 100%;
 	height: 100%;
