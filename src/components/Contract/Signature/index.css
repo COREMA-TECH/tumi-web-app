@@ -76,6 +76,7 @@
 	background: #bbbbbb;
 	width: 95%;
 	height: 50vh;
+	max-height: 300px;
 }
 
 .signature-button-root {

@@ -97,7 +97,7 @@ class Signature extends React.Component {
 		var signaturePad = this.sigPad;
 		// This part causes the canvas to be cleared
 		canvas.width = canvas.offsetWidth * ratio;
-		//canvas.height = canvas.offsetHeight * ratio;
+		canvas.height = canvas.offsetHeight * ratio;
 		canvas.getContext('2d').scale(ratio, ratio);
 		this.sigPad.fromDataURL(this.state.signature);
 		// This library does not listen for canvas changes, so after the canvas is automatically
@@ -254,10 +254,9 @@ class Signature extends React.Component {
 							ref={(ref) => {
 								this.sigPad = ref;
 							}}
-							style={{ height: 300 }}
 							clearOnResize={false}
 							id="signingSurface"
-							canvas={<canvas id="signingCanvas" ref="signingCanvas" />}
+							canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 300 }} />}
 							canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
 						/>
 					</div>
