@@ -167,24 +167,24 @@ class SimpleDialog extends Component {
                                 if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
                                 if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-                                    console.log("Data of cities" + data.getbusinesscompanies);
-                                    //return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
                                     return (
-                                        data.getbusinesscompanies.map((item) => (
-                                            <ListItem button onClick={() => {
-                                                this.handleListItemClick(item.Name);
-                                                this.props.onId(item.Id);
-                                                this.props.onItemValue(parseInt(item.Id_Company));
-                                            }}
-                                                      key={item.Id}>
-                                                <ListItemAvatar>
-                                                    <Avatar className={classes.avatar}>
-                                                        <PersonIcon/>
-                                                    </Avatar>
-                                                </ListItemAvatar>
-                                                <ListItemText primary={item.Name}/>
-                                            </ListItem>
-                                        ))
+                                        data.getbusinesscompanies.map((item) => {
+                                            return (
+                                                <ListItem button onClick={() => {
+                                                    this.handleListItemClick(item.Name);
+                                                    this.props.onId(item.Id);
+                                                    this.props.onItemValue(parseInt(item.Id_Company));
+                                                }}
+                                                          key={item.Id}>
+                                                    <ListItemAvatar>
+                                                        <Avatar className={classes.avatar}>
+                                                            <PersonIcon/>
+                                                        </Avatar>
+                                                    </ListItemAvatar>
+                                                    <ListItemText primary={item.Name}/>
+                                                </ListItem>
+                                            )
+                                        })
                                     )
                                 }
                                 return <p>Nothing to display </p>;
@@ -206,10 +206,38 @@ SimpleDialog.propTypes = {
 
 const SimpleDialogWrapped = withStyles(styles)(withApollo(SimpleDialog));
 
-class SimpleDialogDemo extends React.Component {
+class SimpleDialogDemo extends Component {
     state = {
         open: false,
         selectedValue: '',
+    };
+
+    GET_COMPANY_BY_ID = gql`
+        query ($Id: Int!){
+            getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
+                Id
+                Name
+                Id_Company
+            }
+        }
+    `;
+
+    getContractById = (id) => {
+        this.props.client
+            .query({
+                query: this.GET_COMPANY_BY_ID,
+                variables: {
+                    Id: parseInt(id)
+                }
+            })
+            .then(({data}) => {
+                this.setState({
+                    selectedValue: data.getbusinesscompanies[0].Name
+                });
+
+                this.props.updateCompanySignedBy(data.getbusinesscompanies[0].Id_Company);
+            })
+            .catch((err) => console.log(err));
     };
 
     handleClickOpen = () => {
@@ -227,12 +255,23 @@ class SimpleDialogDemo extends React.Component {
         this.props.update(value);
     };
 
-    nameCompanySelected = value => {
+
+    setValue = (text) => {
+        this.setState(prevState => ({
+            selectedValue: [...prevState.data, text]
+        }));
+
 
     };
 
 
+    componentWillMount() {
+        this.getContractById(this.props.valueSelected)
+    }
+
+
     render() {
+
         return (
             <div>
                 <div className="input-file-container">
@@ -248,6 +287,8 @@ class SimpleDialogDemo extends React.Component {
 
                 </div>
                 <SimpleDialogWrapped
+                    setDefaultText={this.setValue}
+                    valueSelected={this.props.valueSelected}
                     selectedValue={this.state.selectedValue}
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -261,4 +302,4 @@ class SimpleDialogDemo extends React.Component {
     }
 }
 
-export default SimpleDialogDemo;
+export default withApollo(SimpleDialogDemo);
