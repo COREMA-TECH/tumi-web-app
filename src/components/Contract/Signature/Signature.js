@@ -248,17 +248,20 @@ class Signature extends React.Component {
 				</div>
 
 				<h1 className="signature-header"> Signature</h1>
-				<div className="signaturePad-container">
-					<SignaturePad
-						ref={(ref) => {
-							this.sigPad = ref;
-						}}
-						clearOnResize={false}
-						id="signingSurface"
-						canvas={<canvas id="signingCanvas" ref="signingCanvas" />}
-						canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
-					/>
+				<div className="signaturePad-MainContainer">
+					<div className="signaturePad-container">
+						<SignaturePad
+							ref={(ref) => {
+								this.sigPad = ref;
+							}}
+							clearOnResize={false}
+							id="signingSurface"
+							canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 300 }} />}
+							canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
+						/>
+					</div>
 				</div>
+
 				<div className="signature-footer">
 					<div className="signature-button">
 						<Tooltip title={'Clear'}>
