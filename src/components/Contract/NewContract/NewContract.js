@@ -13,6 +13,8 @@ import Query from 'react-apollo/Query';
 import AccountDialog from '../../ui-components/AccountDialog/AccountDialog';
 import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from '../../ui-components/SelectForm/SelectFormContractTemplate';
+import {MySnackbarContentWrapper} from "../../Generic/SnackBar";
+import {Snackbar} from "@material-ui/core";
 
 class NewContract extends Component {
     constructor(props) {
@@ -58,9 +60,35 @@ class NewContract extends Component {
             managementDialog: false,
             Electronic_Address: '',
             loaded: false,
-            loading: false
+            loading: false,
+            openSnackbar: false,
+            variantSnackbar: 'info',
+            messageSnackbar: 'Dummy text!'
         };
     }
+
+    /**
+     * Snackbar methods
+     */
+    handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ openSnackbar: false });
+    };
+
+    handleOpenSnackbar = (variant, message) => {
+        this.setState({
+            openSnackbar: true,
+            variantSnackbar: variant,
+            messageSnackbar: message
+        });
+    };
+    /**
+     * End of SnackBars methods
+     */
+
 
     updateStatus = (id) => {
         this.setState({
@@ -265,7 +293,12 @@ class NewContract extends Component {
                 console.log('Server data response is: ' + data.inscontracts);
                 this.props.update(data.inscontracts.Id);
             })
-            .catch((err) => console.log('The error is: ' + err));
+            .catch((err) => {
+                this.handleOpenSnackbar(
+                    'warning',
+                    'Complete all the inputs and try again'
+                )
+            });
     };
 
     /**********************************************************
@@ -728,6 +761,21 @@ class NewContract extends Component {
                         </div>
                     </div>
                 </div>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center'
+                    }}
+                    open={this.state.openSnackbar}
+                    autoHideDuration={3000}
+                    onClose={this.handleCloseSnackbar}
+                >
+                    <MySnackbarContentWrapper
+                        onClose={this.handleCloseSnackbar}
+                        variant={this.state.variantSnackbar}
+                        message={this.state.messageSnackbar}
+                    />
+                </Snackbar>
             </div>
         );
     }
