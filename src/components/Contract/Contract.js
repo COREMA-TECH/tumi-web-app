@@ -84,6 +84,7 @@ class Contract extends React.Component {
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;
+		const contractValue = this.state.contractId === 0;
 
 		return (
 			<div className={classes.root}>
@@ -98,6 +99,7 @@ class Contract extends React.Component {
 						label="New Contract"
 					/>
 					<Tab
+						disabled={contractValue}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Exhibit"

@@ -197,10 +197,32 @@ class SimpleDialogDemo extends React.Component {
         this.setState({selectedValue: value, open: false});
     };
 
-    idCompanySelected = value => {
-        //TODO: PASARLO AL COMPONENTE PADRE
+    GET_CONTACT_BY_ID = gql`        
+        query ($Id: Int!, $Id_Entity: Int!){
+              getcontacts(Id: $Id, IsActive: 1, Id_Entity: $Id_Entity) {
+                    Id
+                    First_Name
+                    Last_Name
+              }
+        }
+    `;
 
-        this.props.update(value);
+    getContactById = (id, idEntity) => {
+
+        this.props.client
+            .query({
+                query: this.GET_CONTACT_BY_ID,
+                variables: {
+                    Id: parseInt(id),
+                    Id_Entity: parseInt(idEntity)
+                }
+            })
+            .then(({data}) => {
+                this.setState({
+                    selectedValue: data.getcontacts[0].First_Name.trim() + " "  + data.getcontacts[0].Last_Name.trim()
+                });
+            })
+            .catch((err) => console.log(err));
     };
 
 
@@ -214,6 +236,10 @@ class SimpleDialogDemo extends React.Component {
     emailCompanySelected = value => {
         this.props.updateEmailContact(value)
     };
+
+    componentWillMount() {
+        this.getContactById(this.props.valueSelected, this.props.idContact)
+    }
 
     render() {
         return (
@@ -229,6 +255,7 @@ class SimpleDialogDemo extends React.Component {
                     </span>
                 </div>
                 <SimpleDialogWrapped
+                    valueSelected={this.props.valueSelected}
                     selectedValue={this.state.selectedValue}
                     open={this.state.open}
                     onClose={this.handleClose}
@@ -241,4 +268,4 @@ class SimpleDialogDemo extends React.Component {
     }
 }
 
-export default SimpleDialogDemo;
+export default withApollo(SimpleDialogDemo);
