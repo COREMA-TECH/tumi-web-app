@@ -29,7 +29,6 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
-
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -150,7 +149,7 @@ class ExhibitContract extends Component {
 		}
 	`;
 	loadAgreement = () => {
-		console.log("aqui estoy 1");
+		console.log('aqui estoy 1');
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
@@ -160,14 +159,12 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.getcontracts != null) {
-					console.log("aqui estoy 2");
-					this.setState(
-						{
-							agreement: data.data.getcontracts[0].Contract_Terms,
-							//signature: data.data.getcontracts[0].Client_Signature
-						}
-					);
-					console.log("aqui estoy 3");
+					console.log('aqui estoy 2');
+					this.setState({
+						agreement: data.data.getcontracts[0].Contract_Terms
+						//signature: data.data.getcontracts[0].Client_Signature
+					});
+					console.log('aqui estoy 3');
 					console.log(data.data.getcontracts[0].Contract_Terms);
 				} else {
 					this.handleOpenSnackbar('error', 'Error: Loading agreement: getcontracts not exists in query data');
@@ -219,9 +216,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-
-			}
+			() => {}
 		);
 	};
 	insertExhibit = () => {
@@ -241,7 +236,7 @@ class ExhibitContract extends Component {
 		this.loadAgreement();
 	}
 	componentDidMount() {
-		document.getElementById("ifmcontentstoprint").style.display = "none";
+		document.getElementById('ifmcontentstoprint').style.display = 'none';
 	}
 
 	handleClickOpenModal = () => {
@@ -258,8 +253,8 @@ class ExhibitContract extends Component {
 		this.resetState();
 	};
 	printContractHandler = () => {
-		var content = document.getElementById("agreement");
-		var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+		var content = document.getElementById('agreement');
+		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
 		pri.document.open();
 		pri.document.write(content.innerHTML);
 		pri.document.close();
@@ -268,14 +263,13 @@ class ExhibitContract extends Component {
 	};
 
 	createPDFContractHandler = () => {
-
 		var textToWrite = document.getElementById('agreement').innerHTML;
-		var textFileAsBlob = new Blob([textToWrite], { type: 'text/html' });
-		var fileNameToSaveAs = "Contract.html";
+		var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/html' });
+		var fileNameToSaveAs = 'Contract.html';
 
-		var downloadLink = document.createElement("a");
+		var downloadLink = document.createElement('a');
 		downloadLink.download = fileNameToSaveAs;
-		downloadLink.innerHTML = "Download File";
+		downloadLink.innerHTML = 'Download File';
 		if (window.webkitURL != null) {
 			// Chrome allows the link to be clicked without actually adding it to the DOM.
 			downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
@@ -283,12 +277,11 @@ class ExhibitContract extends Component {
 			// Firefox requires the link to be added to the DOM before it can be clicked.
 			//	downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
 			//		downloadLink.onclick = destroyClickedElement;
-			downloadLink.style.display = "none";
+			downloadLink.style.display = 'none';
 			document.body.appendChild(downloadLink);
 		}
 
 		downloadLink.click();
-
 	};
 
 	handleOpenSnackbar = (variant, message) => {
@@ -310,7 +303,6 @@ class ExhibitContract extends Component {
 		console.log(this.state);
 
 		return (
-
 			<div className="contract-container">
 				<Snackbar
 					anchorOrigin={{
@@ -328,10 +320,8 @@ class ExhibitContract extends Component {
 					/>
 				</Snackbar>
 
-
 				<Dialog
-
-					fullScreen={fullScreen}
+					fullScreen={true}
 					open={this.state.openModal}
 					onClose={this.cancelContractHandler}
 					aria-labelledby="responsive-dialog-title"
@@ -342,8 +332,8 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-									'New Contract Preview'
-								)}
+								'New Contract Preview'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
@@ -358,7 +348,7 @@ class ExhibitContract extends Component {
 							/>
 						</div>
 					</DialogContent>
-					<DialogActions >
+					<DialogActions>
 						<div className="exhibit-button-right">
 							<Tooltip title="Save">
 								<div>
@@ -389,7 +379,6 @@ class ExhibitContract extends Component {
 									</Button>
 								</div>
 							</Tooltip>
-
 						</div>
 						<div className="exhibit-button-left">
 							<Tooltip title={'Print Contract'}>
@@ -568,29 +557,17 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>
-							<div
-								className="contract-next-button"
-								onClick={() => { this.handleClickOpenModal }}
-							>
+							<div className="contract-next-button" onClick={this.handleClickOpenModal}>
 								Create Contract
 							</div>
-
-							<button className="contract-next-button" onClick={this.handleClickOpenModal}>
-								{' '}
-								Create Contract{' '}
-							</button>
-
-
 						</div>
 					</div>
 				</div>
-				<iframe id="ifmcontentstoprint" allowtransparency="true" ></iframe>
+				<iframe id="ifmcontentstoprint" allowtransparency="true" />
 			</div>
-
 		);
 	}
 }
-
 
 PositionsCompanyForm.propTypes = {
 	classes: PropTypes.object.isRequired,
@@ -598,4 +575,3 @@ PositionsCompanyForm.propTypes = {
 };
 
 export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));
-
