@@ -63,7 +63,8 @@ class NewContract extends Component {
             loading: false,
             openSnackbar: false,
             variantSnackbar: 'info',
-            messageSnackbar: 'Dummy text!'
+            messageSnackbar: 'Dummy text!',
+            loadingCompanies: false
         };
     }
 
@@ -75,7 +76,7 @@ class NewContract extends Component {
             return;
         }
 
-        this.setState({ openSnackbar: false });
+        this.setState({openSnackbar: false});
     };
 
     handleOpenSnackbar = (variant, message) => {
@@ -116,7 +117,14 @@ class NewContract extends Component {
 
     updateIdCompany = (id) => {
         this.setState({
-            Id_Entity: id
+            Id_Entity: id,
+            loadingCompanies: true
+        }, () => {
+            this.setState({
+                loadingCompanies: false,
+                Id_User_Signed: 0,
+                Id_User_Billing_Contact: 0
+            });
         });
 
         this.props.updateCompanyId(id);
@@ -390,6 +398,10 @@ class NewContract extends Component {
     }
 
     render() {
+        if(this.state.loadingCompanies){
+            return <LinearProgress/>
+        }
+
         if (this.state.loading) {
             return <LinearProgress/>
         }
@@ -480,16 +492,33 @@ class NewContract extends Component {
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed By</span>
-                                            <ContactDialog
-                                                valueSelected={this.state.Id_User_Signed}
-                                                idContact={this.state.Id_Entity}
-                                                update={this.updateIdContact}
-                                                updateEmailContact={(email) => {
-                                                    this.setState({
-                                                        Electronic_Address: email
-                                                    });
-                                                }}
-                                            />
+                                            {
+                                                this.state.loadingCompanies ? (
+                                                    <ContactDialog
+                                                        defaultValue=''
+                                                        valueSelected={this.state.Id_User_Signed}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={this.updateIdContact}
+                                                        updateEmailContact={(email) => {
+                                                            this.setState({
+                                                                Electronic_Address: email
+                                                            });
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <ContactDialog
+                                                        valueSelected={this.state.Id_User_Signed}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={this.updateIdContact}
+                                                        updateEmailContact={(email) => {
+                                                            this.setState({
+                                                                Electronic_Address: email
+                                                            });
+                                                        }}
+                                                    />
+                                                )
+                                            }
+
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Customer Signed Title</span>
@@ -616,17 +645,41 @@ class NewContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing Name</span>
-                                            <ContactDialog
-                                                idContact={this.state.Id_Entity}
-                                                update={(id) => {
-                                                    this.setState({
-                                                        Id_User_Billing_Contact: id
-                                                    });
-                                                }}
-                                                updateEmailContact={(email) => {
+                                            {
+                                                this.state.loadingCompanies ? (
+                                                    <ContactDialog
+                                                        defaultValue=''
+                                                        valueSelected={this.state.Id_User_Billing_Contact}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={(id) => {
+                                                            this.setState({
+                                                                Id_User_Billing_Contact: id
+                                                            }, () => {
+                                                                alert(this.state.Id_User_Billing_Contact)
+                                                            });
+                                                        }}
+                                                        updateEmailContact={(email) => {
 
-                                                }}
-                                            />
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <ContactDialog
+                                                        valueSelected={this.state.Id_User_Billing_Contact}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={(id) => {
+                                                            this.setState({
+                                                                Id_User_Billing_Contact: id
+                                                            }, () => {
+                                                                alert(this.state.Id_User_Billing_Contact)
+                                                            });
+                                                        }}
+                                                        updateEmailContact={(email) => {
+
+                                                        }}
+                                                    />
+                                                )
+                                            }
+
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing Street</span>
