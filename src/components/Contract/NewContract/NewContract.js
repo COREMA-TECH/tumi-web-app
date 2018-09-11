@@ -68,12 +68,6 @@ class NewContract extends Component {
         });
     };
 
-    updateCountry = (id) => {
-        this.setState({
-            Billing_Country: id
-        });
-    };
-
     updateProvidence = (id) => {
         this.setState({
             Billing_State: id
@@ -195,9 +189,10 @@ class NewContract extends Component {
                     Contrat_Owner: data.getcontracts[0].Contrat_Owner,
                     Id_Entity: data.getcontracts[0].Id_Entity,
                     Id_User_Signed: data.getcontracts[0].Id_User_Signed,
-                    User_Signed_Title: data.getcontracts[0].User_Signed_Title,
+                    User_Signed_Title: data.getcontracts[0].User_Signed_Title.trim(),
                     Signed_Date: data.getcontracts[0].Signed_Date,
                     Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
+                    Contract_Term: data.getcontracts[0].Contract_Term,
                     contractExpiration: data.getcontracts[0].Contract_Expiration_Date,
                     Owner_Expiration_Notification: data.getcontracts[0].Owner_Expiration_Notification,
                     Company_Signed: data.getcontracts[0].Company_Signed,
@@ -239,7 +234,7 @@ class NewContract extends Component {
                         Signed_Date: `'${this.state.Signed_Date}'`,
                         Contract_Status: `'${this.state.Contract_Status}'`,
                         Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
-                        Contract_Term: 1,
+                        Contract_Term: parseInt(this.state.Contract_Term),
                         Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
                         Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
                         Company_Signed: `'${this.state.Company_Signed}'`,
@@ -248,7 +243,7 @@ class NewContract extends Component {
                         Billing_Street: `'${this.state.Billing_Street}'`,
                         Billing_City: parseInt(this.state.Billing_City),
                         Billing_State: parseInt(this.state.Billing_State),
-                        Billing_Zip_Code: parseInt(this.state.Billing_State),
+                        Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
                         Billing_Country: 6,
                         Contract_Terms: `'${this.state.Contract_Terms}'`,
                         Exhibit_B: "''",
@@ -310,19 +305,6 @@ class NewContract extends Component {
             });
     };
 
-    /**
-     *  QUERIES to get the countries, cities and states
-     */
-    getCountriesQuery = gql`
-		{
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
-				Id
-				Name
-				IsActive
-			}
-		}
-	`;
-
     getStatesQuery = gql`
 		query States($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
@@ -363,14 +345,6 @@ class NewContract extends Component {
     /**
      * Events of the component
      */
-    handleClickOpen = (scroll, boolValue, id) => () => {
-        this.setState({
-            propertyClick: boolValue,
-            idProperty: id
-        });
-
-        this.setState({open: true, scroll});
-    };
 
     handleClose = () => {
         this.setState({open: false});
@@ -446,7 +420,7 @@ class NewContract extends Component {
                                                                         contractTemplateId: id
                                                                     })
                                                                 }}
-                                                                value={this.state.contractTemplateId}
+                                                                value={3}
                                                             />
                                                         );
                                                     }
