@@ -26,9 +26,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-import DomToImage from 'dom-to-image';
-import { domainToUnicode } from 'url';
-
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -82,7 +79,12 @@ class Signature extends React.Component {
 			loadingData: false,
 			openModal: false,
 			selectedColor: 'blackSelector',
-			selectedLetter: 'letter1Selector'
+			selectedLetter: 'letter1Selector',
+			inputText: '',
+			disableButtonLetter: true,
+			allowSave: false,
+			saved: false,
+			empty: false
 		};
 	}
 
@@ -102,43 +104,79 @@ class Signature extends React.Component {
 		}
 	`;
 	resizeCanvas = () => {
-		// When zoomed out to less than 100%, for some very strange reason,
-		// some browsers report devicePixelRatio as less than 1
-		// and only part of the canvas is cleared then.
-		var ratio = Math.max(window.devicePixelRatio || 1, 1);
-		var canvas = this.sigPad.getCanvas();
-
-		// This part causes the canvas to be cleared
-		canvas.width = canvas.offsetWidth * ratio;
-		canvas.height = canvas.offsetHeight * ratio;
-		canvas.getContext('2d').scale(ratio, ratio);
-		this.sigPad.fromDataURL(this.state.signature);
-		// This library does not listen for canvas changes, so after the canvas is automatically
-		// cleared by the browser, SignaturePad#isEmpty might still return false, even though the
-		// canvas looks empty, because the internal data of this library wasn't cleared. To make sure
-		// that the state of this library is consistent with visual state of the canvas, you
-		// have to clear it manually.
-		//	signaturePad.clear();
-	};
-	insertTextIntoCanvas = () => {
-		var node = document.getElementById('signatureContainer');
-		function getImage(dataUrl, parent) {
+		if (this.sigPad != null) {
+			// When zoomed out to less than 100%, for some very strange reason,
+			// some browsers report devicePixelRatio as less than 1
+			// and only part of the canvas is cleared then.
 			var ratio = Math.max(window.devicePixelRatio || 1, 1);
-			var canvas = parent.sigPad.getCanvas();
+			var canvas = this.sigPad.getCanvas();
 
+			// This part causes the canvas to be cleared
 			canvas.width = canvas.offsetWidth * ratio;
 			canvas.height = canvas.offsetHeight * ratio;
 			canvas.getContext('2d').scale(ratio, ratio);
-			parent.sigPad.fromDataURL(dataUrl);
-			parent.setState({ openModal: false, signature: dataUrl });
+			this.sigPad.fromDataURL(this.state.signature);
+
+			// This library does not listen for canvas changes, so after the canvas is automatically
+			// cleared by the browser, SignaturePad#isEmpty might still return false, even though the
+			// canvas looks empty, because the internal data of this library wasn't cleared. To make sure
+			// that the state of this library is consistent with visual state of the canvas, you
+			// have to clear it manually.
+			//	signaturePad.clear();
 		}
-		DomToImage.toPng(node)
-			.then((dataURL) => {
-				getImage(dataURL, this);
-			})
-			.catch(function(error) {
-				console.error('oops, something went wrong!', error);
+	};
+	insertTextIntoCanvas = () => {
+		if (this.state.inputText.trim() == '') {
+			this.handleOpenSnackbar('warning', 'You must to specify a text signature');
+			return true;
+		}
+		if (this.sigPad != null) {
+			var ratio = Math.max(window.devicePixelRatio || 1, 1);
+			var canvas = this.sigPad.getCanvas();
+			var container = document.getElementById('signaturePadContainer');
+			var ctx;
+			// This part causes the canvas to be cleared
+			canvas.width = canvas.offsetWidth * ratio;
+			canvas.height = canvas.offsetHeight * ratio;
+			ctx = canvas.getContext('2d');
+
+			ctx.scale(ratio, ratio);
+			ctx.font = this.getFontForCanvas();
+			ctx.fillStyle = this.getFillStyleForCanvas();
+			ctx.textAlign = 'center';
+
+			ctx.fillText(this.state.inputText, (container.offsetWidth - 15) / 2, (container.offsetHeight - 15) / 2);
+			this.setState({ openModal: false, disableButtonLetter: true, allowSave: true, empty: false }, () => {
+				this.sigPad.off();
+				this.setState({ signature: this.sigPad.toDataURL() }, () => {
+					this.sigPad.fromDataURL(this.state.signature);
+				});
 			});
+		}
+	};
+	getFontForCanvas = () => {
+		switch (this.state.selectedLetter) {
+			case 'letter1Selector':
+				return '30px "Segoe UI"';
+			case 'letter2Selector':
+				return 'italic  30px "Impact"';
+			case 'letter3Selector':
+				return 'italic  30px "Comic Sans MS"';
+			default:
+				return '30px "Segoe UI"';
+		}
+	};
+	getFillStyleForCanvas = () => {
+		switch (this.state.selectedColor) {
+			case 'blackSelector':
+				return 'black';
+			case 'blueSelector':
+				return '#3f51b5';
+			case 'greenSelector':
+				return '#357a38';
+			default:
+				return 'black';
+		}
 	};
 	loadAgreement = () => {
 		this.setState({ loadingData: true });
@@ -191,7 +229,9 @@ class Signature extends React.Component {
 						this.handleOpenSnackbar('success', 'Document Signed!');
 						this.setState({
 							success: true,
-							loading: false
+							loading: false,
+							allowSave: false,
+							saved: true
 						});
 					})
 					.catch((error) => {
@@ -206,15 +246,30 @@ class Signature extends React.Component {
 		);
 	};
 	handleSaveSignature = () => {
+		if (this.state.saved || !this.state.allowSave) return false;
 		if (this.sigPad.isEmpty()) {
-			this.handleOpenSnackbar('error', 'You need to sign the document!');
+			this.handleOpenSnackbar('warning', 'You need to sign the document!');
 			return false;
 		}
 		this.setState({ signature: this.sigPad.toDataURL() }, this.saveSignature);
 	};
 
 	clearSignature = (e) => {
-		this.sigPad.clear();
+		if (this.state.saved) return false;
+		this.setState(
+			{
+				selectedColor: 'blackSelector',
+				selectedLetter: 'letter1Selector',
+				inputText: '',
+				disableButtonLetter: false,
+				empty: true,
+				allowSave: false
+			},
+			() => {
+				this.sigPad.on();
+				this.sigPad.clear();
+			}
+		);
 	};
 	handleOpenSignatureModal = () => {
 		this.setState({ openSignatureModal: true });
@@ -241,7 +296,7 @@ class Signature extends React.Component {
 		this.loadAgreement();
 	}
 	componentDidMount() {
-		window.addEventListener('resize', this.resizeCanvas.bind(this));
+		document.getElementById('signatureMainContainer').addEventListener('resize', this.resizeCanvas.bind(this));
 		this.resizeCanvas();
 	}
 	handleClickOpenModal = () => {
@@ -249,7 +304,12 @@ class Signature extends React.Component {
 	};
 
 	handleCloseModal = () => {
-		this.setState({ openModal: false });
+		this.setState({
+			openModal: false,
+			selectedColor: 'blackSelector',
+			selectedLetter: 'letter1Selector',
+			inputText: ''
+		});
 	};
 
 	handleColorSelectorClick = (event) => {
@@ -339,7 +399,7 @@ class Signature extends React.Component {
 		const { loading, success } = this.state;
 		const { fullScreen } = this.props;
 		return (
-			<div className="signature-container">
+			<div className="signature-container" id="signatureMainContainer">
 				{this.state.loadingData && <LinearProgress />}
 				<Snackbar
 					anchorOrigin={{
@@ -367,10 +427,9 @@ class Signature extends React.Component {
 						placeholder={this.props.placeholder}
 					/>
 				</div>
-
 				<h1 className="signature-header"> Signature</h1>
 				<div className="signaturePad-MainContainer">
-					<div className="signaturePad-container">
+					<div id="signaturePadContainer" className="signaturePad-container">
 						<SignaturePad
 							ref={(ref) => {
 								this.sigPad = ref;
@@ -379,17 +438,19 @@ class Signature extends React.Component {
 							id="signingSurface"
 							canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 300 }} />}
 							canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
+							onEnd={(e) => {
+								this.setState({ disableButtonLetter: true, allowSave: true, empty: false });
+							}}
 						/>
 					</div>
 				</div>
-
 				<div className="signature-footer">
 					<div className="signature-button-root">
 						<div className="signature-button">
 							<Tooltip title={'Clear'}>
 								<div>
 									<Button
-										disabled={this.state.loading}
+										disabled={this.state.loading || this.state.saved || this.state.empty}
 										variant="fab"
 										color="secondary"
 										className={buttonClassname}
@@ -406,7 +467,7 @@ class Signature extends React.Component {
 							<Tooltip title="Write Signature">
 								<div>
 									<Button
-										disabled={this.state.loading}
+										disabled={this.state.loading || this.state.disableButtonLetter}
 										variant="fab"
 										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
 										onClick={this.handleClickOpenModal}
@@ -424,7 +485,7 @@ class Signature extends React.Component {
 								<Tooltip title="Sign Contract">
 									<div>
 										<Button
-											disabled={this.state.loading}
+											disabled={this.state.loading || !this.state.allowSave}
 											//	disabled={!this.state.formValid}
 											variant="fab"
 											color="primary"
@@ -478,6 +539,10 @@ class Signature extends React.Component {
 								spellCheck="false"
 								className={this.getClassTextInput()}
 								placeholder={'Write Signature'}
+								value={this.state.inputText}
+								onChange={(e) => {
+									this.setState({ inputText: e.currentTarget.value });
+								}}
 							/>
 						</div>
 						<div className="signature-handwriting-letter-container">
@@ -505,11 +570,17 @@ class Signature extends React.Component {
 						</div>
 					</DialogContent>
 					<DialogActions>
-						<Button onClick={this.insertTextIntoCanvas} color="primary">
-							Agree
-						</Button>
-						<Button onClick={this.handleCloseModal} color="primary" autoFocus>
-							Degree
+						<div className={classes.wrapper}>
+							<Button
+								onClick={this.insertTextIntoCanvas}
+								variant="contained"
+								className={classes.buttonSuccess}
+							>
+								Accept
+							</Button>
+						</div>
+						<Button onClick={this.handleCloseModal} color="secondary" variant="contained">
+							Cancel
 						</Button>
 					</DialogActions>
 				</Dialog>

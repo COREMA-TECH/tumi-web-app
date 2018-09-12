@@ -1,5 +1,5 @@
 .add-management-company {
-    width: 600px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,6 +13,31 @@
     cursor: pointer;
 
     transition: all .250s;
+
+}
+
+.add-management-contact {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family:"Segoe UI";
+    color: #41afd7;
+
+    padding: .8em;
+    cursor: pointer;
+
+    transition: all .250s;
+
+}
+
+
+.add-management-contact span {
+    background: #41afd7;
+    border-radius: 5px;
+    padding: .8em 1.5em;
+    color: #fff;
 }
 
 .add-management-company:hover {

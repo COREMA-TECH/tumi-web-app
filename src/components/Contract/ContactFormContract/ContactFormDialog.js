@@ -70,7 +70,11 @@ class FullScreenDialog extends React.Component {
                         message={this.state.messageSnackbar}
                     />
                 </Snackbar>
-                <span className="add-management-company" onClick={this.handleClickOpen}>New Contact</span>
+                <span className="add-management-contact" onClick={this.handleClickOpen}>
+                    <span>
+                    New Contact
+                </span>
+                </span>
                 <Dialog
                     fullScreen
                     open={this.state.open}

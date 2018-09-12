@@ -208,8 +208,8 @@
 }
 
 .green {
-	background: #4caf50;
-	border: 3px solid #4caf50;
+	background: #357a38;
+	border: 3px solid #357a38;
 }
 .blue {
 	background: #3f51b5;
@@ -221,10 +221,10 @@
 }
 
 .greenText {
-	color: #4caf50;
+	color: #357a38;
 }
 .greenText:focus {
-	color: #4caf50;
+	color: #357a38;
 }
 .blueText {
 	color: #3f51b5;

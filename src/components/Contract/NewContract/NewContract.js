@@ -26,7 +26,7 @@ class NewContract extends Component {
 			Id_Company: '',
 			Contract_Name: '',
 			Contrat_Owner: '',
-			contractTemplateId: 1,
+			contractTemplateId: 0,
 			contractExpiration: this.getNewDate(),
 			Id_Entity: 0,
 			Id_User_Signed: '',
@@ -64,11 +64,64 @@ class NewContract extends Component {
 			loading: false,
 			openSnackbar: false,
 			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!'
+			messageSnackbar: 'Dummy text!',
+			loadingCompanies: false
 		};
 	}
 
 	/**
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            Id: '',
+            Id_Company: '',
+            Contract_Name: '',
+            Contrat_Owner: '',
+            contractTemplateId: 0,
+            contractExpiration: '',
+            Id_Entity: 0,
+            Id_User_Signed: '',
+            User_Signed_Title: '',
+            Signed_Date: '',
+            Contract_Status: '',
+            Contract_Start_Date: '',
+            Contract_Term: '',
+            Owner_Expiration_Notification: '',
+            Company_Signed: 0,
+            Company_Signed_Date: '',
+            Id_User_Billing_Contact: '',
+            Billing_Street: '',
+            Billing_City: 0,
+            Billing_State: 0,
+            Billing_Zip_Code: '',
+            Billing_Country: 6,
+            Contract_Terms: '',
+            Exhibit_B: '',
+            Exhibit_C: '',
+            Exhibit_D: '',
+            Exhibit_E: '',
+            Exhibit_F: '',
+            IsActive: 0,
+            User_Created: '',
+            User_Updated: '',
+            Date_Created: '',
+            Date_Updated: '',
+            CompanySignedName: '',
+            open: false,
+            scroll: 'paper',
+            managementDialog: false,
+            Electronic_Address: '',
+            loaded: false,
+            loading: false,
+            openSnackbar: false,
+            variantSnackbar: 'info',
+            messageSnackbar: 'Dummy text!',
+            loadingCompanies: false
+        };
+    }
+
+    /**
      * Snackbar methods
      */
 	handleCloseSnackbar = (event, reason) => {
@@ -86,9 +139,10 @@ class NewContract extends Component {
 			messageSnackbar: message
 		});
 	};
-	/**
+    /**
      * End of SnackBars methods
      */
+
 
 	updateStatus = (id) => {
 		this.setState({
@@ -116,7 +170,19 @@ class NewContract extends Component {
 
 	updateIdCompany = (id) => {
 		this.setState({
-			Id_Entity: id
+			Id_Entity: id,
+			loadingCompanies: true
+		}, () => {
+			this.setState({
+				Id_User_Signed: null,
+				Id_User_Billing_Contact: null
+			}, () => {
+				this.setState({
+					loadingCompanies: false
+				});
+
+
+			});
 		});
 
 		this.props.updateCompanyId(id);
@@ -212,37 +278,37 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-				this.setState(
-					{
-						Contract_Name: data.getcontracts[0].Contract_Name,
-						Contrat_Owner: data.getcontracts[0].Contrat_Owner,
-						Id_Entity: data.getcontracts[0].Id_Entity,
-						Id_User_Signed: data.getcontracts[0].Id_User_Signed,
-						User_Signed_Title: data.getcontracts[0].User_Signed_Title.trim(),
-						Signed_Date: data.getcontracts[0].Signed_Date,
-						Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
-						Contract_Term: data.getcontracts[0].Contract_Term,
-						contractExpiration: data.getcontracts[0].Contract_Expiration_Date,
-						Owner_Expiration_Notification: data.getcontracts[0].Owner_Expiration_Notification,
-						Company_Signed: data.getcontracts[0].Company_Signed,
-						Company_Signed_Date: data.getcontracts[0].Company_Signed_Date,
-						Billing_Street: data.getcontracts[0].Billing_Street,
-						Billing_City: data.getcontracts[0].Billing_City,
-						Billing_State: data.getcontracts[0].Billing_State,
-						Billing_Country: data.getcontracts[0].Billing_Country,
-						Billing_Zip_Code: data.getcontracts[0].Billing_Zip_Code,
-						Contract_Terms: data.getcontracts[0].Contract_Terms,
-						IsActive: data.getcontracts[0].IsActive,
-						Date_Created: data.getcontracts[0].Date_Created,
-						Date_Updated: data.getcontracts[0].Date_Updated,
-						loaded: false
-					},
-					() => {
-						this.setState({
-							loading: false
-						});
-					}
-				);
+				this.setState({
+					Contract_Name: data.getcontracts[0].Contract_Name,
+					Contrat_Owner: data.getcontracts[0].Contrat_Owner,
+					Id_Entity: data.getcontracts[0].Id_Entity,
+					Id_User_Signed: data.getcontracts[0].Id_User_Signed,
+					User_Signed_Title: data.getcontracts[0].User_Signed_Title.trim(),
+					Id_User_Billing_Contact: data.getcontracts[0].Id_User_Billing_Contact,
+					Signed_Date: data.getcontracts[0].Signed_Date,
+					Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
+					Contract_Term: data.getcontracts[0].Contract_Term,
+					contractExpiration: data.getcontracts[0].Contract_Expiration_Date,
+					Owner_Expiration_Notification: data.getcontracts[0].Owner_Expiration_Notification,
+					Company_Signed: data.getcontracts[0].Company_Signed,
+					Company_Signed_Date: data.getcontracts[0].Company_Signed_Date,
+					Billing_Street: data.getcontracts[0].Billing_Street,
+					Billing_City: data.getcontracts[0].Billing_City,
+					Billing_State: data.getcontracts[0].Billing_State,
+					Billing_Country: data.getcontracts[0].Billing_Country,
+					Billing_Zip_Code: data.getcontracts[0].Billing_Zip_Code,
+					Contract_Terms: data.getcontracts[0].Contract_Terms,
+					IsActive: data.getcontracts[0].IsActive,
+					Date_Created: data.getcontracts[0].Date_Created,
+					Date_Updated: data.getcontracts[0].Date_Updated,
+					loaded: false
+				}, () => {
+					this.setState({
+						loading: false
+					}, () => {
+						this.props.updateCompanyId(this.state.Id_Entity);
+					});
+				});
 			})
 			.catch((err) => console.log(err));
 	};
@@ -282,13 +348,13 @@ class NewContract extends Component {
 						Exhibit_D: "''",
 						Exhibit_E: "''",
 						Exhibit_F: "''",
-						IsActive: 1,
+						IsActive: parseInt(this.state.IsActive),
 						User_Created: 1,
 						User_Updated: 1,
 						Date_Created: "'2018-08-14'",
 						Date_Updated: "'2018-08-14'",
 						Electronic_Address: `'${this.state.Electronic_Address}'`,
-						Primary_Email: `'${this.state.Primary_Email}'`
+						Primary_Email: `'${this.state.Primary_Email}'`,
 					}
 				}
 			})
@@ -297,13 +363,14 @@ class NewContract extends Component {
 				this.props.update(data.inscontracts.Id);
 			})
 			.catch((err) => {
-				this.handleOpenSnackbar('warning', 'Complete all inputs and try again');
+				this.handleOpenSnackbar(
+					'warning',
+					'Complete all the inputs and try again'
+				);
+				console.log(err);
 			});
 	};
 
-	/**********************************************************
-     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
-     **********************************************************/
 
 	/**
      * QUERY to get companies
@@ -408,8 +475,12 @@ class NewContract extends Component {
 	}
 
 	render() {
+		if (this.state.loadingCompanies) {
+			return <LinearProgress />
+		}
+
 		if (this.state.loading) {
-			return <LinearProgress />;
+			return <LinearProgress />
 		}
 
 		return (
@@ -469,9 +540,9 @@ class NewContract extends Component {
 																updateIdTemplate={(id) => {
 																	this.setState({
 																		contractTemplateId: id
-																	});
+																	})
 																}}
-																value={3}
+																value={this.state.contractTemplateId}
 															/>
 														);
 													}
@@ -498,16 +569,34 @@ class NewContract extends Component {
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Customer Signed By</span>
-											<ContactDialog
-												valueSelected={this.state.Id_User_Signed}
-												idContact={this.state.Id_Entity}
-												update={this.updateIdContact}
-												updateEmailContact={(email) => {
-													this.setState({
-														Electronic_Address: email
-													});
-												}}
-											/>
+											{
+												this.state.loadingCompanies ? (
+													<ContactDialog
+														defaultValue=''
+														valueSelected={this.state.Id_User_Signed}
+														idContact={this.state.Id_Entity}
+														update={this.updateIdContact}
+														updateEmailContact={(email) => {
+															this.setState({
+																Electronic_Address: email
+															});
+														}}
+													/>
+												) : (
+														<ContactDialog
+															defaultValue=''
+															valueSelected={this.state.Id_User_Signed}
+															idContact={this.state.Id_Entity}
+															update={this.updateIdContact}
+															updateEmailContact={(email) => {
+																this.setState({
+																	Electronic_Address: email
+																});
+															}}
+														/>
+													)
+											}
+
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Customer Signed Title</span>
@@ -608,7 +697,8 @@ class NewContract extends Component {
 										<div className="card-form-row">
 											<span className="input-label primary">Company Signed By</span>
 
-											<InputForm value={this.state.CompanySignedName} change={(text) => { }} />
+											<InputForm value={this.state.CompanySignedName} change={(text) => {
+											}} />
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Company Signed Date</span>
@@ -633,15 +723,90 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Name</span>
-											<ContactDialog
-												idContact={this.state.Id_Entity}
-												update={(id) => {
-													this.setState({
-														Id_User_Billing_Contact: id
-													});
-												}}
-												updateEmailContact={(email) => { }}
-											/>
+											{
+												this.state.loadingCompanies ? (
+													<ContactDialog
+														defaultValue=''
+														valueSelected={this.state.Id_User_Billing_Contact}
+														idContact={this.state.Id_Entity}
+														update={(id) => {
+															this.setState({
+																Id_User_Billing_Contact: id
+															}, () => {
+															});
+														}}
+														updateEmailContact={(email) => {
+
+														}}
+													/>
+												) : (
+														<ContactDialog
+															defaultValue=''
+															valueSelected={this.state.Id_User_Billing_Contact}
+															idContact={this.state.Id_Entity}
+															update={(id) => {
+																this.setState({
+																	Id_User_Billing_Contact: id
+																}, () => {
+																});
+															}}
+															updateEmailContact={(email) => {
+
+															}}
+														/>
+													)
+											}
+
+											{/*<ContactDialog*/}
+											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+											{/*idContact={this.state.Id_Entity}*/}
+											{/*update={(id) => {*/}
+											{/*this.setState({*/}
+											{/*Id_User_Billing_Contact: id*/}
+											{/*}, () => {*/}
+											{/*alert(this.state.Id_User_Billing_Contact)*/}
+											{/*});*/}
+											{/*}}*/}
+											{/*updateEmailContact={(email) => {*/}
+
+											{/*}}*/}
+											{/*/>*/}
+
+											{/*{*/}
+											{/*this.state.loadingCompanies ? (*/}
+											{/*<ContactDialog*/}
+											{/*defaultValue=''*/}
+											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+											{/*idContact={this.state.Id_Entity}*/}
+											{/*update={(id) => {*/}
+											{/*this.setState({*/}
+											{/*Id_User_Billing_Contact: id*/}
+											{/*}, () => {*/}
+											{/*alert(this.state.Id_User_Billing_Contact)*/}
+											{/*});*/}
+											{/*}}*/}
+											{/*updateEmailContact={(email) => {*/}
+
+											{/*}}*/}
+											{/*/>*/}
+											{/*) : (*/}
+											{/*<ContactDialog*/}
+											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+											{/*idContact={this.state.Id_Entity}*/}
+											{/*update={(id) => {*/}
+											{/*this.setState({*/}
+											{/*Id_User_Billing_Contact: id*/}
+											{/*}, () => {*/}
+											{/*alert(this.state.Id_User_Billing_Contact)*/}
+											{/*});*/}
+											{/*}}*/}
+											{/*updateEmailContact={(email) => {*/}
+
+											{/*}}*/}
+											{/*/>*/}
+											{/*)*/}
+											{/*}*/}
+
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Street</span>
@@ -768,12 +933,11 @@ class NewContract extends Component {
 							<div
 								className="contract-next-button"
 								onClick={() => {
-									//alert(this.getNewDate());
 									this.insertContract();
 								}}
 							>
 								Save
-							</div>
+                            </div>
 						</div>
 					</div>
 				</div>

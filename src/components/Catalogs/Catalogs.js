@@ -111,7 +111,7 @@ class Catalogs extends React.Component {
 		query getparentcatalogitem($Id: Int, $Id_Catalog: Int) {
 			getparentcatalogitem(IsActive: 1, Id_Catalog: $Id_Catalog, Id: $Id) {
 				Id
-				Name
+				Name: DisplayLabel
 				DisplayLabel
 			}
 		}
@@ -123,6 +123,7 @@ class Catalogs extends React.Component {
 				Id_Company
 				Code
 				Description
+				Name: Description
 				IsActive
 			}
 		}
@@ -177,12 +178,14 @@ class Catalogs extends React.Component {
 		idToEdit: null,
 
 		idParent: '',
+		idCatalog: '',
 		name: '',
 		displayLabel: '',
 		description: '',
 		value: '',
 
 		idParentValid: true,
+
 		nameValid: true,
 		displayLabelValid: true,
 		descriptionValid: true,
@@ -209,7 +212,7 @@ class Catalogs extends React.Component {
 		this.state = {
 			data: [],
 			catalogs: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
-			idCatalog: 0,
+			idCatalogFilter: 0,
 			idCatalogHasValue: true,
 			idCatalogValid: true,
 			parents: [],
@@ -267,7 +270,7 @@ class Catalogs extends React.Component {
 		//this.setState({ [name]: value.trim() }, this.validateField(name, value));
 	}
 	updateSelect = (id, name) => {
-		var parent = 0;
+		var parent = id;
 		switch (id) {
 			case 5: //City
 				parent = 3; //State
@@ -278,14 +281,13 @@ class Catalogs extends React.Component {
 			case 2: //Country
 				parent = -1; //No Parent
 				break;
-			default:
-				parent: id;
-				break;
 		}
 		this.setState({ [name]: id }, this.validateField(name, id));
+		if (name == 'idCatalogFilter') {
+			this.loadCatalogsItems(id);
+		}
 		if (name == 'idCatalog') {
 			this.loadParents(parent, 0, 0);
-			this.loadCatalogsItems(id);
 		}
 	};
 
@@ -444,7 +446,7 @@ class Catalogs extends React.Component {
 				openModal: true
 			},
 			() => {
-				var parent = 0;
+				var parent = Id_Catalog;
 				switch (Id_Catalog) {
 					case 5: //City
 						parent = 3; //State
@@ -454,9 +456,6 @@ class Catalogs extends React.Component {
 						break;
 					case 2: //Country
 						parent = -1; //No Parent
-						break;
-					default:
-						parent: Id_Catalog;
 						break;
 				}
 				this.loadParents(parent, Id, Id_Parent);
@@ -488,9 +487,9 @@ class Catalogs extends React.Component {
 					this.setState(
 						{
 							catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
-							idCatalog: idCatalog,
-							idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
-							idCatalogValid: data.data.getcatalog.length > 0 ? true : false
+							idCatalogFilter: idCatalog
+							//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
+							//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
 						},
 						() => {
 							this.loadParents(idCatalog);
@@ -744,7 +743,21 @@ class Catalogs extends React.Component {
 		this.setState({ openSnackbar: false });
 	};
 	handleClickOpenModal = () => {
-		this.setState({ openModal: true });
+		this.setState({ openModal: true, idCatalog: this.state.idCatalogFilter }, () => {
+			var parent = this.state.idCatalogFilter;
+			switch (parent) {
+				case 5: //City
+					parent = 3; //State
+					break;
+				case 3: //State
+					parent = 2; //Country
+					break;
+				case 2: //Country
+					parent = -1; //No Parent
+					break;
+			}
+			this.loadParents(parent, 0, 0);
+		});
 	};
 
 	handleCloseModal = () => {
@@ -930,6 +943,22 @@ class Catalogs extends React.Component {
 				</Dialog>
 
 				<div className="catalog__header">
+					<div className="input-container-catalog">
+						<span className="input-label-catalog">Filtro</span>
+
+						<SelectForm
+							id="idCatalogFilter"
+							name="idCatalogFilter"
+							data={this.state.catalogs}
+							disabled={this.state.loadingCatalogs}
+							update={(id) => {
+								this.updateSelect(id, 'idCatalogFilter');
+							}}
+							showNone={false}
+							//error={!this.state.idCatalogValid}
+							value={this.state.idCatalogFilter}
+						/>
+					</div>
 					<button
 						className="add-catalog"
 						onClick={this.handleClickOpenModal}

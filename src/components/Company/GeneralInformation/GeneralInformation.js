@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import './index.css';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import InputFile from '../../ui-components/InputFile/InputFile';
 import { gql } from 'apollo-boost';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
-import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
@@ -693,7 +691,7 @@ class GeneralInformation extends Component {
 
     validateAllFields(fun) {
         let codeValid = this.state.Code.trim().length >= 2;
-        let nameValid = this.state.legalName.trim().length >= 5;
+        let nameValid = this.state.name.trim().length >= 5;
         let descriptionValid = this.state.description.trim().length >= 10;
         let addressValid = this.state.address.trim().length >= 5;
 
@@ -749,7 +747,8 @@ class GeneralInformation extends Component {
         let suiteValid = this.state.suiteValid;
         let phoneNumberValid = this.state.phoneNumberValid;
         let startDateValid = this.state.startDateValid;
-
+        console.log('Field', fieldName);
+        console.log('Value ', value);
         switch (fieldName) {
             case 'Code':
                 codeValid = value.trim().length >= 2;
