@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,7 +11,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import blue from '@material-ui/core/colors/blue';
 import Query from "react-apollo/Query";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
-import {gql} from "apollo-boost";
+import { gql } from "apollo-boost";
 import './index.css';
 import withApollo from "react-apollo/withApollo";
 import ContactFormContract from "../../Contract/ContactFormContract/ContactFormDialog";
@@ -124,10 +124,10 @@ class SimpleDialog extends React.Component {
     `;
 
     render() {
-        const {classes, onClose, selectedValue, ...other} = this.props;
+        const { classes, onClose, selectedValue, ...other } = this.props;
         return (
-            <Dialog fullScreen={true} style={{width: '1024px !important'}} onClose={this.handleClose}
-                    aria-labelledby="simple-dialog-title" {...other}>
+            <Dialog fullScreen={true} style={{ width: '1024px !important' }} onClose={this.handleClose}
+                aria-labelledby="simple-dialog-title" {...other}>
                 <AppBar className={classes.appBar}>
                     <Toolbar>
                         <Typography variant="title" color="inherit" className={classes.flex}>
@@ -152,12 +152,12 @@ class SimpleDialog extends React.Component {
                                 <ListItemText className="row-33" primary="Department" />
                             </ListItem>
                             <Query query={this.getContactsQuery}
-                                   pollInterval={500}
-                                   variables={{Id_Entity: parseInt(this.props.idContact)}}
+                                pollInterval={500}
+                                variables={{ Id_Entity: parseInt(this.props.idContact) }}
                             >
-                                {({loading, error, data, refetch, networkStatus}) => {
+                                {({ loading, error, data, refetch, networkStatus }) => {
                                     //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
+                                    if (loading) return <LinearProgress />;
                                     if (error) return <p>Error </p>;
                                     if (data.getcontacts != null && data.getcontacts.length > 0) {
                                         console.log("Data of cities" + data.getcontacts);
@@ -166,21 +166,21 @@ class SimpleDialog extends React.Component {
                                             data.getcontacts.map((item) => (
 
                                                 <ListItem button onClick={() => {
-                                                    this.handleListItemClick(item.First_Name.trim() + " " + item.Last_Name.trim());
+                                                    this.handleListItemClick((item.First_Name ? item.First_Name.trim() : "") + " " + (item.Last_Name ? item.Last_Name.trim() : ""));
                                                     this.props.onId(item.Id);
                                                     this.props.updateEmailContact(item.Electronic_Address)
                                                 }}
-                                                          key={item.Id}>
+                                                    key={item.Id}>
 
                                                     <ListItemAvatar className="row-10">
                                                         <Avatar className={classes.avatar}>
-                                                            <PersonIcon/>
+                                                            <PersonIcon />
                                                         </Avatar>
                                                     </ListItemAvatar>
                                                     <ListItemText className="row-33"
-                                                        primary={item.First_Name.trim() + item.Last_Name.trim()}/>
-                                                    <ListItemText className="row-33" primary={item.Phone_Number.trim()}/>
-                                                    <ListItemText className="row-33" primary={item.Department.trim()}/>
+                                                        primary={(item.First_Name ? item.First_Name.trim() : "") + (item.Last_Name ? item.Last_Name.trim() : "")} />
+                                                    <ListItemText className="row-33" primary={item.Phone_Number ? item.Phone_Number.trim() : ""} />
+                                                    <ListItemText className="row-33" primary={item.Department ? item.Department.trim() : ""} />
                                                 </ListItem>
                                             ))
                                         )
@@ -191,7 +191,7 @@ class SimpleDialog extends React.Component {
                         </div>
                     </List>
 
-                    <ContactFormContract idContact={this.props.idContact}/>
+                    <ContactFormContract idContact={this.props.idContact} />
                 </div>
             </Dialog>
         )
@@ -220,7 +220,7 @@ class SimpleDialogDemo extends React.Component {
     };
 
     handleClose = value => {
-        this.setState({selectedValue: value, open: false});
+        this.setState({ selectedValue: value, open: false });
     };
 
     GET_CONTACT_BY_ID = gql`        
@@ -234,7 +234,7 @@ class SimpleDialogDemo extends React.Component {
     `;
 
     getContactById = (id, idEntity) => {
-        if(id !== null) {
+        if (id !== null) {
             this.props.client
                 .query({
                     query: this.GET_CONTACT_BY_ID,
@@ -243,7 +243,7 @@ class SimpleDialogDemo extends React.Component {
                         Id_Entity: parseInt(idEntity)
                     }
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setState({
                         selectedValue: data.getcontacts[0].First_Name.trim() + " " + data.getcontacts[0].Last_Name.trim()
                     });

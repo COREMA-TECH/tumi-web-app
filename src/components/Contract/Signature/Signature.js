@@ -25,6 +25,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import renderHTML from 'react-render-html';
 
 const styles = (theme) => ({
 	container: {
@@ -418,14 +419,9 @@ class Signature extends React.Component {
 				</Snackbar>
 				<h1 className="signature-header"> Legal Agreement</h1>
 				<div className="signature-content">
-					<textarea
-						type="text"
-						spellCheck="false"
-						value={this.state.agreement}
-						readOnly
-						className="signature-information"
-						placeholder={this.props.placeholder}
-					/>
+					<div className="signature-information">
+						{renderHTML(this.state.agreement)}
+					</div>
 				</div>
 				<h1 className="signature-header"> Signature</h1>
 				<div className="signaturePad-MainContainer">
@@ -469,7 +465,7 @@ class Signature extends React.Component {
 									<Button
 										disabled={this.state.loading || this.state.disableButtonLetter}
 										variant="fab"
-										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
+										className={[buttonClassname, classes.buttonSuccess].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />

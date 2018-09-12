@@ -367,7 +367,7 @@ class ExhibitContract extends Component {
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
-						<div className="exhibit-content">
+						<div id="agreement" className="exhibit-content">
 							{renderHTML(this.state.agreement)}
 
 						</div>
