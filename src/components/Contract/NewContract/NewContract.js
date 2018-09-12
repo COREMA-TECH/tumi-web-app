@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -13,8 +13,8 @@ import Query from 'react-apollo/Query';
 import AccountDialog from '../../ui-components/AccountDialog/AccountDialog';
 import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from '../../ui-components/SelectForm/SelectFormContractTemplate';
-import {MySnackbarContentWrapper} from "../../Generic/SnackBar";
-import {Snackbar} from "@material-ui/core";
+import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+import { Snackbar } from '@material-ui/core';
 
 class NewContract extends Component {
     constructor(props) {
@@ -140,14 +140,14 @@ class NewContract extends Component {
         this.setState({open: false});
     };
 
-    /**
+	/**
      * End of the events
      */
 
-    /**************************************
+	/**************************************
      *   MUTATION TO CREATE NEW CONTRACT  *
      *************************************/
-    ADD_CONTRACT = gql`
+	ADD_CONTRACT = gql`
 		mutation inscontracts($input: iContracts!) {
 			inscontracts(input: $input) {
 				Id
@@ -155,7 +155,7 @@ class NewContract extends Component {
 		}
 	`;
 
-    GET_CONTRACT = gql`
+	GET_CONTRACT = gql`
 		{
 			getcontracttemplate(Id: null, IsActive: 1) {
 				Id
@@ -165,9 +165,9 @@ class NewContract extends Component {
 		}
 	`;
 
-    GET_CONTRACT_BY_ID = gql`
+	GET_CONTRACT_BY_ID = gql`
 		query getContractById($Id: Int!) {
-			getcontracts(Id: $Id, IsActive: 1) {
+			getcontracts(Id: $Id, IsActive: null) {
 				Id
 				Id_Company
 				Contract_Name
@@ -313,44 +313,41 @@ class NewContract extends Component {
             });
     };
 
-    /**********************************************************
-     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
-     **********************************************************/
 
-    /**
+	/**
      * QUERY to get companies
      */
-    getCompaniesQuery = gql`
+	getCompaniesQuery = gql`
 		query getcompanies($Id: Int!) {
 			getcompanies(Id: $Id, IsActive: 1) {
 				Id
 				Name
 				LegalName
-                Primary_Email
+				Primary_Email
 			}
 		}
 	`;
 
-    getCompanies = (id) => {
-        this.props.client
-            .query({
-                query: this.getCompaniesQuery,
-                variables: {
-                    Id: id
-                }
-            })
-            .then(({data}) => {
-                this.setState({
-                    CompanySignedName: data.getcompanies[0].LegalName,
-                    Primary_Email: data.getcompanies[0].Primary_Email
-                });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+	getCompanies = (id) => {
+		this.props.client
+			.query({
+				query: this.getCompaniesQuery,
+				variables: {
+					Id: id
+				}
+			})
+			.then(({ data }) => {
+				this.setState({
+					CompanySignedName: data.getcompanies[0].LegalName,
+					Primary_Email: data.getcompanies[0].Primary_Email
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
 
-    getStatesQuery = gql`
+	getStatesQuery = gql`
 		query States($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
 				Id
@@ -360,7 +357,7 @@ class NewContract extends Component {
 		}
 	`;
 
-    getCitiesQuery = gql`
+	getCitiesQuery = gql`
 		query Cities($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
 				Id
@@ -369,11 +366,11 @@ class NewContract extends Component {
 			}
 		}
 	`;
-    /**
+	/**
      *  End of the countries, cities and states queries
      */
 
-    getContractTermsQuery = gql`
+	getContractTermsQuery = gql`
 		{
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
 				Id
@@ -383,11 +380,11 @@ class NewContract extends Component {
 		}
 	`;
 
-    /***
+	/***
      * Events fo the dialog
      *
      */
-    /**
+	/**
      * Events of the component
      */
 
@@ -399,6 +396,8 @@ class NewContract extends Component {
         if (this.props.contractId !== 0) {
             this.getContractData(this.props.contractId);
         }
+
+        alert(this.state.Id_User_Billing_Contact + " --- " + this.state.Id_User_Signed);
     }
 
     render() {

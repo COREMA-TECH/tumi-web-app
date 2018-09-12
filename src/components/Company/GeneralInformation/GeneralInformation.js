@@ -690,7 +690,7 @@ class GeneralInformation extends Component {
 
     validateAllFields(fun) {
         let codeValid = this.state.Code.trim().length >= 2;
-        let nameValid = this.state.legalName.trim().length >= 5;
+        let nameValid = this.state.name.trim().length >= 5;
         let descriptionValid = this.state.description.trim().length >= 10;
         let addressValid = this.state.address.trim().length >= 5;
 
@@ -746,7 +746,8 @@ class GeneralInformation extends Component {
         let suiteValid = this.state.suiteValid;
         let phoneNumberValid = this.state.phoneNumberValid;
         let startDateValid = this.state.startDateValid;
-
+        console.log('Field', fieldName);
+        console.log('Value ', value);
         switch (fieldName) {
             case 'Code':
                 codeValid = value.trim().length >= 2;
