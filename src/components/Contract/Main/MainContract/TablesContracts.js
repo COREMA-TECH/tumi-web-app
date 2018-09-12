@@ -267,13 +267,10 @@ import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import TableFooter from "@material-ui/core/TableFooter/TableFooter";
 import TablePagination from "@material-ui/core/TablePagination/TablePagination";
 import Paper from "@material-ui/core/Paper/Paper";
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
+import {gql} from 'apollo-boost';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import withApollo from "react-apollo/withApollo";
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -400,7 +397,8 @@ let id = 0;
 class DepartmentsTable extends React.Component {
     state = {
         page: 0,
-        rowsPerPage: 7
+        rowsPerPage: 7,
+        loadingRemoving: false,
     };
     handleChangePage = (event, page) => {
         this.setState({page});
@@ -425,11 +423,49 @@ class DepartmentsTable extends React.Component {
         return false;
     }
 
+
+    /**
+     * Delete Contracts
+     */
+    deleteContractQuery = gql`
+		mutation delcontracts($Id: Int!) {
+			delcontracts(Id: $Id, IsActive: 0) {
+				Id
+			}
+		}
+	`;
+
+    deleteContractById = id => {
+        this.setState({
+            loadingRemoving: true
+        });
+
+        alert(id);
+
+        this.props.client
+            .mutate({
+                mutation: this.deleteContractQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(data => {
+                this.setState({
+                    loadingRemoving: false
+                });
+            })
+            .catch(error => console.log(error))
+    };
+
     render() {
         const {classes} = this.props;
         let items = this.props.data;
         const {rowsPerPage, page} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
+
+        if (this.state.loadingRemoving) {
+            return <LinearProgress/>
+        }
 
         return (
             <Route render={({history}) => (
@@ -462,7 +498,8 @@ class DepartmentsTable extends React.Component {
                                                         disabled={this.props.loading}
                                                         onClick={(event) => {
                                                             event.stopPropagation();
-                                                            return this.props.onDeleteHandler(row.Id);
+
+                                                            this.deleteContractById(row.Id);
                                                         }}
                                                     >
                                                         <DeleteIcon color="primary"/>
@@ -502,35 +539,6 @@ class DepartmentsTable extends React.Component {
                             </TableRow>
                         </TableFooter>
                     </Table>
-                    <div>
-                        <Dialog
-                            fullScreen={false}
-                            open={this.state.open}
-                            onClose={this.handleClose}
-                            aria-labelledby="responsive-dialog-title"
-                        >
-                            <DialogTitle id="responsive-dialog-title">{"Delete Contract"}</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Do you really want to continue whit this operation?
-                                </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button onClick={this.handleClose} color="primary">
-                                    Disagree
-                                </Button>
-                                <Button onClick={() => {
-                                    this.setState({
-                                        open: false,
-                                    });
-
-                                    this.deleteContractById(this.state.contractId)
-                                }} color="primary" autoFocus>
-                                    Agree
-                                </Button>
-                            </DialogActions>
-                        </Dialog>
-                    </div>
                 </Paper>
             )}/>
         )
@@ -541,5 +549,5 @@ DepartmentsTable.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(DepartmentsTable);
+export default withStyles(styles)(withApollo(DepartmentsTable));
 
