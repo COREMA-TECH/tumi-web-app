@@ -18,6 +18,7 @@ import InputForm from "../InputForm/InputForm";
 import './index.css';
 import withApollo from "react-apollo/withApollo";
 import ManagementCompanyDialog from "../../Contract/ManagementCompany/ManagementCompanyDialog";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const styles = {
@@ -31,7 +32,9 @@ class SimpleDialog extends Component {
     state = {
         firstName: '',
         createdCompany: false,
-        data: []
+        data: [],
+        state: 0,
+        city: 0
     };
 
 
@@ -114,6 +117,7 @@ class SimpleDialog extends Component {
                 Id
                 Name
                 Id_Company
+                ImageURL
             }
         }
     `;
@@ -156,6 +160,7 @@ class SimpleDialog extends Component {
         return (
             <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
                 <DialogTitle id="simple-dialog-title">Select a Management Company</DialogTitle>
+
                 <div>
                     <List>
                         <Query
@@ -178,11 +183,13 @@ class SimpleDialog extends Component {
                                                           key={item.Id}>
                                                     <ListItemAvatar>
                                                         <Avatar className={classes.avatar}>
-                                                            <PersonIcon/>
+                                                            <img className="avatar-uploaded"
+                                                                 src={item.ImageURL} />
                                                         </Avatar>
                                                     </ListItemAvatar>
                                                     <ListItemText primary={item.Name}/>
                                                 </ListItem>
+
                                             )
                                         })
                                     )
