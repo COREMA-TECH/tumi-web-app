@@ -81,6 +81,20 @@ class Contract extends React.Component {
 		});
 	};
 
+	componentWillMount(){
+		try {
+            if(this.props.location.state.contract !== 0){
+                this.setState({
+                    contractId: this.props.location.state.contract
+                })
+            }
+		} catch (e) {
+            this.setState({
+                contractId: 0
+            })
+        }
+	}
+
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;

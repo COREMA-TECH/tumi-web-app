@@ -142,14 +142,14 @@ class SimpleDialog extends React.Component {
                     <List>
                         <div className="list-item-container-scroll">
                             <ListItem className="header-table-contacts">
-                                <ListItemAvatar>
+                                <ListItemAvatar className="row-10">
                                     <Avatar className={classes.avatar}>
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText
+                                <ListItemText className="row-33"
                                     primary="Name" />
-                                <ListItemText primary="Phone Number" />
-                                <ListItemText primary="Department" />
+                                <ListItemText className="row-33" primary="Phone Number" />
+                                <ListItemText className="row-33" primary="Department" />
                             </ListItem>
                             <Query query={this.getContactsQuery}
                                    pollInterval={500}
@@ -172,15 +172,15 @@ class SimpleDialog extends React.Component {
                                                 }}
                                                           key={item.Id}>
 
-                                                    <ListItemAvatar>
+                                                    <ListItemAvatar className="row-10">
                                                         <Avatar className={classes.avatar}>
                                                             <PersonIcon/>
                                                         </Avatar>
                                                     </ListItemAvatar>
-                                                    <ListItemText
+                                                    <ListItemText className="row-33"
                                                         primary={item.First_Name.trim() + item.Last_Name.trim()}/>
-                                                    <ListItemText primary={item.Phone_Number.trim()}/>
-                                                    <ListItemText primary={item.Department.trim()}/>
+                                                    <ListItemText className="row-33" primary={item.Phone_Number.trim()}/>
+                                                    <ListItemText className="row-33" primary={item.Department.trim()}/>
                                                 </ListItem>
                                             ))
                                         )

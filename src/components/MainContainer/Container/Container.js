@@ -9,12 +9,14 @@ import CreateForms from '../../Security/Forms';
 import CreateUsers from '../../Security/Users';
 import Catalogs from '../../Catalogs/';
 import Signature from '../../Contract/Signature';
+import MainContract from "../../Contract/Main/MainContract/MainContract";
 
 class Container extends Component {
 	render() {
 		return (
 			<div className="container">
-				<Route exact path="/home/contract" component={Contract} />
+				<Route exact path="/home/contract/add" component={Contract} />
+				<Route exact path="/home/contracts" component={MainContract} />
 				<Route exact path="/home/company" component={CompanyList} />
 				<Route exact path="/home/company/add" component={CreateCompany} />
 				<Route exact path="/home/company/edit" component={CreateCompany} />
