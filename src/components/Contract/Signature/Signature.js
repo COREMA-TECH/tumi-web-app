@@ -158,13 +158,13 @@ class Signature extends React.Component {
 	getFontForCanvas = () => {
 		switch (this.state.selectedLetter) {
 			case 'letter1Selector':
-				return '30px "Segoe UI"';
+				return '30px "Muli"';
 			case 'letter2Selector':
-				return 'italic  30px "Impact"';
+				return '40px "Rancho"';
 			case 'letter3Selector':
-				return 'italic  30px "Comic Sans MS"';
+				return 'italic 30px "Pacifico"';
 			default:
-				return '30px "Segoe UI"';
+				return '30px "Muli"';
 		}
 	};
 	getFillStyleForCanvas = () => {
@@ -419,9 +419,7 @@ class Signature extends React.Component {
 				</Snackbar>
 				<h1 className="signature-header"> Legal Agreement</h1>
 				<div className="signature-content">
-					<div className="signature-information">
-						{renderHTML(this.state.agreement)}
-					</div>
+					<div className="signature-information">{renderHTML(this.state.agreement)}</div>
 				</div>
 				<h1 className="signature-header"> Signature</h1>
 				<div className="signaturePad-MainContainer">
@@ -465,7 +463,7 @@ class Signature extends React.Component {
 									<Button
 										disabled={this.state.loading || this.state.disableButtonLetter}
 										variant="fab"
-										className={[buttonClassname, classes.buttonSuccess].join(' ')}
+										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />
@@ -533,6 +531,7 @@ class Signature extends React.Component {
 								id="signatureContainer"
 								type="text"
 								spellCheck="false"
+								maxLength="20"
 								className={this.getClassTextInput()}
 								placeholder={'Write Signature'}
 								value={this.state.inputText}

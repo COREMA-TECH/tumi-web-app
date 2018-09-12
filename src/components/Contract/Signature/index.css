@@ -246,28 +246,28 @@
 	height: 50px;
 }
 .default-font {
-	font-family: "Segoe UI";
+	font-family: "Muli";
 }
 .default-font:focus {
-	font-family: "Segoe UI";
+	font-family: "Muli";
 }
 
 .second-font {
-	font-family: "Impact";
-	font-style: italic;
+	font-family: "Rancho";
+	font-size: 30px;
 }
 
 .second-font:focus {
-	font-family: "Impact";
-	font-style: italic;
+	font-family: "Rancho";
+	font-size: 30px;
 }
 
 .third-font {
-	font-family: "Comic Sans MS";
+	font-family: 'Pacifico';
 	font-style: italic;
 }
 
 .third-font:focus {
-	font-family: "Comic Sans MS";
+	font-family: 'Pacifico';
 	font-style: italic;
 }
