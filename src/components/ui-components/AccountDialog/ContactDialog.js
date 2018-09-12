@@ -234,20 +234,22 @@ class SimpleDialogDemo extends React.Component {
     `;
 
     getContactById = (id, idEntity) => {
-        this.props.client
-            .query({
-                query: this.GET_CONTACT_BY_ID,
-                variables: {
-                    Id: parseInt(id),
-                    Id_Entity: parseInt(idEntity)
-                }
-            })
-            .then(({data}) => {
-                this.setState({
-                    selectedValue: data.getcontacts[0].First_Name.trim() + " " + data.getcontacts[0].Last_Name.trim()
-                });
-            })
-            .catch((err) => console.log(err));
+        if(id !== null) {
+            this.props.client
+                .query({
+                    query: this.GET_CONTACT_BY_ID,
+                    variables: {
+                        Id: parseInt(id),
+                        Id_Entity: parseInt(idEntity)
+                    }
+                })
+                .then(({data}) => {
+                    this.setState({
+                        selectedValue: data.getcontacts[0].First_Name.trim() + " " + data.getcontacts[0].Last_Name.trim()
+                    });
+                })
+                .catch((err) => console.log(err));
+        }
     };
 
 
