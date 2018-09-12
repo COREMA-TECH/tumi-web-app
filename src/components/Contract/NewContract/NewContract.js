@@ -122,8 +122,8 @@ class NewContract extends Component {
         }, () => {
             this.setState({
                 loadingCompanies: false,
-                Id_User_Signed: 0,
-                Id_User_Billing_Contact: 0
+                Id_User_Signed: null,
+                Id_User_Billing_Contact: null
             });
         });
 
@@ -226,6 +226,7 @@ class NewContract extends Component {
                     Id_Entity: data.getcontracts[0].Id_Entity,
                     Id_User_Signed: data.getcontracts[0].Id_User_Signed,
                     User_Signed_Title: data.getcontracts[0].User_Signed_Title.trim(),
+                    Id_User_Billing_Contact: data.getcontracts[0].Id_User_Billing_Contact,
                     Signed_Date: data.getcontracts[0].Signed_Date,
                     Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
                     Contract_Term: data.getcontracts[0].Contract_Term,
@@ -246,6 +247,8 @@ class NewContract extends Component {
                 }, () => {
                     this.setState({
                         loading: false
+                    }, () => {
+                        this.props.updateCompanyId(this.state.Id_Entity);
                     });
                 });
             })
@@ -275,7 +278,7 @@ class NewContract extends Component {
                         Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
                         Company_Signed: `'${this.state.Company_Signed}'`,
                         Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
-                        Id_User_Billing_Contact: `'${this.state.Id_User_Billing_Contact}'`,
+                        Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
                         Billing_Street: `'${this.state.Billing_Street}'`,
                         Billing_City: parseInt(this.state.Billing_City),
                         Billing_State: parseInt(this.state.Billing_State),
@@ -646,20 +649,55 @@ class NewContract extends Component {
                                     <div className="card-form-body">
                                         <div className="card-form-row">
                                             <span className="input-label primary">Billing Name</span>
-                                            <ContactDialog
-                                                valueSelected={this.state.Id_User_Billing_Contact}
-                                                idContact={this.state.Id_Entity}
-                                                update={(id) => {
-                                                    this.setState({
-                                                        Id_User_Billing_Contact: id
-                                                    }, () => {
-                                                        alert(this.state.Id_User_Billing_Contact)
-                                                    });
-                                                }}
-                                                updateEmailContact={(email) => {
+                                            {
+                                                this.state.loadingCompanies ? (
+                                                    <ContactDialog
+                                                        defaultValue=''
+                                                        valueSelected={this.state.Id_User_Billing_Contact}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={(id) => {
+                                                            this.setState({
+                                                                Id_User_Billing_Contact: id
+                                                            }, () => {
+                                                                alert(this.state.Id_User_Billing_Contact)
+                                                            });
+                                                        }}
+                                                        updateEmailContact={(email) => {
 
-                                                }}
-                                            />
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <ContactDialog
+                                                        valueSelected={this.state.Id_User_Billing_Contact}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={(id) => {
+                                                            this.setState({
+                                                                Id_User_Billing_Contact: id
+                                                            }, () => {
+                                                                alert(this.state.Id_User_Billing_Contact)
+                                                            });
+                                                        }}
+                                                        updateEmailContact={(email) => {
+
+                                                        }}
+                                                    />
+                                                )
+                                            }
+
+                                            {/*<ContactDialog*/}
+                                                {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+                                                {/*idContact={this.state.Id_Entity}*/}
+                                                {/*update={(id) => {*/}
+                                                    {/*this.setState({*/}
+                                                        {/*Id_User_Billing_Contact: id*/}
+                                                    {/*}, () => {*/}
+                                                        {/*alert(this.state.Id_User_Billing_Contact)*/}
+                                                    {/*});*/}
+                                                {/*}}*/}
+                                                {/*updateEmailContact={(email) => {*/}
+
+                                                {/*}}*/}
+                                            {/*/>*/}
 
                                             {/*{*/}
                                                 {/*this.state.loadingCompanies ? (*/}
