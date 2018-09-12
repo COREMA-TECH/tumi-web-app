@@ -20,23 +20,24 @@ class NewContract extends Component {
 	constructor(props) {
 		super(props);
 
+		console.log("aqui esta la fecha", this.getNewDate());
 		this.state = {
 			Id: '',
 			Id_Company: '',
 			Contract_Name: '',
 			Contrat_Owner: '',
 			contractTemplateId: 1,
-			contractExpiration: '',
+			contractExpiration: this.getNewDate(),
 			Id_Entity: 0,
 			Id_User_Signed: '',
 			User_Signed_Title: '',
-			Signed_Date: '',
+			Signed_Date: this.getNewDate(),
 			Contract_Status: '',
-			Contract_Start_Date: '',
+			Contract_Start_Date: this.getNewDate(),
 			Contract_Term: '',
 			Owner_Expiration_Notification: '',
 			Company_Signed: 0,
-			Company_Signed_Date: '',
+			Company_Signed_Date: this.getNewDate(),
 			Id_User_Billing_Contact: '',
 			Billing_Street: '',
 			Billing_City: 0,
@@ -269,7 +270,7 @@ class NewContract extends Component {
 						Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
 						Company_Signed: `'${this.state.Company_Signed}'`,
 						Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
-						Id_User_Billing_Contact: 1,
+						Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
 						Billing_Street: `'${this.state.Billing_Street}'`,
 						Billing_City: parseInt(this.state.Billing_City),
 						Billing_State: parseInt(this.state.Billing_State),
@@ -281,7 +282,7 @@ class NewContract extends Component {
 						Exhibit_D: "''",
 						Exhibit_E: "''",
 						Exhibit_F: "''",
-						IsActive: parseInt(this.state.IsActive),
+						IsActive: 1,
 						User_Created: 1,
 						User_Updated: 1,
 						Date_Created: "'2018-08-14'",
@@ -296,7 +297,7 @@ class NewContract extends Component {
 				this.props.update(data.inscontracts.Id);
 			})
 			.catch((err) => {
-				this.handleOpenSnackbar('warning', 'Complete all the inputs and try again');
+				this.handleOpenSnackbar('warning', 'Complete all inputs and try again');
 			});
 	};
 
@@ -317,6 +318,24 @@ class NewContract extends Component {
 			}
 		}
 	`;
+
+	getNewDate = () => {
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; //January is 0!
+
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd;
+		}
+		if (mm < 10) {
+			mm = '0' + mm;
+		}
+		var today = yyyy + '-' + mm + '-' + dd;
+
+		return today;
+
+	};
 
 	getCompanies = (id) => {
 		this.props.client
@@ -357,8 +376,8 @@ class NewContract extends Component {
 		}
 	`;
 	/**
-     *  End of the countries, cities and states queries
-     */
+	 *  End of the countries, cities and states queries
+	 */
 
 	getContractTermsQuery = gql`
 		{
@@ -371,12 +390,12 @@ class NewContract extends Component {
 	`;
 
 	/***
-     * Events fo the dialog
-     *
-     */
+	 * Events fo the dialog
+	 *
+	 */
 	/**
-     * Events of the component
-     */
+	 * Events of the component
+	 */
 
 	handleClose = () => {
 		this.setState({ open: false });
@@ -589,7 +608,7 @@ class NewContract extends Component {
 										<div className="card-form-row">
 											<span className="input-label primary">Company Signed By</span>
 
-											<InputForm value={this.state.CompanySignedName} change={(text) => {}} />
+											<InputForm value={this.state.CompanySignedName} change={(text) => { }} />
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Company Signed Date</span>
@@ -621,7 +640,7 @@ class NewContract extends Component {
 														Id_User_Billing_Contact: id
 													});
 												}}
-												updateEmailContact={(email) => {}}
+												updateEmailContact={(email) => { }}
 											/>
 										</div>
 										<div className="card-form-row">
@@ -749,6 +768,7 @@ class NewContract extends Component {
 							<div
 								className="contract-next-button"
 								onClick={() => {
+									//alert(this.getNewDate());
 									this.insertContract();
 								}}
 							>

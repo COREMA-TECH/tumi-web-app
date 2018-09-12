@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import InputFile from '../../ui-components/InputFile/InputFile';
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -119,7 +119,7 @@ class GeneralInformation extends Component {
                 this.props.client
                     .query({
                         query: this.GET_COMPANY_QUERY,
-                        variables: {id: this.props.idCompany},
+                        variables: { id: this.props.idCompany },
                         fetchPolicy: 'no-cache'
                     })
                     .then((data) => {
@@ -187,7 +187,7 @@ class GeneralInformation extends Component {
                 this.props.client
                     .query({
                         query: this.GET_COMPANY_PROPERTY_QUERY,
-                        variables: {Id_Parent: parseInt(this.props.idCompany)},
+                        variables: { Id_Parent: parseInt(this.props.idCompany) },
                         fetchPolicy: 'no-cache'
                     })
                     .then((data) => {
@@ -445,7 +445,7 @@ class GeneralInformation extends Component {
         this.props.client
             .query({
                 query: this.GET_STATES_QUERY,
-                variables: {parent: this.state.country},
+                variables: { parent: this.state.country },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -479,7 +479,7 @@ class GeneralInformation extends Component {
         this.props.client
             .query({
                 query: this.GET_CITIES_QUERY,
-                variables: {parent: this.state.state},
+                variables: { parent: this.state.state },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -515,18 +515,18 @@ class GeneralInformation extends Component {
             idProperty: id
         });
 
-        this.setState({open: true, scroll});
+        this.setState({ open: true, scroll });
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
     handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
 
-        this.setState({openSnackbar: false});
+        this.setState({ openSnackbar: false });
     };
 
     handleOpenSnackbar = (variant, message) => {
@@ -863,13 +863,14 @@ class GeneralInformation extends Component {
         /**
          * If the data is ready render the component
          */
+        console.log("aqio temes ", this.state.startDate);
         return (
             <div className="general-information-tab">
                 {(this.state.loading ||
                     this.state.loadingCities ||
                     this.state.loadingCountries ||
                     this.state.loadingStates ||
-                    this.state.loadingCompanyProperties) && <LinearProgress/>}
+                    this.state.loadingCompanyProperties) && <LinearProgress />}
 
                 <div className="general-information__header">
                     <div className="input-container">
@@ -913,8 +914,8 @@ class GeneralInformation extends Component {
                         </button>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
                 <div className="general-information__content">
                     <div className="card-form-company">
                         <div className="card-form-header grey">General Information</div>
@@ -1132,15 +1133,15 @@ class GeneralInformation extends Component {
                             ))}
                         </div>
                         <div className="card-form-footer">
-							<span className="add-property" onClick={this.handleClickOpen('paper', false, 0)}>
-								+ Add Property
+                            <span className="add-property" onClick={this.handleClickOpen('paper', false, 0)}>
+                                + Add Property
 							</span>
                         </div>
                     </div>
                 </div>
                 {this.props.showStepper ? (
                     <div className="advanced-tab-options">
-						<span
+                        <span
                             className="options-button options-button--next"
                             onClick={() => {
                                 // Then make request mutation to create OR update the company with general information
@@ -1152,12 +1153,12 @@ class GeneralInformation extends Component {
                                 }
                             }}
                         >
-							Save
+                            Save
 						</span>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
 
                 <Dialog
                     open={this.state.open}
@@ -1177,14 +1178,14 @@ class GeneralInformation extends Component {
                                 handleClose={this.handleClose}
                             />
                         ) : (
-                            //Si el click no es en esa property : pasar el Id en nulo
-                            //para que no cargue niguna información relacionada con ese Id
-                            <TabsInDialog
-                                idCompany={this.props.idCompany}
-                                handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                handleClose={this.handleClose}
-                            />
-                        )}
+                                //Si el click no es en esa property : pasar el Id en nulo
+                                //para que no cargue niguna información relacionada con ese Id
+                                <TabsInDialog
+                                    idCompany={this.props.idCompany}
+                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                    handleClose={this.handleClose}
+                                />
+                            )}
                     </DialogContent>
                 </Dialog>
             </div>
