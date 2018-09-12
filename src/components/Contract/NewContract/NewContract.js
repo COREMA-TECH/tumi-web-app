@@ -121,9 +121,14 @@ class NewContract extends Component {
             loadingCompanies: true
         }, () => {
             this.setState({
-                loadingCompanies: false,
                 Id_User_Signed: null,
                 Id_User_Billing_Contact: null
+            }, () => {
+                this.setState({
+                    loadingCompanies: false
+                });
+
+                
             });
         });
 
@@ -396,8 +401,6 @@ class NewContract extends Component {
         if (this.props.contractId !== 0) {
             this.getContractData(this.props.contractId);
         }
-
-        alert(this.state.Id_User_Billing_Contact + " --- " + this.state.Id_User_Signed);
     }
 
     render() {
@@ -510,6 +513,7 @@ class NewContract extends Component {
                                                     />
                                                 ) : (
                                                     <ContactDialog
+                                                        defaultValue=''
                                                         valueSelected={this.state.Id_User_Signed}
                                                         idContact={this.state.Id_Entity}
                                                         update={this.updateIdContact}
@@ -658,7 +662,6 @@ class NewContract extends Component {
                                                             this.setState({
                                                                 Id_User_Billing_Contact: id
                                                             }, () => {
-                                                                alert(this.state.Id_User_Billing_Contact)
                                                             });
                                                         }}
                                                         updateEmailContact={(email) => {
@@ -667,13 +670,13 @@ class NewContract extends Component {
                                                     />
                                                 ) : (
                                                     <ContactDialog
+                                                        defaultValue=''
                                                         valueSelected={this.state.Id_User_Billing_Contact}
                                                         idContact={this.state.Id_Entity}
                                                         update={(id) => {
                                                             this.setState({
                                                                 Id_User_Billing_Contact: id
                                                             }, () => {
-                                                                alert(this.state.Id_User_Billing_Contact)
                                                             });
                                                         }}
                                                         updateEmailContact={(email) => {
