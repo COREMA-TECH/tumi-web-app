@@ -56,9 +56,10 @@
 
 	font-size: 0.8em;
 	font-weight: 400;
-	outline: none;
+
 	font-family: "Segoe UI";
-	resize: none;
+	overflow-y: auto;
+	padding: 20px 20px;
 }
 .signature-information:focus {
 	color: black;
