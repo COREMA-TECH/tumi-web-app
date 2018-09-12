@@ -35,7 +35,11 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import InputForm from '../../ui-components/InputForm/InputForm';
+import InputMask from 'react-input-mask';
+import '../../ui-components/InputForm/index.css';
+
 import './index.css';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -354,7 +358,9 @@ class Catalogs extends React.Component {
 		let usernameValid = this.state.username.trim().length >= 5 && this.state.username.trim().indexOf(' ') < 0;
 		//let fullnameValid = this.state.fullname.trim().length >= 10;
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-		let numberValid = this.state.number.trim().length >= 8;
+		let numberValid =
+			this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+				.length == 10;
 		let passwordValid = this.state.password.trim().length >= 2;
 		let idRolValid = this.state.idRol !== null && this.state.idRol !== 0 && this.state.idRol !== '';
 		let idLanguageValid =
@@ -412,7 +418,9 @@ class Catalogs extends React.Component {
 				emailHasValue = value != '';
 				break;
 			case 'number':
-				numberValid = value.trim().length >= 8;
+				numberValid =
+					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+						.length == 10;
 				numberHasValue = value != '';
 				break;
 			case 'password':
@@ -928,14 +936,18 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Phone</span>
-								<InputForm
+								<span className="input-label primary">Phone Number</span>
+								<InputMask
 									id="number"
 									name="number"
-									maxLength="15"
+									mask="+(999) 999-9999"
+									maskChar=" "
 									value={this.state.number}
-									error={!this.state.numberValid}
-									change={(value) => this.onChangeHandler(value, 'number')}
+									className={this.state.numberValid ? 'input-form' : 'input-form _invalid'}
+									onChange={(e) => {
+										this.onChangeHandler(e.target.value, 'number');
+									}}
+									placeholder="+(999) 999-9999"
 								/>
 							</div>
 							<div className="card-form-row">

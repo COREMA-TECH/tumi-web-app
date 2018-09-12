@@ -30,8 +30,10 @@ import InputFile from '../../ui-components/InputFile/InputFile';
 import days from '../../../data/days.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-
+import InputMask from 'react-input-mask';
+import '../../ui-components/InputForm/index.css';
 import './index.css';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -319,7 +321,9 @@ class ContactcontactForm extends React.Component {
 		let firstnameValid = this.state.firstname.trim().length >= 2;
 		//let middlenameValid = this.state.middlename.trim().length >= 2;
 		let lastnameValid = this.state.lastname.trim().length >= 2;
-		let numberValid = this.state.number.trim().length >= 2;
+		let numberValid =
+			this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+				.length == 10; //this.state.number.trim().length >= 2;
 		let typeValid = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
@@ -378,7 +382,9 @@ class ContactcontactForm extends React.Component {
 				lastnameHasValue = value != '';
 				break;
 			case 'number':
-				numberValid = value.trim().length >= 2;
+				numberValid =
+					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+						.length == 10;
 				numberHasValue = value != '';
 				break;
 			case 'type':
@@ -941,13 +947,17 @@ class ContactcontactForm extends React.Component {
 								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">Phone Number</span>
-									<InputForm
+									<InputMask
 										id="number"
 										name="number"
-										maxLength="15"
-										error={!this.state.numberValid}
+										mask="+(999) 999-9999"
+										maskChar=" "
 										value={this.state.number}
-										change={(value) => this.onNumberChangeHandler(value)}
+										className={this.state.numberValid ? 'input-form' : 'input-form _invalid'}
+										onChange={(e) => {
+											this.onNumberChangeHandler(e.target.value);
+										}}
+										placeholder="+(999) 999-9999"
 									/>
 								</div>
 								<div className="card-form-row">

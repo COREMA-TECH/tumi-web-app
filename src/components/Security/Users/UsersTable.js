@@ -55,7 +55,7 @@ const rows = [
 	{ id: 'Code_User', numeric: false, disablePadding: false, label: 'User Name' },
 	//{ id: 'Full_Name', numeric: false, disablePadding: false, label: 'Full Name' },
 	{ id: 'Electronic_Address', numeric: false, disablePadding: false, label: 'Email' },
-	{ id: 'Phone_Number', numeric: false, disablePadding: false, label: 'Number' },
+	{ id: 'Phone_Number', numeric: false, disablePadding: false, label: 'Phone Number' },
 	{ id: 'Id_Roles', numeric: false, disablePadding: false, label: 'Rol' },
 	{ id: 'Id_language', numeric: false, disablePadding: false, label: 'Language' },
 	{ id: 'IsAdmin', numeric: false, disablePadding: false, label: 'Admin' },
@@ -123,6 +123,7 @@ class EnhancedTableHead extends React.Component {
 								padding={row.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === row.id ? order : false}
 								style={{ backgroundColor: '#3da2c7' }}
+								padding="none"
 							>
 								<Tooltip
 									title="Sort"
@@ -483,11 +484,10 @@ class UsersTable extends React.Component {
 											</Select>
 										</CustomTableCell>
 										<CustomTableCell>{row.Code_User}</CustomTableCell>
-										{/*<CustomTableCell style={{ width: '200px' }}>{row.Full_Name}</CustomTableCell>*/}
 										<CustomTableCell style={{ width: '200px' }}>
 											{row.Electronic_Address}
 										</CustomTableCell>
-										<CustomTableCell>{row.Phone_Number}</CustomTableCell>
+										<CustomTableCell style={{ width: '250px' }}>{row.Phone_Number}</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
 											<Select
 												id="Id_Roles"

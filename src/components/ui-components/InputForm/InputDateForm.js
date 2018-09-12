@@ -9,6 +9,7 @@ class InputDateForm extends Component {
 					<input
 						type="date"
 						value={this.props.value}
+						disabled={this.props.disabled}
 						className={
 							this.props.error ? 'input-form input-form-date _invalid' : 'input-form input-form-date'
 						}
@@ -23,6 +24,7 @@ class InputDateForm extends Component {
 					<input
 						type="date"
 						value={this.props.value}
+						disabled={this.props.disabled}
 						className={
 							this.props.error ? 'input-form input-form-date _invalid' : 'input-form input-form-date'
 						}

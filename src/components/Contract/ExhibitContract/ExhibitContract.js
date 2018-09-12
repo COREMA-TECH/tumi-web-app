@@ -169,11 +169,13 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.sendcontracts != null) {
-					this.handleOpenSnackbar(
-						'success', 'Contract Sent!');
+					this.handleOpenSnackbar('success', 'Contract Sent!');
 					this.resetState();
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading agreement: sendcontracts not exists in query data');
+					this.handleOpenSnackbar(
+						'error',
+						'Error: Loading agreement: sendcontracts not exists in query data'
+					);
 					this.setState({ loadingData: false });
 				}
 			})
@@ -246,7 +248,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => { }
+			() => {}
 		);
 	};
 	insertExhibit = () => {
@@ -296,7 +298,7 @@ class ExhibitContract extends Component {
 
 	createPDFContractHandler = () => {
 		var textToWrite = document.getElementById('agreement').innerHTML;
-		var textFileAsBlob = new Blob([textToWrite], { type: 'text/html' });
+		var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/html' });
 		var fileNameToSaveAs = 'Contract.html';
 
 		var downloadLink = document.createElement('a');
@@ -362,14 +364,13 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-									'New Contract Preview'
-								)}
+								'New Contract Preview'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
 							{renderHTML(this.state.agreement)}
-
 						</div>
 					</DialogContent>
 					<DialogActions>
@@ -592,10 +593,5 @@ class ExhibitContract extends Component {
 		);
 	}
 }
-
-PositionsCompanyForm.propTypes = {
-	classes: PropTypes.object.isRequired,
-	fullScreen: PropTypes.bool.isRequired
-};
 
 export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));

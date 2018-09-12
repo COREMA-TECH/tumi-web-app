@@ -13,6 +13,8 @@ import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 import FileUpload from '../../ui-components/FileUpload/FileUpload';
+import InputMask from 'react-input-mask';
+import '../../ui-components/InputForm/index.css';
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
@@ -703,7 +705,15 @@ class GeneralInformation extends Component {
 
 		let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
 		let suiteValid = parseInt(this.state.suite) >= 0;
-		let phoneNumberValid = this.state.phoneNumber.trim().length >= 5;
+
+		let phoneNumberValid =
+			this.state.phoneNumber
+				.replace(/-/g, '')
+				.replace(/ /g, '')
+				.replace('+', '')
+				.replace('(', '')
+				.replace(')', '').length == 10;
+
 		let startDateValid = this.state.startDate.trim().length == 10;
 
 		this.setState(
@@ -746,8 +756,7 @@ class GeneralInformation extends Component {
 		let suiteValid = this.state.suiteValid;
 		let phoneNumberValid = this.state.phoneNumberValid;
 		let startDateValid = this.state.startDateValid;
-		console.log('Field', fieldName);
-		console.log('Value ', value);
+
 		switch (fieldName) {
 			case 'Code':
 				codeValid = value.trim().length >= 2;
@@ -798,8 +807,9 @@ class GeneralInformation extends Component {
 
 				break;
 			case 'phoneNumber':
-				phoneNumberValid = value.trim().length >= 5;
-
+				phoneNumberValid =
+					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+						.length == 10;
 				break;
 			case 'startDate':
 				startDateValid = value.trim().length == 10;
@@ -860,7 +870,6 @@ class GeneralInformation extends Component {
 		/**
          * If the data is ready render the component
          */
-		console.log('aqio temes ', this.state.startDate);
 		return (
 			<div className="general-information-tab">
 				{(this.state.loading ||
@@ -880,6 +889,7 @@ class GeneralInformation extends Component {
 							}}
 							error={!this.state.rateValid}
 							maxLength="10"
+							disabled={!this.props.showStepper}
 						/>
 					</div>
 					<div className="input-container">
@@ -891,6 +901,7 @@ class GeneralInformation extends Component {
 							}}
 							error={!this.state.codeValid}
 							maxLength="10"
+							disabled={!this.props.showStepper}
 						/>
 					</div>
 				</div>
@@ -926,6 +937,7 @@ class GeneralInformation extends Component {
 									}}
 									error={!this.state.nameValid}
 									maxLength="35"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -937,6 +949,7 @@ class GeneralInformation extends Component {
 									}}
 									error={!this.state.addressValid}
 									maxLength="50"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -947,6 +960,7 @@ class GeneralInformation extends Component {
 										this.updateInput(text, 'optionalAddress');
 									}}
 									maxLength="50"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -959,6 +973,7 @@ class GeneralInformation extends Component {
 									}}
 									error={!this.state.suiteValid}
 									maxLength="10"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -971,6 +986,7 @@ class GeneralInformation extends Component {
 									update={this.updateCountry}
 									error={!this.state.countryValid}
 									value={this.state.country}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -982,6 +998,7 @@ class GeneralInformation extends Component {
 									update={this.updateState}
 									error={!this.state.stateValid}
 									value={this.state.state}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -993,6 +1010,7 @@ class GeneralInformation extends Component {
 									update={this.updateCity}
 									error={!this.state.cityValid}
 									value={this.state.city}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1005,17 +1023,23 @@ class GeneralInformation extends Component {
 									error={!this.state.zipCodeValid}
 									maxLength="10"
 									type="number"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">Phone Number</span>
-								<InputForm
+								<InputMask
+									id="number"
+									name="number"
+									mask="+(999) 999-9999"
+									maskChar=" "
 									value={this.state.phoneNumber}
-									change={(text) => {
-										this.updateInput(text, 'phoneNumber');
+									className={this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'}
+									onChange={(e) => {
+										this.updateInput(e.target.value, 'phoneNumber');
 									}}
-									error={!this.state.phoneNumberValid}
-									maxLength="20"
+									placeholder="+(999) 999-9999"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1027,6 +1051,7 @@ class GeneralInformation extends Component {
 										this.updateInput(text, 'fax');
 									}}
 									maxLength="15"
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 						</div>
@@ -1042,6 +1067,7 @@ class GeneralInformation extends Component {
 										this.updateInput(text, 'startDate');
 									}}
 									error={!this.state.startDateValid}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1052,6 +1078,7 @@ class GeneralInformation extends Component {
 									error={!this.state.startWeekValid}
 									update={this.updateStartWeek}
 									value={this.state.startWeek}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 
@@ -1063,6 +1090,7 @@ class GeneralInformation extends Component {
 									error={!this.state.endWeekValid}
 									update={this.updateEndWeek}
 									value={this.state.endWeek}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 
@@ -1075,6 +1103,7 @@ class GeneralInformation extends Component {
 											contractURL: url
 										});
 									}}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
@@ -1085,6 +1114,7 @@ class GeneralInformation extends Component {
 											insuranceURL: url
 										});
 									}}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
@@ -1095,6 +1125,7 @@ class GeneralInformation extends Component {
 											otherURL: url
 										});
 									}}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
@@ -1105,6 +1136,7 @@ class GeneralInformation extends Component {
 											other01URL: url
 										});
 									}}
+									disabled={!this.props.showStepper}
 								/>
 							</div>
 						</div>
