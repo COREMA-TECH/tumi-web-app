@@ -123,7 +123,6 @@ class EnhancedTableHead extends React.Component {
 								padding={row.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === row.id ? order : false}
 								style={{ backgroundColor: '#3da2c7' }}
-								padding="none"
 							>
 								<Tooltip
 									title="Sort"
@@ -487,7 +486,9 @@ class UsersTable extends React.Component {
 										<CustomTableCell style={{ width: '200px' }}>
 											{row.Electronic_Address}
 										</CustomTableCell>
-										<CustomTableCell style={{ width: '250px' }}>{row.Phone_Number}</CustomTableCell>
+										<CustomTableCell padding="none" style={{ width: '250px' }}>
+											{row.Phone_Number}
+										</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
 											<Select
 												id="Id_Roles"
