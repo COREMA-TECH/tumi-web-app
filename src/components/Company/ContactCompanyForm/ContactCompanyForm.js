@@ -317,7 +317,7 @@ class ContactcontactForm extends React.Component {
 	validateAllFields(fun) {
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 		let firstnameValid = this.state.firstname.trim().length >= 2;
-		let middlenameValid = this.state.middlename.trim().length >= 2;
+		//let middlenameValid = this.state.middlename.trim().length >= 2;
 		let lastnameValid = this.state.lastname.trim().length >= 2;
 		let numberValid = this.state.number.trim().length >= 2;
 		let typeValid = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
@@ -329,7 +329,7 @@ class ContactcontactForm extends React.Component {
 			{
 				emailValid,
 				firstnameValid,
-				middlenameValid,
+				//	middlenameValid,
 				lastnameValid,
 				numberValid,
 				typeValid,
@@ -344,7 +344,7 @@ class ContactcontactForm extends React.Component {
 	validateField(fieldName, value) {
 		let emailValid = this.state.emailValid;
 		let firstnameValid = this.state.firstnameValid;
-		let middlenameValid = this.state.middlenameValid;
+		//	let middlenameValid = this.state.middlenameValid;
 		let lastnameValid = this.state.lastnameValid;
 		let numberValid = this.state.numberValid;
 		let typeValid = this.state.typeValid;
@@ -370,7 +370,7 @@ class ContactcontactForm extends React.Component {
 				firstnameHasValue = value != '';
 				break;
 			case 'middlename':
-				middlenameValid = value.trim().length >= 2;
+				//	middlenameValid = value.trim().length >= 2;
 				middlenameHasValue = value != '';
 				break;
 			case 'lastname':
@@ -400,7 +400,7 @@ class ContactcontactForm extends React.Component {
 			{
 				emailValid,
 				firstnameValid,
-				middlenameValid,
+				//	middlenameValid,
 				lastnameValid,
 				numberValid,
 				typeValid,
@@ -425,7 +425,7 @@ class ContactcontactForm extends React.Component {
 				formValid:
 					this.state.emailValid &&
 					this.state.firstnameValid &&
-					this.state.middlenameValid &&
+					//		this.state.middlenameValid &&
 					this.state.lastnameValid &&
 					this.state.numberValid &&
 					this.state.typeValid &&
@@ -476,7 +476,7 @@ class ContactcontactForm extends React.Component {
 				formValid: true,
 				emailValid: true,
 				firstnameValid: true,
-				middlenameValid: true,
+				//	middlenameValid: true,
 				lastnameValid: true,
 				typeValid: true,
 				idDepartmentValid: true,
@@ -889,7 +889,7 @@ class ContactcontactForm extends React.Component {
 										id="middlename"
 										name="middlename"
 										maxLength="15"
-										error={!this.state.middlenameValid}
+										//error={!this.state.middlenameValid}
 										value={this.state.middlename}
 										change={(value) => this.onMiddleNameChangeHandler(value)}
 									/>
@@ -933,7 +933,7 @@ class ContactcontactForm extends React.Component {
 									<InputForm
 										id="email"
 										name="email"
-										maxLength="30"
+										maxLength="50"
 										error={!this.state.emailValid}
 										value={this.state.email}
 										change={(value) => this.onEmailChangeHandler(value)}

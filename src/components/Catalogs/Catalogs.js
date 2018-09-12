@@ -123,6 +123,7 @@ class Catalogs extends React.Component {
 				Id_Company
 				Code
 				Description
+				Name: Description
 				IsActive
 			}
 		}

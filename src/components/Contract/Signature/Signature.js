@@ -133,31 +133,37 @@ class Signature extends React.Component {
 		if (this.sigPad != null) {
 			var ratio = Math.max(window.devicePixelRatio || 1, 1);
 			var canvas = this.sigPad.getCanvas();
+			var container = document.getElementById('signaturePadContainer');
 			var ctx;
 			// This part causes the canvas to be cleared
 			canvas.width = canvas.offsetWidth * ratio;
 			canvas.height = canvas.offsetHeight * ratio;
 			ctx = canvas.getContext('2d');
+
 			ctx.scale(ratio, ratio);
 			ctx.font = this.getFontForCanvas();
 			ctx.fillStyle = this.getFillStyleForCanvas();
 			ctx.textAlign = 'center';
-			ctx.fillText(this.state.inputText, canvas.width / 2, canvas.height / 2);
+
+			ctx.fillText(this.state.inputText, (container.offsetWidth - 15) / 2, (container.offsetHeight - 15) / 2);
 			this.setState({ openModal: false, disableButtonLetter: true, allowSave: true, empty: false }, () => {
 				this.sigPad.off();
+				this.setState({ signature: this.sigPad.toDataURL() }, () => {
+					this.sigPad.fromDataURL(this.state.signature);
+				});
 			});
 		}
 	};
 	getFontForCanvas = () => {
 		switch (this.state.selectedLetter) {
 			case 'letter1Selector':
-				return '40px "Segoe UI"';
+				return '30px "Segoe UI"';
 			case 'letter2Selector':
-				return 'italic  40px "Impact"';
+				return 'italic  30px "Impact"';
 			case 'letter3Selector':
-				return 'italic  40px "Comic Sans MS"';
+				return 'italic  30px "Comic Sans MS"';
 			default:
-				return '40px "Segoe UI"';
+				return '30px "Segoe UI"';
 		}
 	};
 	getFillStyleForCanvas = () => {
@@ -241,10 +247,10 @@ class Signature extends React.Component {
 	};
 	handleSaveSignature = () => {
 		if (this.state.saved || !this.state.allowSave) return false;
-		/*	if (this.sigPad.isEmpty()) {
-			this.handleOpenSnackbar('error', 'You need to sign the document!');
+		if (this.sigPad.isEmpty()) {
+			this.handleOpenSnackbar('warning', 'You need to sign the document!');
 			return false;
-		}*/
+		}
 		this.setState({ signature: this.sigPad.toDataURL() }, this.saveSignature);
 	};
 
@@ -256,7 +262,8 @@ class Signature extends React.Component {
 				selectedLetter: 'letter1Selector',
 				inputText: '',
 				disableButtonLetter: false,
-				empty: true
+				empty: true,
+				allowSave: false
 			},
 			() => {
 				this.sigPad.on();
@@ -422,7 +429,7 @@ class Signature extends React.Component {
 				</div>
 				<h1 className="signature-header"> Signature</h1>
 				<div className="signaturePad-MainContainer">
-					<div className="signaturePad-container">
+					<div id="signaturePadContainer" className="signaturePad-container">
 						<SignaturePad
 							ref={(ref) => {
 								this.sigPad = ref;
