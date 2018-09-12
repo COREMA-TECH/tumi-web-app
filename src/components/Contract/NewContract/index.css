@@ -13,7 +13,7 @@ body {
 	padding: 0;
 }
 
-@media (min-width: 420px) {
+@media (min-width: 300px) {
 	.contract-container {
 		width: 100%;
 		height: 100%;

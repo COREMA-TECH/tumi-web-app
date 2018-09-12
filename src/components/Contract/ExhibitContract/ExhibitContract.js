@@ -148,6 +148,7 @@ class ExhibitContract extends Component {
 			}
 		}
 	`;
+
 	loadAgreement = () => {
 		console.log('aqui estoy 1');
 		this.setState({ loadingData: true });

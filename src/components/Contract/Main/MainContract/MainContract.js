@@ -60,6 +60,33 @@ class MainContract extends Component {
     };
 
     /**
+     * Delete Contracts
+     */
+    deleteContractQuery = gql`
+		mutation delcontracts($Id: Int!) {
+			inscontracts(Id: $Id, IsActive: 0) {
+				Id
+			}
+		}
+	`;
+
+    deleteContractById = id => {
+        this.props.client
+            .query({
+                query: this.deleteContractQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(data => {
+
+            })
+            .catch(error => console.log(error))
+    };
+
+
+
+    /**
      * Get data before render
      */
     componentWillMount() {
@@ -81,7 +108,7 @@ class MainContract extends Component {
 
 
         let renderTableWithContracts = () => (
-                <TablesContracts data={this.state.data[0]}/>
+                <TablesContracts data={this.state.data[0]} />
         );
 
         return (

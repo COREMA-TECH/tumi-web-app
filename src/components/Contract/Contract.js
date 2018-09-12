@@ -5,6 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import NewContract from './NewContract/NewContract';
 import ExhibitContract from './ExhibitContract/ExhibitContract';
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const styles = (theme) => ({
 	root: {
@@ -61,7 +62,8 @@ class Contract extends React.Component {
 	state = {
 		value: 0,
 		contractId: 0,
-		companyId: 0
+		companyId: 0,
+		loading: false
 	};
 
 	handleChange = (event, value) => {
@@ -82,16 +84,28 @@ class Contract extends React.Component {
 	};
 
 	componentWillMount(){
+		this.setState({
+			loading: true
+		});
+
 		try {
             if(this.props.location.state.contract !== 0){
                 this.setState({
                     contractId: this.props.location.state.contract
-                })
+                }, () => {
+                    this.setState({
+                        loading: false
+                    });
+				})
             }
 		} catch (e) {
             this.setState({
                 contractId: 0
-            })
+            }, () => {
+                this.setState({
+                    loading: false
+                });
+			})
         }
 	}
 
@@ -99,6 +113,10 @@ class Contract extends React.Component {
 		const { classes } = this.props;
 		const { value } = this.state;
 		const contractValue = this.state.contractId === 0;
+
+		if (this.state.loading) {
+			return <LinearProgress />
+		}
 
 		return (
 			<div className={classes.root}>

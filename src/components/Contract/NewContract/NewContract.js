@@ -44,6 +44,7 @@ class NewContract extends Component {
             Billing_Zip_Code: '',
             Billing_Country: 6,
             Contract_Terms: '',
+            Id_Contract_Template: 0,
             Exhibit_B: '',
             Exhibit_C: '',
             Exhibit_D: '',
@@ -127,8 +128,6 @@ class NewContract extends Component {
                 this.setState({
                     loadingCompanies: false
                 });
-
-                
             });
         });
 
@@ -155,6 +154,14 @@ class NewContract extends Component {
 	ADD_CONTRACT = gql`
 		mutation inscontracts($input: iContracts!) {
 			inscontracts(input: $input) {
+				Id
+			}
+		}
+	`;
+
+	UPDATE_CONTRACT = gql`
+		mutation updcontracts($input: iContracts!) {
+			updcontracts(input: $input) {
 				Id
 			}
 		}
@@ -194,6 +201,7 @@ class NewContract extends Component {
 				Billing_Zip_Code
 				Billing_Country
 				Contract_Terms
+				Id_Contract_Template
 				Exhibit_B
 				Exhibit_C
 				Exhibit_D
@@ -235,6 +243,7 @@ class NewContract extends Component {
                     Signed_Date: data.getcontracts[0].Signed_Date,
                     Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
                     Contract_Term: data.getcontracts[0].Contract_Term,
+                    Id_Contract_Template: data.getcontracts[0].Id_Contract_Template,
                     contractExpiration: data.getcontracts[0].Contract_Expiration_Date,
                     Owner_Expiration_Notification: data.getcontracts[0].Owner_Expiration_Notification,
                     Company_Signed: data.getcontracts[0].Company_Signed,
@@ -254,6 +263,7 @@ class NewContract extends Component {
                         loading: false
                     }, () => {
                         this.props.updateCompanyId(this.state.Id_Entity);
+                        alert(this.state.Id_Contract_Template);
                     });
                 });
             })
@@ -289,7 +299,8 @@ class NewContract extends Component {
                         Billing_State: parseInt(this.state.Billing_State),
                         Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
                         Billing_Country: 6,
-                        Contract_Terms: `'${this.state.Contract_Terms}'`,
+                        Contract_Terms: "''",
+                        Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
                         Exhibit_B: "''",
                         Exhibit_C: "''",
                         Exhibit_D: "''",
@@ -308,6 +319,66 @@ class NewContract extends Component {
             .then(({data}) => {
                 console.log('Server data response is: ' + data.inscontracts);
                 this.props.update(data.inscontracts.Id);
+            })
+            .catch((err) => {
+                this.handleOpenSnackbar(
+                    'warning',
+                    'Complete all the inputs and try again'
+                );
+                console.log(err);
+            });
+    };
+
+
+    updateContract = (id) => {
+        //Create the mutation using apollo global client
+        this.props.client
+            .mutate({
+                // Pass the mutation structure
+                mutation: this.UPDATE_CONTRACT,
+                variables: {
+                    input: {
+                        Id: id,
+                        Id_Company: 1,
+                        Contract_Name: `'${this.state.Contract_Name}'`,
+                        Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+                        Id_Entity: parseInt(this.state.Id_Entity),
+                        Id_User_Signed: parseInt(this.state.Id_User_Signed),
+                        User_Signed_Title: `'${this.state.User_Signed_Title}'`,
+                        Signed_Date: `'${this.state.Signed_Date}'`,
+                        Contract_Status: `'${this.state.Contract_Status}'`,
+                        Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
+                        Contract_Term: parseInt(this.state.Contract_Term),
+                        Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
+                        Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
+                        Company_Signed: `'${this.state.Company_Signed}'`,
+                        Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
+                        Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
+                        Billing_Street: `'${this.state.Billing_Street}'`,
+                        Billing_City: parseInt(this.state.Billing_City),
+                        Billing_State: parseInt(this.state.Billing_State),
+                        Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
+                        Billing_Country: 6,
+                        Contract_Terms: "''",
+                        Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
+                        Exhibit_B: "''",
+                        Exhibit_C: "''",
+                        Exhibit_D: "''",
+                        Exhibit_E: "''",
+                        Exhibit_F: "''",
+                        IsActive: parseInt(this.state.IsActive),
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: "'2018-08-14'",
+                        Date_Updated: "'2018-08-14'",
+                        Electronic_Address: `'${this.state.Electronic_Address}'`,
+                        Primary_Email: `'${this.state.Primary_Email}'`,
+                    }
+                }
+            })
+            .then(({data}) => {
+                console.log('Server data response is: ' + data.updcontracts);
+                this.props.update(data.updcontracts.Id);
             })
             .catch((err) => {
                 this.handleOpenSnackbar(
@@ -463,15 +534,10 @@ class NewContract extends Component {
                                                                 data={data.getcontracttemplate}
                                                                 update={(value) => {
                                                                     this.setState({
-                                                                        Contract_Terms: value
+                                                                        Id_Contract_Template: value
                                                                     });
                                                                 }}
-                                                                updateIdTemplate={(id) => {
-                                                                    this.setState({
-                                                                        contractTemplateId: id
-                                                                    })
-                                                                }}
-                                                                value={this.state.contractTemplateId}
+                                                                value={this.state.Id_Contract_Template}
                                                             />
                                                         );
                                                     }
@@ -862,7 +928,13 @@ class NewContract extends Component {
                             <div
                                 className="contract-next-button"
                                 onClick={() => {
-                                    this.insertContract();
+                                    if (this.props.contractId !== 0) {
+                                        alert("UpdateContract with id: " + this.props.contractId);
+                                        this.updateContract(this.props.contractId);
+                                    } else {
+                                        alert("Insert Contract");
+                                        this.insertContract();
+                                    }
                                 }}
                             >
                                 Save
