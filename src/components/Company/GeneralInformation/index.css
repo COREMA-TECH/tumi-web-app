@@ -303,19 +303,14 @@
 		flex-direction: row;
 		justify-content: flex-start;
 		align-items: center;
+
+		height: 70px;
 	}
 
 	.general-information__content .card-form-row {
 		flex-direction: row;
 		justify-content: flex-start;
 		align-items: flex-start;
-	}
-
-	.card-form-row .input-label {
-		justify-content: flex-end;
-
-		min-width: 35%;
-		margin-right: 5px;
 	}
 }
 

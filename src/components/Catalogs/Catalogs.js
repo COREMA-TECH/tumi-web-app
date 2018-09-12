@@ -713,7 +713,7 @@ class Catalogs extends React.Component {
 					if (this.state.formValid) this.insertCatalogItem();
 					else {
 						this.handleOpenSnackbar(
-							'error',
+							'warning',
 							'Error: Saving Information: You must fill all the required fields'
 						);
 						this.setState({

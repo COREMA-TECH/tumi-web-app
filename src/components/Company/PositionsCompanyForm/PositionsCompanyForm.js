@@ -696,7 +696,7 @@ class PositionsCompanyForm extends React.Component {
 					if (this.state.formValid) this.insertPosition();
 					else {
 						this.props.handleOpenSnackbar(
-							'error',
+							'warning',
 							'Error: Saving Information: You must fill all the required fields'
 						);
 						this.setState({

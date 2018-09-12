@@ -773,7 +773,7 @@ class ContactcontactForm extends React.Component {
 					if (this.state.formValid) this.insertContacts();
 					else {
 						this.props.handleOpenSnackbar(
-							'error',
+							'warning',
 							'Error: Saving Information: You must fill all the required fields'
 						);
 						this.setState({
