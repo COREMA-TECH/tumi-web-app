@@ -9,6 +9,8 @@
     }
 }
 
-div[class*="MuiDialogContent-root-"] {
-    min-width: auto !important;
+@media only screen and (max-width: 480px) {
+    div[class*="MuiDialogContent-root-"] {
+        min-width: auto !important;
+    }
 }
