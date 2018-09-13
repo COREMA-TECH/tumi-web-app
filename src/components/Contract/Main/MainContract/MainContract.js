@@ -124,8 +124,8 @@ class MainContract extends Component {
         let renderHeaderContent = () => (
             <div className="company-list__header">
                 <div className="search-container">
-                    <input type="text" className="input-search-contract"/>
-                    <button className="button-search-contract"></button>
+                    <input type="text" placeholder="Search contract" className="input-search-contract"/>
+                    <button className="button-search-contract">Search</button>
                 </div>
                 <button className="add-company" onClick={() => {
                     this.redirectToCreateContract()
