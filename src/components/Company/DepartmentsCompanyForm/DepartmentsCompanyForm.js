@@ -16,7 +16,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-
+import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
 const styles = (theme) => ({
