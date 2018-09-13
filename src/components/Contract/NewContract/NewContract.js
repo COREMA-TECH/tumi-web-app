@@ -316,7 +316,6 @@ class NewContract extends Component {
                         loading: false
                     }, () => {
                         this.props.updateCompanyId(this.state.Id_Entity);
-                        alert(this.state.Id_Contract_Template);
                     });
                 });
             })
@@ -325,7 +324,6 @@ class NewContract extends Component {
 
     insertContract = () => {
         //Create the mutation using apollo global client
-        alert(this.state.Company_Signed);
 
         this.props.client
             .mutate({
@@ -628,7 +626,6 @@ class NewContract extends Component {
                                                             Company_Signed: value
                                                         },
                                                         () => {
-                                                            alert(this.state.Company_Signed);
                                                             this.getCompanies(this.state.Company_Signed);
                                                         }
                                                     );
@@ -1002,10 +999,8 @@ class NewContract extends Component {
                                 className="contract-next-button"
                                 onClick={() => {
                                     if (this.props.contractId !== 0) {
-                                        alert("UpdateContract with id: " + this.props.contractId);
                                         this.updateContract(this.props.contractId);
                                     } else {
-                                        alert("Insert Contract");
                                         this.insertContract();
                                     }
                                 }}

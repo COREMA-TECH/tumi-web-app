@@ -43,7 +43,6 @@ class MainContract extends Component {
         this.setState({
             loadingContracts: true,
         }, () => {
-            alert("loading");
         });
 
         this.props.client
@@ -114,7 +113,7 @@ class MainContract extends Component {
 
         if (this.state.loadingRemoving) {
             return (
-                <CircularProgress size={100}/>
+                <CircularProgress/>
             )
         }
 
@@ -134,7 +133,7 @@ class MainContract extends Component {
                     </div>
                 </div>
                 <div className="main-contract__content">
-                    <Query query={this.getContractsQuery} pollInterval={1000}>
+                    <Query query={this.getContractsQuery} pollInterval={300}>
                         {({loading, error, data, refetch, networkStatus}) => {
                             //if (networkStatus === 4) return <LinearProgress />;
                             if (loading) return <LinearProgress/>;
