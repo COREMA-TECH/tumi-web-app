@@ -42,6 +42,9 @@
     left: 0;
     z-index: 99;
     width: 0px;
+    @media only screen and (min-width: 768px) {
+        display: none;
+    }
     &-callback {
         display: none;
     }

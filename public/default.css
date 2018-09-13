@@ -39,6 +39,9 @@
   left: 0;
   z-index: 99;
   width: 0px; }
+  @media only screen and (min-width: 768px) {
+    .MenuMobile {
+      display: none; } }
   .MenuMobile-callback {
     display: none; }
   .MenuMobile-callback:checked ~ .MenuMobile {
