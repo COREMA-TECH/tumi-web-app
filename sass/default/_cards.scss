@@ -1,0 +1,14 @@
+.card {
+    &-form-row{
+        @media only screen and (max-width: 480px) {
+            display: block !important;
+            .input-form {
+                width: 100% !important;
+            }
+        }
+    }
+}
+
+div[class*="MuiDialogContent-root-"] {
+    min-width: auto !important;
+}

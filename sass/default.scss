@@ -15,10 +15,13 @@
 @import "base/buttons";
 @import "base/helpers";
 @import "base/mixins";
+@import "base/modal";
 
 
 //Sections 
 // Default
 @import "default/header";
+@import "default/cards";
+@import "default/company";
 @import "default/main-section";
 @import "default/footer";
