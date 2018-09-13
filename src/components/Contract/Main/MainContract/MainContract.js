@@ -47,39 +47,6 @@ class MainContract extends Component {
 		}
 	`;
 
-    getContracts = () => {
-        // Show linear progress
-        this.setState(
-            {
-                loadingContracts: true
-            },
-            () => {
-            }
-        );
-
-        this.props.client
-            .query({
-                query: this.getContractsQuery,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({data}) => {
-                this.setState(
-                    (prevState) => ({
-                        data: [...prevState.data, data.getcontracts]
-                    }),
-                    () => {
-                        // Hide linear progress
-                        this.setState({
-                            loadingContracts: false
-                        });
-                    }
-                );
-            })
-            .catch((error) => {
-                console.log('Error fetching data');
-            });
-    };
-
     /**
      * To delete contracts by id
      */

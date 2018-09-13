@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 import InputForm from '../../ui-components/InputForm/InputForm';
 import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
-import { gql } from 'apollo-boost';
+import {gql} from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from '../../ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -13,9 +13,8 @@ import Query from 'react-apollo/Query';
 import AccountDialog from '../../ui-components/AccountDialog/AccountDialog';
 import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from '../../ui-components/SelectForm/SelectFormContractTemplate';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
-import { Snackbar } from '@material-ui/core';
-import InputMask from 'react-input-mask';
+import {MySnackbarContentWrapper} from '../../Generic/SnackBar';
+import {Snackbar} from '@material-ui/core';
 import '../../ui-components/InputForm/index.css';
 
 class NewContract extends Component {
@@ -71,8 +70,8 @@ class NewContract extends Component {
         };
     }
 
-	/**
-    constructor(props) {
+    /**
+     constructor(props) {
         super(props);
 
         this.state = {
@@ -124,7 +123,7 @@ class NewContract extends Component {
         };
     }
 
-    /**
+     /**
      * Snackbar methods
      */
     handleCloseSnackbar = (event, reason) => {
@@ -132,7 +131,7 @@ class NewContract extends Component {
             return;
         }
 
-        this.setState({ openSnackbar: false });
+        this.setState({openSnackbar: false});
     };
 
     handleOpenSnackbar = (variant, message) => {
@@ -196,14 +195,14 @@ class NewContract extends Component {
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
     };
 
-	/**
+    /**
      * End of the events
      */
 
-	/**************************************
+    /**************************************
      *   MUTATION TO CREATE NEW CONTRACT  *
      *************************************/
     ADD_CONTRACT = gql`
@@ -288,7 +287,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     Contract_Name: data.getcontracts[0].Contract_Name,
                     Contrat_Owner: data.getcontracts[0].Contrat_Owner,
@@ -372,7 +371,7 @@ class NewContract extends Component {
                     }
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 console.log('Server data response is: ' + data.inscontracts);
                 this.props.update(data.inscontracts.Id);
             })
@@ -431,7 +430,7 @@ class NewContract extends Component {
                     }
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 console.log('Server data response is: ' + data.updcontracts);
                 this.props.update(data.updcontracts.Id);
             })
@@ -445,7 +444,7 @@ class NewContract extends Component {
     };
 
 
-	/**
+    /**
      * QUERY to get companies
      */
     getCompaniesQuery = gql`
@@ -485,7 +484,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     CompanySignedName: data.getcompanies[0].LegalName,
                     Primary_Email: data.getcompanies[0].Primary_Email
@@ -515,9 +514,9 @@ class NewContract extends Component {
 			}
 		}
 	`;
-	/**
-	 *  End of the countries, cities and states queries
-	 */
+    /**
+     *  End of the countries, cities and states queries
+     */
 
     getContractTermsQuery = gql`
 		{
@@ -529,16 +528,16 @@ class NewContract extends Component {
 		}
 	`;
 
-	/***
-	 * Events fo the dialog
-	 *
-	 */
-	/**
-	 * Events of the component
-	 */
+    /***
+     * Events fo the dialog
+     *
+     */
+    /**
+     * Events of the component
+     */
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
     };
 
     componentWillMount() {
@@ -549,11 +548,11 @@ class NewContract extends Component {
 
     render() {
         if (this.state.loadingCompanies) {
-            return <LinearProgress />
+            return <LinearProgress/>
         }
 
         if (this.state.loading) {
-            return <LinearProgress />
+            return <LinearProgress/>
         }
 
         return (
@@ -593,9 +592,9 @@ class NewContract extends Component {
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Template</span>
                                             <Query query={this.GET_CONTRACT}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (
                                                         data.getcontracttemplate != null &&
@@ -656,23 +655,23 @@ class NewContract extends Component {
                                                         }}
                                                     />
                                                 ) : (
-                                                        <ContactDialog
-                                                            defaultValue=''
-                                                            valueSelected={this.state.Id_User_Signed}
-                                                            idContact={this.state.Id_Entity}
-                                                            update={this.updateIdContact}
-                                                            updateEmailContact={(email) => {
-                                                                this.setState({
-                                                                    Electronic_Address: email
-                                                                });
-                                                            }}
-                                                            updateTypeContact={(value) => {
-                                                                this.setState({
-                                                                    User_Signed_Title: value
-                                                                })
-                                                            }}
-                                                        />
-                                                    )
+                                                    <ContactDialog
+                                                        defaultValue=''
+                                                        valueSelected={this.state.Id_User_Signed}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={this.updateIdContact}
+                                                        updateEmailContact={(email) => {
+                                                            this.setState({
+                                                                Electronic_Address: email
+                                                            });
+                                                        }}
+                                                        updateTypeContact={(value) => {
+                                                            this.setState({
+                                                                User_Signed_Title: value
+                                                            })
+                                                        }}
+                                                    />
+                                                )
                                             }
 
                                         </div>
@@ -726,9 +725,9 @@ class NewContract extends Component {
                                             <span className="input-label primary">Contract Term (months)</span>
 
                                             <Query query={this.getContractTermsQuery}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log('Data of cities' + data.getcatalogitem);
@@ -774,7 +773,7 @@ class NewContract extends Component {
                                             <span className="input-label primary">Company Signed By</span>
 
                                             <InputForm value={this.state.CompanySignedName} change={(text) => {
-                                            }} />
+                                            }}/>
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Company Signed Date</span>
@@ -819,25 +818,25 @@ class NewContract extends Component {
                                                         }}
                                                     />
                                                 ) : (
-                                                        <ContactDialog
-                                                            defaultValue=''
-                                                            valueSelected={this.state.Id_User_Billing_Contact}
-                                                            idContact={this.state.Id_Entity}
-                                                            update={(id) => {
-                                                                this.setState({
-                                                                    Id_User_Billing_Contact: id
-                                                                }, () => {
-                                                                });
-                                                            }}
-                                                            updateEmailContact={(email) => {
+                                                    <ContactDialog
+                                                        defaultValue=''
+                                                        valueSelected={this.state.Id_User_Billing_Contact}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={(id) => {
+                                                            this.setState({
+                                                                Id_User_Billing_Contact: id
+                                                            }, () => {
+                                                            });
+                                                        }}
+                                                        updateEmailContact={(email) => {
 
-                                                            }}
+                                                        }}
 
-                                                            updateTypeContact={(type) => {
+                                                        updateTypeContact={(type) => {
 
-                                                            }}
-                                                        />
-                                                    )
+                                                        }}
+                                                    />
+                                                )
                                             }
 
                                             {/*<ContactDialog*/}
@@ -930,11 +929,11 @@ class NewContract extends Component {
 
                                             <Query
                                                 query={this.getStatesQuery}
-                                                variables={{ parent: this.state.Billing_Country }}
+                                                variables={{parent: this.state.Billing_Country}}
                                             >
-                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log('Data of cities' + data.getcatalogitem);
@@ -955,11 +954,11 @@ class NewContract extends Component {
                                             <span className="input-label primary">Billing City</span>
                                             <Query
                                                 query={this.getCitiesQuery}
-                                                variables={{ parent: this.state.Billing_State }}
+                                                variables={{parent: this.state.Billing_State}}
                                             >
-                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log('Data of cities' + data.getcatalogitem);
