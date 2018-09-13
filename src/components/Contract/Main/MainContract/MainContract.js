@@ -171,7 +171,8 @@ class MainContract extends Component {
                                         return true
                                     }
 
-                                    if (_.Contract_Name.indexOf(this.state.filterText) > -1) {
+                                    if (_.Contract_Name.indexOf(this.state.filterText) > -1
+                                    || _.Contract_Name.toLocaleLowerCase().indexOf(this.state.filterText) > -1) {
                                         return true
                                     }
 
