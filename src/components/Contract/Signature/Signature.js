@@ -27,6 +27,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import renderHTML from 'react-render-html';
 import queryString from 'query-string';
+import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
 
 const styles = (theme) => ({
 	container: {
@@ -68,7 +69,7 @@ class Signature extends React.Component {
 		openModal: false,
 		disableButtonLetter: true,
 		allowSave: false,
-		saved: true,
+		saved: false,
 		empty: true
 	};
 	constructor(props) {
@@ -91,11 +92,11 @@ class Signature extends React.Component {
 			signatory: '',
 			disableButtonLetter: true,
 			allowSave: false,
-			saved: true,
+			saved: false,
 			empty: true,
-
 			tokenValid: false,
-			idContract: 0
+			idContract: 0,
+			view: 1
 		};
 	}
 
@@ -225,15 +226,15 @@ class Signature extends React.Component {
 							signatory: signatory
 						},
 						() => {
-							this.sigPad.fromDataURL(this.state.signature);
-							console.log('Signature', this.state.signature);
-							console.log('Signed', this.state.signature);
-							if (this.state.signature) this.sigPad.off();
+							if (this.sigPad) this.sigPad.fromDataURL(this.state.signature);
+
+							if (this.state.signature && this.sigPad) this.sigPad.off();
 							this.setState({
 								loadingData: false,
 								allowSave: this.state.signature,
 								saved: this.state.signature,
-								disableButtonLetter: this.state.signature
+								disableButtonLetter: this.state.signature,
+								view: this.state.signature ? 2 : 3
 							});
 						}
 					);
@@ -308,10 +309,11 @@ class Signature extends React.Component {
 								success: true,
 								loading: false,
 								allowSave: false,
-								saved: true
+								saved: true,
+								view: 2
 							},
 							() => {
-								this.sigPad.off();
+								if (this.sigPad) this.sigPad.off();
 								setTimeout(this.props.history.push('/home/'), 3000);
 							}
 						);
@@ -484,8 +486,18 @@ class Signature extends React.Component {
 		});
 		const { loading, success } = this.state;
 		const { fullScreen } = this.props;
-		if (!this.state.tokenValid) {
-			return <div />;
+		if (this.state.view == 1) {
+			return <div>{this.state.loadingData && <LinearProgress />}</div>;
+		} else if (this.state.view == 2) {
+			return (
+				<div className="signature-container" id="signatureMainContainer">
+					{this.state.loadingData && <LinearProgress />}
+					<NothingToDisplay
+						url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
+						message="Contract Already Signed!"
+					/>
+				</div>
+			);
 		}
 		return (
 			<div className="signature-container" id="signatureMainContainer">

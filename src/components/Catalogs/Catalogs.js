@@ -687,7 +687,7 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.handleOpenSnackbar('success', 'Catalog Item Deleted!');
-						this.loadCatalogsItems(this.state.idCatalog);
+						this.loadCatalogsItems(this.state.idCatalogFilter);
 						this.resetState();
 					})
 					.catch((error) => {
