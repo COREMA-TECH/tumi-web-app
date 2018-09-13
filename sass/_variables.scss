@@ -1,0 +1,64 @@
+
+// Body
+$body-bg: #fff;
+
+// Borders
+
+// Brands
+$brand-accent: #cc9933;
+$brand-primary: #b7d433;
+$brand-primary-dark: #669900;
+$brand-secondary: #254151;
+$brand-info: #8eb4cb;
+$brand-success: #2ab27b;
+$brand-warning: #cbb956;
+$brand-danger:  #bf5329;
+$brand-apply-primary: #009ce0;
+$brand-apply-secondary: $brand-primary;
+
+//Colors
+$black: #000;
+$white: #FFF;
+$gray: #bdc3cb;
+$light-gray: #fafafa;
+$second-light-gray: #999;
+
+// Typography
+$font-family-sans-serif: "Raleway", sans-serif;
+$font-family-stand-out: "Michroma", sans-serif;
+$text-color: $brand-secondary;
+$font-main-title: 36px;
+
+// Navbar
+$navbar-default-bg: #fff;
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Inputs
+$input-border: lighten($text-color, 40%);
+$input-border-focus: lighten($brand-primary, 25%);
+$input-color-placeholder: lighten($text-color, 30%);
+
+// Panels
+$panel-default-heading-bg: #fff;
+
+
+//Header
+$header-height:  53px;
+
+//MainSection
+$main-section-height: 672px;
+$main-section-height-big: 1050px;
+
+//Services
+$service-header-height: 358px;
+
+//Nearshore vs Offshore section
+$tab-height: 825px;
+$wrapper-svg-width: 1332px;
+
+//Sizes
+$vertical-spacing: 11rem;
+$half-vertical-spacing: 5.5rem;
+$vertical-spacing-underImage: 29rem;
