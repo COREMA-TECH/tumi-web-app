@@ -509,6 +509,7 @@ class GeneralInformation extends Component {
      * Events of the component
      */
 	handleClickOpen = (scroll, boolValue, id) => () => {
+		if (!this.props.showStepper) return false;
 		this.setState({
 			propertyClick: boolValue,
 			idProperty: id
