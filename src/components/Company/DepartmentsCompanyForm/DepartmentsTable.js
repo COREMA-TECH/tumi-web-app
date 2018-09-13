@@ -19,6 +19,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
+import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -170,7 +171,14 @@ class DepartmentsTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+		if (items.length == 0) {
+			return (
+				<NothingToDisplay
+					url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
+					message="Nothing to display!"
+				/>
+			);
+		}
 		return (
 			<Paper className={classes.root}>
 				<Table className={classes.table}>

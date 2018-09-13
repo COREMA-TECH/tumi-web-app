@@ -32,6 +32,7 @@ import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
 import '../../ui-components/InputForm/index.css';
+
 import './index.css';
 
 const styles = (theme) => ({
@@ -633,7 +634,8 @@ class ContactcontactForm extends React.Component {
 		this.setState({ loadingTypes: true }, () => {
 			this.props.client
 				.query({
-					query: this.GET_TYPES_QUERY
+					query: this.GET_TYPES_QUERY,
+					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
@@ -657,12 +659,15 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 	loadDepartments = () => {
+		console.log('Load Departments');
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
-					query: this.GET_DEPARTMENTS_QUERY
+					query: this.GET_DEPARTMENTS_QUERY,
+					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
+					console.log(data.data.getcatalogitem);
 					if (data.data.getcatalogitem != null) {
 						this.setState({
 							departments: data.data.getcatalogitem,

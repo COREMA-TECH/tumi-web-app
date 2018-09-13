@@ -22,7 +22,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
 import Select from '@material-ui/core/Select';
-
+import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
 	root: {
@@ -228,7 +228,14 @@ class PositionsTable extends React.Component {
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 		const { textmask, numberformat } = this.state;
-
+		if (items.length == 0) {
+			return (
+				<NothingToDisplay
+					url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
+					message="Nothing to display!"
+				/>
+			);
+		}
 		return (
 			<Paper className={classes.root}>
 				<Table className={classes.table}>
