@@ -57,4 +57,6 @@
     box-shadow: 1px 1px 15px #ddd;
     justify-content: center;
     align-items: center;
+
+    position: relative;
 }

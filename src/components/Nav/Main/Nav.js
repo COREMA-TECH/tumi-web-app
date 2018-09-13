@@ -1,16 +1,25 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
-import HeaderNav from '../HeaderNav';
 import Menu from '../Menu';
 
 class Nav extends Component {
-	render() {
-		return (
-			<div className="nav">
-				<Menu />
-			</div>
-		);
-	}
+
+    handleResizeNavClick = (event) => {
+        let nav = event.target.parentNode.parentNode;
+
+        nav.classList.toggle('nav-expanded');
+    };
+
+    render() {
+        return (
+            <div className="nav">
+                <Menu/>
+                <div className="nav-element">
+                    <span className="icon-right" onClick={this.handleResizeNavClick}></span>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Nav;

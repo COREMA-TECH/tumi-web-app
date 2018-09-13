@@ -11,7 +11,8 @@ class MainContract extends Component {
 
         this.state = {
             loadingContracts: false,
-            data: []
+            data: [],
+            loadingRemoving: false
         }
     }
 
@@ -60,6 +61,43 @@ class MainContract extends Component {
     };
 
     /**
+     * To delete contracts by id
+     */
+    deleteContractQuery = gql`
+		mutation delcontracts($Id: Int!) {
+			delcontracts(Id: $Id, IsActive: 0) {
+				Id
+			}
+		}
+	`;
+
+    deleteContractById = id => {
+        this.setState({
+            loadingRemoving: true
+        });
+
+        alert(id);
+
+        this.props.client
+            .mutate({
+                mutation: this.deleteContractQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(data => {
+                this.setState({
+                    loadingRemoving: false
+                });
+
+                this.getContracts();
+            })
+            .catch(error => console.log(error))
+    };
+
+
+
+    /**
      * Get data before render
      */
     componentWillMount() {
@@ -72,6 +110,11 @@ class MainContract extends Component {
             return <LinearProgress/>
         }
 
+        if (this.state.loadingRemoving) {
+            return <LinearProgress/>
+        }
+
+
         // To render the content of the header
         let renderHeaderContent = () => (
             <button className="add-company" onClick={() => {
@@ -81,7 +124,9 @@ class MainContract extends Component {
 
 
         let renderTableWithContracts = () => (
-                <TablesContracts data={this.state.data[0]}/>
+                <TablesContracts data={this.state.data[0]} delete={(id) => {
+                    this.deleteContractById(id)
+                }}/>
         );
 
         return (

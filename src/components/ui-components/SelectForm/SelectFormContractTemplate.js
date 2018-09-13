@@ -260,7 +260,6 @@ class ControlledOpenSelect extends React.Component {
         this.setState({[event.target.name]: event.target.value});
 
         this.props.update(event.target.value);
-        this.props.updateIdTemplate(1);
     };
 
     handleClose = () => {
@@ -308,7 +307,7 @@ class ControlledOpenSelect extends React.Component {
                             return (
                                 <MenuItem
                                     key={item.Id}
-                                    value={item.Contract_Template}
+                                    value={item.Id}
                                     name={item.Name}
                                     className="select-form-customized__item"
                                 >

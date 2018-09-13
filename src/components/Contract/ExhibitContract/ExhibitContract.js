@@ -149,6 +149,7 @@ class ExhibitContract extends Component {
 			}
 		}
 	`;
+
 	SEND_CONTRACT_QUERY = gql`
 		query sendcontracts($Id: Int) {
 			sendcontracts(Id: $Id, IsActive: 1) {
