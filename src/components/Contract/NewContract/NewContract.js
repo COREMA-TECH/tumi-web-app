@@ -15,6 +15,8 @@ import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from '../../ui-components/SelectForm/SelectFormContractTemplate';
 import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
 import { Snackbar } from '@material-ui/core';
+import InputMask from 'react-input-mask';
+import '../../ui-components/InputForm/index.css';
 
 class NewContract extends Component {
     constructor(props) {
@@ -982,6 +984,7 @@ class NewContract extends Component {
                                                         Billing_Zip_Code: text
                                                     });
                                                 }}
+                                                type="number"
                                             />
                                         </div>
                                     </div>

@@ -88,17 +88,19 @@
     .card-form-row .input-form {
       width: 100% !important; } }
 
-div[class*="MuiDialogContent-root-"] {
-  min-width: auto !important; }
+.card-form-company {
+  height: 665px; }
+
+@media only screen and (max-width: 480px) {
+  div[class*="MuiDialogContent-root-"] {
+    min-width: auto !important; } }
 
 @media only screen and (max-width: 480px) {
   .department__header {
     display: block !important;
     height: auto !important; }
     .department__header div[class*="withApollo-DepartmentsCompanyForm--root-"] {
-      display: inline-block !important; }
-    .department__header div[class*="MuiTabs-fixed-205"] {
-      overflow-x: scroll !important; } }
+      display: inline-block !important; } }
 
 @media only screen and (max-width: 480px) {
   div[class*="MuiTabs-fixed-"] {
