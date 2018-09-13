@@ -3,6 +3,9 @@ import InputForm from "../../ui-components/InputForm/InputForm";
 import {gql} from "apollo-boost";
 import withApollo from "react-apollo/withApollo";
 import ImageUpload from "../../ui-components/ImageUpload/ImageUpload";
+import Query from "react-apollo/Query";
+import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import SelectForm from "../../ui-components/SelectForm/SelectForm";
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -303,6 +306,65 @@ class GeneralInfoProperty extends Component {
                                 }}
                             />
                         </div>
+
+                        <div className="card-form-row">
+                            <span className="input-label primary">State</span>
+                            <Query
+                                query={this.getStatesQuery}
+                                variables={{ parent: this.state.country }}
+                            >
+                                {({ loading, error, data, refetch, networkStatus }) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress />;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        console.log('Data of cities' + data.getcatalogitem);
+                                        return (
+                                            <SelectForm
+                                                data={data.getcatalogitem}
+                                                update={(value) => {
+                                                    this.setState({
+                                                        state: value
+                                                    })
+                                                }}
+                                                value={this.state.state}
+                                            />
+                                        );
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </div>
+
+                        <div className="card-form-row">
+                            <span className="input-label primary">City</span>
+                            <Query
+                                query={this.getCitiesQuery}
+                                variables={{ parent: this.state.state }}
+                            >
+                                {({ loading, error, data, refetch, networkStatus }) => {
+                                    //if (networkStatus === 4) return <LinearProgress />;
+                                    if (loading) return <LinearProgress />;
+                                    if (error) return <p>Error </p>;
+                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                        console.log('Data of cities' + data.getcatalogitem);
+                                        return (
+                                            <SelectForm
+                                                data={data.getcatalogitem}
+                                                update={(value) => {
+                                                    this.setState({
+                                                        city: value
+                                                    })
+                                                }}
+                                                value={this.state.city}
+                                            />
+                                        );
+                                    }
+                                    return <p>Nothing to display </p>;
+                                }}
+                            </Query>
+                        </div>
+
 
                         <div className="card-form-row">
                             <span className="input-label primary">Zip Code</span>
