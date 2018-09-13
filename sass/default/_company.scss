@@ -5,5 +5,14 @@
         div[class*="withApollo-DepartmentsCompanyForm--root-"] {
             display: inline-block !important;
         }
+        div[class*="MuiTabs-fixed-205"] {
+            overflow-x: scroll !important;
+        }
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    div[class*="MuiTabs-fixed-"] {
+        overflow-x: scroll !important;
     }
 }
