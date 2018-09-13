@@ -4,6 +4,9 @@ import {gql} from 'apollo-boost';
 import withApollo from "react-apollo/withApollo";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import TablesContracts from "./TablesContracts";
+import CircularProgress from "../../../material-ui/CircularProgress";
+import {Query} from "react-apollo";
+import NothingToDisplay from "../../../ui-components/NothingToDisplay/NothingToDisplay";
 
 class MainContract extends Component {
     constructor(props) {
@@ -39,11 +42,14 @@ class MainContract extends Component {
         // Show linear progress
         this.setState({
             loadingContracts: true,
+        }, () => {
+            alert("loading");
         });
 
         this.props.client
             .query({
-                query: this.getContractsQuery
+                query: this.getContractsQuery,
+                fetchPolicy: 'no-cache',
             })
             .then(({data}) => {
                 this.setState(prevState => ({
@@ -72,37 +78,33 @@ class MainContract extends Component {
 	`;
 
     deleteContractById = id => {
+        // this.setState(prevState => ({
+        //     data: this.state.data.filter((_, i) => {
+        //         let element = _.map(item => item.Id);
+        //         return (element !== id);
+        //     })
+        // }), () => {
+        //
+        // });
+
         this.setState({
-            loadingRemoving: true
+            loadingRemoving: true,
+        }, () => {
+            this.props.client
+                .mutate({
+                    mutation: this.deleteContractQuery,
+                    variables: {
+                        Id: id
+                    },
+                })
+                .then(data => {
+                    this.setState({
+                        loadingRemoving: false
+                    })
+                })
+                .catch(error => console.log(error))
         });
-
-        alert(id);
-
-        this.props.client
-            .mutate({
-                mutation: this.deleteContractQuery,
-                variables: {
-                    Id: id
-                }
-            })
-            .then(data => {
-                this.setState({
-                    loadingRemoving: false
-                });
-
-                this.getContracts();
-            })
-            .catch(error => console.log(error))
     };
-
-
-
-    /**
-     * Get data before render
-     */
-    componentWillMount() {
-        this.getContracts()
-    }
 
     render() {
         // If contracts query is loading, show a progress component
@@ -111,7 +113,9 @@ class MainContract extends Component {
         }
 
         if (this.state.loadingRemoving) {
-            return <LinearProgress/>
+            return (
+                <CircularProgress size={100}/>
+            )
         }
 
 
@@ -122,13 +126,6 @@ class MainContract extends Component {
             }}>Add Contract</button>
         );
 
-
-        let renderTableWithContracts = () => (
-                <TablesContracts data={this.state.data[0]} delete={(id) => {
-                    this.deleteContractById(id)
-                }}/>
-        );
-
         return (
             <div className="main-contract">
                 <div className="main-contract__header">
@@ -137,7 +134,27 @@ class MainContract extends Component {
                     </div>
                 </div>
                 <div className="main-contract__content">
-                    {renderTableWithContracts()}
+                    <Query query={this.getContractsQuery} pollInterval={1000}>
+                        {({loading, error, data, refetch, networkStatus}) => {
+                            //if (networkStatus === 4) return <LinearProgress />;
+                            if (loading) return <LinearProgress/>;
+                            if (error) return <p>Error </p>;
+                            if (data.getcontracts != null && data.getcontracts.length > 0) {
+                                return (
+                                    <TablesContracts
+                                        data={data.getcontracts}
+                                        delete={(id) => {
+                                            this.deleteContractById(id)
+                                        }}/>
+                                )
+                            }
+                            return (
+                                <NothingToDisplay
+                                    url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
+                                    message="There are no contracts"/>
+                            )
+                        }}
+                    </Query>
                 </div>
             </div>
         );
