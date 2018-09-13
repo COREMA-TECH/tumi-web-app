@@ -34,10 +34,12 @@
 	justify-content: center;
 	display: flex;
 	width: 100%;
+	min-height: 250px;
 }
 
 .signaturePad-container {
 	max-width: 700px;
+	min-height: 250px;
 }
 @media (max-width: 700px) {
 	.signaturePad-container {
@@ -84,6 +86,7 @@
 	width: 95%;
 	height: 50vh;
 	max-height: 300px;
+	min-height: 250px;
 }
 
 .signature-button-root {

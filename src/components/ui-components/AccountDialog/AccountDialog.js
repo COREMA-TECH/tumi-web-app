@@ -189,7 +189,6 @@ class SimpleDialog extends Component {
                                                     </ListItemAvatar>
                                                     <ListItemText primary={item.Name}/>
                                                 </ListItem>
-
                                             )
                                         })
                                     )
