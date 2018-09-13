@@ -113,7 +113,9 @@ class MainContract extends Component {
 
         if (this.state.loadingRemoving) {
             return (
-                <CircularProgress/>
+                <div className="nothing-container">
+                    <CircularProgress size={150}/>
+                </div>
             )
         }
 
