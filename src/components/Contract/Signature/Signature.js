@@ -376,9 +376,9 @@ class Signature extends React.Component {
 	};
 	componentWillMount() {
 		const values = queryString.parse(this.props.location.search);
-		if (!values.token || !values.customer) this.props.history.push('/home/');
+		if (!values.token || !values.signatory) this.props.history.push('/home/');
 
-		this.validateToken(values.token, values.customer);
+		this.validateToken(values.token, values.signatory);
 	}
 	componentDidMount() {
 		window.addEventListener('resize', this.resizeCanvas.bind(this));
