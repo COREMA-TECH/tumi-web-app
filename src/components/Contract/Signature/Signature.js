@@ -314,7 +314,6 @@ class Signature extends React.Component {
 							},
 							() => {
 								if (this.sigPad) this.sigPad.off();
-								setTimeout(this.props.history.push('/home/'), 3000);
 							}
 						);
 					})
@@ -494,7 +493,7 @@ class Signature extends React.Component {
 					{this.state.loadingData && <LinearProgress />}
 					<NothingToDisplay
 						url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
-						message="Contract Already Signed!"
+						message="Contract Signed!"
 					/>
 				</div>
 			);
