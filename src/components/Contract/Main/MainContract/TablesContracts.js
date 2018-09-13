@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
 import LastPageIcon from '@material-ui/icons/LastPage';
@@ -16,7 +16,6 @@ import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
-import { gql } from 'apollo-boost';
 import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
@@ -52,29 +51,29 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const { classes, count, page, rowsPerPage, theme } = this.props;
+        const {classes, count, page, rowsPerPage, theme} = this.props;
 
         return (
             <div className={classes.root}>
                 <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+                    {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
                 </IconButton>
                 <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+                    {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
                 </IconButton>
                 <IconButton
                     onClick={this.handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Next Page"
                 >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+                    {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
                 </IconButton>
                 <IconButton
                     onClick={this.handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Last Page"
                 >
-                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+                    {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
                 </IconButton>
             </div>
         );
@@ -90,13 +89,13 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired
 };
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
+const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
 
 let counter = 0;
 
 function createData(name, calories, fat) {
     counter += 1;
-    return { id: counter, name, calories, fat };
+    return {id: counter, name, calories, fat};
 }
 
 const CustomTableCell = withStyles((theme) => ({
@@ -151,11 +150,11 @@ class DepartmentsTable extends React.Component {
         loadingRemoving: false
     };
     handleChangePage = (event, page) => {
-        this.setState({ page });
+        this.setState({page});
     };
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({ rowsPerPage: event.target.value });
+        this.setState({rowsPerPage: event.target.value});
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -174,24 +173,24 @@ class DepartmentsTable extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         let items = this.props.data;
-        const { rowsPerPage, page } = this.state;
+        const {rowsPerPage, page} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
         if (this.state.loadingRemoving) {
-            return <LinearProgress />;
+            return <LinearProgress/>;
         }
 
         return (
             <Route
-                render={({ history }) => (
+                render={({history}) => (
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={classes.th} />
-                                    <CustomTableCell padding="none" className={classes.th} />
+                                    <CustomTableCell padding="none" className={classes.th}/>
+                                    <CustomTableCell padding="none" className={classes.th}/>
                                     <CustomTableCell className={classes.th}>Contract Name</CustomTableCell>
                                     <CustomTableCell className={classes.th}>Contract Owner</CustomTableCell>
                                     <CustomTableCell className={classes.th}>Contract Status</CustomTableCell>
@@ -208,11 +207,11 @@ class DepartmentsTable extends React.Component {
                                             onClick={() => {
                                                 history.push({
                                                     pathname: '/home/contract/add',
-                                                    state: { contract: row.Id }
+                                                    state: {contract: row.Id}
                                                 });
                                             }}
                                         >
-                                            <CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+                                            <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
                                                 {' '}
                                                 <Tooltip title="Edit">
                                                     <div>
@@ -221,16 +220,16 @@ class DepartmentsTable extends React.Component {
                                                             onClick={() => {
                                                                 history.push({
                                                                     pathname: '/home/contract/add',
-                                                                    state: { contract: row.Id }
+                                                                    state: {contract: row.Id}
                                                                 });
                                                             }}
                                                         >
-                                                            <EditIcon color="primary" />
+                                                            <EditIcon color="primary"/>
                                                         </IconButton>
                                                     </div>
                                                 </Tooltip>
                                             </CustomTableCell>
-                                            <CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+                                            <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
                                                 <Tooltip title="Delete">
                                                     <div>
                                                         <IconButton
@@ -240,17 +239,17 @@ class DepartmentsTable extends React.Component {
                                                                 this.props.delete(row.Id);
                                                             }}
                                                         >
-                                                            <DeleteIcon color="primary" />
+                                                            <DeleteIcon color="primary"/>
                                                         </IconButton>
                                                     </div>
                                                 </Tooltip>
                                             </CustomTableCell>
                                             <CustomTableCell>{row.Contract_Name}</CustomTableCell>
                                             <CustomTableCell>{row.Contrat_Owner}</CustomTableCell>
-                                            <CustomTableCell style={{ width: '250px' }}>
+                                            <CustomTableCell style={{width: '250px'}}>
                                                 {row.Contract_Status}
                                             </CustomTableCell>
-                                            <CustomTableCell style={{ width: '250px' }}>
+                                            <CustomTableCell style={{width: '250px'}}>
                                                 {row.Contract_Expiration_Date}
                                             </CustomTableCell>
                                         </TableRow>
@@ -258,8 +257,8 @@ class DepartmentsTable extends React.Component {
                                 })}
 
                                 {emptyRows > 0 && (
-                                    <TableRow style={{ height: 48 * emptyRows }}>
-                                        <TableCell colSpan={6} />
+                                    <TableRow style={{height: 48 * emptyRows}}>
+                                        <TableCell colSpan={6}/>
                                     </TableRow>
                                 )}
                             </TableBody>
