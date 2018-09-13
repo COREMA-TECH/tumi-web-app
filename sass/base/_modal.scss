@@ -1,0 +1,8 @@
+.modal {
+    &-overflow {
+        overflow-x: scroll;
+        .list-item-container-scroll {
+            min-width: 500px;
+        }
+    }
+}

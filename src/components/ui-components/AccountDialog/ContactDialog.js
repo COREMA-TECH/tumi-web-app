@@ -138,7 +138,7 @@ class SimpleDialog extends React.Component {
                         </Button>
                     </Toolbar>
                 </AppBar>
-                <div className="center">
+                <div className="center modal-overflow">
                     <List>
                         <div className="list-item-container-scroll">
                             <ListItem className="header-table-contacts">

@@ -1,4 +1,9 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
+.modal-overflow {
+  overflow-x: scroll; }
+  .modal-overflow .list-item-container-scroll {
+    min-width: 500px; }
+
 .Header-mobileMenu {
   color: #FFF;
   margin-left: 1rem;
@@ -76,3 +81,22 @@
   -webkit-filter: FlipH;
   filter: FlipH;
   -ms-filter: "FlipH"; }
+
+@media only screen and (max-width: 480px) {
+  .card-form-row {
+    display: block !important; }
+    .card-form-row .input-form {
+      width: 100% !important; } }
+
+div[class*="MuiDialogContent-root-"] {
+  min-width: auto !important; }
+
+@media only screen and (max-width: 480px) {
+  .department__header {
+    display: block !important;
+    height: auto !important; }
+    .department__header div[class*="withApollo-DepartmentsCompanyForm--root-"] {
+      display: inline-block !important; } }
+
+.main-contract__content {
+  width: 100% !important; }
