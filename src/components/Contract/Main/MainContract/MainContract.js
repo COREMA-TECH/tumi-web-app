@@ -7,6 +7,9 @@ import TablesContracts from './TablesContracts';
 import CircularProgress from '../../../material-ui/CircularProgress';
 import {Query} from 'react-apollo';
 import NothingToDisplay from '../../../ui-components/NothingToDisplay/NothingToDisplay';
+import AlertDialogSlide from '../../../Generic/AlertDialogSlide'
+import { Snackbar } from '@material-ui/core';
+import { MySnackbarContentWrapper } from '../../../Generic/SnackBar';
 
 class MainContract extends Component {
     constructor(props) {
@@ -16,7 +19,11 @@ class MainContract extends Component {
             loadingContracts: false,
             data: [],
             loadingRemoving: false,
-            filterText: ''
+            filterText: '',
+            opendialog: false,
+            openSnackbar: false,
+            variantSnackbar: 'info',
+            messageSnackbar: 'Dummy text!',
         }
     }
 
@@ -84,37 +91,67 @@ class MainContract extends Component {
 		}
 	`;
 
-    deleteContractById = (id) => {
-        // this.setState(prevState => ({
-        //     data: this.state.data.filter((_, i) => {
-        //         let element = _.map(item => item.Id);
-        //         return (element !== id);
-        //     })
-        // }), () => {
-        //
-        // });
-
+    deleteContract=()=>{
         this.setState(
-            {
+			{
                 loadingRemoving: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: this.deleteContractQuery,
-                        variables: {
-                            Id: id
-                        }
-                    })
-                    .then((data) => {
-                        this.setState({
-                            loadingRemoving: false
-                        });
-                    })
-                    .catch((error) => console.log(error));
-            }
-        );
+			},
+			() => {
+				this.props.client
+                .mutate({
+                    mutation: this.deleteContractQuery,
+                    variables: {
+                        Id: this.state.idToDelete
+                    }
+                 })
+                 .then((data) => {
+                   
+                    this.setState({
+                        opendialog: false,loadingRemoving:false
+                    },()=>{
+                        this.handleOpenSnackbar('success', 'Contract Deleted!');
+                    });
+                })
+                .catch((error) => {
+                    console.log('Error: Deleting Contract: ', error);
+                
+                    this.setState({
+                        opendialog: false,loadingRemoving:false
+                    },()=>{
+                        this.handleOpenSnackbar('error', 'Error: Deleting Contract: ' + error);
+                    });
+                });
+					
+			}
+        );      
+    }
+    deleteContractById = (id) => {
+      this.setState({ idToDelete: id, opendialog: true,loadingRemoving:false,loadingContracts:false });
+       
     };
+
+    handleCloseAlertDialog = () => {
+		this.setState({ opendialog: false });
+    };
+    handleConfirmAlertDialog = () => {
+		this.deleteContract();
+    };
+    handleCloseSnackbar = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		this.setState({ openSnackbar: false });
+	};
+
+	handleOpenSnackbar = (variant, message) => {
+		this.setState({
+			openSnackbar: true,
+			variantSnackbar: variant,
+            messageSnackbar: message
+		});
+	};
+
     // To render the content of the header
     render() {
         // If contracts query is loading, show a progress component
@@ -153,6 +190,29 @@ class MainContract extends Component {
 
         return (
             <div className="main-contract">
+            	<Snackbar
+					anchorOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					open={this.state.openSnackbar}
+					autoHideDuration={3000}
+					onClose={this.handleCloseSnackbar}
+				>
+					<MySnackbarContentWrapper
+						onClose={this.handleCloseSnackbar}
+						variant={this.state.variantSnackbar}
+						message={this.state.messageSnackbar}
+					/>
+				</Snackbar>
+            	<AlertDialogSlide
+					handleClose={this.handleCloseAlertDialog}
+					handleConfirm={this.handleConfirmAlertDialog}
+					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingRemoving}
+					content="Do you really want to continue whit this operation?"
+				/>
+				
                 <div className="main-contract__header">
                     {renderHeaderContent()}
                 </div>
