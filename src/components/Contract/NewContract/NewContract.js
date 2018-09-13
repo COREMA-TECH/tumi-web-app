@@ -196,7 +196,6 @@ class NewContract extends Component {
         this.setState({open: false});
     };
 
-
 	/**
      * End of the events
      */
@@ -326,6 +325,8 @@ class NewContract extends Component {
 
     insertContract = () => {
         //Create the mutation using apollo global client
+        alert(this.state.Company_Signed);
+
         this.props.client
             .mutate({
                 // Pass the mutation structure
@@ -345,7 +346,7 @@ class NewContract extends Component {
                         Contract_Term: parseInt(this.state.Contract_Term),
                         Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
                         Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
-                        Company_Signed: `'${this.state.Company_Signed}'`,
+                        Company_Signed: `'${this.state.CompanySignedName}'`,
                         Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
                         Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
                         Billing_Street: `'${this.state.Billing_Street}'`,
@@ -404,7 +405,7 @@ class NewContract extends Component {
                         Contract_Term: parseInt(this.state.Contract_Term),
                         Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
                         Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
-                        Company_Signed: `'${this.state.Company_Signed}'`,
+                        Company_Signed: `'${this.state.CompanySignedName}'`,
                         Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
                         Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
                         Billing_Street: `'${this.state.Billing_Street}'`,
@@ -627,6 +628,7 @@ class NewContract extends Component {
                                                             Company_Signed: value
                                                         },
                                                         () => {
+                                                            alert(this.state.Company_Signed);
                                                             this.getCompanies(this.state.Company_Signed);
                                                         }
                                                     );

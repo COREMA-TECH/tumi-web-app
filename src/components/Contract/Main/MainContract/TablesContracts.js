@@ -423,40 +423,6 @@ class DepartmentsTable extends React.Component {
         return false;
     }
 
-
-    /**
-     * Delete Contracts
-     */
-    deleteContractQuery = gql`
-		mutation delcontracts($Id: Int!) {
-			delcontracts(Id: $Id, IsActive: 0) {
-				Id
-			}
-		}
-	`;
-
-    deleteContractById = id => {
-        this.setState({
-            loadingRemoving: true
-        });
-
-        alert(id);
-
-        this.props.client
-            .mutate({
-                mutation: this.deleteContractQuery,
-                variables: {
-                    Id: id
-                }
-            })
-            .then(data => {
-                this.setState({
-                    loadingRemoving: false
-                });
-            })
-            .catch(error => console.log(error))
-    };
-
     render() {
         const {classes} = this.props;
         let items = this.props.data;
@@ -498,8 +464,7 @@ class DepartmentsTable extends React.Component {
                                                         disabled={this.props.loading}
                                                         onClick={(event) => {
                                                             event.stopPropagation();
-
-                                                            this.deleteContractById(row.Id);
+                                                            this.props.delete(row.Id);
                                                         }}
                                                     >
                                                         <DeleteIcon color="primary"/>
