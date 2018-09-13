@@ -288,7 +288,7 @@ class Signature extends React.Component {
 					.mutate({
 						mutation: this.INSERT_AGREEMENT_SIGNATURE_QUERY,
 						variables: {
-							Id: 14,
+							Id: this.state.idContract,
 							Signature: `'${this.state.signature}'`,
 							Customer: this.state.signatory
 						}
