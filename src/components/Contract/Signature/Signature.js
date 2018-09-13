@@ -26,6 +26,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import renderHTML from 'react-render-html';
+import queryString from 'query-string';
 
 const styles = (theme) => ({
 	container: {
@@ -82,10 +83,14 @@ class Signature extends React.Component {
 			selectedColor: 'blackSelector',
 			selectedLetter: 'letter1Selector',
 			inputText: '',
-			disableButtonLetter: true,
+			signature: '',
+			signatory: '',
+			disableButtonLetter: false,
 			allowSave: false,
 			saved: false,
-			empty: false
+			empty: false,
+			tokenValid: false,
+			idContract: 0
 		};
 	}
 
@@ -94,12 +99,24 @@ class Signature extends React.Component {
 			getcontracts(Id: $Id) {
 				Contract_Terms
 				Client_Signature
+				Company_Signature
 			}
 		}
 	`;
+
+	GET_TOKEN_QUERY = gql`
+		query validtokens($Token: String) {
+			validtokens(Token: $Token) {
+				Token
+				IsActive
+				Id_Contract
+			}
+		}
+	`;
+
 	INSERT_AGREEMENT_SIGNATURE_QUERY = gql`
-		mutation updcontracstsignature($Id: Int, $Client_Signature: String, $Company_Signature: String) {
-			updcontracstsignature(Id: $Id, Client_Signature: $Client_Signature, Company_Signature: $Company_Signature) {
+		mutation updcontracstsignature($Id: Int, $Signature: String, $Customer: String) {
+			updcontracstsignature(Id: $Id, Signature: $Signature, Customer: $Customer) {
 				Id
 			}
 		}
@@ -179,24 +196,37 @@ class Signature extends React.Component {
 				return 'black';
 		}
 	};
-	loadAgreement = () => {
+	loadAgreement = (signatory) => {
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
 				query: this.GET_AGREEMENT_QUERY,
-				variables: { Id: 14 },
+				variables: { Id: this.state.idContract },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
 				if (data.data.getcontracts != null) {
+					if (data.data.getcontracts.length == 0) {
+						this.props.history.push('/home/');
+						return true;
+					}
 					this.setState(
 						{
 							agreement: data.data.getcontracts[0].Contract_Terms,
-							signature: data.data.getcontracts[0].Client_Signature
+							signature:
+								signatory == 'C'
+									? data.data.getcontracts[0].Client_Signature
+									: data.data.getcontracts[0].Company_Signature,
+							signatory: signatory
 						},
 						() => {
 							this.sigPad.fromDataURL(this.state.signature);
-							this.setState({ loadingData: false });
+							if (this.state.signature != '') this.sigPad.off();
+							this.setState({
+								loadingData: false,
+								allowSave: this.state.signature != '',
+								saved: this.state.signature != ''
+							});
 						}
 					);
 				} else {
@@ -208,6 +238,43 @@ class Signature extends React.Component {
 				console.log('Error: Loading agreement: ', error);
 				this.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
 				this.setState({ loadingData: false });
+			});
+	};
+	validateToken = (token, signatory) => {
+		this.setState({ loadingToken: true });
+		this.props.client
+			.query({
+				query: this.GET_TOKEN_QUERY,
+				variables: { Token: `'${token}'` },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.validtokens != null) {
+					if (data.data.validateToken.length == 0) {
+						this.props.history.push('/home/');
+						return true;
+					}
+					this.setState(
+						{
+							tokenValid: data.data.validtokens.length > 0,
+							idContract: data.data.validtokens[0].Id_Contract
+						},
+						() => {
+							if (this.state.tokenValid) this.loadAgreement(signatory);
+							else this.props.history.push('/home/');
+						}
+					);
+				} else {
+					this.setState({ loadingToken: false }, () => {
+						this.props.history.push('/home/');
+					});
+				}
+			})
+			.catch((error) => {
+				console.log('Error: Loading agreement: ', error);
+				this.setState({ loadingToken: false }, () => {
+					this.props.history.push('/home/');
+				});
 			});
 	};
 	saveSignature = () => {
@@ -222,18 +289,24 @@ class Signature extends React.Component {
 						mutation: this.INSERT_AGREEMENT_SIGNATURE_QUERY,
 						variables: {
 							Id: 14,
-							Client_Signature: `'${this.state.signature}'`,
-							Company_Signature: `'${this.state.signature}'`
+							Signature: `'${this.state.signature}'`,
+							Customer: this.state.signatory
 						}
 					})
 					.then((data) => {
 						this.handleOpenSnackbar('success', 'Document Signed!');
-						this.setState({
-							success: true,
-							loading: false,
-							allowSave: false,
-							saved: true
-						});
+						this.setState(
+							{
+								success: true,
+								loading: false,
+								allowSave: false,
+								saved: true
+							},
+							() => {
+								this.sigPad.off();
+								setTimeout(this.props.history.push('/home/'), 3000);
+							}
+						);
 					})
 					.catch((error) => {
 						console.log('Error: Signing Document: ', error);
@@ -294,10 +367,13 @@ class Signature extends React.Component {
 		});
 	};
 	componentWillMount() {
-		this.loadAgreement();
+		const values = queryString.parse(this.props.location.search);
+		if (!values.token || !values.customer) this.props.history.push('/home/');
+
+		this.validateToken(values.token, values.customer);
 	}
 	componentDidMount() {
-		document.getElementById('signatureMainContainer').addEventListener('resize', this.resizeCanvas.bind(this));
+		window.addEventListener('resize', this.resizeCanvas.bind(this));
 		this.resizeCanvas();
 	}
 	handleClickOpenModal = () => {
@@ -392,6 +468,7 @@ class Signature extends React.Component {
 		}
 		return font;
 	};
+
 	render() {
 		const { classes } = this.props;
 		const buttonClassname = classNames({
@@ -399,6 +476,7 @@ class Signature extends React.Component {
 		});
 		const { loading, success } = this.state;
 		const { fullScreen } = this.props;
+
 		return (
 			<div className="signature-container" id="signatureMainContainer">
 				{this.state.loadingData && <LinearProgress />}
@@ -433,7 +511,12 @@ class Signature extends React.Component {
 							canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 300 }} />}
 							canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
 							onEnd={(e) => {
-								this.setState({ disableButtonLetter: true, allowSave: true, empty: false });
+								this.setState({
+									disableButtonLetter: true,
+									allowSave: true,
+									empty: false,
+									signature: this.sigPad.toDataURL()
+								});
 							}}
 						/>
 					</div>
@@ -461,7 +544,9 @@ class Signature extends React.Component {
 							<Tooltip title="Write Signature">
 								<div>
 									<Button
-										disabled={this.state.loading || this.state.disableButtonLetter}
+										disabled={
+											this.state.loading || this.state.disableButtonLetter || this.state.saved
+										}
 										variant="fab"
 										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
 										onClick={this.handleClickOpenModal}
@@ -479,7 +564,7 @@ class Signature extends React.Component {
 								<Tooltip title="Sign Contract">
 									<div>
 										<Button
-											disabled={this.state.loading || !this.state.allowSave}
+											disabled={this.state.loading || !this.state.allowSave || this.state.saved}
 											//	disabled={!this.state.formValid}
 											variant="fab"
 											color="primary"

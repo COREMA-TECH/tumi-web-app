@@ -486,9 +486,7 @@ class UsersTable extends React.Component {
 										<CustomTableCell style={{ width: '200px' }}>
 											{row.Electronic_Address}
 										</CustomTableCell>
-										<CustomTableCell padding="none" style={{ width: '250px' }}>
-											{row.Phone_Number}
-										</CustomTableCell>
+										<CustomTableCell style={{ width: '200px' }}>{row.Phone_Number}</CustomTableCell>
 										<CustomTableCell style={{ width: '150px' }}>
 											<Select
 												id="Id_Roles"
