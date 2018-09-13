@@ -212,7 +212,21 @@
 		font-family: "Segoe UI" !important;
 		font-size: 1em !important;
 		font-weight: 300 !important;
+		border: 0;
+		outline: none;
+		transition: all .250s !important;
+	}
 
+	.add-property__disabled {
+		padding: .2em .8em !important;
+		border-radius: 25px !important;
+		background: darkgray !important;
+		color: lightgray;
+		font-family: "Segoe UI" !important;
+		font-size: 1em !important;
+		font-weight: 300 !important;
+		border: 0;
+		outline: none;
 		transition: all .250s !important;
 	}
 
@@ -220,7 +234,9 @@
 		cursor: pointer;
 		background: rgba(210, 10, 144, .08);
 	}
-
+	.add-property__disabled:hover {
+		cursor: default;
+	}
 	/*.dialog-full:nth-child(2) {*/
 	/*max-width: none !important;*/
 	/*}*/

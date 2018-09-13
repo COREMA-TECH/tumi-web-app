@@ -1163,9 +1163,13 @@ class GeneralInformation extends Component {
 							))}
 						</div>
 						<div className="card-form-footer">
-							<span className="add-property" onClick={this.handleClickOpen('paper', false, 0)}>
+							<button
+								className={!this.props.showStepper ? 'add-property__disabled' : 'add-property'}
+								disabled={!this.props.showStepper}
+								onClick={this.handleClickOpen('paper', false, 0)}
+							>
 								+ Add Property
-							</span>
+							</button>
 						</div>
 					</div>
 				</div>

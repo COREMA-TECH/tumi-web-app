@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import './index.css';
 import {gql} from 'apollo-boost';
-import withApollo from "react-apollo/withApollo";
-import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
-import TablesContracts from "./TablesContracts";
-import CircularProgress from "../../../material-ui/CircularProgress";
-import {Query} from "react-apollo";
-import NothingToDisplay from "../../../ui-components/NothingToDisplay/NothingToDisplay";
+import withApollo from 'react-apollo/withApollo';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import TablesContracts from './TablesContracts';
+import CircularProgress from '../../../material-ui/CircularProgress';
+import {Query} from 'react-apollo';
+import NothingToDisplay from '../../../ui-components/NothingToDisplay/NothingToDisplay';
 
 class MainContract extends Component {
     constructor(props) {
@@ -15,9 +15,11 @@ class MainContract extends Component {
         this.state = {
             loadingContracts: false,
             data: [],
-            loadingRemoving: false
+            loadingRemoving: false,
+            filterText: ''
         }
     }
+
 
     /**
      * This method redirect to create contract component
@@ -27,42 +29,48 @@ class MainContract extends Component {
     };
 
     getContractsQuery = gql`
-             {
-                getcontracts(Id: null, IsActive: 1) {
-                     Id
-                     Contract_Name
-                     Contrat_Owner
-                     Contract_Status
-                     Contract_Expiration_Date
-                }
-             }
-    `;
+		{
+			getcontracts(Id: null, IsActive: 1) {
+				Id
+				Contract_Name
+				Contrat_Owner
+				Contract_Status
+				Contract_Expiration_Date
+			}
+		}
+	`;
 
     getContracts = () => {
         // Show linear progress
-        this.setState({
-            loadingContracts: true,
-        }, () => {
-        });
+        this.setState(
+            {
+                loadingContracts: true
+            },
+            () => {
+            }
+        );
 
         this.props.client
             .query({
                 query: this.getContractsQuery,
-                fetchPolicy: 'no-cache',
+                fetchPolicy: 'no-cache'
             })
             .then(({data}) => {
-                this.setState(prevState => ({
-                    data: [...prevState.data, data.getcontracts]
-                }), () => {
-                    // Hide linear progress
-                    this.setState({
-                        loadingContracts: false,
-                    });
-                });
+                this.setState(
+                    (prevState) => ({
+                        data: [...prevState.data, data.getcontracts]
+                    }),
+                    () => {
+                        // Hide linear progress
+                        this.setState({
+                            loadingContracts: false
+                        });
+                    }
+                );
             })
-            .catch(error => {
-                console.log("Error fetching data")
-            })
+            .catch((error) => {
+                console.log('Error fetching data');
+            });
     };
 
     /**
@@ -76,7 +84,7 @@ class MainContract extends Component {
 		}
 	`;
 
-    deleteContractById = id => {
+    deleteContractById = (id) => {
         // this.setState(prevState => ({
         //     data: this.state.data.filter((_, i) => {
         //         let element = _.map(item => item.Id);
@@ -86,29 +94,32 @@ class MainContract extends Component {
         //
         // });
 
-        this.setState({
-            loadingRemoving: true,
-        }, () => {
-            this.props.client
-                .mutate({
-                    mutation: this.deleteContractQuery,
-                    variables: {
-                        Id: id
-                    },
-                })
-                .then(data => {
-                    this.setState({
-                        loadingRemoving: false
+        this.setState(
+            {
+                loadingRemoving: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: this.deleteContractQuery,
+                        variables: {
+                            Id: id
+                        }
                     })
-                })
-                .catch(error => console.log(error))
-        });
+                    .then((data) => {
+                        this.setState({
+                            loadingRemoving: false
+                        });
+                    })
+                    .catch((error) => console.log(error));
+            }
+        );
     };
-
+    // To render the content of the header
     render() {
         // If contracts query is loading, show a progress component
         if (this.state.loadingContracts) {
-            return <LinearProgress/>
+            return <LinearProgress/>;
         }
 
         if (this.state.loadingRemoving) {
@@ -116,22 +127,28 @@ class MainContract extends Component {
                 <div className="nothing-container">
                     <CircularProgress size={150}/>
                 </div>
-            )
+            );
         }
 
-
-        // To render the content of the header
         let renderHeaderContent = () => (
             <div className="company-list__header">
                 <div className="search-container">
-                    <input type="text" placeholder="Search contract" className="input-search-contract"/>
+                    <input
+                        onChange={(text) => {
+                            this.setState({
+                                filterText: text.target.value
+                            })
+                        }}
+                        value={this.state.filterText}
+                        type="text"
+                        placeholder="Search contract"
+                        className="input-search-contract"/>
                     <button className="button-search-contract">Search</button>
                 </div>
                 <button className="add-company" onClick={() => {
                     this.redirectToCreateContract()
                 }}>Add Contract</button>
             </div>
-
         );
 
         return (
@@ -146,9 +163,20 @@ class MainContract extends Component {
                             if (loading) return <LinearProgress/>;
                             if (error) return <p>Error </p>;
                             if (data.getcontracts != null && data.getcontracts.length > 0) {
+                                let dataContract = data.getcontracts.filter((_, i) => {
+                                    if (this.state.filterText === '') {
+                                        return true
+                                    }
+
+                                    if (_.Contract_Name.indexOf(this.state.filterText) > -1) {
+                                        return true
+                                    }
+
+                                });
+
                                 return (
                                     <TablesContracts
-                                        data={data.getcontracts}
+                                        data={dataContract}
                                         delete={(id) => {
                                             this.deleteContractById(id)
                                         }}/>
