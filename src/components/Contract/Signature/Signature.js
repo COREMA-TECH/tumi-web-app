@@ -65,7 +65,11 @@ const styles = (theme) => ({
 class Signature extends React.Component {
 	state = {
 		signInput: null,
-		openModal: false
+		openModal: false,
+		disableButtonLetter: true,
+		allowSave: false,
+		saved: true,
+		empty: true
 	};
 	constructor(props) {
 		super(props);
@@ -85,10 +89,11 @@ class Signature extends React.Component {
 			inputText: '',
 			signature: '',
 			signatory: '',
-			disableButtonLetter: false,
+			disableButtonLetter: true,
 			allowSave: false,
-			saved: false,
-			empty: false,
+			saved: true,
+			empty: true,
+
 			tokenValid: false,
 			idContract: 0
 		};
@@ -105,8 +110,8 @@ class Signature extends React.Component {
 	`;
 
 	GET_TOKEN_QUERY = gql`
-		query validtokens($Token: String) {
-			validtokens(Token: $Token) {
+		query validtokens($Token: String, $Signatory: String) {
+			validtokens(Token: $Token, Signatory: $Signatory) {
 				Token
 				IsActive
 				Id_Contract
@@ -115,8 +120,8 @@ class Signature extends React.Component {
 	`;
 
 	INSERT_AGREEMENT_SIGNATURE_QUERY = gql`
-		mutation updcontracstsignature($Id: Int, $Signature: String, $Customer: String) {
-			updcontracstsignature(Id: $Id, Signature: $Signature, Customer: $Customer) {
+		mutation updcontracstsignature($Id: Int, $Signature: String, $Signatory: String) {
+			updcontracstsignature(Id: $Id, Signature: $Signature, Signatory: $Signatory) {
 				Id
 			}
 		}
@@ -221,11 +226,14 @@ class Signature extends React.Component {
 						},
 						() => {
 							this.sigPad.fromDataURL(this.state.signature);
-							if (this.state.signature != '') this.sigPad.off();
+							console.log('Signature', this.state.signature);
+							console.log('Signed', this.state.signature);
+							if (this.state.signature) this.sigPad.off();
 							this.setState({
 								loadingData: false,
-								allowSave: this.state.signature != '',
-								saved: this.state.signature != ''
+								allowSave: this.state.signature,
+								saved: this.state.signature,
+								disableButtonLetter: this.state.signature
 							});
 						}
 					);
@@ -245,12 +253,12 @@ class Signature extends React.Component {
 		this.props.client
 			.query({
 				query: this.GET_TOKEN_QUERY,
-				variables: { Token: `'${token}'` },
+				variables: { Token: `'${token}'`, Signatory: `'${signatory}'` },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
 				if (data.data.validtokens != null) {
-					if (data.data.validateToken.length == 0) {
+					if (data.data.validtokens.length == 0) {
 						this.props.history.push('/home/');
 						return true;
 					}
@@ -290,7 +298,7 @@ class Signature extends React.Component {
 						variables: {
 							Id: this.state.idContract,
 							Signature: `'${this.state.signature}'`,
-							Customer: this.state.signatory
+							Signatory: this.state.signatory
 						}
 					})
 					.then((data) => {
@@ -476,7 +484,9 @@ class Signature extends React.Component {
 		});
 		const { loading, success } = this.state;
 		const { fullScreen } = this.props;
-
+		if (!this.state.tokenValid) {
+			return <div />;
+		}
 		return (
 			<div className="signature-container" id="signatureMainContainer">
 				{this.state.loadingData && <LinearProgress />}
