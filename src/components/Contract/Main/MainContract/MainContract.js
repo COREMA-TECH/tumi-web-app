@@ -160,7 +160,10 @@ class MainContract extends Component {
                     <Query query={this.getContractsQuery} pollInterval={300}>
                         {({loading, error, data, refetch, networkStatus}) => {
                             //if (networkStatus === 4) return <LinearProgress />;
-                            if (loading) return <LinearProgress/>;
+                            if (this.state.filterText === '') {
+                                if (loading) return <LinearProgress/>;
+                            }
+
                             if (error) return <p>Error </p>;
                             if (data.getcontracts != null && data.getcontracts.length > 0) {
                                 let dataContract = data.getcontracts.filter((_, i) => {
@@ -168,18 +171,23 @@ class MainContract extends Component {
                                         return true
                                     }
 
-                                    if (_.Contract_Name.indexOf(this.state.filterText) > -1) {
+                                    if (_.Contract_Name.indexOf(this.state.filterText) > -1
+                                    || _.Contract_Name.toLocaleLowerCase().indexOf(this.state.filterText) > -1) {
                                         return true
                                     }
 
                                 });
 
                                 return (
-                                    <TablesContracts
-                                        data={dataContract}
-                                        delete={(id) => {
-                                            this.deleteContractById(id)
-                                        }}/>
+                                    <div className="main-contract-table">
+                                        <div className="contract_table_wrapper">
+                                            <TablesContracts
+                                                data={dataContract}
+                                                delete={(id) => {
+                                                    this.deleteContractById(id)
+                                                }}/>
+                                        </div>
+                                    </div>
                                 )
                             }
                             return (
