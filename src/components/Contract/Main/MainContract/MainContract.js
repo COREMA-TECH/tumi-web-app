@@ -15,7 +15,8 @@ class MainContract extends Component {
         this.state = {
             loadingContracts: false,
             data: [],
-            loadingRemoving: false
+            loadingRemoving: false,
+            filterText: ''
         }
     }
 
@@ -124,7 +125,16 @@ class MainContract extends Component {
         let renderHeaderContent = () => (
             <div className="company-list__header">
                 <div className="search-container">
-                    <input type="text" placeholder="Search contract" className="input-search-contract"/>
+                    <input
+                        onChange={(text) => {
+                            this.setState({
+                                filterText: text.target.value
+                            })
+                        }}
+                        value={this.state.filterText}
+                        type="text"
+                        placeholder="Search contract"
+                        className="input-search-contract"/>
                     <button className="button-search-contract">Search</button>
                 </div>
                 <button className="add-company" onClick={() => {
@@ -146,9 +156,20 @@ class MainContract extends Component {
                             if (loading) return <LinearProgress/>;
                             if (error) return <p>Error </p>;
                             if (data.getcontracts != null && data.getcontracts.length > 0) {
+                                let dataContract = data.getcontracts.filter((_, i) => {
+                                    if(this.state.filterText === ''){
+                                        return true
+                                    }
+
+                                    if(_.Contract_Name.indexOf(this.state.filterText) > -1) {
+                                        return true
+                                    }
+                                    
+                                });
+
                                 return (
                                     <TablesContracts
-                                        data={data.getcontracts}
+                                        data={dataContract}
                                         delete={(id) => {
                                             this.deleteContractById(id)
                                         }}/>
