@@ -27,7 +27,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import InputFile from '../../ui-components/InputFile/InputFile';
-import days from '../../../data/days.json';
+import ContactTypesData from '../../../data/contactTypes.json';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
@@ -116,9 +116,10 @@ class ContactcontactForm extends React.Component {
 				lastname: Last_Name
 				email: Electronic_Address
 				number: Phone_Number
-				type: Contact_Type
+				title: Contact_Title
 				idSupervisor: Id_Supervisor
 				idDepartment: Id_Deparment
+				type: Contact_Type
 			}
 		}
 	`;
@@ -184,15 +185,17 @@ class ContactcontactForm extends React.Component {
 		lastname: '',
 		email: '',
 		number: '',
-		type: '',
+		title: '',
 		idSupervisor: '',
 		idDepartment: 0,
+		type: '',
 
 		firstnameValid: true,
 		middlenameValid: true,
 		lastnameValid: true,
 		emailValid: true,
 		numberValid: true,
+		titleValid: true,
 		typeValid: true,
 		idDepartmentValid: true,
 		idSupervisorValid: true,
@@ -202,6 +205,7 @@ class ContactcontactForm extends React.Component {
 		lastnameHasValue: false,
 		emailHasValue: false,
 		numberHasValue: false,
+		titleHasValue: false,
 		typeHasValue: false,
 		idSupervisorHasValue: false,
 		idDepartmentHasValue: false,
@@ -222,7 +226,7 @@ class ContactcontactForm extends React.Component {
 		this.state = {
 			data: [],
 			idCompany: this.props.idCompany,
-			types: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
+			titles: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
 			allSupervisors: [],
@@ -231,8 +235,8 @@ class ContactcontactForm extends React.Component {
 			loadingDepartments: false,
 			loadingSupervisor: false,
 			loadingAllSupervisors: false,
-			loadingTypes: false,
-
+			loadingTitles: false,
+			contactTypes: ContactTypesData,
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -301,6 +305,7 @@ class ContactcontactForm extends React.Component {
 		let middlenameHasValue = this.state.middlename != '';
 		let lastnameHasValue = this.state.lastname != '';
 		let numberHasValue = this.state.number != '';
+		let titleHasValue = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
 		let typeHasValue = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentHasValue =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && !this.state.idDepartment !== '';
@@ -312,9 +317,10 @@ class ContactcontactForm extends React.Component {
 			middlenameHasValue ||
 			lastnameHasValue ||
 			numberHasValue ||
-			typeHasValue ||
+			titleHasValue ||
 			idDepartmentHasValue ||
-			idSupervisorHasValue
+			idSupervisorHasValue ||
+			typeHasValue
 		);
 	};
 	validateAllFields(fun) {
@@ -325,6 +331,7 @@ class ContactcontactForm extends React.Component {
 		let numberValid =
 			this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 				.length == 10; //this.state.number.trim().length >= 2;
+		let titleValid = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
 		let typeValid = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
@@ -337,9 +344,10 @@ class ContactcontactForm extends React.Component {
 				//	middlenameValid,
 				lastnameValid,
 				numberValid,
-				typeValid,
+				titleValid,
 				idDepartmentValid,
-				idSupervisorValid
+				idSupervisorValid,
+				typeValid
 			},
 			() => {
 				this.validateForm(fun);
@@ -352,6 +360,7 @@ class ContactcontactForm extends React.Component {
 		//	let middlenameValid = this.state.middlenameValid;
 		let lastnameValid = this.state.lastnameValid;
 		let numberValid = this.state.numberValid;
+		let titleValid = this.state.titleValid;
 		let typeValid = this.state.typeValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
 		let idSupervisorValid = this.state.idSupervisorValid;
@@ -361,6 +370,7 @@ class ContactcontactForm extends React.Component {
 		let middlenameHasValue = this.state.middlenameHasValue;
 		let lastnameHasValue = this.state.lastnameHasValue;
 		let numberHasValue = this.state.numberHasValue;
+		let titleHasValue = this.state.titleHasValue;
 		let typeHasValue = this.state.typeHasValue;
 		let idDepartmentHasValue = this.state.idDepartmentHasValue;
 		let idSupervisorHasValue = this.state.idSupervisorHasValue;
@@ -388,6 +398,10 @@ class ContactcontactForm extends React.Component {
 						.length == 10;
 				numberHasValue = value != '';
 				break;
+			case 'title':
+				titleValid = value !== null && value !== 0 && value !== '';
+				titleHasValue = value !== null && value !== 0 && value !== '';
+				break;
 			case 'type':
 				typeValid = value !== null && value !== 0 && value !== '';
 				typeHasValue = value !== null && value !== 0 && value !== '';
@@ -410,6 +424,7 @@ class ContactcontactForm extends React.Component {
 				//	middlenameValid,
 				lastnameValid,
 				numberValid,
+				titleValid,
 				typeValid,
 				idDepartmentValid,
 				idSupervisorValid,
@@ -418,6 +433,7 @@ class ContactcontactForm extends React.Component {
 				middlenameHasValue,
 				lastnameHasValue,
 				numberHasValue,
+				titleHasValue,
 				typeHasValue,
 				idDepartmentHasValue,
 				idSupervisorHasValue
@@ -435,6 +451,7 @@ class ContactcontactForm extends React.Component {
 					//		this.state.middlenameValid &&
 					this.state.lastnameValid &&
 					this.state.numberValid &&
+					this.state.titleValid &&
 					this.state.typeValid &&
 					this.state.idDepartmentValid &&
 					this.state.idSupervisorValid,
@@ -444,6 +461,7 @@ class ContactcontactForm extends React.Component {
 					this.state.middlenameHasValue ||
 					this.state.lastnameHasValue ||
 					this.state.numberHasValue ||
+					this.state.titleHasValue ||
 					this.state.typeHasValue ||
 					this.state.idDepartmentHasValue ||
 					this.state.idSupervisorHasValue
@@ -467,6 +485,7 @@ class ContactcontactForm extends React.Component {
 		lastname,
 		email,
 		number,
+		title,
 		type
 	}) => {
 		this.setState(
@@ -479,12 +498,14 @@ class ContactcontactForm extends React.Component {
 				number: number.trim(),
 				idSupervisor: idSupervisor,
 				idDepartment: idDepartment,
+				title: title,
 				type: type,
 				formValid: true,
 				emailValid: true,
 				firstnameValid: true,
 				//	middlenameValid: true,
 				lastnameValid: true,
+				titleValid: true,
 				typeValid: true,
 				idDepartmentValid: true,
 				idSupervisorValid: true,
@@ -493,6 +514,7 @@ class ContactcontactForm extends React.Component {
 				firstnameHasValue: true,
 				middlenameHasValue: true,
 				lastnameHasValue: true,
+				titleHasValue: true,
 				typeHasValue: true,
 				idDepartmentHasValue: true,
 				idSupervisorHasValue: true,
@@ -520,7 +542,7 @@ class ContactcontactForm extends React.Component {
 			);
 		}
 		this.loadContacts();
-		this.loadTypes();
+		this.loadTitles();
 		this.loadDepartments();
 		this.loadSupervisors();
 		this.loadAllSupervisors();
@@ -630,8 +652,8 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	loadTypes = () => {
-		this.setState({ loadingTypes: true }, () => {
+	loadTitles = () => {
+		this.setState({ loadingTitles: true }, () => {
 			this.props.client
 				.query({
 					query: this.GET_TYPES_QUERY,
@@ -640,21 +662,21 @@ class ContactcontactForm extends React.Component {
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
 						this.setState({
-							types: data.data.getcatalogitem,
-							loadingTypes: false
+							titles: data.data.getcatalogitem,
+							loadingTitles: false
 						});
 					} else {
 						this.props.handleOpenSnackbar(
 							'error',
-							'Error: Loading types: getcatalogitem not exists in query data'
+							'Error: Loading titles: getcatalogitem not exists in query data'
 						);
-						this.setState({ loadingTypes: false });
+						this.setState({ loadingTitles: false });
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading types: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading types: ' + error);
-					this.setState({ loadingTypes: false });
+					console.log('Error: Loading titles: ', error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading titles: ' + error);
+					this.setState({ loadingTitles: false });
 				});
 		});
 	};
@@ -710,6 +732,7 @@ class ContactcontactForm extends React.Component {
 								Last_Name: `'${this.state.lastname}'`,
 								Electronic_Address: `'${this.state.email}'`,
 								Phone_Number: `'${this.state.number}'`,
+								Contact_Title: this.state.title,
 								Contact_Type: this.state.type,
 								Id_Deparment: this.state.idDepartment,
 								Id_Supervisor: this.state.idSupervisor,
@@ -825,6 +848,16 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
+	updateTitle = (id) => {
+		this.setState(
+			{
+				title: id
+			},
+			() => {
+				this.validateField('title', id);
+			}
+		);
+	};
 	updateType = (id) => {
 		this.setState(
 			{
@@ -835,6 +868,7 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
+
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
@@ -849,7 +883,7 @@ class ContactcontactForm extends React.Component {
 					this.state.loadingDepartments ||
 					this.state.loadingSupervisor ||
 					this.state.loadingAllSupervisors ||
-					this.state.loadingTypes) && <LinearProgress />}
+					this.state.loadingTitles) && <LinearProgress />}
 
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
@@ -883,6 +917,19 @@ class ContactcontactForm extends React.Component {
 					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
 						<div className="">
 							<div className="card-form-body">
+								<div className="card-form-row">
+									<span className="input-label primary">Type</span>
+
+									<SelectForm
+										id="type"
+										name="type"
+										data={this.state.contactTypes}
+										update={this.updateType}
+										showNone={false}
+										error={!this.state.typeValid}
+										value={this.state.type}
+									/>
+								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">First Name</span>
 									<InputForm
@@ -969,11 +1016,11 @@ class ContactcontactForm extends React.Component {
 									<span className="input-label primary">Title</span>
 									<SelectForm
 										name="title"
-										data={this.state.types}
-										update={this.updateType}
+										data={this.state.titles}
+										update={this.updateTitle}
 										showNone={false}
-										value={this.state.type}
-										error={!this.state.typeValid}
+										value={this.state.title}
+										error={!this.state.titleValid}
 									/>
 								</div>
 							</div>
@@ -1032,7 +1079,8 @@ class ContactcontactForm extends React.Component {
 					<div className={classes.divStyle}>
 						<ContactsTable
 							data={this.state.data}
-							types={this.state.types}
+							titles={this.state.titles}
+							types={this.state.contactTypes}
 							loading={this.state.loading}
 							supervisors={this.state.allSupervisors}
 							departments={this.state.departments}
