@@ -175,7 +175,8 @@ class NewContract extends Component {
         }, () => {
             this.setState({
                 Id_User_Signed: null,
-                Id_User_Billing_Contact: null
+                Id_User_Billing_Contact: null,
+                User_Signed_Title: '',
             }, () => {
                 this.setState({
                     loadingCompanies: false
@@ -646,6 +647,11 @@ class NewContract extends Component {
                                                                 Electronic_Address: email
                                                             });
                                                         }}
+                                                        updateTypeContact={(value) => {
+                                                            this.setState({
+                                                                User_Signed_Title: value
+                                                            })
+                                                        }}
                                                     />
                                                 ) : (
                                                         <ContactDialog
@@ -658,6 +664,11 @@ class NewContract extends Component {
                                                                     Electronic_Address: email
                                                                 });
                                                             }}
+                                                            updateTypeContact={(value) => {
+                                                                this.setState({
+                                                                    User_Signed_Title: value
+                                                                })
+                                                            }}
                                                         />
                                                     )
                                             }
@@ -668,9 +679,7 @@ class NewContract extends Component {
                                             <InputForm
                                                 value={this.state.User_Signed_Title}
                                                 change={(text) => {
-                                                    this.setState({
-                                                        User_Signed_Title: text
-                                                    });
+
                                                 }}
                                             />
                                         </div>
@@ -803,6 +812,9 @@ class NewContract extends Component {
                                                         updateEmailContact={(email) => {
 
                                                         }}
+                                                        updateTypeContact={(type) => {
+
+                                                        }}
                                                     />
                                                 ) : (
                                                         <ContactDialog
@@ -816,6 +828,10 @@ class NewContract extends Component {
                                                                 });
                                                             }}
                                                             updateEmailContact={(email) => {
+
+                                                            }}
+
+                                                            updateTypeContact={(type) => {
 
                                                             }}
                                                         />
