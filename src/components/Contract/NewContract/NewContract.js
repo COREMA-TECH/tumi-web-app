@@ -17,57 +17,57 @@ import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
 import { Snackbar } from '@material-ui/core';
 
 class NewContract extends Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		console.log("aqui esta la fecha", this.getNewDate());
-		this.state = {
-			Id: '',
-			Id_Company: '',
-			Contract_Name: '',
-			Contrat_Owner: '',
-			contractTemplateId: 0,
-			contractExpiration: this.getNewDate(),
-			Id_Entity: 0,
-			Id_User_Signed: '',
-			User_Signed_Title: '',
-			Signed_Date: this.getNewDate(),
-			Contract_Status: '',
-			Contract_Start_Date: this.getNewDate(),
-			Contract_Term: '',
-			Owner_Expiration_Notification: '',
-			Company_Signed: 0,
-			Company_Signed_Date: this.getNewDate(),
-			Id_User_Billing_Contact: '',
-			Billing_Street: '',
-			Billing_City: 0,
-			Billing_State: 0,
-			Billing_Zip_Code: '',
-			Billing_Country: 6,
-			Contract_Terms: '',
-			Exhibit_B: '',
-			Exhibit_C: '',
-			Exhibit_D: '',
-			Exhibit_E: '',
-			Exhibit_F: '',
-			IsActive: 0,
-			User_Created: '',
-			User_Updated: '',
-			Date_Created: '',
-			Date_Updated: '',
-			CompanySignedName: '',
-			open: false,
-			scroll: 'paper',
-			managementDialog: false,
-			Electronic_Address: '',
-			loaded: false,
-			loading: false,
-			openSnackbar: false,
-			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!',
-			loadingCompanies: false
-		};
-	}
+        console.log("aqui esta la fecha", this.getNewDate());
+        this.state = {
+            Id: '',
+            Id_Company: '',
+            Contract_Name: '',
+            Contrat_Owner: '',
+            contractTemplateId: 0,
+            contractExpiration: this.getNewDate(),
+            Id_Entity: 0,
+            Id_User_Signed: '',
+            User_Signed_Title: '',
+            Signed_Date: this.getNewDate(),
+            Contract_Status: '',
+            Contract_Start_Date: this.getNewDate(),
+            Contract_Term: '',
+            Owner_Expiration_Notification: '',
+            Company_Signed: 0,
+            Company_Signed_Date: this.getNewDate(),
+            Id_User_Billing_Contact: '',
+            Billing_Street: '',
+            Billing_City: 0,
+            Billing_State: 0,
+            Billing_Zip_Code: '',
+            Billing_Country: 6,
+            Contract_Terms: '',
+            Exhibit_B: '',
+            Exhibit_C: '',
+            Exhibit_D: '',
+            Exhibit_E: '',
+            Exhibit_F: '',
+            IsActive: 1,
+            User_Created: '',
+            User_Updated: '',
+            Date_Created: '',
+            Date_Updated: '',
+            CompanySignedName: '',
+            open: false,
+            scroll: 'paper',
+            managementDialog: false,
+            Electronic_Address: '',
+            loaded: false,
+            loading: false,
+            openSnackbar: false,
+            variantSnackbar: 'info',
+            messageSnackbar: 'Dummy text!',
+            loadingCompanies: false
+        };
+    }
 
 	/**
     constructor(props) {
@@ -125,21 +125,21 @@ class NewContract extends Component {
     /**
      * Snackbar methods
      */
-	handleCloseSnackbar = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
+    handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
 
-		this.setState({ openSnackbar: false });
-	};
+        this.setState({ openSnackbar: false });
+    };
 
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
+    handleOpenSnackbar = (variant, message) => {
+        this.setState({
+            openSnackbar: true,
+            variantSnackbar: variant,
+            messageSnackbar: message
+        });
+    };
     /**
      * End of SnackBars methods
      */
@@ -175,7 +175,8 @@ class NewContract extends Component {
         }, () => {
             this.setState({
                 Id_User_Signed: null,
-                Id_User_Billing_Contact: null
+                Id_User_Billing_Contact: null,
+                User_Signed_Title: '',
             }, () => {
                 this.setState({
                     loadingCompanies: false
@@ -193,7 +194,7 @@ class NewContract extends Component {
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
 	/**
@@ -203,7 +204,7 @@ class NewContract extends Component {
 	/**************************************
      *   MUTATION TO CREATE NEW CONTRACT  *
      *************************************/
-	ADD_CONTRACT = gql`
+    ADD_CONTRACT = gql`
 		mutation inscontracts($input: iContracts!) {
 			inscontracts(input: $input) {
 				Id
@@ -211,7 +212,7 @@ class NewContract extends Component {
 		}
 	`;
 
-	UPDATE_CONTRACT = gql`
+    UPDATE_CONTRACT = gql`
 		mutation updcontracts($input: iContracts!) {
 			updcontracts(input: $input) {
 				Id
@@ -219,7 +220,7 @@ class NewContract extends Component {
 		}
 	`;
 
-	GET_CONTRACT = gql`
+    GET_CONTRACT = gql`
 		{
 			getcontracttemplate(Id: null, IsActive: 1) {
 				Id
@@ -229,7 +230,7 @@ class NewContract extends Component {
 		}
 	`;
 
-	GET_CONTRACT_BY_ID = gql`
+    GET_CONTRACT_BY_ID = gql`
 		query getContractById($Id: Int!) {
 			getcontracts(Id: $Id, IsActive: null) {
 				Id
@@ -285,7 +286,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     Contract_Name: data.getcontracts[0].Contract_Name,
                     Contrat_Owner: data.getcontracts[0].Contrat_Owner,
@@ -369,7 +370,7 @@ class NewContract extends Component {
                     }
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log('Server data response is: ' + data.inscontracts);
                 this.props.update(data.inscontracts.Id);
             })
@@ -428,7 +429,7 @@ class NewContract extends Component {
                     }
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log('Server data response is: ' + data.updcontracts);
                 this.props.update(data.updcontracts.Id);
             })
@@ -445,7 +446,7 @@ class NewContract extends Component {
 	/**
      * QUERY to get companies
      */
-	getCompaniesQuery = gql`
+    getCompaniesQuery = gql`
 		query getcompanies($Id: Int!) {
 			getcompanies(Id: $Id, IsActive: 1) {
 				Id
@@ -456,44 +457,44 @@ class NewContract extends Component {
 		}
 	`;
 
-	getNewDate = () => {
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth() + 1; //January is 0!
+    getNewDate = () => {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
 
-		var yyyy = today.getFullYear();
-		if (dd < 10) {
-			dd = '0' + dd;
-		}
-		if (mm < 10) {
-			mm = '0' + mm;
-		}
-		var today = yyyy + '-' + mm + '-' + dd;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var today = yyyy + '-' + mm + '-' + dd;
 
-		return today;
+        return today;
 
-	};
+    };
 
-	getCompanies = (id) => {
-		this.props.client
-			.query({
-				query: this.getCompaniesQuery,
-				variables: {
-					Id: id
-				}
-			})
-			.then(({ data }) => {
-				this.setState({
-					CompanySignedName: data.getcompanies[0].LegalName,
-					Primary_Email: data.getcompanies[0].Primary_Email
-				});
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
+    getCompanies = (id) => {
+        this.props.client
+            .query({
+                query: this.getCompaniesQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(({ data }) => {
+                this.setState({
+                    CompanySignedName: data.getcompanies[0].LegalName,
+                    Primary_Email: data.getcompanies[0].Primary_Email
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
-	getStatesQuery = gql`
+    getStatesQuery = gql`
 		query States($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
 				Id
@@ -503,7 +504,7 @@ class NewContract extends Component {
 		}
 	`;
 
-	getCitiesQuery = gql`
+    getCitiesQuery = gql`
 		query Cities($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
 				Id
@@ -516,7 +517,7 @@ class NewContract extends Component {
 	 *  End of the countries, cities and states queries
 	 */
 
-	getContractTermsQuery = gql`
+    getContractTermsQuery = gql`
 		{
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
 				Id
@@ -534,23 +535,23 @@ class NewContract extends Component {
 	 * Events of the component
 	 */
 
-	handleClose = () => {
-		this.setState({ open: false });
-	};
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
-	componentWillMount() {
-		if (this.props.contractId !== 0) {
-			this.getContractData(this.props.contractId);
-		}
-	}
+    componentWillMount() {
+        if (this.props.contractId !== 0) {
+            this.getContractData(this.props.contractId);
+        }
+    }
 
     render() {
-        if(this.state.loadingCompanies){
-            return <LinearProgress/>
+        if (this.state.loadingCompanies) {
+            return <LinearProgress />
         }
 
         if (this.state.loading) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         return (
@@ -590,9 +591,9 @@ class NewContract extends Component {
                                         <div className="card-form-row">
                                             <span className="input-label primary">Contract Template</span>
                                             <Query query={this.GET_CONTRACT}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
+                                                    if (loading) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
                                                     if (
                                                         data.getcontracttemplate != null &&
@@ -646,20 +647,30 @@ class NewContract extends Component {
                                                                 Electronic_Address: email
                                                             });
                                                         }}
-                                                    />
-                                                ) : (
-                                                    <ContactDialog
-                                                        defaultValue=''
-                                                        valueSelected={this.state.Id_User_Signed}
-                                                        idContact={this.state.Id_Entity}
-                                                        update={this.updateIdContact}
-                                                        updateEmailContact={(email) => {
+                                                        updateTypeContact={(value) => {
                                                             this.setState({
-                                                                Electronic_Address: email
-                                                            });
+                                                                User_Signed_Title: value
+                                                            })
                                                         }}
                                                     />
-                                                )
+                                                ) : (
+                                                        <ContactDialog
+                                                            defaultValue=''
+                                                            valueSelected={this.state.Id_User_Signed}
+                                                            idContact={this.state.Id_Entity}
+                                                            update={this.updateIdContact}
+                                                            updateEmailContact={(email) => {
+                                                                this.setState({
+                                                                    Electronic_Address: email
+                                                                });
+                                                            }}
+                                                            updateTypeContact={(value) => {
+                                                                this.setState({
+                                                                    User_Signed_Title: value
+                                                                })
+                                                            }}
+                                                        />
+                                                    )
                                             }
 
                                         </div>
@@ -668,9 +679,7 @@ class NewContract extends Component {
                                             <InputForm
                                                 value={this.state.User_Signed_Title}
                                                 change={(text) => {
-                                                    this.setState({
-                                                        User_Signed_Title: text
-                                                    });
+
                                                 }}
                                             />
                                         </div>
@@ -715,9 +724,9 @@ class NewContract extends Component {
                                             <span className="input-label primary">Contract Term (months)</span>
 
                                             <Query query={this.getContractTermsQuery}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
+                                                    if (loading) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         console.log('Data of cities' + data.getcatalogitem);
@@ -763,7 +772,7 @@ class NewContract extends Component {
                                             <span className="input-label primary">Company Signed By</span>
 
                                             <InputForm value={this.state.CompanySignedName} change={(text) => {
-                                            }}/>
+                                            }} />
                                         </div>
                                         <div className="card-form-row">
                                             <span className="input-label primary">Company Signed Date</span>
@@ -780,219 +789,226 @@ class NewContract extends Component {
                                 </div>
                             </div>
 
-							<div className="contract-body-row__content">
-								<div className="contract-body-row__header">
-									<span className="contract-body__subtitle">Billing Information</span>
-								</div>
-								<div className="contract-body-row__form">
-									<div className="card-form-body">
-										<div className="card-form-row">
-											<span className="input-label primary">Billing Name</span>
-											{
-												this.state.loadingCompanies ? (
-													<ContactDialog
-														defaultValue=''
-														valueSelected={this.state.Id_User_Billing_Contact}
-														idContact={this.state.Id_Entity}
-														update={(id) => {
-															this.setState({
-																Id_User_Billing_Contact: id
-															}, () => {
-															});
-														}}
-														updateEmailContact={(email) => {
+                            <div className="contract-body-row__content">
+                                <div className="contract-body-row__header">
+                                    <span className="contract-body__subtitle">Billing Information</span>
+                                </div>
+                                <div className="contract-body-row__form">
+                                    <div className="card-form-body">
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Billing Name</span>
+                                            {
+                                                this.state.loadingCompanies ? (
+                                                    <ContactDialog
+                                                        defaultValue=''
+                                                        valueSelected={this.state.Id_User_Billing_Contact}
+                                                        idContact={this.state.Id_Entity}
+                                                        update={(id) => {
+                                                            this.setState({
+                                                                Id_User_Billing_Contact: id
+                                                            }, () => {
+                                                            });
+                                                        }}
+                                                        updateEmailContact={(email) => {
 
-														}}
-													/>
-												) : (
-														<ContactDialog
-															defaultValue=''
-															valueSelected={this.state.Id_User_Billing_Contact}
-															idContact={this.state.Id_Entity}
-															update={(id) => {
-																this.setState({
-																	Id_User_Billing_Contact: id
-																}, () => {
-																});
-															}}
-															updateEmailContact={(email) => {
+                                                        }}
+                                                        updateTypeContact={(type) => {
 
-															}}
-														/>
-													)
-											}
+                                                        }}
+                                                    />
+                                                ) : (
+                                                        <ContactDialog
+                                                            defaultValue=''
+                                                            valueSelected={this.state.Id_User_Billing_Contact}
+                                                            idContact={this.state.Id_Entity}
+                                                            update={(id) => {
+                                                                this.setState({
+                                                                    Id_User_Billing_Contact: id
+                                                                }, () => {
+                                                                });
+                                                            }}
+                                                            updateEmailContact={(email) => {
 
-											{/*<ContactDialog*/}
-											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
-											{/*idContact={this.state.Id_Entity}*/}
-											{/*update={(id) => {*/}
-											{/*this.setState({*/}
-											{/*Id_User_Billing_Contact: id*/}
-											{/*}, () => {*/}
-											{/*alert(this.state.Id_User_Billing_Contact)*/}
-											{/*});*/}
-											{/*}}*/}
-											{/*updateEmailContact={(email) => {*/}
+                                                            }}
 
-											{/*}}*/}
-											{/*/>*/}
+                                                            updateTypeContact={(type) => {
 
-											{/*{*/}
-											{/*this.state.loadingCompanies ? (*/}
-											{/*<ContactDialog*/}
-											{/*defaultValue=''*/}
-											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
-											{/*idContact={this.state.Id_Entity}*/}
-											{/*update={(id) => {*/}
-											{/*this.setState({*/}
-											{/*Id_User_Billing_Contact: id*/}
-											{/*}, () => {*/}
-											{/*alert(this.state.Id_User_Billing_Contact)*/}
-											{/*});*/}
-											{/*}}*/}
-											{/*updateEmailContact={(email) => {*/}
+                                                            }}
+                                                        />
+                                                    )
+                                            }
 
-											{/*}}*/}
-											{/*/>*/}
-											{/*) : (*/}
-											{/*<ContactDialog*/}
-											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
-											{/*idContact={this.state.Id_Entity}*/}
-											{/*update={(id) => {*/}
-											{/*this.setState({*/}
-											{/*Id_User_Billing_Contact: id*/}
-											{/*}, () => {*/}
-											{/*alert(this.state.Id_User_Billing_Contact)*/}
-											{/*});*/}
-											{/*}}*/}
-											{/*updateEmailContact={(email) => {*/}
+                                            {/*<ContactDialog*/}
+                                            {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+                                            {/*idContact={this.state.Id_Entity}*/}
+                                            {/*update={(id) => {*/}
+                                            {/*this.setState({*/}
+                                            {/*Id_User_Billing_Contact: id*/}
+                                            {/*}, () => {*/}
+                                            {/*alert(this.state.Id_User_Billing_Contact)*/}
+                                            {/*});*/}
+                                            {/*}}*/}
+                                            {/*updateEmailContact={(email) => {*/}
 
-											{/*}}*/}
-											{/*/>*/}
-											{/*)*/}
-											{/*}*/}
+                                            {/*}}*/}
+                                            {/*/>*/}
 
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">Billing Street</span>
-											<InputForm
-												value={this.state.Billing_Street}
-												change={(text) => {
-													this.setState({
-														Billing_Street: text
-													});
-												}}
-											/>
-										</div>
+                                            {/*{*/}
+                                            {/*this.state.loadingCompanies ? (*/}
+                                            {/*<ContactDialog*/}
+                                            {/*defaultValue=''*/}
+                                            {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+                                            {/*idContact={this.state.Id_Entity}*/}
+                                            {/*update={(id) => {*/}
+                                            {/*this.setState({*/}
+                                            {/*Id_User_Billing_Contact: id*/}
+                                            {/*}, () => {*/}
+                                            {/*alert(this.state.Id_User_Billing_Contact)*/}
+                                            {/*});*/}
+                                            {/*}}*/}
+                                            {/*updateEmailContact={(email) => {*/}
 
-										{/*<div className="card-form-row">*/}
-										{/*<span className="input-label primary">Billing Country</span>*/}
-										{/*<Query query={this.getCountriesQuery}>*/}
-										{/*{({loading, error, data, refetch, networkStatus}) => {*/}
-										{/*//if (networkStatus === 4) return <LinearProgress />;*/}
-										{/*if (loading) return <LinearProgress/>;*/}
-										{/*if (error) return <p>Error </p>;*/}
-										{/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-										{/*console.log('Data of cities' + data.getcatalogitem);*/}
-										{/*return (*/}
-										{/*<SelectForm*/}
-										{/*data={data.getcatalogitem}*/}
-										{/*update={this.updateCountry}*/}
-										{/*value={this.state.Billing_Country}*/}
-										{/*/>*/}
-										{/*);*/}
-										{/*}*/}
-										{/*return <p>Nothing to display </p>;*/}
-										{/*}}*/}
-										{/*</Query>*/}
-										{/*</div>*/}
+                                            {/*}}*/}
+                                            {/*/>*/}
+                                            {/*) : (*/}
+                                            {/*<ContactDialog*/}
+                                            {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+                                            {/*idContact={this.state.Id_Entity}*/}
+                                            {/*update={(id) => {*/}
+                                            {/*this.setState({*/}
+                                            {/*Id_User_Billing_Contact: id*/}
+                                            {/*}, () => {*/}
+                                            {/*alert(this.state.Id_User_Billing_Contact)*/}
+                                            {/*});*/}
+                                            {/*}}*/}
+                                            {/*updateEmailContact={(email) => {*/}
 
-										<div className="card-form-row">
-											<span className="input-label primary">Billing State / Providence</span>
+                                            {/*}}*/}
+                                            {/*/>*/}
+                                            {/*)*/}
+                                            {/*}*/}
 
-											<Query
-												query={this.getStatesQuery}
-												variables={{ parent: this.state.Billing_Country }}
-											>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (loading) return <LinearProgress />;
-													if (error) return <p>Error </p>;
-													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														console.log('Data of cities' + data.getcatalogitem);
-														return (
-															<SelectForm
-																data={data.getcatalogitem}
-																update={this.updateProvidence}
-																value={this.state.Billing_State}
-															/>
-														);
-													}
-													return <p>Nothing to display </p>;
-												}}
-											</Query>
-										</div>
+                                        </div>
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Billing Street</span>
+                                            <InputForm
+                                                value={this.state.Billing_Street}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        Billing_Street: text
+                                                    });
+                                                }}
+                                            />
+                                        </div>
 
-										<div className="card-form-row">
-											<span className="input-label primary">Billing City</span>
-											<Query
-												query={this.getCitiesQuery}
-												variables={{ parent: this.state.Billing_State }}
-											>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (loading) return <LinearProgress />;
-													if (error) return <p>Error </p>;
-													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														console.log('Data of cities' + data.getcatalogitem);
-														return (
-															<SelectForm
-																data={data.getcatalogitem}
-																update={this.updateCity}
-																value={this.state.Billing_City}
-															/>
-														);
-													}
-													return <p>Nothing to display </p>;
-												}}
-											</Query>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">Billing Zip Code / Postal Code</span>
-											<InputForm
-												value={this.state.Billing_Zip_Code}
-												change={(text) => {
-													this.setState({
-														Billing_Zip_Code: text
-													});
-												}}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
+                                        {/*<div className="card-form-row">*/}
+                                        {/*<span className="input-label primary">Billing Country</span>*/}
+                                        {/*<Query query={this.getCountriesQuery}>*/}
+                                        {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                        {/*if (loading) return <LinearProgress/>;*/}
+                                        {/*if (error) return <p>Error </p>;*/}
+                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+                                        {/*console.log('Data of cities' + data.getcatalogitem);*/}
+                                        {/*return (*/}
+                                        {/*<SelectForm*/}
+                                        {/*data={data.getcatalogitem}*/}
+                                        {/*update={this.updateCountry}*/}
+                                        {/*value={this.state.Billing_Country}*/}
+                                        {/*/>*/}
+                                        {/*);*/}
+                                        {/*}*/}
+                                        {/*return <p>Nothing to display </p>;*/}
+                                        {/*}}*/}
+                                        {/*</Query>*/}
+                                        {/*</div>*/}
 
-							<div className="contract-body-row__content hidden">
-								<div className="contract-body-row__header">
-									<span className="contract-body__subtitle">Contract Information</span>
-								</div>
-								<div className="contract-body-row__form">
-									<div className="card-form-body">
-										<div className="card-form-row">
-											<span className="input-label primary">Contract Terms</span>
-											<TextAreaForm
-												value={this.state.Contract_Terms}
-												change={(text) => {
-													this.setState({
-														Contract_Terms: text
-													});
-												}}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Billing State / Providence</span>
+
+                                            <Query
+                                                query={this.getStatesQuery}
+                                                variables={{ parent: this.state.Billing_Country }}
+                                            >
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log('Data of cities' + data.getcatalogitem);
+                                                        return (
+                                                            <SelectForm
+                                                                data={data.getcatalogitem}
+                                                                update={this.updateProvidence}
+                                                                value={this.state.Billing_State}
+                                                            />
+                                                        );
+                                                    }
+                                                    return <p>Nothing to display </p>;
+                                                }}
+                                            </Query>
+                                        </div>
+
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Billing City</span>
+                                            <Query
+                                                query={this.getCitiesQuery}
+                                                variables={{ parent: this.state.Billing_State }}
+                                            >
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log('Data of cities' + data.getcatalogitem);
+                                                        return (
+                                                            <SelectForm
+                                                                data={data.getcatalogitem}
+                                                                update={this.updateCity}
+                                                                value={this.state.Billing_City}
+                                                            />
+                                                        );
+                                                    }
+                                                    return <p>Nothing to display </p>;
+                                                }}
+                                            </Query>
+                                        </div>
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Billing Zip Code / Postal Code</span>
+                                            <InputForm
+                                                value={this.state.Billing_Zip_Code}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        Billing_Zip_Code: text
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="contract-body-row__content hidden">
+                                <div className="contract-body-row__header">
+                                    <span className="contract-body__subtitle">Contract Information</span>
+                                </div>
+                                <div className="contract-body-row__form">
+                                    <div className="card-form-body">
+                                        <div className="card-form-row">
+                                            <span className="input-label primary">Contract Terms</span>
+                                            <TextAreaForm
+                                                value={this.state.Contract_Terms}
+                                                change={(text) => {
+                                                    this.setState({
+                                                        Contract_Terms: text
+                                                    });
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="contract-footer">
                             <div

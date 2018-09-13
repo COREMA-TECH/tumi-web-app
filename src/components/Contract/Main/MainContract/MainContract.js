@@ -122,17 +122,22 @@ class MainContract extends Component {
 
         // To render the content of the header
         let renderHeaderContent = () => (
-            <button className="add-company" onClick={() => {
-                this.redirectToCreateContract()
-            }}>Add Contract</button>
+            <div className="company-list__header">
+                <div className="search-container">
+                    <input type="text" className="input-search-contract"/>
+                    <button className="button-search-contract"></button>
+                </div>
+                <button className="add-company" onClick={() => {
+                    this.redirectToCreateContract()
+                }}>Add Contract</button>
+            </div>
+
         );
 
         return (
             <div className="main-contract">
                 <div className="main-contract__header">
-                    <div className="company-list__header">
-                        {renderHeaderContent()}
-                    </div>
+                    {renderHeaderContent()}
                 </div>
                 <div className="main-contract__content">
                     <Query query={this.getContractsQuery} pollInterval={300}>
