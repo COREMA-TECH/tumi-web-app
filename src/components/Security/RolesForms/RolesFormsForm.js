@@ -89,25 +89,23 @@ const styles = (theme) => ({
 
 class RolesForm extends React.Component {
 	GET_COMPANY_QUERY = gql`
-			query getcompanies {
-				getcompanies(IsActive:1)
-				{
-					Id
-					Name
-				}
+		query getcompanies {
+			getcompanies(IsActive: 1) {
+				Id
+				Name
 			}
+		}
 	`;
 
 	GET_ROLES_QUERY = gql`
-			query getroles {
-				getroles(IsActive:1)
-				{
-					Id
-					Id_Company
-					Description
-					IsActive
-				}
+		query getroles {
+			getroles(IsActive: 1) {
+				Id
+				Id_Company
+				Description
+				IsActive
 			}
+		}
 	`;
 	INSERT_ROLES_QUERY = gql`
 		mutation insroles($input: iRoles!) {
@@ -168,7 +166,6 @@ class RolesForm extends React.Component {
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!',
 
-
 			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
 		};
@@ -216,7 +213,7 @@ class RolesForm extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
-		console.log("onSelectChangeHandler", name, value);
+		console.log('onSelectChangeHandler', name, value);
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
@@ -327,10 +324,7 @@ class RolesForm extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar(
-						'error',
-						'Error: Loading roles: getroles not exists in query data'
-					);
+					this.handleOpenSnackbar('error', 'Error: Loading roles: getroles not exists in query data');
 				}
 			})
 			.catch((error) => {
@@ -357,10 +351,7 @@ class RolesForm extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar(
-						'error',
-						'Error: Loading Companies: getCompany not exists in query data'
-					);
+					this.handleOpenSnackbar('error', 'Error: Loading Companies: getCompany not exists in query data');
 				}
 			})
 			.catch((error) => {
@@ -406,19 +397,13 @@ class RolesForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						console.log("Guardando");
-						this.handleOpenSnackbar(
-							'success',
-							isEdition ? 'Roles Updated!' : 'Roles Inserted!'
-						);
+						console.log('Guardando');
+						this.handleOpenSnackbar('success', isEdition ? 'Roles Updated!' : 'Roles Inserted!');
 						this.loadRoles();
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log(
-							isEdition ? 'Error: Updating Roles: ' : 'Error: Inserting Roles: ',
-							error
-						);
+						console.log(isEdition ? 'Error: Updating Roles: ' : 'Error: Inserting Roles: ', error);
 						this.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Roles: ' + error : 'Error: Inserting Roles: ' + error
@@ -471,7 +456,7 @@ class RolesForm extends React.Component {
 				if (this.state.formValid) this.insertRoles();
 				else {
 					this.handleOpenSnackbar(
-						'error',
+						'warning',
 						'Error: Saving Information: You must fill all the required fields'
 					);
 					this.setState({
@@ -486,7 +471,7 @@ class RolesForm extends React.Component {
 		this.resetState();
 	};
 	handleOpenSnackbar = (variant, message) => {
-		console.log("handleOpenSnackbar etamos aqui!!!!!");
+		console.log('handleOpenSnackbar etamos aqui!!!!!');
 		this.setState({
 			openSnackbar: true,
 			variantSnackbar: variant,
@@ -527,7 +512,7 @@ class RolesForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[classes.formControl, classes.inputControl].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.inputControl ].join(' ')}>
 						<TextField
 							id="id_company"
 							select
@@ -550,7 +535,7 @@ class RolesForm extends React.Component {
 							))}
 						</TextField>
 					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="description">Description</InputLabel>
 						<Input
 							id="description"
@@ -574,12 +559,12 @@ class RolesForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Save Changes'
+									) : (
+										'Insert Record'
+									)
 								}
 							>
 								<div>
@@ -594,12 +579,12 @@ class RolesForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-													<SaveIcon />
-												) : (
-													<AddIcon />
-												)}
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											<SaveIcon />
+										) : (
+											<AddIcon />
+										)}
 									</Button>
 								</div>
 							</Tooltip>

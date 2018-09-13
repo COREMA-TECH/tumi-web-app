@@ -25,6 +25,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import renderHTML from 'react-render-html';
 
 const styles = (theme) => ({
 	container: {
@@ -157,13 +158,13 @@ class Signature extends React.Component {
 	getFontForCanvas = () => {
 		switch (this.state.selectedLetter) {
 			case 'letter1Selector':
-				return '30px "Segoe UI"';
+				return '30px "Muli"';
 			case 'letter2Selector':
-				return 'italic  30px "Impact"';
+				return '40px "Rancho"';
 			case 'letter3Selector':
-				return 'italic  30px "Comic Sans MS"';
+				return 'italic 30px "Pacifico"';
 			default:
-				return '30px "Segoe UI"';
+				return '30px "Muli"';
 		}
 	};
 	getFillStyleForCanvas = () => {
@@ -418,14 +419,7 @@ class Signature extends React.Component {
 				</Snackbar>
 				<h1 className="signature-header"> Legal Agreement</h1>
 				<div className="signature-content">
-					<textarea
-						type="text"
-						spellCheck="false"
-						value={this.state.agreement}
-						readOnly
-						className="signature-information"
-						placeholder={this.props.placeholder}
-					/>
+					<div className="signature-information">{renderHTML(this.state.agreement)}</div>
 				</div>
 				<h1 className="signature-header"> Signature</h1>
 				<div className="signaturePad-MainContainer">
@@ -537,6 +531,7 @@ class Signature extends React.Component {
 								id="signatureContainer"
 								type="text"
 								spellCheck="false"
+								maxLength="20"
 								className={this.getClassTextInput()}
 								placeholder={'Write Signature'}
 								value={this.state.inputText}

@@ -483,4 +483,7 @@
 	.card-form-company {
 		width: 32%;
 	}
+	.general-information__header {
+		height: 70px;
+	}
 }

@@ -17,6 +17,59 @@ import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
 import { Snackbar } from '@material-ui/core';
 
 class NewContract extends Component {
+	constructor(props) {
+		super(props);
+
+		console.log("aqui esta la fecha", this.getNewDate());
+		this.state = {
+			Id: '',
+			Id_Company: '',
+			Contract_Name: '',
+			Contrat_Owner: '',
+			contractTemplateId: 0,
+			contractExpiration: this.getNewDate(),
+			Id_Entity: 0,
+			Id_User_Signed: '',
+			User_Signed_Title: '',
+			Signed_Date: this.getNewDate(),
+			Contract_Status: '',
+			Contract_Start_Date: this.getNewDate(),
+			Contract_Term: '',
+			Owner_Expiration_Notification: '',
+			Company_Signed: 0,
+			Company_Signed_Date: this.getNewDate(),
+			Id_User_Billing_Contact: '',
+			Billing_Street: '',
+			Billing_City: 0,
+			Billing_State: 0,
+			Billing_Zip_Code: '',
+			Billing_Country: 6,
+			Contract_Terms: '',
+			Exhibit_B: '',
+			Exhibit_C: '',
+			Exhibit_D: '',
+			Exhibit_E: '',
+			Exhibit_F: '',
+			IsActive: 0,
+			User_Created: '',
+			User_Updated: '',
+			Date_Created: '',
+			Date_Updated: '',
+			CompanySignedName: '',
+			open: false,
+			scroll: 'paper',
+			managementDialog: false,
+			Electronic_Address: '',
+			loaded: false,
+			loading: false,
+			openSnackbar: false,
+			variantSnackbar: 'info',
+			messageSnackbar: 'Dummy text!',
+			loadingCompanies: false
+		};
+	}
+
+	/**
     constructor(props) {
         super(props);
 
@@ -72,25 +125,24 @@ class NewContract extends Component {
     /**
      * Snackbar methods
      */
-    handleCloseSnackbar = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+	handleCloseSnackbar = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
 
-        this.setState({openSnackbar: false});
-    };
+		this.setState({ openSnackbar: false });
+	};
 
-    handleOpenSnackbar = (variant, message) => {
-        this.setState({
-            openSnackbar: true,
-            variantSnackbar: variant,
-            messageSnackbar: message
-        });
-    };
+	handleOpenSnackbar = (variant, message) => {
+		this.setState({
+			openSnackbar: true,
+			variantSnackbar: variant,
+			messageSnackbar: message
+		});
+	};
     /**
      * End of SnackBars methods
      */
-
 
     updateStatus = (id) => {
         this.setState({
@@ -143,6 +195,7 @@ class NewContract extends Component {
     handleClose = () => {
         this.setState({open: false});
     };
+
 
 	/**
      * End of the events
@@ -218,6 +271,7 @@ class NewContract extends Component {
 			}
 		}
 	`;
+
 
     // To get the data by a specific contact using the ID
     getContractData = (id) => {
@@ -329,7 +383,6 @@ class NewContract extends Component {
             });
     };
 
-
     updateContract = (id) => {
         //Create the mutation using apollo global client
         this.props.client
@@ -404,6 +457,24 @@ class NewContract extends Component {
 		}
 	`;
 
+	getNewDate = () => {
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; //January is 0!
+
+		var yyyy = today.getFullYear();
+		if (dd < 10) {
+			dd = '0' + dd;
+		}
+		if (mm < 10) {
+			mm = '0' + mm;
+		}
+		var today = yyyy + '-' + mm + '-' + dd;
+
+		return today;
+
+	};
+
 	getCompanies = (id) => {
 		this.props.client
 			.query({
@@ -443,8 +514,8 @@ class NewContract extends Component {
 		}
 	`;
 	/**
-     *  End of the countries, cities and states queries
-     */
+	 *  End of the countries, cities and states queries
+	 */
 
 	getContractTermsQuery = gql`
 		{
@@ -457,22 +528,22 @@ class NewContract extends Component {
 	`;
 
 	/***
-     * Events fo the dialog
-     *
-     */
+	 * Events fo the dialog
+	 *
+	 */
 	/**
-     * Events of the component
-     */
+	 * Events of the component
+	 */
 
-    handleClose = () => {
-        this.setState({open: false});
-    };
+	handleClose = () => {
+		this.setState({ open: false });
+	};
 
-    componentWillMount() {
-        if (this.props.contractId !== 0) {
-            this.getContractData(this.props.contractId);
-        }
-    }
+	componentWillMount() {
+		if (this.props.contractId !== 0) {
+			this.getContractData(this.props.contractId);
+		}
+	}
 
     render() {
         if(this.state.loadingCompanies){
@@ -710,219 +781,219 @@ class NewContract extends Component {
                                 </div>
                             </div>
 
-                            <div className="contract-body-row__content">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Billing Information</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Billing Name</span>
-                                            {
-                                                this.state.loadingCompanies ? (
-                                                    <ContactDialog
-                                                        defaultValue=''
-                                                        valueSelected={this.state.Id_User_Billing_Contact}
-                                                        idContact={this.state.Id_Entity}
-                                                        update={(id) => {
-                                                            this.setState({
-                                                                Id_User_Billing_Contact: id
-                                                            }, () => {
-                                                            });
-                                                        }}
-                                                        updateEmailContact={(email) => {
+							<div className="contract-body-row__content">
+								<div className="contract-body-row__header">
+									<span className="contract-body__subtitle">Billing Information</span>
+								</div>
+								<div className="contract-body-row__form">
+									<div className="card-form-body">
+										<div className="card-form-row">
+											<span className="input-label primary">Billing Name</span>
+											{
+												this.state.loadingCompanies ? (
+													<ContactDialog
+														defaultValue=''
+														valueSelected={this.state.Id_User_Billing_Contact}
+														idContact={this.state.Id_Entity}
+														update={(id) => {
+															this.setState({
+																Id_User_Billing_Contact: id
+															}, () => {
+															});
+														}}
+														updateEmailContact={(email) => {
 
-                                                        }}
-                                                    />
-                                                ) : (
-                                                    <ContactDialog
-                                                        defaultValue=''
-                                                        valueSelected={this.state.Id_User_Billing_Contact}
-                                                        idContact={this.state.Id_Entity}
-                                                        update={(id) => {
-                                                            this.setState({
-                                                                Id_User_Billing_Contact: id
-                                                            }, () => {
-                                                            });
-                                                        }}
-                                                        updateEmailContact={(email) => {
+														}}
+													/>
+												) : (
+														<ContactDialog
+															defaultValue=''
+															valueSelected={this.state.Id_User_Billing_Contact}
+															idContact={this.state.Id_Entity}
+															update={(id) => {
+																this.setState({
+																	Id_User_Billing_Contact: id
+																}, () => {
+																});
+															}}
+															updateEmailContact={(email) => {
 
-                                                        }}
-                                                    />
-                                                )
-                                            }
+															}}
+														/>
+													)
+											}
 
-                                            {/*<ContactDialog*/}
-                                                {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
-                                                {/*idContact={this.state.Id_Entity}*/}
-                                                {/*update={(id) => {*/}
-                                                    {/*this.setState({*/}
-                                                        {/*Id_User_Billing_Contact: id*/}
-                                                    {/*}, () => {*/}
-                                                        {/*alert(this.state.Id_User_Billing_Contact)*/}
-                                                    {/*});*/}
-                                                {/*}}*/}
-                                                {/*updateEmailContact={(email) => {*/}
+											{/*<ContactDialog*/}
+											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+											{/*idContact={this.state.Id_Entity}*/}
+											{/*update={(id) => {*/}
+											{/*this.setState({*/}
+											{/*Id_User_Billing_Contact: id*/}
+											{/*}, () => {*/}
+											{/*alert(this.state.Id_User_Billing_Contact)*/}
+											{/*});*/}
+											{/*}}*/}
+											{/*updateEmailContact={(email) => {*/}
 
-                                                {/*}}*/}
-                                            {/*/>*/}
+											{/*}}*/}
+											{/*/>*/}
 
-                                            {/*{*/}
-                                                {/*this.state.loadingCompanies ? (*/}
-                                                    {/*<ContactDialog*/}
-                                                        {/*defaultValue=''*/}
-                                                        {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
-                                                        {/*idContact={this.state.Id_Entity}*/}
-                                                        {/*update={(id) => {*/}
-                                                            {/*this.setState({*/}
-                                                                {/*Id_User_Billing_Contact: id*/}
-                                                            {/*}, () => {*/}
-                                                                {/*alert(this.state.Id_User_Billing_Contact)*/}
-                                                            {/*});*/}
-                                                        {/*}}*/}
-                                                        {/*updateEmailContact={(email) => {*/}
+											{/*{*/}
+											{/*this.state.loadingCompanies ? (*/}
+											{/*<ContactDialog*/}
+											{/*defaultValue=''*/}
+											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+											{/*idContact={this.state.Id_Entity}*/}
+											{/*update={(id) => {*/}
+											{/*this.setState({*/}
+											{/*Id_User_Billing_Contact: id*/}
+											{/*}, () => {*/}
+											{/*alert(this.state.Id_User_Billing_Contact)*/}
+											{/*});*/}
+											{/*}}*/}
+											{/*updateEmailContact={(email) => {*/}
 
-                                                        {/*}}*/}
-                                                    {/*/>*/}
-                                                {/*) : (*/}
-                                                    {/*<ContactDialog*/}
-                                                        {/*valueSelected={this.state.Id_User_Billing_Contact}*/}
-                                                        {/*idContact={this.state.Id_Entity}*/}
-                                                        {/*update={(id) => {*/}
-                                                            {/*this.setState({*/}
-                                                                {/*Id_User_Billing_Contact: id*/}
-                                                            {/*}, () => {*/}
-                                                                {/*alert(this.state.Id_User_Billing_Contact)*/}
-                                                            {/*});*/}
-                                                        {/*}}*/}
-                                                        {/*updateEmailContact={(email) => {*/}
+											{/*}}*/}
+											{/*/>*/}
+											{/*) : (*/}
+											{/*<ContactDialog*/}
+											{/*valueSelected={this.state.Id_User_Billing_Contact}*/}
+											{/*idContact={this.state.Id_Entity}*/}
+											{/*update={(id) => {*/}
+											{/*this.setState({*/}
+											{/*Id_User_Billing_Contact: id*/}
+											{/*}, () => {*/}
+											{/*alert(this.state.Id_User_Billing_Contact)*/}
+											{/*});*/}
+											{/*}}*/}
+											{/*updateEmailContact={(email) => {*/}
 
-                                                        {/*}}*/}
-                                                    {/*/>*/}
-                                                {/*)*/}
-                                            {/*}*/}
+											{/*}}*/}
+											{/*/>*/}
+											{/*)*/}
+											{/*}*/}
 
-                                        </div>
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Billing Street</span>
-                                            <InputForm
-                                                value={this.state.Billing_Street}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Billing_Street: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
+										</div>
+										<div className="card-form-row">
+											<span className="input-label primary">Billing Street</span>
+											<InputForm
+												value={this.state.Billing_Street}
+												change={(text) => {
+													this.setState({
+														Billing_Street: text
+													});
+												}}
+											/>
+										</div>
 
-                                        {/*<div className="card-form-row">*/}
-                                        {/*<span className="input-label primary">Billing Country</span>*/}
-                                        {/*<Query query={this.getCountriesQuery}>*/}
-                                        {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                        {/*if (loading) return <LinearProgress/>;*/}
-                                        {/*if (error) return <p>Error </p>;*/}
-                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                        {/*console.log('Data of cities' + data.getcatalogitem);*/}
-                                        {/*return (*/}
-                                        {/*<SelectForm*/}
-                                        {/*data={data.getcatalogitem}*/}
-                                        {/*update={this.updateCountry}*/}
-                                        {/*value={this.state.Billing_Country}*/}
-                                        {/*/>*/}
-                                        {/*);*/}
-                                        {/*}*/}
-                                        {/*return <p>Nothing to display </p>;*/}
-                                        {/*}}*/}
-                                        {/*</Query>*/}
-                                        {/*</div>*/}
+										{/*<div className="card-form-row">*/}
+										{/*<span className="input-label primary">Billing Country</span>*/}
+										{/*<Query query={this.getCountriesQuery}>*/}
+										{/*{({loading, error, data, refetch, networkStatus}) => {*/}
+										{/*//if (networkStatus === 4) return <LinearProgress />;*/}
+										{/*if (loading) return <LinearProgress/>;*/}
+										{/*if (error) return <p>Error </p>;*/}
+										{/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+										{/*console.log('Data of cities' + data.getcatalogitem);*/}
+										{/*return (*/}
+										{/*<SelectForm*/}
+										{/*data={data.getcatalogitem}*/}
+										{/*update={this.updateCountry}*/}
+										{/*value={this.state.Billing_Country}*/}
+										{/*/>*/}
+										{/*);*/}
+										{/*}*/}
+										{/*return <p>Nothing to display </p>;*/}
+										{/*}}*/}
+										{/*</Query>*/}
+										{/*</div>*/}
 
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Billing State / Providence</span>
+										<div className="card-form-row">
+											<span className="input-label primary">Billing State / Providence</span>
 
-                                            <Query
-                                                query={this.getStatesQuery}
-                                                variables={{parent: this.state.Billing_Country}}
-                                            >
-                                                {({loading, error, data, refetch, networkStatus}) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        console.log('Data of cities' + data.getcatalogitem);
-                                                        return (
-                                                            <SelectForm
-                                                                data={data.getcatalogitem}
-                                                                update={this.updateProvidence}
-                                                                value={this.state.Billing_State}
-                                                            />
-                                                        );
-                                                    }
-                                                    return <p>Nothing to display </p>;
-                                                }}
-                                            </Query>
-                                        </div>
+											<Query
+												query={this.getStatesQuery}
+												variables={{ parent: this.state.Billing_Country }}
+											>
+												{({ loading, error, data, refetch, networkStatus }) => {
+													//if (networkStatus === 4) return <LinearProgress />;
+													if (loading) return <LinearProgress />;
+													if (error) return <p>Error </p>;
+													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+														console.log('Data of cities' + data.getcatalogitem);
+														return (
+															<SelectForm
+																data={data.getcatalogitem}
+																update={this.updateProvidence}
+																value={this.state.Billing_State}
+															/>
+														);
+													}
+													return <p>Nothing to display </p>;
+												}}
+											</Query>
+										</div>
 
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Billing City</span>
-                                            <Query
-                                                query={this.getCitiesQuery}
-                                                variables={{parent: this.state.Billing_State}}
-                                            >
-                                                {({loading, error, data, refetch, networkStatus}) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        console.log('Data of cities' + data.getcatalogitem);
-                                                        return (
-                                                            <SelectForm
-                                                                data={data.getcatalogitem}
-                                                                update={this.updateCity}
-                                                                value={this.state.Billing_City}
-                                                            />
-                                                        );
-                                                    }
-                                                    return <p>Nothing to display </p>;
-                                                }}
-                                            </Query>
-                                        </div>
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Billing Zip Code / Postal Code</span>
-                                            <InputForm
-                                                value={this.state.Billing_Zip_Code}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Billing_Zip_Code: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+										<div className="card-form-row">
+											<span className="input-label primary">Billing City</span>
+											<Query
+												query={this.getCitiesQuery}
+												variables={{ parent: this.state.Billing_State }}
+											>
+												{({ loading, error, data, refetch, networkStatus }) => {
+													//if (networkStatus === 4) return <LinearProgress />;
+													if (loading) return <LinearProgress />;
+													if (error) return <p>Error </p>;
+													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+														console.log('Data of cities' + data.getcatalogitem);
+														return (
+															<SelectForm
+																data={data.getcatalogitem}
+																update={this.updateCity}
+																value={this.state.Billing_City}
+															/>
+														);
+													}
+													return <p>Nothing to display </p>;
+												}}
+											</Query>
+										</div>
+										<div className="card-form-row">
+											<span className="input-label primary">Billing Zip Code / Postal Code</span>
+											<InputForm
+												value={this.state.Billing_Zip_Code}
+												change={(text) => {
+													this.setState({
+														Billing_Zip_Code: text
+													});
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
 
-                            <div className="contract-body-row__content hidden">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Contract Information</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm
-                                                value={this.state.Contract_Terms}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        Contract_Terms: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+							<div className="contract-body-row__content hidden">
+								<div className="contract-body-row__header">
+									<span className="contract-body__subtitle">Contract Information</span>
+								</div>
+								<div className="contract-body-row__form">
+									<div className="card-form-body">
+										<div className="card-form-row">
+											<span className="input-label primary">Contract Terms</span>
+											<TextAreaForm
+												value={this.state.Contract_Terms}
+												change={(text) => {
+													this.setState({
+														Contract_Terms: text
+													});
+												}}
+											/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 
                         <div className="contract-footer">
                             <div

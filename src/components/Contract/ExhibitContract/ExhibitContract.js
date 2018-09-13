@@ -28,6 +28,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
+import renderHTML from 'react-render-html';
 
 const styles = (theme) => ({
 	container: {
@@ -149,31 +150,62 @@ class ExhibitContract extends Component {
 		}
 	`;
 
+	SEND_CONTRACT_QUERY = gql`
+		query sendcontracts($Id: Int) {
+			sendcontracts(Id: $Id, IsActive: 1) {
+				Id
+				Electronic_Address
+				Primary_Email
+			}
+		}
+	`;
+
+	sendContract = () => {
+		this.setState({ loadingData: true });
+		this.props.client
+			.query({
+				query: this.SEND_CONTRACT_QUERY,
+				variables: { Id: this.props.contractId },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.sendcontracts != null) {
+					this.handleOpenSnackbar('success', 'Contract Sent!');
+					this.resetState();
+				} else {
+					this.handleOpenSnackbar(
+						'error',
+						'Error: Loading agreement: sendcontracts not exists in query data'
+					);
+					this.setState({ loadingData: false });
+				}
+			})
+			.catch((error) => {
+				this.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
+				this.setState({ loadingData: false });
+			});
+	};
+
 	loadAgreement = () => {
-		console.log('aqui estoy 1');
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
 				query: this.GET_AGREEMENT_QUERY,
-				variables: { Id: 14 },
+				variables: { Id: this.props.contractId },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
 				if (data.data.getcontracts != null) {
-					console.log('aqui estoy 2');
 					this.setState({
 						agreement: data.data.getcontracts[0].Contract_Terms
 						//signature: data.data.getcontracts[0].Client_Signature
 					});
-					console.log('aqui estoy 3');
-					console.log(data.data.getcontracts[0].Contract_Terms);
 				} else {
 					this.handleOpenSnackbar('error', 'Error: Loading agreement: getcontracts not exists in query data');
 					this.setState({ loadingData: false });
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading agreement: ', error);
 				this.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
 				this.setState({ loadingData: false });
 			});
@@ -233,6 +265,7 @@ class ExhibitContract extends Component {
 			}
 		});
 	};
+
 	componentWillMount() {
 		this.loadAgreement();
 	}
@@ -253,6 +286,7 @@ class ExhibitContract extends Component {
 	cancelContractHandler = () => {
 		this.resetState();
 	};
+
 	printContractHandler = () => {
 		var content = document.getElementById('agreement');
 		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
@@ -300,8 +334,6 @@ class ExhibitContract extends Component {
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
-		console.log(this.state.agreement);
-		console.log(this.state);
 
 		return (
 			<div className="contract-container">
@@ -338,15 +370,8 @@ class ExhibitContract extends Component {
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
-						<div className="exhibit-content">
-							<textarea
-								id="agreement"
-								type="text"
-								spellCheck={false}
-								value={this.state.agreement}
-								className="exhibit-information"
-								placeholder={this.props.placeholder}
-							/>
+						<div id="agreement" className="exhibit-content">
+							{renderHTML(this.state.agreement)}
 						</div>
 					</DialogContent>
 					<DialogActions>
@@ -415,7 +440,7 @@ class ExhibitContract extends Component {
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
-										onClick={this.cancelContractHandler}
+										onClick={this.sendContract}
 									>
 										<SendIcon />
 									</Button>
@@ -569,10 +594,5 @@ class ExhibitContract extends Component {
 		);
 	}
 }
-
-PositionsCompanyForm.propTypes = {
-	classes: PropTypes.object.isRequired,
-	fullScreen: PropTypes.bool.isRequired
-};
 
 export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));

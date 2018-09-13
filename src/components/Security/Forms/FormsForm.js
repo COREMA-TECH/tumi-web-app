@@ -89,20 +89,19 @@ const styles = (theme) => ({
 
 class FormsForm extends React.Component {
 	GET_FORMS_QUERY = gql`
-			query getforms {
-				getforms(IsActive:1)
-				{
-					Id
-					Code
-					Name
-					Value
-					Value01
-					Value02
-					Value03
-					Value04
-					IsActive
-				}
+		query getforms {
+			getforms(IsActive: 1) {
+				Id
+				Code
+				Name
+				Value
+				Value01
+				Value02
+				Value03
+				Value04
+				IsActive
 			}
+		}
 	`;
 	INSERT_FORMS_QUERY = gql`
 		mutation insforms($input: iForms!) {
@@ -163,7 +162,6 @@ class FormsForm extends React.Component {
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!',
 
-
 			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
 		};
@@ -211,7 +209,7 @@ class FormsForm extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
-		console.log("onSelectChangeHandler", name, value);
+		console.log('onSelectChangeHandler', name, value);
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
@@ -322,10 +320,7 @@ class FormsForm extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar(
-						'error',
-						'Error: Loading forms: getforms not exists in query data'
-					);
+					this.handleOpenSnackbar('error', 'Error: Loading forms: getforms not exists in query data');
 				}
 			})
 			.catch((error) => {
@@ -406,19 +401,13 @@ class FormsForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						console.log("Guardando");
-						this.handleOpenSnackbar(
-							'success',
-							isEdition ? 'Forms Updated!' : 'Forms Inserted!'
-						);
+						console.log('Guardando');
+						this.handleOpenSnackbar('success', isEdition ? 'Forms Updated!' : 'Forms Inserted!');
 						this.loadForms();
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log(
-							isEdition ? 'Error: Updating Forms: ' : 'Error: Inserting Forms: ',
-							error
-						);
+						console.log(isEdition ? 'Error: Updating Forms: ' : 'Error: Inserting Forms: ', error);
 						this.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Forms: ' + error : 'Error: Inserting Forms: ' + error
@@ -471,7 +460,7 @@ class FormsForm extends React.Component {
 				if (this.state.formValid) this.insertForms();
 				else {
 					this.handleOpenSnackbar(
-						'error',
+						'warning',
 						'Error: Saving Information: You must fill all the required fields'
 					);
 					this.setState({
@@ -526,7 +515,7 @@ class FormsForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className={classes.divStyle}>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="code">Code</InputLabel>
 						<Input
 							id="code"
@@ -544,7 +533,7 @@ class FormsForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="name">Name</InputLabel>
 						<Input
 							id="name"
@@ -562,7 +551,7 @@ class FormsForm extends React.Component {
 							onChange={(event) => this.onChangeHandler(event)}
 						/>
 					</FormControl>
-					<FormControl className={[classes.formControl, classes.nameControl].join(' ')}>
+					<FormControl className={[ classes.formControl, classes.nameControl ].join(' ')}>
 						<InputLabel htmlFor="value">Value</InputLabel>
 						<Input
 							id="value"
@@ -585,12 +574,12 @@ class FormsForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Save Changes'
+									) : (
+										'Insert Record'
+									)
 								}
 							>
 								<div>
@@ -605,12 +594,12 @@ class FormsForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-													<SaveIcon />
-												) : (
-													<AddIcon />
-												)}
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											<SaveIcon />
+										) : (
+											<AddIcon />
+										)}
 									</Button>
 								</div>
 							</Tooltip>

@@ -13,7 +13,7 @@
 	padding: 1.5em;
 
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
 	align-items: center;
 }
 
@@ -28,7 +28,7 @@
 	transition: all .250s;
 	border: none;
 	outline: none;
-
+	min-width: 130px;
 	margin: .2em;
 }
 
@@ -149,29 +149,28 @@
 	width: 20% !important;
 }
 
-.input-container {
-	min-width: 15vw;
+.input-container-catalog {
+	min-width: 350px;
 	padding: .25em;
 	border-radius: 5px;
 	border: 1px solid #e6e6e6;
 	background: #f5f7f9;
 	display: flex;
 	margin-right: 1em;
+	width: 350px;
 }
 
-.input-container .input-form {
-	width: 100% !important;
-}
-
-.input-label {
+.input-label-catalog {
 	margin-right: 12px;
 	font-family: "Segoe UI";
 	font-size: 1em;
 	font-weight: 300;
-	min-width: 40%;
-
+	margin-left: 10px;
+	display: -ms-flexbox;
 	display: flex;
+	-ms-flex-pack: end;
 	justify-content: flex-end;
+	align-items: center;
 }
 
 .input-label--center {
@@ -202,7 +201,6 @@
 	font-size: 1em;
 	font-family: "Segoe UI";
 
-	catalog: relative;
 	width: 100%;
 
 	display: flex;
@@ -282,4 +280,3 @@
 	justify-content: flex-end;
 	align-items: center;
 }
-

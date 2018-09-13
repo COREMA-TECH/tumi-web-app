@@ -1,12 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
+
 import PositionsTable from './PositionsTable';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from '../../Generic/AlertDialogSlide';
@@ -14,26 +11,26 @@ import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import CheckIcon from '@material-ui/icons/Check';
-import AddIcon from '@material-ui/icons/Add';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import MaskedInput from 'react-text-mask';
-import NumberFormat from 'react-number-format';
+
 import InputForm from '../../ui-components/InputForm/InputForm';
 import SelectForm from '../../ui-components/SelectForm/SelectForm';
-import Select from '@material-ui/core/Select';
+
 import ShiftsData from '../../../data/shitfs.json';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
 import './index.css';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -100,48 +97,6 @@ const styles = (theme) => ({
 		marginLeft: -12
 	}
 });
-
-function TextMaskCustom(props) {
-	const { inputRef, ...other } = props;
-
-	return (
-		<MaskedInput
-			{...other}
-			ref={inputRef}
-			mask={[ '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/ ]}
-			placeholderChar={'\u2000'}
-			showMask
-		/>
-	);
-}
-
-TextMaskCustom.propTypes = {
-	inputRef: PropTypes.func.isRequired
-};
-
-function NumberFormatCustom(props) {
-	const { inputRef, onChange, ...other } = props;
-
-	return (
-		<NumberFormat
-			{...other}
-			getInputRef={inputRef}
-			onValueChange={(values) => {
-				onChange({
-					target: {
-						value: values.value
-					}
-				});
-			}}
-			thousandSeparator
-		/>
-	);
-}
-
-NumberFormatCustom.propTypes = {
-	inputRef: PropTypes.func.isRequired,
-	onChange: PropTypes.func.isRequired
-};
 
 class PositionsCompanyForm extends React.Component {
 	GET_POSTIONS_QUERY = gql`
@@ -696,7 +651,7 @@ class PositionsCompanyForm extends React.Component {
 					if (this.state.formValid) this.insertPosition();
 					else {
 						this.props.handleOpenSnackbar(
-							'error',
+							'warning',
 							'Error: Saving Information: You must fill all the required fields'
 						);
 						this.setState({

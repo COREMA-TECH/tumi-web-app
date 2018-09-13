@@ -446,7 +446,7 @@ class DepartmentsCompanyForm extends React.Component {
 					if (this.state.formValid) this.insertDepartment();
 					else {
 						this.props.handleOpenSnackbar(
-							'error',
+							'warning',
 							'Error: Saving Information: You must fill all the required fields'
 						);
 						this.setState({
