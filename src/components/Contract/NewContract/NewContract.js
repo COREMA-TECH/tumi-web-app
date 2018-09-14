@@ -20,7 +20,6 @@ class NewContract extends Component {
 	constructor(props) {
 		super(props);
 
-		console.log('aqui esta la fecha', this.getNewDate());
 		this.state = {
 			Id: '',
 			Id_Company: '',
@@ -708,7 +707,6 @@ class NewContract extends Component {
 													if (loading) return <LinearProgress />;
 													if (error) return <p>Error </p>;
 													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														console.log('Data of cities' + data.getcatalogitem);
 														return (
 															<SelectForm
 																data={data.getcatalogitem}
@@ -905,7 +903,6 @@ class NewContract extends Component {
 													if (loading) return <LinearProgress />;
 													if (error) return <p>Error </p>;
 													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														console.log('Data of cities' + data.getcatalogitem);
 														return (
 															<SelectForm
 																data={data.getcatalogitem}
@@ -930,7 +927,6 @@ class NewContract extends Component {
 													if (loading) return <LinearProgress />;
 													if (error) return <p>Error </p>;
 													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														console.log('Data of cities' + data.getcatalogitem);
 														return (
 															<SelectForm
 																data={data.getcatalogitem}

@@ -84,11 +84,6 @@ class Contract extends React.Component {
 	};
 
 	componentWillMount() {
-		if (!this.props.location.state || !this.props.location.state.contract)
-			this.props.history.push({
-				pathname: '/home/'
-			});
-
 		this.setState(
 			{
 				loading: true
@@ -112,6 +107,11 @@ class Contract extends React.Component {
 						});
 					}
 				} catch (e) {
+					this.props.history.push({
+						pathname: '/home/'
+					});
+					return false;
+
 					this.setState(
 						{
 							contractId: 0
@@ -131,7 +131,7 @@ class Contract extends React.Component {
 		const { classes } = this.props;
 		const { value } = this.state;
 		const contractValue = this.state.contractId === 0;
-		console.log(this.state.loading);
+
 		if (this.state.loading) {
 			return <LinearProgress />;
 		}
