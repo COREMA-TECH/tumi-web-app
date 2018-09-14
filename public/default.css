@@ -4,6 +4,10 @@
   .modal-overflow .list-item-container-scroll {
     min-width: 500px; }
 
+@media only screen and (max-width: 480px) {
+  .select-form-customized {
+    width: 100% !important; } }
+
 .Header-mobileMenu {
   color: #FFF;
   margin-left: 1rem;
