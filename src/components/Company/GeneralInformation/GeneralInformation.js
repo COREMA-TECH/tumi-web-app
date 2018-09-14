@@ -16,6 +16,8 @@ import FileUpload from '../../ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
 import '../../ui-components/InputForm/index.css';
 
+import withGlobalContent from '../../Global';
+
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
 		codeValid: true,
@@ -520,21 +522,6 @@ class GeneralInformation extends Component {
 
 	handleClose = () => {
 		this.setState({ open: false });
-	};
-	handleCloseSnackbar = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-
-		this.setState({ openSnackbar: false });
-	};
-
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
 	};
 
 	/**
@@ -1206,19 +1193,11 @@ class GeneralInformation extends Component {
 					<DialogContent>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
-							<TabsInDialog
-								idCompany={this.state.idProperty}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-								handleClose={this.handleClose}
-							/>
+							<TabsInDialog idCompany={this.state.idProperty} handleClose={this.handleClose} />
 						) : (
 							//Si el click no es en esa property : pasar el Id en nulo
 							//para que no cargue niguna información relacionada con ese Id
-							<TabsInDialog
-								idCompany={this.props.idCompany}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-								handleClose={this.handleClose}
-							/>
+							<TabsInDialog idCompany={this.props.idCompany} handleClose={this.handleClose} />
 						)}
 					</DialogContent>
 				</Dialog>
@@ -1229,4 +1208,4 @@ class GeneralInformation extends Component {
 
 GeneralInformation.propTypes = {};
 
-export default withApollo(GeneralInformation);
+export default withApollo(withGlobalContent(GeneralInformation));

@@ -7,8 +7,6 @@ import GeneralInformation from '../GeneralInformation/GeneralInformation';
 import ContactCompanyForm from '../ContactCompanyForm';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
 
 import './index.css';
 
@@ -67,9 +65,7 @@ class CustomizedTabs extends React.Component {
 	state = {
 		value: 0,
 		item: 4,
-		openSnackbar: false,
-		variantSnackbar: 'info',
-		messageSnackbar: 'Dummy text!',
+
 		activateTabs: true
 	};
 
@@ -109,7 +105,6 @@ class CustomizedTabs extends React.Component {
 				return (
 					<GeneralInformation
 						idCompany={this.props.idCompany}
-						handleOpenSnackbar={this.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -122,7 +117,6 @@ class CustomizedTabs extends React.Component {
 				return (
 					<ContactCompanyForm
 						idCompany={this.props.idCompany}
-						handleOpenSnackbar={this.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -135,7 +129,6 @@ class CustomizedTabs extends React.Component {
 				return (
 					<DepartmentsCompanyForm
 						idCompany={this.props.idCompany}
-						handleOpenSnackbar={this.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -149,7 +142,6 @@ class CustomizedTabs extends React.Component {
 					<PositionsCompanyForm
 						idCompany={this.props.idCompany}
 						idContract={this.props.idContract}
-						handleOpenSnackbar={this.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -161,44 +153,12 @@ class CustomizedTabs extends React.Component {
 		}
 	};
 
-	handleCloseSnackbar = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-
-		this.setState({ openSnackbar: false });
-	};
-
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
-
-
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;
 
 		return (
 			<div className={classes.root}>
-				<Snackbar
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'center'
-					}}
-					open={this.state.openSnackbar}
-					autoHideDuration={3000}
-					onClose={this.handleCloseSnackbar}
-				>
-					<MySnackbarContentWrapper
-						onClose={this.handleCloseSnackbar}
-						variant={this.state.variantSnackbar}
-						message={this.state.messageSnackbar}
-					/>
-				</Snackbar>
 				<Tabs
 					value={value}
 					onChange={this.handleChange}

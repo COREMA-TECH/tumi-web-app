@@ -111,7 +111,6 @@ class CustomizedTabs extends Component {
 				{value === 1 && (
 					<ContactCompanyForm
 						idCompany={this.props.idCompany}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -123,7 +122,6 @@ class CustomizedTabs extends Component {
 				{value === 2 && (
 					<DepartmentsCompanyForm
 						idCompany={this.props.idCompany}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -136,7 +134,6 @@ class CustomizedTabs extends Component {
 					<PositionsCompanyForm
 						idCompany={this.props.idCompany}
 						idContract={1}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}

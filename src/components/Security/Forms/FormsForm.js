@@ -17,8 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+import withGlobalContent from '../../Global';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -158,9 +157,6 @@ class FormsForm extends React.Component {
 		this.state = {
 			data: [],
 			forms: [],
-			openSnackbar: false,
-			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!',
 
 			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
@@ -320,12 +316,12 @@ class FormsForm extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading forms: getforms not exists in query data');
+					this.props.handleOpenSnackbar('error', 'Error: Loading forms: getforms not exists in query data');
 				}
 			})
 			.catch((error) => {
 				console.log('Error: Loading forms: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading forms: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading forms: ' + error);
 			});
 	};
 
@@ -347,7 +343,7 @@ class FormsForm extends React.Component {
 							}
 						);
 					} else {
-						this.handleOpenSnackbar(
+						this.props.handleOpenSnackbar(
 							'error',
 							'Error: Loading Companies: getCompany not exists in query data'
 						);
@@ -355,7 +351,7 @@ class FormsForm extends React.Component {
 				})
 				.catch((error) => {
 					console.log('Error: Loading Companies: ', error);
-					this.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
+					this.props.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
 				});
 		};*/
 
@@ -402,13 +398,13 @@ class FormsForm extends React.Component {
 					})
 					.then((data) => {
 						console.log('Guardando');
-						this.handleOpenSnackbar('success', isEdition ? 'Forms Updated!' : 'Forms Inserted!');
+						this.props.handleOpenSnackbar('success', isEdition ? 'Forms Updated!' : 'Forms Inserted!');
 						this.loadForms();
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log(isEdition ? 'Error: Updating Forms: ' : 'Error: Inserting Forms: ', error);
-						this.handleOpenSnackbar(
+						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Forms: ' + error : 'Error: Inserting Forms: ' + error
 						);
@@ -434,13 +430,13 @@ class FormsForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.handleOpenSnackbar('success', 'Form Deleted!');
+						this.props.handleOpenSnackbar('success', 'Form Deleted!');
 						this.loadForms();
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log('Error: Deleting Forms: ', error);
-						this.handleOpenSnackbar('error', 'Error: Deleting Form: ' + error);
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Form: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -459,7 +455,7 @@ class FormsForm extends React.Component {
 				this.validateAllFields();
 				if (this.state.formValid) this.insertForms();
 				else {
-					this.handleOpenSnackbar(
+					this.props.handleOpenSnackbar(
 						'warning',
 						'Error: Saving Information: You must fill all the required fields'
 					);
@@ -474,13 +470,7 @@ class FormsForm extends React.Component {
 	cancelFormsHandler = () => {
 		this.resetState();
 	};
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
+
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
@@ -492,21 +482,6 @@ class FormsForm extends React.Component {
 		console.log(this.state.openSnackbar);
 		return (
 			<div className={classes.container}>
-				<Snackbar
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'center'
-					}}
-					open={this.state.openSnackbar}
-					autoHideDuration={3000}
-					onClose={this.handleCloseSnackbar}
-				>
-					<MySnackbarContentWrapper
-						onClose={this.handleCloseSnackbar}
-						variant={this.state.variantSnackbar}
-						message={this.state.messageSnackbar}
-					/>
-				</Snackbar>
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -643,4 +618,4 @@ FormsForm.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(FormsForm));
+export default withStyles(styles)(withApollo(withGlobalContent(FormsForm)));

@@ -14,8 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import gql from 'graphql-tag';
 
@@ -29,6 +28,7 @@ import renderHTML from 'react-render-html';
 import queryString from 'query-string';
 import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
 
+import withGlobalContent from '../../Global';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -78,9 +78,7 @@ class Signature extends React.Component {
 			loading: false,
 			success: false,
 			openSignatureModal: false,
-			openSnackbar: false,
-			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!',
+
 			agreement: '',
 			signature: '',
 			loadingData: false,
@@ -151,7 +149,7 @@ class Signature extends React.Component {
 	};
 	insertTextIntoCanvas = () => {
 		if (this.state.inputText.trim() == '') {
-			this.handleOpenSnackbar('warning', 'You must to specify a text signature');
+			this.props.handleOpenSnackbar('warning', 'You must to specify a text signature');
 			return true;
 		}
 		if (this.sigPad != null) {
@@ -239,13 +237,16 @@ class Signature extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading agreement: getcontracts not exists in query data');
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading agreement: getcontracts not exists in query data'
+					);
 					this.setState({ loadingData: false });
 				}
 			})
 			.catch((error) => {
 				console.log('Error: Loading agreement: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
 				this.setState({ loadingData: false });
 			});
 	};
@@ -303,7 +304,7 @@ class Signature extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.handleOpenSnackbar('success', 'Document Signed!');
+						this.props.handleOpenSnackbar('success', 'Document Signed!');
 						this.setState(
 							{
 								success: true,
@@ -319,7 +320,7 @@ class Signature extends React.Component {
 					})
 					.catch((error) => {
 						console.log('Error: Signing Document: ', error);
-						this.handleOpenSnackbar('error', 'Error: Signing Document: ' + error);
+						this.props.handleOpenSnackbar('error', 'Error: Signing Document: ' + error);
 						this.setState({
 							success: false,
 							loading: false
@@ -331,7 +332,7 @@ class Signature extends React.Component {
 	handleSaveSignature = () => {
 		if (this.state.saved || !this.state.allowSave) return false;
 		if (this.sigPad.isEmpty()) {
-			this.handleOpenSnackbar('warning', 'You need to sign the document!');
+			this.props.handleOpenSnackbar('warning', 'You need to sign the document!');
 			return false;
 		}
 		this.setState({ signature: this.sigPad.toDataURL() }, this.saveSignature);
@@ -361,20 +362,7 @@ class Signature extends React.Component {
 	handleCloseSignatureModal = () => {
 		this.setState({ openSignatureModal: false });
 	};
-	handleCloseSnackbar = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
 
-		this.setState({ openSnackbar: false });
-	};
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
 	componentWillMount() {
 		const values = queryString.parse(this.props.location.search);
 		if (!values.token || !values.signatory) this.props.history.push('/home/');
@@ -501,21 +489,6 @@ class Signature extends React.Component {
 		return (
 			<div className="signature-container" id="signatureMainContainer">
 				{this.state.loadingData && <LinearProgress />}
-				<Snackbar
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'center'
-					}}
-					open={this.state.openSnackbar}
-					autoHideDuration={3000}
-					onClose={this.handleCloseSnackbar}
-				>
-					<MySnackbarContentWrapper
-						onClose={this.handleCloseSnackbar}
-						variant={this.state.variantSnackbar}
-						message={this.state.messageSnackbar}
-					/>
-				</Snackbar>
 				<h1 className="signature-header"> Legal Agreement</h1>
 				<div className="signature-content">
 					<div className="signature-information">{renderHTML(this.state.agreement)}</div>

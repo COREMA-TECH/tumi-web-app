@@ -33,6 +33,8 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
 import '../../ui-components/InputForm/index.css';
 
+import withGlobalContent from '../../Global';
+
 import './index.css';
 
 const styles = (theme) => ({
@@ -237,6 +239,9 @@ class ContactcontactForm extends React.Component {
 			loadingAllSupervisors: false,
 			loadingTitles: false,
 			contactTypes: ContactTypesData,
+	
+			activateTabs: true,
+
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -681,7 +686,6 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 	loadDepartments = () => {
-		console.log('Load Departments');
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -753,6 +757,7 @@ class ContactcontactForm extends React.Component {
 					})
 					.catch((error) => {
 						console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
+
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
@@ -876,7 +881,7 @@ class ContactcontactForm extends React.Component {
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
-
+		console.log('Contact form', this.props.handleOpenSnackbar);
 		return (
 			<div className="contact-tab">
 				{(this.state.loadingData ||
@@ -886,7 +891,7 @@ class ContactcontactForm extends React.Component {
 					this.state.loadingTitles) && <LinearProgress />}
 
 				<AlertDialogSlide
-					handleClose={this.handleCloseAlertDialog}
+					handleClose={this.handleColseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
 					open={this.state.opendialog}
 					loadingConfirm={this.state.loadingConfirm}
@@ -1122,4 +1127,4 @@ ContactcontactForm.propTypes = {
 	fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(withMobileDialog()(ContactcontactForm)));
+export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(ContactcontactForm))));

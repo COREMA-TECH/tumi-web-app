@@ -17,11 +17,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import withGlobalContent from '../../Global';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -162,9 +162,6 @@ class RolesForm extends React.Component {
 		this.state = {
 			data: [],
 			company: [],
-			openSnackbar: false,
-			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!',
 
 			//idCompany: this.props.idCompany,
 			...this.DEFAULT_STATE
@@ -324,12 +321,12 @@ class RolesForm extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading roles: getroles not exists in query data');
+					this.props.handleOpenSnackbar('error', 'Error: Loading roles: getroles not exists in query data');
 				}
 			})
 			.catch((error) => {
 				console.log('Error: Loading roles: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
 			});
 	};
 
@@ -351,12 +348,15 @@ class RolesForm extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading Companies: getCompany not exists in query data');
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading Companies: getCompany not exists in query data'
+					);
 				}
 			})
 			.catch((error) => {
 				console.log('Error: Loading Companies: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
 			});
 	};
 
@@ -398,13 +398,13 @@ class RolesForm extends React.Component {
 					})
 					.then((data) => {
 						console.log('Guardando');
-						this.handleOpenSnackbar('success', isEdition ? 'Roles Updated!' : 'Roles Inserted!');
+						this.props.handleOpenSnackbar('success', isEdition ? 'Roles Updated!' : 'Roles Inserted!');
 						this.loadRoles();
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log(isEdition ? 'Error: Updating Roles: ' : 'Error: Inserting Roles: ', error);
-						this.handleOpenSnackbar(
+						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Roles: ' + error : 'Error: Inserting Roles: ' + error
 						);
@@ -430,13 +430,13 @@ class RolesForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.handleOpenSnackbar('success', 'Role Deleted!');
+						this.props.handleOpenSnackbar('success', 'Role Deleted!');
 						this.loadRoles();
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log('Error: Deleting Role: ', error);
-						this.handleOpenSnackbar('error', 'Error: Deleting Role: ' + error);
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Role: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -455,7 +455,7 @@ class RolesForm extends React.Component {
 				this.validateAllFields();
 				if (this.state.formValid) this.insertRoles();
 				else {
-					this.handleOpenSnackbar(
+					this.props.handleOpenSnackbar(
 						'warning',
 						'Error: Saving Information: You must fill all the required fields'
 					);
@@ -470,14 +470,7 @@ class RolesForm extends React.Component {
 	cancelRolesHandler = () => {
 		this.resetState();
 	};
-	handleOpenSnackbar = (variant, message) => {
-		console.log('handleOpenSnackbar etamos aqui!!!!!');
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
+
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
@@ -489,21 +482,6 @@ class RolesForm extends React.Component {
 		console.log(this.state.openSnackbar);
 		return (
 			<div className={classes.container}>
-				<Snackbar
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'center'
-					}}
-					open={this.state.openSnackbar}
-					autoHideDuration={3000}
-					onClose={this.handleCloseSnackbar}
-				>
-					<MySnackbarContentWrapper
-						onClose={this.handleCloseSnackbar}
-						variant={this.state.variantSnackbar}
-						message={this.state.messageSnackbar}
-					/>
-				</Snackbar>
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -628,4 +606,4 @@ RolesForm.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(RolesForm));
+export default withStyles(styles)(withApollo(withGlobalContent(RolesForm)));

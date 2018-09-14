@@ -29,6 +29,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
+import withGlobalContent from '../../Global';
+
 import './index.css';
 
 const styles = (theme) => ({
@@ -900,4 +902,4 @@ PositionsCompanyForm.propTypes = {
 	fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(withMobileDialog()(PositionsCompanyForm)));
+export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(PositionsCompanyForm))));

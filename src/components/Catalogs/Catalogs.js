@@ -19,8 +19,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../Generic/SnackBar';
+
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Select from '@material-ui/core/Select';
 
@@ -33,7 +32,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import SelectForm from '../ui-components/SelectForm/SelectForm';
 import InputForm from '../ui-components/InputForm/InputForm';
-
+import withGlobalContent from '../Global';
 import './index.css';
 const styles = (theme) => ({
 	container: {
@@ -217,9 +216,7 @@ class Catalogs extends React.Component {
 			idCatalogValid: true,
 			parents: [],
 			allparents: [],
-			openSnackbar: false,
-			variantSnackbar: '',
-			messageSnackbar: '',
+
 			loadingData: true,
 			loadingCatalogs: true,
 			loadingParents: true,
@@ -498,13 +495,16 @@ class Catalogs extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading catalogs: getcatalog not exists in query data');
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading catalogs: getcatalog not exists in query data'
+					);
 					this.setState({ loadingData: false });
 				}
 			})
 			.catch((error) => {
 				console.log('Error: Loading catalogs: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading catalogs: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading catalogs: ' + error);
 				this.setState({ loadingData: false });
 			});
 	};
@@ -528,7 +528,7 @@ class Catalogs extends React.Component {
 						}
 					);
 				} else {
-					this.handleOpenSnackbar(
+					this.props.handleOpenSnackbar(
 						'error',
 						'Error: Loading catalogs items: getcatalogitem not exists in query data'
 					);
@@ -537,7 +537,7 @@ class Catalogs extends React.Component {
 			})
 			.catch((error) => {
 				console.log('Error: Loading catalogs items: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading catalogs items: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading catalogs items: ' + error);
 				this.setState({ loadingCatalogs: false });
 			});
 	};
@@ -559,7 +559,7 @@ class Catalogs extends React.Component {
 						idParentValid: idParent > -1
 					});
 				} else {
-					this.handleOpenSnackbar(
+					this.props.handleOpenSnackbar(
 						'error',
 						'Error: Loading parents: getparentcatalogitem not exists in query data'
 					);
@@ -568,7 +568,7 @@ class Catalogs extends React.Component {
 			})
 			.catch((error) => {
 				console.log('Error: Loading parents: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading parents: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading parents: ' + error);
 				this.setState({ loadingParents: false });
 			});
 	};
@@ -588,7 +588,7 @@ class Catalogs extends React.Component {
 						loadingAllParents: false
 					});
 				} else {
-					this.handleOpenSnackbar(
+					this.props.handleOpenSnackbar(
 						'error',
 						'Error: Loading all parents: getparentcatalogitem not exists in query data'
 					);
@@ -597,7 +597,7 @@ class Catalogs extends React.Component {
 			})
 			.catch((error) => {
 				console.log('Error: Loading all parents: ', error);
-				this.handleOpenSnackbar('error', 'Error: Loading all parents: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading all parents: ' + error);
 				this.setState({ loadingAllParents: false });
 			});
 	};
@@ -646,7 +646,7 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.handleOpenSnackbar(
+						this.props.handleOpenSnackbar(
 							'success',
 							isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
 						);
@@ -658,7 +658,7 @@ class Catalogs extends React.Component {
 							isEdition ? 'Error: Updating Catalog Item: ' : 'Error: Inserting Catalog Item: ',
 							error
 						);
-						this.handleOpenSnackbar(
+						this.props.handleOpenSnackbar(
 							'error',
 							isEdition
 								? 'Error: Updating Catalog Item: ' + error
@@ -686,13 +686,13 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.handleOpenSnackbar('success', 'Catalog Item Deleted!');
+						this.props.handleOpenSnackbar('success', 'Catalog Item Deleted!');
 						this.loadCatalogsItems(this.state.idCatalogFilter);
 						this.resetState();
 					})
 					.catch((error) => {
 						console.log('Error: Deleting Catalog Item: ', error);
-						this.handleOpenSnackbar('error', 'Error: Deleting Catalog Item: ' + error);
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Catalog Item: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -712,7 +712,7 @@ class Catalogs extends React.Component {
 				this.validateAllFields(() => {
 					if (this.state.formValid) this.insertCatalogItem();
 					else {
-						this.handleOpenSnackbar(
+						this.props.handleOpenSnackbar(
 							'warning',
 							'Error: Saving Information: You must fill all the required fields'
 						);
@@ -728,20 +728,7 @@ class Catalogs extends React.Component {
 	cancelCatalogItemHandler = () => {
 		this.resetState();
 	};
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
-	handleCloseSnackbar = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
 
-		this.setState({ openSnackbar: false });
-	};
 	handleClickOpenModal = () => {
 		this.setState({ openModal: true, idCatalog: this.state.idCatalogFilter }, () => {
 			var parent = this.state.idCatalogFilter;
@@ -785,21 +772,7 @@ class Catalogs extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<Snackbar
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'center'
-					}}
-					open={this.state.openSnackbar}
-					autoHideDuration={3000}
-					onClose={this.handleCloseSnackbar}
-				>
-					<MySnackbarContentWrapper
-						onClose={this.handleCloseSnackbar}
-						variant={this.state.variantSnackbar}
-						message={this.state.messageSnackbar}
-					/>
-				</Snackbar>
+
 				<Dialog
 					fullScreen={fullScreen}
 					open={this.state.openModal}
@@ -1000,4 +973,4 @@ Catalogs.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(withMobileDialog()(Catalogs)));
+export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(Catalogs))));

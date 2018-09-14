@@ -5,8 +5,7 @@ import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
 import withApollo from 'react-apollo/withApollo';
 import { gql } from 'apollo-boost';
 import PositionsCompanyForm from '../../Company/PositionsCompanyForm/';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import CheckIcon from '@material-ui/icons/Check';
@@ -29,6 +28,8 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
+
+import withGlobalContent from '../../Global';
 
 const styles = (theme) => ({
 	container: {
@@ -108,9 +109,7 @@ class ExhibitContract extends Component {
 			exhibitD: '',
 			exhibitE: '',
 			exhibitF: '',
-			openSnackbar: false,
-			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!',
+
 			agreement: ''
 		};
 	}
@@ -170,10 +169,10 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.sendcontracts != null) {
-					this.handleOpenSnackbar('success', 'Contract Sent!');
+					this.props.handleOpenSnackbar('success', 'Contract Sent!');
 					this.resetState();
 				} else {
-					this.handleOpenSnackbar(
+					this.props.handleOpenSnackbar(
 						'error',
 						'Error: Loading agreement: sendcontracts not exists in query data'
 					);
@@ -181,7 +180,7 @@ class ExhibitContract extends Component {
 				}
 			})
 			.catch((error) => {
-				this.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
 				this.setState({ loadingData: false });
 			});
 	};
@@ -201,12 +200,15 @@ class ExhibitContract extends Component {
 						//signature: data.data.getcontracts[0].Client_Signature
 					});
 				} else {
-					this.handleOpenSnackbar('error', 'Error: Loading agreement: getcontracts not exists in query data');
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading agreement: getcontracts not exists in query data'
+					);
 					this.setState({ loadingData: false });
 				}
 			})
 			.catch((error) => {
-				this.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
 				this.setState({ loadingData: false });
 			});
 	};
@@ -276,13 +278,7 @@ class ExhibitContract extends Component {
 	handleClickOpenModal = () => {
 		this.setState({ openModal: true });
 	};
-	handleCloseSnackbar = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
 
-		this.setState({ openSnackbar: false });
-	};
 	cancelContractHandler = () => {
 		this.resetState();
 	};
@@ -319,14 +315,6 @@ class ExhibitContract extends Component {
 		downloadLink.click();
 	};
 
-	handleOpenSnackbar = (variant, message) => {
-		this.setState({
-			openSnackbar: true,
-			variantSnackbar: variant,
-			messageSnackbar: message
-		});
-	};
-
 	render() {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
@@ -337,22 +325,6 @@ class ExhibitContract extends Component {
 
 		return (
 			<div className="contract-container">
-				<Snackbar
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'center'
-					}}
-					open={this.state.openSnackbar}
-					autoHideDuration={3000}
-					onClose={this.handleCloseSnackbar}
-				>
-					<MySnackbarContentWrapper
-						onClose={this.handleCloseSnackbar}
-						variant={this.state.variantSnackbar}
-						message={this.state.messageSnackbar}
-					/>
-				</Snackbar>
-
 				<Dialog
 					fullScreen={true}
 					open={this.state.openModal}
@@ -461,7 +433,7 @@ class ExhibitContract extends Component {
 									<PositionsCompanyForm
 										idCompany={this.props.companyId}
 										idContract={this.props.contractId}
-										handleOpenSnackbar={this.handleOpenSnackbar}
+										handleOpenSnackbar={this.props.handleOpenSnackbar}
 										showStepper={false}
 									/>
 								</div>
@@ -595,4 +567,4 @@ class ExhibitContract extends Component {
 	}
 }
 
-export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));
+export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(ExhibitContract))));

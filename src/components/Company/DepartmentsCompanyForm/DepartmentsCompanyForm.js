@@ -19,6 +19,8 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
+import withGlobalContent from '../../Global';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -611,4 +613,4 @@ DepartmentsCompanyForm.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(DepartmentsCompanyForm));
+export default withStyles(styles)(withApollo(withGlobalContent(DepartmentsCompanyForm)));
