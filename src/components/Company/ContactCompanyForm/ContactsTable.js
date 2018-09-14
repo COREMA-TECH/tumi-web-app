@@ -193,6 +193,7 @@ class ContactsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
+							<CustomTableCell className={classes.th}>Type</CustomTableCell>
 							<CustomTableCell className={classes.th}>First Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
@@ -236,6 +237,22 @@ class ContactsTable extends React.Component {
 											</div>
 										</Tooltip>
 									</CustomTableCell>
+									<CustomTableCell>
+										<Select
+											id="type"
+											name="type"
+											value={row.type}
+											disabled
+											IconComponent="div"
+											disableUnderline={true}
+										>
+											{this.props.types.map(({ Id, Name }) => (
+												<MenuItem key={Id} value={Id} name={Name}>
+													{Name}
+												</MenuItem>
+											))}
+										</Select>
+									</CustomTableCell>
 									<CustomTableCell>{row.firstname}</CustomTableCell>
 									<CustomTableCell>{row.middlename}</CustomTableCell>
 									<CustomTableCell>{row.lastname}</CustomTableCell>
@@ -278,14 +295,14 @@ class ContactsTable extends React.Component {
 									<CustomTableCell>{row.number}</CustomTableCell>
 									<CustomTableCell>
 										<Select
-											id="type"
-											name="type"
-											value={row.type}
+											id="title"
+											name="title"
+											value={row.title}
 											disabled
 											IconComponent="div"
 											disableUnderline={true}
 										>
-											{this.props.types.map(({ Id, Name }) => (
+											{this.props.titles.map(({ Id, Name }) => (
 												<MenuItem key={Id} value={Id} name={Name}>
 													{Name}
 												</MenuItem>
