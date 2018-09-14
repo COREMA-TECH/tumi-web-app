@@ -27,7 +27,10 @@ class MainContract extends Component {
      * This method redirect to create contract component
      */
 	redirectToCreateContract = () => {
-		this.props.history.push('/home/contract/add');
+		this.props.history.push({
+			pathname: '/home/contract/add',
+			state: { contract: 0 }
+		});
 	};
 
 	getContractsQuery = gql`
