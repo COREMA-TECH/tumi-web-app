@@ -691,7 +691,6 @@ class ContactcontactForm extends React.Component {
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
-					console.log(data.data.getcatalogitem);
 					if (data.data.getcatalogitem != null) {
 						this.setState({
 							departments: data.data.getcatalogitem,
@@ -879,7 +878,7 @@ class ContactcontactForm extends React.Component {
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
-		console.log('Contact form', this.props.handleOpenSnackbar);
+
 		return (
 			<div className="contact-tab">
 				{(this.state.loadingData ||

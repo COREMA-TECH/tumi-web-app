@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import NewContract from './NewContract/NewContract';
 import ExhibitContract from './ExhibitContract/ExhibitContract';
-import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 
 const styles = (theme) => ({
 	root: {
@@ -83,30 +83,40 @@ class Contract extends React.Component {
 		});
 	};
 
-	componentWillMount(){
+	componentWillMount() {
 		this.setState({
 			loading: true
 		});
 
+		if (!this.props.location.state || !this.props.location.state.contract) {
+			this.props.history.push('/home/');
+			return false;
+		}
 		try {
-            if(this.props.location.state.contract !== 0){
-                this.setState({
-                    contractId: this.props.location.state.contract
-                }, () => {
-                    this.setState({
-                        loading: false
-                    });
-				})
-            }
+			if (this.props.location.state.contract !== 0) {
+				this.setState(
+					{
+						contractId: this.props.location.state.contract
+					},
+					() => {
+						this.setState({
+							loading: false
+						});
+					}
+				);
+			}
 		} catch (e) {
-            this.setState({
-                contractId: 0
-            }, () => {
-                this.setState({
-                    loading: false
-                });
-			})
-        }
+			this.setState(
+				{
+					contractId: 0
+				},
+				() => {
+					this.setState({
+						loading: false
+					});
+				}
+			);
+		}
 	}
 
 	render() {
@@ -115,7 +125,7 @@ class Contract extends React.Component {
 		const contractValue = this.state.contractId === 0;
 
 		if (this.state.loading) {
-			return <LinearProgress />
+			return <LinearProgress />;
 		}
 
 		return (

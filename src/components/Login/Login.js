@@ -95,11 +95,11 @@ class Login extends Component {
 
 		return (
 			<div className="login-container">
-				<div class="limiter">
-					<div class="container-login100">
+				<div className="limiter">
+					<div className="container-login100">
 						<div className="login-form">
 							<div className="login-form__header" />
-							<div class="txt1">
+							<div className="txt1">
 								<img
 									width="150"
 									height="150"
@@ -107,55 +107,58 @@ class Login extends Component {
 								/>
 							</div>
 							<form onSubmit={this.handleSubmit} className="login-form__content">
-								<div class="wrap-input100 validate-input m-b-23" data-validate="Username is reauired">
-									<span class="label-input100">Username</span>
+								<div
+									className="wrap-input100 validate-input m-b-23"
+									data-validate="Username is reauired"
+								>
+									<span className="label-input100">Username</span>
 									<input
-										class="input100"
+										className="input100"
 										type="text"
 										id="username"
 										name="username"
 										placeholder="Type your username"
 										required="required"
 									/>
-									<span class="focus-input100" data-symbol="&#xf206;" />
+									<span className="focus-input100" data-symbol="&#xf206;" />
 								</div>
-								<div class="wrap-input100 validate-input" data-validate="Password is required">
-									<span class="label-input100">Password</span>
+								<div className="wrap-input100 validate-input" data-validate="Password is required">
+									<span className="label-input100">Password</span>
 									<input
-										class="input100"
+										className="input100"
 										type="password"
 										id="pass"
 										name="pass"
 										placeholder="Type your password"
 										required="required"
 									/>
-									<span class="focus-input100" data-symbol="&#xf190;" />
+									<span className="focus-input100" data-symbol="&#xf190;" />
 								</div>
 
-								<div class="text-right">
+								<div className="text-right">
 									<a href="#" />
 								</div>
 
-								<div class="text-right">
+								<div className="text-right">
 									<a href="#">Forgot password?</a>
 								</div>
 								<input type="submit" className="login-button" value="Login" />
 
-								<div class="txt1">
+								<div className="txt1">
 									<span>Or Sign Up Using</span>
 								</div>
 
-								<div class="flex-c-m">
-									<a href="#" class="login100-social-item_bg1">
-										<i class="fa fa-facebook" />
+								<div className="flex-c-m">
+									<a href="#" className="login100-social-item_bg1">
+										<i className="fa fa-facebook" />
 									</a>
 
-									<a href="#" class="login100-social-item_bg2">
-										<i class="fa fa-twitter" />
+									<a href="#" className="login100-social-item_bg2">
+										<i className="fa fa-twitter" />
 									</a>
 
-									<a href="#" class="login100-social-item_bg3">
-										<i class="fa fa-google" />
+									<a href="#" className="login100-social-item_bg3">
+										<i className="fa fa-google" />
 									</a>
 								</div>
 							</form>

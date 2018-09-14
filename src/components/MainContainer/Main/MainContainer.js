@@ -13,7 +13,7 @@ class MainContainer extends Component {
 		return (
 			<div className="main-container">
 				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" />
-				<label className="Header-mobileMenu" for="MenuMobile-callback">
+				<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
 					<i className="fas fa-bars" />
 				</label>
 				<MobileMenu />

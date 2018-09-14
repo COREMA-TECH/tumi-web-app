@@ -364,6 +364,7 @@ class Signature extends React.Component {
 	};
 
 	componentWillMount() {
+		console.log('Signature', this.props);
 		const values = queryString.parse(this.props.location.search);
 		if (!values.token || !values.signatory) this.props.history.push('/home/');
 
@@ -666,4 +667,4 @@ Signature.propTypes = {
 	classes: PropTypes.object.isRequired,
 	fullScreen: PropTypes.bool.isRequired
 };
-export default withStyles(styles)(withApollo(withMobileDialog()(Signature)));
+export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(Signature))));

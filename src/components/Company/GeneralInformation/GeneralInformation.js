@@ -1135,7 +1135,7 @@ class GeneralInformation extends Component {
 								<li className="header-elements">Property Name</li>
 							</div>
 							{this.state.companyProperties.map((item) => (
-								<div className="table-elements">
+								<div className="table-elements" key={item.Id}>
 									<div
 										title="Watch Property"
 										className="table__item"
@@ -1211,7 +1211,5 @@ class GeneralInformation extends Component {
 		);
 	}
 }
-
-GeneralInformation.propTypes = {};
 
 export default withApollo(GeneralInformation);

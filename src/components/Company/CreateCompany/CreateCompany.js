@@ -16,7 +16,8 @@ class CreateCompany extends Component {
 		try {
 			return this.props.location.state.idCompany;
 		} catch (error) {
-			return 0;
+			this.props.history.push('/home/');
+			return false;
 		}
 	}
 
@@ -27,14 +28,15 @@ class CreateCompany extends Component {
 		try {
 			return this.props.location.state.idContract;
 		} catch (error) {
-			return 0;
+			this.props.history.push('/home/');
+			return false;
 		}
 	}
 
 	render() {
 		return (
 			<div className="create-company-container">
-				<FullWithTabs idCompany={this.checkId()} idContract={this.checkIdContract()} />
+				<FullWithTabs idCompany={this.checkId()} idContract={this.checkIdContract()} {...this.props} />
 			</div>
 		);
 	}

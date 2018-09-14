@@ -6,7 +6,7 @@ class InputFile extends Component {
 		{
 			if (this.props.placeholder) {
 				return (
-					<div class="input-file-container">
+					<div className="input-file-container">
 						<input
 							type="text"
 							placeholder={this.props.placeholder}
