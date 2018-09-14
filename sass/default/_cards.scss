@@ -6,9 +6,22 @@
                 width: 100% !important;
             }
         }
+        @media only screen and (max-width: 768px) {
+            .input-label {
+                display: block !important;
+            }
+            .primary {
+                margin-bottom: 1rem;
+            }
+        }
     }
     &-form-company {
         height: 665px;
+        @media only screen and (max-width: 480px) {
+            display: block !important;
+            min-height: 765px;
+            height: auto;
+        }
     }
 }
 
