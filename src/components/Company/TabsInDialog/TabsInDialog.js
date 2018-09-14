@@ -106,7 +106,11 @@ class CustomizedTabs extends Component {
 					/>
 				</Tabs>
 				{value === 0 && (
-					<GeneralInforProperty idCompany={this.props.idCompany} handleClose={this.props.handleClose} />
+					<GeneralInforProperty
+						idCompany={this.props.idCompany}
+						handleClose={this.props.handleClose}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
 				)}
 				{value === 1 && (
 					<ContactCompanyForm
@@ -117,6 +121,7 @@ class CustomizedTabs extends Component {
 						valueTab={this.state.value}
 						showStepper={this.state.showStepper}
 						toggleStepper={this.toggleStepper}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				)}
 				{value === 2 && (
@@ -128,6 +133,7 @@ class CustomizedTabs extends Component {
 						valueTab={this.state.value}
 						showStepper={this.state.showStepper}
 						toggleStepper={this.toggleStepper}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				)}
 				{value === 3 && (
@@ -140,6 +146,7 @@ class CustomizedTabs extends Component {
 						valueTab={this.state.value}
 						showStepper={this.state.showStepper}
 						toggleStepper={this.toggleStepper}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				)}
 			</div>

@@ -33,8 +33,6 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
 import '../../ui-components/InputForm/index.css';
 
-import withGlobalContent from '../../Global';
-
 import './index.css';
 
 const styles = (theme) => ({
@@ -239,7 +237,7 @@ class ContactcontactForm extends React.Component {
 			loadingAllSupervisors: false,
 			loadingTitles: false,
 			contactTypes: ContactTypesData,
-	
+
 			activateTabs: true,
 
 			...this.DEFAULT_STATE
@@ -1127,4 +1125,4 @@ ContactcontactForm.propTypes = {
 	fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(ContactcontactForm))));
+export default withStyles(styles)(withApollo(withMobileDialog()(ContactcontactForm)));

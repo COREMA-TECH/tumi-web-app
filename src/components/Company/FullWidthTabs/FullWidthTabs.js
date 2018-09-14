@@ -7,6 +7,9 @@ import GeneralInformation from '../GeneralInformation/GeneralInformation';
 import ContactCompanyForm from '../ContactCompanyForm';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm';
+import { Snackbar } from '@material-ui/core';
+import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
+import withGlobalContent from '../../Global';
 
 import './index.css';
 
@@ -105,6 +108,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<GeneralInformation
 						idCompany={this.props.idCompany}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -117,6 +121,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<ContactCompanyForm
 						idCompany={this.props.idCompany}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -129,6 +134,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<DepartmentsCompanyForm
 						idCompany={this.props.idCompany}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -142,6 +148,7 @@ class CustomizedTabs extends React.Component {
 					<PositionsCompanyForm
 						idCompany={this.props.idCompany}
 						idContract={this.props.idContract}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -198,7 +205,7 @@ CustomizedTabs.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(CustomizedTabs);
+export default withStyles(styles)(withGlobalContent(CustomizedTabs));
 
 // import React from 'react';
 // import PropTypes from 'prop-types';

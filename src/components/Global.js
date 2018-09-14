@@ -49,7 +49,6 @@ const withGlobalContent = (WrappedComponent) => {
 							message={this.state.messageSnackbar}
 						/>
 					</Snackbar>
-					{console.log('All props', obj)}
 					<WrappedComponent {...obj} />
 				</React.Fragment>
 			);

@@ -226,6 +226,7 @@ class Catalogs extends React.Component {
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
+		console.log('Catalogos', this.props);
 	}
 	focusTextInput() {
 		if (document.getElementById('name')) {

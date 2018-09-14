@@ -4,7 +4,6 @@ import Route from 'react-router-dom/es/Route';
 import Login from '../Login/Login';
 import Private from '../Private/Private';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
-import withGlobalContent from '../Global';
 
 class Main extends Component {
 	render() {
@@ -16,4 +15,5 @@ class Main extends Component {
 		);
 	}
 }
-export default withGlobalContent(Main);
+
+export default Main;

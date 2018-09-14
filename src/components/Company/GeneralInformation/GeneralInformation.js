@@ -16,8 +16,6 @@ import FileUpload from '../../ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
 import '../../ui-components/InputForm/index.css';
 
-import withGlobalContent from '../../Global';
-
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
 		codeValid: true,
@@ -1193,11 +1191,19 @@ class GeneralInformation extends Component {
 					<DialogContent>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
-							<TabsInDialog idCompany={this.state.idProperty} handleClose={this.handleClose} />
+							<TabsInDialog
+								idCompany={this.state.idProperty}
+								handleClose={this.handleClose}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
 						) : (
 							//Si el click no es en esa property : pasar el Id en nulo
 							//para que no cargue niguna información relacionada con ese Id
-							<TabsInDialog idCompany={this.props.idCompany} handleClose={this.handleClose} />
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								handleClose={this.handleClose}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
 						)}
 					</DialogContent>
 				</Dialog>
@@ -1208,4 +1214,4 @@ class GeneralInformation extends Component {
 
 GeneralInformation.propTypes = {};
 
-export default withApollo(withGlobalContent(GeneralInformation));
+export default withApollo(GeneralInformation);
