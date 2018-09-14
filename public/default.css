@@ -88,8 +88,19 @@
     .card-form-row .input-form {
       width: 100% !important; } }
 
+@media only screen and (max-width: 768px) {
+  .card-form-row .input-label {
+    display: block !important; }
+  .card-form-row .primary {
+    margin-bottom: 1rem; } }
+
 .card-form-company {
   height: 665px; }
+  @media only screen and (max-width: 480px) {
+    .card-form-company {
+      display: block !important;
+      min-height: 765px;
+      height: auto; } }
 
 @media only screen and (max-width: 480px) {
   div[class*="MuiDialogContent-root-"] {
