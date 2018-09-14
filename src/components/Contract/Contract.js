@@ -146,7 +146,7 @@ class Contract extends React.Component {
 					<Tab
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="New Contract"
+						label={this.state.contractId == 0 ? 'New Contract' : 'Edit Contract'}
 					/>
 					<Tab
 						disabled={contractValue}

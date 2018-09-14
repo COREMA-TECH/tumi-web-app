@@ -110,7 +110,8 @@ class ExhibitContract extends Component {
 			exhibitE: '',
 			exhibitF: '',
 
-			agreement: ''
+			agreement: '',
+			openModal: false
 		};
 	}
 

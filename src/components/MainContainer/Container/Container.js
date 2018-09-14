@@ -6,10 +6,11 @@ import CreateCompany from '../../Company/CreateCompany/CreateCompany';
 import Contract from '../../Contract/Contract';
 import CreateRole from '../../Security/Roles';
 import CreateForms from '../../Security/Forms';
+import CreateRolesForms from '../../Security/RolesForms';
 import CreateUsers from '../../Security/Users';
 import Catalogs from '../../Catalogs/';
 import Signature from '../../Contract/Signature';
-import MainContract from "../../Contract/Main/MainContract/MainContract";
+import MainContract from '../../Contract/Main/MainContract/MainContract';
 
 class Container extends Component {
 	render() {
@@ -22,6 +23,7 @@ class Container extends Component {
 				<Route exact path="/home/company/edit" component={CreateCompany} />
 
 				<Route exact path="/home/Roles" component={CreateRole} />
+				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
 				<Route exact path="/home/Forms" component={CreateForms} />
 				<Route exact path="/home/Users" component={CreateUsers} />
 				<Route exact path="/home/catalogs" component={Catalogs} />

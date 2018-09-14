@@ -422,7 +422,7 @@ class NewContract extends Component {
 			})
 			.then(({ data }) => {
 				console.log('Server data response is: ' + data.updcontracts);
-				this.props.update(data.updcontracts.Id);
+				this.props.update(id);
 			})
 			.catch((err) => {
 				this.props.handleOpenSnackbar('warning', 'Complete all the inputs and try again');
@@ -526,6 +526,7 @@ class NewContract extends Component {
 	};
 
 	componentWillMount() {
+		console.log('ComponentWillmount:', this.props.contractId);
 		if (this.props.contractId !== 0) {
 			this.getContractData(this.props.contractId);
 		}
