@@ -103,6 +103,7 @@ class Contract extends React.Component {
 						);
 					} else {
 						this.setState({
+							contractId: 0,
 							loading: false
 						});
 					}

@@ -526,7 +526,6 @@ class NewContract extends Component {
 	};
 
 	componentWillMount() {
-		console.log('ComponentWillmount:', this.props.contractId);
 		if (this.props.contractId !== 0) {
 			this.getContractData(this.props.contractId);
 		}

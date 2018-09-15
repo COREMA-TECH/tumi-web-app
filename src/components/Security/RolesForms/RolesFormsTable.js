@@ -52,8 +52,6 @@ class TablePaginationActions extends React.Component {
 	render() {
 		const { classes, count, page, rowsPerPage, theme } = this.props;
 
-
-
 		return (
 			<div className={classes.root}>
 				<IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
@@ -157,7 +155,6 @@ class RolesTable extends React.Component {
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
-		console.log("Antes del render");
 		console.log(this.props);
 
 		return (
