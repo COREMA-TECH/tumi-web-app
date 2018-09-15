@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from '../../Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -19,19 +19,19 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import InputForm from '../../ui-components/InputForm/InputForm';
+import InputForm from 'ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-import InputFile from '../../ui-components/InputFile/InputFile';
+import InputFile from 'ui-components/InputFile/InputFile';
 import ContactTypesData from '../../../data/contactTypes.json';
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
-import '../../ui-components/InputForm/index.css';
+import 'ui-components/InputForm/index.css';
 
 import './index.css';
 
@@ -473,12 +473,13 @@ class ContactcontactForm extends React.Component {
 		);
 	}
 
-	handleCloseAlertDialog = () => {
+	handleColseAlertDialog = () => {
 		this.setState({ opendialog: false });
 	};
 	handleConfirmAlertDialog = () => {
 		this.deleteContacts();
 	};
+
 	onEditHandler = ({
 		idSearch,
 		idSupervisor,

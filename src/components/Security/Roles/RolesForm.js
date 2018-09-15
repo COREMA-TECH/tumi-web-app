@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import RolesTable from './RolesTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from '../../../components/Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -21,7 +21,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import withGlobalContent from '../../Global';
+import withGlobalContent from 'Generic/Global';
 
 const styles = (theme) => ({
 	container: {

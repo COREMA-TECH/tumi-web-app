@@ -7,7 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 
-import AlertDialogSlide from '../../Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 class CompanyCard extends React.Component {
 	state = {

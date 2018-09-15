@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import InputForm from "../../../ui-components/InputForm/InputForm";
+import InputForm from "ui-components/InputForm/InputForm";
 import './index.css';
 
 class DepartmentsProperty extends Component {

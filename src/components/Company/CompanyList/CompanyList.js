@@ -3,7 +3,7 @@ import './index.css';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import CompanyCard from '../../ui-components/CompanyCard/CompanyCard';
+import CompanyCard from 'ui-components/CompanyCard/CompanyCard';
 
 class CompanyList extends Component {
 	state = { data: [], open: false };

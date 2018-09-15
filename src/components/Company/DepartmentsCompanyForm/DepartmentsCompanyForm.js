@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import DepartmentsTable from './DepartmentsTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from '../../Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -14,9 +14,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import InputForm from '../../ui-components/InputForm/InputForm';
+import InputForm from 'ui-components/InputForm/InputForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
 const styles = (theme) => ({

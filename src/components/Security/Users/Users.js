@@ -7,7 +7,7 @@ import FormControl from '@material-ui/core/FormControl';
 import UsersTable from './UsersTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from '../../Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -32,14 +32,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
-import InputForm from '../../ui-components/InputForm/InputForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
+import InputForm from 'ui-components/InputForm/InputForm';
 import InputMask from 'react-input-mask';
-import '../../ui-components/InputForm/index.css';
+import 'ui-components/InputForm/index.css';
 
 import './index.css';
 
-import withGlobalContent from '../../Global';
+import withGlobalContent from 'Generic/Global';
 
 const styles = (theme) => ({
 	container: {

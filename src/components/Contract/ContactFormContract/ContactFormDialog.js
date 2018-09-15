@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import ContactCompanyForm from '../../Company/ContactCompanyForm/ContactCompanyForm';
-import withGlobalContent from '../../Global';
+import withGlobalContent from 'Generic/Global';
 import Button from '@material-ui/core/es/Button/Button';
 
 const styles = {

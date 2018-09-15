@@ -7,9 +7,8 @@ import GeneralInformation from '../GeneralInformation/GeneralInformation';
 import ContactCompanyForm from '../ContactCompanyForm';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm';
-import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../Generic/SnackBar';
-import withGlobalContent from '../../Global';
+
+import withGlobalContent from 'Generic/Global';
 
 import './index.css';
 

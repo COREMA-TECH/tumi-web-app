@@ -6,7 +6,7 @@ import PositionsTable from './PositionsTable';
 
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
-import AlertDialogSlide from '../../Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
@@ -17,8 +17,8 @@ import SaveIcon from '@material-ui/icons/Save';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
 
-import InputForm from '../../ui-components/InputForm/InputForm';
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import InputForm from 'ui-components/InputForm/InputForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
 
 import ShiftsData from '../../../data/shitfs.json';
 import Dialog from '@material-ui/core/Dialog';

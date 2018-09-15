@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import './index.css';
-import InputForm from '../../ui-components/InputForm/InputForm';
+import InputForm from 'ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputFile from '../../ui-components/InputFile/InputFile';
+import InputFile from 'ui-components/InputFile/InputFile';
 import { gql } from 'apollo-boost';
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
-import InputDateForm from '../../ui-components/InputForm/InputDateForm';
-import FileUpload from '../../ui-components/FileUpload/FileUpload';
+import InputDateForm from 'ui-components/InputForm/InputDateForm';
+import FileUpload from 'ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
-import '../../ui-components/InputForm/index.css';
+import 'ui-components/InputForm/index.css';
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {

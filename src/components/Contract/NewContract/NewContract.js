@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import './index.css';
-import InputForm from '../../ui-components/InputForm/InputForm';
-import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
+import InputForm from 'ui-components/InputForm/InputForm';
+import TextAreaForm from 'ui-components/InputForm/TextAreaForm';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
 import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
-import InputDateForm from '../../ui-components/InputForm/InputDateForm';
+import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Query from 'react-apollo/Query';
-import AccountDialog from '../../ui-components/AccountDialog/AccountDialog';
-import ContactDialog from '../../ui-components/AccountDialog/ContactDialog';
-import SelectFormContractTemplate from '../../ui-components/SelectForm/SelectFormContractTemplate';
-import withGlobalContent from '../../Global';
-import '../../ui-components/InputForm/index.css';
+import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
+import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
+import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
+import withGlobalContent from 'Generic/Global';
+import 'ui-components/InputForm/index.css';
 
 class NewContract extends Component {
 	constructor(props) {

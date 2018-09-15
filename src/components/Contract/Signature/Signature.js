@@ -26,9 +26,9 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import renderHTML from 'react-render-html';
 import queryString from 'query-string';
-import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 
-import withGlobalContent from '../../Global';
+import withGlobalContent from 'Generic/Global';
 const styles = (theme) => ({
 	container: {
 		display: 'flex',

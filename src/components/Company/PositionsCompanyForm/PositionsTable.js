@@ -22,7 +22,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
 import Select from '@material-ui/core/Select';
-import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
 	root: {

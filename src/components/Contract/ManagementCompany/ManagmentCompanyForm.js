@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import InputForm from "../../ui-components/InputForm/InputForm";
+import InputForm from "ui-components/InputForm/InputForm";
 import {gql} from "apollo-boost";
 import withApollo from "react-apollo/withApollo";
-import ImageUpload from "../../ui-components/ImageUpload/ImageUpload";
+import ImageUpload from "ui-components/ImageUpload/ImageUpload";
 import Query from "react-apollo/Query";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
-import SelectForm from "../../ui-components/SelectForm/SelectForm";
+import SelectForm from "ui-components/SelectForm/SelectForm";
 
 class GeneralInfoProperty extends Component {
     state = {

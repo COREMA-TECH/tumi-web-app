@@ -6,9 +6,9 @@ import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import TablesContracts from './TablesContracts';
 import CircularProgress from '../../../material-ui/CircularProgress';
 import { Query } from 'react-apollo';
-import NothingToDisplay from '../../../ui-components/NothingToDisplay/NothingToDisplay';
-import AlertDialogSlide from '../../../Generic/AlertDialogSlide';
-import withGlobalContent from '../../../Global';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
+import withGlobalContent from 'Generic/Global';
 
 class MainContract extends Component {
 	constructor(props) {

@@ -28,7 +28,7 @@ import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
 import classNames from 'classnames';
 import Select from '@material-ui/core/Select';
-import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 
 //let counter = 0;
 function createData(name, calories, fat, carbs, protein) {

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import InputForm from '../../ui-components/InputForm/InputForm';
+import InputForm from 'ui-components/InputForm/InputForm';
 import { gql } from 'apollo-boost';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Query from 'react-apollo/Query';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
-import InputDateForm from '../../ui-components/InputForm/InputDateForm';
+import InputDateForm from 'ui-components/InputForm/InputDateForm';
 
 class GeneralInfoProperty extends Component {
 	state = {

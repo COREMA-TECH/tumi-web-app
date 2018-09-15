@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import InputForm from '../ui-components/InputForm/InputForm';
+import InputForm from 'ui-components/InputForm/InputForm';
 import './index.css';
 import Redirect from 'react-router-dom/es/Redirect';
 import Route from 'react-router-dom/es/Route';
@@ -7,7 +7,7 @@ import Link from '@material-ui/icons/es/Link';
 import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import { withApollo } from 'react-apollo';
-import AlertDialogSlide from '../Generic/AlertDialogSlide';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 import './images/icons/favicon.ico';
 import './images/login.png';
@@ -21,7 +21,7 @@ import './vendor/daterangepicker/daterangepicker.css';
 import './css/util.css';
 import './css/main.css';
 
-import withGlobalContent from '../Global';
+import withGlobalContent from 'Generic/Global';
 class Login extends Component {
 	// var result;
 	constructor(props) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './index.css';
-import TextAreaForm from '../../ui-components/InputForm/TextAreaForm';
+import TextAreaForm from 'ui-components/InputForm/TextAreaForm';
 import withApollo from 'react-apollo/withApollo';
 import { gql } from 'apollo-boost';
 import PositionsCompanyForm from '../../Company/PositionsCompanyForm/';
@@ -16,8 +16,8 @@ import PrintIcon from '@material-ui/icons/Print';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
-import InputForm from '../../ui-components/InputForm/InputForm';
-import SelectForm from '../../ui-components/SelectForm/SelectForm';
+import InputForm from 'ui-components/InputForm/InputForm';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -29,7 +29,7 @@ import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
 
-import withGlobalContent from '../../Global';
+import withGlobalContent from 'Generic/Global';
 
 const styles = (theme) => ({
 	container: {

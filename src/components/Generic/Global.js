@@ -1,7 +1,6 @@
 import { Snackbar } from '@material-ui/core';
-import { MySnackbarContentWrapper } from '../../src/components/Generic/SnackBar';
+import { MySnackbarContentWrapper } from './SnackBar';
 import React, { Component } from 'react';
-
 const withGlobalContent = (WrappedComponent) => {
 	return class Global extends Component {
 		state = {

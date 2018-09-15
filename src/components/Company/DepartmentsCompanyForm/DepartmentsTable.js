@@ -19,7 +19,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
-import NothingToDisplay from '../../ui-components/NothingToDisplay/NothingToDisplay';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
