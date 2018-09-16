@@ -29,8 +29,6 @@ import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
 
-import withGlobalContent from 'Generic/Global';
-
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -568,4 +566,4 @@ class ExhibitContract extends Component {
 	}
 }
 
-export default withStyles(styles)(withApollo(withMobileDialog()(withGlobalContent(ExhibitContract))));
+export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));

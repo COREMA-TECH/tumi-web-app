@@ -6,6 +6,7 @@ import Tab from '@material-ui/core/Tab';
 import NewContract from './NewContract/NewContract';
 import ExhibitContract from './ExhibitContract/ExhibitContract';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import withGlobalContent from '../Generic/Global';
 
 const styles = (theme) => ({
 	root: {
@@ -161,9 +162,16 @@ class Contract extends React.Component {
 						contractId={this.state.contractId}
 						update={this.updateContractId}
 						updateCompanyId={this.updateCompanyId}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				)}
-				{value === 1 && <ExhibitContract contractId={this.state.contractId} companyId={this.state.companyId} />}
+				{value === 1 && (
+					<ExhibitContract
+						contractId={this.state.contractId}
+						companyId={this.state.companyId}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
+				)}
 			</div>
 		);
 	}
@@ -173,4 +181,4 @@ Contract.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(Contract);
+export default withStyles(styles)(withGlobalContent(Contract));

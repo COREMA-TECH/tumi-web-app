@@ -272,7 +272,9 @@ class SimpleDialogDemo extends Component {
 					<input
 						defaultValue={this.state.selectedValue}
 						type="text"
-						className="input-form input-form--file"
+						className={
+							this.props.error ? 'input-form input-form--file _invalid' : 'input-form input-form--file'
+						}
 					/>
 					<span className="input-form--file-button primary-button" onClick={this.handleClickOpen}>
 						<span className="icon-drop" />
