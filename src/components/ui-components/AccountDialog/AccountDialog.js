@@ -18,8 +18,9 @@ import InputForm from '../InputForm/InputForm';
 import './index.css';
 import withApollo from 'react-apollo/withApollo';
 import ManagementCompanyDialog from '../../Contract/ManagementCompany/ManagementCompanyDialog';
-import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 const emails = [ 'username@gmail.com', 'user02@gmail.com' ];
 const styles = {
 	avatar: {
@@ -158,8 +159,8 @@ class SimpleDialog extends Component {
 			<Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
 				<DialogTitle id="simple-dialog-title">Select a Management Company</DialogTitle>
 
-				<div>
-					<List>
+				<DialogContent>
+					<List component="nav">
 						<Query query={this.getCompaniesQuery} pollInterval={500}>
 							{({ loading, error, data, refetch, networkStatus }) => {
 								//if (networkStatus === 4) return <LinearProgress />;
@@ -191,8 +192,10 @@ class SimpleDialog extends Component {
 							}}
 						</Query>
 					</List>
+				</DialogContent>
+				<DialogActions>
 					<ManagementCompanyDialog handleOpenSnackbar={this.props.handleOpenSnackbar} />
-				</div>
+				</DialogActions>
 			</Dialog>
 		);
 	}

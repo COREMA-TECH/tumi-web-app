@@ -19,7 +19,7 @@ import 'ui-components/InputForm/index.css';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-import withGlobalContent from 'Generic/Global';
+
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -1126,27 +1126,26 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Name</span>
-											{console.log("Billing Name: ", this.state.Id_Entity)}
-												<ContactDialog
-													defaultValue=""
-													valueSelected={this.state.Id_User_Billing_Contact}
-													error={!this.state.Id_User_Billing_ContactValid}
-													idCompany={this.state.Id_Entity}
-													update={(id) => {
-														this.setState(
-															{
-																Id_User_Billing_Contact: id
-															},
-															() => {
-																this.validateField('Id_User_Billing_Contact', id);
-															}
-														);
-													}}
-													updateEmailContact={(email) => {}}
-													updateTypeContact={(type) => {}}
-													handleOpenSnackbar={this.props.handleOpenSnackbar}
-												/>
-											
+											{console.log('Billing Name: ', this.state.Id_Entity)}
+											<ContactDialog
+												defaultValue=""
+												valueSelected={this.state.Id_User_Billing_Contact}
+												error={!this.state.Id_User_Billing_ContactValid}
+												idCompany={this.state.Id_Entity}
+												update={(id) => {
+													this.setState(
+														{
+															Id_User_Billing_Contact: id
+														},
+														() => {
+															this.validateField('Id_User_Billing_Contact', id);
+														}
+													);
+												}}
+												updateEmailContact={(email) => {}}
+												updateTypeContact={(type) => {}}
+												handleOpenSnackbar={this.props.handleOpenSnackbar}
+											/>
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Street</span>
