@@ -334,6 +334,7 @@ class NewContract extends Component {
 						IsActive: data.getcontracts[0].IsActive,
 						Date_Created: data.getcontracts[0].Date_Created,
 						Date_Updated: data.getcontracts[0].Date_Updated,
+						CompanySignedName: data.getcontracts[0].CompanySignedName,
 						loaded: false
 					},
 					() => {
@@ -918,6 +919,7 @@ class NewContract extends Component {
 											<span className="input-label primary">Management Company</span>
 											<AccountDialog
 												valueSelected={this.state.Id_Entity}
+												handleOpenSnackbar={this.props.handleOpenSnackbar}
 												error={!this.state.Id_EntityValid}
 												update={this.updateIdCompany}
 												updateCompanySignedBy={(value) => {
@@ -1124,12 +1126,12 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Name</span>
-											{this.state.loadingCompanies ? (
+											{console.log("Billing Name: ", this.state.Id_Entity)}
 												<ContactDialog
 													defaultValue=""
 													valueSelected={this.state.Id_User_Billing_Contact}
 													error={!this.state.Id_User_Billing_ContactValid}
-													idContact={this.state.Id_Entity}
+													idCompany={this.state.Id_Entity}
 													update={(id) => {
 														this.setState(
 															{
@@ -1144,27 +1146,7 @@ class NewContract extends Component {
 													updateTypeContact={(type) => {}}
 													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
-											) : (
-												<ContactDialog
-													defaultValue=""
-													valueSelected={this.state.Id_User_Billing_Contact}
-													error={!this.state.Id_User_Billing_ContactValid}
-													idContact={this.state.Id_Entity}
-													update={(id) => {
-														this.setState(
-															{
-																Id_User_Billing_Contact: id
-															},
-															() => {
-																this.validateField('Id_User_Billing_Contact', id);
-															}
-														);
-													}}
-													updateEmailContact={(email) => {}}
-													updateTypeContact={(type) => {}}
-													handleOpenSnackbar={this.props.handleOpenSnackbar}
-												/>
-											)}
+											
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Street</span>
@@ -1315,4 +1297,4 @@ class NewContract extends Component {
 NewContract.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(withGlobalContent(NewContract)));
+export default withStyles(styles)(withApollo(NewContract));

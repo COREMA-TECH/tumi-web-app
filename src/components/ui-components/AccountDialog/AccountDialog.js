@@ -191,7 +191,7 @@ class SimpleDialog extends Component {
 							}}
 						</Query>
 					</List>
-					<ManagementCompanyDialog />
+					<ManagementCompanyDialog handleOpenSnackbar={this.props.handleOpenSnackbar} />
 				</div>
 			</Dialog>
 		);
@@ -285,6 +285,7 @@ class SimpleDialogDemo extends Component {
 					setDefaultText={this.setValue}
 					valueSelected={this.props.valueSelected}
 					selectedValue={this.state.selectedValue}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					open={this.state.open}
 					onClose={this.handleClose}
 					onId={this.idCompanySelected}

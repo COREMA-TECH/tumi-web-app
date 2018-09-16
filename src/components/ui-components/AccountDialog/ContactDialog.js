@@ -256,6 +256,8 @@ class SimpleDialogDemo extends React.Component {
 	`;
 
 	getContactById = (id, idEntity) => {
+		console.log('getContactById - id ', id);
+		console.log('getContactById - idEntity: ', idEntity);
 		if (id !== null) {
 			this.props.client
 				.query({
@@ -294,7 +296,6 @@ class SimpleDialogDemo extends React.Component {
 	}
 
 	render() {
-		console.log('Id Company Contact Dialog - SimpleDialogDemo: ', this.props.idCompany);
 		return (
 			<div>
 				<div className="input-file-container">
