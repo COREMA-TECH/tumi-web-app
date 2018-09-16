@@ -9,7 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import ContactCompanyForm from '../../Company/ContactCompanyForm/ContactCompanyForm';
-import withGlobalContent from 'Generic/Global';
+import ContactCompanyDialogInternal from './ContactFormDialogInternal';
 import Button from '@material-ui/core/es/Button/Button';
 
 const styles = {
@@ -46,6 +46,7 @@ class FullScreenDialog extends React.Component {
 				<span className="add-management-contact" onClick={this.handleClickOpen}>
 					<span>New Contact</span>
 				</span>
+
 				<Dialog fullScreen open={this.state.open} onClose={this.handleClose} TransitionComponent={Transition}>
 					<AppBar className={classes.appBar}>
 						<Toolbar>
@@ -53,22 +54,17 @@ class FullScreenDialog extends React.Component {
 								<CloseIcon />
 							</IconButton>
 							<Typography variant="title" color="inherit" className={classes.flex}>
-								Management Company
+								Management Company/ Algo
 							</Typography>
 							<Button color="inherit" onClick={this.handleClose}>
 								Finish
 							</Button>
 						</Toolbar>
 					</AppBar>
-					<ContactCompanyForm
-						idCompany={this.props.idContact}
+
+					<ContactCompanyDialogInternal
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
-						toggleStepper={this.toggleStepper}
+						idCompany={this.props.idCompany}
 					/>
 				</Dialog>
 			</div>
@@ -80,4 +76,4 @@ FullScreenDialog.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withGlobalContent(FullScreenDialog));
+export default withStyles(styles)(FullScreenDialog);

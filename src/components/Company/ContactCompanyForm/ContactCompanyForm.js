@@ -223,6 +223,7 @@ class ContactcontactForm extends React.Component {
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			data: [],
 			idCompany: this.props.idCompany,

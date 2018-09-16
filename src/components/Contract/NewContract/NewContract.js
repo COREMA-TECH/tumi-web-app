@@ -19,7 +19,7 @@ import 'ui-components/InputForm/index.css';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-
+import withGlobalContent from 'Generic/Global';
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -936,63 +936,34 @@ class NewContract extends Component {
 										<div className="card-form-row">
 											<span className="input-label primary">Customer Signed By</span>
 
-											{this.state.loadingCompanies ? (
-												<ContactDialog
-													defaultValue=""
-													valueSelected={this.state.Id_User_Signed}
-													error={!this.state.Id_User_SignedValid}
-													idContact={this.state.Id_Entity}
-													update={this.updateIdContact}
-													updateEmailContact={(email) => {
-														this.setState(
-															{
-																Electronic_Address: email
-															},
-															() => {
-																this.validateField('Electronic_Address', email);
-															}
-														);
-													}}
-													updateTypeContact={(value) => {
-														this.setState(
-															{
-																User_Signed_Title: value
-															},
-															() => {
-																this.validateField('User_Signed_Title', value);
-															}
-														);
-													}}
-												/>
-											) : (
-												<ContactDialog
-													defaultValue=""
-													valueSelected={this.state.Id_User_Signed}
-													error={!this.state.Id_User_SignedValid}
-													idContact={this.state.Id_Entity}
-													update={this.updateIdContact}
-													updateEmailContact={(email) => {
-														this.setState(
-															{
-																Electronic_Address: email
-															},
-															() => {
-																this.validateField('Electronic_Address', email);
-															}
-														);
-													}}
-													updateTypeContact={(value) => {
-														this.setState(
-															{
-																User_Signed_Title: value
-															},
-															() => {
-																this.validateField('User_Signed_Title', value);
-															}
-														);
-													}}
-												/>
-											)}
+											<ContactDialog
+												defaultValue=""
+												valueSelected={this.state.Id_User_Signed}
+												handleOpenSnackbar={this.props.handleOpenSnackbar}
+												error={!this.state.Id_User_SignedValid}
+												idCompany={this.state.Id_Entity}
+												update={this.updateIdContact}
+												updateEmailContact={(email) => {
+													this.setState(
+														{
+															Electronic_Address: email
+														},
+														() => {
+															this.validateField('Electronic_Address', email);
+														}
+													);
+												}}
+												updateTypeContact={(value) => {
+													this.setState(
+														{
+															User_Signed_Title: value
+														},
+														() => {
+															this.validateField('User_Signed_Title', value);
+														}
+													);
+												}}
+											/>
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">Customer Signed Title</span>
@@ -1171,6 +1142,7 @@ class NewContract extends Component {
 													}}
 													updateEmailContact={(email) => {}}
 													updateTypeContact={(type) => {}}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											) : (
 												<ContactDialog
@@ -1190,6 +1162,7 @@ class NewContract extends Component {
 													}}
 													updateEmailContact={(email) => {}}
 													updateTypeContact={(type) => {}}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											)}
 										</div>
@@ -1342,4 +1315,4 @@ class NewContract extends Component {
 NewContract.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(NewContract));
+export default withStyles(styles)(withApollo(withGlobalContent(NewContract)));

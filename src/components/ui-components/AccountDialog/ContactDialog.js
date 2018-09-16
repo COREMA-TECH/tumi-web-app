@@ -81,7 +81,7 @@ class SimpleDialog extends React.Component {
 				variables: {
 					input: {
 						Id: 150,
-						Id_Entity: parseInt(this.props.idContact),
+						Id_Entity: parseInt(this.props.idCompany),
 						First_Name: `'${this.state.firstName}'`,
 						Middle_Name: `'${this.state.middleName}'`,
 						Last_Name: "''",
@@ -155,14 +155,13 @@ class SimpleDialog extends React.Component {
 							<Query
 								query={this.getContactsQuery}
 								pollInterval={500}
-								variables={{ Id_Entity: parseInt(this.props.idContact) }}
+								variables={{ Id_Entity: parseInt(this.props.idCompany) }}
 							>
 								{({ loading, error, data, refetch, networkStatus }) => {
 									//if (networkStatus === 4) return <LinearProgress />;
 									if (loading) return <LinearProgress />;
 									if (error) return <p>Error </p>;
 									if (data.getcontacts != null && data.getcontacts.length > 0) {
-										console.log('Data of cities' + data.getcontacts);
 										//return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
 										return data.getcontacts.map((item) => (
 											<ListItem
@@ -208,7 +207,10 @@ class SimpleDialog extends React.Component {
 						</div>
 					</List>
 
-					<ContactFormContract idContact={this.props.idContact} />
+					<ContactFormContract
+						idCompany={this.props.idCompany}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
 				</div>
 			</Dialog>
 		);
@@ -230,6 +232,10 @@ class SimpleDialogDemo extends React.Component {
 	};
 
 	handleClickOpen = () => {
+		if (!this.props.idCompany || this.props.idCompany == 0) {
+			this.props.handleOpenSnackbar('warning', 'You must to select the company');
+			return false;
+		}
 		this.setState({
 			open: true
 		});
@@ -284,10 +290,11 @@ class SimpleDialogDemo extends React.Component {
 	};
 
 	componentWillMount() {
-		this.getContactById(this.props.valueSelected, this.props.idContact);
+		this.getContactById(this.props.valueSelected, this.props.idCompany);
 	}
 
 	render() {
+		console.log('Id Company Contact Dialog - SimpleDialogDemo: ', this.props.idCompany);
 		return (
 			<div>
 				<div className="input-file-container">
@@ -297,11 +304,13 @@ class SimpleDialogDemo extends React.Component {
 						className={
 							this.props.error ? 'input-form input-form--file _invalid' : 'input-form input-form--file'
 						}
+						readOnly
 					/>
 					<span className="input-form--file-button primary-button" onClick={this.handleClickOpen}>
 						<span className="icon-drop" />
 					</span>
 				</div>
+
 				<SimpleDialogWrapped
 					valueSelected={this.props.valueSelected}
 					selectedValue={this.state.selectedValue}
@@ -310,7 +319,8 @@ class SimpleDialogDemo extends React.Component {
 					onId={this.idCustomerSelected}
 					updateEmailContact={this.emailCompanySelected}
 					updateTypeContact={this.typeCompanySelected}
-					idContact={this.props.idContact}
+					idCompany={this.props.idCompany}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
 				/>
 			</div>
 		);

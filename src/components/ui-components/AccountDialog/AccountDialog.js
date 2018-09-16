@@ -275,6 +275,7 @@ class SimpleDialogDemo extends Component {
 						className={
 							this.props.error ? 'input-form input-form--file _invalid' : 'input-form input-form--file'
 						}
+						readOnly
 					/>
 					<span className="input-form--file-button primary-button" onClick={this.handleClickOpen}>
 						<span className="icon-drop" />
