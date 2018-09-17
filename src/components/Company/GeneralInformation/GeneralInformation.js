@@ -4,8 +4,8 @@ import InputForm from 'ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
+import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputFile from 'ui-components/InputFile/InputFile';
 import { gql } from 'apollo-boost';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -14,7 +14,53 @@ import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import FileUpload from 'ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
 import 'ui-components/InputForm/index.css';
+import Slide from '@material-ui/core/Slide/Slide';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+const styles = (theme) => ({
+	wrapper: {
+		margin: theme.spacing.unit,
+		position: 'relative'
+	},
+	buttonSuccess: {
+		background: ' #3da2c7',
+		borderRadius: '5px',
+		padding: '.5em 1em',
+
+		fontWeight: '300',
+		fontFamily: 'Segoe UI',
+		fontSize: '1.1em',
+		color: '#fff',
+		textTransform: 'none',
+		//cursor: pointer;
+		margin: '2px',
+
+		//	backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			background: ' #3da2c7'
+		}
+	},
+
+	buttonProgress: {
+		//color: ,
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12
+	}
+});
+function Transition(props) {
+	return <Slide direction="up" {...props} />;
+}
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
@@ -31,6 +77,7 @@ class GeneralInformation extends Component {
 		cityValid: true,
 		suiteValid: true,
 		phoneNumberValid: true,
+		faxValid: true,
 		startDateValid: true,
 		formValid: true
 	};
@@ -329,75 +376,77 @@ class GeneralInformation extends Component {
 	`;
 
 	updateCompany = (companyId) => {
-		this.validateAllFields(() => {
-			if (!this.state.formValid) {
-				this.props.handleOpenSnackbar(
-					'warning',
-					'Error: Saving Information: You must fill all the required fields'
-				);
-				return true;
-			}
+		this.setState({ loadingUpdate: true }, () => {
+			this.validateAllFields(() => {
+				if (!this.state.formValid) {
+					this.props.handleOpenSnackbar(
+						'warning',
+						'Error: Saving Information: You must fill all the required fields'
+					);
+					return true;
+				}
 
-			//Create the mutation using apollo global client
-			this.props.client
-				.mutate({
-					// Pass the mutation structure
-					mutation: this.UPDATE_COMPANY,
-					variables: {
-						input: {
-							Id: companyId,
-							Code: `'${this.state.Code}'`,
-							Code01: `'${this.state.Code}'`,
-							Id_Contract: 1,
-							Id_Company: 1,
-							BusinessType: 1,
-							Location: `'${this.state.address}'`,
-							Location01: `'${this.state.optionalAddress}'`,
-							Name: `'${this.state.legalName}'`,
-							Description: `'${this.state.description}'`,
-							Start_Week: this.state.startWeek,
-							End_Week: this.state.endWeek,
-							Legal_Name: `'${this.state.legalName}'`,
-							Country: parseInt(this.state.country),
-							State: parseInt(this.state.state),
-							Rate: parseFloat(this.state.rate),
-							Zipcode: parseInt(this.state.zipCode),
-							Fax: `'${this.state.fax}'`,
-							Primary_Email: `'${this.state.legalName}'`,
-							Phone_Number: `'${this.state.phoneNumber}'`,
-							Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-							City: parseInt(this.state.city),
-							Id_Parent: 1,
-							IsActive: parseInt(this.state.active),
-							User_Created: 1,
-							User_Updated: 1,
-							Date_Created: "'2018-08-14'",
-							Date_Updated: "'2018-08-14'",
-							ImageURL: `'${this.state.avatar}'`,
-							Start_Date: `'${this.state.startDate}'`,
-							Contract_URL: `'${this.state.contractURL}'`,
-							Insurace_URL: `'${this.state.insuranceURL}'`,
-							Other_URL: `'${this.state.otherURL}'`,
-							Other01_URL: `'${this.state.other01URL}'`,
-							Suite: parseInt(this.state.suite),
-							Contract_Status: "'C'"
+				//Create the mutation using apollo global client
+				this.props.client
+					.mutate({
+						// Pass the mutation structure
+						mutation: this.UPDATE_COMPANY,
+						variables: {
+							input: {
+								Id: companyId,
+								Code: `'${this.state.Code}'`,
+								Code01: `'${this.state.Code}'`,
+								Id_Contract: 1,
+								Id_Company: 1,
+								BusinessType: 1,
+								Location: `'${this.state.address}'`,
+								Location01: `'${this.state.optionalAddress}'`,
+								Name: `'${this.state.name}'`,
+								Description: `'${this.state.description}'`,
+								Start_Week: this.state.startWeek,
+								End_Week: this.state.endWeek,
+								Legal_Name: `'${this.state.legalName}'`,
+								Country: parseInt(this.state.country),
+								State: parseInt(this.state.state),
+								Rate: parseFloat(this.state.rate),
+								Zipcode: parseInt(this.state.zipCode),
+								Fax: `'${this.state.fax}'`,
+								Primary_Email: `'${this.state.legalName}'`,
+								Phone_Number: `'${this.state.phoneNumber}'`,
+								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+								City: parseInt(this.state.city),
+								Id_Parent: 1,
+								IsActive: parseInt(this.state.active),
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-08-14'",
+								Date_Updated: "'2018-08-14'",
+								ImageURL: `'${this.state.avatar}'`,
+								Start_Date: `'${this.state.startDate}'`,
+								Contract_URL: `'${this.state.contractURL}'`,
+								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Other_URL: `'${this.state.otherURL}'`,
+								Other01_URL: `'${this.state.other01URL}'`,
+								Suite: parseInt(this.state.suite),
+								Contract_Status: "'C'"
+							}
 						}
-					}
-				})
-				.then((data) => {
-					this.props.handleOpenSnackbar('success', 'General Information Updated!');
-					// When the user click Next button, open second tab
-					this.props.toggleStepper();
-					this.props.next();
-				})
-				.catch((error) => {
-					console.log('Error: Updating General Information: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
-					this.setState({
-						success: false,
-						loading: false
+					})
+					.then((data) => {
+						this.setState({ loadingUpdate: false });
+						this.props.handleOpenSnackbar('success', 'General Information Updated!');
+						// When the user click Next button, open second tab
+						this.props.toggleStepper();
+						this.props.next();
+					})
+					.catch((error) => {
+						console.log('Error: Updating General Information: ', error);
+						this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
+						this.setState({
+							loadingUpdate: false
+						});
 					});
-				});
+			});
 		});
 	};
 	/**********************************************************
@@ -602,7 +651,8 @@ class GeneralInformation extends Component {
 			contractURL: '',
 			insuranceURL: '',
 			otherURL: '',
-			other01URL: ''
+			other01URL: '',
+			loadingUpdate: false
 		};
 	}
 
@@ -679,7 +729,7 @@ class GeneralInformation extends Component {
 	validateAllFields(fun) {
 		let codeValid = this.state.Code.trim().length >= 2;
 		let nameValid = this.state.name.trim().length >= 5;
-		let descriptionValid = this.state.description.trim().length >= 10;
+		//	let descriptionValid = this.state.description.trim().length >= 10;
 		let addressValid = this.state.address.trim().length >= 5;
 
 		let startWeekValid = this.state.startWeek !== null && this.state.startWeek !== 0 && this.state.startWeek !== '';
@@ -700,13 +750,16 @@ class GeneralInformation extends Component {
 				.replace('(', '')
 				.replace(')', '').length == 10;
 
+		let fax = this.state.fax.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+		let faxValid = fax.length == 10 || fax.length == 0;
+
 		let startDateValid = this.state.startDate.trim().length == 10;
 
 		this.setState(
 			{
 				codeValid,
 				nameValid,
-				descriptionValid,
+				//descriptionValid,
 				addressValid,
 				startWeekValid,
 				endWeekValid,
@@ -717,6 +770,7 @@ class GeneralInformation extends Component {
 				cityValid,
 				suiteValid,
 				phoneNumberValid,
+				faxValid,
 				startDateValid
 			},
 			() => {
@@ -728,7 +782,7 @@ class GeneralInformation extends Component {
 	validateField(fieldName, value) {
 		let codeValid = this.state.codeValid;
 		let nameValid = this.state.nameValid;
-		let descriptionValid = this.state.descriptionValid;
+		//let descriptionValid = this.state.descriptionValid;
 		let addressValid = this.state.addressValid;
 
 		let startWeekValid = this.state.startWeekValid;
@@ -741,6 +795,7 @@ class GeneralInformation extends Component {
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
 		let phoneNumberValid = this.state.phoneNumberValid;
+		let faxValid = this.state.faxValid;
 		let startDateValid = this.state.startDateValid;
 
 		switch (fieldName) {
@@ -752,10 +807,10 @@ class GeneralInformation extends Component {
 				nameValid = value.trim().length >= 5;
 
 				break;
-			case 'description':
-				descriptionValid = value.trim().length >= 10;
+			//	case 'description':
+			//	descriptionValid = value.trim().length >= 10;
 
-				break;
+			//	break;
 			case 'address':
 				addressValid = value.trim().length >= 5;
 
@@ -797,6 +852,10 @@ class GeneralInformation extends Component {
 					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 						.length == 10;
 				break;
+			case 'fax':
+				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+				faxValid = fax.length == 10 || fax.length == 0;
+				break;
 			case 'startDate':
 				startDateValid = value.trim().length == 10;
 				break;
@@ -807,7 +866,7 @@ class GeneralInformation extends Component {
 			{
 				codeValid,
 				nameValid,
-				descriptionValid,
+				//descriptionValid,
 				addressValid,
 				startWeekValid,
 				endWeekValid,
@@ -818,6 +877,7 @@ class GeneralInformation extends Component {
 				cityValid,
 				suiteValid,
 				phoneNumberValid,
+				faxValid,
 				startDateValid
 			},
 			this.validateForm
@@ -841,6 +901,7 @@ class GeneralInformation extends Component {
 					this.state.cityValid &&
 					this.state.suiteValid &&
 					this.state.phoneNumberValid &&
+					this.state.faxValid &&
 					this.state.startDateValid
 			},
 			func
@@ -853,6 +914,8 @@ class GeneralInformation extends Component {
      * @returns {XML} component
      */
 	render() {
+		const { classes } = this.props;
+
 		/**
          * If the data is ready render the component
          */
@@ -973,6 +1036,7 @@ class GeneralInformation extends Component {
 									error={!this.state.countryValid}
 									value={this.state.country}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -985,6 +1049,7 @@ class GeneralInformation extends Component {
 									error={!this.state.stateValid}
 									value={this.state.state}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -997,6 +1062,7 @@ class GeneralInformation extends Component {
 									error={!this.state.cityValid}
 									value={this.state.city}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1030,13 +1096,17 @@ class GeneralInformation extends Component {
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">Fax</span>
-								<InputForm
-									type="number"
+								<InputMask
+									id="fax"
+									name="fax"
+									mask="+(999) 999-9999"
+									maskChar=" "
 									value={this.state.fax}
-									change={(text) => {
-										this.updateInput(text, 'fax');
+									className={this.state.faxValid ? 'input-form' : 'input-form _invalid'}
+									onChange={(e) => {
+										this.updateInput(e.target.value, 'fax');
 									}}
-									maxLength="15"
+									placeholder="+(999) 999-9999"
 									disabled={!this.props.showStepper}
 								/>
 							</div>
@@ -1065,6 +1135,7 @@ class GeneralInformation extends Component {
 									update={this.updateStartWeek}
 									value={this.state.startWeek}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 
@@ -1077,6 +1148,7 @@ class GeneralInformation extends Component {
 									update={this.updateEndWeek}
 									value={this.state.endWeek}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 
@@ -1160,20 +1232,20 @@ class GeneralInformation extends Component {
 				</div>
 				{this.props.showStepper ? (
 					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// Then make request mutation to create OR update the company with general information
-								if (window.location.pathname === '/Company/add') {
-									this.insertCompany();
-								} else if (window.location.pathname === '/home/company/edit') {
-									//Update Company with: this.props.idCompany [ company id received by props]
+						<div className={classes.wrapper}>
+							<Button
+								className={classes.buttonSuccess}
+								onClick={() => {
 									this.updateCompany(this.props.idCompany);
-								}
-							}}
-						>
-							Save
-						</span>
+								}}
+								disabled={this.state.loadingUpdate}
+							>
+								Save
+							</Button>
+							{this.state.loadingUpdate && (
+								<CircularProgress size={24} className={classes.buttonProgress} />
+							)}
+						</div>
 					</div>
 				) : (
 					''
@@ -1187,7 +1259,16 @@ class GeneralInformation extends Component {
 					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-
+					<AppBar style={{ background: '#0092BD' }}>
+						<Toolbar>
+							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+								<CloseIcon />
+							</IconButton>
+							<Typography variant="title" color="inherit">
+								Management Company
+							</Typography>
+						</Toolbar>
+					</AppBar>
 					<DialogContent>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
@@ -1212,4 +1293,8 @@ class GeneralInformation extends Component {
 	}
 }
 
-export default withApollo(GeneralInformation);
+GeneralInformation.propTypes = {
+	classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(withApollo(GeneralInformation)) ;

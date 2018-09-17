@@ -1,3 +1,7 @@
+.management-company-container {
+    width: 100%;
+}
+
 .add-management-company {
     width: 100%;
     display: flex;
@@ -6,7 +10,7 @@
 
     font-family:"Segoe UI";
 
-    background: #f5f5f5;
+    background: #eeeeee;
     color: #41afd7;
 
     padding: .8em;
@@ -14,6 +18,8 @@
 
     transition: all .250s;
 
+    border-radius: 3px;
+    box-shadow: 0 0 5px #cccccc;
 }
 
 .add-management-contact {
@@ -41,7 +47,8 @@
 }
 
 .add-management-company:hover {
-    background: #eeeeee;
+    color: #e5e5e5;
+    background: #41afd7;
 }
 
 .management-content {

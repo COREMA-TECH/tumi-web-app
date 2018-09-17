@@ -230,7 +230,7 @@ const uuidv4 = require('uuid/v4');
 
 const styles = (theme) => ({
 	formControl: {
-		font: '400 13.3333px Arial',
+		font: '400 0.8em Arial',
 		border: '1px solid #E6E6E6',
 		borderRadius: '5px',
 		borderBottom: '1px solid'

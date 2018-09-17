@@ -364,7 +364,6 @@ class Signature extends React.Component {
 	};
 
 	componentWillMount() {
-		console.log('Signature', this.props);
 		const values = queryString.parse(this.props.location.search);
 		if (!values.token || !values.signatory) this.props.history.push('/home/');
 
@@ -543,7 +542,7 @@ class Signature extends React.Component {
 											this.state.loading || this.state.disableButtonLetter || this.state.saved
 										}
 										variant="fab"
-										className={[buttonClassname, classes.buttonSuccess].join(' ')}
+										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />

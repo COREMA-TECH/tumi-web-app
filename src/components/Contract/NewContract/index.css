@@ -99,17 +99,6 @@ body {
 		box-sizing: border-box;
 	}
 
-	.contract-footer {
-		width: 100%;
-		background: #ffffff;
-		box-shadow: 0 -1px 12px #eee;
-
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: .5em;
-	}
-
 	.contract-next-button {
 		background: #3da2c7;
 		border-radius: 5px;
@@ -199,4 +188,26 @@ body {
 
 .header-elements:nth-child(1) {
 	border-right: 1px solid #ffffff;
+}
+.contract-buttom {
+	padding: .5em;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-ms-flex-align: center;
+	align-items: center;
+	padding: 1em;
+	background: #ffffff;
+	-webkit-box-shadow: 0 -2px 10px #ddd;
+	box-shadow: 0 -2px 10px #ddd;
+	position: -webkit-sticky;
+	position: sticky;
+	bottom: 0;
+	left: 0;
+	z-index: 100;
+	margin-bottom: -.8em;
+	margin-left: -13px;
+	margin-right: -13px;
+	height: 70px;
 }

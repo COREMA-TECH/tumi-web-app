@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import CompanyCard from 'ui-components/CompanyCard/CompanyCard';
+import ErrorMessageComponent from "../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 
 class CompanyList extends Component {
 	state = { data: [], open: false };
@@ -85,7 +86,12 @@ class CompanyList extends Component {
 				{({ loading, error, data, refetch, networkStatus }) => {
 					//if (networkStatus === 4) return <LinearProgress />;
 					if (loading) return <LinearProgress />;
-					if (error) return <p>Error </p>;
+					if (error) return (
+                        <ErrorMessageComponent
+                            url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
+                            message="Error loading companies"
+                        />
+					);
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
 						return (
 							<div className="company-list">
