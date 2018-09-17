@@ -19,7 +19,7 @@ import 'ui-components/InputForm/index.css';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
+import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -296,12 +296,10 @@ class NewContract extends Component {
 		}
 	`;
 
-	getString=(value)=>{
-		if (value)	
-			return value.trim();
-		else
-			return ''
-	}
+	getString = (value) => {
+		if (value) return value.trim();
+		else return '';
+	};
 	// To get the data by a specific contact using the ID
 	getContractData = (id) => {
 		this.setState({
@@ -319,7 +317,7 @@ class NewContract extends Component {
 			.then(({ data }) => {
 				this.setState(
 					{
-						Contract_Name:this.getString( data.getcontracts[0].Contract_Name),
+						Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
 						Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
 						Id_Entity: data.getcontracts[0].Id_Entity,
 						Id_User_Signed: data.getcontracts[0].Id_User_Signed,
@@ -563,7 +561,7 @@ class NewContract extends Component {
 			})
 			.then(({ data }) => {
 				this.setState({
-					CompanySignedName:this.getString( data.getcompanies[0].LegalName),
+					CompanySignedName: this.getString(data.getcompanies[0].LegalName),
 					CompanySignedNameValid: true,
 					Primary_Email: this.getString(data.getcompanies[0].Primary_Email)
 				});
@@ -1220,7 +1218,7 @@ class NewContract extends Component {
 															/>
 														);
 													}
-													return <SelectNothingToDisplay />
+													return <SelectNothingToDisplay />;
 												}}
 											</Query>
 										</div>
@@ -1272,28 +1270,27 @@ class NewContract extends Component {
 								</div>
 							</div>
 						</div>
-
-						<div className="contract-footer">
-							<div className={classes.wrapper}>
-								<Button
-									//className="contract-next-button"
-									className={classes.buttonSuccess}
-									onClick={() => {
-										if (this.props.contractId !== 0) {
-											this.updateContract(this.props.contractId);
-										} else {
-											this.insertContract();
-										}
-									}}
-									disabled={this.state.loadingInsert || this.state.loadingUpdate}
-								>
-									Save
-								</Button>
-								{(this.state.loadingInsert || this.state.loadingUpdate) && (
-									<CircularProgress size={24} className={classes.buttonProgress} />
-								)}
-							</div>
-						</div>
+					</div>
+				</div>
+				<div className="contract-buttom">
+					<div className={classes.wrapper}>
+						<Button
+							//className="contract-next-button"
+							className={classes.buttonSuccess}
+							onClick={() => {
+								if (this.props.contractId !== 0) {
+									this.updateContract(this.props.contractId);
+								} else {
+									this.insertContract();
+								}
+							}}
+							disabled={this.state.loadingInsert || this.state.loadingUpdate}
+						>
+							Save
+						</Button>
+						{(this.state.loadingInsert || this.state.loadingUpdate) && (
+							<CircularProgress size={24} className={classes.buttonProgress} />
+						)}
 					</div>
 				</div>
 			</div>
