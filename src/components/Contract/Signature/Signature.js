@@ -299,7 +299,7 @@ class Signature extends React.Component {
 						mutation: this.INSERT_AGREEMENT_SIGNATURE_QUERY,
 						variables: {
 							Id: this.state.idContract,
-							Signature: `'${this.state.signature}'`,
+							Signature: `${this.state.signature}`,
 							Signatory: this.state.signatory
 						}
 					})
@@ -543,7 +543,7 @@ class Signature extends React.Component {
 											this.state.loading || this.state.disableButtonLetter || this.state.saved
 										}
 										variant="fab"
-										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
+										className={[buttonClassname, classes.buttonSuccess].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />
