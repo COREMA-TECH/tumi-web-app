@@ -1,6 +1,7 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Noto+Sans";
 .add-company {
+  float: right;
   margin: 0 auto !important; }
 
 .btn-file {
@@ -121,6 +122,9 @@
     .MenuMobile-link:hover {
       color: #b7d433;
       text-decoration: none; }
+  @media only screen and (min-width: 768px) {
+    .MenuMobile-overlay {
+      display: none !important; } }
   .MenuMobile-wrapper {
     margin: 0;
     padding: 0;
@@ -139,6 +143,9 @@
   font-size: 1.35rem !important; }
   .nav-expanded .menu-item__icon {
     margin-right: 1.5rem !important; }
+
+.nav {
+  width: 60px !important; }
 
 .nav-title {
   display: none; }
