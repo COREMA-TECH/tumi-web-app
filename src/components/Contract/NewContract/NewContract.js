@@ -791,7 +791,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -971,7 +971,7 @@ class NewContract extends Component {
 											<span className="input-label primary">Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1093,7 +1093,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1126,7 +1126,7 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Name</span>
-											{console.log('Billing Name: ', this.state.Id_Entity)}
+
 											<ContactDialog
 												defaultValue=""
 												valueSelected={this.state.Id_User_Billing_Contact}
@@ -1142,8 +1142,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => { }}
-												updateTypeContact={(type) => { }}
+												updateEmailContact={(email) => {}}
+												updateTypeContact={(type) => {}}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>
