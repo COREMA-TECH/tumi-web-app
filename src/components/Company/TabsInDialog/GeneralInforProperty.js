@@ -469,10 +469,7 @@ class GeneralInfoProperty extends Component {
 							this.insertCompany(this.props.idCompany);
 						}}
 					>
-						Save
-					</div>
-					<div className="contract-next-button" onClick={this.props.handleClose}>
-						Cancel
+						Next
 					</div>
 				</div>
 			</div>
