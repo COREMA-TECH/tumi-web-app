@@ -163,7 +163,6 @@ class MainContract extends Component {
 				<div className="main-contract__content">
 					<Query query={this.getContractsQuery} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
-							//if (networkStatus === 4) return <LinearProgress />;
 							if (this.state.filterText === '') {
 								if (loading) return <LinearProgress />;
 							}
@@ -177,7 +176,8 @@ class MainContract extends Component {
 
 									if (
 										_.Contract_Name.indexOf(this.state.filterText) > -1 ||
-										_.Contract_Name.toLocaleLowerCase().indexOf(this.state.filterText) > -1
+										_.Contract_Name.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
+										_.Contract_Name.toLocaleUpperCase().indexOf(this.state.filterText) > -1
 									) {
 										return true;
 									}
