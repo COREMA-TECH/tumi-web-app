@@ -136,7 +136,6 @@ class MainContract extends Component {
 						placeholder="Search contract"
 						className="input-search-contract"
 					/>
-					<button className="button-search-contract">Search</button>
 				</div>
 				<button
 					className="add-company"
