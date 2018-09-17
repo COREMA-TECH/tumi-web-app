@@ -155,7 +155,6 @@ class MainContract extends Component {
 								placeholder="Search contract"
 								className="input-search-contract"
 							/>
-							<button className="button-search-contract">Search</button>
 						</div>
 					</Grid>
 					<Grid item xs={12} sm={6}>
