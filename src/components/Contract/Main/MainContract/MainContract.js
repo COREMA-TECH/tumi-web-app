@@ -107,7 +107,6 @@ class MainContract extends Component {
 		this.deleteContract();
 	};
 
-	// To render the content of the header
 	render() {
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
@@ -122,6 +121,7 @@ class MainContract extends Component {
 			);
 		}
 
+        // To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="company-list__header">
 				<div className="search-container">
