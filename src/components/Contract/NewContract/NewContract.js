@@ -19,6 +19,7 @@ import 'ui-components/InputForm/index.css';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 
 const styles = (theme) => ({
 	wrapper: {
@@ -1219,7 +1220,7 @@ class NewContract extends Component {
 															/>
 														);
 													}
-													return <p>Nothing to display </p>;
+													return <SelectNothingToDisplay />
 												}}
 											</Query>
 										</div>
