@@ -865,7 +865,7 @@ class GeneralInformation extends Component {
      * @returns {XML} component
      */
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
 
 
         /**
@@ -1202,7 +1202,7 @@ class GeneralInformation extends Component {
                     fullScreen
                 >
                     <DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-                    <AppBar>
+                    <AppBar style={{background: '#0092BD'}}>
                         <Toolbar>
                             <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                                 <CloseIcon/>
