@@ -9,6 +9,7 @@ import { Query } from 'react-apollo';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
+import ErrorMessageComponent from "../../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 
 class MainContract extends Component {
 	constructor(props) {
@@ -166,7 +167,12 @@ class MainContract extends Component {
 								if (loading) return <LinearProgress />;
 							}
 
-							if (error) return <p>Error </p>;
+                            if (error) return (
+                                <ErrorMessageComponent
+                                    url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
+                                    message="Error loading contracts"
+                                />
+                            );
 							if (data.getcontracts != null && data.getcontracts.length > 0) {
 								let dataContract = data.getcontracts.filter((_, i) => {
 									if (this.state.filterText === '') {
