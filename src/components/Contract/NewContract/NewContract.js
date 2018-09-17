@@ -84,7 +84,7 @@ class NewContract extends Component {
 			Id: '',
 			Id_Company: '',
 			Contract_Name: '',
-			Contrat_Owner: '',
+			Contrat_Owner: sessionStorage.getItem('FullName'),
 			contractTemplateId: 0,
 			contractExpiration: this.getNewDate(),
 			Id_Contract_Template: '',
@@ -791,7 +791,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -971,7 +971,7 @@ class NewContract extends Component {
 											<span className="input-label primary">Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => {}}
+												change={(text) => { }}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1093,7 +1093,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => {}}
+												change={(text) => { }}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1142,8 +1142,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => {}}
-												updateTypeContact={(type) => {}}
+												updateEmailContact={(email) => { }}
+												updateTypeContact={(type) => { }}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>
