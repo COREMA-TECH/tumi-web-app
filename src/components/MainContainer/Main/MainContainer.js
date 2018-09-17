@@ -3,6 +3,7 @@ import './index.css';
 import Toolbar from '../Toolbar/Main/Toolbar';
 import Container from '../Container/';
 import MobileMenu from '../../Nav/MobileMenu';
+import Global from 'Generic/Global';
 
 class MainContainer extends Component {
 	handleClickMenu = (event) => {
@@ -17,6 +18,7 @@ class MainContainer extends Component {
 					<i className="fas fa-bars" />
 				</label>
 				<MobileMenu />
+				<div class="MenuMobile-overlay" onClick={this.props.handleCloseMenu}></div>
 				<div className="main-container--header">
 					<span className="icon-menu" onClick={this.handleClickMenu} />
 					<span className="main-container__title">Company Information</span>
@@ -32,4 +34,4 @@ class MainContainer extends Component {
 
 MainContainer.propTypes = {};
 
-export default MainContainer;
+export default Global (MainContainer);

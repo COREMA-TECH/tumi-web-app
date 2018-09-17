@@ -25,7 +25,16 @@
     &-option {
         box-sizing: border-box;
         list-style: none;
-        text-transform: uppercase;
+        .closeIcon {
+            display: block;
+            color: $white;
+            text-align: right;
+            padding-right: 1rem;
+            padding-top: 10px;
+            &:hover {
+                cursor: pointer;
+            }
+        }
         .menu__item {
             height: 60.41px !important;
         }
@@ -49,15 +58,32 @@
         display: none;
     }
     &-callback:checked~.MenuMobile {
-        width: 45px;
+        width: 290px;
     }
     &-callback:checked~.Header-mobileMenu {
         margin-left: 3rem;
     }
-    &-link {
-        color: $white;
+    &-callback:checked~&-overlay {
+        background-color: rgba(0,0,0,.5);
         display: block;
-        text-transform: uppercase;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+        z-index: 98;
+    }
+    &-icon {
+        font-size: 1.35rem;
+        margin-right: 1.5rem;
+        text-decoration: none;
+    }
+    &-link {
+        align-items: center;
+        color: $white;
+        display: flex;
+        justify-content: flex-start;
+        font-family: $font-family-sans-serif;
+        padding: 1rem; 
+        text-decoration: none;
         width: 100%;
         &:hover {
             color: $brand-primary;
@@ -68,6 +94,23 @@
         margin: 0;
         padding: 0;
         text-align: center;
+    }
+}
+
+.menu {
+    &__item {
+        font-family: $font-family-sans-serif;
+        padding: 1rem;
+        text-decoration: none !important;
+        .nav-expanded & {
+            justify-content: flex-start !important;
+        }
+    }
+    &-item__icon {
+        font-size: 1.35rem !important;
+        .nav-expanded & {
+            margin-right: 1.5rem !important;
+        }
     }
 }
 
