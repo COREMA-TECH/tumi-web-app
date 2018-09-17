@@ -446,20 +446,6 @@ class GeneralInfoProperty extends Component {
 							<InputForm />
 						</div>
 					</div>
-					<div className="dialog-row">
-						<div className="card-form-row">
-							<span className="input-label primary">Insurance</span>
-							<InputForm />
-						</div>
-						<div className="card-form-row">
-							<span className="input-label primary">Other</span>
-							<InputForm />
-						</div>
-						<div className="card-form-row">
-							<span className="input-label primary">Other 2</span>
-							<InputForm />
-						</div>
-					</div>
 				</div>
 
 				<div className="contract-footer--bottom">

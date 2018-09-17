@@ -9,6 +9,22 @@ import { Query } from 'react-apollo';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
+import ErrorMessageComponent from "../../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+
+const styles = theme => ({
+	root: {
+	  flexGrow: 1,
+	},
+	paper: {
+	  padding: theme.spacing.unit * 2,
+	  textAlign: 'center',
+	  color: theme.palette.text.secondary,
+	},
+});
 
 class MainContract extends Component {
 	constructor(props) {
@@ -108,6 +124,7 @@ class MainContract extends Component {
 	};
 
 	render() {
+		const { classes } = this.props;
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
 			return <LinearProgress />;
@@ -123,29 +140,35 @@ class MainContract extends Component {
 
         // To render the content of the header
 		let renderHeaderContent = () => (
-			<div className="company-list__header">
-				<div className="search-container">
-					<input
-						onChange={(text) => {
-							this.setState({
-								filterText: text.target.value
-							});
-						}}
-						value={this.state.filterText}
-						type="text"
-						placeholder="Search contract"
-						className="input-search-contract"
-					/>
-					<button className="button-search-contract">Search</button>
-				</div>
-				<button
-					className="add-company"
-					onClick={() => {
-						this.redirectToCreateContract();
-					}}
-				>
-					Add Contract
-				</button>
+			<div className={[classes.root,"company-list__header"].join(" ")}>
+				<Grid container spacing={24}>
+					<Grid item xs={12} sm={6}>
+						<div className="search-container">
+							<input
+								onChange={(text) => {
+									this.setState({
+										filterText: text.target.value
+									});
+								}}
+								value={this.state.filterText}
+								type="text"
+								placeholder="Search contract"
+								className="input-search-contract"
+							/>
+							<button className="button-search-contract">Search</button>
+						</div>
+					</Grid>
+					<Grid item xs={12} sm={6}>
+						<button
+							className="add-company"
+							onClick={() => {
+								this.redirectToCreateContract();
+							}}
+						>
+							Add Contract
+						</button>
+					</Grid>
+				</Grid>
 			</div>
 		);
 
@@ -167,7 +190,12 @@ class MainContract extends Component {
 								if (loading) return <LinearProgress />;
 							}
 
-							if (error) return <p>Error </p>;
+                            if (error) return (
+                                <ErrorMessageComponent
+                                    url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
+                                    message="Error loading contracts"
+                                />
+                            );
 							if (data.getcontracts != null && data.getcontracts.length > 0) {
 								let dataContract = data.getcontracts.filter((_, i) => {
 									if (this.state.filterText === '') {
@@ -210,4 +238,8 @@ class MainContract extends Component {
 	}
 }
 
-export default withApollo(withGlobalContent(MainContract));
+MainContract.propTypes = {
+	classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(withApollo(withGlobalContent(MainContract)));
