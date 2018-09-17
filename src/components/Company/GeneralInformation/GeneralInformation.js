@@ -4,8 +4,8 @@ import InputForm from 'ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
+import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputFile from 'ui-components/InputFile/InputFile';
 import { gql } from 'apollo-boost';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -14,7 +14,17 @@ import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import FileUpload from 'ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
 import 'ui-components/InputForm/index.css';
+import Slide from '@material-ui/core/Slide/Slide';
+
+function Transition(props) {
+	return <Slide direction="up" {...props} />;
+}
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
@@ -31,6 +41,7 @@ class GeneralInformation extends Component {
 		cityValid: true,
 		suiteValid: true,
 		phoneNumberValid: true,
+		faxValid: true,
 		startDateValid: true,
 		formValid: true
 	};
@@ -353,7 +364,7 @@ class GeneralInformation extends Component {
 							BusinessType: 1,
 							Location: `'${this.state.address}'`,
 							Location01: `'${this.state.optionalAddress}'`,
-							Name: `'${this.state.legalName}'`,
+							Name: `'${this.state.name}'`,
 							Description: `'${this.state.description}'`,
 							Start_Week: this.state.startWeek,
 							End_Week: this.state.endWeek,
@@ -679,7 +690,7 @@ class GeneralInformation extends Component {
 	validateAllFields(fun) {
 		let codeValid = this.state.Code.trim().length >= 2;
 		let nameValid = this.state.name.trim().length >= 5;
-		let descriptionValid = this.state.description.trim().length >= 10;
+		//	let descriptionValid = this.state.description.trim().length >= 10;
 		let addressValid = this.state.address.trim().length >= 5;
 
 		let startWeekValid = this.state.startWeek !== null && this.state.startWeek !== 0 && this.state.startWeek !== '';
@@ -700,13 +711,16 @@ class GeneralInformation extends Component {
 				.replace('(', '')
 				.replace(')', '').length == 10;
 
+		let fax = this.state.fax.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+		let faxValid = fax.length == 10 || fax.length == 0;
+
 		let startDateValid = this.state.startDate.trim().length == 10;
 
 		this.setState(
 			{
 				codeValid,
 				nameValid,
-				descriptionValid,
+				//descriptionValid,
 				addressValid,
 				startWeekValid,
 				endWeekValid,
@@ -717,6 +731,7 @@ class GeneralInformation extends Component {
 				cityValid,
 				suiteValid,
 				phoneNumberValid,
+				faxValid,
 				startDateValid
 			},
 			() => {
@@ -728,7 +743,7 @@ class GeneralInformation extends Component {
 	validateField(fieldName, value) {
 		let codeValid = this.state.codeValid;
 		let nameValid = this.state.nameValid;
-		let descriptionValid = this.state.descriptionValid;
+		//let descriptionValid = this.state.descriptionValid;
 		let addressValid = this.state.addressValid;
 
 		let startWeekValid = this.state.startWeekValid;
@@ -741,6 +756,7 @@ class GeneralInformation extends Component {
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
 		let phoneNumberValid = this.state.phoneNumberValid;
+		let faxValid = this.state.faxValid;
 		let startDateValid = this.state.startDateValid;
 
 		switch (fieldName) {
@@ -752,10 +768,10 @@ class GeneralInformation extends Component {
 				nameValid = value.trim().length >= 5;
 
 				break;
-			case 'description':
-				descriptionValid = value.trim().length >= 10;
+			//	case 'description':
+			//	descriptionValid = value.trim().length >= 10;
 
-				break;
+			//	break;
 			case 'address':
 				addressValid = value.trim().length >= 5;
 
@@ -797,6 +813,10 @@ class GeneralInformation extends Component {
 					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 						.length == 10;
 				break;
+			case 'fax':
+				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+				faxValid = fax.length == 10 || fax.length == 0;
+				break;
 			case 'startDate':
 				startDateValid = value.trim().length == 10;
 				break;
@@ -807,7 +827,7 @@ class GeneralInformation extends Component {
 			{
 				codeValid,
 				nameValid,
-				descriptionValid,
+				//descriptionValid,
 				addressValid,
 				startWeekValid,
 				endWeekValid,
@@ -818,6 +838,7 @@ class GeneralInformation extends Component {
 				cityValid,
 				suiteValid,
 				phoneNumberValid,
+				faxValid,
 				startDateValid
 			},
 			this.validateForm
@@ -841,6 +862,7 @@ class GeneralInformation extends Component {
 					this.state.cityValid &&
 					this.state.suiteValid &&
 					this.state.phoneNumberValid &&
+					this.state.faxValid &&
 					this.state.startDateValid
 			},
 			func
@@ -853,6 +875,8 @@ class GeneralInformation extends Component {
      * @returns {XML} component
      */
 	render() {
+		const { classes } = this.props;
+
 		/**
          * If the data is ready render the component
          */
@@ -973,6 +997,7 @@ class GeneralInformation extends Component {
 									error={!this.state.countryValid}
 									value={this.state.country}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -985,6 +1010,7 @@ class GeneralInformation extends Component {
 									error={!this.state.stateValid}
 									value={this.state.state}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -997,6 +1023,7 @@ class GeneralInformation extends Component {
 									error={!this.state.cityValid}
 									value={this.state.city}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1030,13 +1057,17 @@ class GeneralInformation extends Component {
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">Fax</span>
-								<InputForm
-									type="number"
+								<InputMask
+									id="fax"
+									name="fax"
+									mask="+(999) 999-9999"
+									maskChar=" "
 									value={this.state.fax}
-									change={(text) => {
-										this.updateInput(text, 'fax');
+									className={this.state.faxValid ? 'input-form' : 'input-form _invalid'}
+									onChange={(e) => {
+										this.updateInput(e.target.value, 'fax');
 									}}
-									maxLength="15"
+									placeholder="+(999) 999-9999"
 									disabled={!this.props.showStepper}
 								/>
 							</div>
@@ -1065,6 +1096,7 @@ class GeneralInformation extends Component {
 									update={this.updateStartWeek}
 									value={this.state.startWeek}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 
@@ -1077,6 +1109,7 @@ class GeneralInformation extends Component {
 									update={this.updateEndWeek}
 									value={this.state.endWeek}
 									disabled={!this.props.showStepper}
+									showNone={false}
 								/>
 							</div>
 
@@ -1187,7 +1220,16 @@ class GeneralInformation extends Component {
 					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-
+					<AppBar style={{ background: '#0092BD' }}>
+						<Toolbar>
+							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+								<CloseIcon />
+							</IconButton>
+							<Typography variant="title" color="inherit">
+								Management Company
+							</Typography>
+						</Toolbar>
+					</AppBar>
 					<DialogContent>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
@@ -1211,5 +1253,9 @@ class GeneralInformation extends Component {
 		);
 	}
 }
+
+GeneralInformation.propTypes = {
+	classes: PropTypes.object.isRequired
+};
 
 export default withApollo(GeneralInformation);

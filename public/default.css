@@ -10,7 +10,8 @@
   height: 32px; }
 
 .button-search-contract {
-  border: 0 !important; }
+  border: 0 !important;
+  border-radius: 0 5px 5px 0 !important; }
 
 @media only screen and (min-width: 576px) {
   .MuiModal-root-73 .select-form-customized {
@@ -22,6 +23,9 @@
 .input-name-file {
   height: 32px;
   width: 75%; }
+
+.input-search-contract {
+  border-radius: 5px 0 0 5px !important; }
 
 .modal-overflow {
   overflow-x: scroll; }

@@ -121,7 +121,6 @@ class MainContract extends Component {
 		this.deleteContract();
 	};
 
-	// To render the content of the header
 	render() {
 		const { classes } = this.props;
 		// If contracts query is loading, show a progress component
@@ -137,6 +136,7 @@ class MainContract extends Component {
 			);
 		}
 
+        // To render the content of the header
 		let renderHeaderContent = () => (
 			<div className={[classes.root,"company-list__header"].join(" ")}>
 				<Grid container spacing={24}>
@@ -184,7 +184,6 @@ class MainContract extends Component {
 				<div className="main-contract__content">
 					<Query query={this.getContractsQuery} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
-							//if (networkStatus === 4) return <LinearProgress />;
 							if (this.state.filterText === '') {
 								if (loading) return <LinearProgress />;
 							}
@@ -198,7 +197,8 @@ class MainContract extends Component {
 
 									if (
 										_.Contract_Name.indexOf(this.state.filterText) > -1 ||
-										_.Contract_Name.toLocaleLowerCase().indexOf(this.state.filterText) > -1
+										_.Contract_Name.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
+										_.Contract_Name.toLocaleUpperCase().indexOf(this.state.filterText) > -1
 									) {
 										return true;
 									}

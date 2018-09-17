@@ -19,6 +19,7 @@ import 'ui-components/InputForm/index.css';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 
 const styles = (theme) => ({
 	wrapper: {
@@ -54,6 +55,7 @@ const styles = (theme) => ({
 		marginLeft: -12
 	}
 });
+
 class NewContract extends Component {
 	DEFAULT_STATE = {
 		Contract_NameValid: true,
@@ -84,7 +86,7 @@ class NewContract extends Component {
 			Id: '',
 			Id_Company: '',
 			Contract_Name: '',
-			Contrat_Owner: '',
+			Contrat_Owner: sessionStorage.getItem('FullName'),
 			contractTemplateId: 0,
 			contractExpiration: this.getNewDate(),
 			Id_Contract_Template: '',
@@ -294,6 +296,12 @@ class NewContract extends Component {
 		}
 	`;
 
+	getString=(value)=>{
+		if (value)	
+			return value.trim();
+		else
+			return ''
+	}
 	// To get the data by a specific contact using the ID
 	getContractData = (id) => {
 		this.setState({
@@ -311,11 +319,11 @@ class NewContract extends Component {
 			.then(({ data }) => {
 				this.setState(
 					{
-						Contract_Name: data.getcontracts[0].Contract_Name,
-						Contrat_Owner: data.getcontracts[0].Contrat_Owner,
+						Contract_Name:this.getString( data.getcontracts[0].Contract_Name),
+						Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
 						Id_Entity: data.getcontracts[0].Id_Entity,
 						Id_User_Signed: data.getcontracts[0].Id_User_Signed,
-						User_Signed_Title: data.getcontracts[0].User_Signed_Title.trim(),
+						User_Signed_Title: this.getString(data.getcontracts[0].User_Signed_Title),
 						Id_User_Billing_Contact: data.getcontracts[0].Id_User_Billing_Contact,
 						Signed_Date: data.getcontracts[0].Signed_Date,
 						Contract_Start_Date: data.getcontracts[0].Contract_Start_Date,
@@ -323,9 +331,9 @@ class NewContract extends Component {
 						Id_Contract_Template: data.getcontracts[0].Id_Contract_Template,
 						contractExpiration: data.getcontracts[0].Contract_Expiration_Date,
 						Owner_Expiration_Notification: data.getcontracts[0].Owner_Expiration_Notification,
-						Company_Signed: data.getcontracts[0].Company_Signed,
+						Company_Signed: this.getString(data.getcontracts[0].Company_Signed),
 						Company_Signed_Date: data.getcontracts[0].Company_Signed_Date,
-						Billing_Street: data.getcontracts[0].Billing_Street,
+						Billing_Street: this.getString(data.getcontracts[0].Billing_Street),
 						Billing_City: data.getcontracts[0].Billing_City,
 						Billing_State: data.getcontracts[0].Billing_State,
 						Billing_Country: data.getcontracts[0].Billing_Country,
@@ -334,7 +342,7 @@ class NewContract extends Component {
 						IsActive: data.getcontracts[0].IsActive,
 						Date_Created: data.getcontracts[0].Date_Created,
 						Date_Updated: data.getcontracts[0].Date_Updated,
-						CompanySignedName: data.getcontracts[0].CompanySignedName,
+						CompanySignedName: this.getString(data.getcontracts[0].CompanySignedName),
 						loaded: false
 					},
 					() => {
@@ -555,9 +563,9 @@ class NewContract extends Component {
 			})
 			.then(({ data }) => {
 				this.setState({
-					CompanySignedName: data.getcompanies[0].LegalName,
+					CompanySignedName:this.getString( data.getcompanies[0].LegalName),
 					CompanySignedNameValid: true,
-					Primary_Email: data.getcompanies[0].Primary_Email
+					Primary_Email: this.getString(data.getcompanies[0].Primary_Email)
 				});
 			})
 			.catch((error) => {
@@ -726,7 +734,6 @@ class NewContract extends Component {
 	}
 	/*Validations */
 	validateAllFields(fun) {
-		console.log('Id_Contract_Template', this.state.Id_Contract_Template);
 		let Contract_NameValid = this.state.Contract_Name.trim().length >= 5;
 		let Contrat_OwnerValid = this.state.Contrat_Owner.trim().length >= 5;
 		let Id_Contract_TemplateValid =
@@ -838,7 +845,7 @@ class NewContract extends Component {
 						<div className="contract-body-row">
 							<div className="contract-body-row__content">
 								<div className="contract-body-row__header">
-									<span className="contract-body__subtitle">Contact Information</span>
+									<span className="contract-body__subtitle">Contract Information</span>
 								</div>
 								<div className="contract-body-row__form">
 									<div className="card-form-body">
@@ -1126,7 +1133,7 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">Billing Name</span>
-											{console.log('Billing Name: ', this.state.Id_Entity)}
+
 											<ContactDialog
 												defaultValue=""
 												valueSelected={this.state.Id_User_Billing_Contact}
@@ -1213,7 +1220,7 @@ class NewContract extends Component {
 															/>
 														);
 													}
-													return <p>Nothing to display </p>;
+													return <SelectNothingToDisplay />
 												}}
 											</Query>
 										</div>

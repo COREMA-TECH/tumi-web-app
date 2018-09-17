@@ -117,6 +117,7 @@ class SimpleDialog extends React.Component {
 				Phone_Number
 				Department
 				Type
+				Title
 			}
 		}
 	`;
@@ -174,7 +175,7 @@ class SimpleDialog extends React.Component {
 													);
 													this.props.onId(item.Id);
 													this.props.updateEmailContact(item.Electronic_Address);
-													this.props.updateTypeContact(item.Type);
+													this.props.updateTypeContact(item.Title);
 												}}
 												key={item.Id}
 											>
@@ -256,8 +257,6 @@ class SimpleDialogDemo extends React.Component {
 	`;
 
 	getContactById = (id, idEntity) => {
-		console.log('getContactById - id ', id);
-		console.log('getContactById - idEntity: ', idEntity);
 		if (id !== null) {
 			this.props.client
 				.query({
