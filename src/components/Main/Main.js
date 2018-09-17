@@ -6,7 +6,11 @@ import Private from '../Private/Private';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 
 class Main extends Component {
+	LoginId = sessionStorage.getItem('LoginId');
 	render() {
+		if (!this.LoginId & window.location.pathname != "/login") {
+			window.location.href = '/login';
+		}
 		return (
 			<div>
 				<Route path="/login" component={Login} />

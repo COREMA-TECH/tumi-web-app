@@ -50,6 +50,7 @@ class CompanyCard extends React.Component {
 						</div>
 						<div className="card__footer">
 							<Button
+								disabled={true}
 								variant="contained"
 								color="primary"
 								className="card__button"
@@ -64,6 +65,8 @@ class CompanyCard extends React.Component {
 								<EditIcon />
 							</Button>
 							<Button
+								disabled={true}
+
 								variant="contained"
 								color="secondary"
 								className="card__button"

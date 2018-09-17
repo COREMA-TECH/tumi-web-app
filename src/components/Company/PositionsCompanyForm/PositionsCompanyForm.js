@@ -196,7 +196,7 @@ class PositionsCompanyForm extends React.Component {
 
 		this.state = {
 			data: [],
-			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
+			departments: [{ Id: 0, Code: 'Nothing', Description: 'Nothing' }],
 			shifts: ShiftsData,
 
 			idCompany: this.props.idCompany,
@@ -206,6 +206,16 @@ class PositionsCompanyForm extends React.Component {
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
+
+		this.Login = {
+			LoginId: sessionStorage.getItem('LoginId'),
+			IsAdmin: sessionStorage.getItem('IsAdmin'),
+			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+		}
+
 	}
 	focusTextInput() {
 		if (document.getElementById('position') != null) {
@@ -401,7 +411,7 @@ class PositionsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -697,6 +707,7 @@ class PositionsCompanyForm extends React.Component {
 		this.setState({ openModal: false });
 	};
 	render() {
+
 		const { loading, success } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
@@ -715,7 +726,9 @@ class PositionsCompanyForm extends React.Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 				<div className="position__header">
-					<button className="add-position" onClick={this.handleClickOpenModal}>
+					<button className="add-position" onClick={
+						this.handleClickOpenModal
+					} >
 						{' '}
 						Add Rates{' '}
 					</button>
@@ -732,8 +745,8 @@ class PositionsCompanyForm extends React.Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-								'Create Position/Rate'
-							)}
+									'Create Position/Rate'
+								)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 550, padding: '0px' }}>
@@ -811,22 +824,25 @@ class PositionsCompanyForm extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+												'Save Changes'
+											) : (
+												'Insert Record'
+											)
 									}
 								>
 									<div>
 										<Button
-											disabled={this.state.loading}
+											disabled={(this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? !this.Login.AllowEdit : !this.Login.AllowInsert)}
+											//disabled={this.state.loading}
 											//	disabled={!this.state.formValid}
 											variant="fab"
 											color="primary"
 											className={buttonClassname}
-											onClick={this.addPositionHandler}
+											onClick={
+												this.addPositionHandler
+											}
 										>
 											{success ? <CheckIcon /> : <SaveIcon />}
 										</Button>
@@ -867,30 +883,32 @@ class PositionsCompanyForm extends React.Component {
 						/>
 					</div>
 				</div>
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--back"
-							onClick={() => {
-								this.props.back();
-							}}
-						>
-							Back
+				{
+					this.props.showStepper ? (
+						<div className="advanced-tab-options">
+							<span
+								className="options-button options-button--back"
+								onClick={() => {
+									this.props.back();
+								}}
+							>
+								Back
 						</span>
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// When the user click Next button, open second tab
-								this.props.next();
-							}}
-						>
-							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
-						</span>
-					</div>
-				) : (
-					''
-				)}
-			</div>
+							<span
+								className="options-button options-button--next"
+								onClick={() => {
+									// When the user click Next button, open second tab
+									this.props.next();
+								}}
+							>
+								{this.props.valueTab < 3 ? 'Next' : 'Finish'}
+							</span>
+						</div>
+					) : (
+							''
+						)
+				}
+			</div >
 		);
 	}
 }

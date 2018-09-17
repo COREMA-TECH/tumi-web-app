@@ -155,6 +155,15 @@ class DepartmentsCompanyForm extends React.Component {
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
+
+		this.Login = {
+			LoginId: sessionStorage.getItem('LoginId'),
+			IsAdmin: sessionStorage.getItem('IsAdmin'),
+			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+		}
 	}
 	focusTextInput() {
 		if (document.getElementById('code') != null) {
@@ -251,7 +260,7 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid: this.state.codeValid && this.state.descriptionValid,
@@ -510,12 +519,12 @@ class DepartmentsCompanyForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 								}
 							>
 								<div>
@@ -524,7 +533,8 @@ class DepartmentsCompanyForm extends React.Component {
 											width: '35px',
 											height: '35px'
 										}}
-										disabled={this.state.loading}
+										disabled={(this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? !this.Login.AllowEdit : !this.Login.AllowInsert)}
+										//disabled={this.state.loading}
 										//	disabled={!this.state.formValid}
 										variant="fab"
 										color="primary"
@@ -534,12 +544,12 @@ class DepartmentsCompanyForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+													<SaveIcon />
+												) : (
+													<AddIcon />
+												)}
 									</Button>
 								</div>
 							</Tooltip>
@@ -600,8 +610,8 @@ class DepartmentsCompanyForm extends React.Component {
 						</span>
 					</div>
 				) : (
-					''
-				)}
+						''
+					)}
 			</div>
 		);
 	}

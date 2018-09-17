@@ -38,6 +38,17 @@ class Login extends Component {
 		query getvalid_users($Code_User: String, $Password: String) {
 			getvalid_users(Code_User: $Code_User, Password: $Password) {
 				Id
+				Code_User
+				Full_Name
+				Electronic_Address
+				Phone_Number
+				Id_Language
+				IsAdmin
+				AllowEdit
+				AllowDelete
+				AllowInsert
+				AllowExport
+				IsActive
 			}
 		}
 	`;
@@ -69,9 +80,27 @@ class Login extends Component {
 			})
 			.then((data) => {
 				if (data.data.getvalid_users.length == 1) {
-					window.location.href = '/home';
+					if (data.data.getvalid_users[0].IsActive == 0) {
+						sessionStorage.clear();
+						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
+					} else {
+						sessionStorage.setItem('LoginId', data.data.getvalid_users[0].Id);
+						sessionStorage.setItem('FullName', data.data.getvalid_users[0].Full_Name);
+
+						if (data.data.getvalid_users[0].IsAdmin == 1) { sessionStorage.setItem('IsAdmin', true); } else { sessionStorage.setItem('IsAdmin', false); }
+						if (data.data.getvalid_users[0].AllowEdit == 1) { sessionStorage.setItem('AllowEdit', true); } else { sessionStorage.setItem('AllowEdit', false); }
+						if (data.data.getvalid_users[0].AllowDelete == 1) { sessionStorage.setItem('AllowDelete', true); } else { sessionStorage.setItem('AllowDelete', false); }
+						if (data.data.getvalid_users[0].AllowInsert == 1) { sessionStorage.setItem('AllowInsert', true); } else { sessionStorage.setItem('AllowInsert', false); }
+						if (data.data.getvalid_users[0].AllowExport == 1) { sessionStorage.setItem('AllowExport', true); } else { sessionStorage.setItem('AllowExport', false); }
+
+						/*sessionStorage.setItem('AllowEdit', data.data.getvalid_users[0].AllowEdit);
+						sessionStorage.setItem('AllowDelete', data.data.getvalid_users[0].AllowDelete);
+						sessionStorage.setItem('AllowInsert', data.data.getvalid_users[0].AllowInsert);
+						sessionStorage.setItem('AllowExport', data.data.getvalid_users[0].AllowExport);*/
+						window.location.href = '/home';
+					}
 				} else {
-					console.log('entramos en al false');
+					sessionStorage.clear();
 					this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
 				}
 			})
@@ -82,6 +111,7 @@ class Login extends Component {
 
 	render(data) {
 		// When user is logged redirect to the private routes
+		sessionStorage.clear();
 		if (this.state.logged) {
 			return (
 				<Redirect
@@ -179,12 +209,12 @@ const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 			1 === 1 ? (
 				<Component {...props} />
 			) : (
-				<Redirect
-					to={{
-						pathname: '/login',
-						state: { from: props.location }
-					}}
-				/>
-			)}
+					<Redirect
+						to={{
+							pathname: '/login',
+							state: { from: props.location }
+						}}
+					/>
+				)}
 	/>
 );

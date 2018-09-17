@@ -22,6 +22,16 @@ class CompanyCard extends React.Component {
 		this.state = {
 			deleted: false
 		};
+
+		this.Login = {
+			LoginId: sessionStorage.getItem('LoginId'),
+			IsAdmin: sessionStorage.getItem('IsAdmin'),
+			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+		}
+
 	}
 
 	render() {
@@ -45,22 +55,26 @@ class CompanyCard extends React.Component {
 
 										return (
 											<DeleteIcon
+												//disable={!true}
+												disabled={(this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? !this.Login.AllowEdit : !this.Login.AllowInsert)}
+
 												className="delete-company-icon"
-												onClick={(event) => {
-													delbusinesscompanies({
-														variables: {
-															Id: this.props.idCompany,
-															IsActive: 0
-														}
-													});
+												onClick={
+													(event) => {
+														delbusinesscompanies({
+															variables: {
+																Id: this.props.idCompany,
+																IsActive: 0
+															}
+														});
 
-													this.setState({
-														deleted: true
-													});
-													console.log('Clicked delete');
+														this.setState({
+															deleted: true
+														});
+														console.log('Clicked delete');
 
-													event.stopPropagation();
-												}}
+														event.stopPropagation();
+													}}
 											/>
 										);
 									}}
