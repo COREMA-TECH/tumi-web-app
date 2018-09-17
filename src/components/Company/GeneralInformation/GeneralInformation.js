@@ -21,7 +21,43 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import 'ui-components/InputForm/index.css';
 import Slide from '@material-ui/core/Slide/Slide';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+const styles = (theme) => ({
+	wrapper: {
+		margin: theme.spacing.unit,
+		position: 'relative'
+	},
+	buttonSuccess: {
+		background: ' #3da2c7',
+		borderRadius: '5px',
+		padding: '.5em 1em',
 
+		fontWeight: '300',
+		fontFamily: 'Segoe UI',
+		fontSize: '1.1em',
+		color: '#fff',
+		textTransform: 'none',
+		//cursor: pointer;
+		margin: '2px',
+
+		//	backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			background: ' #3da2c7'
+		}
+	},
+
+	buttonProgress: {
+		//color: ,
+		position: 'absolute',
+		top: '50%',
+		left: '50%',
+		marginTop: -12,
+		marginLeft: -12
+	}
+});
 function Transition(props) {
 	return <Slide direction="up" {...props} />;
 }
@@ -340,75 +376,77 @@ class GeneralInformation extends Component {
 	`;
 
 	updateCompany = (companyId) => {
-		this.validateAllFields(() => {
-			if (!this.state.formValid) {
-				this.props.handleOpenSnackbar(
-					'warning',
-					'Error: Saving Information: You must fill all the required fields'
-				);
-				return true;
-			}
+		this.setState({ loadingUpdate: true }, () => {
+			this.validateAllFields(() => {
+				if (!this.state.formValid) {
+					this.props.handleOpenSnackbar(
+						'warning',
+						'Error: Saving Information: You must fill all the required fields'
+					);
+					return true;
+				}
 
-			//Create the mutation using apollo global client
-			this.props.client
-				.mutate({
-					// Pass the mutation structure
-					mutation: this.UPDATE_COMPANY,
-					variables: {
-						input: {
-							Id: companyId,
-							Code: `'${this.state.Code}'`,
-							Code01: `'${this.state.Code}'`,
-							Id_Contract: 1,
-							Id_Company: 1,
-							BusinessType: 1,
-							Location: `'${this.state.address}'`,
-							Location01: `'${this.state.optionalAddress}'`,
-							Name: `'${this.state.name}'`,
-							Description: `'${this.state.description}'`,
-							Start_Week: this.state.startWeek,
-							End_Week: this.state.endWeek,
-							Legal_Name: `'${this.state.legalName}'`,
-							Country: parseInt(this.state.country),
-							State: parseInt(this.state.state),
-							Rate: parseFloat(this.state.rate),
-							Zipcode: parseInt(this.state.zipCode),
-							Fax: `'${this.state.fax}'`,
-							Primary_Email: `'${this.state.legalName}'`,
-							Phone_Number: `'${this.state.phoneNumber}'`,
-							Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-							City: parseInt(this.state.city),
-							Id_Parent: 1,
-							IsActive: parseInt(this.state.active),
-							User_Created: 1,
-							User_Updated: 1,
-							Date_Created: "'2018-08-14'",
-							Date_Updated: "'2018-08-14'",
-							ImageURL: `'${this.state.avatar}'`,
-							Start_Date: `'${this.state.startDate}'`,
-							Contract_URL: `'${this.state.contractURL}'`,
-							Insurace_URL: `'${this.state.insuranceURL}'`,
-							Other_URL: `'${this.state.otherURL}'`,
-							Other01_URL: `'${this.state.other01URL}'`,
-							Suite: parseInt(this.state.suite),
-							Contract_Status: "'C'"
+				//Create the mutation using apollo global client
+				this.props.client
+					.mutate({
+						// Pass the mutation structure
+						mutation: this.UPDATE_COMPANY,
+						variables: {
+							input: {
+								Id: companyId,
+								Code: `'${this.state.Code}'`,
+								Code01: `'${this.state.Code}'`,
+								Id_Contract: 1,
+								Id_Company: 1,
+								BusinessType: 1,
+								Location: `'${this.state.address}'`,
+								Location01: `'${this.state.optionalAddress}'`,
+								Name: `'${this.state.name}'`,
+								Description: `'${this.state.description}'`,
+								Start_Week: this.state.startWeek,
+								End_Week: this.state.endWeek,
+								Legal_Name: `'${this.state.legalName}'`,
+								Country: parseInt(this.state.country),
+								State: parseInt(this.state.state),
+								Rate: parseFloat(this.state.rate),
+								Zipcode: parseInt(this.state.zipCode),
+								Fax: `'${this.state.fax}'`,
+								Primary_Email: `'${this.state.legalName}'`,
+								Phone_Number: `'${this.state.phoneNumber}'`,
+								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+								City: parseInt(this.state.city),
+								Id_Parent: 1,
+								IsActive: parseInt(this.state.active),
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-08-14'",
+								Date_Updated: "'2018-08-14'",
+								ImageURL: `'${this.state.avatar}'`,
+								Start_Date: `'${this.state.startDate}'`,
+								Contract_URL: `'${this.state.contractURL}'`,
+								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Other_URL: `'${this.state.otherURL}'`,
+								Other01_URL: `'${this.state.other01URL}'`,
+								Suite: parseInt(this.state.suite),
+								Contract_Status: "'C'"
+							}
 						}
-					}
-				})
-				.then((data) => {
-					this.props.handleOpenSnackbar('success', 'General Information Updated!');
-					// When the user click Next button, open second tab
-					this.props.toggleStepper();
-					this.props.next();
-				})
-				.catch((error) => {
-					console.log('Error: Updating General Information: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
-					this.setState({
-						success: false,
-						loading: false
+					})
+					.then((data) => {
+						this.setState({ loadingUpdate: false });
+						this.props.handleOpenSnackbar('success', 'General Information Updated!');
+						// When the user click Next button, open second tab
+						this.props.toggleStepper();
+						this.props.next();
+					})
+					.catch((error) => {
+						console.log('Error: Updating General Information: ', error);
+						this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
+						this.setState({
+							loadingUpdate: false
+						});
 					});
-				});
+			});
 		});
 	};
 	/**********************************************************
@@ -613,7 +651,8 @@ class GeneralInformation extends Component {
 			contractURL: '',
 			insuranceURL: '',
 			otherURL: '',
-			other01URL: ''
+			other01URL: '',
+			loadingUpdate: false
 		};
 	}
 
@@ -1193,20 +1232,20 @@ class GeneralInformation extends Component {
 				</div>
 				{this.props.showStepper ? (
 					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// Then make request mutation to create OR update the company with general information
-								if (window.location.pathname === '/Company/add') {
-									this.insertCompany();
-								} else if (window.location.pathname === '/home/company/edit') {
-									//Update Company with: this.props.idCompany [ company id received by props]
+						<div className={classes.wrapper}>
+							<Button
+								className={classes.buttonSuccess}
+								onClick={() => {
 									this.updateCompany(this.props.idCompany);
-								}
-							}}
-						>
-							Save
-						</span>
+								}}
+								disabled={this.state.loadingUpdate}
+							>
+								Save
+							</Button>
+							{this.state.loadingUpdate && (
+								<CircularProgress size={24} className={classes.buttonProgress} />
+							)}
+						</div>
 					</div>
 				) : (
 					''
@@ -1258,4 +1297,4 @@ GeneralInformation.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withApollo(GeneralInformation);
+export default withStyles(styles)(withApollo(GeneralInformation)) ;

@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
+import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -569,7 +569,7 @@ class GeneralInfoProperty extends Component {
 											/>
 										);
 									}
-									return <SelectNothingToDisplay/>;
+									return <SelectNothingToDisplay />;
 								}}
 							</Query>
 						</div>
@@ -594,7 +594,7 @@ class GeneralInfoProperty extends Component {
 											/>
 										);
 									}
-                                    return <SelectNothingToDisplay/>;
+									return <SelectNothingToDisplay />;
 								}}
 							</Query>
 						</div>
@@ -621,6 +621,8 @@ class GeneralInfoProperty extends Component {
 								value={this.state.phoneNumber}
 								className={this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'}
 								onChange={(e) => {
+									console.log('Changed');
+									console.log('Evento', e.target.value);
 									this.updateInput(e.target.value, 'phoneNumber');
 								}}
 								placeholder="+(999) 999-9999"
