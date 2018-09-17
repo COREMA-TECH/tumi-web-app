@@ -54,6 +54,7 @@ const styles = (theme) => ({
 		marginLeft: -12
 	}
 });
+
 class NewContract extends Component {
 	DEFAULT_STATE = {
 		Contract_NameValid: true,

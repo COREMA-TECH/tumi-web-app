@@ -4,8 +4,8 @@ import InputForm from 'ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import TabsInDialog from '../TabsInDialog/TabsInDialog';
+import PropTypes from 'prop-types';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import InputFile from 'ui-components/InputFile/InputFile';
 import { gql } from 'apollo-boost';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -14,7 +14,17 @@ import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import FileUpload from 'ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
 import 'ui-components/InputForm/index.css';
+import Slide from '@material-ui/core/Slide/Slide';
+
+function Transition(props) {
+	return <Slide direction="up" {...props} />;
+}
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
@@ -865,6 +875,8 @@ class GeneralInformation extends Component {
      * @returns {XML} component
      */
 	render() {
+		const { classes } = this.props;
+
 		/**
          * If the data is ready render the component
          */
@@ -1208,7 +1220,16 @@ class GeneralInformation extends Component {
 					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-
+					<AppBar style={{ background: '#0092BD' }}>
+						<Toolbar>
+							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+								<CloseIcon />
+							</IconButton>
+							<Typography variant="title" color="inherit">
+								Management Company
+							</Typography>
+						</Toolbar>
+					</AppBar>
 					<DialogContent>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
@@ -1232,5 +1253,9 @@ class GeneralInformation extends Component {
 		);
 	}
 }
+
+GeneralInformation.propTypes = {
+	classes: PropTypes.object.isRequired
+};
 
 export default withApollo(GeneralInformation);
