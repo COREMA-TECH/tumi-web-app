@@ -9,6 +9,8 @@ import { Query } from 'react-apollo';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
+import ErrorMessageComponent from "../../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -153,7 +155,6 @@ class MainContract extends Component {
 								placeholder="Search contract"
 								className="input-search-contract"
 							/>
-							<button className="button-search-contract">Search</button>
 						</div>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -188,7 +189,12 @@ class MainContract extends Component {
 								if (loading) return <LinearProgress />;
 							}
 
-							if (error) return <p>Error </p>;
+                            if (error) return (
+                                <ErrorMessageComponent
+                                    url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
+                                    message="Error loading contracts"
+                                />
+                            );
 							if (data.getcontracts != null && data.getcontracts.length > 0) {
 								let dataContract = data.getcontracts.filter((_, i) => {
 									if (this.state.filterText === '') {
