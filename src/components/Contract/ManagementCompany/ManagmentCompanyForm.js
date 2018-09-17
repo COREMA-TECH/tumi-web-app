@@ -55,6 +55,7 @@ class GeneralInfoProperty extends Component {
 		cityValid: true,
 		zipCodeValid: true,
 		phoneNumberValid: true,
+		faxValid: true,
 		formValid: true
 	};
 
@@ -406,6 +407,8 @@ class GeneralInfoProperty extends Component {
 				.replace('+', '')
 				.replace('(', '')
 				.replace(')', '').length == 10;
+		let fax = this.state.fax.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+		let faxValid = fax.length == 10 || fax.length == 0;
 
 		this.setState(
 			{
@@ -414,7 +417,8 @@ class GeneralInfoProperty extends Component {
 				zipCodeValid,
 				stateValid,
 				cityValid,
-				phoneNumberValid
+				phoneNumberValid,
+				faxValid
 			},
 			() => {
 				this.validateForm(fun);
@@ -431,7 +435,7 @@ class GeneralInfoProperty extends Component {
 
 		let cityValid = this.state.cityValid;
 		let phoneNumberValid = this.state.phoneNumberValid;
-
+		let faxValid = this.state.faxValid;
 		switch (fieldName) {
 			case 'name':
 				nameValid = value.trim().length >= 5;
@@ -459,6 +463,10 @@ class GeneralInfoProperty extends Component {
 					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 						.length == 10;
 				break;
+			case 'fax':
+				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+				faxValid = fax.length == 10 || fax.length == 0;
+				break;
 			default:
 				break;
 		}
@@ -469,7 +477,8 @@ class GeneralInfoProperty extends Component {
 				zipCodeValid,
 				stateValid,
 				cityValid,
-				phoneNumberValid
+				phoneNumberValid,
+				faxValid
 			},
 			this.validateForm
 		);
@@ -484,7 +493,8 @@ class GeneralInfoProperty extends Component {
 					this.state.zipCodeValid &&
 					this.state.stateValid &&
 					this.state.cityValid &&
-					this.state.phoneNumberValid
+					this.state.phoneNumberValid &&
+					this.state.faxValid
 			},
 			func
 		);
@@ -618,14 +628,17 @@ class GeneralInfoProperty extends Component {
 						</div>
 						<div className="card-form-row">
 							<span className="input-label primary">Fax Number</span>
-
-							<InputForm
-								type="number"
+							<InputMask
+								id="fax"
+								name="fax"
+								mask="+(999) 999-9999"
+								maskChar=" "
 								value={this.state.fax}
-								change={(text) => {
-									this.updateInput(text, 'fax');
+								className={this.state.faxValid ? 'input-form' : 'input-form _invalid'}
+								onChange={(e) => {
+									this.updateInput(e.target.value, 'fax');
 								}}
-								maxLength="15"
+								placeholder="+(999) 999-9999"
 							/>
 						</div>
 						<br />
