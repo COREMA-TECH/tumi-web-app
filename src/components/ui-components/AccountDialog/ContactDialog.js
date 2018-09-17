@@ -22,7 +22,7 @@ import Typography from '@material-ui/core/Typography/Typography';
 import Button from '@material-ui/core/es/Button/Button';
 import AppBar from '@material-ui/core/AppBar/AppBar';
 
-const emails = [ 'username@gmail.com', 'user02@gmail.com' ];
+const emails = ['username@gmail.com', 'user02@gmail.com'];
 const styles = {
 	avatar: {
 		backgroundColor: blue[100],
@@ -117,6 +117,7 @@ class SimpleDialog extends React.Component {
 				Phone_Number
 				Department
 				Type
+				Title
 			}
 		}
 	`;
@@ -169,12 +170,12 @@ class SimpleDialog extends React.Component {
 												onClick={() => {
 													this.handleListItemClick(
 														(item.First_Name ? item.First_Name.trim() : '') +
-															' ' +
-															(item.Last_Name ? item.Last_Name.trim() : '')
+														' ' +
+														(item.Last_Name ? item.Last_Name.trim() : '')
 													);
 													this.props.onId(item.Id);
 													this.props.updateEmailContact(item.Electronic_Address);
-													this.props.updateTypeContact(item.Type);
+													this.props.updateTypeContact(item.Title);
 												}}
 												key={item.Id}
 											>
