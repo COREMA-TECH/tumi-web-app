@@ -42,7 +42,7 @@ class FullScreenDialog extends React.Component {
 	render() {
 		const { classes } = this.props;
 		return (
-			<div>
+			<div className="management-company-container">
 				<span className="add-management-company" onClick={this.handleClickOpen}>
 					New Company
 				</span>
