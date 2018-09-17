@@ -24,9 +24,14 @@ const withGlobalContent = (WrappedComponent) => {
 			});
 		};
 
+		closeMenu = (event) => {
+			document.getElementById("MenuMobile-callback").checked = false; 
+		};
+
 		customProps = {
 			handleCloseSnackbar: this.handleCloseSnackbar,
-			handleOpenSnackbar: this.handleOpenSnackbar
+			handleOpenSnackbar: this.handleOpenSnackbar,
+			handleCloseMenu: this.closeMenu
 		};
 
 		render() {
