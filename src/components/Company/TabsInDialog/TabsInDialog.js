@@ -63,9 +63,11 @@ const styles = (theme) => ({
 });
 
 class CustomizedTabs extends Component {
-	state = {
-		value: 0
-	};
+    state = {
+        value: 0,
+        activeTab: false
+    };
+
 
 	handleChange = (event, value) => {
 		this.setState({ value });

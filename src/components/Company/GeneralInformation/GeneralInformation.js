@@ -486,6 +486,7 @@ class GeneralInformation extends Component {
 				});
 			});
 	};
+
 	loadStates = () => {
 		this.setState({
 			loadingStates: true
