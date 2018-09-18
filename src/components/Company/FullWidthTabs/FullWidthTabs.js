@@ -154,6 +154,7 @@ class CustomizedTabs extends React.Component {
 						valueTab={this.state.value}
 						showStepper={this.state.showStepper}
 						toggleStepper={this.toggleStepper}
+						showBillRate={true}
 					/>
 				);
 		}

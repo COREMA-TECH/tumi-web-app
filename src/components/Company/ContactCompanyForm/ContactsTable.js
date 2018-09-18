@@ -201,7 +201,7 @@ class ContactsTable extends React.Component {
 							<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
-							<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>
+							{/*<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>*/}
 							<CustomTableCell className={classes.th}>Email</CustomTableCell>
 							<CustomTableCell className={classes.th}>Phone Number</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
@@ -288,7 +288,7 @@ class ContactsTable extends React.Component {
 											))}
 										</Select>
 									</CustomTableCell>
-									<CustomTableCell>
+									{/*<CustomTableCell>
 										<Select
 											id="supervisor"
 											name="supervisor"
@@ -306,7 +306,8 @@ class ContactsTable extends React.Component {
 												</MenuItem>
 											))}
 										</Select>
-									</CustomTableCell>
+										</CustomTableCell>*/}
+
 									<CustomTableCell>{row.email}</CustomTableCell>
 									<CustomTableCell>{row.number}</CustomTableCell>
 									<CustomTableCell>

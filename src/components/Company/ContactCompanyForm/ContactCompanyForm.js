@@ -186,7 +186,7 @@ class ContactcontactForm extends React.Component {
 		email: '',
 		number: '',
 		title: '',
-		idSupervisor: '',
+		idSupervisor: 0,
 		idDepartment: 0,
 		type: '',
 
@@ -989,7 +989,7 @@ class ContactcontactForm extends React.Component {
 										value={this.state.idDepartment}
 									/>
 								</div>
-
+								{/*
 								<div className="card-form-row">
 									<span className="input-label primary">Supervisor</span>
 									<SelectForm
@@ -999,7 +999,7 @@ class ContactcontactForm extends React.Component {
 										value={this.state.idSupervisor}
 										error={!this.state.idSupervisorValid}
 									/>
-								</div>
+</div>*/}
 								<div className="card-form-row">
 									<span className="input-label primary">Email</span>
 									<InputForm

@@ -248,7 +248,9 @@ class PositionsTable extends React.Component {
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
-							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+							{this.props.showBillRate && (
+								<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+							)}
 							<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
 							<CustomTableCell padding="none" className={classes.th}>
 								Shift
@@ -327,18 +329,20 @@ class PositionsTable extends React.Component {
 											}}
 										/>
 									</CustomTableCell>
-									<CustomTableCell style={{ width: '180px' }}>
-										<TextField
-											className={classes.formControl}
-											value={row.Bill_Rate}
-											id="billrate"
-											readOnly
-											InputProps={{
-												inputComponent: NumberFormatCustom,
-												disableUnderline: true
-											}}
-										/>
-									</CustomTableCell>
+									{this.props.showBillRate && (
+										<CustomTableCell style={{ width: '180px' }}>
+											<TextField
+												className={classes.formControl}
+												value={row.Bill_Rate}
+												id="billrate"
+												readOnly
+												InputProps={{
+													inputComponent: NumberFormatCustom,
+													disableUnderline: true
+												}}
+											/>
+										</CustomTableCell>
+									)}
 									<CustomTableCell padding="none" style={{ width: '100px' }}>
 										<Select
 											id="shift"
