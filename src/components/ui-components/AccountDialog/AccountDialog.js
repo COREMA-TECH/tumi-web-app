@@ -6,7 +6,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import blue from '@material-ui/core/colors/blue';
 import Query from 'react-apollo/Query';
@@ -18,12 +17,26 @@ import ManagementCompanyDialog from '../../Contract/ManagementCompany/Management
 
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import CircularProgress from "../../material-ui/CircularProgress";
+import DeleteIcon from '@material-ui/icons/Delete';
+import Mutation from "react-apollo/Mutation";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import Typography from "@material-ui/core/Typography/Typography";
+import Button from "@material-ui/core/es/Button/Button";
+import AppBar from "@material-ui/core/AppBar/AppBar";
+import IconButton from "@material-ui/core/IconButton/IconButton";
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
 const styles = {
     avatar: {
         backgroundColor: blue[100],
         color: blue[600]
+    },
+    appBar: {
+        position: 'relative',
+        background: '#3DA2C7'
+    },
+    flex: {
+        flex: 1
     }
 };
 
@@ -131,6 +144,15 @@ class SimpleDialog extends Component {
 		}
 	`;
 
+    deleteCompanyMutation = gql`
+        mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
+            delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
+                Code
+                Name
+            }
+        }
+    `;
+
     getCompanies = () => {
         this.props.client
             .query({
@@ -154,9 +176,19 @@ class SimpleDialog extends Component {
         const {classes, onClose, selectedValue, ...other} = this.props;
 
         return (
-            <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
-                <DialogTitle id="simple-dialog-title">Select a Management Company</DialogTitle>
-
+            <Dialog
+                fullScreen
+                onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+                <AppBar className={classes.appBar}>
+                    <Toolbar>
+                        <Typography variant="title" color="inherit" className={classes.flex}>
+                            Select a Management Company
+                        </Typography>
+                        <Button color="inherit" onClick={this.handleClose}>
+                            Cancel
+                        </Button>
+                    </Toolbar>
+                </AppBar>
                 <DialogContent>
                     <List component="nav">
                         <Query query={this.getCompaniesQuery} pollInterval={500}>
@@ -182,6 +214,30 @@ class SimpleDialog extends Component {
                                                     </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText primary={item.Name}/>
+                                                <Mutation mutation={this.deleteCompanyMutation}>
+                                                    {(delbusinesscompanies, {loading, error}) => {
+                                                        if (loading) return <CircularProgress/>;
+
+                                                        return (
+                                                            <IconButton
+                                                                disabled={this.props.loading}
+                                                                onClick={
+                                                                    (event) => {
+                                                                        delbusinesscompanies({
+                                                                            variables: {
+                                                                                Id: item.Id,
+                                                                                IsActive: 0
+                                                                            }
+                                                                        });
+
+                                                                        event.stopPropagation();
+                                                                    }}
+                                                            >
+                                                                <DeleteIcon color="primary"/>
+                                                            </IconButton>
+                                                        );
+                                                    }}
+                                                </Mutation>
                                             </ListItem>
                                         );
                                     });
