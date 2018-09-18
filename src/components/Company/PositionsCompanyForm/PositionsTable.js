@@ -232,12 +232,7 @@ class PositionsTable extends React.Component {
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 		const { textmask, numberformat } = this.state;
 		if (items.length == 0) {
-			return (
-				<NothingToDisplay
-					url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
-					message="Nothing to display!"
-				/>
-			);
+			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" />;
 		}
 		return (
 			<Paper className={classes.root}>
