@@ -44,7 +44,7 @@ class FullScreenDialog extends React.Component {
 		return (
 			<div>
 				<span className="add-management-contact" onClick={this.handleClickOpen}>
-					<span>New Contact</span>
+					<span>Manage Contacts</span>
 				</span>
 
 				<Dialog fullScreen open={this.state.open} onClose={this.handleClose} TransitionComponent={Transition}>
