@@ -6,7 +6,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import blue from '@material-ui/core/colors/blue';
 import Query from 'react-apollo/Query';
@@ -25,8 +24,8 @@ import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 import Typography from "@material-ui/core/Typography/Typography";
 import Button from "@material-ui/core/es/Button/Button";
 import AppBar from "@material-ui/core/AppBar/AppBar";
+import IconButton from "@material-ui/core/IconButton/IconButton";
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
 const styles = {
     avatar: {
         backgroundColor: blue[100],
@@ -220,9 +219,8 @@ class SimpleDialog extends Component {
                                                         if (loading) return <CircularProgress/>;
 
                                                         return (
-                                                            <DeleteIcon
-                                                                style={{color: '#000'}}
-                                                                className="delete-company-icon"
+                                                            <IconButton
+                                                                disabled={this.props.loading}
                                                                 onClick={
                                                                     (event) => {
                                                                         delbusinesscompanies({
@@ -234,7 +232,9 @@ class SimpleDialog extends Component {
 
                                                                         event.stopPropagation();
                                                                     }}
-                                                            />
+                                                            >
+                                                                <DeleteIcon color="primary"/>
+                                                            </IconButton>
                                                         );
                                                     }}
                                                 </Mutation>
