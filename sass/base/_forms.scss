@@ -17,19 +17,16 @@
 }
 
 .input-search-contract {
-    border-radius: 5px 0 0 5px !important;
-    border-right: 0 !important;
+    border-radius: 0px 5px 5px 0 !important;
 }
 
 .search-container {
     display: flex;
     width: 100%;
     .icon {
-        background: transparent;
-        border-radius: 0 5px 5px 0;
-        border: $gray solid 1px;
-        border-left: 0;
-        color: $text-color;
+        background: $brand-primary;
+        border-radius: 5px 0 0 5px;
+        color: white;
         min-width: 50px;
         padding: 10px;
         text-align: center;

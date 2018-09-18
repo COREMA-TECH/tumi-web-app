@@ -195,8 +195,7 @@ p {
   width: 75%; }
 
 .input-search-contract {
-  border-radius: 5px 0 0 5px !important;
-  border-right: 0 !important; }
+  border-radius: 0px 5px 5px 0 !important; }
 
 .search-container {
   display: -webkit-box;
@@ -204,11 +203,9 @@ p {
   display: flex;
   width: 100%; }
   .search-container .icon {
-    background: transparent;
-    border-radius: 0 5px 5px 0;
-    border: #dddddd solid 1px;
-    border-left: 0;
-    color: #7e7e7e;
+    background: #3ca2c8;
+    border-radius: 5px 0 0 5px;
+    color: white;
     min-width: 50px;
     padding: 10px;
     text-align: center; }
