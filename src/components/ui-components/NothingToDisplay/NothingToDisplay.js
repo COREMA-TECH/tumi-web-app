@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 
 class NothingToDisplay extends Component {
-    render() {
-        return (
-            <div className="nothing-container">
-                <span className="nothing-text">{this.props.message}</span>
-                <img className="nothing-image" src={this.props.url} alt=""/>
-            </div>
-        );
-    }
+	render() {
+		return (
+			<div className="error-container">
+				<h1 className={[ this.props.type, 'Error-title' ].join(' ')}>{this.props.title}</h1>
+				<span className="Error-text">{this.props.message}</span>
+			</div>
+		);
+	}
 }
 
 export default NothingToDisplay;
