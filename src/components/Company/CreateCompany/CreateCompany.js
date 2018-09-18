@@ -7,7 +7,9 @@ class CreateCompany extends Component {
 		super(props);
 	}
 
-	componentWillMount() {}
+	componentWillMount() {
+
+	}
 
 	checkId() {
 		let id;

@@ -79,7 +79,9 @@ class ImageUpload extends Component {
 
 		return (
 			<div className="upload-image">
-				<img className="avatar-uploaded" src={this.state.fileURL} alt="Company Avatar" />
+				<div className="avatar-wrapper">
+					<img className="avatar-uploaded" src={this.state.fileURL} alt="Company Avatar" />
+				</div>
 				<br />
 				<div className="upload-btn-wrapper">
 					<button className="btn">Select Avatar</button>

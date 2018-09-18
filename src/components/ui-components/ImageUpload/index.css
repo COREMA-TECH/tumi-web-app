@@ -7,12 +7,7 @@
 }
 
 .avatar-uploaded {
-	width: 12vh;
-	height: 12vh;
-	border-radius: 50%;
-	background: #ddd;
-
-	object-fit: contain;
+	
 }
 
 .upload-btn-wrapper {

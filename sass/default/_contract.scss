@@ -1,3 +1,21 @@
+.avatar {
+    &-uploaded {
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        position: absolute;
+        height: 100%;
+    }
+    &-wrapper {
+        border-radius: 90px;
+        height: 91px;
+        overflow: hidden;
+        position: relative;
+        width: 91px;
+    }
+}
+
 .main-contract {
     &__header {
         height: auto !important;
