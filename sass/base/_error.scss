@@ -1,4 +1,7 @@
 .Error {
+    &-success {
+        color: $success;
+    }
     &-danger {
         color: $red;
     }

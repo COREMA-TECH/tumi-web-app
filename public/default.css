@@ -209,6 +209,9 @@ p {
   .select-form-customized {
     width: 100% !important; } }
 
+.Error-success {
+  color: #3ca2c8; }
+
 .Error-danger {
   color: #f50057; }
 
