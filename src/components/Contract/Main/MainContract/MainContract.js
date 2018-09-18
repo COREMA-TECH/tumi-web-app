@@ -17,12 +17,12 @@ import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
 	root: {
-	  flexGrow: 1,
+		flexGrow: 1,
 	},
 	paper: {
-	  padding: theme.spacing.unit * 2,
-	  textAlign: 'center',
-	  color: theme.palette.text.secondary,
+		padding: theme.spacing.unit * 2,
+		textAlign: 'center',
+		color: theme.palette.text.secondary,
 	},
 });
 
@@ -138,9 +138,9 @@ class MainContract extends Component {
 			);
 		}
 
-        // To render the content of the header
+		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[classes.root,"company-list__header"].join(" ")}>
+			<div className={[classes.root, "company-list__header"].join(" ")}>
 				<Grid container spacing={24}>
 					<Grid item xs={12} sm={6}>
 						<div className="search-container">
@@ -155,7 +155,6 @@ class MainContract extends Component {
 								placeholder="Search contract"
 								className="input-search-contract"
 							/>
-							<button className="button-search-contract">Search</button>
 						</div>
 					</Grid>
 					<Grid item xs={12} sm={6}>
@@ -190,12 +189,12 @@ class MainContract extends Component {
 								if (loading) return <LinearProgress />;
 							}
 
-                            if (error) return (
-                                <ErrorMessageComponent
-                                    url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
-                                    message="Error loading contracts"
-                                />
-                            );
+							if (error) return (
+								<ErrorMessageComponent
+									url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
+									message="Error loading contracts"
+								/>
+							);
 							if (data.getcontracts != null && data.getcontracts.length > 0) {
 								let dataContract = data.getcontracts.filter((_, i) => {
 									if (this.state.filterText === '') {
