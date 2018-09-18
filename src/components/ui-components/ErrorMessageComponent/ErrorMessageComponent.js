@@ -5,8 +5,8 @@ class ErrorMessageComponent extends Component {
     render() {
         return (
             <div className="error-container">
-                <span className="error-text">{this.props.message}</span>
-                <img className="error-image" src={this.props.url} alt=""/>
+                <h1 className={[this.props.type,"Error-title"].join(" ")}>{this.props.title}</h1>
+                <span className="Error-text">{this.props.message}</span>
             </div>
         );
     }

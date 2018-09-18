@@ -1,0 +1,15 @@
+.Error {
+    &-danger {
+        color: $red;
+    }
+    &-title {
+        font-size: 10rem;
+        font-weight: 700;
+    }
+    &-text {
+        font-size: 1.5rem;
+        display: block;
+        width: 450px;
+        text-align: center;
+    }
+}

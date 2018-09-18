@@ -209,6 +209,19 @@ p {
   .select-form-customized {
     width: 100% !important; } }
 
+.Error-danger {
+  color: #f50057; }
+
+.Error-title {
+  font-size: 10rem;
+  font-weight: 700; }
+
+.Error-text {
+  font-size: 1.5rem;
+  display: block;
+  width: 450px;
+  text-align: center; }
+
 .Header-mobileMenu {
   color: #FFF;
   margin-left: 1rem;
