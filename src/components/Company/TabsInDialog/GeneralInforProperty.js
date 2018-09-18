@@ -7,6 +7,7 @@ import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import InputValid from "../../ui-components/InputWithValidation/InputValid";
+import InputForm from "../../ui-components/InputForm/InputForm";
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -284,15 +285,8 @@ class GeneralInfoProperty extends Component {
         }
     };
 
-    /**********************************************************
-     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
-     **********************************************************/
-
-    render() {
-        if (this.state.linearProgress) {
-            return <LinearProgress/>
-        }
-
+    // To set style in required input
+    changeStylesInCompletedInputs = () => {
         let invalidInputs = document.querySelectorAll("input[required]"),
             i;
 
@@ -301,240 +295,262 @@ class GeneralInfoProperty extends Component {
                 invalidInputs[i].classList.remove('invalid');
             }
         }
+    };
 
-        return (
+    /**********************************************************
+     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
+     **********************************************************/
+
+	render() {
+	    this.changeStylesInCompletedInputs();
+
+		return (
             <form onSubmit={this.handleFormSubmit} noValidate>
-                <div className="general-information__content">
-                    <div className="dialog-row">
-                        <div className="card-form-row">
-                            <span className="input-label primary">Property Name</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        name: text
-                                    })
-                                }}
-                                value={this.state.name}
-                                type="text"
-                                required
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Address</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        address: text
-                                    })
-                                }}
-                                value={this.state.address}
-                                type="text"
-                                required
-                            />
-
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Address 2</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        optionalAddress: text
-                                    })
-                                }}
-                                value={this.state.optionalAddress}
-                                type="text"
-                                required
-                            />
-                        </div>
-                    </div>
-                    <div className="dialog-row">
-                        <div className="card-form-row">
-                            <span className="input-label primary">Suite</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        suite: text
-                                    })
-                                }}
-                                value={this.state.suite}
-                                type="number"
-                                required
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">States</span>
-                            <Query query={this.getStatesQuery} variables={{parent: 6}}>
-                                {({loading, error, data, refetch, networkStatus}) => {
-                                    //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
-                                    if (error) return <p>Error </p>;
-                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        console.log('VALUE: ' + data.getcatalogitem);
-                                        return (
-                                            <SelectForm
-                                                data={data.getcatalogitem}
-                                                update={(value) => {
-                                                }}
-                                                value={this.state.IsActive}
-                                            />
-                                        );
-                                    }
-                                    return <p>Nothing to display </p>;
-                                }}
-                            </Query>
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">City</span>
-                            <Query query={this.getCitiesQuery} variables={{parent: 140}}>
-                                {({loading, error, data, refetch, networkStatus}) => {
-                                    //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
-                                    if (error) return <p>Error </p>;
-                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        console.log('Data of cities' + data.getcatalogitem);
-                                        return (
-                                            <SelectForm
-                                                data={data.getcatalogitem}
-                                                update={(value) => {
-                                                }}
-                                                value={this.state.IsActive}
-                                            />
-                                        );
-                                    }
-                                    return <p>Nothing to display </p>;
-                                }}
-                            </Query>
-                        </div>
-                    </div>
-                    <div className="dialog-row">
-                        <div className="card-form-row">
-                            <span className="input-label primary">Zip Code</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        zipCode: text
-                                    })
-                                }}
-                                value={this.state.zipCode}
-                                type="number"
-                                required
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Phone Number</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        phoneNumber: text
-                                    })
-                                }}
-                                value={this.state.phoneNumber}
-                                type="number"
-                                required
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Fax Week</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        fax: text
-                                    })
-                                }}
-                                value={this.state.fax}
-                                type="number"
-                                required
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="general-information__content">
-                    <div className="dialog-row">
-                        <div className="card-form-row">
-                            <span className="input-label primary">Property Code</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        Code: text
-                                    })
-                                }}
-                                value={this.state.Code}
-                                type="text"
-                                required
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Cost Center</span>
-                            <InputValid
-                                type="number"
-                                required
-                                value={this.state.Code01}
-                                change={(text) => {
-                                    this.setState({
-                                        Code01: text
-                                    });
-                                }}
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Contract Start Date</span>
-                            <InputDateForm
-                                value={this.state.startDate}
-                                change={(text) => {
-                                    this.setState({
-                                        startDate: text
-                                    });
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <div className="dialog-row">
-                        <div className="card-form-row">
-                            <span className="input-label primary">Room</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        room: text
-                                    })
-                                }}
-                                type="number"
-                                required
-                            />
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Week Start</span>
-                            <SelectForm data={days} update={(value) => {
-                            }} value={this.state.IsActive}/>
-                        </div>
-                        <div className="card-form-row">
-                            <span className="input-label primary">Contract</span>
-                            <InputValid
-                                change={(text) => {
-                                    this.setState({
-                                        legalName: text
-                                    })
-                                }}
-                                type="text"
-                                required/>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="contract-footer--bottom">
-                    {/*<div*/}
-                    {/*className="contract-next-button"*/}
-                    {/*onClick={() => {*/}
-                    {/*//this.insertCompany(this.props.idCompany);*/}
-                    {/*this.props.next();*/}
-                    {/*}}*/}
-                    {/*>*/}
-                    {/*Next*/}
-                    {/*</div>*/}
+				<div className="container">
+					<div className="row">
+						<div className="col-6">
+							<div className="card-wrapper">
+								<div class="card-form-header grey">General Information</div>
+								<div className="row">
+									<div className="col-6">
+										<span className="primary card-input-label">Property Name</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    name: text
+                                                })
+                                            }}
+                                            value={this.state.name}
+                                            type="text"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Address</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    address: text
+                                                })
+                                            }}
+                                            value={this.state.address}
+                                            type="text"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Address 2</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    optionalAddress: text
+                                                })
+                                            }}
+                                            value={this.state.optionalAddress}
+                                            type="text"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Suite</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    suite: text
+                                                })
+                                            }}
+                                            value={this.state.suite}
+                                            type="number"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">States</span>
+									</div>
+									<div className="col-6">
+										<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+											{({ loading, error, data, refetch, networkStatus }) => {
+												//if (networkStatus === 4) return <LinearProgress />;
+												if (loading) return <LinearProgress />;
+												if (error) return <p>Error </p>;
+												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+													console.log('VALUE: ' + data.getcatalogitem);
+													return (
+														<SelectForm
+															data={data.getcatalogitem}
+															update={(value) => {}}
+															value={this.state.IsActive}
+														/>
+													);
+												}
+												return <p>Nothing to display </p>;
+											}}
+										</Query>
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">City</span>
+									</div>
+									<div className="col-6">
+										<Query query={this.getCitiesQuery} variables={{ parent: 140 }}>
+											{({ loading, error, data, refetch, networkStatus }) => {
+												//if (networkStatus === 4) return <LinearProgress />;
+												if (loading) return <LinearProgress />;
+												if (error) return <p>Error </p>;
+												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+													console.log('Data of cities' + data.getcatalogitem);
+													return (
+														<SelectForm
+															data={data.getcatalogitem}
+															update={(value) => {}}
+															value={this.state.IsActive}
+														/>
+													);
+												}
+												return <p>Nothing to display </p>;
+											}}
+										</Query>
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Zip Code</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    zipCode: text
+                                                })
+                                            }}
+                                            value={this.state.zipCode}
+                                            type="number"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Phone Number</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    phoneNumber: text
+                                                })
+                                            }}
+                                            value={this.state.phoneNumber}
+                                            type="number"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Fax Week</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    fax: text
+                                                })
+                                            }}
+                                            value={this.state.fax}
+                                            type="number"
+                                            required
+                                        />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div className="col-6">
+							<div className="card-wrapper">
+								<div class="card-form-header yellow">Legal Docs</div>
+								<div className="row">
+									<div className="col-6">
+										<span className="primary card-input-label">Property Code</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    Code: text
+                                                })
+                                            }}
+                                            value={this.state.Code}
+                                            type="text"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Cost Center</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            type="number"
+                                            required
+                                            value={this.state.Code01}
+                                            change={(text) => {
+                                                this.setState({
+                                                    Code01: text
+                                                });
+                                            }}
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Contract Start Date</span>
+									</div>
+									<div className="col-6">
+										<InputDateForm
+											value={this.state.startDate}
+											change={(text) => {
+												this.setState({
+													startDate: text
+												});
+											}}
+										/>
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Room</span>
+									</div>
+									<div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    room: text
+                                                })
+                                            }}
+                                            type="number"
+                                            required
+                                        />
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Week Start</span>
+									</div>
+									<div className="col-6">
+										<SelectForm data={days} update={(value) => {}} value={this.state.IsActive} />	
+									</div>
+									<div className="col-6">
+										<span className="primary card-input-label">Contract</span>
+									</div>
+									<div className="col-6">
+										<InputForm />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div className="contract-footer--bottom">
                     <input type="submit" value="Next" className="contract-next-button"/>
-                </div>
-            </form>
-        );
-    }
+				</div>
+			</form>
+		);
+	}
 }
 
 GeneralInfoProperty.propTypes = {};
