@@ -195,7 +195,23 @@ p {
   width: 75%; }
 
 .input-search-contract {
-  border-radius: 5px 0 0 5px !important; }
+  border-radius: 5px 0 0 5px !important;
+  border-right: 0 !important; }
+
+.search-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%; }
+  .search-container .icon {
+    background: transparent;
+    border-radius: 0 5px 5px 0;
+    border: #dddddd solid 1px;
+    border-left: 0;
+    color: #7e7e7e;
+    min-width: 50px;
+    padding: 10px;
+    text-align: center; }
 
 .table-elements {
   margin: 0 auto !important; }
@@ -309,7 +325,7 @@ p {
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link:hover {
-      color: #b7d433;
+      color: #3ca2c8;
       text-decoration: none; }
   @media only screen and (min-width: 768px) {
     .MenuMobile-overlay {
