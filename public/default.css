@@ -183,6 +183,8 @@ p {
 
 @media only screen and (min-width: 576px) {
   .MuiModal-root-73 .select-form-customized {
+    max-width: 251.5px; }
+  .MuiModal-root-75 .select-form-customized {
     max-width: 251.5px; } }
 
 .input-form--file {
@@ -393,10 +395,19 @@ p {
   div[class*="MuiTabs-fixed-"] {
     overflow-x: scroll !important; } }
 
+.avatar-uploaded {
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  position: absolute;
+  height: 100%; }
+
 .avatar-wrapper {
   border-radius: 90px;
-  overflow: hidden;
   height: 91px;
+  overflow: hidden;
+  position: relative;
   width: 91px; }
 
 .main-contract__header {
