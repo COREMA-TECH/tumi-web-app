@@ -186,7 +186,7 @@ class ContactcontactForm extends React.Component {
 		email: '',
 		number: '',
 		title: '',
-		idSupervisor: '',
+		idSupervisor: 0,
 		idDepartment: 0,
 		type: '',
 
@@ -227,8 +227,8 @@ class ContactcontactForm extends React.Component {
 		this.state = {
 			data: [],
 			idCompany: this.props.idCompany,
-			titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
-			departments: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
+			titles: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
+			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
 			allSupervisors: [],
 			inputEnabled: true,
@@ -252,7 +252,7 @@ class ContactcontactForm extends React.Component {
 			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
 			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
 			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
-		}
+		};
 	}
 
 	focusTextInput() {
@@ -345,7 +345,7 @@ class ContactcontactForm extends React.Component {
 			this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 				.length == 10; //this.state.number.trim().length >= 2;
 		let titleValid = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
-		let typeValid = this.state.type !== null && this.state.type !== 0 && this.state.type !== '';
+		let typeValid = this.state.type !== null && this.state.type !== '';
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
 		let idSupervisorValid =
@@ -416,8 +416,8 @@ class ContactcontactForm extends React.Component {
 				titleHasValue = value !== null && value !== 0 && value !== '';
 				break;
 			case 'type':
-				typeValid = value !== null && value !== 0 && value !== '';
-				typeHasValue = value !== null && value !== 0 && value !== '';
+				typeValid = value !== null && value !== '';
+				typeHasValue = value !== null && value !== '';
 				break;
 			case 'idDepartment':
 				idDepartmentValid = value !== null && value !== 0 && value !== '';
@@ -455,7 +455,7 @@ class ContactcontactForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -923,22 +923,23 @@ class ContactcontactForm extends React.Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Contact'
 							) : (
-									'Create Contact'
-								)}
+								'Create Contact'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
 						<div className="">
 							<div className="card-form-body">
 								<div className="card-form-row">
-									<span className="input-label primary">Type</span>
+									<span className="input-label primary">Contact Type</span>
 
 									<SelectForm
 										id="type"
 										name="type"
 										data={this.state.contactTypes}
 										update={this.updateType}
-										showNone={false}
+										showNone={true}
+										noneName="Employee"
 										error={!this.state.typeValid}
 										value={this.state.type}
 									/>
@@ -988,7 +989,7 @@ class ContactcontactForm extends React.Component {
 										value={this.state.idDepartment}
 									/>
 								</div>
-
+								{/*
 								<div className="card-form-row">
 									<span className="input-label primary">Supervisor</span>
 									<SelectForm
@@ -998,7 +999,7 @@ class ContactcontactForm extends React.Component {
 										value={this.state.idSupervisor}
 										error={!this.state.idSupervisorValid}
 									/>
-								</div>
+</div>*/}
 								<div className="card-form-row">
 									<span className="input-label primary">Email</span>
 									<InputForm
@@ -1045,17 +1046,25 @@ class ContactcontactForm extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												'Save Changes'
-											) : (
-												'Insert Record'
-											)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 									}
 								>
 									<div>
 										<Button
-											disabled={(this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? !this.Login.AllowEdit : !this.Login.AllowInsert)}
+											disabled={
+												this.state.idToEdit != null &&
+												this.state.idToEdit != '' &&
+												this.state.idToEdit != 0 ? (
+													!this.Login.AllowEdit
+												) : (
+													!this.Login.AllowInsert
+												)
+											}
 											//disabled={this.state.loading}
 											//	disabled={!this.state.formValid}
 											variant="fab"
@@ -1124,8 +1133,8 @@ class ContactcontactForm extends React.Component {
 						</span>
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 			</div>
 		);
 	}
