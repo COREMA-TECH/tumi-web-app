@@ -873,7 +873,7 @@ class Catalogs extends React.Component {
 					<DialogContent style={{ width: 600 }}>
 						<div className="card-form-body">
 							<div className="card-form-row">
-								<span className="input-label primary">Contact</span>
+								<span className="input-label primary">* Contact</span>
 								<SelectForm
 									id="idContact"
 									name="idContact"
@@ -887,7 +887,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">User</span>
+								<span className="input-label primary">* User</span>
 								<InputForm
 									id="username"
 									name="username"
@@ -898,7 +898,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Email</span>
+								<span className="input-label primary">* Email</span>
 								<InputForm
 									id="email"
 									name="email"
@@ -909,7 +909,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Phone Number</span>
+								<span className="input-label primary">* Phone Number</span>
 								<InputMask
 									id="number"
 									name="number"
@@ -924,7 +924,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Rol</span>
+								<span className="input-label primary">* Rol</span>
 								<SelectForm
 									id="idRol"
 									name="idRol"
@@ -939,7 +939,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Language</span>
+								<span className="input-label primary">* Language</span>
 								<SelectForm
 									id="idRol"
 									name="idRol"
