@@ -1176,7 +1176,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
-								<span className="primary">Other 1</span>
+								<span className="primary" />
 								<FileUpload
 									updateURL={(url) => {
 										this.setState({
@@ -1187,7 +1187,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
-								<span className="primary">Other 2</span>
+								<span className="primary" />
 								<FileUpload
 									updateURL={(url) => {
 										this.setState({
@@ -1297,4 +1297,4 @@ GeneralInformation.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(GeneralInformation)) ;
+export default withStyles(styles)(withApollo(GeneralInformation));

@@ -54,7 +54,7 @@ class FullScreenDialog extends React.Component {
 								<CloseIcon />
 							</IconButton>
 							<Typography variant="title" color="inherit" className={classes.flex}>
-								Management Company/ Algo
+								Management Company
 							</Typography>
 							<Button color="inherit" onClick={this.handleClose}>
 								Finish
