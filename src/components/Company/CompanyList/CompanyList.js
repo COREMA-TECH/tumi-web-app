@@ -52,8 +52,9 @@ class CompanyList extends Component {
 					if (error)
 						return (
 							<ErrorMessageComponent
-								url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
-								message="Error loading companies, please refresh the page!"
+								title="Oops!"
+								message="Something went wrong. If you think this is a server error, please contact the admnistrator"
+								type="Error-danger"
 							/>
 						);
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {

@@ -518,7 +518,7 @@ class GeneralInfoProperty extends Component {
 						<br />
 						<br />
 						<div className="card-form-row">
-							<span className="input-label primary">Company Name</span>
+							<span className="input-label primary">* Company Name</span>
 							<InputForm
 								value={this.state.name}
 								change={(text) => {
@@ -529,7 +529,7 @@ class GeneralInfoProperty extends Component {
 							/>
 						</div>
 						<div className="card-form-row">
-							<span className="input-label primary">Address</span>
+							<span className="input-label primary">* Address</span>
 							<InputForm
 								value={this.state.address}
 								change={(text) => {
@@ -551,7 +551,7 @@ class GeneralInfoProperty extends Component {
 						</div>
 
 						<div className="card-form-row">
-							<span className="input-label primary">State</span>
+							<span className="input-label primary">* State</span>
 							<Query query={this.getStatesQuery} variables={{ parent: this.state.country }}>
 								{({ loading, error, data, refetch, networkStatus }) => {
 									//if (networkStatus === 4) return <LinearProgress />;
@@ -575,7 +575,7 @@ class GeneralInfoProperty extends Component {
 						</div>
 
 						<div className="card-form-row">
-							<span className="input-label primary">City</span>
+							<span className="input-label primary">* City</span>
 							<Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
 								{({ loading, error, data, refetch, networkStatus }) => {
 									//if (networkStatus === 4) return <LinearProgress />;
@@ -600,7 +600,7 @@ class GeneralInfoProperty extends Component {
 						</div>
 
 						<div className="card-form-row">
-							<span className="input-label primary">Zip Code</span>
+							<span className="input-label primary">* Zip Code</span>
 							<InputForm
 								value={this.state.zipCode}
 								change={(text) => {
@@ -612,7 +612,7 @@ class GeneralInfoProperty extends Component {
 							/>
 						</div>
 						<div className="card-form-row">
-							<span className="input-label primary">Phone Number</span>
+							<span className="input-label primary">* Phone Number</span>
 							<InputMask
 								id="number"
 								name="number"

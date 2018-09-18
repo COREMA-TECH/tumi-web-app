@@ -163,7 +163,7 @@ class DepartmentsCompanyForm extends React.Component {
 			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
 			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
 			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
-		}
+		};
 	}
 	focusTextInput() {
 		if (document.getElementById('code') != null) {
@@ -260,7 +260,7 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid: this.state.codeValid && this.state.descriptionValid,
@@ -490,7 +490,7 @@ class DepartmentsCompanyForm extends React.Component {
 				/>
 				<div className="department__header">
 					<div className="input-container">
-						<span className="input-label">Code</span>
+						<span className="input-label">* Code</span>
 
 						<InputForm
 							id="code"
@@ -502,7 +502,7 @@ class DepartmentsCompanyForm extends React.Component {
 						/>
 					</div>
 					<div className="input-container">
-						<span className="input-label">Description</span>
+						<span className="input-label">* Description</span>
 						<div className="input-form-description ">
 							<InputForm
 								id="description"
@@ -519,12 +519,12 @@ class DepartmentsCompanyForm extends React.Component {
 							<Tooltip
 								title={
 									this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Save Changes'
+									) : (
+										'Insert Record'
+									)
 								}
 							>
 								<div>
@@ -533,7 +533,15 @@ class DepartmentsCompanyForm extends React.Component {
 											width: '35px',
 											height: '35px'
 										}}
-										disabled={(this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? !this.Login.AllowEdit : !this.Login.AllowInsert)}
+										disabled={
+											this.state.idToEdit != null &&
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+												!this.Login.AllowEdit
+											) : (
+												!this.Login.AllowInsert
+											)
+										}
 										//disabled={this.state.loading}
 										//	disabled={!this.state.formValid}
 										variant="fab"
@@ -544,12 +552,12 @@ class DepartmentsCompanyForm extends React.Component {
 										{success ? (
 											<CheckIcon />
 										) : this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-													<SaveIcon />
-												) : (
-													<AddIcon />
-												)}
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											<SaveIcon />
+										) : (
+											<AddIcon />
+										)}
 									</Button>
 								</div>
 							</Tooltip>
@@ -610,8 +618,8 @@ class DepartmentsCompanyForm extends React.Component {
 						</span>
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 			</div>
 		);
 	}

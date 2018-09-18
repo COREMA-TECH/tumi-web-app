@@ -174,7 +174,6 @@ class GeneralInformation extends Component {
 
 							this.setState(
 								{
-									loading: false,
 									name: item.Name.trim(),
 									legalName: item.Legal_Name.trim(),
 									description: item.Description.trim(),
@@ -249,7 +248,8 @@ class GeneralInformation extends Component {
 							);
 
 							this.setState({
-								loadingCompanyProperties: false
+								loadingCompanyProperties: false,
+								loading: false
 							});
 						}
 					})
@@ -257,7 +257,8 @@ class GeneralInformation extends Component {
 						console.log('Error: Loading company properties: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Loading company properties: ' + error);
 						this.setState({
-							loadingCompanyProperties: false
+							loadingCompanyProperties: false,
+							loading: false
 						});
 					});
 			}
@@ -383,6 +384,7 @@ class GeneralInformation extends Component {
 						'warning',
 						'Error: Saving Information: You must fill all the required fields'
 					);
+					this.setState({ loadingUpdate: false });
 					return true;
 				}
 
@@ -486,8 +488,7 @@ class GeneralInformation extends Component {
 				});
 			});
 	};
-
-	loadStates = () => {
+	loadStates = (func = () => {}) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -499,17 +500,22 @@ class GeneralInformation extends Component {
 			})
 			.then((data) => {
 				if (data.data.getcatalogitem != null) {
-					this.setState({
-						states: data.data.getcatalogitem,
-						loadingStates: false
-					});
+					this.setState(
+						{
+							states: data.data.getcatalogitem,
+							loadingStates: false,
+							loading: false
+						},
+						func
+					);
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
 						'Error: Loading states: getcatalogitem not exists in query data'
 					);
 					this.setState({
-						loadingStates: false
+						loadingStates: false,
+						loading: false
 					});
 				}
 			})
@@ -517,11 +523,12 @@ class GeneralInformation extends Component {
 				console.log('Error: Loading states: ', error);
 				this.props.handleOpenSnackbar('error', 'Error: Loading states: ' + error);
 				this.setState({
-					loadingStates: false
+					loadingStates: false,
+					loading: false
 				});
 			});
 	};
-	loadCities = () => {
+	loadCities = (func = () => {}) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -533,10 +540,13 @@ class GeneralInformation extends Component {
 			})
 			.then((data) => {
 				if (data.data.getcatalogitem != null) {
-					this.setState({
-						cities: data.data.getcatalogitem,
-						loadingCities: false
-					});
+					this.setState(
+						{
+							cities: data.data.getcatalogitem,
+							loadingCities: false
+						},
+						func
+					);
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -930,7 +940,7 @@ class GeneralInformation extends Component {
 
 				<div className="general-information__header">
 					<div className="input-container">
-						<span className="input-label">Markup</span>
+						<span className="input-label">* Markup</span>
 						<InputForm
 							type="number"
 							value={this.state.rate}
@@ -943,7 +953,7 @@ class GeneralInformation extends Component {
 						/>
 					</div>
 					<div className="input-container">
-						<span className="input-label">Company Code</span>
+						<span className="input-label">* Company Code</span>
 						<InputForm
 							value={this.state.Code}
 							change={(text) => {
@@ -957,19 +967,29 @@ class GeneralInformation extends Component {
 				</div>
 				{window.location.pathname === '/home/company/edit' ? (
 					<div className="options-company">
-						<button
-							disabled={this.state.loading}
-							className="edit-company-button"
-							onClick={() => {
-								this.loadCompany(() => {
-									this.loadCities();
-									this.loadStates();
-									this.props.toggleStepper();
-								});
-							}}
-						>
-							{this.props.showStepper ? 'Cancelar' : 'Edit Company'}
-						</button>
+						{!this.props.showStepper && (
+							<button
+								disabled={
+									this.state.loading ||
+									this.state.loadingCities ||
+									this.state.loadingCountries ||
+									this.state.loadingStates ||
+									this.state.loadingCompanyProperties
+								}
+								className="edit-company-button"
+								onClick={() => {
+									this.loadCompany(() => {
+										this.loadCities(() => {
+											this.loadStates(() => {
+												this.props.toggleStepper();
+											});
+										});
+									});
+								}}
+							>
+								Edit Company
+							</button>
+						)}
 					</div>
 				) : (
 					''
@@ -979,7 +999,7 @@ class GeneralInformation extends Component {
 						<div className="card-form-header grey">General Information</div>
 						<div className="card-form-body">
 							<div className="card-form-row">
-								<span className="input-label primary">Company Name</span>
+								<span className="input-label primary">* Company Name</span>
 								<InputForm
 									value={this.state.name}
 									change={(text) => {
@@ -991,7 +1011,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Address</span>
+								<span className="input-label primary">* Address</span>
 								<InputForm
 									value={this.state.address}
 									change={(text) => {
@@ -1014,7 +1034,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Suite</span>
+								<span className="input-label primary">* Suite</span>
 								<InputForm
 									type="number"
 									value={this.state.suite}
@@ -1027,7 +1047,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Countries</span>
+								<span className="input-label primary">* Countries</span>
 
 								<SelectForm
 									name="country"
@@ -1041,7 +1061,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">State</span>
+								<span className="input-label primary">* State</span>
 								<SelectForm
 									name="state"
 									disabled={this.state.loadingStates}
@@ -1054,7 +1074,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">City</span>
+								<span className="input-label primary">* City</span>
 								<SelectForm
 									name="city"
 									disabled={this.state.loadingCities}
@@ -1067,7 +1087,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Zip Code</span>
+								<span className="input-label primary">* Zip Code</span>
 								<InputForm
 									value={this.state.zipCode}
 									change={(text) => {
@@ -1080,7 +1100,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Phone Number</span>
+								<span className="input-label primary">* Phone Number</span>
 								<InputMask
 									id="number"
 									name="number"
@@ -1117,7 +1137,7 @@ class GeneralInformation extends Component {
 						<div className="card-form-header yellow">Legal Docs</div>
 						<div className="card-form-body">
 							<div className="card-form-row">
-								<span className="input-label primary">Contract Start Date</span>
+								<span className="input-label primary">* Contract Start Date</span>
 								<InputDateForm
 									value={this.state.startDate}
 									change={(text) => {
@@ -1128,7 +1148,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Week Start</span>
+								<span className="input-label primary">* Week Start</span>
 								<SelectForm
 									name="startWeek"
 									data={days}
@@ -1141,7 +1161,7 @@ class GeneralInformation extends Component {
 							</div>
 
 							<div className="card-form-row">
-								<span className="input-label  primary">Week End</span>
+								<span className="input-label  primary">* Week End</span>
 								<SelectForm
 									name="endWeek"
 									data={days}
@@ -1247,6 +1267,38 @@ class GeneralInformation extends Component {
 								<CircularProgress size={24} className={classes.buttonProgress} />
 							)}
 						</div>
+						{this.props.showStepper && (
+							<div className={classes.wrapper}>
+								<Button
+									className={classes.buttonSuccess}
+									disabled={
+										this.state.loading ||
+										this.state.loadingCities ||
+										this.state.loadingCountries ||
+										this.state.loadingStates ||
+										this.state.loadingCompanyProperties
+									}
+									onClick={() => {
+										this.loadCompany(() => {
+											this.loadCities(() => {
+												this.loadStates(() => {
+													this.props.toggleStepper();
+												});
+											});
+										});
+									}}
+								>
+									Cancel
+								</Button>
+								{(this.state.loading ||
+									this.state.loadingCities ||
+									this.state.loadingCountries ||
+									this.state.loadingStates ||
+									this.state.loadingCompanyProperties) && (
+									<CircularProgress size={24} className={classes.buttonProgress} />
+								)}
+							</div>
+						)}
 					</div>
 				) : (
 					''

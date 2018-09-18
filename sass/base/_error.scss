@@ -1,0 +1,19 @@
+.Error {
+    &-success {
+        color: $success;
+    }
+    &-danger {
+        color: $red;
+    }
+    &-title {
+        font-size: 8rem;
+        font-weight: 700;
+    }
+    &-text {
+        color: $text-color;
+        display: block;
+        font-size: 1.5rem;
+        text-align: center;
+        width: 450px;
+    }
+}
