@@ -124,6 +124,9 @@ const styles = (theme) => ({
 	row: {
 		'&:nth-of-type(odd)': {
 			backgroundColor: theme.palette.background.default
+		},
+		'&:hover': {
+			cursor: 'pointer'
 		}
 	},
 	fab: {
@@ -193,7 +196,7 @@ class ContactsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th}>Type</CustomTableCell>
+							<CustomTableCell className={classes.th}>Contact Type</CustomTableCell>
 							<CustomTableCell className={classes.th}>First Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
@@ -207,14 +210,22 @@ class ContactsTable extends React.Component {
 					<TableBody>
 						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
-								<TableRow hover className={classes.row} key={uuidv4()}>
+								<TableRow
+									hover
+									className={classes.row}
+									key={uuidv4()}
+									onClick={() => {
+										return this.props.onEditHandler({ ...row });
+									}}
+								>
 									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										{' '}
 										<Tooltip title="Edit">
 											<div>
 												<IconButton
 													disabled={this.props.loading}
-													onClick={() => {
+													onClick={(e) => {
+														e.stopPropagation();
 														return this.props.onEditHandler({ ...row });
 													}}
 												>
@@ -228,7 +239,8 @@ class ContactsTable extends React.Component {
 											<div>
 												<IconButton
 													disabled={this.props.loading}
-													onClick={() => {
+													onClick={(e) => {
+														e.stopPropagation();
 														return this.props.onDeleteHandler(row.idSearch);
 													}}
 												>
@@ -246,6 +258,10 @@ class ContactsTable extends React.Component {
 											IconComponent="div"
 											disableUnderline={true}
 										>
+											<MenuItem key={0} value={0} name="Employee">
+												<em>Employee</em>
+											</MenuItem>
+
 											{this.props.types.map(({ Id, Name }) => (
 												<MenuItem key={Id} value={Id} name={Name}>
 													{Name}
