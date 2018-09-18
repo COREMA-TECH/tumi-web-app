@@ -46,7 +46,9 @@ class GeneralInfoProperty extends Component {
         active: 1,
         suite: '',
         linearProgress: false,
-        idProperty: null
+        idProperty: null,
+        validState: '',
+        validCity: ''
     };
 
 
@@ -277,6 +279,7 @@ class GeneralInfoProperty extends Component {
     handleFormSubmit = (event) => {
         event.preventDefault();
 
+        // To set error in inputs
         let invalidInputs = document.querySelectorAll("input[required]"), i, validated = true;
         for (i = 0; i < invalidInputs.length; ++i) {
             if (invalidInputs[i].value !== '') {
@@ -287,6 +290,23 @@ class GeneralInfoProperty extends Component {
 
                 validated = false;
             }
+        }
+
+        //To set errors in selects
+        if(this.state.city === 0) {
+            this.setState({
+                validCity: 'valid'
+            });
+
+            validated = false;
+        }
+
+        if(this.state.state === 0) {
+            this.setState({
+                validState: 'valid'
+            });
+
+            validated = false;
         }
 
         if (validated) {
@@ -316,6 +336,7 @@ class GeneralInfoProperty extends Component {
 
     render() {
         this.changeStylesInCompletedInputs();
+
 
         return (
             <form onSubmit={this.handleFormSubmit} noValidate>
@@ -401,6 +422,7 @@ class GeneralInfoProperty extends Component {
                                                             name="state"
                                                             value={this.state.state}
                                                             data={data.getcatalogitem}
+                                                            error={this.state.validState === '' ? false : true}
                                                             update={(value) => {
                                                                 this.setState({
                                                                     state: value
@@ -429,6 +451,7 @@ class GeneralInfoProperty extends Component {
                                                             name="city"
                                                             value={this.state.city}
                                                             data={data.getcatalogitem}
+                                                            error={this.state.validCity === '' ? false : true}
                                                             update={(value) => {
                                                                 this.setState({
                                                                     city: value
@@ -460,16 +483,6 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">Phone Number</span>
                                     </div>
                                     <div className="col-6">
-                                        {/*<InputValid*/}
-                                        {/*change={(text) => {*/}
-                                        {/*this.setState({*/}
-                                        {/*phoneNumber: text*/}
-                                        {/*})*/}
-                                        {/*}}*/}
-                                        {/*value={this.state.phoneNumber}*/}
-                                        {/*type="number"*/}
-                                        {/*required*/}
-                                        {/*/>*/}
                                         <InputMask
                                             id="number"
                                             name="number"
