@@ -545,7 +545,7 @@ class ExhibitContract extends Component {
 						</div>
 
 						<div className="contract-footer">
-							<div
+							{/*<div
 								className="contract-next-button"
 								onClick={() => {
 									// Insert Exhibits
@@ -553,7 +553,7 @@ class ExhibitContract extends Component {
 								}}
 							>
 								Save
-							</div>
+							</div>*/}
 							<div className="contract-next-button" onClick={this.handleClickOpenModal}>
 								Create Contract
 							</div>

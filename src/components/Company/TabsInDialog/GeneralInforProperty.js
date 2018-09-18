@@ -490,6 +490,7 @@ class GeneralInfoProperty extends Component {
 						className="contract-next-button"
 						onClick={() => {
 							this.insertCompany(this.props.idCompany);
+                            this.props.next();
 						}}
 					>
 						Next
@@ -497,45 +498,6 @@ class GeneralInfoProperty extends Component {
 				</div>
 			</div>
 		);
-		// return (
-		//     <Query query={this.getCompanyQuery} variables={{id: this.props.idCompany, Id_Parent: this.props.idCompany}}>
-		//         {({loading, error, data, refetch}) => {
-		//             if (loading) return <LinearProgress/>;
-		//             if (error) return <p>Error </p>;
-		//             if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-		//                 data.getbusinesscompanies.map((item) => {
-		//                     this.setState({
-		//                         loaded: true,
-		//                         name: item.Name.trim(),
-		//                         legalName: item.Legal_Name.trim(),
-		//                         description: item.Description.trim(),
-		//                         startWeek: item.Start_Week,
-		//                         endWeek: item.End_Week,
-		//                         address: item.Location.trim(),
-		//                         optionalAddress: item.Location01.trim(),
-		//
-		//                         country: item.Country,
-		//                         state: item.State,
-		//                         city: item.City,
-		//
-		//                         rate: item.Rate,
-		//                         email: item.Primary_Email.trim(),
-		//                         phoneNumber: item.Phone_Number.trim(),
-		//
-		//                         Code: item.Code.trim(),
-		//                         Code01: item.Code01.trim(),
-		//                         zipCode: item.Zipcode,
-		//                         fax: item.Fax,
-		//                         startDate: item.Start_Date.trim(),
-		//                         active: item.IsActive
-		//                     });
-		//                 });
-		//                 return true;
-		//             }
-		//             return <p>Nothing to display </p>;
-		//         }}
-		//     </Query>
-		// )
 	}
 }
 

@@ -25,14 +25,13 @@ class ControlledOpenSelect extends React.Component {
 	constructor(props) {
 		super(props);
 
-		if (props.showNone != null) this.state = { showNone: props.showNone };
+		this.state = {
+			age: '',
+			open: false,
+			showNone: props.showNone == null ? true : props.showNone,
+			noneName: props.noneName || 'None'
+		};
 	}
-
-	state = {
-		age: '',
-		open: false,
-		showNone: true
-	};
 
 	handleChange = (event) => {
 		this.setState({ [event.target.name]: event.target.value });
@@ -78,8 +77,13 @@ class ControlledOpenSelect extends React.Component {
 						readOnly={this.props.readOnly}
 					>
 						{this.state.showNone && (
-							<MenuItem key={0} value={0} name="None" className="select-form-customized__item ">
-								<em>None</em>
+							<MenuItem
+								key={0}
+								value={0}
+								name={this.state.noneName}
+								className="select-form-customized__item "
+							>
+								<em>{this.state.noneName}</em>
 							</MenuItem>
 						)}
 						{this.props.data.map((item) => {

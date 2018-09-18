@@ -125,6 +125,9 @@ const styles = (theme) => ({
 	row: {
 		'&:nth-of-type(odd)': {
 			backgroundColor: theme.palette.background.default
+		},
+		'&:hover': {
+			cursor: 'pointer'
 		}
 	},
 	fab: {
@@ -245,7 +248,9 @@ class PositionsTable extends React.Component {
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
-							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+							{this.props.showBillRate && (
+								<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+							)}
 							<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
 							<CustomTableCell padding="none" className={classes.th}>
 								Shift
@@ -255,14 +260,22 @@ class PositionsTable extends React.Component {
 					<TableBody>
 						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
-								<TableRow hover className={classes.row} key={uuidv4()}>
+								<TableRow
+									hover
+									className={classes.row}
+									key={uuidv4()}
+									onClick={() => {
+										return this.props.onEditHandler({ ...row });
+									}}
+								>
 									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										{' '}
 										<Tooltip title="Edit">
 											<div>
 												<IconButton
 													disabled={this.props.loading}
-													onClick={() => {
+													onClick={(e) => {
+														e.stopPropagation();
 														return this.props.onEditHandler({ ...row });
 													}}
 												>
@@ -276,7 +289,8 @@ class PositionsTable extends React.Component {
 											<div>
 												<IconButton
 													disabled={this.props.loading}
-													onClick={() => {
+													onClick={(e) => {
+														e.stopPropagation();
 														return this.props.onDeleteHandler(row.Id);
 													}}
 												>
@@ -315,18 +329,20 @@ class PositionsTable extends React.Component {
 											}}
 										/>
 									</CustomTableCell>
-									<CustomTableCell style={{ width: '180px' }}>
-										<TextField
-											className={classes.formControl}
-											value={row.Bill_Rate}
-											id="billrate"
-											readOnly
-											InputProps={{
-												inputComponent: NumberFormatCustom,
-												disableUnderline: true
-											}}
-										/>
-									</CustomTableCell>
+									{this.props.showBillRate && (
+										<CustomTableCell style={{ width: '180px' }}>
+											<TextField
+												className={classes.formControl}
+												value={row.Bill_Rate}
+												id="billrate"
+												readOnly
+												InputProps={{
+													inputComponent: NumberFormatCustom,
+													disableUnderline: true
+												}}
+											/>
+										</CustomTableCell>
+									)}
 									<CustomTableCell padding="none" style={{ width: '100px' }}>
 										<Select
 											id="shift"
