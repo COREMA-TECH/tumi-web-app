@@ -793,7 +793,7 @@ class Catalogs extends React.Component {
 					<DialogContent style={{ width: 600 }}>
 						<div className="card-form-body">
 							<div className="card-form-row">
-								<span className="input-label primary">Catalog</span>
+								<span className="input-label primary">* Catalog</span>
 								<SelectForm
 									id="idCatalog"
 									name="idCatalog"
@@ -808,7 +808,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Name</span>
+								<span className="input-label primary">* Name</span>
 								<InputForm
 									id="name"
 									name="name"
@@ -819,7 +819,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Display Label</span>
+								<span className="input-label primary">* Display Label</span>
 								<InputForm
 									id="displayLabel"
 									name="displayLabel"
@@ -830,7 +830,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Description</span>
+								<span className="input-label primary">* Description</span>
 								<InputForm
 									id="description"
 									name="description"
@@ -841,7 +841,7 @@ class Catalogs extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Parent</span>
+								<span className="input-label primary">* Parent</span>
 								<SelectForm
 									disabled={this.state.loadingParents}
 									id="idParent"

@@ -931,7 +931,7 @@ class ContactcontactForm extends React.Component {
 						<div className="">
 							<div className="card-form-body">
 								<div className="card-form-row">
-									<span className="input-label primary">Contact Type</span>
+									<span className="input-label primary">* Contact Type</span>
 
 									<SelectForm
 										id="type"
@@ -945,7 +945,7 @@ class ContactcontactForm extends React.Component {
 									/>
 								</div>
 								<div className="card-form-row">
-									<span className="input-label primary">First Name</span>
+									<span className="input-label primary">* First Name</span>
 									<InputForm
 										id="firstname"
 										name="firstname"
@@ -968,7 +968,7 @@ class ContactcontactForm extends React.Component {
 								</div>
 
 								<div className="card-form-row">
-									<span className="input-label primary">Last Name</span>
+									<span className="input-label primary">* Last Name</span>
 									<InputForm
 										id="lastname"
 										name="lastname"
@@ -979,7 +979,7 @@ class ContactcontactForm extends React.Component {
 									/>
 								</div>
 								<div className="card-form-row">
-									<span className="input-label primary">Department</span>
+									<span className="input-label primary">* Department</span>
 									<SelectForm
 										name="department"
 										data={this.state.departments}
@@ -1001,7 +1001,7 @@ class ContactcontactForm extends React.Component {
 									/>
 </div>*/}
 								<div className="card-form-row">
-									<span className="input-label primary">Email</span>
+									<span className="input-label primary">* Email</span>
 									<InputForm
 										id="email"
 										name="email"
@@ -1012,7 +1012,7 @@ class ContactcontactForm extends React.Component {
 									/>
 								</div>
 								<div className="card-form-row">
-									<span className="input-label primary">Phone Number</span>
+									<span className="input-label primary">* Phone Number</span>
 									<InputMask
 										id="number"
 										name="number"
@@ -1027,7 +1027,7 @@ class ContactcontactForm extends React.Component {
 									/>
 								</div>
 								<div className="card-form-row">
-									<span className="input-label primary">Title</span>
+									<span className="input-label primary">* Title</span>
 									<SelectForm
 										name="title"
 										data={this.state.titles}

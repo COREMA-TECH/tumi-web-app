@@ -748,7 +748,7 @@ class PositionsCompanyForm extends React.Component {
 					<DialogContent style={{ minWidth: 550, padding: '0px' }}>
 						<div className="card-form-body">
 							<div className="card-form-row">
-								<span className="input-label primary">Department</span>
+								<span className="input-label primary">* Department</span>
 								<SelectForm
 									id="idDepartment"
 									name="idDepartment"
@@ -762,7 +762,7 @@ class PositionsCompanyForm extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Title</span>
+								<span className="input-label primary">* Title</span>
 								<InputForm
 									id="position"
 									name="position"
@@ -773,7 +773,7 @@ class PositionsCompanyForm extends React.Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">Pay Rate</span>
+								<span className="input-label primary">* Pay Rate</span>
 
 								<InputForm
 									id="payrate"
@@ -787,7 +787,7 @@ class PositionsCompanyForm extends React.Component {
 							</div>
 							{this.props.showBillRate && (
 								<div className="card-form-row">
-									<span className="input-label primary">Bill Rate</span>
+									<span className="input-label primary">* Bill Rate</span>
 									<InputForm
 										id="billrate"
 										name="billrate"
@@ -800,7 +800,7 @@ class PositionsCompanyForm extends React.Component {
 								</div>
 							)}
 							<div className="card-form-row">
-								<span className="input-label primary">Shift</span>
+								<span className="input-label primary">* Shift</span>
 								<SelectForm
 									id="shift"
 									name="shift"

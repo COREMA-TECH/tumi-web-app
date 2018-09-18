@@ -848,7 +848,7 @@ class NewContract extends Component {
 								<div className="contract-body-row__form">
 									<div className="card-form-body">
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Name</span>
+											<span className="input-label primary">* Contract Name</span>
 
 											<InputForm
 												value={this.state.Contract_Name}
@@ -866,7 +866,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Owner</span>
+											<span className="input-label primary">* Contract Owner</span>
 											<InputForm
 												value={this.state.Contrat_Owner}
 												change={(text) => {
@@ -883,7 +883,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Template</span>
+											<span className="input-label primary">* Contract Template</span>
 											<Query query={this.GET_CONTRACT}>
 												{({ loading, error, data, refetch, networkStatus }) => {
 													//if (networkStatus === 4) return <LinearProgress />;
@@ -921,7 +921,7 @@ class NewContract extends Component {
 											</Query>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Management Company</span>
+											<span className="input-label primary">* Management Company</span>
 											<AccountDialog
 												valueSelected={this.state.Id_Entity}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
@@ -941,7 +941,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Customer Signed By</span>
+											<span className="input-label primary">* Customer Signed By</span>
 
 											<ContactDialog
 												defaultValue=""
@@ -973,7 +973,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Customer Signed Title</span>
+											<span className="input-label primary">* Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
 												change={(text) => {}}
@@ -981,7 +981,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Customer Signed Date</span>
+											<span className="input-label primary">* Customer Signed Date</span>
 											<InputDateForm
 												value={this.state.Signed_Date}
 												placeholder={this.state.Signed_Date}
@@ -1004,7 +1004,7 @@ class NewContract extends Component {
 								<div className="contract-body-row__form">
 									<div className="card-form-body">
 										<div className="card-form-row">
-											<span className="input-label primary">Status</span>
+											<span className="input-label primary">* Status</span>
 											<SelectForm
 												data={status}
 												update={this.updateStatus}
@@ -1014,7 +1014,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Start Date</span>
+											<span className="input-label primary">* Contract Start Date</span>
 											<InputDateForm
 												placeholder={this.state.Contract_Start_Date}
 												value={this.state.Contract_Start_Date}
@@ -1032,7 +1032,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Term (months)</span>
+											<span className="input-label primary">* Contract Term (months)</span>
 
 											<Query query={this.getContractTermsQuery}>
 												{({ loading, error, data, refetch, networkStatus }) => {
@@ -1065,7 +1065,7 @@ class NewContract extends Component {
 										</div>
 
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Expiration Date</span>
+											<span className="input-label primary">* Contract Expiration Date</span>
 											<InputDateForm
 												placeholder={this.state.contractExpiration}
 												value={this.state.contractExpiration}
@@ -1084,7 +1084,7 @@ class NewContract extends Component {
 										</div>
 
 										<div className="card-form-row">
-											<span className="input-label primary">Owner Expiration Notice</span>
+											<span className="input-label primary">* Owner Expiration Notice</span>
 											<SelectForm
 												data={intervalDays}
 												update={this.updateOwnerExpirationNotification}
@@ -1094,7 +1094,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Company Signed By</span>
+											<span className="input-label primary">* Company Signed By</span>
 
 											<InputForm
 												value={this.state.CompanySignedName}
@@ -1103,7 +1103,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Company Signed Date</span>
+											<span className="input-label primary">* Company Signed Date</span>
 											<InputDateForm
 												value={this.state.Company_Signed_Date}
 												error={!this.state.Company_Signed_DateValid}
@@ -1130,7 +1130,7 @@ class NewContract extends Component {
 								<div className="contract-body-row__form">
 									<div className="card-form-body">
 										<div className="card-form-row">
-											<span className="input-label primary">Billing Name</span>
+											<span className="input-label primary">* Billing Name</span>
 
 											<ContactDialog
 												defaultValue=""
@@ -1153,7 +1153,7 @@ class NewContract extends Component {
 											/>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Billing Street</span>
+											<span className="input-label primary">* Billing Street</span>
 											<InputForm
 												value={this.state.Billing_Street}
 												error={!this.state.Billing_StreetValid}
@@ -1171,7 +1171,7 @@ class NewContract extends Component {
 										</div>
 
 										<div className="card-form-row">
-											<span className="input-label primary">Billing State / Providence</span>
+											<span className="input-label primary">* Billing State / Providence</span>
 
 											<Query
 												query={this.getStatesQuery}
@@ -1198,7 +1198,7 @@ class NewContract extends Component {
 										</div>
 
 										<div className="card-form-row">
-											<span className="input-label primary">Billing City</span>
+											<span className="input-label primary">* Billing City</span>
 											<Query
 												query={this.getCitiesQuery}
 												variables={{ parent: this.state.Billing_State }}
@@ -1223,7 +1223,9 @@ class NewContract extends Component {
 											</Query>
 										</div>
 										<div className="card-form-row">
-											<span className="input-label primary">Billing Zip Code / Postal Code</span>
+											<span className="input-label primary">
+												* Billing Zip Code / Postal Code
+											</span>
 											<InputForm
 												value={this.state.Billing_Zip_Code}
 												change={(text) => {
@@ -1251,7 +1253,7 @@ class NewContract extends Component {
 								<div className="contract-body-row__form">
 									<div className="card-form-body">
 										<div className="card-form-row">
-											<span className="input-label primary">Contract Terms</span>
+											<span className="input-label primary">* Contract Terms</span>
 											<TextAreaForm
 												value={this.state.Contract_Terms}
 												change={(text) => {
