@@ -394,6 +394,11 @@ div[class*="MuiLinearProgress-root-"] {
   .card-form-row .primary {
     margin-bottom: 1rem; } }
 
+.card-form-body {
+  -webkit-box-pack: start !important;
+  -ms-flex-pack: start !important;
+  justify-content: flex-start !important; }
+
 .card-form-company {
   height: 665px; }
   @media only screen and (max-width: 480px) {
