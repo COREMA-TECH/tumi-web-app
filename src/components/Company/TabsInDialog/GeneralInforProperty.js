@@ -453,6 +453,7 @@ class GeneralInfoProperty extends Component {
 						className="contract-next-button"
 						onClick={() => {
 							this.insertCompany(this.props.idCompany);
+                            this.props.next();
 						}}
 					>
 						Next

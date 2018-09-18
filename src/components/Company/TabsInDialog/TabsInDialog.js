@@ -71,6 +71,12 @@ class CustomizedTabs extends Component {
         this.setState({value});
     };
 
+    updateValue = () => {
+        this.setState((prevState) => ({
+            value: prevState.value + 1
+        }));
+    };
+
     render() {
         const {classes} = this.props;
         const {value} = this.state;
@@ -108,6 +114,7 @@ class CustomizedTabs extends Component {
                         idCompany={this.props.idCompany}
                         handleClose={this.props.handleClose}
                         handleOpenSnackbar={this.props.handleOpenSnackbar}
+                        next={this.updateValue}
                     />
                 )}
                 {value === 1 && (

@@ -185,7 +185,7 @@ class SimpleDialog extends React.Component {
                                                 <ListItemText
                                                     className="row-33"
                                                     primary={
-                                                        (item.First_Name ? item.First_Name.trim() : '') +
+                                                        (item.First_Name ? item.First_Name.trim() : '') + " " + 
                                                         (item.Last_Name ? item.Last_Name.trim() : '')
                                                     }
                                                 />
