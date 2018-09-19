@@ -270,16 +270,12 @@ class ContactcontactForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.loadSupervisors();
-				this.loadAllSupervisors();
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -828,15 +824,14 @@ class ContactcontactForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
-						this.setState({ opendialog: false }, () => {
-							this.setState({ firstLoad: true }, () => {
-								this.loadContacts(() => {
-									this.loadTitles(() => {
-										this.loadDepartments(() => {
-											this.loadSupervisors(0, () => {
-												this.loadAllSupervisors(() => {
-													this.setState({ indexView: 1, firstLoad: false });
-												});
+					
+						this.setState({ opendialog: false, firstLoad: true, showCircularLoading: true }, () => {
+							this.loadContacts(() => {
+								this.loadTitles(() => {
+									this.loadDepartments(() => {
+										this.loadSupervisors(0, () => {
+											this.loadAllSupervisors(() => {
+												this.setState({ indexView: 1, firstLoad: false });
 											});
 										});
 									});
@@ -877,7 +872,9 @@ class ContactcontactForm extends React.Component {
 	};
 
 	cancelContactHandler = () => {
-		this.resetState();
+		this.resetState(() => {
+			this.loadAllSupervisors(this.loadSupervisors);
+		});
 	};
 	handleClickOpenModal = () => {
 		this.setState({ openModal: true });

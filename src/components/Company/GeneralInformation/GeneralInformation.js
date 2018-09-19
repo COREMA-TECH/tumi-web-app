@@ -200,33 +200,35 @@ class GeneralInformation extends Component {
 									startDate: item.Start_Date.trim(),
 									active: item.IsActive,
 									suite: item.Suite,
-									...this.DEFAULT_STATUS
+									indexView: 1,
+									...this.DEFAULT_STATUS,
+									loading: false
 								},
 								func
 							);
 						} else {
-							this.props.handleOpenSnackbar(
-								'error',
-								'Error: Loading company information: getbusinesscompanies not exists in query data'
-							);
-
 							this.setState({
-								loading: false
+								loading: false,
+								indexView: 2,
+								errorMessage:
+									'Error: Loading company information: getbusinesscompanies not exists in query data',
+								firstLoad: false
 							});
 						}
 					})
 					.catch((error) => {
-						console.log('Error: Loading company information: ', error);
-						this.props.handleOpenSnackbar('error', 'Error: Loading company information: ' + error);
 						this.setState({
-							loading: false
+							loading: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading company information: ' + error,
+							firstLoad: false
 						});
 					});
 			}
 		);
 	};
 
-	loadCompanyProperties = () => {
+	loadCompanyProperties = (func = () => {}) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -240,28 +242,32 @@ class GeneralInformation extends Component {
 					})
 					.then((data) => {
 						if (data.data.getbusinesscompanies != null) {
-							this.setState({
-								companyProperties: data.data.getbusinesscompanies,
-								loadingCompanyProperties: false
-							});
-						} else {
-							this.props.handleOpenSnackbar(
-								'error',
-								'Error: Loading company properties: getbusinesscompanies not exists in query data'
+							this.setState(
+								{
+									companyProperties: data.data.getbusinesscompanies,
+									loadingCompanyProperties: false,
+									indexView: 1
+								},
+								func
 							);
-
+						} else {
 							this.setState({
 								loadingCompanyProperties: false,
-								loading: false
+								loading: false,
+								indexView: 2,
+								errorMessage:
+									'Error: Loading company properties: getbusinesscompanies not exists in query data',
+								firstLoad: false
 							});
 						}
 					})
 					.catch((error) => {
-						console.log('Error: Loading company properties: ', error);
-						this.props.handleOpenSnackbar('error', 'Error: Loading company properties: ' + error);
 						this.setState({
 							loadingCompanyProperties: false,
-							loading: false
+							loading: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading company properties: ' + error,
+							firstLoad: false
 						});
 					});
 			}
@@ -445,7 +451,6 @@ class GeneralInformation extends Component {
 						this.props.next();
 					})
 					.catch((error) => {
-						console.log('Error: Updating General Information: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
 						this.setState({
 							loadingUpdate: false
@@ -458,7 +463,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = () => {
+	loadCountries = (func = () => {}) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -469,25 +474,29 @@ class GeneralInformation extends Component {
 			})
 			.then((data) => {
 				if (data.data.getcatalogitem != null) {
-					this.setState({
-						countries: data.data.getcatalogitem,
-						loadingCountries: false
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading countries: getcatalogitem not exists in query data'
+					this.setState(
+						{
+							countries: data.data.getcatalogitem,
+							loadingCountries: false,
+							indexView: 1
+						},
+						func
 					);
+				} else {
 					this.setState({
-						loadingCountries: false
+						loadingCountries: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading countries: getcatalogitem not exists in query data',
+						firstLoad: false
 					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading countries: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading countries: ' + error);
 				this.setState({
-					loadingCountries: false
+					loadingCountries: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading countries: ' + error,
+					firstLoad: false
 				});
 			});
 	};
@@ -507,27 +516,28 @@ class GeneralInformation extends Component {
 						{
 							states: data.data.getcatalogitem,
 							loadingStates: false,
-							loading: false
+							loading: false,
+							indexView: 1
 						},
 						func
 					);
 				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading states: getcatalogitem not exists in query data'
-					);
 					this.setState({
 						loadingStates: false,
-						loading: false
+						loading: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading states: getcatalogitem not exists in query data',
+						firstLoad: false
 					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading states: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading states: ' + error);
 				this.setState({
 					loadingStates: false,
-					loading: false
+					loading: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading states: ' + error,
+					firstLoad: false
 				});
 			});
 	};
@@ -546,25 +556,26 @@ class GeneralInformation extends Component {
 					this.setState(
 						{
 							cities: data.data.getcatalogitem,
-							loadingCities: false
+							loadingCities: false,
+							indexView: 1
 						},
 						func
 					);
 				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading cities: getcatalogitem not exists in query data'
-					);
 					this.setState({
-						loadingCities: false
+						loadingCities: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading cities: getcatalogitem not exists in query data',
+						firstLoad: false
 					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading cities: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading cities: ' + error);
 				this.setState({
-					loadingCities: false
+					loadingCities: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading cities: ' + error,
+					firstLoad: false
 				});
 			});
 	};
@@ -595,16 +606,21 @@ class GeneralInformation extends Component {
 					inputEnabled: false
 				},
 				() => {
-					this.loadCompany(() => {
-						this.loadCities();
-						this.loadStates();
-						this.loadCompanyProperties();
+					this.setState({ firstLoad: true }, () => {
+						this.loadCompany(() => {
+							this.loadCountries(() => {
+								this.loadCities(() => {
+									this.loadStates(() => {
+										this.loadCompanyProperties(() => {
+											this.setState({ indexView: 1, firstLoad: false });
+										});
+									});
+								});
+							});
+						});
 					});
 				}
 			);
-			this.loadCountries();
-			this.loadStates();
-			this.loadCities();
 		}
 	}
 
@@ -657,10 +673,10 @@ class GeneralInformation extends Component {
 			country: 0,
 			state: 0,
 			city: 0,
-			loadingCountries: true,
-			loadingCities: true,
-			loadingStates: true,
-			loadingCompanyProperties: true,
+			loadingCountries: false,
+			loadingCities: false,
+			loadingStates: false,
+			loadingCompanyProperties: false,
 
 			contractURL: '',
 			insuranceURL: '',
@@ -931,17 +947,27 @@ class GeneralInformation extends Component {
      */
 	render() {
 		const { classes } = this.props;
+		let isLoading =
+			this.state.loading ||
+			this.state.loadingCities ||
+			this.state.loadingCountries ||
+			this.state.loadingStates ||
+			this.state.loadingCompanyProperties ||
+			this.state.firstLoad;
 
 		/**
          * If the data is ready render the component
          */
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
 		return (
 			<div className="general-information-tab">
-				{(this.state.loading ||
-					this.state.loadingCities ||
-					this.state.loadingCountries ||
-					this.state.loadingStates ||
-					this.state.loadingCompanyProperties) && <LinearProgress />}
+				{isLoading && <LinearProgress />}
 
 				<div className="general-information__header">
 					<div className="input-container">
@@ -974,19 +1000,20 @@ class GeneralInformation extends Component {
 					<div className="options-company">
 						{!this.props.showStepper && (
 							<button
-								disabled={
-									this.state.loading ||
-									this.state.loadingCities ||
-									this.state.loadingCountries ||
-									this.state.loadingStates ||
-									this.state.loadingCompanyProperties
-								}
+								disabled={isLoading}
 								className="edit-company-button"
 								onClick={() => {
-									this.loadCompany(() => {
-										this.loadCities(() => {
-											this.loadStates(() => {
-												this.props.toggleStepper();
+									this.setState({ firstLoad: true }, () => {
+										this.loadCompany(() => {
+											this.loadCountries(() => {
+												this.loadCities(() => {
+													this.loadStates(() => {
+														this.loadCompanyProperties(() => {
+															this.props.toggleStepper();
+															this.setState({ indexView: 1, firstLoad: false });
+														});
+													});
+												});
 											});
 										});
 									});
@@ -1276,18 +1303,19 @@ class GeneralInformation extends Component {
 							<div className={classes.wrapper}>
 								<Button
 									className={classes.buttonSuccess}
-									disabled={
-										this.state.loading ||
-										this.state.loadingCities ||
-										this.state.loadingCountries ||
-										this.state.loadingStates ||
-										this.state.loadingCompanyProperties
-									}
+									disabled={isLoading}
 									onClick={() => {
-										this.loadCompany(() => {
-											this.loadCities(() => {
-												this.loadStates(() => {
-													this.props.toggleStepper();
+										this.setState({ firstLoad: true }, () => {
+											this.loadCompany(() => {
+												this.loadCountries(() => {
+													this.loadCities(() => {
+														this.loadStates(() => {
+															this.loadCompanyProperties(() => {
+																this.props.toggleStepper();
+																this.setState({ indexView: 1, firstLoad: false });
+															});
+														});
+													});
 												});
 											});
 										});
@@ -1295,13 +1323,7 @@ class GeneralInformation extends Component {
 								>
 									Cancel
 								</Button>
-								{(this.state.loading ||
-									this.state.loadingCities ||
-									this.state.loadingCountries ||
-									this.state.loadingStates ||
-									this.state.loadingCompanyProperties) && (
-									<CircularProgress size={24} className={classes.buttonProgress} />
-								)}
+								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
 							</div>
 						)}
 					</div>

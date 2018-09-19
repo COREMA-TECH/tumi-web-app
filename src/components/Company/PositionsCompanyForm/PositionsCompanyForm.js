@@ -485,6 +485,7 @@ class PositionsCompanyForm extends React.Component {
 	}
 
 	loadDepartments = (func = () => {}) => {
+		console.log('Load Department Inside');
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -494,6 +495,7 @@ class PositionsCompanyForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
+						console.log('Load Department Set Data', data.data.getcatalogitem);
 						this.setState(
 							{
 								departments: data.data.getcatalogitem,
@@ -523,6 +525,7 @@ class PositionsCompanyForm extends React.Component {
 	};
 
 	loadPositions = (func = () => {}) => {
+		console.log('Load Positions Inside');
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -532,6 +535,7 @@ class PositionsCompanyForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getposition != null) {
+						console.log('Load Positions Set Data', data.data.getposition);
 						this.setState(
 							{
 								data: data.data.getposition,
@@ -608,8 +612,13 @@ class PositionsCompanyForm extends React.Component {
 							'success',
 							isEdition ? 'Positions and Rates Updated!' : 'Positions and Rates Inserted!'
 						);
-						this.setState({ showCircularLoading: true }, () => {
-							this.loadPositions(this.resetState);
+
+						this.setState({ showCircularLoading: true, loading: false }, () => {
+							this.loadPositions(() => {
+								this.loadDepartments(() => {
+									this.setState({ indexView: 1, showCircularLoading: false });
+								});
+							});
 						});
 					})
 					.catch((error) => {
@@ -641,10 +650,14 @@ class PositionsCompanyForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Position and Rate Deleted!');
-						this.setState({ showCircularLoading: true, firstLoad: true }, () => {
-							this.loadDepartments(() => {
-								this.resetState(() => {
-									this.setState({ indexView: 1, firstLoad: false });
+						this.setState({ opendialog: false, showCircularLoading: true, loadingConfirm: false }, () => {
+							this.loadPositions(() => {
+								this.loadDepartments(() => {
+									this.setState({
+										indexView: 1,
+										showCircularLoading: false,
+										loadingConfirm: false
+									});
 								});
 							});
 						});

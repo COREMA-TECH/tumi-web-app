@@ -36,7 +36,7 @@ import SelectForm from 'ui-components/SelectForm/SelectForm';
 import InputForm from 'ui-components/InputForm/InputForm';
 import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
-
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
 import withGlobalContent from 'Generic/Global';
@@ -247,9 +247,9 @@ class Catalogs extends React.Component {
 		enableCancelButton: false,
 
 		loading: false,
-		success: false,
 		loadingConfirm: false,
-		openModal: false
+		openModal: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -260,16 +260,26 @@ class Catalogs extends React.Component {
 			roles: [ { Id: 0, Name: 'Nothing' } ],
 			languages: [ { Id: 0, Name: 'Nothing' } ],
 
-			loadingData: true,
-			loadingContacts: true,
-			loadingRoles: true,
-			loadingLanguages: true,
-
+			loadingData: false,
+			loadingContacts: false,
+			loadingRoles: false,
+			loadingLanguages: false,
+			firstLoad: true,
+			indexView: 0, //Loading
+			errorMessage: '',
 			idCompany: this.props.idCompany,
 
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
+		this.Login = {
+			LoginId: sessionStorage.getItem('LoginId'),
+			IsAdmin: sessionStorage.getItem('IsAdmin'),
+			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+		};
 	}
 	focusTextInput() {
 		if (document.getElementById('username') != null) {
@@ -284,14 +294,12 @@ class Catalogs extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -353,7 +361,7 @@ class Catalogs extends React.Component {
 	validateAllFields(func) {
 		let idContactValid =
 			this.state.idContact !== null && this.state.idContact !== -1 && this.state.idContact !== '';
-		let usernameValid = this.state.username.trim().length >= 5 && this.state.username.trim().indexOf(' ') < 0;
+		let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
 		//let fullnameValid = this.state.fullname.trim().length >= 10;
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 		let numberValid =
@@ -404,7 +412,7 @@ class Catalogs extends React.Component {
 				idContactHasValue = value !== null && value !== -1 && value !== '';
 				break;
 			case 'username':
-				usernameValid = this.state.username.trim().length >= 5 && this.state.username.trim().indexOf(' ') < 0;
+				usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
 				usernameHasValue = value != '';
 				break;
 			//case 'fullname':
@@ -513,180 +521,209 @@ class Catalogs extends React.Component {
 		AllowExport,
 		AllowEdit
 	}) => {
-		this.setState(
-			{
-				idToEdit: Id,
-				idContact: Id_Contact,
-				idRol: Id_Roles,
-				username: Code_User.trim(),
-				//fullname: Full_Name.trim(),
-				email: Electronic_Address.trim(),
-				number: Phone_Number.trim(),
-				password: Password.trim(),
-				idLanguage: Id_Language,
-				isAdmin: IsAdmin == 1,
-				allowDelete: AllowDelete == 1,
-				allowInsert: AllowInsert == 1,
-				allowExport: AllowExport == 1,
-				allowEdit: AllowEdit == 1,
+		this.setState({ showCircularLoading: false }, () => {
+			this.setState(
+				{
+					idToEdit: Id,
+					idContact: Id_Contact,
+					idRol: Id_Roles,
+					username: Code_User.trim(),
+					//fullname: Full_Name.trim(),
+					email: Electronic_Address.trim(),
+					number: Phone_Number.trim(),
+					password: Password.trim(),
+					idLanguage: Id_Language,
+					isAdmin: IsAdmin == 1,
+					allowDelete: AllowDelete == 1,
+					allowInsert: AllowInsert == 1,
+					allowExport: AllowExport == 1,
+					allowEdit: AllowEdit == 1,
 
-				formValid: true,
-				idContactValid: true,
-				idRolValid: true,
-				usernameValid: true,
-				//fullnameValid: true,
-				emailValid: true,
-				numberValid: true,
-				passwordValid: true,
-				idLanguageValid: true,
+					formValid: true,
+					idContactValid: true,
+					idRolValid: true,
+					usernameValid: true,
+					//fullnameValid: true,
+					emailValid: true,
+					numberValid: true,
+					passwordValid: true,
+					idLanguageValid: true,
 
-				enableCancelButton: true,
-				idContactHasValue: true,
-				idRolHasValue: true,
-				usernameHasValue: true,
-				//fullnameHasValue: true,
-				emailHasValue: true,
-				numberHasValue: true,
-				passwordHasValue: true,
-				idLanguageHasValue: true,
-				openModal: true,
-				buttonTitle: this.TITLE_EDIT
-			},
-			() => {
-				this.focusTextInput();
-			}
-		);
+					enableCancelButton: true,
+					idContactHasValue: true,
+					idRolHasValue: true,
+					usernameHasValue: true,
+					//fullnameHasValue: true,
+					emailHasValue: true,
+					numberHasValue: true,
+					passwordHasValue: true,
+					idLanguageHasValue: true,
+					openModal: true,
+					buttonTitle: this.TITLE_EDIT
+				},
+				this.focusTextInput
+			);
+		});
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
 	};
 	componentWillMount() {
-		this.loadUsers();
-		this.loadContacts();
-		this.loadRoles();
-		this.loadLanguages();
+		this.setState({ firstLoad: true }, () => {
+			this.loadUsers(() => {
+				this.loadContacts(() => {
+					this.loadRoles(() => {
+						this.loadLanguages(() => {
+							this.setState({ indexView: 1, firstLoad: false });
+						});
+					});
+				});
+			});
+		});
 	}
 
-	loadUsers = () => {
-		this.setState({ loadingData: true });
-		this.props.client
-			.query({
-				query: this.GET_USERS_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getusers != null) {
-					this.setState(
-						{
-							data: data.data.getusers
-						},
-						() => {
-							this.setState({ loadingData: false }, this.resetState);
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar('error', 'Error: Loading users: getusers not exists in query data');
-					this.setState({ loadingData: false });
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading users: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading users: ' + error);
-				this.setState({ loadingData: false });
-			});
+	loadUsers = (func = () => {}) => {
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_USERS_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getusers != null) {
+						this.setState(
+							{
+								data: data.data.getusers,
+								loadingData: false
+							},
+							func
+						);
+					} else {
+						this.setState({
+							loadingData: false,
+							firstLoad: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading users: getusers not exists in query data'
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingData: false,
+						firstLoad: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading users: ' + error
+					});
+				});
+		});
 	};
 
-	loadContacts = () => {
-		this.setState({ loadingContacts: true });
-		this.props.client
-			.query({
-				query: this.GET_CONTACTS_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getsupervisor != null) {
-					this.setState(
-						{
-							contacts: data.data.getsupervisor
-						},
-						() => {
-							this.setState({ loadingContacts: false }, this.resetState);
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading contacts: getsupervisor not exists in query data'
-					);
-					this.setState({ loadingContacts: false });
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading contacts: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading contacts: ' + error);
-				this.setState({ loadingContacts: false });
-			});
+	loadContacts = (func = () => {}) => {
+		this.setState({ loadingContacts: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_CONTACTS_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getsupervisor != null) {
+						this.setState(
+							{
+								contacts: data.data.getsupervisor,
+								loadingContacts: false
+							},
+							func
+						);
+					} else {
+						this.setState({
+							loadingContacts: false,
+							firstLoad: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading contacts: getsupervisor not exists in query data'
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingContacts: false,
+						firstLoad: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading contacts: ' + error
+					});
+				});
+		});
 	};
-	loadRoles = () => {
-		this.setState({ loadingRoles: true });
-		this.props.client
-			.query({
-				query: this.GET_ROLES_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getroles != null) {
-					this.setState(
-						{
-							roles: data.data.getroles
-						},
-						() => {
-							this.setState({ loadingRoles: false }, this.resetState);
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar('error', 'Error: Loading roles: getroles not exists in query data');
-					this.setState({ loadingRoles: false });
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading roles: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
-				this.setState({ loadingRoles: false });
-			});
+	loadRoles = (func = () => {}) => {
+		this.setState({ loadingRoles: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_ROLES_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getroles != null) {
+						this.setState(
+							{
+								roles: data.data.getroles,
+								loadingRoles: false
+							},
+							func
+						);
+					} else {
+						this.setState({
+							loadingRoles: false,
+							firstLoad: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading roles: getroles not exists in query data'
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingRoles: false,
+						firstLoad: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading roles: ' + error
+					});
+				});
+		});
 	};
 
-	loadLanguages = () => {
-		this.setState({ loadingLanguages: true });
-		this.props.client
-			.query({
-				query: this.GET_LANGUAGES_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState(
-						{
-							languages: data.data.getcatalogitem
-						},
-						() => {
-							this.setState({ loadingLanguages: false }, this.resetState);
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading languages: getcatalogitem not exists in query data'
-					);
-					this.setState({ loadingLanguages: false });
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading languages: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading languages: ' + error);
-				this.setState({ loadingLanguages: false });
-			});
+	loadLanguages = (func = () => {}) => {
+		this.setState({ loadingLanguages: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_LANGUAGES_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					if (data.data.getcatalogitem != null) {
+						this.setState(
+							{
+								languages: data.data.getcatalogitem,
+								loadingLanguages: false
+							},
+							func
+						);
+					} else {
+						this.setState({
+							loadingLanguages: false,
+							firstLoad: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading languages: getcatalogitem not exists in query data'
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingLanguages: false,
+						firstLoad: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading languages: ' + error
+					});
+				});
+		});
 	};
 
 	getObjectToInsertAndUpdate = () => {
@@ -704,7 +741,6 @@ class Catalogs extends React.Component {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -738,17 +774,22 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
-						this.loadUsers();
-						this.resetState();
+						this.setState({ openModal: false, showCircularLoading: true }, () => {
+							this.loadUsers(() => {
+								this.loadContacts(() => {
+									this.loadRoles(() => {
+										this.loadLanguages(this.resetState);
+									});
+								});
+							});
+						});
 					})
 					.catch((error) => {
-						console.log(isEdition ? 'Error: Updating User: ' : 'Error: Inserting User: ', error);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating User: ' + error : 'Error: Inserting User: ' + error
 						);
 						this.setState({
-							success: false,
 							loading: false
 						});
 					});
@@ -770,11 +811,24 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'user Deleted!');
-						this.loadUsers();
-						this.resetState();
+						this.setState(
+							{ openModal: false, firstLoad: true, showCircularLoading: true, opendialog: false },
+							() => {
+								this.loadUsers(() => {
+									this.loadContacts(() => {
+										this.loadRoles(() => {
+											this.loadLanguages(() => {
+												this.resetState(() => {
+													this.setState({ indexView: 1, firstLoad: false });
+												});
+											});
+										});
+									});
+								});
+							}
+						);
 					})
 					.catch((error) => {
-						console.log('Error: Deleting User: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting User: ' + error);
 						this.setState({
 							loadingConfirm: false
@@ -787,7 +841,6 @@ class Catalogs extends React.Component {
 	addUserHandler = () => {
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -837,16 +890,29 @@ class Catalogs extends React.Component {
 		const { loading, success } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-		const buttonClassname = classNames({
-			[classes.buttonSuccess]: success
-		});
 
+		const isLoading =
+			this.state.loadingData ||
+			this.state.loadingContacts ||
+			this.state.loadingRoles ||
+			this.state.loadingLanguages ||
+			this.state.loading ||
+			this.state.firstLoad;
+
+		if (this.state.indexView == 0) {
+			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
+		}
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					{isLoading && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
 		return (
 			<div className="users_tab">
-				{(this.state.loadingData ||
-					this.state.loadingContacts ||
-					this.state.loadingRoles ||
-					this.state.loadingLanguages) && <LinearProgress />}
+				{isLoading && <LinearProgress />}
 
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
@@ -1031,14 +1097,12 @@ class Catalogs extends React.Component {
 								>
 									<div>
 										<Button
-											disabled={this.state.loading}
-											//	disabled={!this.state.formValid}
+											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
 											variant="fab"
 											color="primary"
-											className={buttonClassname}
 											onClick={this.addUserHandler}
 										>
-											{success ? <CheckIcon /> : <SaveIcon />}
+											<SaveIcon />
 										</Button>
 									</div>
 								</Tooltip>
@@ -1053,7 +1117,6 @@ class Catalogs extends React.Component {
 											//disabled={this.state.loading || !this.state.enableCancelButton}
 											variant="fab"
 											color="secondary"
-											className={buttonClassname}
 											onClick={this.cancelUserHandler}
 										>
 											<ClearIcon />
@@ -1066,16 +1129,7 @@ class Catalogs extends React.Component {
 				</Dialog>
 
 				<div className="users__header">
-					<button
-						className="add-users"
-						onClick={this.handleClickOpenModal}
-						disabled={
-							this.state.loadingData ||
-							this.state.loadingContacts ||
-							this.state.loadingRoles ||
-							this.state.loadingLanguages
-						}
-					>
+					<button className="add-users" onClick={this.handleClickOpenModal} disabled={isLoading}>
 						{' '}
 						Add User{' '}
 					</button>
@@ -1087,7 +1141,7 @@ class Catalogs extends React.Component {
 							contacts={this.state.contacts}
 							roles={this.state.roles}
 							languages={this.state.languages}
-							loading={this.state.loading}
+							loading={this.state.showCircularLoading && isLoading}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}
 						/>
