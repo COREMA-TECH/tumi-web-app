@@ -7,6 +7,7 @@ import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputValid from "../../ui-components/InputWithValidation/InputValid";
 import InputMask from "react-input-mask";
+import FileUpload from 'ui-components/FileUpload/FileUpload';
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -608,23 +609,102 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">Week Start</span>
                                     </div>
                                     <div className="col-6">
-                                        <SelectForm
-                                            data={days}
-                                            update={(value) => {
-                                                if (value === 0) {
-                                                    this.setState({
-                                                        startWeek: value,
-                                                        validStartWeek: 'valid'
-                                                    })
-                                                } else {
-                                                    this.setState({
-                                                        startWeek: value,
-                                                        validStartWeek: ''
-                                                    });
-                                                }
+                                        <div className="row">
+                                            <div className="col-5">
+                                                <SelectForm
+                                                    data={days}
+                                                    update={(value) => {
+                                                        if(value === 0){
+                                                            this.setState({
+                                                                startWeek: value,
+                                                                validStartWeek: 'valid'
+                                                            })
+                                                        } else {
+                                                            this.setState({
+                                                                startWeek: value,
+                                                                validStartWeek: ''
+                                                            });
+                                                        }
+                                                    }}
+                                                    value={this.state.startWeek}
+                                                    error={this.state.validStartWeek === '' ? false : true}
+                                                />
+                                            </div>
+                                            <div className="col-2">
+                                                <span>To</span>
+                                            </div>
+                                            <div className="col-5">
+                                                <SelectForm
+                                                    data={days}
+                                                    update={(value) => {
+                                                        if(value === 0){
+                                                            this.setState({
+                                                                startWeek: value,
+                                                                validStartWeek: 'valid'
+                                                            })
+                                                        } else {
+                                                            this.setState({
+                                                                startWeek: value,
+                                                                validStartWeek: ''
+                                                            });
+                                                        }
+                                                    }}
+                                                    value={this.state.startWeek}
+                                                    error={this.state.validStartWeek === '' ? false : true}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <span className="primary card-input-label">Contract</span>
+                                    </div>
+                                    <div className="col-6">
+                                        <FileUpload
+                                            updateURL={(url) => {
+                                                this.setState({
+                                                    contractURL: url
+                                                });
                                             }}
-                                            value={this.state.startWeek}
-                                            error={this.state.validStartWeek === '' ? false : true}
+                                            disabled={!this.props.showStepper}
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <span className="primary card-input-label">Insurance</span>
+                                    </div>
+                                    <div className="col-6">
+                                        <FileUpload
+                                            updateURL={(url) => {
+                                                this.setState({
+                                                    contractURL: url
+                                                });
+                                            }}
+                                            disabled={!this.props.showStepper}
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <span className="primary card-input-label">Other</span>
+                                    </div>
+                                    <div className="col-6">
+                                        <FileUpload
+                                            updateURL={(url) => {
+                                                this.setState({
+                                                    contractURL: url
+                                                });
+                                            }}
+                                            disabled={!this.props.showStepper}
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <span className="primary card-input-label">Other 2</span>
+                                    </div>
+                                    <div className="col-6">
+                                        <FileUpload
+                                            updateURL={(url) => {
+                                                this.setState({
+                                                    contractURL: url
+                                                });
+                                            }}
+                                            disabled={!this.props.showStepper}
                                         />
                                     </div>
                                 </div>

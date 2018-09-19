@@ -10,6 +10,16 @@ class MainContainer extends Component {
 		//Open the menu
 	};
 
+	setTitle = (str) => {
+		var pathname = str.split("/");
+		var title;
+		if (pathname[3] != undefined)
+			title = pathname[3] + " " + pathname[2];
+		else 
+			title = pathname[2];
+		return title;
+	}
+
 	render() {
 		return (
 			<div className="main-container">
@@ -21,7 +31,9 @@ class MainContainer extends Component {
 				<div class="MenuMobile-overlay" onClick={this.props.handleCloseMenu}></div>
 				<div className="main-container--header">
 					<span className="icon-menu" onClick={this.handleClickMenu} />
-					<span className="main-container__title">Company Information</span>
+					<span className="main-container__title">
+						{this.setTitle(window.location.pathname)}
+					</span>
 					<Toolbar />
 				</div>
 				<div className="main-container--container">

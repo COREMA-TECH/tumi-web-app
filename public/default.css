@@ -210,8 +210,13 @@ p {
     padding: 10px;
     text-align: center; }
 
+.main-container__title {
+  text-transform: capitalize; }
+
 .table-elements {
   margin: 0 auto !important; }
+  .table-elements li {
+    padding: 5px !important; }
 
 .modal-overflow {
   overflow-x: scroll; }
