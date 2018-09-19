@@ -28,7 +28,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
 const styles = (theme) => ({
@@ -186,9 +186,9 @@ class PositionsCompanyForm extends React.Component {
 		enableCancelButton: false,
 		openSnackbar: true,
 		loading: false,
-		success: false,
 		loadingConfirm: false,
-		openModal: false
+		openModal: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -202,6 +202,9 @@ class PositionsCompanyForm extends React.Component {
 			idCompany: this.props.idCompany,
 			companyRate: 0,
 			inputEnabled: true,
+			indexView: 0, //Loading
+			errorMessage: '',
+			firstLoad: true,
 
 			...this.DEFAULT_STATE
 		};
@@ -229,14 +232,12 @@ class PositionsCompanyForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -461,7 +462,8 @@ class PositionsCompanyForm extends React.Component {
 				shiftHasValue: true,
 
 				buttonTitle: this.TITLE_EDIT,
-				openModal: true
+				openModal: true,
+				showCircularLoading: false
 			},
 			() => {
 				this.focusTextInput();
@@ -470,21 +472,19 @@ class PositionsCompanyForm extends React.Component {
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
 	};
 	componentWillMount() {
-		if (window.location.pathname === '/company/edit') {
-			this.setState(
-				{
-					//inputEnabled: false
-				}
-			);
-		}
-		this.loadDepartments();
-		this.loadPositions();
+		this.setState({ firstLoad: true }, () => {
+			this.loadPositions(() => {
+				this.loadDepartments(() => {
+					this.setState({ indexView: 1, firstLoad: false });
+				});
+			});
+		});
 	}
 
-	loadDepartments = () => {
+	loadDepartments = (func = () => {}) => {
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -494,27 +494,35 @@ class PositionsCompanyForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
-						this.setState({
-							departments: data.data.getcatalogitem,
-							loadingDepartments: false
-						});
-					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading departments: getcatalogitem not exists in query data'
+						this.setState(
+							{
+								departments: data.data.getcatalogitem,
+								loadingDepartments: false,
+								indexView: 1
+							},
+							func
 						);
-						this.setState({ loadingDepartments: false });
+					} else {
+						this.setState({
+							loadingDepartments: false,
+							indexView: 2,
+							firstLoad: false,
+							errorMessage: 'Error: Loading departments: getcatalogitem not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading departments: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
-					this.setState({ loadingDepartments: false });
+					this.setState({
+						loadingDepartments: false,
+						indexView: 2,
+						firstLoad: false,
+						errorMessage: 'Error: Loading departments: ' + error
+					});
 				});
 		});
 	};
 
-	loadPositions = () => {
+	loadPositions = (func = () => {}) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -530,22 +538,27 @@ class PositionsCompanyForm extends React.Component {
 								loadingData: false
 							},
 							() => {
-								this.getRate();
-								this.resetState();
+								func(() => {
+									this.getRate(this.resetState);
+								});
 							}
 						);
 					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading positions and rates: getposition not exists in query data'
-						);
-						this.setState({ loadingData: false });
+						this.setState({
+							loadingData: false,
+							indexView: 2,
+							firstLoad: false,
+							errorMessage: 'Error: Loading positions and rates: getposition not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading positions: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading positions and rates: ' + error);
-					this.setState({ loadingData: false });
+					this.setState({
+						loadingData: false,
+						indexView: 2,
+						firstLoad: false,
+						errorMessage: 'Error: Loading positions and rates: ' + error
+					});
 				});
 		});
 	};
@@ -566,7 +579,6 @@ class PositionsCompanyForm extends React.Component {
 
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -596,16 +608,11 @@ class PositionsCompanyForm extends React.Component {
 							'success',
 							isEdition ? 'Positions and Rates Updated!' : 'Positions and Rates Inserted!'
 						);
-						this.loadPositions();
-						this.resetState();
+						this.setState({ showCircularLoading: true }, () => {
+							this.loadPositions(this.resetState);
+						});
 					})
 					.catch((error) => {
-						console.log(
-							isEdition
-								? 'Error: Updating Positions and Rates: '
-								: 'Error: Inserting Positions and Rates: ',
-							error
-						);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition
@@ -613,7 +620,6 @@ class PositionsCompanyForm extends React.Component {
 								: 'Error: Inserting Positions and Rates: ' + error
 						);
 						this.setState({
-							success: false,
 							loading: false
 						});
 					});
@@ -635,11 +641,15 @@ class PositionsCompanyForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Position and Rate Deleted!');
-						this.loadPositions();
-						this.resetState();
+						this.setState({ showCircularLoading: true, firstLoad: true }, () => {
+							this.loadDepartments(() => {
+								this.resetState(() => {
+									this.setState({ indexView: 1, firstLoad: false });
+								});
+							});
+						});
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Position and Rates: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Position and Rates: ' + error);
 						this.setState({
 							loadingConfirm: false
@@ -652,7 +662,6 @@ class PositionsCompanyForm extends React.Component {
 	addPositionHandler = () => {
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -671,7 +680,7 @@ class PositionsCompanyForm extends React.Component {
 			}
 		);
 	};
-	getRate = () => {
+	getRate = (func = () => {}) => {
 		this.props.client
 			.query({
 				query: this.GET_RATE_QUERY,
@@ -682,7 +691,8 @@ class PositionsCompanyForm extends React.Component {
 				if (data.data.getbusinesscompanies != null) {
 					this.setState({
 						companyRate: data.data.getbusinesscompanies[0].Rate
-					});
+					}),
+						func;
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -691,12 +701,19 @@ class PositionsCompanyForm extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading Company Rate: ', error);
 				this.props.handleOpenSnackbar('error', 'Error: Loading Company Rate: ' + error);
 			});
 	};
 	cancelDepartmentHandler = () => {
-		this.resetState();
+		this.setState({ firstLoad: true }, () => {
+			this.resetState(() => {
+				this.loadPositions(() => {
+					this.loadDepartments(() => {
+						this.setState({ indexView: 1, firstLoad: false });
+					});
+				});
+			});
+		});
 	};
 
 	handleClickOpenModal = () => {
@@ -706,16 +723,26 @@ class PositionsCompanyForm extends React.Component {
 		this.setState({ openModal: false });
 	};
 	render() {
-		const { loading, success } = this.state;
+		const { loading } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-		const buttonClassname = classNames({
-			[classes.buttonSuccess]: success
-		});
+		var isLoading =
+			this.state.loadingData || this.state.loadingDepartments || this.state.firstLoad || this.state.loading;
 
+		if (this.state.indexView == 0) {
+			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
+		}
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					{isLoading && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
 		return (
 			<div className="position_tab">
-				{(this.state.loadingData || this.state.loadingDepartments) && <LinearProgress />}
+				{isLoading && <LinearProgress />}
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -831,23 +858,12 @@ class PositionsCompanyForm extends React.Component {
 								>
 									<div>
 										<Button
-											disabled={
-												this.state.idToEdit != null &&
-												this.state.idToEdit != '' &&
-												this.state.idToEdit != 0 ? (
-													!this.Login.AllowEdit
-												) : (
-													!this.Login.AllowInsert
-												)
-											}
-											//disabled={this.state.loading}
-											//	disabled={!this.state.formValid}
+											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
 											variant="fab"
 											color="primary"
-											className={buttonClassname}
 											onClick={this.addPositionHandler}
 										>
-											{success ? <CheckIcon /> : <SaveIcon />}
+											<SaveIcon />
 										</Button>
 									</div>
 								</Tooltip>
@@ -863,7 +879,6 @@ class PositionsCompanyForm extends React.Component {
 											//	disabled={this.state.loading || !this.state.enableCancelButton}
 											variant="fab"
 											color="secondary"
-											className={buttonClassname}
 											onClick={this.cancelDepartmentHandler}
 										>
 											<ClearIcon />
@@ -879,7 +894,7 @@ class PositionsCompanyForm extends React.Component {
 						<PositionsTable
 							data={this.state.data}
 							departments={this.state.departments}
-							loading={this.state.loading}
+							loading={this.state.showCircularLoading && isLoading}
 							shifts={this.state.shifts}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}

@@ -142,7 +142,8 @@ class DepartmentsCompanyForm extends React.Component {
 		openSnackbar: true,
 		loading: false,
 		success: false,
-		loadingConfirm: false
+		loadingConfirm: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -290,7 +291,8 @@ class DepartmentsCompanyForm extends React.Component {
 				codeHasValue: true,
 				descriptionHasValue: true,
 
-				buttonTitle: this.TITLE_EDIT
+				buttonTitle: this.TITLE_EDIT,
+				showCircularLoading: false
 			},
 			() => {
 				this.focusTextInput();
@@ -299,13 +301,13 @@ class DepartmentsCompanyForm extends React.Component {
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
 	};
 	componentWillMount() {
 		this.loadDepartments();
 	}
 
-	loadDepartments = () => {
+	loadDepartments = (func = () => {}) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -391,7 +393,7 @@ class DepartmentsCompanyForm extends React.Component {
 							'success',
 							isEdition ? 'Department Updated!' : 'Department Inserted!'
 						);
-						this.resetState(() => {
+						this.setState({ showCircularLoading: true }, () => {
 							this.loadDepartments();
 						});
 					})
@@ -423,7 +425,7 @@ class DepartmentsCompanyForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Department Deleted!');
-						this.resetState(() => {
+						this.setState({ showCircularLoading: true }, () => {
 							this.loadDepartments();
 						});
 					})
@@ -606,7 +608,7 @@ class DepartmentsCompanyForm extends React.Component {
 					<div className={classes.divStyle}>
 						<DepartmentsTable
 							data={this.state.data}
-							loading={this.state.loading}
+							loading={this.state.showCircularLoading && this.state.loadingData}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}
 						/>
