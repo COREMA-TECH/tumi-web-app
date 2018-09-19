@@ -1,13 +1,10 @@
-.table-elements {
-	margin: 0 auto !important;
+.main-container__title {
+	text-transform: capitalize;
 }
 
-div[class*="MuiLinearProgress-root-"] {
-	position: absolute;
-	top: 0;
-	width: 100%;
-	z-index: 999;
-	@media only screen and (min-width: $breakpoint-large) {
-		margin-left: -60px;
+.table-elements {
+	margin: 0 auto !important;
+	li {
+		padding: 5px !important;
 	}
 }

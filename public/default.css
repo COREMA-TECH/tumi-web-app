@@ -210,17 +210,13 @@ p {
     padding: 10px;
     text-align: center; }
 
+.main-container__title {
+  text-transform: capitalize; }
+
 .table-elements {
   margin: 0 auto !important; }
-
-div[class*="MuiLinearProgress-root-"] {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 999; }
-  @media only screen and (min-width: 60em) {
-    div[class*="MuiLinearProgress-root-"] {
-      margin-left: -60px; } }
+  .table-elements li {
+    padding: 5px !important; }
 
 .modal-overflow {
   overflow-x: scroll; }
