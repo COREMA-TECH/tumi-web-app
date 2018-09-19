@@ -195,10 +195,28 @@ p {
   width: 75%; }
 
 .input-search-contract {
-  border-radius: 5px 0 0 5px !important; }
+  border-radius: 0px 5px 5px 0 !important; }
+
+.search-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%; }
+  .search-container .icon {
+    background: #3ca2c8;
+    border-radius: 5px 0 0 5px;
+    color: white;
+    min-width: 50px;
+    padding: 10px;
+    text-align: center; }
+
+.main-container__title {
+  text-transform: capitalize; }
 
 .table-elements {
   margin: 0 auto !important; }
+  .table-elements li {
+    padding: 5px !important; }
 
 .modal-overflow {
   overflow-x: scroll; }
@@ -309,7 +327,7 @@ p {
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link:hover {
-      color: #b7d433;
+      color: #3ca2c8;
       text-decoration: none; }
   @media only screen and (min-width: 768px) {
     .MenuMobile-overlay {
@@ -371,6 +389,11 @@ p {
     display: block !important; }
   .card-form-row .primary {
     margin-bottom: 1rem; } }
+
+.card-form-body {
+  -webkit-box-pack: start !important;
+  -ms-flex-pack: start !important;
+  justify-content: flex-start !important; }
 
 .card-form-company {
   height: 665px; }
