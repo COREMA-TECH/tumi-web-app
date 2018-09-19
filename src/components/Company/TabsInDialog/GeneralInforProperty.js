@@ -8,6 +8,7 @@ import withApollo from 'react-apollo/withApollo';
 import InputValid from "../../ui-components/InputWithValidation/InputValid";
 import InputMask from "react-input-mask";
 import FileUpload from 'ui-components/FileUpload/FileUpload';
+import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -242,7 +243,7 @@ class GeneralInfoProperty extends Component {
                         input: {
                             Id: parseInt(updatedId),
                             Code: `'${this.state.Code}'`,
-                            Code01: `'${this.state.Code}'`,
+                            Code01: `'${this.state.Code01}'`,
                             Id_Contract: 1,
                             Id_Company: parseInt(companyId),
                             BusinessType: 1,
@@ -433,8 +434,7 @@ class GeneralInfoProperty extends Component {
         });
     };
 
-    componentDidMount(){
-
+    componentWillMount(){
         if(this.props.idProperty !== null) {
             this.getPropertyData(this.props.idProperty, this.props.idCompany);
         } else {
@@ -544,7 +544,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <p>Nothing to display </p>;
+                                                return <SelectNothingToDisplay />
                                             }}
                                         </Query>
                                     </div>
@@ -552,7 +552,7 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">City</span>
                                     </div>
                                     <div className="col-6">
-                                        <Query query={this.getCitiesQuery} variables={{parent: 140}}>
+                                        <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
                                             {({loading, error, data, refetch, networkStatus}) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (loading) return <LinearProgress/>;
