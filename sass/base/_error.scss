@@ -1,19 +1,30 @@
 .Error {
-    &-success {
-        color: $success;
+    &-container {
+        padding-top: 3rem;
+        text-align: center;
+        width: 100%;
     }
     &-danger {
         color: $red;
     }
+    &-icon {
+        max-width: 200px;
+        width: 100%;
+    }
+    &-success {
+        color: $success;
+    }
     &-title {
-        font-size: 8rem;
+        font-size: 6rem;
         font-weight: 700;
     }
     &-text {
         color: $text-color;
         display: block;
         font-size: 1.5rem;
+        margin: 0 auto;
         text-align: center;
-        width: 450px;
+        max-width: 450px;
+        width: 100%;
     }
 }
