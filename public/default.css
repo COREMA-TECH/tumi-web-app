@@ -257,22 +257,33 @@ p {
   .select-form-customized {
     width: 100% !important; } }
 
-.Error-success {
-  color: #3ca2c8; }
+.Error-container {
+  padding-top: 3rem;
+  text-align: center;
+  width: 100%; }
 
 .Error-danger {
   color: #f50057; }
 
+.Error-icon {
+  max-width: 200px;
+  width: 100%; }
+
+.Error-success {
+  color: #3ca2c8; }
+
 .Error-title {
-  font-size: 8rem;
+  font-size: 6rem;
   font-weight: 700; }
 
 .Error-text {
   color: #7e7e7e;
   display: block;
   font-size: 1.5rem;
+  margin: 0 auto;
   text-align: center;
-  width: 450px; }
+  max-width: 450px;
+  width: 100%; }
 
 .Header-mobileMenu {
   color: #FFF;

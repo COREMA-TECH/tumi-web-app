@@ -475,7 +475,7 @@ class DepartmentsCompanyForm extends React.Component {
 			return (
 				<React.Fragment>
 					{this.state.loadingData && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" icon="danger" />)
 				</React.Fragment>
 			);
 		}
