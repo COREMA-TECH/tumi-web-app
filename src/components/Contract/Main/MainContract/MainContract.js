@@ -182,7 +182,7 @@ class MainContract extends Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 
-				<div className="main-contract__header">{renderHeaderContent()}</div>
+				<div className="main-contract__header main-contract__header-sg-container">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
 					<Query query={this.getContractsQuery} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
