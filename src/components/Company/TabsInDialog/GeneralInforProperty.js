@@ -192,8 +192,9 @@ class GeneralInfoProperty extends Component {
                         }
                     }
                 })
-                .then((data) => {
-                    this.props.updateIdProperty(data.data.insbusinesscompanies.Id);
+                .then(({data}) => {
+                    console.log("ID: -------------- : " + data.insbusinesscompanies.Id);
+                    // this.props.updateIdProperty();
 
                     this.setState({
                         linearProgress: false
