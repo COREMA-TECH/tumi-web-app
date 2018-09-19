@@ -195,7 +195,9 @@ class GeneralInfoProperty extends Component {
                 .then((data) => {
                     this.setState({
                         linearProgress: false
-                    })
+                    });
+
+                    this.props.next();
                 })
                 .catch((err) => console.log('The error is: ' + err));
 
@@ -603,10 +605,17 @@ class GeneralInfoProperty extends Component {
                                         <SelectForm
                                             data={days}
                                             update={(value) => {
-                                                this.setState({
-                                                    startWeek: value,
-                                                    validStartWeek: ''
-                                                })
+                                                if(value === 0){
+                                                    this.setState({
+                                                        startWeek: value,
+                                                        validStartWeek: 'valid'
+                                                    })
+                                                } else {
+                                                    this.setState({
+                                                        startWeek: value,
+                                                        validStartWeek: ''
+                                                    });
+                                                }
                                             }}
                                             value={this.state.startWeek}
                                             error={this.state.validStartWeek === '' ? false : true}
