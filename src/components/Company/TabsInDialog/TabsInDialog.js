@@ -80,6 +80,14 @@ class CustomizedTabs extends Component {
 		}));
 	};
 
+	componentWillMount(){
+		if(this.props.idProperty){
+			this.setState({
+                idProperty: this.props.idProperty
+            })
+        }
+    }
+
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;
@@ -112,7 +120,7 @@ class CustomizedTabs extends Component {
                         disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Positions"
+						label="Positions and Rates"
 					/>
 				</Tabs>
 				{value === 0 && (
@@ -131,7 +139,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 1 && (
 					<ContactCompanyForm
-						idCompany={this.props.idCompany}
+						idCompany={this.state.idProperty}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -143,7 +151,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 2 && (
 					<DepartmentsCompanyForm
-						idCompany={this.props.idCompany}
+                        idCompany={this.state.idProperty}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -155,7 +163,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 3 && (
 					<PositionsCompanyForm
-						idCompany={this.props.idCompany}
+                        idCompany={this.state.idProperty}
 						idContract={1}
 						item={this.state.item}
 						next={this.nextHandleChange}

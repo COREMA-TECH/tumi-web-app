@@ -578,9 +578,10 @@ class GeneralInformation extends Component {
         this.setState({
             propertyClick: boolValue,
             idProperty: id
-        });
+        }, () => {
 
-        this.setState({open: true, scroll});
+            this.setState({open: true, scroll});
+        });
     };
 
     handleClose = () => {
@@ -1332,7 +1333,8 @@ class GeneralInformation extends Component {
                         {this.state.propertyClick ? (
                             //Si el click es en una property : pasar el id de esa property
                             <TabsInDialog
-                                idCompany={this.state.idProperty}
+                                idCompany={this.props.idCompany}
+                                idProperty={this.state.idProperty}
                                 handleClose={this.handleClose}
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                             />
