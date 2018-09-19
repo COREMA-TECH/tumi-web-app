@@ -65,7 +65,8 @@ const styles = (theme) => ({
 class CustomizedTabs extends Component {
     state = {
         value: 0,
-        activeTab: false
+        activeTab: false,
+		idProperty: null
     };
 
 
@@ -96,16 +97,19 @@ class CustomizedTabs extends Component {
 						label="General Information"
 					/>
 					<Tab
+                        disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Contacts"
 					/>
 					<Tab
+                        disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Departments"
 					/>
 					<Tab
+                        disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Positions"
@@ -114,6 +118,12 @@ class CustomizedTabs extends Component {
 				{value === 0 && (
 					<GeneralInforProperty
 						idCompany={this.props.idCompany}
+						idProperty={this.state.idProperty}
+						updateIdProperty={(id) => {
+							this.setState({
+                                idProperty: id
+							})
+						}}
 						handleClose={this.props.handleClose}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						next={this.updateValue}

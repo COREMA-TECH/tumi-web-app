@@ -193,6 +193,8 @@ class GeneralInfoProperty extends Component {
                     }
                 })
                 .then((data) => {
+                    this.props.updateIdProperty(data.data.insbusinesscompanies.Id);
+
                     this.setState({
                         linearProgress: false
                     });
@@ -220,7 +222,7 @@ class GeneralInfoProperty extends Component {
 		}
 	`;
 
-    updateCompany = (companyId) => {
+    updateCompany = (companyId, updatedId) => {
         //Create the mutation using apollo global client
         this.props.client
             .mutate({
@@ -228,15 +230,15 @@ class GeneralInfoProperty extends Component {
                 mutation: this.UPDATE_COMPANY,
                 variables: {
                     input: {
-                        Id: companyId,
+                        Id: parseInt(updatedId),
                         Code: `'${this.state.Code}'`,
                         Code01: `'${this.state.Code}'`,
                         Id_Contract: 1,
-                        Id_Company: 1,
+                        Id_Company: parseInt(companyId),
                         BusinessType: 1,
                         Location: `'${this.state.address}'`,
                         Location01: `'${this.state.optionalAddress}'`,
-                        Name: `'${this.state.legalName}'`,
+                        Name: `'${this.state.name}'`,
                         Description: `'${this.state.description}'`,
                         Start_Week: this.state.startWeek,
                         End_Week: this.state.endWeek,
@@ -246,11 +248,11 @@ class GeneralInfoProperty extends Component {
                         Rate: parseFloat(this.state.rate),
                         Zipcode: parseInt(this.state.zipCode),
                         Fax: `'${this.state.fax}'`,
-                        Primary_Email: `'${this.state.legalName}'`,
+                        Primary_Email: `'email'`,
                         Phone_Number: `'${this.state.phoneNumber}'`,
                         Phone_Prefix: `'${this.state.phonePrefix}'`,
                         City: parseInt(this.state.city),
-                        Id_Parent: 1,
+                        Id_Parent: parseInt(companyId),
                         IsActive: parseInt(this.state.active),
                         User_Created: 1,
                         User_Updated: 1,
@@ -321,8 +323,11 @@ class GeneralInfoProperty extends Component {
 
         if (validated) {
             //Show loading component
-
-            this.insertCompany(this.props.idCompany);
+            if(this.props.idProperty === null) {
+                this.insertCompany(this.props.idCompany);
+            } else {
+                this.updateCompany(this.props.idCompany, this.props.idProperty)
+            }
         } else {
             // Show snackbar warning
         }
@@ -605,7 +610,7 @@ class GeneralInfoProperty extends Component {
                                         <SelectForm
                                             data={days}
                                             update={(value) => {
-                                                if(value === 0){
+                                                if (value === 0) {
                                                     this.setState({
                                                         startWeek: value,
                                                         validStartWeek: 'valid'
@@ -626,7 +631,6 @@ class GeneralInfoProperty extends Component {
                         </div>
                     </div>
                 </div>
-
                 <div className="contract-footer--bottom">
                     <input type="submit" value="Next" className="contract-next-button"/>
                 </div>
