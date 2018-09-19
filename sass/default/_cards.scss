@@ -23,6 +23,9 @@
             }
         }
     }
+    &-form-body {
+        justify-content: flex-start !important;
+    }
     &-form-company {
         height: 665px;
         @media only screen and (max-width: 480px) {
