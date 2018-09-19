@@ -5,6 +5,41 @@
     .MuiModal-root-75 .select-form-customized {
         max-width: 251.5px;
     }
+    div[class*="MuiFormControl-root-"].select-form-customized {
+        max-width: 267px;
+    }
+}
+
+.department__header-inputGroup {
+    padding: 0 !important;
+    height: auto !important;
+    .withApollo-DepartmentsCompanyForm--wrapper-100 {
+        margin: 0 !important;
+    }
+}
+
+.input {
+    &-label {
+        &-right {
+            @media only screen and (min-width: $breakpoint-large) {
+                text-align: right;
+            }
+        }
+    }
+    &-enable {
+        background-color: $white;
+    }
+    &-wrapper {
+        border: solid 1px $gray;
+        border-radius: $border-radius-input;
+        width: 100%;
+        &-gray {
+            background-color: $light-gray; 
+        }
+        .input-form {
+            width: 100%;
+        }
+    }
 }
 
 .input-form--file {
@@ -18,6 +53,11 @@
 
 .input-search-contract {
     border-radius: 0px 5px 5px 0 !important;
+    transition: width .5s;
+    width: 50% !important;
+    &:focus {
+        width: 100% !important;
+    }
 }
 
 .search-container {

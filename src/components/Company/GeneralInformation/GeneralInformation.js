@@ -669,7 +669,9 @@ class GeneralInformation extends Component {
             insuranceURL: '',
             otherURL: '',
             other01URL: '',
-            loadingUpdate: false
+            loadingUpdate: false,
+            indexView: 0, //Loading
+            errorMessage: ''
         };
     }
 

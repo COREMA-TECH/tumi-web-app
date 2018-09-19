@@ -9,21 +9,21 @@ import { Query } from 'react-apollo';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
-import ErrorMessageComponent from "../../../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+import ErrorMessageComponent from '../../../ui-components/ErrorMessageComponent/ErrorMessageComponent';
 
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-const styles = theme => ({
+const styles = (theme) => ({
 	root: {
-		flexGrow: 1,
+		flexGrow: 1
 	},
 	paper: {
 		padding: theme.spacing.unit * 2,
 		textAlign: 'center',
-		color: theme.palette.text.secondary,
-	},
+		color: theme.palette.text.secondary
+	}
 });
 
 class MainContract extends Component {
@@ -140,11 +140,11 @@ class MainContract extends Component {
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[classes.root, "company-list__header"].join(" ")}>
+			<div className={[ classes.root, 'company-list__header' ].join(' ')}>
 				<Grid container spacing={24}>
 					<Grid item xs={12} sm={6}>
 						<div className="search-container">
-							<i class="fa fa-search icon"></i>
+							<i className="fa fa-search icon" />
 							<input
 								onChange={(text) => {
 									this.setState({
@@ -182,7 +182,7 @@ class MainContract extends Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 
-				<div className="main-contract__header">{renderHeaderContent()}</div>
+				<div className="main-contract__header main-contract__header-sg-container">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
 					<Query query={this.getContractsQuery} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
@@ -190,12 +190,13 @@ class MainContract extends Component {
 								if (loading) return <LinearProgress />;
 							}
 
-							if (error) return (
-								<ErrorMessageComponent
-									url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
-									message="Error loading contracts"
-								/>
-							);
+							if (error)
+								return (
+									<ErrorMessageComponent
+										url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
+										message="Error loading contracts"
+									/>
+								);
 							if (data.getcontracts != null && data.getcontracts.length > 0) {
 								let dataContract = data.getcontracts.filter((_, i) => {
 									if (this.state.filterText === '') {
@@ -213,13 +214,19 @@ class MainContract extends Component {
 
 								return (
 									<div className="main-contract-table">
-										<div className="contract_table_wrapper">
-											<TablesContracts
-												data={dataContract}
-												delete={(id) => {
-													this.deleteContractById(id);
-												}}
-											/>
+										<div className="container">
+											<div className="row">
+												<div className="col-12">
+													<div className="contract_table_wrapper">
+														<TablesContracts
+															data={dataContract}
+															delete={(id) => {
+																this.deleteContractById(id);
+															}}
+															/>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								);
@@ -239,7 +246,7 @@ class MainContract extends Component {
 }
 
 MainContract.propTypes = {
-	classes: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withApollo(withGlobalContent(MainContract)));

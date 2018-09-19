@@ -11,8 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
 import TablePagination from '@material-ui/core/TablePagination';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
@@ -20,7 +18,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
 	root: {
@@ -174,6 +172,16 @@ class DepartmentsTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
+
+		if (this.props.loading) {
+			return (
+				<React.Fragment>
+					<div className="nothing-container">
+						<CircularProgress size={150} />
+					</div>
+				</React.Fragment>
+			);
+		}
 		if (items.length == 0) {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" />;
 		}
@@ -184,8 +192,8 @@ class DepartmentsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th}>Code</CustomTableCell>
-							<CustomTableCell className={classes.th}>Description</CustomTableCell>
+							<CustomTableCell className={classes.th}>Department Code</CustomTableCell>
+							<CustomTableCell className={classes.th}>Department Name</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>

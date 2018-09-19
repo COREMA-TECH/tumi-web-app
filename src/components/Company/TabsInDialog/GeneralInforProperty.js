@@ -384,8 +384,6 @@ class GeneralInfoProperty extends Component {
         this.setState({
             linearProgress: true
         }, () => {
-            alert(this.state.linearProgress);
-
             this.props.client
                 .query({
                     query: this.getCompanyQuery,
@@ -441,7 +439,6 @@ class GeneralInfoProperty extends Component {
             this.getPropertyData(this.props.idProperty, this.props.idCompany);
         } else {
             // Show Snackbar
-            alert("Updated");
         }
     }
 

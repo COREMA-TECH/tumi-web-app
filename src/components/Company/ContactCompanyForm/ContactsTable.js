@@ -21,6 +21,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import TableFooter from '@material-ui/core/TableFooter';
 import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -181,6 +182,16 @@ class ContactsTable extends React.Component {
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
+
+		if (this.props.loading) {
+			return (
+				<React.Fragment>
+					<div className="nothing-container">
+						<CircularProgress size={150} />
+					</div>
+				</React.Fragment>
+			);
+		}
 		if (items.length == 0) {
 			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" />;
 		}
@@ -199,7 +210,7 @@ class ContactsTable extends React.Component {
 							{/*<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>*/}
 							<CustomTableCell className={classes.th}>Email</CustomTableCell>
 							<CustomTableCell className={classes.th}>Phone Number</CustomTableCell>
-							<CustomTableCell className={classes.th}>Title</CustomTableCell>
+							<CustomTableCell className={classes.th}>Contact Title</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>

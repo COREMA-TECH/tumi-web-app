@@ -33,6 +33,8 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import InputForm from 'ui-components/InputForm/InputForm';
 import withGlobalContent from 'Generic/Global';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+
 import './index.css';
 const styles = (theme) => ({
 	container: {
@@ -201,9 +203,10 @@ class Catalogs extends React.Component {
 		enableCancelButton: false,
 
 		loading: false,
-		success: false,
 		loadingConfirm: false,
-		openModal: false
+		openModal: false,
+		firstLoad: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -217,16 +220,16 @@ class Catalogs extends React.Component {
 			parents: [],
 			allparents: [],
 
-			loadingData: true,
-			loadingCatalogs: true,
-			loadingParents: true,
-			loadingAllParents: true,
+			loadingData: false,
+			loadingCatalogs: false,
+			loadingParents: false,
+			loadingAllParents: false,
 			idCompany: this.props.idCompany,
-
+			indexView: 0, //Loading
+			errorMessage: '',
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
-		console.log('Catalogos', this.props);
 	}
 	focusTextInput() {
 		if (document.getElementById('name')) {
@@ -241,15 +244,12 @@ class Catalogs extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.loadAllParents();
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -310,9 +310,9 @@ class Catalogs extends React.Component {
 	validateAllFields(func) {
 		let idCatalogValid = this.state.idCatalog !== null && this.state.idCatalog !== 0 && this.state.idCatalog !== '';
 		let idParentValid = this.state.idParent !== null && this.state.idParent !== -1 && this.state.idParent !== '';
-		let nameValid = this.state.name.trim().length >= 2;
-		let displayLabelValid = this.state.displayLabel.trim().length >= 2;
-		let descriptionValid = this.state.description.trim().length >= 2;
+		let nameValid = this.state.name.trim().length >= 1;
+		let displayLabelValid = this.state.displayLabel.trim().length >= 1;
+		let descriptionValid = this.state.description.trim().length >= 1;
 
 		this.setState(
 			{
@@ -351,15 +351,15 @@ class Catalogs extends React.Component {
 				idParentHasValue = value !== null && value !== -1 && value !== '';
 				break;
 			case 'name':
-				nameValid = value.trim().length >= 2;
+				nameValid = value.trim().length >= 1;
 				nameHasValue = value != '';
 				break;
 			case 'displayLabel':
-				displayLabelValid = value.trim().length >= 2;
+				displayLabelValid = value.trim().length >= 1;
 				displayLabelHasValue = value != '';
 				break;
 			case 'description':
-				descriptionValid = value.trim().length >= 2;
+				descriptionValid = value.trim().length >= 1;
 				descriptionHasValue = value != '';
 				break;
 			case 'value':
@@ -415,102 +415,125 @@ class Catalogs extends React.Component {
 		this.deleteCatalogItem();
 	};
 	onEditHandler = ({ Id, Id_Catalog, Id_Parent, Name, DisplayLabel, Description, Value }) => {
-		this.setState(
-			{
-				idToEdit: Id,
-				idCatalog: Id_Catalog,
-				idParent: Id_Parent,
-				name: Name.trim(),
-				displayLabel: DisplayLabel.trim(),
-				description: Description.trim(),
-				value: Value == null ? '' : Value.trim(),
-
-				formValid: true,
-				idCatalogValid: true,
-				idParentValid: true,
-				nameValid: true,
-				displayLabelValid: true,
-				descriptionValid: true,
-
-				enableCancelButton: true,
-				idCatalogHasValue: true,
-				idParentHasValue: true,
-				nameHasValue: true,
-				displayHasValue: true,
-				descriptionHasValue: true,
-				valueHasValue: true,
-
-				buttonTitle: this.TITLE_EDIT,
-				openModal: true
-			},
-			() => {
-				var parent = Id_Catalog;
-				switch (Id_Catalog) {
-					case 5: //City
-						parent = 3; //State
-						break;
-					case 3: //State
-						parent = 2; //Country
-						break;
-					case 2: //Country
-						parent = -1; //No Parent
-						break;
-				}
-				this.loadParents(parent, Id, Id_Parent);
-				this.focusTextInput();
+		this.setState({ showCircularLoading: false }, () => {
+			var parent = Id_Catalog;
+			switch (Id_Catalog) {
+				case 5: //City
+					parent = 3; //State
+					break;
+				case 3: //State
+					parent = 2; //Country
+					break;
+				case 2: //Country
+					parent = -1; //No Parent
+					break;
 			}
-		);
+			this.loadParents(parent, Id, Id_Parent, () => {
+				this.setState(
+					{
+						idToEdit: Id,
+						idCatalog: Id_Catalog,
+						idParent: Id_Parent,
+						name: Name.trim(),
+						displayLabel: DisplayLabel.trim(),
+						description: Description.trim(),
+						value: Value == null ? '' : Value.trim(),
+
+						formValid: true,
+						idCatalogValid: true,
+						idParentValid: true,
+						nameValid: true,
+						displayLabelValid: true,
+						descriptionValid: true,
+
+						enableCancelButton: true,
+						idCatalogHasValue: true,
+						idParentHasValue: true,
+						nameHasValue: true,
+						displayHasValue: true,
+						descriptionHasValue: true,
+						valueHasValue: true,
+
+						buttonTitle: this.TITLE_EDIT,
+						openModal: true
+					},
+					this.focusTextInput
+				);
+			});
+		});
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, showCircularLoading: false, opendialog: true });
 	};
 	componentWillMount() {
-		this.loadCatalogs();
-		this.loadCatalogsItems();
-		this.loadAllParents();
+		this.setState({ firstLoad: true }, () => {
+			this.loadCatalogs(() => {
+				this.setState({ indexView: 1, firstLoad: false });
+			});
+		});
 	}
 
-	loadCatalogs = () => {
-		this.setState({ loadingData: true });
-		this.props.client
-			.query({
-				query: this.GET_CATALOGS_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				console.log(data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0);
-				let idCatalog = data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0;
-				if (data.data.getcatalog != null) {
-					this.setState(
-						{
-							catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
-							idCatalogFilter: idCatalog
-							//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
-							//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
-						},
-						() => {
-							this.loadParents(idCatalog);
-							this.loadCatalogsItems(data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0);
-							this.setState({ loadingData: false }, this.resetState());
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading catalogs: getcatalog not exists in query data'
-					);
-					this.setState({ loadingData: false });
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading catalogs: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading catalogs: ' + error);
-				this.setState({ loadingData: false });
-			});
+	loadCatalogs = (func = () => {}) => {
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_CATALOGS_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					let idCatalog = data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0;
+					if (data.data.getcatalog != null) {
+						this.setState(
+							{
+								catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
+								idCatalogFilter: idCatalog,
+
+								loadingData: false,
+								firstLoad: false
+								//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
+								//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
+							},
+							() => {
+								this.loadParents(idCatalog, 0, 0, () => {
+									this.loadCatalogsItems(
+										data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0,
+										() => {
+											this.setState(
+												{
+													loadingData: false,
+													firstLoad: false
+												},
+												() => {
+													this.resetState(func());
+												}
+											);
+										}
+									);
+								});
+							}
+						);
+					} else {
+						this.setState({
+							loadingData: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading catalogs: getcatalog not exists in query data',
+							firstLoad: false
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingData: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading catalogs: ' + error,
+						firstLoad: false
+					});
+				});
+		});
 	};
 
-	loadCatalogsItems = (idCatalog = 0) => {
+	loadCatalogsItems = (idCatalog = 0, func = () => {}) => {
 		this.setState({ loadingCatalogs: true });
 		this.props.client
 			.query({
@@ -522,27 +545,38 @@ class Catalogs extends React.Component {
 				if (data.data.getcatalogitem != null) {
 					this.setState(
 						{
-							data: data.data.getcatalogitem
+							data: data.data.getcatalogitem,
+							firstLoad: false
 						},
 						() => {
-							this.setState({ loadingCatalogs: false }, this.resetState());
+							this.setState(
+								{
+									loadingCatalogs: false,
+									firstLoad: false
+								},
+								this.resetState(func)
+							);
 						}
 					);
 				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading catalogs items: getcatalogitem not exists in query data'
-					);
-					this.setState({ loadingCatalogs: false });
+					this.setState({
+						loadingCatalogs: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading catalogs items: getcatalogitem not exists in query data',
+						firstLoad: false
+					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading catalogs items: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading catalogs items: ' + error);
-				this.setState({ loadingCatalogs: false });
+				this.setState({
+					loadingCatalogs: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading catalogs items: ' + error,
+					firstLoad: false
+				});
 			});
 	};
-	loadParents = (idCatalog = -1, id = 0, idParent = -1) => {
+	loadParents = (idCatalog = -1, id = 0, idParent = -1, func = () => {}) => {
 		this.setState({ loadingParents: true });
 		this.props.client
 			.query({
@@ -552,29 +586,37 @@ class Catalogs extends React.Component {
 			})
 			.then((data) => {
 				if (data.data.getparentcatalogitem != null) {
-					this.setState({
-						parents: data.data.getparentcatalogitem,
-						loadingParents: false,
-						idParent: idParent,
-						idParentHasValue: idParent > -1,
-						idParentValid: idParent > -1
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading parents: getparentcatalogitem not exists in query data'
+					this.setState(
+						{
+							parents: data.data.getparentcatalogitem,
+							loadingParents: false,
+							idParent: idParent,
+							idParentHasValue: idParent > -1,
+							idParentValid: idParent > -1,
+							firstLoad: false
+						},
+						func
 					);
-					this.setState({ loadingParents: false });
+				} else {
+					this.setState({
+						loadingParents: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading parents: getparentcatalogitem not exists in query data',
+						firstLoad: false
+					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading parents: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading parents: ' + error);
-				this.setState({ loadingParents: false });
+				this.setState({
+					loadingParents: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading parents: ' + error,
+					firstLoad: false
+				});
 			});
 	};
 
-	loadAllParents = () => {
+	loadAllParents = (func = () => {}) => {
 		this.setState({ loadingAllParents: true });
 		this.props.client
 			.query({
@@ -584,22 +626,30 @@ class Catalogs extends React.Component {
 			})
 			.then((data) => {
 				if (data.data.getparentcatalogitem != null) {
-					this.setState({
-						allparents: data.data.getparentcatalogitem,
-						loadingAllParents: false
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading all parents: getparentcatalogitem not exists in query data'
+					this.setState(
+						{
+							allparents: data.data.getparentcatalogitem,
+							loadingAllParents: false,
+							firstLoad: false
+						},
+						func
 					);
-					this.setState({ loadingAllParents: false });
+				} else {
+					this.setState({
+						loadingAllParents: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading all parents: getparentcatalogitem not exists in query data',
+						firstLoad: false
+					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading all parents: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading all parents: ' + error);
-				this.setState({ loadingAllParents: false });
+				this.setState({
+					loadingAllParents: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading all parents: ' + error,
+					firstLoad: false
+				});
 			});
 	};
 
@@ -618,7 +668,6 @@ class Catalogs extends React.Component {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -651,14 +700,21 @@ class Catalogs extends React.Component {
 							'success',
 							isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
 						);
-						this.loadCatalogsItems(this.state.idCatalog);
-						this.resetState();
+						this.setState(
+							{
+								openModal: false,
+								showCircularLoading: true
+							},
+							() => {
+								this.loadCatalogsItems(this.state.idCatalog, () => {
+									this.loadAllParents(() => {
+										this.resetState();
+									});
+								});
+							}
+						);
 					})
 					.catch((error) => {
-						console.log(
-							isEdition ? 'Error: Updating Catalog Item: ' : 'Error: Inserting Catalog Item: ',
-							error
-						);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition
@@ -666,7 +722,6 @@ class Catalogs extends React.Component {
 								: 'Error: Inserting Catalog Item: ' + error
 						);
 						this.setState({
-							success: false,
 							loading: false
 						});
 					});
@@ -676,7 +731,8 @@ class Catalogs extends React.Component {
 	deleteCatalogItem = () => {
 		this.setState(
 			{
-				loadingConfirm: true
+				loadingConfirm: true,
+				showCircularLoading: true
 			},
 			() => {
 				this.props.client
@@ -688,14 +744,18 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Catalog Item Deleted!');
-						this.loadCatalogsItems(this.state.idCatalogFilter);
-						this.resetState();
+						this.loadCatalogsItems(
+							this.state.idCatalogFilter,
+							this.resetState(() => {
+								this.setState({ showCircularLoading: false });
+							})
+						);
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Catalog Item: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Catalog Item: ' + error);
 						this.setState({
-							loadingConfirm: false
+							loadingConfirm: false,
+							showCircularLoading: false
 						});
 					});
 			}
@@ -705,7 +765,6 @@ class Catalogs extends React.Component {
 	addCatalogItemHandler = () => {
 		this.setState(
 			{
-				success: false,
 				loading: true,
 				openModal: true
 			},
@@ -752,20 +811,30 @@ class Catalogs extends React.Component {
 		this.setState({ openModal: false });
 	};
 	render() {
-		const { loading, success } = this.state;
+		const { loading } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-		const buttonClassname = classNames({
-			[classes.buttonSuccess]: success
-		});
-
+		const isLoading =
+			this.state.loadingData ||
+			this.state.loadingParents ||
+			this.state.loadingAllParents ||
+			this.state.loadingCatalogs ||
+			this.state.loadingConfirm;
+		if (this.state.indexView == 0) {
+			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
+		}
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					{isLoading && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
 		return (
 			<div className="catalog_tab">
-				{(this.state.loadingData ||
-					this.state.loadingParents ||
-					this.state.loadingAllParents ||
-					this.state.loadingCatalogs) && <LinearProgress />}
-					
+				{isLoading && <LinearProgress />}
+
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -887,10 +956,10 @@ class Catalogs extends React.Component {
 											//	disabled={!this.state.formValid}
 											variant="fab"
 											color="primary"
-											className={buttonClassname}
+											//	className={buttonClassname}
 											onClick={this.addCatalogItemHandler}
 										>
-											{success ? <CheckIcon /> : <SaveIcon />}
+											<SaveIcon />
 										</Button>
 									</div>
 								</Tooltip>
@@ -904,7 +973,7 @@ class Catalogs extends React.Component {
 										<Button
 											variant="fab"
 											color="secondary"
-											className={buttonClassname}
+											//className={buttonClassname}
 											onClick={this.cancelCatalogItemHandler}
 										>
 											<ClearIcon />
@@ -933,32 +1002,19 @@ class Catalogs extends React.Component {
 							value={this.state.idCatalogFilter}
 						/>
 					</div>
-					<button
-						className="add-catalog"
-						onClick={this.handleClickOpenModal}
-						disabled={
-							this.state.loadingData ||
-							this.state.loadingDepartments ||
-							this.state.loadingParents ||
-							this.state.loadingAllParents
-						}
-					>
+					<button className="add-catalog" onClick={this.handleClickOpenModal} disabled={isLoading}>
 						{' '}
 						Add Catalog{' '}
 					</button>
 				</div>
+
 				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<CatalogsTable
 							data={this.state.data}
 							catalogs={this.state.catalogs}
 							parents={this.state.allparents}
-							loading={
-								this.state.loadingData ||
-								this.state.loadingDepartments ||
-								this.state.loadingParents ||
-								this.state.loadingAllParents
-							}
+							loading={this.state.showCircularLoading && isLoading}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}
 						/>

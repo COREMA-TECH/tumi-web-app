@@ -179,13 +179,13 @@ class Signature extends React.Component {
 	getFontForCanvas = () => {
 		switch (this.state.selectedLetter) {
 			case 'letter1Selector':
-				return '30px "Muli"';
+				return '60px "Muli"';
 			case 'letter2Selector':
-				return '40px "Rancho"';
+				return '60px "Rancho"';
 			case 'letter3Selector':
-				return 'italic 30px "Pacifico"';
+				return 'italic 60px "Pacifico"';
 			default:
-				return '30px "Muli"';
+				return '60px "Muli"';
 		}
 	};
 	getFillStyleForCanvas = () => {
@@ -542,7 +542,7 @@ class Signature extends React.Component {
 											this.state.loading || this.state.disableButtonLetter || this.state.saved
 										}
 										variant="fab"
-										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
+										className={[buttonClassname, classes.buttonSuccess].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />
