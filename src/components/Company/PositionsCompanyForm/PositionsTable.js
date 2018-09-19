@@ -244,7 +244,7 @@ class PositionsTable extends React.Component {
 			);
 		}
 		if (items.length == 0) {
-			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" />;
+			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
 			<Paper className={classes.root}>

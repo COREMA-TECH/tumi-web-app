@@ -57,6 +57,14 @@ class FileUpload extends Component {
 		);
 	}
 
+	componentWillMount(){
+		if(this.props.fileNameUploaded){
+			this.setState({
+				fileName: this.props.fileNameUploaded
+			})
+		}
+	}
+
 	render() {
 		return (
 			<div className="upload-file">

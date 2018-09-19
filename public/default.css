@@ -185,7 +185,31 @@ p {
   .MuiModal-root-73 .select-form-customized {
     max-width: 251.5px; }
   .MuiModal-root-75 .select-form-customized {
-    max-width: 251.5px; } }
+    max-width: 251.5px; }
+  div[class*="MuiFormControl-root-"].select-form-customized {
+    max-width: 267px; } }
+
+.department__header-inputGroup {
+  padding: 0 !important;
+  height: auto !important; }
+  .department__header-inputGroup .withApollo-DepartmentsCompanyForm--wrapper-100 {
+    margin: 0 !important; }
+
+@media only screen and (min-width: 60em) {
+  .input-label-right {
+    text-align: right; } }
+
+.input-enable {
+  background-color: #FFF; }
+
+.input-wrapper {
+  border: solid 1px #dddddd;
+  border-radius: 5px;
+  width: 100%; }
+  .input-wrapper-gray {
+    background-color: #f5f7f9; }
+  .input-wrapper .input-form {
+    width: 100%; }
 
 .input-form--file {
   max-width: 248px; }
@@ -195,7 +219,13 @@ p {
   width: 75%; }
 
 .input-search-contract {
-  border-radius: 0px 5px 5px 0 !important; }
+  border-radius: 0px 5px 5px 0 !important;
+  -webkit-transition: width .5s;
+  -o-transition: width .5s;
+  transition: width .5s;
+  width: 50% !important; }
+  .input-search-contract:focus {
+    width: 100% !important; }
 
 .search-container {
   display: -webkit-box;
@@ -227,22 +257,33 @@ p {
   .select-form-customized {
     width: 100% !important; } }
 
-.Error-success {
-  color: #3ca2c8; }
+.Error-container {
+  padding-top: 3rem;
+  text-align: center;
+  width: 100%; }
 
 .Error-danger {
   color: #f50057; }
 
+.Error-icon {
+  max-width: 200px;
+  width: 100%; }
+
+.Error-success {
+  color: #3ca2c8; }
+
 .Error-title {
-  font-size: 8rem;
+  font-size: 6rem;
   font-weight: 700; }
 
 .Error-text {
   color: #7e7e7e;
   display: block;
   font-size: 1.5rem;
+  margin: 0 auto;
   text-align: center;
-  width: 450px; }
+  max-width: 450px;
+  width: 100%; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -254,7 +295,7 @@ p {
   position: absolute;
   top: 4px;
   display: none; }
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 767px) {
     .Header-mobileMenu {
       display: block; } }
 
@@ -451,7 +492,13 @@ p {
   width: 91px; }
 
 .main-contract__header {
-  height: auto !important; }
+  height: auto !important;
+  padding-top: 5px !important;
+  padding-bottom: 5px !important; }
+
+@media (min-width: 360px) {
+  .main-contract .company-list__header {
+    height: auto !important; } }
 
 .main-contract__content {
   width: 100% !important; }

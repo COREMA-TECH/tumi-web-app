@@ -24,7 +24,6 @@ import Slide from '@material-ui/core/Slide/Slide';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -584,12 +583,15 @@ class GeneralInformation extends Component {
      */
 	handleClickOpen = (scroll, boolValue, id) => () => {
 		if (!this.props.showStepper) return false;
-		this.setState({
-			propertyClick: boolValue,
-			idProperty: id
-		});
-
-		this.setState({ open: true, scroll });
+		this.setState(
+			{
+				propertyClick: boolValue,
+				idProperty: id
+			},
+			() => {
+				this.setState({ open: true, scroll });
+			}
+		);
 	};
 
 	handleClose = () => {

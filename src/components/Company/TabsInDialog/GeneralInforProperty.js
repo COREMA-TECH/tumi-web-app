@@ -8,6 +8,7 @@ import withApollo from 'react-apollo/withApollo';
 import InputValid from "../../ui-components/InputWithValidation/InputValid";
 import InputMask from "react-input-mask";
 import FileUpload from 'ui-components/FileUpload/FileUpload';
+import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -31,7 +32,7 @@ class GeneralInfoProperty extends Component {
         phoneNumber: '',
         startDate: '',
         startWeek: '',
-        endWeek: 6,
+        endWeek: '',
         workWeek: '',
         avatar: 'url',
         otherPhoneNumber: '',
@@ -50,6 +51,11 @@ class GeneralInfoProperty extends Component {
         validState: '',
         validCity: '',
         validStartWeek: '',
+        validEndWeek: '',
+        contractURL: '',
+        insuranceURL: '',
+        otherURL: '',
+        other01URL: '',
     };
 
 
@@ -124,6 +130,10 @@ class GeneralInfoProperty extends Component {
 				Primary_Email
 				Phone_Number
 				Suite
+				Contract_URL
+                Insurace_URL
+                Other_URL
+                Other01_URL
 			}
 		}
 	`;
@@ -156,7 +166,7 @@ class GeneralInfoProperty extends Component {
                         input: {
                             Id: 150,
                             Code: `'${this.state.Code}'`,
-                            Code01: `'${this.state.Code}'`,
+                            Code01: `'${this.state.Code01}'`,
                             Id_Contract: 1,
                             Id_Company: parseInt(id),
                             BusinessType: 1,
@@ -166,7 +176,7 @@ class GeneralInfoProperty extends Component {
                             Description: `'${this.state.description}'`,
                             Start_Week: this.state.startWeek,
                             End_Week: this.state.endWeek,
-                            Legal_Name: `'${this.state.legalName}'`,
+                            Legal_Name: "''",
                             Country: parseInt(this.state.country),
                             State: parseInt(this.state.state),
                             Rate: parseFloat(this.state.rate),
@@ -184,21 +194,28 @@ class GeneralInfoProperty extends Component {
                             Date_Updated: "'2018-08-14'",
                             ImageURL: `'${this.state.avatar}'`,
                             Start_Date: "'2018-08-14'",
-                            Contract_URL: "'firebase url'",
-                            Insurace_URL: "'firebase url'",
-                            Other_URL: "'firebase url'",
-                            Other01_URL: "'firebase url'",
+                            Contract_URL: `'${this.state.contractURL}'`,
+                            Insurace_URL: `'${this.state.insuranceURL}'`,
+                            Other_URL: `'${this.state.otherURL}'`,
+                            Other01_URL: `'${this.state.other01URL}'`,
                             Suite: parseInt(this.state.suite),
                             Contract_Status: "'C'"
                         }
                     }
                 })
-                .then((data) => {
+                .then(({data}) => {
+                    this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id));
+
                     this.setState({
                         linearProgress: false
                     });
 
                     this.props.next();
+
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Success: Property created'
+                    );
                 })
                 .catch((err) => console.log('The error is: ' + err));
 
@@ -221,61 +238,74 @@ class GeneralInfoProperty extends Component {
 		}
 	`;
 
-    updateCompany = (companyId) => {
+    updateCompany = (companyId, updatedId) => {
         //Create the mutation using apollo global client
-        this.props.client
-            .mutate({
-                // Pass the mutation structure
-                mutation: this.UPDATE_COMPANY,
-                variables: {
-                    input: {
-                        Id: companyId,
-                        Code: `'${this.state.Code}'`,
-                        Code01: `'${this.state.Code}'`,
-                        Id_Contract: 1,
-                        Id_Company: 1,
-                        BusinessType: 1,
-                        Location: `'${this.state.address}'`,
-                        Location01: `'${this.state.optionalAddress}'`,
-                        Name: `'${this.state.legalName}'`,
-                        Description: `'${this.state.description}'`,
-                        Start_Week: this.state.startWeek,
-                        End_Week: this.state.endWeek,
-                        Legal_Name: `'${this.state.legalName}'`,
-                        Country: parseInt(this.state.country),
-                        State: parseInt(this.state.state),
-                        Rate: parseFloat(this.state.rate),
-                        Zipcode: parseInt(this.state.zipCode),
-                        Fax: `'${this.state.fax}'`,
-                        Primary_Email: `'${this.state.legalName}'`,
-                        Phone_Number: `'${this.state.phoneNumber}'`,
-                        Phone_Prefix: `'${this.state.phonePrefix}'`,
-                        City: parseInt(this.state.city),
-                        Id_Parent: 1,
-                        IsActive: parseInt(this.state.active),
-                        User_Created: 1,
-                        User_Updated: 1,
-                        Date_Created: "'2018-08-14'",
-                        Date_Updated: "'2018-08-14'",
-                        ImageURL: `'${this.state.avatar}'`,
-                        Start_Date: "'2018-08-14'",
-                        Contract_URL: "'firebase url'",
-                        Insurace_URL: "'firebase url'",
-                        Other_URL: "'firebase url'",
-                        Other01_URL: "'firebase url'",
-                        Suite: parseInt(this.state.suite),
-                        Contract_Status: "'C'"
+        this.setState({
+            linearProgress: true
+        }, () => {
+            this.props.client
+                .mutate({
+                    // Pass the mutation structure
+                    mutation: this.UPDATE_COMPANY,
+                    variables: {
+                        input: {
+                            Id: parseInt(updatedId),
+                            Code: `'${this.state.Code}'`,
+                            Code01: `'${this.state.Code01}'`,
+                            Id_Contract: 1,
+                            Id_Company: parseInt(companyId),
+                            BusinessType: 1,
+                            Location: `'${this.state.address}'`,
+                            Location01: `'${this.state.optionalAddress}'`,
+                            Name: `'${this.state.name}'`,
+                            Description: `'${this.state.description}'`,
+                            Start_Week: this.state.startWeek,
+                            End_Week: this.state.endWeek,
+                            Legal_Name: "''",
+                            Country: parseInt(this.state.country),
+                            State: parseInt(this.state.state),
+                            Rate: parseFloat(this.state.rate),
+                            Zipcode: parseInt(this.state.zipCode),
+                            Fax: `'${this.state.fax}'`,
+                            Primary_Email: `'email'`,
+                            Phone_Number: `'${this.state.phoneNumber}'`,
+                            Phone_Prefix: `'${this.state.phonePrefix}'`,
+                            City: parseInt(this.state.city),
+                            Id_Parent: parseInt(companyId),
+                            IsActive: parseInt(this.state.active),
+                            User_Created: 1,
+                            User_Updated: 1,
+                            Date_Created: "'2018-08-14'",
+                            Date_Updated: "'2018-08-14'",
+                            ImageURL: `'${this.state.avatar}'`,
+                            Start_Date: "'2018-08-14'",
+                            Contract_URL: `'${this.state.contractURL}'`,
+                            Insurace_URL: `'${this.state.insuranceURL}'`,
+                            Other_URL: `'${this.state.otherURL}'`,
+                            Other01_URL: `'${this.state.other01URL}'`,
+                            Suite: parseInt(this.state.suite),
+                            Contract_Status: "'C'"
+                        }
                     }
-                }
-            })
-            .then((data) => {
-                console.log('Server data response is: ' + data);
-            })
-            .catch((err) => {
-                //Capture error and show a specific message
+                })
+                .then((data) => {
+                    this.props.next();
 
-                console.log('The error is: ' + err)
-            });
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Success: Property updated'
+                    );
+
+                    this.setState({
+                        linearProgress: false
+                    });
+                })
+                .catch((err) => {
+                    //Capture error and show a specific message
+
+                    console.log('The error is: ' + err)
+                });
+        })
     };
 
 
@@ -320,12 +350,27 @@ class GeneralInfoProperty extends Component {
             validated = false;
         }
 
+        if (this.state.endWeek === '') {
+            this.setState({
+                validEndWeek: 'valid'
+            });
+
+            validated = false;
+        }
+
         if (validated) {
             //Show loading component
-
-            this.insertCompany(this.props.idCompany);
+            if (this.props.idProperty === null) {
+                this.insertCompany(this.props.idCompany);
+            } else {
+                this.updateCompany(this.props.idCompany, this.props.idProperty)
+            }
         } else {
             // Show snackbar warning
+            this.props.handleOpenSnackbar(
+                'warning',
+                'Error: Saving Information: You must fill all the required fields'
+            );
         }
     };
 
@@ -341,13 +386,81 @@ class GeneralInfoProperty extends Component {
         }
     };
 
-    /**********************************************************
-     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
-     **********************************************************/
+    /**
+     * Get data from property
+     */
+    getPropertyData = (idProperty, idParent) => {
+        this.setState({
+            linearProgress: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: this.getCompanyQuery,
+                    variables: {
+                        id: idProperty,
+                        Id_Parent: idParent
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({data}) => {
+                    if (data.getbusinesscompanies !== null) {
+                        let item = data.getbusinesscompanies[0];
+                        this.setState({
+                            name: item.Name.trim(),
+                            legalName: item.Legal_Name.trim(),
+                            description: item.Description.trim(),
+                            startWeek: item.Start_Week,
+                            endWeek: item.End_Week,
+                            address: item.Location.trim(),
+                            optionalAddress: item.Location01.trim(),
+
+                            country: item.Country,
+                            state: item.State,
+                            city: item.City,
+
+                            rate: item.Rate,
+                            email: item.Primary_Email.trim(),
+                            phoneNumber: item.Phone_Number.trim(),
+
+                            Code: item.Code.trim(),
+                            Code01: item.Code01.trim(),
+                            zipCode: item.Zipcode,
+                            fax: item.Fax,
+                            startDate: item.Start_Date.trim(),
+                            active: item.IsActive,
+                            suite: item.Suite,
+                            contractURL: item.Contract_URL,
+                            insuranceURL: item.Insurace_URL,
+                            otherURL: item.Other_URL,
+                            other01URL: item.Other01_URL,
+                        });
+
+                        this.setState({
+                            linearProgress: false
+                        });
+                    } else {
+                        // TODO: Show a error message
+                    }
+                })
+                .catch();
+        });
+    };
+
+    componentWillMount() {
+        if (this.props.idProperty !== null) {
+            this.getPropertyData(this.props.idProperty, this.props.idCompany);
+        } else {
+            // Show Snackbar
+        }
+    }
+
 
     render() {
         this.changeStylesInCompletedInputs();
 
+        if (this.state.linearProgress) {
+            return <LinearProgress/>
+        }
 
         return (
             <form onSubmit={this.handleFormSubmit} noValidate>
@@ -443,7 +556,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <p>Nothing to display </p>;
+                                                return <SelectNothingToDisplay/>
                                             }}
                                         </Query>
                                     </div>
@@ -451,7 +564,7 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">City</span>
                                     </div>
                                     <div className="col-6">
-                                        <Query query={this.getCitiesQuery} variables={{parent: 140}}>
+                                        <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
                                             {({loading, error, data, refetch, networkStatus}) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (loading) return <LinearProgress/>;
@@ -473,7 +586,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <p>Nothing to display </p>;
+                                                return <SelectNothingToDisplay/>
                                             }}
                                         </Query>
                                     </div>
@@ -608,7 +721,7 @@ class GeneralInfoProperty extends Component {
                                                 <SelectForm
                                                     data={days}
                                                     update={(value) => {
-                                                        if(value === 0){
+                                                        if (value === 0) {
                                                             this.setState({
                                                                 startWeek: value,
                                                                 validStartWeek: 'valid'
@@ -631,20 +744,20 @@ class GeneralInfoProperty extends Component {
                                                 <SelectForm
                                                     data={days}
                                                     update={(value) => {
-                                                        if(value === 0){
+                                                        if (value === 0) {
                                                             this.setState({
-                                                                startWeek: value,
-                                                                validStartWeek: 'valid'
+                                                                endWeek: value,
+                                                                validEndWeek: 'valid'
                                                             })
                                                         } else {
                                                             this.setState({
-                                                                startWeek: value,
-                                                                validStartWeek: ''
+                                                                endWeek: value,
+                                                                validEndWeek: ''
                                                             });
                                                         }
                                                     }}
-                                                    value={this.state.startWeek}
-                                                    error={this.state.validStartWeek === '' ? false : true}
+                                                    value={this.state.endWeek}
+                                                    error={this.state.validEndWeek === '' ? false : true}
                                                 />
                                             </div>
                                         </div>
@@ -659,7 +772,7 @@ class GeneralInfoProperty extends Component {
                                                     contractURL: url
                                                 });
                                             }}
-                                            disabled={!this.props.showStepper}
+                                            fileNameUploaded={this.state.contractURL}
                                         />
                                     </div>
                                     <div className="col-6">
@@ -669,10 +782,10 @@ class GeneralInfoProperty extends Component {
                                         <FileUpload
                                             updateURL={(url) => {
                                                 this.setState({
-                                                    contractURL: url
+                                                    insuranceURL: url
                                                 });
                                             }}
-                                            disabled={!this.props.showStepper}
+                                            fileNameUploaded={this.state.insuranceURL}
                                         />
                                     </div>
                                     <div className="col-6">
@@ -682,10 +795,10 @@ class GeneralInfoProperty extends Component {
                                         <FileUpload
                                             updateURL={(url) => {
                                                 this.setState({
-                                                    contractURL: url
+                                                    otherURL: url
                                                 });
                                             }}
-                                            disabled={!this.props.showStepper}
+                                            fileNameUploaded={this.state.otherURL}
                                         />
                                     </div>
                                     <div className="col-6">
@@ -695,10 +808,10 @@ class GeneralInfoProperty extends Component {
                                         <FileUpload
                                             updateURL={(url) => {
                                                 this.setState({
-                                                    contractURL: url
+                                                    other01URL: url
                                                 });
                                             }}
-                                            disabled={!this.props.showStepper}
+                                            fileNameUploaded={this.state.other01URL}
                                         />
                                     </div>
                                 </div>
@@ -706,7 +819,6 @@ class GeneralInfoProperty extends Component {
                         </div>
                     </div>
                 </div>
-
                 <div className="contract-footer--bottom">
                     <input type="submit" value="Next" className="contract-next-button"/>
                 </div>
