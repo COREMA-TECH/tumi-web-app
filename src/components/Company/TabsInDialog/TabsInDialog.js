@@ -65,7 +65,8 @@ const styles = (theme) => ({
 class CustomizedTabs extends Component {
     state = {
         value: 0,
-        activeTab: false
+        activeTab: false,
+		idProperty: null
     };
 
 
@@ -78,6 +79,14 @@ class CustomizedTabs extends Component {
 			value: prevState.value + 1
 		}));
 	};
+
+	componentWillMount(){
+		if(this.props.idProperty){
+			this.setState({
+                idProperty: this.props.idProperty
+            })
+        }
+    }
 
 	render() {
 		const { classes } = this.props;
@@ -96,24 +105,33 @@ class CustomizedTabs extends Component {
 						label="General Information"
 					/>
 					<Tab
+                        disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Contacts"
 					/>
 					<Tab
+                        disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Departments"
 					/>
 					<Tab
+                        disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Positions"
+						label="Positions and Rates"
 					/>
 				</Tabs>
 				{value === 0 && (
 					<GeneralInforProperty
 						idCompany={this.props.idCompany}
+						idProperty={this.state.idProperty}
+						updateIdProperty={(id) => {
+							this.setState({
+                                idProperty: id
+							})
+						}}
 						handleClose={this.props.handleClose}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						next={this.updateValue}
@@ -121,7 +139,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 1 && (
 					<ContactCompanyForm
-						idCompany={this.props.idCompany}
+						idCompany={this.state.idProperty}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -133,7 +151,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 2 && (
 					<DepartmentsCompanyForm
-						idCompany={this.props.idCompany}
+                        idCompany={this.state.idProperty}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -145,7 +163,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 3 && (
 					<PositionsCompanyForm
-						idCompany={this.props.idCompany}
+                        idCompany={this.state.idProperty}
 						idContract={1}
 						item={this.state.item}
 						next={this.nextHandleChange}
