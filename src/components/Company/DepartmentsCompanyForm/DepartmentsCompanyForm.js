@@ -152,6 +152,8 @@ class DepartmentsCompanyForm extends React.Component {
 			idCompany: this.props.idCompany,
 			inputEnabled: true,
 			loadingData: false,
+			indexView: 0, //Loading
+			errorMessage: '',
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
@@ -178,14 +180,12 @@ class DepartmentsCompanyForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -302,13 +302,6 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		if (window.location.pathname === '/company/edit') {
-			this.setState(
-				{
-					//inputEnabled: false
-				}
-			);
-		}
 		this.loadDepartments();
 	}
 
@@ -325,24 +318,27 @@ class DepartmentsCompanyForm extends React.Component {
 						this.setState(
 							{
 								data: data.data.getcatalogitem,
-								loadingData: false
+								loadingData: false,
+								indexView: 1
 							},
 							() => {
 								this.resetState();
 							}
 						);
 					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading departments: getcatalogitem not exists in query data'
-						);
-						this.setState({ loadingData: false });
+						this.setState({
+							loadingData: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading departments: getcatalogitem not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading departments: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
-					this.setState({ loadingData: false });
+					this.setState({
+						loadingData: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading departments: ' + error
+					});
 				});
 		});
 	};
@@ -395,14 +391,11 @@ class DepartmentsCompanyForm extends React.Component {
 							'success',
 							isEdition ? 'Department Updated!' : 'Department Inserted!'
 						);
-						this.loadDepartments();
-						this.resetState();
+						this.resetState(() => {
+							this.loadDepartments();
+						});
 					})
 					.catch((error) => {
-						console.log(
-							isEdition ? 'Error: Updating Department: ' : 'Error: Inserting Department: ',
-							error
-						);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Department: ' + error : 'Error: Inserting Department: ' + error
@@ -430,11 +423,11 @@ class DepartmentsCompanyForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Department Deleted!');
-						this.loadDepartments();
-						this.resetState();
+						this.resetState(() => {
+							this.loadDepartments();
+						});
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Department: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Department: ' + error);
 						this.setState({
 							loadingConfirm: false
@@ -477,7 +470,17 @@ class DepartmentsCompanyForm extends React.Component {
 		const buttonClassname = classNames({
 			[classes.buttonSuccess]: success
 		});
-
+		if (this.state.indexView == 0) {
+			return <React.Fragment>{this.state.loadingData && <LinearProgress />}</React.Fragment>;
+		}
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					{this.state.loadingData && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
 		return (
 			<div className="department_tab">
 				{this.state.loadingData && <LinearProgress />}

@@ -18,7 +18,7 @@ class MainContainer extends Component {
 					<i className="fas fa-bars" />
 				</label>
 				<MobileMenu />
-				<div class="MenuMobile-overlay" onClick={this.props.handleCloseMenu}></div>
+				<div className="MenuMobile-overlay" onClick={this.props.handleCloseMenu} />
 				<div className="main-container--header">
 					<span className="icon-menu" onClick={this.handleClickMenu} />
 					<span className="main-container__title">Company Information</span>
@@ -34,4 +34,4 @@ class MainContainer extends Component {
 
 MainContainer.propTypes = {};
 
-export default Global (MainContainer);
+export default Global(MainContainer);

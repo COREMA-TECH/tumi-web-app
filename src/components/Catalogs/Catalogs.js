@@ -33,6 +33,8 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import InputForm from 'ui-components/InputForm/InputForm';
 import withGlobalContent from 'Generic/Global';
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+
 import './index.css';
 const styles = (theme) => ({
 	container: {
@@ -217,16 +219,16 @@ class Catalogs extends React.Component {
 			parents: [],
 			allparents: [],
 
-			loadingData: true,
-			loadingCatalogs: true,
-			loadingParents: true,
-			loadingAllParents: true,
+			loadingData: false,
+			loadingCatalogs: false,
+			loadingParents: false,
+			loadingAllParents: false,
 			idCompany: this.props.idCompany,
-
+			indexView: 0, //Loading
+			errorMessage: '',
 			...this.DEFAULT_STATE
 		};
 		this.onEditHandler = this.onEditHandler.bind(this);
-		console.log('Catalogos', this.props);
 	}
 	focusTextInput() {
 		if (document.getElementById('name')) {
@@ -241,15 +243,12 @@ class Catalogs extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.loadAllParents();
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -467,50 +466,63 @@ class Catalogs extends React.Component {
 	};
 	componentWillMount() {
 		this.loadCatalogs();
-		this.loadCatalogsItems();
-		this.loadAllParents();
 	}
 
-	loadCatalogs = () => {
-		this.setState({ loadingData: true });
-		this.props.client
-			.query({
-				query: this.GET_CATALOGS_QUERY,
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				console.log(data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0);
-				let idCatalog = data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0;
-				if (data.data.getcatalog != null) {
-					this.setState(
-						{
-							catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
-							idCatalogFilter: idCatalog
-							//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
-							//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
-						},
-						() => {
-							this.loadParents(idCatalog);
-							this.loadCatalogsItems(data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0);
-							this.setState({ loadingData: false }, this.resetState());
-						}
-					);
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading catalogs: getcatalog not exists in query data'
-					);
-					this.setState({ loadingData: false });
-				}
-			})
-			.catch((error) => {
-				console.log('Error: Loading catalogs: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading catalogs: ' + error);
-				this.setState({ loadingData: false });
-			});
+	loadCatalogs = (func = () => {}) => {
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.GET_CATALOGS_QUERY,
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					let idCatalog = data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0;
+					if (data.data.getcatalog != null) {
+						this.setState(
+							{
+								catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
+								idCatalogFilter: idCatalog,
+								indexView: 1,
+								loadingData: false
+								//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
+								//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
+							},
+							() => {
+								this.loadParents(idCatalog, 0, 0, () => {
+									this.loadCatalogsItems(
+										0,
+										data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0,
+										() => {
+											this.setState(
+												{ loadingData: false },
+												this.resetState(() => {
+													func;
+												})
+											);
+										}
+									);
+								});
+							}
+						);
+					} else {
+						this.setState({
+							loadingData: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading catalogs: getcatalog not exists in query data'
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingData: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading catalogs: ' + error
+					});
+				});
+		});
 	};
 
-	loadCatalogsItems = (idCatalog = 0) => {
+	loadCatalogsItems = (idCatalog = 0, func = () => {}) => {
 		this.setState({ loadingCatalogs: true });
 		this.props.client
 			.query({
@@ -522,27 +534,35 @@ class Catalogs extends React.Component {
 				if (data.data.getcatalogitem != null) {
 					this.setState(
 						{
-							data: data.data.getcatalogitem
+							data: data.data.getcatalogitem,
+							indexView: 1
 						},
 						() => {
-							this.setState({ loadingCatalogs: false }, this.resetState());
+							this.setState(
+								{ loadingCatalogs: false },
+								this.resetState(() => {
+									func;
+								})
+							);
 						}
 					);
 				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading catalogs items: getcatalogitem not exists in query data'
-					);
-					this.setState({ loadingCatalogs: false });
+					this.setState({
+						loadingCatalogs: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading catalogs items: getcatalogitem not exists in query data'
+					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading catalogs items: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading catalogs items: ' + error);
-				this.setState({ loadingCatalogs: false });
+				this.setState({
+					loadingCatalogs: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading catalogs items: ' + error
+				});
 			});
 	};
-	loadParents = (idCatalog = -1, id = 0, idParent = -1) => {
+	loadParents = (idCatalog = -1, id = 0, idParent = -1, func = () => {}) => {
 		this.setState({ loadingParents: true });
 		this.props.client
 			.query({
@@ -552,29 +572,35 @@ class Catalogs extends React.Component {
 			})
 			.then((data) => {
 				if (data.data.getparentcatalogitem != null) {
-					this.setState({
-						parents: data.data.getparentcatalogitem,
-						loadingParents: false,
-						idParent: idParent,
-						idParentHasValue: idParent > -1,
-						idParentValid: idParent > -1
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading parents: getparentcatalogitem not exists in query data'
+					this.setState(
+						{
+							parents: data.data.getparentcatalogitem,
+							loadingParents: false,
+							idParent: idParent,
+							idParentHasValue: idParent > -1,
+							idParentValid: idParent > -1,
+							indexView: 1
+						},
+						func
 					);
-					this.setState({ loadingParents: false });
+				} else {
+					this.setState({
+						loadingParents: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading parents: getparentcatalogitem not exists in query data'
+					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading parents: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading parents: ' + error);
-				this.setState({ loadingParents: false });
+				this.setState({
+					loadingParents: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading parents: ' + error
+				});
 			});
 	};
 
-	loadAllParents = () => {
+	loadAllParents = (func = () => {}) => {
 		this.setState({ loadingAllParents: true });
 		this.props.client
 			.query({
@@ -584,22 +610,28 @@ class Catalogs extends React.Component {
 			})
 			.then((data) => {
 				if (data.data.getparentcatalogitem != null) {
-					this.setState({
-						allparents: data.data.getparentcatalogitem,
-						loadingAllParents: false
-					});
-				} else {
-					this.props.handleOpenSnackbar(
-						'error',
-						'Error: Loading all parents: getparentcatalogitem not exists in query data'
+					this.setState(
+						{
+							allparents: data.data.getparentcatalogitem,
+							loadingAllParents: false,
+							indexView: 1
+						},
+						func
 					);
-					this.setState({ loadingAllParents: false });
+				} else {
+					this.setState({
+						loadingAllParents: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading all parents: getparentcatalogitem not exists in query data'
+					});
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading all parents: ', error);
-				this.props.handleOpenSnackbar('error', 'Error: Loading all parents: ' + error);
-				this.setState({ loadingAllParents: false });
+				this.setState({
+					loadingAllParents: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading all parents: ' + error
+				});
 			});
 	};
 
@@ -651,14 +683,13 @@ class Catalogs extends React.Component {
 							'success',
 							isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
 						);
-						this.loadCatalogsItems(this.state.idCatalog);
-						this.resetState();
+						this.loadCatalogsItems(this.state.idCatalog, () => {
+							this.loadAllParents(() => {
+								this.resetState();
+							});
+						});
 					})
 					.catch((error) => {
-						console.log(
-							isEdition ? 'Error: Updating Catalog Item: ' : 'Error: Inserting Catalog Item: ',
-							error
-						);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition
@@ -692,7 +723,6 @@ class Catalogs extends React.Component {
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Catalog Item: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Catalog Item: ' + error);
 						this.setState({
 							loadingConfirm: false
@@ -759,8 +789,35 @@ class Catalogs extends React.Component {
 			[classes.buttonSuccess]: success
 		});
 
+		if (this.state.indexView == 0) {
+			return (
+				<React.Fragment>
+					{(this.state.loadingData ||
+						this.state.loadingParents ||
+						this.state.loadingAllParents ||
+						this.state.loadingCatalogs) && <LinearProgress />}
+				</React.Fragment>
+			);
+		}
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					{(this.state.loadingData ||
+						this.state.loadingParents ||
+						this.state.loadingAllParents ||
+						this.state.loadingCatalogs) && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
 		return (
 			<div className="catalog_tab">
+				{console.log('Before Rnder')}
+				{console.log('loadingData', this.state.loadingData)}
+				{console.log('loadingCatalogs', this.state.loadingCatalogs)}
+				{console.log('loadingParents', this.state.loadingParents)}
+				{console.log('loadingAllParents', this.state.loadingAllParents)}
+
 				{(this.state.loadingData ||
 					this.state.loadingParents ||
 					this.state.loadingAllParents ||
@@ -938,7 +995,7 @@ class Catalogs extends React.Component {
 						onClick={this.handleClickOpenModal}
 						disabled={
 							this.state.loadingData ||
-							this.state.loadingDepartments ||
+							this.state.loadingCatalogs ||
 							this.state.loadingParents ||
 							this.state.loadingAllParents
 						}
@@ -947,6 +1004,11 @@ class Catalogs extends React.Component {
 						Add Catalog{' '}
 					</button>
 				</div>
+				{console.log('Before Table')}
+				{console.log('loadingData', this.state.loadingData)}
+				{console.log('loadingCatalogs', this.state.loadingCatalogs)}
+				{console.log('loadingParents', this.state.loadingParents)}
+				{console.log('loadingAllParents', this.state.loadingAllParents)}
 				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<CatalogsTable
@@ -955,7 +1017,7 @@ class Catalogs extends React.Component {
 							parents={this.state.allparents}
 							loading={
 								this.state.loadingData ||
-								this.state.loadingDepartments ||
+								this.state.loadingCatalogs ||
 								this.state.loadingParents ||
 								this.state.loadingAllParents
 							}
