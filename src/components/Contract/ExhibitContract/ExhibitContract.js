@@ -347,35 +347,10 @@ class ExhibitContract extends Component {
 					</DialogContent>
 					<DialogActions>
 						<div className="exhibit-button-right">
-							<Tooltip title="Save">
-								<div>
-									<Button
-										disabled={this.state.loading}
-										//	disabled={!this.state.formValid}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.handleSaveSignature}
-									>
-										<SaveIcon />
-									</Button>
-								</div>
-							</Tooltip>
+							
 							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 
-							<Tooltip title={'Cancel Operation'}>
-								<div>
-									<Button
-										//	disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="secondary"
-										className={buttonClassname}
-										onClick={this.cancelContractHandler}
-									>
-										<ClearIcon />
-									</Button>
-								</div>
-							</Tooltip>
+							
 						</div>
 						<div className="exhibit-button-left">
 							<Tooltip title={'Print Contract'}>
@@ -414,6 +389,19 @@ class ExhibitContract extends Component {
 										onClick={this.sendContract}
 									>
 										<SendIcon />
+									</Button>
+								</div>
+							</Tooltip>
+							<Tooltip title={'Cancel Operation'}>
+								<div>
+									<Button
+										//	disabled={this.state.loading || !this.state.enableCancelButton}
+										variant="fab"
+										color="secondary"
+										className={buttonClassname}
+										onClick={this.cancelContractHandler}
+									>
+										<ClearIcon />
 									</Button>
 								</div>
 							</Tooltip>

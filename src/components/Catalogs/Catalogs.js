@@ -822,7 +822,7 @@ class Catalogs extends React.Component {
 					this.state.loadingParents ||
 					this.state.loadingAllParents ||
 					this.state.loadingCatalogs) && <LinearProgress />}
-
+					
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
