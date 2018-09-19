@@ -52,6 +52,10 @@ class GeneralInfoProperty extends Component {
         validCity: '',
         validStartWeek: '',
         validEndWeek: '',
+        contractURL: '',
+        insuranceURL: '',
+        otherURL: '',
+        other01URL: '',
     };
 
 
@@ -126,6 +130,10 @@ class GeneralInfoProperty extends Component {
 				Primary_Email
 				Phone_Number
 				Suite
+				Contract_URL
+                Insurace_URL
+                Other_URL
+                Other01_URL
 			}
 		}
 	`;
@@ -186,10 +194,10 @@ class GeneralInfoProperty extends Component {
                             Date_Updated: "'2018-08-14'",
                             ImageURL: `'${this.state.avatar}'`,
                             Start_Date: "'2018-08-14'",
-                            Contract_URL: "'firebase url'",
-                            Insurace_URL: "'firebase url'",
-                            Other_URL: "'firebase url'",
-                            Other01_URL: "'firebase url'",
+                            Contract_URL: `'${this.state.contractURL}'`,
+                            Insurace_URL: `'${this.state.insuranceURL}'`,
+                            Other_URL: `'${this.state.otherURL}'`,
+                            Other01_URL: `'${this.state.other01URL}'`,
                             Suite: parseInt(this.state.suite),
                             Contract_Status: "'C'"
                         }
@@ -271,10 +279,10 @@ class GeneralInfoProperty extends Component {
                             Date_Updated: "'2018-08-14'",
                             ImageURL: `'${this.state.avatar}'`,
                             Start_Date: "'2018-08-14'",
-                            Contract_URL: "'firebase url'",
-                            Insurace_URL: "'firebase url'",
-                            Other_URL: "'firebase url'",
-                            Other01_URL: "'firebase url'",
+                            Contract_URL: `'${this.state.contractURL}'`,
+                            Insurace_URL: `'${this.state.insuranceURL}'`,
+                            Other_URL: `'${this.state.otherURL}'`,
+                            Other01_URL: `'${this.state.other01URL}'`,
                             Suite: parseInt(this.state.suite),
                             Contract_Status: "'C'"
                         }
@@ -352,7 +360,7 @@ class GeneralInfoProperty extends Component {
 
         if (validated) {
             //Show loading component
-            if(this.props.idProperty === null) {
+            if (this.props.idProperty === null) {
                 this.insertCompany(this.props.idCompany);
             } else {
                 this.updateCompany(this.props.idCompany, this.props.idProperty)
@@ -380,7 +388,7 @@ class GeneralInfoProperty extends Component {
 
     /**
      * Get data from property
-      */
+     */
     getPropertyData = (idProperty, idParent) => {
         this.setState({
             linearProgress: true
@@ -395,7 +403,7 @@ class GeneralInfoProperty extends Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then(({data}) => {
-                    if(data.getbusinesscompanies !== null){
+                    if (data.getbusinesscompanies !== null) {
                         let item = data.getbusinesscompanies[0];
                         this.setState({
                             name: item.Name.trim(),
@@ -421,6 +429,10 @@ class GeneralInfoProperty extends Component {
                             startDate: item.Start_Date.trim(),
                             active: item.IsActive,
                             suite: item.Suite,
+                            contractURL: item.Contract_URL,
+                            insuranceURL: item.Insurace_URL,
+                            otherURL: item.Other_URL,
+                            other01URL: item.Other01_URL,
                         });
 
                         this.setState({
@@ -434,8 +446,8 @@ class GeneralInfoProperty extends Component {
         });
     };
 
-    componentWillMount(){
-        if(this.props.idProperty !== null) {
+    componentWillMount() {
+        if (this.props.idProperty !== null) {
             this.getPropertyData(this.props.idProperty, this.props.idCompany);
         } else {
             // Show Snackbar
@@ -446,8 +458,8 @@ class GeneralInfoProperty extends Component {
     render() {
         this.changeStylesInCompletedInputs();
 
-        if(this.state.linearProgress) {
-            return <LinearProgress />
+        if (this.state.linearProgress) {
+            return <LinearProgress/>
         }
 
         return (
@@ -544,7 +556,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay />
+                                                return <SelectNothingToDisplay/>
                                             }}
                                         </Query>
                                     </div>
@@ -574,7 +586,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay />
+                                                return <SelectNothingToDisplay/>
                                             }}
                                         </Query>
                                     </div>
@@ -709,7 +721,7 @@ class GeneralInfoProperty extends Component {
                                                 <SelectForm
                                                     data={days}
                                                     update={(value) => {
-                                                        if(value === 0){
+                                                        if (value === 0) {
                                                             this.setState({
                                                                 startWeek: value,
                                                                 validStartWeek: 'valid'
@@ -732,7 +744,7 @@ class GeneralInfoProperty extends Component {
                                                 <SelectForm
                                                     data={days}
                                                     update={(value) => {
-                                                        if(value === 0){
+                                                        if (value === 0) {
                                                             this.setState({
                                                                 endWeek: value,
                                                                 validEndWeek: 'valid'
@@ -760,6 +772,7 @@ class GeneralInfoProperty extends Component {
                                                     contractURL: url
                                                 });
                                             }}
+                                            fileNameUploaded={this.state.contractURL}
                                         />
                                     </div>
                                     <div className="col-6">
@@ -769,9 +782,10 @@ class GeneralInfoProperty extends Component {
                                         <FileUpload
                                             updateURL={(url) => {
                                                 this.setState({
-                                                    contractURL: url
+                                                    insuranceURL: url
                                                 });
                                             }}
+                                            fileNameUploaded={this.state.insuranceURL}
                                         />
                                     </div>
                                     <div className="col-6">
@@ -781,9 +795,10 @@ class GeneralInfoProperty extends Component {
                                         <FileUpload
                                             updateURL={(url) => {
                                                 this.setState({
-                                                    contractURL: url
+                                                    otherURL: url
                                                 });
                                             }}
+                                            fileNameUploaded={this.state.otherURL}
                                         />
                                     </div>
                                     <div className="col-6">
@@ -793,9 +808,10 @@ class GeneralInfoProperty extends Component {
                                         <FileUpload
                                             updateURL={(url) => {
                                                 this.setState({
-                                                    contractURL: url
+                                                    other01URL: url
                                                 });
                                             }}
+                                            fileNameUploaded={this.state.other01URL}
                                         />
                                     </div>
                                 </div>
