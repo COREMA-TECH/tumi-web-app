@@ -217,7 +217,8 @@ class ContactcontactForm extends React.Component {
 		openSnackbar: true,
 		loading: false,
 		loadingConfirm: false,
-		openModal: false
+		openModal: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -503,49 +504,51 @@ class ContactcontactForm extends React.Component {
 		title,
 		type
 	}) => {
-		this.loadSupervisors(idSearch, () => {
-			this.setState(
-				{
-					idToEdit: idSearch,
-					firstname: firstname.trim(),
-					middlename: middlename.trim(),
-					lastname: lastname.trim(),
-					email: email.trim(),
-					number: number.trim(),
-					idSupervisor: idSupervisor,
-					idDepartment: idDepartment,
-					title: title,
-					type: type,
-					formValid: true,
-					emailValid: true,
-					firstnameValid: true,
-					//	middlenameValid: true,
-					lastnameValid: true,
-					titleValid: true,
-					typeValid: true,
-					idDepartmentValid: true,
-					idSupervisorValid: true,
-					enableCancelButton: true,
-					emailHasValue: true,
-					firstnameHasValue: true,
-					middlenameHasValue: true,
-					lastnameHasValue: true,
-					titleHasValue: true,
-					typeHasValue: true,
-					idDepartmentHasValue: true,
-					idSupervisorHasValue: true,
+		this.setState({ showCircularLoading: false }, () => {
+			this.loadSupervisors(idSearch, () => {
+				this.setState(
+					{
+						idToEdit: idSearch,
+						firstname: firstname.trim(),
+						middlename: middlename.trim(),
+						lastname: lastname.trim(),
+						email: email.trim(),
+						number: number.trim(),
+						idSupervisor: idSupervisor,
+						idDepartment: idDepartment,
+						title: title,
+						type: type,
+						formValid: true,
+						emailValid: true,
+						firstnameValid: true,
+						//	middlenameValid: true,
+						lastnameValid: true,
+						titleValid: true,
+						typeValid: true,
+						idDepartmentValid: true,
+						idSupervisorValid: true,
+						enableCancelButton: true,
+						emailHasValue: true,
+						firstnameHasValue: true,
+						middlenameHasValue: true,
+						lastnameHasValue: true,
+						titleHasValue: true,
+						typeHasValue: true,
+						idDepartmentHasValue: true,
+						idSupervisorHasValue: true,
 
-					numberValid: true,
-					buttonTitle: this.TITLE_EDIT,
-					openModal: true
-				},
-				this.focusTextInput
-			);
+						numberValid: true,
+						buttonTitle: this.TITLE_EDIT,
+						openModal: true
+					},
+					this.focusTextInput
+				);
+			});
 		});
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, showCircularLoading: false, opendialog: true });
 	};
 	componentWillMount() {
 		this.setState({ firstLoad: true }, () => {
@@ -788,7 +791,7 @@ class ContactcontactForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-						this.setState({ openModal: false }, () => {
+						this.setState({ openModal: false, showCircularLoading: true }, () => {
 							this.loadContacts(() => {
 								this.loadAllSupervisors(() => {
 									this.loadSupervisors(0, () => {
@@ -825,10 +828,21 @@ class ContactcontactForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
-						this.loadContacts();
-						this.loadAllSupervisors();
-						this.loadSupervisors();
-						this.resetState();
+						this.setState({ opendialog: false }, () => {
+							this.setState({ firstLoad: true }, () => {
+								this.loadContacts(() => {
+									this.loadTitles(() => {
+										this.loadDepartments(() => {
+											this.loadSupervisors(0, () => {
+												this.loadAllSupervisors(() => {
+													this.setState({ indexView: 1, firstLoad: false });
+												});
+											});
+										});
+									});
+								});
+							});
+						});
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
@@ -923,14 +937,8 @@ class ContactcontactForm extends React.Component {
 			this.state.loadingSupervisor ||
 			this.state.loadingAllSupervisors ||
 			this.state.loadingTitles ||
-			this.state.loading;
-
-		console.log('Is loadingData', this.state.loadingData);
-		console.log('Is loadingDepartments', this.state.loadingDepartments);
-		console.log('Is loadingSupervisor', this.state.loadingSupervisor);
-		console.log('Is loadingAllSupervisors', this.state.loadingAllSupervisors);
-		console.log('Is loadingTitles', this.state.loadingTitles);
-		console.log('Is loading', this.state.loading);
+			this.state.loading ||
+			this.state.firstLoad;
 
 		if (this.state.indexView == 0) {
 			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
@@ -1142,7 +1150,7 @@ class ContactcontactForm extends React.Component {
 							data={this.state.data}
 							titles={this.state.titles}
 							types={this.state.contactTypes}
-							loading={isLoading}
+							loading={this.state.showCircularLoading && isLoading}
 							supervisors={this.state.allSupervisors}
 							departments={this.state.departments}
 							onEditHandler={this.onEditHandler}
