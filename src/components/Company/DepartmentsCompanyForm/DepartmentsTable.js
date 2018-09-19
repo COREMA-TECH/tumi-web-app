@@ -192,8 +192,8 @@ class DepartmentsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th}>Code</CustomTableCell>
-							<CustomTableCell className={classes.th}>Description</CustomTableCell>
+							<CustomTableCell className={classes.th}>Department Code</CustomTableCell>
+							<CustomTableCell className={classes.th}>Department Name</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>

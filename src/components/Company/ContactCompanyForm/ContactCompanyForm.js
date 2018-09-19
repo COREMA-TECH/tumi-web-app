@@ -32,7 +32,7 @@ import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
-
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
 const styles = (theme) => ({
@@ -216,7 +216,6 @@ class ContactcontactForm extends React.Component {
 		enableCancelButton: false,
 		openSnackbar: true,
 		loading: false,
-		success: false,
 		loadingConfirm: false,
 		openModal: false
 	};
@@ -238,7 +237,8 @@ class ContactcontactForm extends React.Component {
 			loadingAllSupervisors: false,
 			loadingTitles: false,
 			contactTypes: ContactTypesData,
-
+			indexView: 0, //Loading
+			errorMessage: '',
 			activateTabs: true,
 
 			...this.DEFAULT_STATE
@@ -502,64 +502,62 @@ class ContactcontactForm extends React.Component {
 		title,
 		type
 	}) => {
-		this.setState(
-			{
-				idToEdit: idSearch,
-				firstname: firstname.trim(),
-				middlename: middlename.trim(),
-				lastname: lastname.trim(),
-				email: email.trim(),
-				number: number.trim(),
-				idSupervisor: idSupervisor,
-				idDepartment: idDepartment,
-				title: title,
-				type: type,
-				formValid: true,
-				emailValid: true,
-				firstnameValid: true,
-				//	middlenameValid: true,
-				lastnameValid: true,
-				titleValid: true,
-				typeValid: true,
-				idDepartmentValid: true,
-				idSupervisorValid: true,
-				enableCancelButton: true,
-				emailHasValue: true,
-				firstnameHasValue: true,
-				middlenameHasValue: true,
-				lastnameHasValue: true,
-				titleHasValue: true,
-				typeHasValue: true,
-				idDepartmentHasValue: true,
-				idSupervisorHasValue: true,
+		this.loadSupervisors(idSearch, () => {
+			this.setState(
+				{
+					idToEdit: idSearch,
+					firstname: firstname.trim(),
+					middlename: middlename.trim(),
+					lastname: lastname.trim(),
+					email: email.trim(),
+					number: number.trim(),
+					idSupervisor: idSupervisor,
+					idDepartment: idDepartment,
+					title: title,
+					type: type,
+					formValid: true,
+					emailValid: true,
+					firstnameValid: true,
+					//	middlenameValid: true,
+					lastnameValid: true,
+					titleValid: true,
+					typeValid: true,
+					idDepartmentValid: true,
+					idSupervisorValid: true,
+					enableCancelButton: true,
+					emailHasValue: true,
+					firstnameHasValue: true,
+					middlenameHasValue: true,
+					lastnameHasValue: true,
+					titleHasValue: true,
+					typeHasValue: true,
+					idDepartmentHasValue: true,
+					idSupervisorHasValue: true,
 
-				numberValid: true,
-				buttonTitle: this.TITLE_EDIT,
-				openModal: true
-			},
-			() => {
-				this.loadSupervisors(idSearch);
-				this.focusTextInput();
-			}
-		);
+					numberValid: true,
+					buttonTitle: this.TITLE_EDIT,
+					openModal: true
+				},
+				this.focusTextInput
+			);
+		});
 	};
 
 	onDeleteHandler = (idSearch) => {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		if (window.location.pathname === '/company/edit') {
-			this.setState(
-				{
-					//inputEnabled: false
-				}
-			);
-		}
-		this.loadContacts();
-		this.loadTitles();
-		this.loadDepartments();
-		this.loadSupervisors();
-		this.loadAllSupervisors();
+		this.loadContacts(() => {
+			this.loadTitles(() => {
+				this.loadDepartments(() => {
+					this.loadSupervisors(0, () => {
+						this.loadAllSupervisors(() => {
+							this.setState({ indexView: 1 });
+						});
+					});
+				});
+			});
+		});
 	}
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
@@ -572,7 +570,7 @@ class ContactcontactForm extends React.Component {
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	loadContacts = () => {
+	loadContacts = (func = () => {}) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -587,26 +585,27 @@ class ContactcontactForm extends React.Component {
 								data: data.data.getcontacts,
 								loadingData: false
 							},
-							() => {
-								this.resetState();
-							}
+							func
 						);
 					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading contacts: getcontacts not exists in query data'
-						);
-						this.setState({ loadingData: false });
+						this.setState({
+							loadingData: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading contacts: getcontacts not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading contacts: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading contacts: ' + error);
-					this.setState({ loadingData: false });
+					this.setState({
+						loadingData: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading contacts: ' + error
+					});
 				});
 		});
 	};
-	loadSupervisors = (idContact = 0) => {
+	loadSupervisors = (idContact = 0, func = () => {}) => {
+		console.log('loadSupervisors');
 		this.setState({ loadingSupervisor: true }, () => {
 			this.props.client
 				.query({
@@ -616,27 +615,33 @@ class ContactcontactForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getsupervisor != null) {
-						this.setState({
-							supervisors: data.data.getsupervisor,
-							loadingSupervisor: false
-						});
-					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading supervisors: getsupervisor not exists in query data'
+						this.setState(
+							{
+								supervisors: data.data.getsupervisor,
+								loadingSupervisor: false
+							},
+							func
 						);
-						this.setState({ loadingSupervisor: false });
+					} else {
+						this.setState({
+							loadingSupervisor: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading supervisors: getsupervisor not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading supervisors: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading supervisors: ' + error);
-					this.setState({ loadingSupervisor: false });
+					this.setState({
+						loadingSupervisor: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading supervisors: ' + error
+					});
 				});
 		});
 	};
 
-	loadAllSupervisors = () => {
+	loadAllSupervisors = (func = () => {}) => {
+		console.log('loadAllSupervisors', func);
 		this.setState({ loadingAllSupervisors: true }, () => {
 			this.props.client
 				.query({
@@ -646,27 +651,32 @@ class ContactcontactForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getsupervisor != null) {
-						this.setState({
-							allSupervisors: data.data.getsupervisor,
-							loadingAllSupervisors: false
-						});
-					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading [all] supervisors: getsupervisor not exists in query data'
+						this.setState(
+							{
+								allSupervisors: data.data.getsupervisor,
+								loadingAllSupervisors: false
+							},
+							func
 						);
-						this.setState({ loadingAllSupervisors: false });
+					} else {
+						this.setState({
+							loadingAllSupervisors: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading [all] supervisors: getsupervisor not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading [all] supervisors: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading [all] supervisors: ' + error);
-					this.setState({ loadingAllSupervisors: false });
+					this.setState({
+						loadingAllSupervisors: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading [all] supervisors: ' + error
+					});
 				});
 		});
 	};
 
-	loadTitles = () => {
+	loadTitles = (func = () => {}) => {
 		this.setState({ loadingTitles: true }, () => {
 			this.props.client
 				.query({
@@ -675,26 +685,31 @@ class ContactcontactForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
-						this.setState({
-							titles: data.data.getcatalogitem,
-							loadingTitles: false
-						});
-					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading titles: getcatalogitem not exists in query data'
+						this.setState(
+							{
+								titles: data.data.getcatalogitem,
+								loadingTitles: false
+							},
+							func
 						);
-						this.setState({ loadingTitles: false });
+					} else {
+						this.setState({
+							loadingTitles: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading titles: getcatalogitem not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading titles: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading titles: ' + error);
-					this.setState({ loadingTitles: false });
+					this.setState({
+						loadingTitles: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading titles: ' + error
+					});
 				});
 		});
 	};
-	loadDepartments = () => {
+	loadDepartments = (func = () => {}) => {
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -703,22 +718,27 @@ class ContactcontactForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
-						this.setState({
-							departments: data.data.getcatalogitem,
-							loadingDepartments: false
-						});
-					} else {
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error: Loading departments: getcatalogitem not exists in query data'
+						this.setState(
+							{
+								departments: data.data.getcatalogitem,
+								loadingDepartments: false
+							},
+							func
 						);
-						this.setState({ loadingDepartments: false });
+					} else {
+						this.setState({
+							loadingDepartments: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading departments: getcatalogitem not exists in query data'
+						});
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading departments: ', error);
-					this.props.handleOpenSnackbar('error', 'Error: Loading departments: ' + error);
-					this.setState({ loadingDepartments: false });
+					this.setState({
+						loadingDepartments: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading departments: ' + error
+					});
 				});
 		});
 	};
@@ -728,7 +748,6 @@ class ContactcontactForm extends React.Component {
 
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -758,20 +777,22 @@ class ContactcontactForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-						this.loadContacts();
-						this.loadAllSupervisors();
-						this.loadSupervisors();
-						this.resetState();
+						this.setState({ openModal: false }, () => {
+							this.loadContacts(() => {
+								this.loadAllSupervisors(() => {
+									this.loadSupervisors(0, () => {
+										this.resetState();
+									});
+								});
+							});
+						});
 					})
 					.catch((error) => {
-						console.log(isEdition ? 'Error: Updating Contact: ' : 'Error: Inserting Contact: ', error);
-
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
 						);
 						this.setState({
-							success: false,
 							loading: false
 						});
 					});
@@ -799,7 +820,6 @@ class ContactcontactForm extends React.Component {
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Contact: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
 						this.setState({
 							loadingConfirm: false
@@ -812,7 +832,6 @@ class ContactcontactForm extends React.Component {
 	addContactHandler = () => {
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -883,20 +902,32 @@ class ContactcontactForm extends React.Component {
 	};
 
 	render() {
-		const { loading, success } = this.state;
+		const { loading } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-		const buttonClassname = classNames({
-			[classes.buttonSuccess]: success
-		});
-
+		console.log('Index View', this.state.indexView);
+		const isLoading =
+			this.state.loadingData ||
+			this.state.loadingDepartments ||
+			this.state.loadingSupervisor ||
+			this.state.loadingAllSupervisors ||
+			this.state.loadingTitles ||
+			this.state.loading;
+		if (this.state.indexView == 0) {
+			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
+		}
+		if (this.state.indexView == 2) {
+			return (
+				<React.Fragment>
+					{isLoading && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+				</React.Fragment>
+			);
+		}
+		console.log('IsLoading', isLoading);
 		return (
 			<div className="contact-tab">
-				{(this.state.loadingData ||
-					this.state.loadingDepartments ||
-					this.state.loadingSupervisor ||
-					this.state.loadingAllSupervisors ||
-					this.state.loadingTitles) && <LinearProgress />}
+				{isLoading && <LinearProgress />}
 
 				<AlertDialogSlide
 					handleClose={this.handleColseAlertDialog}
@@ -1027,7 +1058,7 @@ class ContactcontactForm extends React.Component {
 									/>
 								</div>
 								<div className="card-form-row">
-									<span className="input-label primary">* Title</span>
+									<span className="input-label primary">* Contact Title</span>
 									<SelectForm
 										name="title"
 										data={this.state.titles}
@@ -1056,23 +1087,12 @@ class ContactcontactForm extends React.Component {
 								>
 									<div>
 										<Button
-											disabled={
-												this.state.idToEdit != null &&
-												this.state.idToEdit != '' &&
-												this.state.idToEdit != 0 ? (
-													!this.Login.AllowEdit
-												) : (
-													!this.Login.AllowInsert
-												)
-											}
-											//disabled={this.state.loading}
-											//	disabled={!this.state.formValid}
+											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
 											variant="fab"
 											color="primary"
-											className={buttonClassname}
 											onClick={this.addContactHandler}
 										>
-											{success ? <CheckIcon /> : <SaveIcon />}
+											<SaveIcon />
 										</Button>
 									</div>
 								</Tooltip>
@@ -1087,7 +1107,6 @@ class ContactcontactForm extends React.Component {
 											//disabled={this.state.loading || !this.state.enableCancelButton}
 											variant="fab"
 											color="secondary"
-											className={buttonClassname}
 											onClick={this.cancelContactHandler}
 										>
 											<ClearIcon />
@@ -1104,7 +1123,7 @@ class ContactcontactForm extends React.Component {
 							data={this.state.data}
 							titles={this.state.titles}
 							types={this.state.contactTypes}
-							loading={this.state.loading}
+							loading={isLoading}
 							supervisors={this.state.allSupervisors}
 							departments={this.state.departments}
 							onEditHandler={this.onEditHandler}

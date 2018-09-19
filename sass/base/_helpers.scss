@@ -1,13 +1,13 @@
 .table-elements {
-    margin: 0 auto !important;
+	margin: 0 auto !important;
 }
 
 div[class*="MuiLinearProgress-root-"] {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 999;
-    @media only screen and (min-width: $breakpoint-large) {
-        margin-left: -60px;
-    }
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 999;
+	@media only screen and (min-width: $breakpoint-large) {
+		margin-left: -60px;
+	}
 }

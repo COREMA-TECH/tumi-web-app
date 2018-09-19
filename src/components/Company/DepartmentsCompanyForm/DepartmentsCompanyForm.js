@@ -440,7 +440,6 @@ class DepartmentsCompanyForm extends React.Component {
 	addDepartmenttHandler = () => {
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -464,12 +463,9 @@ class DepartmentsCompanyForm extends React.Component {
 		this.resetState();
 	};
 	render() {
-		const { loading, success } = this.state;
+		const { loading } = this.state;
 		const { classes } = this.props;
 
-		const buttonClassname = classNames({
-			[classes.buttonSuccess]: success
-		});
 		if (this.state.indexView == 0) {
 			return <React.Fragment>{this.state.loadingData && <LinearProgress />}</React.Fragment>;
 		}
@@ -493,7 +489,7 @@ class DepartmentsCompanyForm extends React.Component {
 				/>
 				<div className="department__header">
 					<div className="input-container">
-						<span className="input-label">* Code</span>
+						<span className="input-label">* Department Code</span>
 
 						<InputForm
 							id="code"
@@ -505,7 +501,7 @@ class DepartmentsCompanyForm extends React.Component {
 						/>
 					</div>
 					<div className="input-container">
-						<span className="input-label">* Description</span>
+						<span className="input-label">* Department Name</span>
 						<div className="input-form-description ">
 							<InputForm
 								id="description"
@@ -537,24 +533,13 @@ class DepartmentsCompanyForm extends React.Component {
 											height: '35px'
 										}}
 										disabled={
-											this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												!this.Login.AllowEdit
-											) : (
-												!this.Login.AllowInsert
-											)
+											this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert
 										}
-										//disabled={this.state.loading}
-										//	disabled={!this.state.formValid}
 										variant="fab"
 										color="primary"
-										className={buttonClassname}
 										onClick={this.addDepartmenttHandler}
 									>
-										{success ? (
-											<CheckIcon />
-										) : this.state.idToEdit != null &&
+										{this.state.idToEdit != null &&
 										this.state.idToEdit != '' &&
 										this.state.idToEdit != 0 ? (
 											<SaveIcon />
@@ -576,7 +561,6 @@ class DepartmentsCompanyForm extends React.Component {
 										disabled={this.state.loading || !this.state.enableCancelButton}
 										variant="fab"
 										color="secondary"
-										className={buttonClassname}
 										onClick={this.cancelDepartmentHandler}
 										style={{
 											width: '35px',

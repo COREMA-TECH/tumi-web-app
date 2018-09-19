@@ -203,7 +203,6 @@ class Catalogs extends React.Component {
 		enableCancelButton: false,
 
 		loading: false,
-		success: false,
 		loadingConfirm: false,
 		openModal: false
 	};
@@ -309,9 +308,9 @@ class Catalogs extends React.Component {
 	validateAllFields(func) {
 		let idCatalogValid = this.state.idCatalog !== null && this.state.idCatalog !== 0 && this.state.idCatalog !== '';
 		let idParentValid = this.state.idParent !== null && this.state.idParent !== -1 && this.state.idParent !== '';
-		let nameValid = this.state.name.trim().length >= 2;
-		let displayLabelValid = this.state.displayLabel.trim().length >= 2;
-		let descriptionValid = this.state.description.trim().length >= 2;
+		let nameValid = this.state.name.trim().length >= 1;
+		let displayLabelValid = this.state.displayLabel.trim().length >= 1;
+		let descriptionValid = this.state.description.trim().length >= 1;
 
 		this.setState(
 			{
@@ -350,15 +349,15 @@ class Catalogs extends React.Component {
 				idParentHasValue = value !== null && value !== -1 && value !== '';
 				break;
 			case 'name':
-				nameValid = value.trim().length >= 2;
+				nameValid = value.trim().length >= 1;
 				nameHasValue = value != '';
 				break;
 			case 'displayLabel':
-				displayLabelValid = value.trim().length >= 2;
+				displayLabelValid = value.trim().length >= 1;
 				displayLabelHasValue = value != '';
 				break;
 			case 'description':
-				descriptionValid = value.trim().length >= 2;
+				descriptionValid = value.trim().length >= 1;
 				descriptionHasValue = value != '';
 				break;
 			case 'value':
@@ -465,7 +464,9 @@ class Catalogs extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		this.loadCatalogs();
+		this.loadCatalogs(() => {
+			this.setState({ indexView: 1 });
+		});
 	}
 
 	loadCatalogs = (func = () => {}) => {
@@ -482,7 +483,7 @@ class Catalogs extends React.Component {
 							{
 								catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
 								idCatalogFilter: idCatalog,
-								indexView: 1,
+
 								loadingData: false
 								//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
 								//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
@@ -490,15 +491,11 @@ class Catalogs extends React.Component {
 							() => {
 								this.loadParents(idCatalog, 0, 0, () => {
 									this.loadCatalogsItems(
-										0,
 										data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0,
 										() => {
-											this.setState(
-												{ loadingData: false },
-												this.resetState(() => {
-													func;
-												})
-											);
+											this.setState({ loadingData: false }, () => {
+												this.resetState(func());
+											});
 										}
 									);
 								});
@@ -534,16 +531,10 @@ class Catalogs extends React.Component {
 				if (data.data.getcatalogitem != null) {
 					this.setState(
 						{
-							data: data.data.getcatalogitem,
-							indexView: 1
+							data: data.data.getcatalogitem
 						},
 						() => {
-							this.setState(
-								{ loadingCatalogs: false },
-								this.resetState(() => {
-									func;
-								})
-							);
+							this.setState({ loadingCatalogs: false }, this.resetState(func));
 						}
 					);
 				} else {
@@ -578,8 +569,7 @@ class Catalogs extends React.Component {
 							loadingParents: false,
 							idParent: idParent,
 							idParentHasValue: idParent > -1,
-							idParentValid: idParent > -1,
-							indexView: 1
+							idParentValid: idParent > -1
 						},
 						func
 					);
@@ -613,8 +603,7 @@ class Catalogs extends React.Component {
 					this.setState(
 						{
 							allparents: data.data.getparentcatalogitem,
-							loadingAllParents: false,
-							indexView: 1
+							loadingAllParents: false
 						},
 						func
 					);
@@ -650,7 +639,6 @@ class Catalogs extends React.Component {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 		this.setState(
 			{
-				success: false,
 				loading: true
 			},
 			() => {
@@ -679,15 +667,22 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
-						this.props.handleOpenSnackbar(
-							'success',
-							isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+						this.setState(
+							{
+								openModal: false
+							},
+							() => {
+								this.props.handleOpenSnackbar(
+									'success',
+									isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+								);
+								this.loadCatalogsItems(this.state.idCatalog, () => {
+									this.loadAllParents(() => {
+										this.resetState();
+									});
+								});
+							}
 						);
-						this.loadCatalogsItems(this.state.idCatalog, () => {
-							this.loadAllParents(() => {
-								this.resetState();
-							});
-						});
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
@@ -697,7 +692,6 @@ class Catalogs extends React.Component {
 								: 'Error: Inserting Catalog Item: ' + error
 						);
 						this.setState({
-							success: false,
 							loading: false
 						});
 					});
@@ -719,8 +713,7 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Catalog Item Deleted!');
-						this.loadCatalogsItems(this.state.idCatalogFilter);
-						this.resetState();
+						this.loadCatalogsItems(this.state.idCatalogFilter, this.resetState);
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Catalog Item: ' + error);
@@ -735,7 +728,6 @@ class Catalogs extends React.Component {
 	addCatalogItemHandler = () => {
 		this.setState(
 			{
-				success: false,
 				loading: true,
 				openModal: true
 			},
@@ -782,12 +774,9 @@ class Catalogs extends React.Component {
 		this.setState({ openModal: false });
 	};
 	render() {
-		const { loading, success } = this.state;
+		const { loading } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-		const buttonClassname = classNames({
-			[classes.buttonSuccess]: success
-		});
 
 		if (this.state.indexView == 0) {
 			return (
@@ -812,17 +801,11 @@ class Catalogs extends React.Component {
 		}
 		return (
 			<div className="catalog_tab">
-				{console.log('Before Rnder')}
-				{console.log('loadingData', this.state.loadingData)}
-				{console.log('loadingCatalogs', this.state.loadingCatalogs)}
-				{console.log('loadingParents', this.state.loadingParents)}
-				{console.log('loadingAllParents', this.state.loadingAllParents)}
-
 				{(this.state.loadingData ||
 					this.state.loadingParents ||
 					this.state.loadingAllParents ||
 					this.state.loadingCatalogs) && <LinearProgress />}
-					
+
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
 					handleConfirm={this.handleConfirmAlertDialog}
@@ -944,10 +927,10 @@ class Catalogs extends React.Component {
 											//	disabled={!this.state.formValid}
 											variant="fab"
 											color="primary"
-											className={buttonClassname}
+											//	className={buttonClassname}
 											onClick={this.addCatalogItemHandler}
 										>
-											{success ? <CheckIcon /> : <SaveIcon />}
+											<SaveIcon />
 										</Button>
 									</div>
 								</Tooltip>
@@ -961,7 +944,7 @@ class Catalogs extends React.Component {
 										<Button
 											variant="fab"
 											color="secondary"
-											className={buttonClassname}
+											//className={buttonClassname}
 											onClick={this.cancelCatalogItemHandler}
 										>
 											<ClearIcon />
@@ -1004,11 +987,7 @@ class Catalogs extends React.Component {
 						Add Catalog{' '}
 					</button>
 				</div>
-				{console.log('Before Table')}
-				{console.log('loadingData', this.state.loadingData)}
-				{console.log('loadingCatalogs', this.state.loadingCatalogs)}
-				{console.log('loadingParents', this.state.loadingParents)}
-				{console.log('loadingAllParents', this.state.loadingAllParents)}
+
 				<div className={classes.container}>
 					<div className={classes.divStyle}>
 						<CatalogsTable
