@@ -5,7 +5,6 @@ import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Query from 'react-apollo/Query';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
-import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import InputValid from "../../ui-components/InputWithValidation/InputValid";
 import InputMask from "react-input-mask";
 
@@ -30,7 +29,7 @@ class GeneralInfoProperty extends Component {
         management: '',
         phoneNumber: '',
         startDate: '',
-        startWeek: 0,
+        startWeek: '',
         endWeek: 6,
         workWeek: '',
         avatar: 'url',
@@ -48,7 +47,8 @@ class GeneralInfoProperty extends Component {
         linearProgress: false,
         idProperty: null,
         validState: '',
-        validCity: ''
+        validCity: '',
+        validStartWeek: '',
     };
 
 
@@ -293,7 +293,7 @@ class GeneralInfoProperty extends Component {
         }
 
         //To set errors in selects
-        if(this.state.city === 0) {
+        if (this.state.city === 0) {
             this.setState({
                 validCity: 'valid'
             });
@@ -301,9 +301,17 @@ class GeneralInfoProperty extends Component {
             validated = false;
         }
 
-        if(this.state.state === 0) {
+        if (this.state.state === 0) {
             this.setState({
                 validState: 'valid'
+            });
+
+            validated = false;
+        }
+
+        if (this.state.startWeek === '') {
+            this.setState({
+                validStartWeek: 'valid'
             });
 
             validated = false;
@@ -425,7 +433,8 @@ class GeneralInfoProperty extends Component {
                                                             error={this.state.validState === '' ? false : true}
                                                             update={(value) => {
                                                                 this.setState({
-                                                                    state: value
+                                                                    state: value,
+                                                                    validState: ''
                                                                 })
                                                             }}
                                                         />
@@ -454,7 +463,8 @@ class GeneralInfoProperty extends Component {
                                                             error={this.state.validCity === '' ? false : true}
                                                             update={(value) => {
                                                                 this.setState({
-                                                                    city: value
+                                                                    city: value,
+                                                                    validCity: ''
                                                                 })
                                                             }}
                                                         />
@@ -560,13 +570,15 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">Contract Start Date</span>
                                     </div>
                                     <div className="col-6">
-                                        <InputDateForm
-                                            value={this.state.startDate}
+                                        <InputValid
                                             change={(text) => {
                                                 this.setState({
                                                     startDate: text
-                                                });
+                                                })
                                             }}
+                                            value={this.state.startDate}
+                                            type="date"
+                                            required
                                         />
                                     </div>
                                     <div className="col-6">
@@ -579,6 +591,7 @@ class GeneralInfoProperty extends Component {
                                                     room: text
                                                 })
                                             }}
+                                            value={this.state.room}
                                             type="number"
                                             required
                                         />
@@ -587,11 +600,17 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">Week Start</span>
                                     </div>
                                     <div className="col-6">
-                                        <SelectForm data={days} update={(value) => {
-                                            this.setState({
-                                                startWeek: value
-                                            })
-                                        }} value={this.state.startWeek}/>
+                                        <SelectForm
+                                            data={days}
+                                            update={(value) => {
+                                                this.setState({
+                                                    startWeek: value,
+                                                    validStartWeek: ''
+                                                })
+                                            }}
+                                            value={this.state.startWeek}
+                                            error={this.state.validStartWeek === '' ? false : true}
+                                        />
                                     </div>
                                 </div>
                             </div>
