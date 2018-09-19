@@ -237,6 +237,7 @@ class ContactcontactForm extends React.Component {
 			loadingAllSupervisors: false,
 			loadingTitles: false,
 			contactTypes: ContactTypesData,
+			firstLoad: true,
 			indexView: 0, //Loading
 			errorMessage: '',
 			activateTabs: true,
@@ -547,12 +548,14 @@ class ContactcontactForm extends React.Component {
 		this.setState({ idToDelete: idSearch, opendialog: true });
 	};
 	componentWillMount() {
-		this.loadContacts(() => {
-			this.loadTitles(() => {
-				this.loadDepartments(() => {
-					this.loadSupervisors(0, () => {
-						this.loadAllSupervisors(() => {
-							this.setState({ indexView: 1 });
+		this.setState({ firstLoad: true }, () => {
+			this.loadContacts(() => {
+				this.loadTitles(() => {
+					this.loadDepartments(() => {
+						this.loadSupervisors(0, () => {
+							this.loadAllSupervisors(() => {
+								this.setState({ indexView: 1, firstLoad: false });
+							});
 						});
 					});
 				});
@@ -590,6 +593,7 @@ class ContactcontactForm extends React.Component {
 					} else {
 						this.setState({
 							loadingData: false,
+							firstLoad: false,
 							indexView: 2,
 							errorMessage: 'Error: Loading contacts: getcontacts not exists in query data'
 						});
@@ -598,6 +602,7 @@ class ContactcontactForm extends React.Component {
 				.catch((error) => {
 					this.setState({
 						loadingData: false,
+						firstLoad: false,
 						indexView: 2,
 						errorMessage: 'Error: Loading contacts: ' + error
 					});
@@ -605,7 +610,6 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 	loadSupervisors = (idContact = 0, func = () => {}) => {
-		console.log('loadSupervisors');
 		this.setState({ loadingSupervisor: true }, () => {
 			this.props.client
 				.query({
@@ -625,6 +629,7 @@ class ContactcontactForm extends React.Component {
 					} else {
 						this.setState({
 							loadingSupervisor: false,
+							firstLoad: false,
 							indexView: 2,
 							errorMessage: 'Error: Loading supervisors: getsupervisor not exists in query data'
 						});
@@ -633,6 +638,7 @@ class ContactcontactForm extends React.Component {
 				.catch((error) => {
 					this.setState({
 						loadingSupervisor: false,
+						firstLoad: false,
 						indexView: 2,
 						errorMessage: 'Error: Loading supervisors: ' + error
 					});
@@ -641,7 +647,6 @@ class ContactcontactForm extends React.Component {
 	};
 
 	loadAllSupervisors = (func = () => {}) => {
-		console.log('loadAllSupervisors', func);
 		this.setState({ loadingAllSupervisors: true }, () => {
 			this.props.client
 				.query({
@@ -661,6 +666,7 @@ class ContactcontactForm extends React.Component {
 					} else {
 						this.setState({
 							loadingAllSupervisors: false,
+							firstLoad: false,
 							indexView: 2,
 							errorMessage: 'Error: Loading [all] supervisors: getsupervisor not exists in query data'
 						});
@@ -669,6 +675,7 @@ class ContactcontactForm extends React.Component {
 				.catch((error) => {
 					this.setState({
 						loadingAllSupervisors: false,
+						firstLoad: false,
 						indexView: 2,
 						errorMessage: 'Error: Loading [all] supervisors: ' + error
 					});
@@ -695,6 +702,7 @@ class ContactcontactForm extends React.Component {
 					} else {
 						this.setState({
 							loadingTitles: false,
+							firstLoad: false,
 							indexView: 2,
 							errorMessage: 'Error: Loading titles: getcatalogitem not exists in query data'
 						});
@@ -703,6 +711,7 @@ class ContactcontactForm extends React.Component {
 				.catch((error) => {
 					this.setState({
 						loadingTitles: false,
+						firstLoad: false,
 						indexView: 2,
 						errorMessage: 'Error: Loading titles: ' + error
 					});
@@ -728,6 +737,7 @@ class ContactcontactForm extends React.Component {
 					} else {
 						this.setState({
 							loadingDepartments: false,
+							firstLoad: false,
 							indexView: 2,
 							errorMessage: 'Error: Loading departments: getcatalogitem not exists in query data'
 						});
@@ -736,6 +746,7 @@ class ContactcontactForm extends React.Component {
 				.catch((error) => {
 					this.setState({
 						loadingDepartments: false,
+						firstLoad: false,
 						indexView: 2,
 						errorMessage: 'Error: Loading departments: ' + error
 					});
@@ -905,7 +916,7 @@ class ContactcontactForm extends React.Component {
 		const { loading } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-		console.log('Index View', this.state.indexView);
+
 		const isLoading =
 			this.state.loadingData ||
 			this.state.loadingDepartments ||
@@ -913,6 +924,14 @@ class ContactcontactForm extends React.Component {
 			this.state.loadingAllSupervisors ||
 			this.state.loadingTitles ||
 			this.state.loading;
+
+		console.log('Is loadingData', this.state.loadingData);
+		console.log('Is loadingDepartments', this.state.loadingDepartments);
+		console.log('Is loadingSupervisor', this.state.loadingSupervisor);
+		console.log('Is loadingAllSupervisors', this.state.loadingAllSupervisors);
+		console.log('Is loadingTitles', this.state.loadingTitles);
+		console.log('Is loading', this.state.loading);
+
 		if (this.state.indexView == 0) {
 			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
 		}
@@ -924,7 +943,7 @@ class ContactcontactForm extends React.Component {
 				</React.Fragment>
 			);
 		}
-		console.log('IsLoading', isLoading);
+
 		return (
 			<div className="contact-tab">
 				{isLoading && <LinearProgress />}
