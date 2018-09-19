@@ -574,7 +574,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <p>Nothing to display </p>;
+                                                return <SelectNothingToDisplay />
                                             }}
                                         </Query>
                                     </div>
