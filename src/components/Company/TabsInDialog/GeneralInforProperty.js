@@ -9,6 +9,7 @@ import InputValid from "../../ui-components/InputWithValidation/InputValid";
 import InputMask from "react-input-mask";
 import FileUpload from 'ui-components/FileUpload/FileUpload';
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
+import './valid.css';
 
 class GeneralInfoProperty extends Component {
     state = {
@@ -697,21 +698,21 @@ class GeneralInfoProperty extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-6">
-                                        <span className="primary card-input-label">Room</span>
-                                    </div>
-                                    <div className="col-6">
-                                        <InputValid
-                                            change={(text) => {
-                                                this.setState({
-                                                    room: text
-                                                })
-                                            }}
-                                            value={this.state.room}
-                                            type="number"
-                                            required
-                                        />
-                                    </div>
+                                    {/*<div className="col-6">*/}
+                                        {/*<span className="primary card-input-label">Room</span>*/}
+                                    {/*</div>*/}
+                                    {/*<div className="col-6">*/}
+                                        {/*<InputValid*/}
+                                            {/*change={(text) => {*/}
+                                                {/*this.setState({*/}
+                                                    {/*room: text*/}
+                                                {/*})*/}
+                                            {/*}}*/}
+                                            {/*value={this.state.room}*/}
+                                            {/*type="number"*/}
+                                            {/*required*/}
+                                        {/*/>*/}
+                                    {/*</div>*/}
                                     <div className="col-6">
                                         <span className="primary card-input-label">Week Start</span>
                                     </div>
