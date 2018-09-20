@@ -28,6 +28,7 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
+import * as jsPDF from 'jspdf'
 
 const styles = (theme) => ({
 	container: {
@@ -250,7 +251,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {}
+			() => { }
 		);
 	};
 	insertExhibit = () => {
@@ -290,28 +291,57 @@ class ExhibitContract extends Component {
 		pri.document.close();
 		pri.focus();
 		pri.print();
+		//pri.download();
 	};
 
 	createPDFContractHandler = () => {
+		var doc = new jsPDF()
+		var specialElementHandlers = {
+			'#editor': function (element, renderer) {
+				return true;
+			}
+		};
+
 		var textToWrite = document.getElementById('agreement').innerHTML;
-		var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/html' });
-		var fileNameToSaveAs = 'Contract.html';
+		var textFileAsBlob = new Blob([textToWrite], { type: 'text/html' });
 
-		var downloadLink = document.createElement('a');
-		downloadLink.download = fileNameToSaveAs;
-		downloadLink.innerHTML = 'Download File';
-		if (window.webkitURL != null) {
-			// Chrome allows the link to be clicked without actually adding it to the DOM.
-			downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-		} else {
-			// Firefox requires the link to be added to the DOM before it can be clicked.
-			//	downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-			//		downloadLink.onclick = destroyClickedElement;
-			downloadLink.style.display = 'none';
-			document.body.appendChild(downloadLink);
-		}
+		alert(document.getElementById('agreement').innerHTML);
+		//console.log(this.state.agreement);
+		doc.fromHTML(document.getElementById('agreement').innerHTML, 15, 15, {
+			'width': 170,
+			'elementHandlers': specialElementHandlers
+		});
+		doc.save('Contract.pdf')
+		//doc.fromHTML(textToWrite);
+		//console.log("con value");
+		//console.log(document.getElementById('dvpdf'));
 
-		downloadLink.click();
+		/*doc.fromHTML(this.state.agreement, 15, 15, {
+			'width': 170,
+			'elementHandlers': specialElementHandlers
+		});
+		doc.save('Contract.pdf')*/
+		//		CreatePDF();
+
+		/*	var textToWrite = document.getElementById('agreement').innerHTML;
+			var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/html' });
+			var fileNameToSaveAs = 'Contract.html';
+	
+			var downloadLink = document.createElement('a');
+			downloadLink.download = fileNameToSaveAs;
+			downloadLink.innerHTML = 'Download File';
+			if (window.webkitURL != null) {
+				// Chrome allows the link to be clicked without actually adding it to the DOM.
+				downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+			} else {
+				// Firefox requires the link to be added to the DOM before it can be clicked.
+				//	downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+				//		downloadLink.onclick = destroyClickedElement;
+				downloadLink.style.display = 'none';
+				document.body.appendChild(downloadLink);
+			}
+	
+			downloadLink.click();*/
 	};
 
 	render() {
@@ -336,8 +366,8 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-								'New Contract Preview'
-							)}
+									'New Contract Preview'
+								)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
@@ -347,10 +377,10 @@ class ExhibitContract extends Component {
 					</DialogContent>
 					<DialogActions>
 						<div className="exhibit-button-right">
-							
+
 							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 
-							
+
 						</div>
 						<div className="exhibit-button-left">
 							<Tooltip title={'Print Contract'}>
@@ -367,9 +397,10 @@ class ExhibitContract extends Component {
 								</div>
 							</Tooltip>
 							<Tooltip title={'Download Contract'}>
-								<div>
+								<div >
 									<Button
 										//	disabled={this.state.loading || !this.state.enableCancelButton}
+										//id="btnDownloadpdf"
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
@@ -378,6 +409,7 @@ class ExhibitContract extends Component {
 										<DownloadIcon />
 									</Button>
 								</div>
+
 							</Tooltip>
 							<Tooltip title={'Send Contract by email'}>
 								<div>
