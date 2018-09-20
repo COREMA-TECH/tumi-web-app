@@ -313,8 +313,23 @@ class GeneralInfoProperty extends Component {
     handleFormSubmit = (event) => {
         event.preventDefault();
 
-        // To set error in inputs
         let invalidInputs = document.querySelectorAll("input[required]"), i, validated = true;
+
+        let numberInput = document.getElementById('prop-number');
+        let faxInput = document.getElementById('prop-fax');
+
+        if (numberInput.value.length < 15) {
+            numberInput.classList.add('invalid');
+            validated = false;
+        }
+
+        if (faxInput.value.length < 15) {
+            faxInput.classList.add('invalid');
+
+            validated = false;
+        }
+
+        // To set error in inputs
         for (i = 0; i < invalidInputs.length; ++i) {
             if (invalidInputs[i].value !== '') {
                 invalidInputs[i].classList.remove('invalid');
@@ -384,6 +399,22 @@ class GeneralInfoProperty extends Component {
             if (invalidInputs[i].value !== '') {
                 invalidInputs[i].classList.remove('invalid');
             }
+        }
+
+        // Catch the error in the first render
+        try {
+            let numberInput = document.getElementById('prop-number');
+            let faxInput = document.getElementById('prop-fax');
+
+            if (numberInput.value.length < 10) {
+                numberInput.classList.remove('invalid');
+            }
+
+            if (faxInput.value.length < 10) {
+                faxInput.classList.remove('invalid');
+            }
+        } catch (e) {
+
         }
     };
 
@@ -483,6 +514,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             value={this.state.name}
                                             type="text"
+                                            maxLength="35"
                                             required
                                         />
                                     </div>
@@ -498,6 +530,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             value={this.state.address}
                                             type="text"
+                                            maxLength="50"
                                             required
                                         />
                                     </div>
@@ -513,6 +546,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             value={this.state.optionalAddress}
                                             type="text"
+                                            maxLength="50"
                                             required
                                         />
                                     </div>
@@ -528,6 +562,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             value={this.state.suite}
                                             type="number"
+                                            maxLength="10"
                                             required
                                         />
                                     </div>
@@ -602,6 +637,7 @@ class GeneralInfoProperty extends Component {
                                                 })
                                             }}
                                             value={this.state.zipCode}
+                                            maxLength="10"
                                             type="number"
                                             required
                                         />
@@ -611,7 +647,7 @@ class GeneralInfoProperty extends Component {
                                     </div>
                                     <div className="col-6">
                                         <InputMask
-                                            id="number"
+                                            id="prop-number"
                                             name="number"
                                             mask="+(999) 999-9999"
                                             maskChar=" "
@@ -624,6 +660,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             placeholder="+(999) 999-9999"
                                             required
+                                            minLength="15"
                                         />
                                     </div>
                                     <div className="col-6">
@@ -631,7 +668,7 @@ class GeneralInfoProperty extends Component {
                                     </div>
                                     <div className="col-6">
                                         <InputMask
-                                            id="number"
+                                            id="prop-fax"
                                             name="number"
                                             mask="+(999) 999-9999"
                                             maskChar=" "
@@ -644,6 +681,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             placeholder="+(999) 999-9999"
                                             required
+                                            minLength="15"
                                         />
                                     </div>
                                 </div>
@@ -665,6 +703,7 @@ class GeneralInfoProperty extends Component {
                                             }}
                                             value={this.state.Code}
                                             type="text"
+                                            maxLength="10"
                                             required
                                         />
                                     </div>
@@ -673,7 +712,7 @@ class GeneralInfoProperty extends Component {
                                     </div>
                                     <div className="col-6">
                                         <InputValid
-                                            type="number"
+                                            type="text"
                                             required
                                             value={this.state.Code01}
                                             change={(text) => {
@@ -681,6 +720,7 @@ class GeneralInfoProperty extends Component {
                                                     Code01: text
                                                 });
                                             }}
+                                            maxLength="10"
                                         />
                                     </div>
                                     <div className="col-6">
@@ -699,19 +739,19 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     {/*<div className="col-6">*/}
-                                        {/*<span className="primary card-input-label">Room</span>*/}
+                                    {/*<span className="primary card-input-label">Room</span>*/}
                                     {/*</div>*/}
                                     {/*<div className="col-6">*/}
-                                        {/*<InputValid*/}
-                                            {/*change={(text) => {*/}
-                                                {/*this.setState({*/}
-                                                    {/*room: text*/}
-                                                {/*})*/}
-                                            {/*}}*/}
-                                            {/*value={this.state.room}*/}
-                                            {/*type="number"*/}
-                                            {/*required*/}
-                                        {/*/>*/}
+                                    {/*<InputValid*/}
+                                    {/*change={(text) => {*/}
+                                    {/*this.setState({*/}
+                                    {/*room: text*/}
+                                    {/*})*/}
+                                    {/*}}*/}
+                                    {/*value={this.state.room}*/}
+                                    {/*type="number"*/}
+                                    {/*required*/}
+                                    {/*/>*/}
                                     {/*</div>*/}
                                     <div className="col-6">
                                         <span className="primary card-input-label">Week Start</span>
