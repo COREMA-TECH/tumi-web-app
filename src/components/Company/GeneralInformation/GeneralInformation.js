@@ -1243,7 +1243,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
-								<span className="primary" />
+								<input type="text" class="input-file-name" max="120" placeholder="Name File"/>
 								<FileUpload
 									updateURL={(url) => {
 										this.setState({
@@ -1254,7 +1254,7 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
-								<span className="primary" />
+								<input type="text" class="input-file-name" max="120" placeholder="Name File"/>
 								<FileUpload
 									updateURL={(url) => {
 										this.setState({
