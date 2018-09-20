@@ -189,7 +189,7 @@ class GeneralInformation extends Component {
 									optionalAddress: item.Location01.trim(),
 									otherName: item.Other_Name ? item.Other_Name.trim() : '',
 									otherName1: item.Other01_Name ? item.Other01_Name.trim() : '',
-									rooms: item.Rooms ? item.Rooms.trim() : '',
+									rooms: item.Rooms ? item.Rooms.toString().trim() : '',
 									country: item.Country,
 									state: item.State,
 									city: item.City,
