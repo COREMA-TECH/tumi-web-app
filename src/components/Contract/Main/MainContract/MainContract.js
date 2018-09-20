@@ -182,7 +182,7 @@ class MainContract extends Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 
-				<div className="main-contract__header">{renderHeaderContent()}</div>
+				<div className="main-contract__header main-contract__header-sg-container">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
 					<Query query={this.getContractsQuery} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
@@ -214,21 +214,29 @@ class MainContract extends Component {
 
 								return (
 									<div className="main-contract-table">
-										<div className="contract_table_wrapper">
-											<TablesContracts
-												data={dataContract}
-												delete={(id) => {
-													this.deleteContractById(id);
-												}}
-											/>
+										<div className="container">
+											<div className="row">
+												<div className="col-12">
+													<div className="contract_table_wrapper">
+														<TablesContracts
+															data={dataContract}
+															delete={(id) => {
+																this.deleteContractById(id);
+															}}
+														/>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								);
 							}
 							return (
 								<NothingToDisplay
-									url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
-									message="There are no contracts"
+									title="Oops!"
+									message={'There are no contracts'}
+									type="Error-success"
+									icon="wow"
 								/>
 							);
 						}}

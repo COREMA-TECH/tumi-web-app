@@ -10,6 +10,7 @@ class InputValid extends Component {
                 value={this.props.value}
                 className={'input-form'}
                 required
+                min="0"
                 placeholder={this.props.placeholder && ''}
                 maxLength={this.props.maxLength}
                 disabled={this.props.disabled}

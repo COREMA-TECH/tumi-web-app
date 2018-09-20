@@ -142,7 +142,8 @@ class DepartmentsCompanyForm extends React.Component {
 		openSnackbar: true,
 		loading: false,
 		success: false,
-		loadingConfirm: false
+		loadingConfirm: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -290,7 +291,8 @@ class DepartmentsCompanyForm extends React.Component {
 				codeHasValue: true,
 				descriptionHasValue: true,
 
-				buttonTitle: this.TITLE_EDIT
+				buttonTitle: this.TITLE_EDIT,
+				showCircularLoading: false
 			},
 			() => {
 				this.focusTextInput();
@@ -299,13 +301,13 @@ class DepartmentsCompanyForm extends React.Component {
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
 	};
 	componentWillMount() {
 		this.loadDepartments();
 	}
 
-	loadDepartments = () => {
+	loadDepartments = (func = () => {}) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -391,7 +393,7 @@ class DepartmentsCompanyForm extends React.Component {
 							'success',
 							isEdition ? 'Department Updated!' : 'Department Inserted!'
 						);
-						this.resetState(() => {
+						this.setState({ showCircularLoading: true }, () => {
 							this.loadDepartments();
 						});
 					})
@@ -423,7 +425,7 @@ class DepartmentsCompanyForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Department Deleted!');
-						this.resetState(() => {
+						this.setState({ showCircularLoading: true }, () => {
 							this.loadDepartments();
 						});
 					})
@@ -473,7 +475,12 @@ class DepartmentsCompanyForm extends React.Component {
 			return (
 				<React.Fragment>
 					{this.state.loadingData && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}
@@ -487,90 +494,121 @@ class DepartmentsCompanyForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className="department__header">
-					<div className="input-container">
-						<span className="input-label">* Department Code</span>
-
-						<InputForm
-							id="code"
-							name="code"
-							maxLength="10"
-							error={!this.state.codeValid}
-							value={this.state.code}
-							change={(value) => this.onCodeChangeHandler(value)}
-						/>
-					</div>
-					<div className="input-container">
-						<span className="input-label">* Department Name</span>
-						<div className="input-form-description ">
-							<InputForm
-								id="description"
-								name="description"
-								maxLength="15"
-								error={!this.state.descriptionValid}
-								value={this.state.description}
-								change={(value) => this.onDescriptionChangeHandler(value)}
-							/>
-						</div>
-					</div>
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip
-								title={
-									this.state.idToEdit != null &&
-									this.state.idToEdit != '' &&
-									this.state.idToEdit != 0 ? (
-										'Save Changes'
-									) : (
-										'Insert Record'
-									)
-								}
-							>
-								<div>
-									<Button
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
-										disabled={
-											this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert
-										}
-										variant="fab"
-										color="primary"
-										onClick={this.addDepartmenttHandler}
-									>
-										{this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											<SaveIcon />
-										) : (
-											<AddIcon />
-										)}
-									</Button>
+				<div className="department__header department__header-inputGroup">
+					<div className="container">
+						<div className="row">
+							<div className="col-4">
+								<div className="input-wrapper input-wrapper-gray">
+									<div className="row">
+										<div className="col-6 input-label-right">
+											<span className="">* Department Code</span>
+										</div>
+										<div className="col-6">
+											<InputForm
+												id="code"
+												name="code"
+												maxLength="10"
+												error={!this.state.codeValid}
+												value={this.state.code}
+												change={(value) => this.onCodeChangeHandler(value)}
+												className="input-enable"
+											/>
+										</div>
+									</div>
 								</div>
-							</Tooltip>
-							{loading && <CircularProgress size={45} className={classes.fabProgress} />}
-						</div>
-					</div>
-
-					<div className={classes.root}>
-						<div className={classes.wrapper}>
-							<Tooltip title={'Cancel Operation'}>
-								<div>
-									<Button
-										disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="secondary"
-										onClick={this.cancelDepartmentHandler}
-										style={{
-											width: '35px',
-											height: '35px'
-										}}
-									>
-										<ClearIcon />
-									</Button>
+							</div>
+							<div className="col-4">
+								<div className="input-wrapper input-wrapper-gray">
+									<div className="row">
+										<div className="col-6 input-label-right">
+											<span className="">* Department Name</span>
+										</div>
+										<div className="col-6">
+											<InputForm
+												id="description"
+												name="description"
+												maxLength="15"
+												error={!this.state.descriptionValid}
+												value={this.state.description}
+												change={(value) => this.onDescriptionChangeHandler(value)}
+											/>
+										</div>
+									</div>
 								</div>
-							</Tooltip>
+							</div>
+							<div className="col-2">
+								<div className="row">
+									<div className="col-6">
+										<div className={classes.root}>
+											<div className={classes.wrapper}>
+												<Tooltip
+													title={
+														this.state.idToEdit != null &&
+														this.state.idToEdit != '' &&
+														this.state.idToEdit != 0 ? (
+															'Save Changes'
+														) : (
+															'Insert Record'
+														)
+													}
+												>
+													<div>
+														<Button
+															style={{
+																width: '35px',
+																height: '35px'
+															}}
+															disabled={
+																this.state.loading ||
+																!this.Login.AllowEdit ||
+																!this.Login.AllowInsert
+															}
+															variant="fab"
+															color="primary"
+															onClick={this.addDepartmenttHandler}
+														>
+															{this.state.idToEdit != null &&
+															this.state.idToEdit != '' &&
+															this.state.idToEdit != 0 ? (
+																<SaveIcon />
+															) : (
+																<AddIcon />
+															)}
+														</Button>
+													</div>
+												</Tooltip>
+												{loading && (
+													<CircularProgress size={45} className={classes.fabProgress} />
+												)}
+											</div>
+										</div>
+									</div>
+									<div className="col-6">
+										<div className={classes.root}>
+											<div className={classes.wrapper}>
+												<Tooltip title={'Cancel Operation'}>
+													<div>
+														<Button
+															disabled={
+																this.state.loading || !this.state.enableCancelButton
+															}
+															variant="fab"
+															color="secondary"
+															onClick={this.cancelDepartmentHandler}
+															style={{
+																width: '35px',
+																height: '35px'
+															}}
+														>
+															<ClearIcon />
+														</Button>
+													</div>
+												</Tooltip>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -578,7 +616,7 @@ class DepartmentsCompanyForm extends React.Component {
 					<div className={classes.divStyle}>
 						<DepartmentsTable
 							data={this.state.data}
-							loading={this.state.loading}
+							loading={this.state.showCircularLoading && this.state.loadingData}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}
 						/>

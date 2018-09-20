@@ -23,6 +23,8 @@ import MaskedInput from 'react-text-mask';
 import NumberFormat from 'react-number-format';
 import Select from '@material-ui/core/Select';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
 	root: {
@@ -231,8 +233,18 @@ class PositionsTable extends React.Component {
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 		const { textmask, numberformat } = this.state;
+
+		if (this.props.loading) {
+			return (
+				<React.Fragment>
+					<div className="nothing-container">
+						<CircularProgress size={150} />
+					</div>
+				</React.Fragment>
+			);
+		}
 		if (items.length == 0) {
-			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" />;
+			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
 		}
 		return (
 			<Paper className={classes.root}>

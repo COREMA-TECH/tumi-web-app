@@ -33,6 +33,7 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import './index.css';
 
 const styles = (theme) => ({
@@ -173,6 +174,14 @@ class ContactcontactForm extends React.Component {
 		}
 	`;
 
+	INSERT_DEPARTMENTS_QUERY = gql`
+		mutation inscatalogitem($input: iParamCI!) {
+			inscatalogitem(input: $input) {
+				Id
+			}
+		}
+	`;
+
 	TITLE_ADD = 'Add Contact';
 	TITLE_EDIT = 'Update Contact';
 
@@ -188,6 +197,7 @@ class ContactcontactForm extends React.Component {
 		title: '',
 		idSupervisor: 0,
 		idDepartment: 0,
+		departmentName: '',
 		type: '',
 
 		firstnameValid: true,
@@ -198,6 +208,7 @@ class ContactcontactForm extends React.Component {
 		titleValid: true,
 		typeValid: true,
 		idDepartmentValid: true,
+		departmentNameValid: true,
 		idSupervisorValid: true,
 
 		firstnameHasValue: false,
@@ -209,7 +220,7 @@ class ContactcontactForm extends React.Component {
 		typeHasValue: false,
 		idSupervisorHasValue: false,
 		idDepartmentHasValue: false,
-
+		departmentNameHasValue: false,
 		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
@@ -217,7 +228,8 @@ class ContactcontactForm extends React.Component {
 		openSnackbar: true,
 		loading: false,
 		loadingConfirm: false,
-		openModal: false
+		openModal: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -269,16 +281,12 @@ class ContactcontactForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = () => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {
-				this.loadSupervisors();
-				this.loadAllSupervisors();
-				this.focusTextInput();
-			}
+			func
 		);
 	};
 	handleClose = (event, reason) => {
@@ -351,6 +359,7 @@ class ContactcontactForm extends React.Component {
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
 		let idSupervisorValid =
 			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
+		let departmentNameValid = this.state.departmentName.trim().length >= 2;
 		this.setState(
 			{
 				emailValid,
@@ -359,9 +368,10 @@ class ContactcontactForm extends React.Component {
 				lastnameValid,
 				numberValid,
 				titleValid,
-				idDepartmentValid,
+				//idDepartmentValid,
 				idSupervisorValid,
-				typeValid
+				typeValid,
+				departmentNameValid
 			},
 			() => {
 				this.validateForm(fun);
@@ -377,6 +387,7 @@ class ContactcontactForm extends React.Component {
 		let titleValid = this.state.titleValid;
 		let typeValid = this.state.typeValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
+		let departmentNameValid = this.state.departmentNameValid;
 		let idSupervisorValid = this.state.idSupervisorValid;
 
 		let emailHasValue = this.state.emailHasValue;
@@ -387,6 +398,7 @@ class ContactcontactForm extends React.Component {
 		let titleHasValue = this.state.titleHasValue;
 		let typeHasValue = this.state.typeHasValue;
 		let idDepartmentHasValue = this.state.idDepartmentHasValue;
+		let departmentNameHasValue = this.state.departmentName;
 		let idSupervisorHasValue = this.state.idSupervisorHasValue;
 
 		switch (fieldName) {
@@ -424,6 +436,10 @@ class ContactcontactForm extends React.Component {
 				idDepartmentValid = value !== null && value !== 0 && value !== '';
 				idDepartmentHasValue = value !== null && value !== 0 && value !== '';
 				break;
+			case 'departmentName':
+				departmentNameValid = value.trim().length >= 2;
+				departmentNameHasValue = value != '';
+				break;
 			case 'idSupervisor':
 				idSupervisorValid = value !== null && value !== -1 && value !== '';
 				idSupervisorHasValue = value !== null && value !== -1 && value !== '';
@@ -440,7 +456,8 @@ class ContactcontactForm extends React.Component {
 				numberValid,
 				titleValid,
 				typeValid,
-				idDepartmentValid,
+				//idDepartmentValid,
+				departmentNameValid,
 				idSupervisorValid,
 				emailHasValue,
 				firstnameHasValue,
@@ -450,6 +467,7 @@ class ContactcontactForm extends React.Component {
 				titleHasValue,
 				typeHasValue,
 				idDepartmentHasValue,
+				departmentNameHasValue,
 				idSupervisorHasValue
 			},
 			this.validateForm
@@ -467,7 +485,8 @@ class ContactcontactForm extends React.Component {
 					this.state.numberValid &&
 					this.state.titleValid &&
 					this.state.typeValid &&
-					this.state.idDepartmentValid &&
+					//this.state.idDepartmentValid &&
+					this.state.departmentNameValid &&
 					this.state.idSupervisorValid,
 				enableCancelButton:
 					this.state.emailHasValue ||
@@ -477,7 +496,8 @@ class ContactcontactForm extends React.Component {
 					this.state.numberHasValue ||
 					this.state.titleHasValue ||
 					this.state.typeHasValue ||
-					this.state.idDepartmentHasValue ||
+					//	this.state.idDepartmentHasValue ||
+					this.state.departmentName ||
 					this.state.idSupervisorHasValue
 			},
 			func
@@ -503,49 +523,58 @@ class ContactcontactForm extends React.Component {
 		title,
 		type
 	}) => {
-		this.loadSupervisors(idSearch, () => {
-			this.setState(
-				{
-					idToEdit: idSearch,
-					firstname: firstname.trim(),
-					middlename: middlename.trim(),
-					lastname: lastname.trim(),
-					email: email.trim(),
-					number: number.trim(),
-					idSupervisor: idSupervisor,
-					idDepartment: idDepartment,
-					title: title,
-					type: type,
-					formValid: true,
-					emailValid: true,
-					firstnameValid: true,
-					//	middlenameValid: true,
-					lastnameValid: true,
-					titleValid: true,
-					typeValid: true,
-					idDepartmentValid: true,
-					idSupervisorValid: true,
-					enableCancelButton: true,
-					emailHasValue: true,
-					firstnameHasValue: true,
-					middlenameHasValue: true,
-					lastnameHasValue: true,
-					titleHasValue: true,
-					typeHasValue: true,
-					idDepartmentHasValue: true,
-					idSupervisorHasValue: true,
+		this.setState({ showCircularLoading: false }, () => {
+			var department = this.state.departments.find(function(obj) {
+				return obj.Id === idDepartment;
+			});
 
-					numberValid: true,
-					buttonTitle: this.TITLE_EDIT,
-					openModal: true
-				},
-				this.focusTextInput
-			);
+			this.loadSupervisors(idSearch, () => {
+				this.setState(
+					{
+						idToEdit: idSearch,
+						firstname: firstname.trim(),
+						middlename: middlename.trim(),
+						lastname: lastname.trim(),
+						email: email.trim(),
+						number: number.trim(),
+						idSupervisor: idSupervisor,
+						idDepartment: idDepartment,
+						departmentName: department ? department.Name.trim() : '',
+						title: title,
+						type: type,
+						formValid: true,
+						emailValid: true,
+						firstnameValid: true,
+						//	middlenameValid: true,
+						lastnameValid: true,
+						titleValid: true,
+						typeValid: true,
+						idDepartmentValid: true,
+						departmentNameValid: true,
+						idSupervisorValid: true,
+						enableCancelButton: true,
+						emailHasValue: true,
+						firstnameHasValue: true,
+						middlenameHasValue: true,
+						lastnameHasValue: true,
+						titleHasValue: true,
+						typeHasValue: true,
+						idDepartmentHasValue: true,
+						idSupervisorHasValue: true,
+						departmentNameHasValue: true,
+
+						numberValid: true,
+						buttonTitle: this.TITLE_EDIT,
+						openModal: true
+					},
+					this.focusTextInput
+				);
+			});
 		});
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, showCircularLoading: false, opendialog: true });
 	};
 	componentWillMount() {
 		this.setState({ firstLoad: true }, () => {
@@ -754,59 +783,107 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	insertContacts = () => {
+	insertContacts = (idDepartment) => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
-		this.setState(
-			{
-				loading: true
-			},
-			() => {
-				this.props.client
-					.mutate({
-						mutation: query,
-						variables: {
-							input: {
-								Id: id,
-								Id_Entity: this.props.idCompany,
-								First_Name: `'${this.state.firstname}'`,
-								Middle_Name: `'${this.state.middlename}'`,
-								Last_Name: `'${this.state.lastname}'`,
-								Electronic_Address: `'${this.state.email}'`,
-								Phone_Number: `'${this.state.number}'`,
-								Contact_Title: this.state.title,
-								Contact_Type: this.state.type,
-								Id_Deparment: this.state.idDepartment,
-								Id_Supervisor: this.state.idSupervisor,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14 16:10:25+00'",
-								Date_Updated: "'2018-08-14 16:10:25+00'"
-							}
-						}
-					})
-					.then((data) => {
-						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-						this.setState({ openModal: false }, () => {
-							this.loadContacts(() => {
-								this.loadAllSupervisors(() => {
-									this.loadSupervisors(0, () => {
-										this.resetState();
-									});
+		this.props.client
+			.mutate({
+				mutation: query,
+				variables: {
+					input: {
+						Id: id,
+						Id_Entity: this.props.idCompany,
+						First_Name: `'${this.state.firstname}'`,
+						Middle_Name: `'${this.state.middlename}'`,
+						Last_Name: `'${this.state.lastname}'`,
+						Electronic_Address: `'${this.state.email}'`,
+						Phone_Number: `'${this.state.number}'`,
+						Contact_Title: this.state.title,
+						Contact_Type: this.state.type,
+						Id_Deparment: idDepartment,
+						Id_Supervisor: this.state.idSupervisor,
+						IsActive: 1,
+						User_Created: 1,
+						User_Updated: 1,
+						Date_Created: "'2018-08-14 16:10:25+00'",
+						Date_Updated: "'2018-08-14 16:10:25+00'"
+					}
+				}
+			})
+			.then((data) => {
+				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
+				this.setState({ openModal: false, showCircularLoading: true }, () => {
+					this.loadContacts(() => {
+						this.loadDepartments(() => {
+							this.loadAllSupervisors(() => {
+								this.loadSupervisors(0, () => {
+									this.resetState();
 								});
 							});
 						});
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar(
-							'error',
-							isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
-						);
-						this.setState({
-							loading: false
-						});
 					});
+				});
+			})
+			.catch((error) => {
+				this.props.handleOpenSnackbar(
+					'error',
+					isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+				);
+				this.setState({
+					loading: false
+				});
+			});
+	};
+	insertDepartment = () => {
+		this.setState(
+			{
+				loading: true,
+				showCircularLoading: true
+			},
+			() => {
+				var department = this.state.departments.find((obj) => {
+					return obj.Name.trim() === this.state.departmentName.trim();
+				});
+
+				if (department) {
+					this.insertContacts(department.Id);
+				} else {
+					this.props.client
+						.mutate({
+							mutation: this.INSERT_DEPARTMENTS_QUERY,
+							variables: {
+								input: {
+									Id: 0,
+									Id_Catalog: 8,
+									Id_Parent: 0,
+									Name: `''`,
+									DisplayLabel: `'${this.state.departmentName}'`,
+									Description: `'${this.state.departmentName}'`,
+									Value: null,
+									Value01: null,
+									Value02: null,
+									Value03: null,
+									Value04: null,
+									IsActive: 1,
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-09-20 08:10:25+00'",
+									Date_Updated: "'2018-09-20 08:10:25+00'"
+								}
+							}
+						})
+						.then((data) => {
+							this.setState({ openModal: false }, () => {
+								this.insertContacts(data.data.inscatalogitem.Id);
+							});
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+							this.setState({
+								loading: false
+							});
+						});
+				}
 			}
 		);
 	};
@@ -825,10 +902,20 @@ class ContactcontactForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
-						this.loadContacts();
-						this.loadAllSupervisors();
-						this.loadSupervisors();
-						this.resetState();
+
+						this.setState({ opendialog: false, firstLoad: true, showCircularLoading: true }, () => {
+							this.loadContacts(() => {
+								this.loadTitles(() => {
+									this.loadDepartments(() => {
+										this.loadSupervisors(0, () => {
+											this.loadAllSupervisors(() => {
+												this.setState({ indexView: 1, firstLoad: false });
+											});
+										});
+									});
+								});
+							});
+						});
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Contact: ' + error);
@@ -847,7 +934,7 @@ class ContactcontactForm extends React.Component {
 			},
 			() => {
 				this.validateAllFields(() => {
-					if (this.state.formValid) this.insertContacts();
+					if (this.state.formValid) this.insertDepartment();
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',
@@ -863,7 +950,9 @@ class ContactcontactForm extends React.Component {
 	};
 
 	cancelContactHandler = () => {
-		this.resetState();
+		this.resetState(() => {
+			this.loadAllSupervisors(this.loadSupervisors);
+		});
 	};
 	handleClickOpenModal = () => {
 		this.setState({ openModal: true });
@@ -891,6 +980,17 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
+	updateDepartmentName = (value) => {
+		this.setState(
+			{
+				departmentName: value
+			},
+			() => {
+				this.validateField('departmentName', value);
+			}
+		);
+	};
+
 	updateTitle = (id) => {
 		this.setState(
 			{
@@ -923,14 +1023,8 @@ class ContactcontactForm extends React.Component {
 			this.state.loadingSupervisor ||
 			this.state.loadingAllSupervisors ||
 			this.state.loadingTitles ||
-			this.state.loading;
-
-		console.log('Is loadingData', this.state.loadingData);
-		console.log('Is loadingDepartments', this.state.loadingDepartments);
-		console.log('Is loadingSupervisor', this.state.loadingSupervisor);
-		console.log('Is loadingAllSupervisors', this.state.loadingAllSupervisors);
-		console.log('Is loadingTitles', this.state.loadingTitles);
-		console.log('Is loading', this.state.loading);
+			this.state.loading ||
+			this.state.firstLoad;
 
 		if (this.state.indexView == 0) {
 			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
@@ -939,7 +1033,12 @@ class ContactcontactForm extends React.Component {
 			return (
 				<React.Fragment>
 					{isLoading && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}
@@ -1030,13 +1129,22 @@ class ContactcontactForm extends React.Component {
 								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">* Department</span>
-									<SelectForm
+									{/*	<SelectForm
 										name="department"
 										data={this.state.departments}
 										error={!this.state.idDepartmentValid}
 										update={this.updateDepartment}
 										showNone={false}
 										value={this.state.idDepartment}
+									/>*/}
+									<AutosuggestInput
+										id="department"
+										name="department"
+										data={this.state.departments}
+										error={!this.state.departmentNameValid}
+										value={this.state.departmentName}
+										onChange={this.updateDepartmentName}
+										onSelect={this.updateDepartmentName}
 									/>
 								</div>
 								{/*
@@ -1142,7 +1250,7 @@ class ContactcontactForm extends React.Component {
 							data={this.state.data}
 							titles={this.state.titles}
 							types={this.state.contactTypes}
-							loading={isLoading}
+							loading={this.state.showCircularLoading && isLoading}
 							supervisors={this.state.allSupervisors}
 							departments={this.state.departments}
 							onEditHandler={this.onEditHandler}

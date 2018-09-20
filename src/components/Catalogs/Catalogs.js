@@ -204,7 +204,9 @@ class Catalogs extends React.Component {
 
 		loading: false,
 		loadingConfirm: false,
-		openModal: false
+		openModal: false,
+		firstLoad: false,
+		showCircularLoading: false
 	};
 
 	constructor(props) {
@@ -413,59 +415,62 @@ class Catalogs extends React.Component {
 		this.deleteCatalogItem();
 	};
 	onEditHandler = ({ Id, Id_Catalog, Id_Parent, Name, DisplayLabel, Description, Value }) => {
-		this.setState(
-			{
-				idToEdit: Id,
-				idCatalog: Id_Catalog,
-				idParent: Id_Parent,
-				name: Name.trim(),
-				displayLabel: DisplayLabel.trim(),
-				description: Description.trim(),
-				value: Value == null ? '' : Value.trim(),
-
-				formValid: true,
-				idCatalogValid: true,
-				idParentValid: true,
-				nameValid: true,
-				displayLabelValid: true,
-				descriptionValid: true,
-
-				enableCancelButton: true,
-				idCatalogHasValue: true,
-				idParentHasValue: true,
-				nameHasValue: true,
-				displayHasValue: true,
-				descriptionHasValue: true,
-				valueHasValue: true,
-
-				buttonTitle: this.TITLE_EDIT,
-				openModal: true
-			},
-			() => {
-				var parent = Id_Catalog;
-				switch (Id_Catalog) {
-					case 5: //City
-						parent = 3; //State
-						break;
-					case 3: //State
-						parent = 2; //Country
-						break;
-					case 2: //Country
-						parent = -1; //No Parent
-						break;
-				}
-				this.loadParents(parent, Id, Id_Parent);
-				this.focusTextInput();
+		this.setState({ showCircularLoading: false }, () => {
+			var parent = Id_Catalog;
+			switch (Id_Catalog) {
+				case 5: //City
+					parent = 3; //State
+					break;
+				case 3: //State
+					parent = 2; //Country
+					break;
+				case 2: //Country
+					parent = -1; //No Parent
+					break;
 			}
-		);
+			this.loadParents(parent, Id, Id_Parent, () => {
+				this.setState(
+					{
+						idToEdit: Id,
+						idCatalog: Id_Catalog,
+						idParent: Id_Parent,
+						name: Name.trim(),
+						displayLabel: DisplayLabel.trim(),
+						description: Description.trim(),
+						value: Value == null ? '' : Value.trim(),
+
+						formValid: true,
+						idCatalogValid: true,
+						idParentValid: true,
+						nameValid: true,
+						displayLabelValid: true,
+						descriptionValid: true,
+
+						enableCancelButton: true,
+						idCatalogHasValue: true,
+						idParentHasValue: true,
+						nameHasValue: true,
+						displayHasValue: true,
+						descriptionHasValue: true,
+						valueHasValue: true,
+
+						buttonTitle: this.TITLE_EDIT,
+						openModal: true
+					},
+					this.focusTextInput
+				);
+			});
+		});
 	};
 
 	onDeleteHandler = (idSearch) => {
-		this.setState({ idToDelete: idSearch, opendialog: true });
+		this.setState({ idToDelete: idSearch, showCircularLoading: false, opendialog: true });
 	};
 	componentWillMount() {
-		this.loadCatalogs(() => {
-			this.setState({ indexView: 1 });
+		this.setState({ firstLoad: true }, () => {
+			this.loadCatalogs(() => {
+				this.setState({ indexView: 1, firstLoad: false });
+			});
 		});
 	}
 
@@ -484,7 +489,8 @@ class Catalogs extends React.Component {
 								catalogs: data.data.getcatalog.length > 0 ? data.data.getcatalog : this.state.catalogs,
 								idCatalogFilter: idCatalog,
 
-								loadingData: false
+								loadingData: false,
+								firstLoad: false
 								//	idCatalogHasValue: data.data.getcatalog.length > 0 ? true : false,
 								//	idCatalogValid: data.data.getcatalog.length > 0 ? true : false
 							},
@@ -493,9 +499,15 @@ class Catalogs extends React.Component {
 									this.loadCatalogsItems(
 										data.data.getcatalog.length > 0 ? data.data.getcatalog[0].Id : 0,
 										() => {
-											this.setState({ loadingData: false }, () => {
-												this.resetState(func());
-											});
+											this.setState(
+												{
+													loadingData: false,
+													firstLoad: false
+												},
+												() => {
+													this.resetState(func());
+												}
+											);
 										}
 									);
 								});
@@ -505,7 +517,8 @@ class Catalogs extends React.Component {
 						this.setState({
 							loadingData: false,
 							indexView: 2,
-							errorMessage: 'Error: Loading catalogs: getcatalog not exists in query data'
+							errorMessage: 'Error: Loading catalogs: getcatalog not exists in query data',
+							firstLoad: false
 						});
 					}
 				})
@@ -513,7 +526,8 @@ class Catalogs extends React.Component {
 					this.setState({
 						loadingData: false,
 						indexView: 2,
-						errorMessage: 'Error: Loading catalogs: ' + error
+						errorMessage: 'Error: Loading catalogs: ' + error,
+						firstLoad: false
 					});
 				});
 		});
@@ -531,17 +545,25 @@ class Catalogs extends React.Component {
 				if (data.data.getcatalogitem != null) {
 					this.setState(
 						{
-							data: data.data.getcatalogitem
+							data: data.data.getcatalogitem,
+							firstLoad: false
 						},
 						() => {
-							this.setState({ loadingCatalogs: false }, this.resetState(func));
+							this.setState(
+								{
+									loadingCatalogs: false,
+									firstLoad: false
+								},
+								this.resetState(func)
+							);
 						}
 					);
 				} else {
 					this.setState({
 						loadingCatalogs: false,
 						indexView: 2,
-						errorMessage: 'Error: Loading catalogs items: getcatalogitem not exists in query data'
+						errorMessage: 'Error: Loading catalogs items: getcatalogitem not exists in query data',
+						firstLoad: false
 					});
 				}
 			})
@@ -549,7 +571,8 @@ class Catalogs extends React.Component {
 				this.setState({
 					loadingCatalogs: false,
 					indexView: 2,
-					errorMessage: 'Error: Loading catalogs items: ' + error
+					errorMessage: 'Error: Loading catalogs items: ' + error,
+					firstLoad: false
 				});
 			});
 	};
@@ -569,7 +592,8 @@ class Catalogs extends React.Component {
 							loadingParents: false,
 							idParent: idParent,
 							idParentHasValue: idParent > -1,
-							idParentValid: idParent > -1
+							idParentValid: idParent > -1,
+							firstLoad: false
 						},
 						func
 					);
@@ -577,7 +601,8 @@ class Catalogs extends React.Component {
 					this.setState({
 						loadingParents: false,
 						indexView: 2,
-						errorMessage: 'Error: Loading parents: getparentcatalogitem not exists in query data'
+						errorMessage: 'Error: Loading parents: getparentcatalogitem not exists in query data',
+						firstLoad: false
 					});
 				}
 			})
@@ -585,7 +610,8 @@ class Catalogs extends React.Component {
 				this.setState({
 					loadingParents: false,
 					indexView: 2,
-					errorMessage: 'Error: Loading parents: ' + error
+					errorMessage: 'Error: Loading parents: ' + error,
+					firstLoad: false
 				});
 			});
 	};
@@ -603,7 +629,8 @@ class Catalogs extends React.Component {
 					this.setState(
 						{
 							allparents: data.data.getparentcatalogitem,
-							loadingAllParents: false
+							loadingAllParents: false,
+							firstLoad: false
 						},
 						func
 					);
@@ -611,7 +638,8 @@ class Catalogs extends React.Component {
 					this.setState({
 						loadingAllParents: false,
 						indexView: 2,
-						errorMessage: 'Error: Loading all parents: getparentcatalogitem not exists in query data'
+						errorMessage: 'Error: Loading all parents: getparentcatalogitem not exists in query data',
+						firstLoad: false
 					});
 				}
 			})
@@ -619,7 +647,8 @@ class Catalogs extends React.Component {
 				this.setState({
 					loadingAllParents: false,
 					indexView: 2,
-					errorMessage: 'Error: Loading all parents: ' + error
+					errorMessage: 'Error: Loading all parents: ' + error,
+					firstLoad: false
 				});
 			});
 	};
@@ -667,15 +696,16 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
+						this.props.handleOpenSnackbar(
+							'success',
+							isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+						);
 						this.setState(
 							{
-								openModal: false
+								openModal: false,
+								showCircularLoading: true
 							},
 							() => {
-								this.props.handleOpenSnackbar(
-									'success',
-									isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
-								);
 								this.loadCatalogsItems(this.state.idCatalog, () => {
 									this.loadAllParents(() => {
 										this.resetState();
@@ -701,7 +731,8 @@ class Catalogs extends React.Component {
 	deleteCatalogItem = () => {
 		this.setState(
 			{
-				loadingConfirm: true
+				loadingConfirm: true,
+				showCircularLoading: true
 			},
 			() => {
 				this.props.client
@@ -713,12 +744,18 @@ class Catalogs extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Catalog Item Deleted!');
-						this.loadCatalogsItems(this.state.idCatalogFilter, this.resetState);
+						this.loadCatalogsItems(
+							this.state.idCatalogFilter,
+							this.resetState(() => {
+								this.setState({ showCircularLoading: false });
+							})
+						);
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Catalog Item: ' + error);
 						this.setState({
-							loadingConfirm: false
+							loadingConfirm: false,
+							showCircularLoading: false
 						});
 					});
 			}
@@ -777,34 +814,26 @@ class Catalogs extends React.Component {
 		const { loading } = this.state;
 		const { classes } = this.props;
 		const { fullScreen } = this.props;
-
+		const isLoading =
+			this.state.loadingData ||
+			this.state.loadingParents ||
+			this.state.loadingAllParents ||
+			this.state.loadingCatalogs ||
+			this.state.loadingConfirm;
 		if (this.state.indexView == 0) {
-			return (
-				<React.Fragment>
-					{(this.state.loadingData ||
-						this.state.loadingParents ||
-						this.state.loadingAllParents ||
-						this.state.loadingCatalogs) && <LinearProgress />}
-				</React.Fragment>
-			);
+			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
 		}
 		if (this.state.indexView == 2) {
 			return (
 				<React.Fragment>
-					{(this.state.loadingData ||
-						this.state.loadingParents ||
-						this.state.loadingAllParents ||
-						this.state.loadingCatalogs) && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+					{isLoading && <LinearProgress />}
+					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" icon="danger"/>)
 				</React.Fragment>
 			);
 		}
 		return (
 			<div className="catalog_tab">
-				{(this.state.loadingData ||
-					this.state.loadingParents ||
-					this.state.loadingAllParents ||
-					this.state.loadingCatalogs) && <LinearProgress />}
+				{isLoading && <LinearProgress />}
 
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
@@ -973,16 +1002,7 @@ class Catalogs extends React.Component {
 							value={this.state.idCatalogFilter}
 						/>
 					</div>
-					<button
-						className="add-catalog"
-						onClick={this.handleClickOpenModal}
-						disabled={
-							this.state.loadingData ||
-							this.state.loadingCatalogs ||
-							this.state.loadingParents ||
-							this.state.loadingAllParents
-						}
-					>
+					<button className="add-catalog" onClick={this.handleClickOpenModal} disabled={isLoading}>
 						{' '}
 						Add Catalog{' '}
 					</button>
@@ -994,12 +1014,7 @@ class Catalogs extends React.Component {
 							data={this.state.data}
 							catalogs={this.state.catalogs}
 							parents={this.state.allparents}
-							loading={
-								this.state.loadingData ||
-								this.state.loadingCatalogs ||
-								this.state.loadingParents ||
-								this.state.loadingAllParents
-							}
+							loading={this.state.showCircularLoading && isLoading}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}
 						/>

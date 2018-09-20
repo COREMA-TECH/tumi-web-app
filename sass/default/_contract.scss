@@ -19,5 +19,12 @@
 .main-contract {
     &__header {
         height: auto !important;
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+    .company-list__header {
+        @media (min-width: 360px) {
+            height: auto !important;
+        }
     }
 }
