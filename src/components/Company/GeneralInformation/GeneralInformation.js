@@ -132,6 +132,9 @@ class GeneralInformation extends Component {
 				Id_Company
 				BusinessType
 				Name
+				Other_Name
+				Other01_Name
+				Rooms
 				Description
 				Start_Week
 				End_Week
@@ -184,7 +187,9 @@ class GeneralInformation extends Component {
 									endWeek: item.End_Week,
 									address: item.Location.trim(),
 									optionalAddress: item.Location01.trim(),
-
+									otherName: item.Other_Name ? item.Other_Name.trim() : '',
+									otherName1: item.Other01_Name ? item.Other01_Name.trim() : '',
+									rooms: item.Rooms ? item.Rooms.trim() : '',
 									country: item.Country,
 									state: item.State,
 									city: item.City,
@@ -199,7 +204,7 @@ class GeneralInformation extends Component {
 									fax: item.Fax,
 									startDate: item.Start_Date.trim(),
 									active: item.IsActive,
-									suite: item.Suite,
+									suite: item.Suite ? item.Suite.trim() : '',
 									indexView: 1,
 									...this.DEFAULT_STATUS,
 									loading: false
@@ -405,6 +410,9 @@ class GeneralInformation extends Component {
 						variables: {
 							input: {
 								Id: companyId,
+								Other_Name: `'${this.state.otherName}'`,
+								Other01_Name: `'${this.state.otherName1}'`,
+								Rooms: 0,
 								Code: `'${this.state.Code}'`,
 								Code01: `'${this.state.Code}'`,
 								Id_Contract: 1,
@@ -438,7 +446,7 @@ class GeneralInformation extends Component {
 								Insurace_URL: `'${this.state.insuranceURL}'`,
 								Other_URL: `'${this.state.otherURL}'`,
 								Other01_URL: `'${this.state.other01URL}'`,
-								Suite: parseInt(this.state.suite),
+								Suite: `'${this.state.suite}'`,
 								Contract_Status: "'C'"
 							}
 						}
@@ -642,6 +650,8 @@ class GeneralInformation extends Component {
 			completedInput: false,
 			loading: false,
 			name: '',
+			otherName: '',
+			otherName1: '',
 			legalName: '',
 			description: '',
 			location: '',
@@ -658,7 +668,7 @@ class GeneralInformation extends Component {
 			workWeek: '',
 			avatar: 'url',
 			otherPhoneNumber: '',
-			room: '',
+			rooms: '',
 			rate: '',
 			fax: '',
 			zipCode: '',
@@ -1082,7 +1092,6 @@ class GeneralInformation extends Component {
 							<div className="card-form-row">
 								<span className="input-label primary">* Suite</span>
 								<InputForm
-									type="number"
 									value={this.state.suite}
 									change={(text) => {
 										this.updateInput(text, 'suite');
@@ -1243,7 +1252,17 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
-								<input type="text" class="input-file-name" max="120" placeholder="Name File"/>
+								<input
+									type="text"
+									className="input-file-name"
+									max="120"
+									placeholder="Name File"
+									value={this.state.otherName}
+									onChange={(e) => {
+										this.updateInput(e.target.value, 'otherName');
+									}}
+									disabled={!this.props.showStepper}
+								/>
 								<FileUpload
 									updateURL={(url) => {
 										this.setState({
@@ -1254,7 +1273,17 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
-								<input type="text" class="input-file-name" max="120" placeholder="Name File"/>
+								<input
+									type="text"
+									className="input-file-name"
+									max="120"
+									placeholder="Name File"
+									value={this.state.otherName1}
+									onChange={(e) => {
+										this.updateInput(e.target.value, 'otherName1');
+									}}
+									disabled={!this.props.showStepper}
+								/>
 								<FileUpload
 									updateURL={(url) => {
 										this.setState({
