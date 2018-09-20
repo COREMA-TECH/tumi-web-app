@@ -174,6 +174,14 @@ class ContactcontactForm extends React.Component {
 		}
 	`;
 
+	INSERT_DEPARTMENTS_QUERY = gql`
+		mutation inscatalogitem($input: iParamCI!) {
+			inscatalogitem(input: $input) {
+				Id
+			}
+		}
+	`;
+
 	TITLE_ADD = 'Add Contact';
 	TITLE_EDIT = 'Update Contact';
 
@@ -360,7 +368,7 @@ class ContactcontactForm extends React.Component {
 				lastnameValid,
 				numberValid,
 				titleValid,
-				idDepartmentValid,
+				//idDepartmentValid,
 				idSupervisorValid,
 				typeValid,
 				departmentNameValid
@@ -448,7 +456,7 @@ class ContactcontactForm extends React.Component {
 				numberValid,
 				titleValid,
 				typeValid,
-				idDepartmentValid,
+				//idDepartmentValid,
 				departmentNameValid,
 				idSupervisorValid,
 				emailHasValue,
@@ -477,7 +485,7 @@ class ContactcontactForm extends React.Component {
 					this.state.numberValid &&
 					this.state.titleValid &&
 					this.state.typeValid &&
-					this.state.idDepartmentValid &&
+					//this.state.idDepartmentValid &&
 					this.state.departmentNameValid &&
 					this.state.idSupervisorValid,
 				enableCancelButton:
@@ -488,7 +496,7 @@ class ContactcontactForm extends React.Component {
 					this.state.numberHasValue ||
 					this.state.titleHasValue ||
 					this.state.typeHasValue ||
-					this.state.idDepartmentHasValue ||
+					//	this.state.idDepartmentHasValue ||
 					this.state.departmentName ||
 					this.state.idSupervisorHasValue
 			},
@@ -783,6 +791,27 @@ class ContactcontactForm extends React.Component {
 				loading: true
 			},
 			() => {
+				var department = this.state.departments.find((obj) => {
+					return obj.Name.trim() === this.state.departmentName.trim();
+				});
+				var statusInsDepartment;
+				var idDepartment;
+				if (department) idDepartment = department.Id;
+				else {
+					statusInsDepartment = this.insertDepartment();
+					if (statusInsDepartment.valid) idDepartment = statusInsDepartment.id;
+					else {
+						this.props.handleOpenSnackbar(
+							'error',
+							isEdition
+								? 'Error: Updating Contact: ' + statusInsDepartment.message
+								: 'Error: Inserting Contact: ' + statusInsDepartment.message
+						);
+						this.setState({
+							loading: false
+						});
+					}
+				}
 				this.props.client
 					.mutate({
 						mutation: query,
@@ -797,7 +826,7 @@ class ContactcontactForm extends React.Component {
 								Phone_Number: `'${this.state.number}'`,
 								Contact_Title: this.state.title,
 								Contact_Type: this.state.type,
-								Id_Deparment: this.state.idDepartment,
+								Id_Deparment: idDepartment,
 								Id_Supervisor: this.state.idSupervisor,
 								IsActive: 1,
 								User_Created: 1,
@@ -869,6 +898,39 @@ class ContactcontactForm extends React.Component {
 					});
 			}
 		);
+	};
+
+	insertDepartment = () => {
+		this.props.client
+			.mutate({
+				mutation: this.INSERT_DEPARTMENTS_QUERY,
+				variables: {
+					input: {
+						Id: 0,
+						Id_Catalog: 8,
+						Id_Parent: 0,
+						Name: `''`,
+						DisplayLabel: `'${this.state.departmentName}'`,
+						Description: `'${this.state.departmentName}'`,
+						Value: null,
+						Value01: null,
+						Value02: null,
+						Value03: null,
+						Value04: null,
+						IsActive: 1,
+						User_Created: 1,
+						User_Updated: 1,
+						Date_Created: "'2018-09-20 08:10:25+00'",
+						Date_Updated: "'2018-09-20 08:10:25+00'"
+					}
+				}
+			})
+			.then((data) => {
+				return { valid: true, id: data.inscatalogitem.Id, message: data.inscatalogitem.Name };
+			})
+			.catch((error) => {
+				return { valid: false, id: 0, message: error };
+			});
 	};
 
 	addContactHandler = () => {
