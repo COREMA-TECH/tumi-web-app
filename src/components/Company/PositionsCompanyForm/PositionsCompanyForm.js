@@ -525,7 +525,6 @@ class PositionsCompanyForm extends React.Component {
 	};
 
 	loadPositions = (func = () => {}) => {
-		console.log('Load Positions Inside');
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -613,7 +612,7 @@ class PositionsCompanyForm extends React.Component {
 							isEdition ? 'Positions and Rates Updated!' : 'Positions and Rates Inserted!'
 						);
 
-						this.setState({ showCircularLoading: true, loading: false }, () => {
+						this.setState({ showCircularLoading: true, loading: false, openModal: false }, () => {
 							this.loadPositions(() => {
 								this.loadDepartments(() => {
 									this.setState({ indexView: 1, showCircularLoading: false });
@@ -749,7 +748,12 @@ class PositionsCompanyForm extends React.Component {
 			return (
 				<React.Fragment>
 					{isLoading && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" icon="danger" />)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}

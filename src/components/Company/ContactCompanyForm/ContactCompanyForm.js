@@ -261,10 +261,10 @@ class ContactcontactForm extends React.Component {
 		this.Login = {
 			LoginId: sessionStorage.getItem('LoginId'),
 			IsAdmin: sessionStorage.getItem('IsAdmin'),
-			AllowEdit: true, //sessionStorage.getItem('AllowEdit') === 'true',
-			AllowDelete: true, //sessionStorage.getItem('AllowDelete') === 'true',
-			AllowInsert: true, //sessionStorage.getItem('AllowInsert') === 'true',
-			AllowExport: true //sessionStorage.getItem('AllowExport') === 'true'
+			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
 		};
 	}
 
@@ -783,80 +783,107 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	insertContacts = () => {
+	insertContacts = (idDepartment) => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
+		this.props.client
+			.mutate({
+				mutation: query,
+				variables: {
+					input: {
+						Id: id,
+						Id_Entity: this.props.idCompany,
+						First_Name: `'${this.state.firstname}'`,
+						Middle_Name: `'${this.state.middlename}'`,
+						Last_Name: `'${this.state.lastname}'`,
+						Electronic_Address: `'${this.state.email}'`,
+						Phone_Number: `'${this.state.number}'`,
+						Contact_Title: this.state.title,
+						Contact_Type: this.state.type,
+						Id_Deparment: idDepartment,
+						Id_Supervisor: this.state.idSupervisor,
+						IsActive: 1,
+						User_Created: 1,
+						User_Updated: 1,
+						Date_Created: "'2018-08-14 16:10:25+00'",
+						Date_Updated: "'2018-08-14 16:10:25+00'"
+					}
+				}
+			})
+			.then((data) => {
+				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
+				this.setState({ openModal: false, showCircularLoading: true }, () => {
+					this.loadContacts(() => {
+						this.loadDepartments(() => {
+							this.loadAllSupervisors(() => {
+								this.loadSupervisors(0, () => {
+									this.resetState();
+								});
+							});
+						});
+					});
+				});
+			})
+			.catch((error) => {
+				this.props.handleOpenSnackbar(
+					'error',
+					isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+				);
+				this.setState({
+					loading: false
+				});
+			});
+	};
+	insertDepartment = () => {
 		this.setState(
 			{
-				loading: true
+				loading: true,
+				showCircularLoading: true
 			},
 			() => {
 				var department = this.state.departments.find((obj) => {
 					return obj.Name.trim() === this.state.departmentName.trim();
 				});
-				var statusInsDepartment;
-				var idDepartment;
-				if (department) idDepartment = department.Id;
-				else {
-					statusInsDepartment = this.insertDepartment();
-					if (statusInsDepartment.valid) idDepartment = statusInsDepartment.id;
-					else {
-						this.props.handleOpenSnackbar(
-							'error',
-							isEdition
-								? 'Error: Updating Contact: ' + statusInsDepartment.message
-								: 'Error: Inserting Contact: ' + statusInsDepartment.message
-						);
-						this.setState({
-							loading: false
-						});
-					}
-				}
-				this.props.client
-					.mutate({
-						mutation: query,
-						variables: {
-							input: {
-								Id: id,
-								Id_Entity: this.props.idCompany,
-								First_Name: `'${this.state.firstname}'`,
-								Middle_Name: `'${this.state.middlename}'`,
-								Last_Name: `'${this.state.lastname}'`,
-								Electronic_Address: `'${this.state.email}'`,
-								Phone_Number: `'${this.state.number}'`,
-								Contact_Title: this.state.title,
-								Contact_Type: this.state.type,
-								Id_Deparment: idDepartment,
-								Id_Supervisor: this.state.idSupervisor,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14 16:10:25+00'",
-								Date_Updated: "'2018-08-14 16:10:25+00'"
+
+				if (department) {
+					this.insertContacts(department.Id);
+				} else {
+					this.props.client
+						.mutate({
+							mutation: this.INSERT_DEPARTMENTS_QUERY,
+							variables: {
+								input: {
+									Id: 0,
+									Id_Catalog: 8,
+									Id_Parent: 0,
+									Name: `''`,
+									DisplayLabel: `'${this.state.departmentName}'`,
+									Description: `'${this.state.departmentName}'`,
+									Value: null,
+									Value01: null,
+									Value02: null,
+									Value03: null,
+									Value04: null,
+									IsActive: 1,
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-09-20 08:10:25+00'",
+									Date_Updated: "'2018-09-20 08:10:25+00'"
+								}
 							}
-						}
-					})
-					.then((data) => {
-						this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-						this.setState({ openModal: false, showCircularLoading: true }, () => {
-							this.loadContacts(() => {
-								this.loadAllSupervisors(() => {
-									this.loadSupervisors(0, () => {
-										this.resetState();
-									});
-								});
+						})
+						.then((data) => {
+							this.setState({ openModal: false }, () => {
+								this.insertContacts(data.data.inscatalogitem.Id);
+							});
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+							this.setState({
+								loading: false
 							});
 						});
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar(
-							'error',
-							isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
-						);
-						this.setState({
-							loading: false
-						});
-					});
+				}
 			}
 		);
 	};
@@ -900,39 +927,6 @@ class ContactcontactForm extends React.Component {
 		);
 	};
 
-	insertDepartment = () => {
-		this.props.client
-			.mutate({
-				mutation: this.INSERT_DEPARTMENTS_QUERY,
-				variables: {
-					input: {
-						Id: 0,
-						Id_Catalog: 8,
-						Id_Parent: 0,
-						Name: `''`,
-						DisplayLabel: `'${this.state.departmentName}'`,
-						Description: `'${this.state.departmentName}'`,
-						Value: null,
-						Value01: null,
-						Value02: null,
-						Value03: null,
-						Value04: null,
-						IsActive: 1,
-						User_Created: 1,
-						User_Updated: 1,
-						Date_Created: "'2018-09-20 08:10:25+00'",
-						Date_Updated: "'2018-09-20 08:10:25+00'"
-					}
-				}
-			})
-			.then((data) => {
-				return { valid: true, id: data.inscatalogitem.Id, message: data.inscatalogitem.Name };
-			})
-			.catch((error) => {
-				return { valid: false, id: 0, message: error };
-			});
-	};
-
 	addContactHandler = () => {
 		this.setState(
 			{
@@ -940,7 +934,7 @@ class ContactcontactForm extends React.Component {
 			},
 			() => {
 				this.validateAllFields(() => {
-					if (this.state.formValid) this.insertContacts();
+					if (this.state.formValid) this.insertDepartment();
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',

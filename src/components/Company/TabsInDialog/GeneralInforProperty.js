@@ -506,7 +506,7 @@ class GeneralInfoProperty extends Component {
 
         return (
             <form onSubmit={this.handleFormSubmit} noValidate>
-                <div className="container">
+                <div className="container container-small">
                     <div className="row">
                         <div className="col-6">
                             <div className="card-wrapper">
