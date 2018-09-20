@@ -57,6 +57,8 @@ class GeneralInfoProperty extends Component {
         insuranceURL: '',
         otherURL: '',
         other01URL: '',
+        phoneNumberValid: true,
+        faxNumberValid: true,
     };
 
 
@@ -133,8 +135,9 @@ class GeneralInfoProperty extends Component {
 				Suite
 				Contract_URL
                 Insurace_URL
-                Other_URL
-                Other01_URL
+                Other_Name
+                Other01_Name
+                Rooms
 			}
 		}
 	`;
@@ -199,7 +202,10 @@ class GeneralInfoProperty extends Component {
                             Insurace_URL: `'${this.state.insuranceURL}'`,
                             Other_URL: `'${this.state.otherURL}'`,
                             Other01_URL: `'${this.state.other01URL}'`,
-                            Suite: parseInt(this.state.suite),
+                            Other_Name: "''",
+                            Other01_Name: "''",
+                            Rooms: parseInt(this.state.room),
+                            Suite: `'${this.state.suite}'`,
                             Contract_Status: "'C'"
                         }
                     }
@@ -284,7 +290,10 @@ class GeneralInfoProperty extends Component {
                             Insurace_URL: `'${this.state.insuranceURL}'`,
                             Other_URL: `'${this.state.otherURL}'`,
                             Other01_URL: `'${this.state.other01URL}'`,
-                            Suite: parseInt(this.state.suite),
+                            Other_Name: "''",
+                            Other01_Name: "''",
+                            Rooms: parseInt(this.state.room),
+                            Suite: `'${this.state.suite}'`,
                             Contract_Status: "'C'"
                         }
                     }
@@ -312,82 +321,82 @@ class GeneralInfoProperty extends Component {
 
     handleFormSubmit = (event) => {
         event.preventDefault();
-
         let invalidInputs = document.querySelectorAll("input[required]"), i, validated = true;
+        let fax = this.state.fax.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
 
-        let numberInput = document.getElementById('prop-number');
-        let faxInput = document.getElementById('prop-fax');
+        this.setState({
+            phoneNumberValid: this.state.phoneNumber.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+                .length === 10,
+            faxNumberValid: fax.length === 10 || fax.length === 0
+        }, () => {
 
-        if (numberInput.value.length < 15) {
-            numberInput.classList.add('invalid');
-            validated = false;
-        }
+            if (!this.state.phoneNumberValid || !this.state.faxNumberValid) {
+                validated = false;
+            }
 
-        if (faxInput.value.length < 15) {
-            faxInput.classList.add('invalid');
 
-            validated = false;
-        }
+            // To set error in inputs
+            for (i = 0; i < invalidInputs.length; ++i) {
+                if (invalidInputs[i].value !== '') {
+                    invalidInputs[i].classList.remove('invalid');
 
-        // To set error in inputs
-        for (i = 0; i < invalidInputs.length; ++i) {
-            if (invalidInputs[i].value !== '') {
-                invalidInputs[i].classList.remove('invalid');
+                } else {
+                    invalidInputs[i].classList.add('invalid');
 
-            } else {
-                invalidInputs[i].classList.add('invalid');
+                    validated = false;
+                }
+            }
+
+            //To set errors in selects
+            if (this.state.city === 0) {
+                this.setState({
+                    validCity: 'valid'
+                });
 
                 validated = false;
             }
-        }
 
-        //To set errors in selects
-        if (this.state.city === 0) {
-            this.setState({
-                validCity: 'valid'
-            });
+            if (this.state.state === 0) {
+                this.setState({
+                    validState: 'valid'
+                });
 
-            validated = false;
-        }
-
-        if (this.state.state === 0) {
-            this.setState({
-                validState: 'valid'
-            });
-
-            validated = false;
-        }
-
-        if (this.state.startWeek === '') {
-            this.setState({
-                validStartWeek: 'valid'
-            });
-
-            validated = false;
-        }
-
-        if (this.state.endWeek === '') {
-            this.setState({
-                validEndWeek: 'valid'
-            });
-
-            validated = false;
-        }
-
-        if (validated) {
-            //Show loading component
-            if (this.props.idProperty === null) {
-                this.insertCompany(this.props.idCompany);
-            } else {
-                this.updateCompany(this.props.idCompany, this.props.idProperty)
+                validated = false;
             }
-        } else {
-            // Show snackbar warning
-            this.props.handleOpenSnackbar(
-                'warning',
-                'Error: Saving Information: You must fill all the required fields'
-            );
-        }
+
+            if (this.state.startWeek === '') {
+                this.setState({
+                    validStartWeek: 'valid'
+                });
+
+                validated = false;
+            }
+
+            if (this.state.endWeek === '') {
+                this.setState({
+                    validEndWeek: 'valid'
+                });
+
+                validated = false;
+            }
+
+            if (validated) {
+                //Show loading component
+                if (this.props.idProperty === null) {
+                    this.insertCompany(this.props.idCompany);
+                } else {
+                    this.updateCompany(this.props.idCompany, this.props.idProperty)
+                }
+            } else {
+                // Show snackbar warning
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'Warning: Saving Information: You must fill all the required fields'
+                );
+            }
+
+        });
+
     };
 
     // To set style in required input
@@ -401,21 +410,21 @@ class GeneralInfoProperty extends Component {
             }
         }
 
-        // Catch the error in the first render
-        try {
-            let numberInput = document.getElementById('prop-number');
-            let faxInput = document.getElementById('prop-fax');
-
-            if (numberInput.value.length < 10) {
-                numberInput.classList.remove('invalid');
-            }
-
-            if (faxInput.value.length < 10) {
-                faxInput.classList.remove('invalid');
-            }
-        } catch (e) {
-
-        }
+        // // Catch the error in the first render
+        // try {
+        //     let numberInput = document.getElementById('prop-number');
+        //     let faxInput = document.getElementById('prop-fax');
+        //
+        //     if (numberInput.value.length < 10) {
+        //         numberInput.classList.remove('invalid');
+        //     }
+        //
+        //     if (faxInput.value.length < 10) {
+        //         faxInput.classList.remove('invalid');
+        //     }
+        // } catch (e) {
+        //
+        // }
     };
 
     /**
@@ -465,6 +474,7 @@ class GeneralInfoProperty extends Component {
                             insuranceURL: item.Insurace_URL,
                             otherURL: item.Other_URL,
                             other01URL: item.Other01_URL,
+                            room: item.Rooms
                         });
 
                         this.setState({
@@ -503,7 +513,7 @@ class GeneralInfoProperty extends Component {
                                 <div class="card-form-header grey">General Information</div>
                                 <div className="row">
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Property Name</span>
+                                        <span className="primary card-input-label">* Property Name</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -519,7 +529,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Address</span>
+                                        <span className="primary card-input-label">* Address</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -535,7 +545,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Address 2</span>
+                                        <span className="primary card-input-label">* Address 2</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -551,7 +561,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Suite</span>
+                                        <span className="primary card-input-label">* Suite</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -561,13 +571,13 @@ class GeneralInfoProperty extends Component {
                                                 })
                                             }}
                                             value={this.state.suite}
-                                            type="number"
+                                            type="text"
                                             maxLength="10"
                                             required
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">States</span>
+                                        <span className="primary card-input-label">* States</span>
                                     </div>
                                     <div className="col-6">
                                         <Query query={this.getStatesQuery} variables={{parent: 6}}>
@@ -597,7 +607,7 @@ class GeneralInfoProperty extends Component {
                                         </Query>
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">City</span>
+                                        <span className="primary card-input-label">* City</span>
                                     </div>
                                     <div className="col-6">
                                         <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
@@ -627,7 +637,7 @@ class GeneralInfoProperty extends Component {
                                         </Query>
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Zip Code</span>
+                                        <span className="primary card-input-label">* Zip Code</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -643,7 +653,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Phone Number</span>
+                                        <span className="primary card-input-label">* Phone Number</span>
                                     </div>
                                     <div className="col-6">
                                         <InputMask
@@ -652,10 +662,11 @@ class GeneralInfoProperty extends Component {
                                             mask="+(999) 999-9999"
                                             maskChar=" "
                                             value={this.state.phoneNumber}
-                                            className={'input-form'}
+                                            className={this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'}
                                             onChange={(e) => {
                                                 this.setState({
-                                                    phoneNumber: e.target.value
+                                                    phoneNumber: e.target.value,
+                                                    phoneNumberValid: true
                                                 })
                                             }}
                                             placeholder="+(999) 999-9999"
@@ -664,7 +675,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Fax Week</span>
+                                        <span className="primary card-input-label">Fax Number</span>
                                     </div>
                                     <div className="col-6">
                                         <InputMask
@@ -673,14 +684,14 @@ class GeneralInfoProperty extends Component {
                                             mask="+(999) 999-9999"
                                             maskChar=" "
                                             value={this.state.fax}
-                                            className={'input-form'}
+                                            className={this.state.faxNumberValid ? 'input-form' : 'input-form _invalid'}
                                             onChange={(e) => {
                                                 this.setState({
-                                                    fax: e.target.value
+                                                    fax: e.target.value,
+                                                    faxNumberValid: true
                                                 })
                                             }}
                                             placeholder="+(999) 999-9999"
-                                            required
                                             minLength="15"
                                         />
                                     </div>
@@ -692,7 +703,7 @@ class GeneralInfoProperty extends Component {
                                 <div class="card-form-header yellow">Legal Docs</div>
                                 <div className="row">
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Property Code</span>
+                                        <span className="primary card-input-label">* Property Code</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -708,7 +719,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Cost Center</span>
+                                        <span className="primary card-input-label">* Cost Center</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -724,7 +735,7 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Contract Start Date</span>
+                                        <span className="primary card-input-label">* Contract Start Date</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -738,23 +749,23 @@ class GeneralInfoProperty extends Component {
                                             required
                                         />
                                     </div>
-                                    {/*<div className="col-6">*/}
-                                    {/*<span className="primary card-input-label">Room</span>*/}
-                                    {/*</div>*/}
-                                    {/*<div className="col-6">*/}
-                                    {/*<InputValid*/}
-                                    {/*change={(text) => {*/}
-                                    {/*this.setState({*/}
-                                    {/*room: text*/}
-                                    {/*})*/}
-                                    {/*}}*/}
-                                    {/*value={this.state.room}*/}
-                                    {/*type="number"*/}
-                                    {/*required*/}
-                                    {/*/>*/}
-                                    {/*</div>*/}
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Week Start</span>
+                                        <span className="primary card-input-label">* Room</span>
+                                    </div>
+                                    <div className="col-6">
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    room: text
+                                                })
+                                            }}
+                                            value={this.state.room}
+                                            type="number"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <span className="primary card-input-label">* Week Start</span>
                                     </div>
                                     <div className="col-6">
                                         <div className="row">
