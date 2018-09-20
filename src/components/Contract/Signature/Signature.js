@@ -167,7 +167,7 @@ class Signature extends React.Component {
 			ctx.fillStyle = this.getFillStyleForCanvas();
 			ctx.textAlign = 'center';
 
-			ctx.fillText(this.state.inputText, (container.offsetWidth - 15) / 2, (container.offsetHeight - 15) / 2);
+			ctx.fillText(this.state.inputText, container.offsetWidth / 2, (container.offsetHeight + 10) / 2);
 			this.setState({ openModal: false, disableButtonLetter: true, allowSave: true, empty: false }, () => {
 				this.sigPad.off();
 				this.setState({ signature: this.sigPad.toDataURL() }, () => {
@@ -179,13 +179,13 @@ class Signature extends React.Component {
 	getFontForCanvas = () => {
 		switch (this.state.selectedLetter) {
 			case 'letter1Selector':
-				return '60px "Muli"';
+				return '30px "Muli"';
 			case 'letter2Selector':
-				return '60px "Rancho"';
+				return '30px "Rancho"';
 			case 'letter3Selector':
-				return 'italic 60px "Pacifico"';
+				return 'italic 30px "Pacifico"';
 			default:
-				return '60px "Muli"';
+				return '30px "Muli"';
 		}
 	};
 	getFillStyleForCanvas = () => {
@@ -245,7 +245,6 @@ class Signature extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading agreement: ', error);
 				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
 				this.setState({ loadingData: false });
 			});
@@ -480,8 +479,10 @@ class Signature extends React.Component {
 				<div className="signature-container" id="signatureMainContainer">
 					{this.state.loadingData && <LinearProgress />}
 					<NothingToDisplay
-						url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
-						message="Contract Signed!"
+						title="All Right!"
+						message={'Contract Signed!'}
+						type="Error-danger"
+						icon="danger"
 					/>
 				</div>
 			);
@@ -502,7 +503,7 @@ class Signature extends React.Component {
 							}}
 							clearOnResize={false}
 							id="signingSurface"
-							canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 300 }} />}
+							canvas={<canvas id="signingCanvas" ref="signingCanvas" style={{ maxHeight: 100 }} />}
 							canvasProps={{ className: 'signature-input', id: 'signingCanvas' }}
 							onEnd={(e) => {
 								this.setState({
@@ -542,7 +543,7 @@ class Signature extends React.Component {
 											this.state.loading || this.state.disableButtonLetter || this.state.saved
 										}
 										variant="fab"
-										className={[buttonClassname, classes.buttonSuccess].join(' ')}
+										className={[ buttonClassname, classes.buttonSuccess ].join(' ')}
 										onClick={this.handleClickOpenModal}
 									>
 										<TitleIcon />
@@ -610,7 +611,7 @@ class Signature extends React.Component {
 								id="signatureContainer"
 								type="text"
 								spellCheck="false"
-								maxLength="20"
+								maxLength="15"
 								className={this.getClassTextInput()}
 								placeholder={'Write Signature'}
 								value={this.state.inputText}
