@@ -30,6 +30,18 @@
             }
         }
     }
+    &-file-name {
+        border: solid 1px $gray;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        margin-left: 4%;
+        padding: .45em;
+        width: 92%;
+        @media only screen and (min-width: $breakpoint-large) { 
+            margin-left: 0;
+            width: 100px;
+        }
+    }
     &-enable {
         background-color: $white;
     }
