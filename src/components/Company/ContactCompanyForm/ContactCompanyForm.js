@@ -33,6 +33,7 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import './index.css';
 
 const styles = (theme) => ({
@@ -188,6 +189,7 @@ class ContactcontactForm extends React.Component {
 		title: '',
 		idSupervisor: 0,
 		idDepartment: 0,
+		departmentName: '',
 		type: '',
 
 		firstnameValid: true,
@@ -198,6 +200,7 @@ class ContactcontactForm extends React.Component {
 		titleValid: true,
 		typeValid: true,
 		idDepartmentValid: true,
+		departmentNameValid: true,
 		idSupervisorValid: true,
 
 		firstnameHasValue: false,
@@ -209,7 +212,7 @@ class ContactcontactForm extends React.Component {
 		typeHasValue: false,
 		idSupervisorHasValue: false,
 		idDepartmentHasValue: false,
-
+		departmentNameHasValue: false,
 		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
@@ -250,10 +253,10 @@ class ContactcontactForm extends React.Component {
 		this.Login = {
 			LoginId: sessionStorage.getItem('LoginId'),
 			IsAdmin: sessionStorage.getItem('IsAdmin'),
-			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
-			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
-			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
-			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+			AllowEdit: true, //sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: true, //sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: true, //sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: true //sessionStorage.getItem('AllowExport') === 'true'
 		};
 	}
 
@@ -348,6 +351,7 @@ class ContactcontactForm extends React.Component {
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
 		let idSupervisorValid =
 			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
+		let departmentNameValid = this.state.departmentName.trim().length >= 2;
 		this.setState(
 			{
 				emailValid,
@@ -358,7 +362,8 @@ class ContactcontactForm extends React.Component {
 				titleValid,
 				idDepartmentValid,
 				idSupervisorValid,
-				typeValid
+				typeValid,
+				departmentNameValid
 			},
 			() => {
 				this.validateForm(fun);
@@ -374,6 +379,7 @@ class ContactcontactForm extends React.Component {
 		let titleValid = this.state.titleValid;
 		let typeValid = this.state.typeValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
+		let departmentNameValid = this.state.departmentNameValid;
 		let idSupervisorValid = this.state.idSupervisorValid;
 
 		let emailHasValue = this.state.emailHasValue;
@@ -384,6 +390,7 @@ class ContactcontactForm extends React.Component {
 		let titleHasValue = this.state.titleHasValue;
 		let typeHasValue = this.state.typeHasValue;
 		let idDepartmentHasValue = this.state.idDepartmentHasValue;
+		let departmentNameHasValue = this.state.departmentName;
 		let idSupervisorHasValue = this.state.idSupervisorHasValue;
 
 		switch (fieldName) {
@@ -421,6 +428,10 @@ class ContactcontactForm extends React.Component {
 				idDepartmentValid = value !== null && value !== 0 && value !== '';
 				idDepartmentHasValue = value !== null && value !== 0 && value !== '';
 				break;
+			case 'departmentName':
+				departmentNameValid = value.trim().length >= 2;
+				departmentNameHasValue = value != '';
+				break;
 			case 'idSupervisor':
 				idSupervisorValid = value !== null && value !== -1 && value !== '';
 				idSupervisorHasValue = value !== null && value !== -1 && value !== '';
@@ -438,6 +449,7 @@ class ContactcontactForm extends React.Component {
 				titleValid,
 				typeValid,
 				idDepartmentValid,
+				departmentNameValid,
 				idSupervisorValid,
 				emailHasValue,
 				firstnameHasValue,
@@ -447,6 +459,7 @@ class ContactcontactForm extends React.Component {
 				titleHasValue,
 				typeHasValue,
 				idDepartmentHasValue,
+				departmentNameHasValue,
 				idSupervisorHasValue
 			},
 			this.validateForm
@@ -465,6 +478,7 @@ class ContactcontactForm extends React.Component {
 					this.state.titleValid &&
 					this.state.typeValid &&
 					this.state.idDepartmentValid &&
+					this.state.departmentNameValid &&
 					this.state.idSupervisorValid,
 				enableCancelButton:
 					this.state.emailHasValue ||
@@ -475,6 +489,7 @@ class ContactcontactForm extends React.Component {
 					this.state.titleHasValue ||
 					this.state.typeHasValue ||
 					this.state.idDepartmentHasValue ||
+					this.state.departmentName ||
 					this.state.idSupervisorHasValue
 			},
 			func
@@ -501,6 +516,10 @@ class ContactcontactForm extends React.Component {
 		type
 	}) => {
 		this.setState({ showCircularLoading: false }, () => {
+			var department = this.state.departments.find(function(obj) {
+				return obj.Id === idDepartment;
+			});
+
 			this.loadSupervisors(idSearch, () => {
 				this.setState(
 					{
@@ -512,6 +531,7 @@ class ContactcontactForm extends React.Component {
 						number: number.trim(),
 						idSupervisor: idSupervisor,
 						idDepartment: idDepartment,
+						departmentName: department ? department.Name.trim() : '',
 						title: title,
 						type: type,
 						formValid: true,
@@ -522,6 +542,7 @@ class ContactcontactForm extends React.Component {
 						titleValid: true,
 						typeValid: true,
 						idDepartmentValid: true,
+						departmentNameValid: true,
 						idSupervisorValid: true,
 						enableCancelButton: true,
 						emailHasValue: true,
@@ -532,6 +553,7 @@ class ContactcontactForm extends React.Component {
 						typeHasValue: true,
 						idDepartmentHasValue: true,
 						idSupervisorHasValue: true,
+						departmentNameHasValue: true,
 
 						numberValid: true,
 						buttonTitle: this.TITLE_EDIT,
@@ -824,7 +846,7 @@ class ContactcontactForm extends React.Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Contact Deleted!');
-					
+
 						this.setState({ opendialog: false, firstLoad: true, showCircularLoading: true }, () => {
 							this.loadContacts(() => {
 								this.loadTitles(() => {
@@ -902,6 +924,17 @@ class ContactcontactForm extends React.Component {
 			}
 		);
 	};
+	updateDepartmentName = (value) => {
+		this.setState(
+			{
+				departmentName: value
+			},
+			() => {
+				this.validateField('departmentName', value);
+			}
+		);
+	};
+
 	updateTitle = (id) => {
 		this.setState(
 			{
@@ -944,7 +977,12 @@ class ContactcontactForm extends React.Component {
 			return (
 				<React.Fragment>
 					{isLoading && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" icon="danger" />)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}
@@ -1035,13 +1073,22 @@ class ContactcontactForm extends React.Component {
 								</div>
 								<div className="card-form-row">
 									<span className="input-label primary">* Department</span>
-									<SelectForm
+									{/*	<SelectForm
 										name="department"
 										data={this.state.departments}
 										error={!this.state.idDepartmentValid}
 										update={this.updateDepartment}
 										showNone={false}
 										value={this.state.idDepartment}
+									/>*/}
+									<AutosuggestInput
+										id="department"
+										name="department"
+										data={this.state.departments}
+										error={!this.state.departmentNameValid}
+										value={this.state.departmentName}
+										onChange={this.updateDepartmentName}
+										onSelect={this.updateDepartmentName}
 									/>
 								</div>
 								{/*

@@ -162,10 +162,10 @@ class DepartmentsCompanyForm extends React.Component {
 		this.Login = {
 			LoginId: sessionStorage.getItem('LoginId'),
 			IsAdmin: sessionStorage.getItem('IsAdmin'),
-			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
-			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
-			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
-			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+			AllowEdit: true, //sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: true, //sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: true, //sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: true //sessionStorage.getItem('AllowExport') === 'true'
 		};
 	}
 	focusTextInput() {
@@ -475,7 +475,12 @@ class DepartmentsCompanyForm extends React.Component {
 			return (
 				<React.Fragment>
 					{this.state.loadingData && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" icon="danger" />)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}
@@ -554,7 +559,9 @@ class DepartmentsCompanyForm extends React.Component {
 																height: '35px'
 															}}
 															disabled={
-																this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert
+																this.state.loading ||
+																!this.Login.AllowEdit ||
+																!this.Login.AllowInsert
 															}
 															variant="fab"
 															color="primary"
@@ -570,7 +577,9 @@ class DepartmentsCompanyForm extends React.Component {
 														</Button>
 													</div>
 												</Tooltip>
-												{loading && <CircularProgress size={45} className={classes.fabProgress} />}
+												{loading && (
+													<CircularProgress size={45} className={classes.fabProgress} />
+												)}
 											</div>
 										</div>
 									</div>
@@ -580,7 +589,9 @@ class DepartmentsCompanyForm extends React.Component {
 												<Tooltip title={'Cancel Operation'}>
 													<div>
 														<Button
-															disabled={this.state.loading || !this.state.enableCancelButton}
+															disabled={
+																this.state.loading || !this.state.enableCancelButton
+															}
 															variant="fab"
 															color="secondary"
 															onClick={this.cancelDepartmentHandler}
@@ -597,12 +608,9 @@ class DepartmentsCompanyForm extends React.Component {
 										</div>
 									</div>
 								</div>
-
 							</div>
 						</div>
 					</div>
-					
-					
 				</div>
 				<div className={classes.container}>
 					<div className={classes.divStyle}>

@@ -24,7 +24,7 @@ import Slide from '@material-ui/core/Slide/Slide';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -1293,7 +1293,7 @@ class GeneralInformation extends Component {
 								onClick={() => {
 									this.updateCompany(this.props.idCompany);
 								}}
-								disabled={this.state.loadingUpdate}
+								disabled={isLoading}
 							>
 								Save
 							</Button>
