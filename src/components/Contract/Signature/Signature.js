@@ -478,7 +478,7 @@ class Signature extends React.Component {
 			return (
 				<div className="signature-container" id="signatureMainContainer">
 					{this.state.loadingData && <LinearProgress />}
-					<NothingToDisplay title="All Right!" message={'Contract Signed!'} type="Error-success" icon="wow" />
+					<NothingToDisplay title="All Right!" message={'Contract Signed!'} type="Error-success" icon="ok" />
 				</div>
 			);
 		}
