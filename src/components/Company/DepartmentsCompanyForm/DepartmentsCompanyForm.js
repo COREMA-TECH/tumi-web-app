@@ -162,10 +162,10 @@ class DepartmentsCompanyForm extends React.Component {
 		this.Login = {
 			LoginId: sessionStorage.getItem('LoginId'),
 			IsAdmin: sessionStorage.getItem('IsAdmin'),
-			AllowEdit: true, //sessionStorage.getItem('AllowEdit') === 'true',
-			AllowDelete: true, //sessionStorage.getItem('AllowDelete') === 'true',
-			AllowInsert: true, //sessionStorage.getItem('AllowInsert') === 'true',
-			AllowExport: true //sessionStorage.getItem('AllowExport') === 'true'
+			AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
+			AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
+			AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
+			AllowExport: sessionStorage.getItem('AllowExport') === 'true'
 		};
 	}
 	focusTextInput() {

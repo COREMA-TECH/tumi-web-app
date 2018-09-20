@@ -25,6 +25,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -499,6 +500,7 @@ class GeneralInformation extends Component {
 				});
 			});
 	};
+
 	loadStates = (func = () => {}) => {
 		this.setState({
 			loadingStates: true
@@ -540,6 +542,7 @@ class GeneralInformation extends Component {
 				});
 			});
 	};
+
 	loadCities = (func = () => {}) => {
 		this.setState({
 			loadingCities: true
@@ -596,6 +599,10 @@ class GeneralInformation extends Component {
 
 	handleClose = () => {
 		this.setState({ open: false });
+
+		this.loadCompanyProperties(() => {
+			this.setState({ indexView: 1, firstLoad: false });
+		});
 	};
 
 	/**
@@ -963,7 +970,12 @@ class GeneralInformation extends Component {
 		if (this.state.indexView == 2) {
 			return (
 				<React.Fragment>
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" />)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}
@@ -1355,7 +1367,8 @@ class GeneralInformation extends Component {
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
 							<TabsInDialog
-								idCompany={this.state.idProperty}
+								idCompany={this.props.idCompany}
+								idProperty={this.state.idProperty}
 								handleClose={this.handleClose}
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>

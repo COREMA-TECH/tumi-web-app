@@ -223,7 +223,7 @@ class MainContract extends Component {
 															delete={(id) => {
 																this.deleteContractById(id);
 															}}
-															/>
+														/>
 													</div>
 												</div>
 											</div>
@@ -233,8 +233,10 @@ class MainContract extends Component {
 							}
 							return (
 								<NothingToDisplay
-									url="https://cdn3.iconfinder.com/data/icons/business-2-3/256/Contract-512.png"
-									message="There are no contracts"
+									title="Oops!"
+									message={'There are no contracts'}
+									type="Error-success"
+									icon="wow"
 								/>
 							);
 						}}
