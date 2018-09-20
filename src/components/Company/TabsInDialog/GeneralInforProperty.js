@@ -787,6 +787,7 @@ class GeneralInfoProperty extends Component {
                                                     }}
                                                     value={this.state.startWeek}
                                                     error={this.state.validStartWeek === '' ? false : true}
+                                                    showNone={false}
                                                 />
                                             </div>
                                             <div className="col-2">
@@ -810,6 +811,7 @@ class GeneralInfoProperty extends Component {
                                                     }}
                                                     value={this.state.endWeek}
                                                     error={this.state.validEndWeek === '' ? false : true}
+                                                    showNone={false}
                                                 />
                                             </div>
                                         </div>
