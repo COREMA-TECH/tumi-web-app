@@ -347,10 +347,7 @@ class ExhibitContract extends Component {
 					</DialogContent>
 					<DialogActions>
 						<div className="exhibit-button-right">
-							
 							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
-
-							
 						</div>
 						<div className="exhibit-button-left">
 							<Tooltip title={'Print Contract'}>

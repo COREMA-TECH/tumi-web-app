@@ -29,6 +29,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+
 import './index.css';
 
 const styles = (theme) => ({
@@ -155,6 +157,14 @@ class PositionsCompanyForm extends React.Component {
 		}
 	`;
 
+	INSERT_DEPARTMENTS_QUERY = gql`
+		mutation inscatalogitem($input: iParamCI!) {
+			inscatalogitem(input: $input) {
+				Id
+			}
+		}
+	`;
+
 	TITLE_ADD = 'Add Position';
 	TITLE_EDIT = 'Update Position';
 
@@ -163,18 +173,21 @@ class PositionsCompanyForm extends React.Component {
 		idToDelete: null,
 		idToEdit: null,
 		idDepartment: '',
+		departmentName: '',
 		position: '',
 		billrate: 0,
 		payrate: 0,
 		shift: '',
 
 		idDepartmentValid: true,
+		departmentNameValid: true,
 		positionValid: true,
 		billrateValid: true,
 		payrateValid: true,
 		shiftValid: true,
 
 		idDepartmentHasValue: false,
+		departmentNameHasValue: false,
 		positionHasValue: false,
 		billrateHasValue: false,
 		payrateHasValue: false,
@@ -325,6 +338,18 @@ class PositionsCompanyForm extends React.Component {
 			}
 		);
 	};
+
+	updateDepartmentName = (value) => {
+		this.setState(
+			{
+				departmentName: value
+			},
+			() => {
+				this.validateField('departmentName', value);
+			}
+		);
+	};
+
 	enableCancelButton = () => {
 		let positionHasValue = this.state.position != '';
 		let billrateHasValue = this.state.billrate != 0;
@@ -339,7 +364,7 @@ class PositionsCompanyForm extends React.Component {
 		let billrateValid = this.state.billrate != 0 && this.state.billrate != '';
 		let payrateValid = this.state.payrate != 0 && this.state.payrate != '';
 		let shiftValid = this.state.shift != '';
-
+		let departmentNameValid = this.state.departmentName.trim().length >= 2;
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
 
@@ -348,8 +373,9 @@ class PositionsCompanyForm extends React.Component {
 				positionValid,
 				billrateValid,
 				payrateValid,
-				idDepartmentValid,
-				shiftValid
+				//idDepartmentValid,
+				shiftValid,
+				departmentNameValid
 			},
 			() => {
 				this.validateForm(func);
@@ -362,12 +388,14 @@ class PositionsCompanyForm extends React.Component {
 		let billrateValid = this.state.billrateValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
 		let shiftValid = this.state.shiftValid;
+		let departmentNameValid = this.state.departmentNameValid;
 
 		let positionHasValue = this.state.postionHasValue;
 		let payrateHasValue = this.state.payrateHasValue;
 		let billrateHasValue = this.state.billrateHasValue;
 		let idDepartmentHasValue = this.state.departmentHasValue;
 		let shiftHasValue = this.state.shiftHasValue;
+		let departmentNameHasValue = this.state.departmentName;
 
 		switch (fieldName) {
 			case 'position':
@@ -386,6 +414,10 @@ class PositionsCompanyForm extends React.Component {
 				idDepartmentValid = value !== null && value !== 0 && value !== '';
 				idDepartmentHasValue = value !== null && value !== '';
 				break;
+			case 'departmentName':
+				departmentNameValid = value.trim().length >= 2;
+				departmentNameHasValue = value != '';
+				break;
 			case 'shift':
 				shiftValid = value != '';
 				shiftHasValue = value != '';
@@ -398,13 +430,14 @@ class PositionsCompanyForm extends React.Component {
 				positionValid,
 				payrateValid,
 				billrateValid,
-				idDepartmentValid,
+				//	idDepartmentValid,
 				shiftValid,
-
+				departmentNameValid,
 				positionHasValue,
 				payrateHasValue,
 				billrateHasValue,
 				idDepartmentHasValue,
+				departmentNameHasValue,
 				shiftHasValue
 			},
 			this.validateForm
@@ -418,13 +451,15 @@ class PositionsCompanyForm extends React.Component {
 					this.state.positionValid &&
 					this.state.payrateValid &&
 					this.state.billrateValid &&
-					this.state.idDepartmentValid &&
+					//	this.state.idDepartmentValid &&
+					this.state.departmentNameValid &&
 					this.state.shiftValid,
 				enableCancelButton:
 					this.state.positionHasValue ||
 					this.state.payrateHasValue ||
 					this.state.billrateHasValue ||
-					this.state.idDepartmentHasValue ||
+					//	this.state.idDepartmentHasValue ||
+					this.state.departmentName ||
 					this.state.shiftHasValue
 			},
 			func
@@ -438,37 +473,44 @@ class PositionsCompanyForm extends React.Component {
 		this.deletePostion();
 	};
 	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift }) => {
-		this.setState(
-			{
-				idToEdit: Id,
-				position: Position.trim(),
-				idDepartment: Id_Department,
-				billrate: Bill_Rate,
-				payrate: Pay_Rate,
-				shift: Shift,
+		this.setState({ showCircularLoading: false }, () => {
+			var department = this.state.departments.find(function(obj) {
+				return obj.Id === Id_Department;
+			});
+			this.setState(
+				{
+					idToEdit: Id,
+					position: Position.trim(),
+					idDepartment: Id_Department,
+					departmentName: department ? department.Name.trim() : '',
+					billrate: Bill_Rate,
+					payrate: Pay_Rate,
+					shift: Shift,
 
-				formValid: true,
-				positionValid: true,
-				idDepartmentValid: true,
-				billrateValid: true,
-				payrateValid: true,
-				shiftValid: true,
+					formValid: true,
+					positionValid: true,
+					idDepartmentValid: true,
+					departmentNameValid: true,
+					billrateValid: true,
+					payrateValid: true,
+					shiftValid: true,
 
-				enableCancelButton: true,
-				positionHasValue: true,
-				idDepartmentHasValue: true,
-				billrateHasValue: true,
-				payrateHasValue: true,
-				shiftHasValue: true,
-
-				buttonTitle: this.TITLE_EDIT,
-				openModal: true,
-				showCircularLoading: false
-			},
-			() => {
-				this.focusTextInput();
-			}
-		);
+					enableCancelButton: true,
+					positionHasValue: true,
+					idDepartmentHasValue: true,
+					billrateHasValue: true,
+					payrateHasValue: true,
+					shiftHasValue: true,
+					departmentNameHasValue: true,
+					buttonTitle: this.TITLE_EDIT,
+					openModal: true,
+					showCircularLoading: false
+				},
+				() => {
+					this.focusTextInput();
+				}
+			);
+		});
 	};
 
 	onDeleteHandler = (idSearch) => {
@@ -485,7 +527,6 @@ class PositionsCompanyForm extends React.Component {
 	}
 
 	loadDepartments = (func = () => {}) => {
-		console.log('Load Department Inside');
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -495,7 +536,6 @@ class PositionsCompanyForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getcatalogitem != null) {
-						console.log('Load Department Set Data', data.data.getcatalogitem);
 						this.setState(
 							{
 								departments: data.data.getcatalogitem,
@@ -534,7 +574,6 @@ class PositionsCompanyForm extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getposition != null) {
-						console.log('Load Positions Set Data', data.data.getposition);
 						this.setState(
 							{
 								data: data.data.getposition,
@@ -577,63 +616,107 @@ class PositionsCompanyForm extends React.Component {
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	insertPosition = () => {
+	insertPosition = (idDepartment) => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
+		this.props.client
+			.mutate({
+				mutation: query,
+				variables: {
+					input: {
+						Id: id,
+						Id_Entity: this.props.idCompany,
+						Id_Contract: this.props.idContract,
+						Id_Department: idDepartment,
+						Position: `'${this.state.position}'`,
+						Bill_Rate: this.state.billrate,
+						Pay_Rate: this.state.payrate,
+						Shift: `'${this.state.shift}'`,
+						IsActive: 1,
+						User_Created: 1,
+						User_Updated: 1,
+						Date_Created: "'2018-08-14 16:10:25+00'",
+						Date_Updated: "'2018-08-14 16:10:25+00'"
+					}
+				}
+			})
+			.then((data) => {
+				this.props.handleOpenSnackbar(
+					'success',
+					isEdition ? 'Positions and Rates Updated!' : 'Positions and Rates Inserted!'
+				);
+
+				this.setState({ showCircularLoading: true, openModal: false }, () => {
+					this.loadPositions(() => {
+						this.loadDepartments(() => {
+							this.setState({ indexView: 1, showCircularLoading: false, loading: false });
+						});
+					});
+				});
+			})
+			.catch((error) => {
+				this.props.handleOpenSnackbar(
+					'error',
+					isEdition
+						? 'Error: Updating Positions and Rates: ' + error
+						: 'Error: Inserting Positions and Rates: ' + error
+				);
+				this.setState({
+					loading: false
+				});
+			});
+	};
+	insertDepartment = () => {
 		this.setState(
 			{
 				loading: true
 			},
 			() => {
-				this.props.client
-					.mutate({
-						mutation: query,
-						variables: {
-							input: {
-								Id: id,
-								Id_Entity: this.props.idCompany,
-								Id_Contract: this.props.idContract,
-								Id_Department: this.state.idDepartment,
-								Position: `'${this.state.position}'`,
-								Bill_Rate: this.state.billrate,
-								Pay_Rate: this.state.payrate,
-								Shift: `'${this.state.shift}'`,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14 16:10:25+00'",
-								Date_Updated: "'2018-08-14 16:10:25+00'"
-							}
-						}
-					})
-					.then((data) => {
-						this.props.handleOpenSnackbar(
-							'success',
-							isEdition ? 'Positions and Rates Updated!' : 'Positions and Rates Inserted!'
-						);
+				var department = this.state.departments.find((obj) => {
+					return obj.Name.trim() === this.state.departmentName.trim();
+				});
 
-						this.setState({ showCircularLoading: true, loading: false, openModal: false }, () => {
-							this.loadPositions(() => {
-								this.loadDepartments(() => {
-									this.setState({ indexView: 1, showCircularLoading: false });
-								});
+				if (department) {
+					this.insertPosition(department.Id);
+				} else {
+					this.props.client
+						.mutate({
+							mutation: this.INSERT_DEPARTMENTS_QUERY,
+							variables: {
+								input: {
+									Id: 0,
+									Id_Catalog: 8,
+									Id_Parent: 0,
+									Name: `''`,
+									DisplayLabel: `'${this.state.departmentName}'`,
+									Description: `'${this.state.departmentName}'`,
+									Value: null,
+									Value01: null,
+									Value02: null,
+									Value03: null,
+									Value04: null,
+									IsActive: 1,
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-09-20 08:10:25+00'",
+									Date_Updated: "'2018-09-20 08:10:25+00'"
+								}
+							}
+						})
+						.then((data) => {
+							this.insertPosition(data.data.inscatalogitem.Id);
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+							this.setState({
+								loading: false
 							});
 						});
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar(
-							'error',
-							isEdition
-								? 'Error: Updating Positions and Rates: ' + error
-								: 'Error: Inserting Positions and Rates: ' + error
-						);
-						this.setState({
-							loading: false
-						});
-					});
+				}
 			}
 		);
 	};
+
 	deletePostion = (id) => {
 		this.setState(
 			{
@@ -678,7 +761,7 @@ class PositionsCompanyForm extends React.Component {
 			},
 			() => {
 				this.validateAllFields(() => {
-					if (this.state.formValid) this.insertPosition();
+					if (this.state.formValid) this.insertDepartment();
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',
@@ -793,7 +876,17 @@ class PositionsCompanyForm extends React.Component {
 						<div className="card-form-body">
 							<div className="card-form-row">
 								<span className="input-label primary">* Department</span>
-								<SelectForm
+								<AutosuggestInput
+									id="idDepartment"
+									name="idDepartment"
+									data={this.state.departments}
+									error={!this.state.departmentNameValid}
+									value={this.state.departmentName}
+									onChange={this.updateDepartmentName}
+									onSelect={this.updateDepartmentName}
+								/>
+
+								{/*	<SelectForm
 									id="idDepartment"
 									name="idDepartment"
 									data={this.state.departments}
@@ -803,7 +896,7 @@ class PositionsCompanyForm extends React.Component {
 									showNone={false}
 									error={!this.state.idDepartmentValid}
 									value={this.state.idDepartment}
-								/>
+								/>*/}
 							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">* Title</span>
@@ -826,6 +919,7 @@ class PositionsCompanyForm extends React.Component {
 									error={!this.state.payrateValid}
 									value={this.state.payrate}
 									type="number"
+									allowZero={false}
 									change={(text) => this.onNumberChangeHandler(text, 'payrate')}
 								/>
 							</div>
@@ -839,6 +933,7 @@ class PositionsCompanyForm extends React.Component {
 										error={!this.state.billrateValid}
 										value={this.state.billrate}
 										type="number"
+										allowZero={false}
 										change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 									/>
 								</div>
