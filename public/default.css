@@ -195,6 +195,10 @@ p {
   .department__header-inputGroup .withApollo-DepartmentsCompanyForm--wrapper-100 {
     margin: 0 !important; }
 
+.input-autocomplete + div {
+  padding: 10px !important;
+  z-index: 9999; }
+
 @media only screen and (min-width: 60em) {
   .input-label-right {
     text-align: right; } }

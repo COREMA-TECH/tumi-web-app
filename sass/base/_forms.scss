@@ -19,6 +19,10 @@
 }
 
 .input {
+    &-autocomplete + div {
+        padding: 10px !important;
+        z-index: 9999;
+    }
     &-label {
         &-right {
             @media only screen and (min-width: $breakpoint-large) {
