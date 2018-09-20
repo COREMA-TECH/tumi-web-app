@@ -525,7 +525,6 @@ class PositionsCompanyForm extends React.Component {
 	};
 
 	loadPositions = (func = () => {}) => {
-		console.log('Load Positions Inside');
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
