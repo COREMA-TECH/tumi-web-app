@@ -4,7 +4,7 @@ import {CREATE_APPLICATION} from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import {GET_CITIES_QUERY, GET_STATES_QUERY} from "./Queries";
+import {GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "./Queries";
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -123,7 +123,7 @@ class ApplyForm extends Component {
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return <select name="state" id="state" required
                                                                    className="input-form">
-                                                        <option value="">None</option>
+                                                        <option value="">Select a state</option>
                                                         {
                                                             data.getcatalogitem.map(item => (
                                                                 <option value={item.Id}>{item.Name}</option>
@@ -140,7 +140,6 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* City</span>
                                     </div>
                                     <div className="col-6">
-
                                         <Query query={GET_CITIES_QUERY} variables={{parent: 0}}>
                                             {({loading, error, data, refetch, networkStatus}) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
@@ -149,7 +148,7 @@ class ApplyForm extends Component {
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return <select name="city" id="city" required
                                                                    className="input-form">
-                                                        <option value="">None</option>
+                                                        <option value="">Select a city</option>
                                                         {
                                                             data.getcatalogitem.map(item => (
                                                                 <option value={item.Id}>{item.Name}</option>
@@ -242,15 +241,26 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* Position Applying for</span>
                                     </div>
                                     <div className="col-6">
-                                        <input
-                                            name="positionApplyingFor"
-                                            type="text"
-                                            type="text"
-                                            className="input-form"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                        />
+                                        <Query query={GET_POSITIONS_QUERY}>
+                                            {({loading, error, data, refetch, networkStatus}) => {
+                                                //if (networkStatus === 4) return <LinearProgress />;
+                                                if (loading) return <LinearProgress/>;
+                                                if (error) return <p>Error </p>;
+                                                if (data.getposition != null && data.getposition.length > 0) {
+                                                    return <select name="city" id="city" required
+                                                                   className="input-form">
+                                                        <option value="">Select a position</option>
+                                                        {
+                                                            data.getposition.map(item => (
+                                                                <option value={item.Id}>{item.Position}</option>
+                                                            ))
+                                                        }
+                                                    </select>
+
+                                                }
+                                                return <SelectNothingToDisplay/>
+                                            }}
+                                        </Query>
                                     </div>
 
                                     <div className="col-6">
