@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {Mutation} from "react-apollo";
 import {CREATE_APPLICATION} from "./Mutations";
+import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
+import Query from "react-apollo/Query";
+import SelectForm from "../ui-components/SelectForm/SelectForm";
+import {GET_CITIES_QUERY, GET_STATES_QUERY} from "./Queries";
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -28,6 +33,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="firstName"
                                             type="text"
                                             className="input-form"
                                             required
@@ -41,6 +47,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="midleName"
                                             type="text"
                                             className="input-form"
                                             required
@@ -54,6 +61,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="lastName"
                                             type="text"
                                             className="input-form"
                                             required
@@ -67,6 +75,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="date"
                                             type="date"
                                             className="input-form"
                                             required
@@ -80,6 +89,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="streetAddress"
                                             type="text"
                                             className="input-form"
                                             required
@@ -93,6 +103,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="aptNumber"
                                             type="number"
                                             className="input-form"
                                             required
@@ -105,26 +116,53 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* State</span>
                                     </div>
                                     <div className="col-6">
-                                        <input
-                                            type="text"
-                                            className="input-form"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                        />
+                                        <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
+                                            {({loading, error, data, refetch, networkStatus}) => {
+                                                //if (networkStatus === 4) return <LinearProgress />;
+                                                if (loading) return <LinearProgress/>;
+                                                if (error) return <p>Error </p>;
+                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                    console.log('VALUE: ' + data.getcatalogitem);
+                                                    return (
+                                                        <SelectForm
+                                                            name="state"
+                                                            data={data.getcatalogitem}
+                                                            update={(value) => {
+
+                                                            }}
+                                                        />
+                                                    );
+                                                }
+                                                return <SelectNothingToDisplay/>
+                                            }}
+                                        </Query>
                                     </div>
 
                                     <div className="col-6">
                                         <span className="primary card-input-label">* City</span>
                                     </div>
                                     <div className="col-6">
-                                        <input
-                                            type="text"
-                                            className="input-form"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                        />
+                                        <Query query={GET_CITIES_QUERY} variables={{parent: 0}}>
+                                            {({loading, error, data, refetch, networkStatus}) => {
+                                                //if (networkStatus === 4) return <LinearProgress />;
+                                                if (loading) return <LinearProgress/>;
+                                                if (error) return <p>Error </p>;
+                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                    console.log('Data of cities' + data.getcatalogitem);
+                                                    return (
+                                                        <SelectForm
+                                                            name="city"
+                                                            data={data.getcatalogitem}
+                                                            error={this.state.validCity === '' ? false : true}
+                                                            update={(value) => {
+
+                                                            }}
+                                                        />
+                                                    );
+                                                }
+                                                return <SelectNothingToDisplay/>
+                                            }}
+                                        </Query>
                                     </div>
 
                                     <div className="col-6">
@@ -132,6 +170,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="zipCode"
                                             type="number"
                                             className="input-form"
                                             required
@@ -145,6 +184,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="homePhone"
                                             type="number"
                                             className="input-form"
                                             required
@@ -158,6 +198,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="cellPhone"
                                             type="number"
                                             className="input-form"
                                             required
@@ -171,6 +212,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="socialSecurityNumber"
                                             type="number"
                                             className="input-form"
                                             required
@@ -184,6 +226,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="emailAddress"
                                             type="email"
                                             className="input-form"
                                             required
@@ -201,6 +244,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="positionApplyingFor"
                                             type="email"
                                             className="input-form"
                                             required
@@ -214,6 +258,7 @@ class ApplyForm extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
+                                            name="dateAvailable"
                                             type="date"
                                             className="input-form"
                                             required
@@ -230,7 +275,7 @@ class ApplyForm extends Component {
                                         <input
                                             value="1"
                                             type="radio"
-                                            name="schedule-restrictions"
+                                            name="scheduleRestrictions"
                                             className="input-form"
                                             checked
                                         />
@@ -238,7 +283,7 @@ class ApplyForm extends Component {
                                         <input
                                             value="0"
                                             type="radio"
-                                            name="schedule-restrictions"
+                                            name="scheduleRestrictions"
                                             className="input-form"
                                         />
                                     </div>
@@ -247,7 +292,7 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* If yes, please explain </span>
                                     </div>
                                     <div className="col-6">
-                                        <textarea name="schedule-explain" cols="30" rows="10" className="input-form"/>
+                                        <textarea name="scheduleExplain" cols="30" rows="10" className="input-form"/>
                                     </div>
 
                                     <div className="col-6">
@@ -275,7 +320,7 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* If yes, please explain </span>
                                     </div>
                                     <div className="col-6">
-                                        <textarea name="convicted-explain" cols="30" rows="10" className="input-form"/>
+                                        <textarea name="convictedExplain" cols="30" rows="10" className="input-form"/>
                                     </div>
 
                                     <div className="col-6">
@@ -283,7 +328,7 @@ class ApplyForm extends Component {
                                     className="primary card-input-label">* How did you hear about Tumi Staffing </span>
                                     </div>
                                     <div className="col-6">
-                                        <textarea name="convicted-explain" cols="30" rows="10" className="input-form"/>
+                                        <textarea name="comment" cols="30" rows="10" className="input-form"/>
                                     </div>
                                 </div>
                             </div>
