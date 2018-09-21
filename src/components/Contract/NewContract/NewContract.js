@@ -114,7 +114,7 @@ class NewContract extends Component {
 			Exhibit_D: '',
 			Exhibit_E: '',
 			Exhibit_F: '',
-			IsActive: 1,
+			IsActive: 0,
 			User_Created: '',
 			User_Updated: '',
 			Date_Created: '',

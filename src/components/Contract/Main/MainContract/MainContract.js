@@ -112,6 +112,7 @@ class MainContract extends Component {
 			}
 		);
 	};
+
 	deleteContractById = (id) => {
 		this.setState({ idToDelete: id, opendialog: true, loadingRemoving: false, loadingContracts: false });
 	};

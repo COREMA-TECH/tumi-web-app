@@ -97,10 +97,12 @@ class CompanyList extends Component {
 					if (loading) return <LinearProgress />;
 					if (error)
 						return (
+
 							<ErrorMessageComponent
 								title="Oops!"
-								message="Something went wrong. If you think this is a server error, please contact the admnistrator"
+								message={this.state.errorMessage}
 								type="Error-danger"
+								icon="danger"
 							/>
 						);
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
