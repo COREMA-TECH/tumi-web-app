@@ -4,7 +4,6 @@ import {CREATE_APPLICATION} from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import SelectForm from "../ui-components/SelectForm/SelectForm";
 import {GET_CITIES_QUERY, GET_STATES_QUERY} from "./Queries";
 
 class ApplyForm extends Component {
@@ -116,54 +115,46 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* State</span>
                                     </div>
                                     <div className="col-6">
-                                        <select name="city" id="city" required className="input-form">
-                                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        console.log('VALUE: ' + data.getcatalogitem);
-                                                        return data.getcatalogitem.map(item => (
-                                                            <option value={item.Id}>{item.Name}</option>
-                                                        ));
-                                                        // return (
-                                                        //     <SelectForm
-                                                        //         name="state"
-                                                        //         data={data.getcatalogitem}
-                                                        //         update={(value) => {
-                                                        //
-                                                        //         }}
-                                                        //     />
-                                                        // );
-                                                    }
-                                                    return <SelectNothingToDisplay/>
-                                                }}
-                                            </Query>
-                                        </select>
+                                        <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
+                                            {({loading, error, data, refetch, networkStatus}) => {
+                                                //if (networkStatus === 4) return <LinearProgress />;
+                                                if (loading) return <LinearProgress/>;
+                                                if (error) return <p>Error </p>;
+                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                    return <select name="state" id="state" required
+                                                                   className="input-form">
+                                                        {
+                                                            data.getcatalogitem.map(item => (
+                                                                <option value={item.Id}>{item.Name}</option>
+                                                            ))
+                                                        }
+                                                    </select>
+                                                }
+                                                return <SelectNothingToDisplay/>
+                                            }}
+                                        </Query>
                                     </div>
 
                                     <div className="col-6">
                                         <span className="primary card-input-label">* City</span>
                                     </div>
                                     <div className="col-6">
+
                                         <Query query={GET_CITIES_QUERY} variables={{parent: 0}}>
                                             {({loading, error, data, refetch, networkStatus}) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (loading) return <LinearProgress/>;
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    console.log('Data of cities' + data.getcatalogitem);
-                                                    return (
-                                                        <SelectForm
-                                                            name="city"
-                                                            data={data.getcatalogitem}
-                                                            error={this.state.validCity === '' ? false : true}
-                                                            update={(value) => {
+                                                    return <select name="city" id="city" required
+                                                                   className="input-form">
+                                                        {
+                                                            data.getcatalogitem.map(item => (
+                                                                <option value={item.Id}>{item.Name}</option>
+                                                            ))
+                                                        }
+                                                    </select>
 
-                                                            }}
-                                                        />
-                                                    );
                                                 }
                                                 return <SelectNothingToDisplay/>
                                             }}
