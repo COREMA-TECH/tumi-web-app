@@ -38,6 +38,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="3"
                                         />
                                     </div>
 
@@ -52,6 +53,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="3"
                                         />
                                     </div>
 
@@ -66,6 +68,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="3"
                                         />
                                     </div>
 
@@ -94,6 +97,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="5"
                                         />
                                     </div>
 
@@ -108,6 +112,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="5"
                                         />
                                     </div>
 
@@ -172,7 +177,8 @@ class ApplyForm extends Component {
                                             className="input-form"
                                             required
                                             min="0"
-                                            maxLength="50"
+                                            maxLength="7"
+                                            minLength="4"
                                         />
                                     </div>
 
@@ -182,11 +188,12 @@ class ApplyForm extends Component {
                                     <div className="col-6">
                                         <input
                                             name="homePhone"
-                                            type="number"
+                                            type="tel"
                                             className="input-form"
                                             required
                                             min="0"
-                                            maxLength="50"
+                                            maxLength="10"
+                                            minLength="10"
                                         />
                                     </div>
 
@@ -196,11 +203,12 @@ class ApplyForm extends Component {
                                     <div className="col-6">
                                         <input
                                             name="cellPhone"
-                                            type="number"
+                                            type="tel"
                                             className="input-form"
                                             required
                                             min="0"
-                                            maxLength="50"
+                                            maxLength="10"
+                                            minLength="10"
                                         />
                                     </div>
 
@@ -215,6 +223,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="10"
                                         />
                                     </div>
 
@@ -230,6 +239,7 @@ class ApplyForm extends Component {
                                             min="0"
                                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                             maxLength="50"
+                                            minLength="8"
                                         />
                                     </div>
 
