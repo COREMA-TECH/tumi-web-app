@@ -66,6 +66,7 @@ class NewContract extends Component {
 		User_Signed_TitleValid: true,
 		Signed_DateValid: true,
 		IsActiveValid: true,
+		Contract_StatusValid: true,
 		Contract_Start_DateValid: true,
 		Contract_TermValid: true,
 		contractExpirationValid: true,
@@ -87,15 +88,15 @@ class NewContract extends Component {
 			Id_Company: '',
 			Contract_Name: '',
 			Contrat_Owner: sessionStorage.getItem('FullName'),
-			contractTemplateId: 0,
+			contractTemplateId: 1,
 			contractExpiration: this.getNewDate(),
-			Id_Contract_Template: '',
+			Id_Contract_Template: 1,
 
-			Id_Entity: 0,
+			Id_Entity: this.props.Id_Entity,
 			Id_User_Signed: '',
 			User_Signed_Title: '',
 			Signed_Date: this.getNewDate(),
-			Contract_Status: '',
+			Contract_Status: 0,
 			Contract_Start_Date: this.getNewDate(),
 			Contract_Term: '',
 			Owner_Expiration_Notification: '',
@@ -135,10 +136,10 @@ class NewContract extends Component {
 	updateStatus = (id) => {
 		this.setState(
 			{
-				IsActive: id
+				Contract_Status: id
 			},
 			() => {
-				this.validateField('IsActive', id);
+				this.validateField('Contract_Status', id);
 			}
 		);
 	};
@@ -631,6 +632,7 @@ class NewContract extends Component {
 		let User_Signed_TitleValid = this.state.User_Signed_TitleValid;
 		let Signed_DateValid = this.state.Signed_DateValid;
 		let IsActiveValid = this.state.IsActiveValid;
+		let Contract_StatusValid = this.state.Contract_StatusValid;
 		let Contract_Start_DateValid = this.state.Contract_Start_DateValid;
 		let Contract_TermValid = this.state.Contract_TermValid;
 		let contractExpirationValid = this.state.contractExpirationValid;
@@ -669,6 +671,9 @@ class NewContract extends Component {
 				break;
 			case 'IsActive':
 				IsActiveValid = value !== null && value !== '';
+				break;
+			case 'Contract_Status':
+				Contract_StatusValid = value !== null && value !== '';
 				break;
 			case 'Contract_Start_Date':
 				Contract_Start_DateValid = value.trim().length == 10;
@@ -715,6 +720,7 @@ class NewContract extends Component {
 				User_Signed_TitleValid,
 				Signed_DateValid,
 				IsActiveValid,
+				Contract_StatusValid,
 				Contract_Start_DateValid,
 				Contract_TermValid,
 				contractExpirationValid,
@@ -745,6 +751,7 @@ class NewContract extends Component {
 		let User_Signed_TitleValid = this.state.User_Signed_Title.trim().length >= 5;
 		let Signed_DateValid = this.state.Signed_Date.trim().length == 10;
 		let IsActiveValid = this.state.IsActive !== null && this.state.IsActive !== '';
+		let Contract_StatusValid = this.state.Contract_StatusValid !== null && this.state.Contract_StatusValid !== '';
 		let Contract_Start_DateValid = this.state.Contract_Start_Date.trim().length == 10;
 		let Contract_TermValid =
 			this.state.Contract_Term !== null && this.state.Contract_Term !== 0 && this.state.Contract_Term !== '';
@@ -778,6 +785,7 @@ class NewContract extends Component {
 				User_Signed_TitleValid,
 				Signed_DateValid,
 				IsActiveValid,
+				Contract_StatusValid,
 				Contract_Start_DateValid,
 				Contract_TermValid,
 				contractExpirationValid,
@@ -796,7 +804,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -808,6 +816,7 @@ class NewContract extends Component {
 					this.state.User_Signed_TitleValid &&
 					this.state.Signed_DateValid &&
 					this.state.IsActiveValid &&
+					this.state.Contract_StatusValid &&
 					this.state.Contract_Start_DateValid &&
 					this.state.Contract_TermValid &&
 					this.state.contractExpirationValid &&
@@ -976,7 +985,7 @@ class NewContract extends Component {
 											<span className="input-label primary">* Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => {}}
+												change={(text) => { }}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1008,8 +1017,9 @@ class NewContract extends Component {
 											<SelectForm
 												data={status}
 												update={this.updateStatus}
-												value={this.state.IsActive}
-												error={!this.state.IsActiveValid}
+												value={this.state.Contract_Status}
+												//error={!this.state.IsActiveValid}
+												error={!this.state.Contract_StatusValid}
 												showNone={false}
 											/>
 										</div>
@@ -1098,7 +1108,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => {}}
+												change={(text) => { }}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1147,8 +1157,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => {}}
-												updateTypeContact={(type) => {}}
+												updateEmailContact={(email) => { }}
+												updateTypeContact={(type) => { }}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>

@@ -9,6 +9,23 @@ import ApplyForm from "../ApplyForm/ApplyForm";
 class Main extends Component {
     LoginId = sessionStorage.getItem('LoginId');
 
+<<<<<<< HEAD
+	render() {
+
+		if (!this.LoginId & (window.location.pathname != '/login') & (window.location.pathname != '/home/signature/	')) {
+			window.location.href = '/login';
+			return false;
+		}
+
+
+		return (
+			<div>
+				<Route path="/login" component={Login} />
+				<PrivateRoute path="/home" component={Private} />
+			</div>
+		);
+	}
+=======
     render() {
         console.log('Home Signature', window.location.pathname);
         if (!window.location.pathname.toLocaleLowerCase().startsWith('home/signature')) {
@@ -26,6 +43,7 @@ class Main extends Component {
             </div>
         );
     }
+>>>>>>> 7dddf844a47708a274ff6dc0d4540f6755d047ff
 }
 
 export default Main;

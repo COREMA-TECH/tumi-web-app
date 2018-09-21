@@ -20,6 +20,7 @@ class Container extends Component {
 				<Route exact path="/home/contracts" component={MainContract} />
 				<Route exact path="/home/company" component={CompanyList} />
 				<Route exact path="/home/company/edit" component={CreateCompany} />
+				<Route exact path="/home/company/add" component={CreateCompany} />
 
 				<Route exact path="/home/Roles" component={CreateRole} />
 				<Route exact path="/home/RolesForms" component={CreateRolesForms} />

@@ -141,7 +141,7 @@ class MainContract extends Component {
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[ classes.root, 'company-list__header' ].join(' ')}>
+			<div className={[classes.root, 'company-list__header'].join(' ')}>
 				<Grid container spacing={24}>
 					<Grid item xs={12} sm={6}>
 						<div className="search-container">
