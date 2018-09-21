@@ -116,26 +116,31 @@ class ApplyForm extends Component {
                                         <span className="primary card-input-label">* State</span>
                                     </div>
                                     <div className="col-6">
-                                        <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                            {({loading, error, data, refetch, networkStatus}) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress/>;
-                                                if (error) return <p>Error </p>;
-                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    console.log('VALUE: ' + data.getcatalogitem);
-                                                    return (
-                                                        <SelectForm
-                                                            name="state"
-                                                            data={data.getcatalogitem}
-                                                            update={(value) => {
-
-                                                            }}
-                                                        />
-                                                    );
-                                                }
-                                                return <SelectNothingToDisplay/>
-                                            }}
-                                        </Query>
+                                        <select name="city" id="city" required className="input-form">
+                                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        console.log('VALUE: ' + data.getcatalogitem);
+                                                        return data.getcatalogitem.map(item => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ));
+                                                        // return (
+                                                        //     <SelectForm
+                                                        //         name="state"
+                                                        //         data={data.getcatalogitem}
+                                                        //         update={(value) => {
+                                                        //
+                                                        //         }}
+                                                        //     />
+                                                        // );
+                                                    }
+                                                    return <SelectNothingToDisplay/>
+                                                }}
+                                            </Query>
+                                        </select>
                                     </div>
 
                                     <div className="col-6">
@@ -231,6 +236,7 @@ class ApplyForm extends Component {
                                             className="input-form"
                                             required
                                             min="0"
+                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                             maxLength="50"
                                         />
                                     </div>
