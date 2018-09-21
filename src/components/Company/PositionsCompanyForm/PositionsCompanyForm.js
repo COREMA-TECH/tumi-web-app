@@ -31,6 +31,8 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
 
+import Route from 'react-router-dom/es/Route';
+
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -196,7 +198,7 @@ class PositionsCompanyForm extends React.Component {
 
 		this.state = {
 			data: [],
-			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
+			departments: [{ Id: 0, Code: 'Nothing', Description: 'Nothing' }],
 			shifts: ShiftsData,
 
 			idCompany: this.props.idCompany,
@@ -232,7 +234,7 @@ class PositionsCompanyForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => {}) => {
+	resetState = (func = () => { }) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -334,6 +336,17 @@ class PositionsCompanyForm extends React.Component {
 
 		return positionHasValue || billrateHasValue || payrateHasValue || idDepartmentHasValue || shiftHasValue;
 	};
+
+	/**
+     * This method redirect to create contract component
+     */
+	redirectToCreateContract = () => {
+		this.props.history.push({
+			pathname: '/home/contract/add',
+			state: { contract: 0 }
+		});
+	};
+
 	validateAllFields(func) {
 		let positionValid = this.state.position.trim().length >= 3;
 		let billrateValid = this.state.billrate != 0 && this.state.billrate != '';
@@ -411,7 +424,7 @@ class PositionsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -484,7 +497,7 @@ class PositionsCompanyForm extends React.Component {
 		});
 	}
 
-	loadDepartments = (func = () => {}) => {
+	loadDepartments = (func = () => { }) => {
 		console.log('Load Department Inside');
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
@@ -524,7 +537,7 @@ class PositionsCompanyForm extends React.Component {
 		});
 	};
 
-	loadPositions = (func = () => {}) => {
+	loadPositions = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -692,7 +705,7 @@ class PositionsCompanyForm extends React.Component {
 			}
 		);
 	};
-	getRate = (func = () => {}) => {
+	getRate = (func = () => { }) => {
 		this.props.client
 			.query({
 				query: this.GET_RATE_QUERY,
@@ -758,191 +771,205 @@ class PositionsCompanyForm extends React.Component {
 			);
 		}
 		return (
-			<div className="position_tab">
-				{isLoading && <LinearProgress />}
-				<AlertDialogSlide
-					handleClose={this.handleCloseAlertDialog}
-					handleConfirm={this.handleConfirmAlertDialog}
-					open={this.state.opendialog}
-					loadingConfirm={this.state.loadingConfirm}
-					content="Do you really want to continue whit this operation?"
-				/>
-				<div className="position__header">
-					<button className="add-position" onClick={this.handleClickOpenModal}>
-						{' '}
-						Add Rates{' '}
-					</button>
-				</div>
-				<Dialog
-					fullScreen={fullScreen}
-					open={this.state.openModal}
-					onClose={this.cancelDepartmentHandler}
-					aria-labelledby="responsive-dialog-title"
-				>
-					<DialogTitle style={{ padding: '0px' }}>
-						<div className="card-form-header orange">
-							{' '}
-							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
-								'Edit  Position/Rate'
-							) : (
-								'Create Position/Rate'
-							)}
-						</div>
-					</DialogTitle>
-					<DialogContent style={{ minWidth: 550, padding: '0px' }}>
-						<div className="card-form-body">
-							<div className="card-form-row">
-								<span className="input-label primary">* Department</span>
-								<SelectForm
-									id="idDepartment"
-									name="idDepartment"
-									data={this.state.departments}
-									update={(id) => {
-										this.updateSelect(id, 'idDepartment');
-									}}
-									showNone={false}
-									error={!this.state.idDepartmentValid}
-									value={this.state.idDepartment}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Title</span>
-								<InputForm
-									id="position"
-									name="position"
-									maxLength="50"
-									value={this.state.position}
-									error={!this.state.positionValid}
-									change={(value) => this.onChangeHandler(value, 'position')}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Pay Rate</span>
-
-								<InputForm
-									id="payrate"
-									name="payrate"
-									maxLength="10"
-									error={!this.state.payrateValid}
-									value={this.state.payrate}
-									type="number"
-									change={(text) => this.onNumberChangeHandler(text, 'payrate')}
-								/>
-							</div>
-							{this.props.showBillRate && (
-								<div className="card-form-row">
-									<span className="input-label primary">* Bill Rate</span>
-									<InputForm
-										id="billrate"
-										name="billrate"
-										maxLength="10"
-										error={!this.state.billrateValid}
-										value={this.state.billrate}
-										type="number"
-										change={(text) => this.onNumberChangeHandler(text, 'billrate')}
-									/>
-								</div>
-							)}
-							<div className="card-form-row">
-								<span className="input-label primary">* Shift</span>
-								<SelectForm
-									id="shift"
-									name="shift"
-									data={this.state.shifts}
-									update={(id) => {
-										this.updateSelect(id, 'shift');
-									}}
-									showNone={false}
-									error={!this.state.shiftValid}
-									value={this.state.shift}
-								/>
-							</div>
-						</div>
-					</DialogContent>
-					<DialogActions style={{ margin: '20px 20px' }}>
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip
-									title={
-										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
-									}
-								>
-									<div>
-										<Button
-											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-											variant="fab"
-											color="primary"
-											onClick={this.addPositionHandler}
-										>
-											<SaveIcon />
-										</Button>
-									</div>
-								</Tooltip>
-								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
-							</div>
-						</div>
-
-						<div className={classes.root}>
-							<div className={classes.wrapper}>
-								<Tooltip title={'Cancel Operation'}>
-									<div>
-										<Button
-											//	disabled={this.state.loading || !this.state.enableCancelButton}
-											variant="fab"
-											color="secondary"
-											onClick={this.cancelDepartmentHandler}
-										>
-											<ClearIcon />
-										</Button>
-									</div>
-								</Tooltip>
-							</div>
-						</div>
-					</DialogActions>
-				</Dialog>
-				<div className={classes.container}>
-					<div className={classes.divStyle}>
-						<PositionsTable
-							data={this.state.data}
-							departments={this.state.departments}
-							loading={this.state.showCircularLoading && isLoading}
-							shifts={this.state.shifts}
-							onEditHandler={this.onEditHandler}
-							onDeleteHandler={this.onDeleteHandler}
-							showBillRate={this.props.showBillRate}
+			<Route
+				render={({ history }) => (
+					<div className="position_tab">
+						{isLoading && <LinearProgress />}
+						<AlertDialogSlide
+							handleClose={this.handleCloseAlertDialog}
+							handleConfirm={this.handleConfirmAlertDialog}
+							open={this.state.opendialog}
+							loadingConfirm={this.state.loadingConfirm}
+							content="Do you really want to continue whit this operation?"
 						/>
-					</div>
-				</div>
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--back"
-							onClick={() => {
-								this.props.back();
-							}}
+						<div className="position__header">
+							<button className="add-position" onClick={this.handleClickOpenModal}>
+								{' '}
+								Add Rates{' '}
+							</button>
+							<button className="add-position"
+								onClick={() => {
+									history.push({
+										pathname: '/home/contract/add',
+										state: { contract: 0, IdEntity: this.props.idCompany }
+									});
+								}}
+							>
+								{' '}
+								Add Contract{' '}
+							</button>
+						</div>
+						<Dialog
+							fullScreen={fullScreen}
+							open={this.state.openModal}
+							onClose={this.cancelDepartmentHandler}
+							aria-labelledby="responsive-dialog-title"
 						>
-							Back
+							<DialogTitle style={{ padding: '0px' }}>
+								<div className="card-form-header orange">
+									{' '}
+									{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
+										'Edit  Position/Rate'
+									) : (
+											'Create Position/Rate'
+										)}
+								</div>
+							</DialogTitle>
+							<DialogContent style={{ minWidth: 550, padding: '0px' }}>
+								<div className="card-form-body">
+									<div className="card-form-row">
+										<span className="input-label primary">* Department</span>
+										<SelectForm
+											id="idDepartment"
+											name="idDepartment"
+											data={this.state.departments}
+											update={(id) => {
+												this.updateSelect(id, 'idDepartment');
+											}}
+											showNone={false}
+											error={!this.state.idDepartmentValid}
+											value={this.state.idDepartment}
+										/>
+									</div>
+									<div className="card-form-row">
+										<span className="input-label primary">* Title</span>
+										<InputForm
+											id="position"
+											name="position"
+											maxLength="50"
+											value={this.state.position}
+											error={!this.state.positionValid}
+											change={(value) => this.onChangeHandler(value, 'position')}
+										/>
+									</div>
+									<div className="card-form-row">
+										<span className="input-label primary">* Pay Rate</span>
+
+										<InputForm
+											id="payrate"
+											name="payrate"
+											maxLength="10"
+											error={!this.state.payrateValid}
+											value={this.state.payrate}
+											type="number"
+											change={(text) => this.onNumberChangeHandler(text, 'payrate')}
+										/>
+									</div>
+									{this.props.showBillRate && (
+										<div className="card-form-row">
+											<span className="input-label primary">* Bill Rate</span>
+											<InputForm
+												id="billrate"
+												name="billrate"
+												maxLength="10"
+												error={!this.state.billrateValid}
+												value={this.state.billrate}
+												type="number"
+												change={(text) => this.onNumberChangeHandler(text, 'billrate')}
+											/>
+										</div>
+									)}
+									<div className="card-form-row">
+										<span className="input-label primary">* Shift</span>
+										<SelectForm
+											id="shift"
+											name="shift"
+											data={this.state.shifts}
+											update={(id) => {
+												this.updateSelect(id, 'shift');
+											}}
+											showNone={false}
+											error={!this.state.shiftValid}
+											value={this.state.shift}
+										/>
+									</div>
+								</div>
+							</DialogContent>
+							<DialogActions style={{ margin: '20px 20px' }}>
+								<div className={classes.root}>
+									<div className={classes.wrapper}>
+										<Tooltip
+											title={
+												this.state.idToEdit != null &&
+													this.state.idToEdit != '' &&
+													this.state.idToEdit != 0 ? (
+														'Save Changes'
+													) : (
+														'Insert Record'
+													)
+											}
+										>
+											<div>
+												<Button
+													disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+													variant="fab"
+													color="primary"
+													onClick={this.addPositionHandler}
+												>
+													<SaveIcon />
+												</Button>
+											</div>
+										</Tooltip>
+										{loading && <CircularProgress size={68} className={classes.fabProgress} />}
+									</div>
+								</div>
+
+								<div className={classes.root}>
+									<div className={classes.wrapper}>
+										<Tooltip title={'Cancel Operation'}>
+											<div>
+												<Button
+													//	disabled={this.state.loading || !this.state.enableCancelButton}
+													variant="fab"
+													color="secondary"
+													onClick={this.cancelDepartmentHandler}
+												>
+													<ClearIcon />
+												</Button>
+											</div>
+										</Tooltip>
+									</div>
+								</div>
+							</DialogActions>
+						</Dialog>
+						<div className={classes.container}>
+							<div className={classes.divStyle}>
+								<PositionsTable
+									data={this.state.data}
+									departments={this.state.departments}
+									loading={this.state.showCircularLoading && isLoading}
+									shifts={this.state.shifts}
+									onEditHandler={this.onEditHandler}
+									onDeleteHandler={this.onDeleteHandler}
+									showBillRate={this.props.showBillRate}
+								/>
+							</div>
+						</div>
+						{this.props.showStepper ? (
+							<div className="advanced-tab-options">
+								<span
+									className="options-button options-button--back"
+									onClick={() => {
+										this.props.back();
+									}}
+								>
+									Back
 						</span>
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// When the user click Next button, open second tab
-								this.props.next();
-							}}
-						>
-							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
-						</span>
+								<span
+									className="options-button options-button--next"
+									onClick={() => {
+										// When the user click Next button, open second tab
+										this.props.next();
+									}}
+								>
+									{this.props.valueTab < 3 ? 'Next' : 'Finish'}
+								</span>
+							</div>
+						) : (
+								''
+							)}
 					</div>
-				) : (
-					''
-				)}
-			</div>
+				)} />
 		);
 	}
 }

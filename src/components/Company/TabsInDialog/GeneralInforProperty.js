@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {gql} from 'apollo-boost';
+import React, { Component } from 'react';
+import { gql } from 'apollo-boost';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Query from 'react-apollo/Query';
@@ -210,7 +210,7 @@ class GeneralInfoProperty extends Component {
                         }
                     }
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id));
 
                     this.setState({
@@ -443,7 +443,7 @@ class GeneralInfoProperty extends Component {
                     },
                     fetchPolicy: 'no-cache'
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     if (data.getbusinesscompanies !== null) {
                         let item = data.getbusinesscompanies[0];
                         this.setState({
@@ -501,7 +501,7 @@ class GeneralInfoProperty extends Component {
         this.changeStylesInCompletedInputs();
 
         if (this.state.linearProgress) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         return (
@@ -513,7 +513,7 @@ class GeneralInfoProperty extends Component {
                                 <div class="card-form-header grey">General Information</div>
                                 <div className="row">
                                     <div className="col-6">
-                                        <span className="primary card-input-label">* Property Name</span>
+                                        <span className="primary card-input-label">* Hotel Name</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -580,10 +580,10 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">* States</span>
                                     </div>
                                     <div className="col-6">
-                                        <Query query={this.getStatesQuery} variables={{parent: 6}}>
-                                            {({loading, error, data, refetch, networkStatus}) => {
+                                        <Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress/>;
+                                                if (loading) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     console.log('VALUE: ' + data.getcatalogitem);
@@ -602,7 +602,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay/>
+                                                return <SelectNothingToDisplay />
                                             }}
                                         </Query>
                                     </div>
@@ -610,10 +610,10 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">* City</span>
                                     </div>
                                     <div className="col-6">
-                                        <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
-                                            {({loading, error, data, refetch, networkStatus}) => {
+                                        <Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress/>;
+                                                if (loading) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     console.log('Data of cities' + data.getcatalogitem);
@@ -632,7 +632,7 @@ class GeneralInfoProperty extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay/>
+                                                return <SelectNothingToDisplay />
                                             }}
                                         </Query>
                                     </div>
@@ -703,7 +703,7 @@ class GeneralInfoProperty extends Component {
                                 <div class="card-form-header yellow">Legal Docs</div>
                                 <div className="row">
                                     <div className="col-6">
-                                        <span className="primary card-input-label">* Property Code</span>
+                                        <span className="primary card-input-label">* Hotel Code</span>
                                     </div>
                                     <div className="col-6">
                                         <InputValid
@@ -874,7 +874,7 @@ class GeneralInfoProperty extends Component {
                     </div>
                 </div>
                 <div className="contract-footer--bottom">
-                    <input type="submit" value="Next" className="contract-next-button"/>
+                    <input type="submit" value="Next" className="contract-next-button" />
                 </div>
             </form>
         );

@@ -9,13 +9,12 @@ class Main extends Component {
 	LoginId = sessionStorage.getItem('LoginId');
 
 	render() {
-		console.log('Home Signature', window.location.pathname);
-		if (!window.location.pathname.toLocaleLowerCase().startsWith('home/signature')) {
-			if (!this.LoginId & (window.location.pathname != '/login')) {
-				window.location.href = '/login';
-				return false;
-			}
+
+		if (!this.LoginId & (window.location.pathname != '/login') & (window.location.pathname != '/home/signature/	')) {
+			window.location.href = '/login';
+			return false;
 		}
+
 
 		return (
 			<div>

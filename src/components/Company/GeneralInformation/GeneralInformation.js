@@ -162,7 +162,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	loadCompany = (func = () => {}) => {
+	loadCompany = (func = () => { }) => {
 		this.setState(
 			{
 				loading: true
@@ -233,7 +233,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => {}) => {
+	loadCompanyProperties = (func = () => { }) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -471,7 +471,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => {}) => {
+	loadCountries = (func = () => { }) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -509,7 +509,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => {}) => {
+	loadStates = (func = () => { }) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -551,7 +551,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => {}) => {
+	loadCities = (func = () => { }) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -617,12 +617,20 @@ class GeneralInformation extends Component {
      * End of the events
      */
 	componentWillMount() {
+		if (window.location.pathname === '/home/company/add') {
+
+			console.log(this.props.idCompany);
+			console.log(this.props.toggleStepper);
+
+			if (this.props.idCompany == 0) { this.props.toggleStepper(); }
+		}
 		if (window.location.pathname === '/home/company/edit') {
 			this.setState(
 				{
 					inputEnabled: false
 				},
 				() => {
+
 					this.setState({ firstLoad: true }, () => {
 						this.loadCompany(() => {
 							this.loadCountries(() => {
@@ -935,7 +943,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -1048,8 +1056,8 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-					''
-				)}
+						''
+					)}
 				<div className="general-information__content">
 					<div className="card-form-company">
 						<div className="card-form-header grey">General Information</div>
@@ -1371,8 +1379,8 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-					''
-				)}
+						''
+					)}
 
 				<Dialog
 					open={this.state.open}
@@ -1402,14 +1410,14 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-							//Si el click no es en esa property : pasar el Id en nulo
-							//para que no cargue niguna información relacionada con ese Id
-							<TabsInDialog
-								idCompany={this.props.idCompany}
-								handleClose={this.handleClose}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-							/>
-						)}
+								//Si el click no es en esa property : pasar el Id en nulo
+								//para que no cargue niguna información relacionada con ese Id
+								<TabsInDialog
+									idCompany={this.props.idCompany}
+									handleClose={this.handleClose}
+									handleOpenSnackbar={this.props.handleOpenSnackbar}
+								/>
+							)}
 					</DialogContent>
 				</Dialog>
 			</div>
