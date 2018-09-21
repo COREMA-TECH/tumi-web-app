@@ -5,6 +5,7 @@ import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import {GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "./Queries";
+import './index.css';
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -354,7 +355,8 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                         <div className="row">
-                            <input type="submit" value="Apply"/>
+                            <input type="reset" className="reset" value="Reset"/>
+                            <input type="submit" className="submit" value="Apply" />
                         </div>
                     </form>
                 )}
