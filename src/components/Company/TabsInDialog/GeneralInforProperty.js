@@ -409,22 +409,6 @@ class GeneralInfoProperty extends Component {
                 invalidInputs[i].classList.remove('invalid');
             }
         }
-
-        // // Catch the error in the first render
-        // try {
-        //     let numberInput = document.getElementById('prop-number');
-        //     let faxInput = document.getElementById('prop-fax');
-        //
-        //     if (numberInput.value.length < 10) {
-        //         numberInput.classList.remove('invalid');
-        //     }
-        //
-        //     if (faxInput.value.length < 10) {
-        //         faxInput.classList.remove('invalid');
-        //     }
-        // } catch (e) {
-        //
-        // }
     };
 
     /**
