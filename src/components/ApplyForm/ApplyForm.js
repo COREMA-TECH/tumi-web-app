@@ -123,6 +123,7 @@ class ApplyForm extends Component {
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return <select name="state" id="state" required
                                                                    className="input-form">
+                                                        <option value="">None</option>
                                                         {
                                                             data.getcatalogitem.map(item => (
                                                                 <option value={item.Id}>{item.Name}</option>
@@ -148,6 +149,7 @@ class ApplyForm extends Component {
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return <select name="city" id="city" required
                                                                    className="input-form">
+                                                        <option value="">None</option>
                                                         {
                                                             data.getcatalogitem.map(item => (
                                                                 <option value={item.Id}>{item.Name}</option>
@@ -242,7 +244,8 @@ class ApplyForm extends Component {
                                     <div className="col-6">
                                         <input
                                             name="positionApplyingFor"
-                                            type="email"
+                                            type="text"
+                                            type="text"
                                             className="input-form"
                                             required
                                             min="0"
