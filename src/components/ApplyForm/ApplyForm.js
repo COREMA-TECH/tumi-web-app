@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import gql from "graphql-tag";
 import {Mutation} from "react-apollo";
+import CREATE_APPLICATION from "./Mutations";
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -8,37 +8,6 @@ class ApplyForm extends Component {
     }
 
     render() {
-
-        // Mutation to create a employment application
-        const CREATE_APPLICATION = gql`
-              mutation createApplication(
-                    $firstName: String!, 
-                    $middleName: String!,
-                    $lastName: String!,
-                    $date: String!,
-                    $streetAddress: String!,
-                    $aptNumber: Int!,
-                    $city: Int!,
-                    $state: Int!,
-                    $zipCode: Int!,
-                    $homePhone: String!,
-                    $cellPhone: String!,
-                    $socialSecurityNumber: String!,
-                    $emailAddress: String!,
-                    $positionApplyingFor: Int!,
-                    $dateAvailable: String!,
-                    $scheduleRestrictions: Int!,
-                    $scheduleExplain: String,
-                    $convicted: Int!,
-                    $convictedExplain: String,
-                    $comment: String!
-              ) {
-                    createApplication(type: $type) {
-                          id
-                    }
-              }
-        `;
-
 
         return (
             <Mutation mutation={CREATE_APPLICATION}>
