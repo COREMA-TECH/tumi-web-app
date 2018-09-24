@@ -28,7 +28,7 @@ class ApplyForm extends Component {
         // To render the Applicant Information Section
         let renderApplicantInformationSection = () => (
             <div className="row">
-                <h3>Applicant Information</h3>
+                <h4>Applicant Information</h4>
                 <div className="col-6">
                     <div className="row">
                         <div className="col-6">
@@ -385,6 +385,7 @@ class ApplyForm extends Component {
         // To render the Education Service Section
         let renderEducationSection = () => (
             <div className="row">
+                <h4>Education</h4>
                 <div className="row">
                     <div className="col-3">
                         <span className="primary card-input-label"> Time Period</span>
@@ -505,7 +506,7 @@ class ApplyForm extends Component {
         // To render the Military Service Section
         let renderMilitaryServiceSection = () => (
             <div className="row">
-                <h3>Military Service</h3>
+                <h4>Military Service</h4>
                 <div className="col-3">
                     <div className="row">
                         <div className="col-6">
@@ -521,6 +522,7 @@ class ApplyForm extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
+                            <span></span>
                         </div>
                     </div>
                     <div className="row">
@@ -537,6 +539,7 @@ class ApplyForm extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
+                            <span></span>
                         </div>
                     </div>
                 </div>
@@ -547,7 +550,7 @@ class ApplyForm extends Component {
                         </div>
                         <div className="col-9">
                             <div className="row">
-                                <div className="col-5">
+                                <div className="col-6">
                                     <input
                                         name="militaryStartDate"
                                         type="date"
@@ -558,7 +561,7 @@ class ApplyForm extends Component {
                                         minLength="3"
                                     />
                                 </div>
-                                <span className="col-2">To: </span>
+                                <span className="col-1">To: </span>
                                 <div className="col-5">
                                     <input
                                         name="militaryEndDate"
@@ -581,6 +584,7 @@ class ApplyForm extends Component {
                                         className="input-form">
                                     <option value="">Select a type</option>
                                 </select>
+                                <span></span>
                             </div>
                         </div>
                     </div>
@@ -590,6 +594,7 @@ class ApplyForm extends Component {
 
         let renderPreviousEmploymentSection = () => (
             <div className="row">
+                <h4>Previous Employment</h4>
                 <div className="col-12">
                     <div className="row">
                         <div className="col-9">
@@ -763,6 +768,57 @@ class ApplyForm extends Component {
             </div>
         );
 
+        let renderLenguagesSection = () => (
+            <div className="row">
+                <h4>Lenguages</h4>
+                <div className="col-1">
+                    <span className="primary card-input-label"> Lenguage</span>
+                </div>
+                <div className="col-3">
+                    <input
+                        name="lenguageName"
+                        type="text"
+                        className="input-form"
+                        required
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                    <span></span>
+                </div>
+                <div className="col-1">
+                    <span className="primary card-input-label"> Conversation</span>
+                </div>
+                <div className="col-3">
+                    <input
+                        name="conversationLenguage"
+                        type="number"
+                        className="input-form"
+                        required
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                    <span></span>
+                </div>
+                <div className="col-1">
+                    <span className="primary card-input-label"> Writing</span>
+                </div>
+                <div className="col-3">
+                    <input
+                        name="writingLenguage"
+                        type="number"
+                        className="input-form"
+                        required
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                    <span></span>
+                </div>
+            </div>
+        );
+
         return (
             <Mutation mutation={CREATE_APPLICATION}>
                 {(createApplication, {data}) => (
@@ -774,7 +830,7 @@ class ApplyForm extends Component {
                             //input.value = "";
                         }}
                     >
-                        {renderPreviousEmploymentSection()}
+                        { renderLenguagesSection() }
                         <div className="row">
                             <input type="reset" className="reset" value="Reset"/>
                             <input type="submit" className="submit" value="Apply"/>
