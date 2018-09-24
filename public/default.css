@@ -475,6 +475,7 @@ p {
   overflow: hidden;
   width: 100%; }
   .card-wrapper .input-form {
+    padding: 5px !important;
     width: 100% !important; }
   .card-wrapper .select-form-customized {
     width: 100% !important; }

@@ -55,6 +55,8 @@ class GeneralInfoProperty extends Component {
         validEndWeek: '',
         contractURL: '',
         insuranceURL: '',
+        Other_Name: '',
+        Other01_Name: '',
         otherURL: '',
         other01URL: '',
         phoneNumberValid: true,
@@ -202,8 +204,8 @@ class GeneralInfoProperty extends Component {
                             Insurace_URL: `'${this.state.insuranceURL}'`,
                             Other_URL: `'${this.state.otherURL}'`,
                             Other01_URL: `'${this.state.other01URL}'`,
-                            Other_Name: "''",
-                            Other01_Name: "''",
+                            Other_Name: `'${this.state.Other_Name}'`,
+                            Other01_Name: `'${this.state.Other01_Name}'`,
                             Rooms: parseInt(this.state.room),
                             Suite: `'${this.state.suite}'`,
                             Contract_Status: "'C'"
@@ -290,8 +292,8 @@ class GeneralInfoProperty extends Component {
                             Insurace_URL: `'${this.state.insuranceURL}'`,
                             Other_URL: `'${this.state.otherURL}'`,
                             Other01_URL: `'${this.state.other01URL}'`,
-                            Other_Name: "''",
-                            Other01_Name: "''",
+                            Other_Name: `'${this.state.Other_Name}'`,
+                            Other01_Name: `'${this.state.Other01_Name}'`,
                             Rooms: parseInt(this.state.room),
                             Suite: `'${this.state.suite}'`,
                             Contract_Status: "'C'"
@@ -458,6 +460,8 @@ class GeneralInfoProperty extends Component {
                             insuranceURL: item.Insurace_URL,
                             otherURL: item.Other_URL,
                             other01URL: item.Other01_URL,
+                            Other_Name: item.Other_Name,
+                            Other01_Name: item.Other01_Name,
                             room: item.Rooms
                         });
 
@@ -827,7 +831,17 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Other</span>
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    Other_Name: text
+                                                })
+                                            }}
+                                            value={this.state.Other_Name}
+                                            type="text"
+                                            placeholder="Name File"
+                                            required
+                                        />
                                     </div>
                                     <div className="col-6">
                                         <FileUpload
@@ -840,7 +854,17 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <span className="primary card-input-label">Other 2</span>
+                                        <InputValid
+                                            change={(text) => {
+                                                this.setState({
+                                                    Other01_Name: text
+                                                })
+                                            }}
+                                            value={this.state.Other01_Name}
+                                            type="text"
+                                            placeholder="Name File"
+                                            required
+                                        />
                                     </div>
                                     <div className="col-6">
                                         <FileUpload
