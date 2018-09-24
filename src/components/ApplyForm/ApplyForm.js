@@ -607,6 +607,7 @@ class ApplyForm extends Component {
                                         maxLength="50"
                                         minLength="3"
                                     />
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -625,6 +626,7 @@ class ApplyForm extends Component {
                                         maxLength="50"
                                         minLength="3"
                                     />
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -643,6 +645,7 @@ class ApplyForm extends Component {
                                         maxLength="50"
                                         minLength="3"
                                     />
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -661,6 +664,7 @@ class ApplyForm extends Component {
                                         maxLength="50"
                                         minLength="3"
                                     />
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -679,6 +683,7 @@ class ApplyForm extends Component {
                                         maxLength="50"
                                         minLength="3"
                                     />
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -697,6 +702,7 @@ class ApplyForm extends Component {
                                         maxLength="50"
                                         minLength="3"
                                     />
+                                    <span></span>
                                 </div>
                             </div>
                         </div>
@@ -718,6 +724,7 @@ class ApplyForm extends Component {
                                                 maxLength="50"
                                                 minLength="3"
                                             />
+                                            <span></span>
                                         </div>
                                         <div className="col-1">
                                             <span>To: </span>
@@ -732,6 +739,7 @@ class ApplyForm extends Component {
                                                 maxLength="50"
                                                 minLength="3"
                                             />
+                                            <span></span>
                                         </div>
                                     </div>
                                 </div>
