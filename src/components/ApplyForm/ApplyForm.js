@@ -506,7 +506,7 @@ class ApplyForm extends Component {
         let renderMilitaryServiceSection = () => (
             <div className="row">
                 <h3>Military Service</h3>
-                <div className="col-6">
+                <div className="col-3">
                     <div className="row">
                         <div className="col-6">
                             <span className="primary card-input-label"> Branch</span>
@@ -540,37 +540,48 @@ class ApplyForm extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-6">
+                <div className="col-9">
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-3">
                             <span className="primary card-input-label"> Dates</span>
                         </div>
-                        <div className="col-6">
-                            <input
-                                name="militaryDates"
-                                type="date"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
+                        <div className="col-9">
+                            <div className="row">
+                                <div className="col-5">
+                                    <input
+                                        name="militaryStartDate"
+                                        type="date"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                                <span className="col-2">To: </span>
+                                <div className="col-5">
+                                    <input
+                                        name="militaryEndDate"
+                                        type="date"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Type of Discharge</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="militaryTypeDischarge"
-                                type="text"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
+                        <div className="row">
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Type of Discharge</span>
+                            </div>
+                            <div className="col-6">
+                                <select name="dischargeType" id="dischargeType" required
+                                        className="input-form">
+                                    <option value="">Select a type</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -588,8 +599,6 @@ class ApplyForm extends Component {
                             //input.value = "";
                         }}
                     >
-                        {renderApplicantInformationSection()}
-                        {renderEducationSection()}
                         {renderMilitaryServiceSection()}
                         <div className="row">
                             <input type="reset" className="reset" value="Reset"/>
