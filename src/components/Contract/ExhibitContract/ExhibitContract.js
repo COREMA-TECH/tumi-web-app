@@ -295,7 +295,8 @@ class ExhibitContract extends Component {
 	};
 
 	createPDFContractHandler = () => {
-		var doc = new jsPDF()
+
+		/*var doc = new jsPDF()
 		var specialElementHandlers = {
 			'#editor': function (element, renderer) {
 				return true;
@@ -395,16 +396,10 @@ class ExhibitContract extends Component {
 							</Tooltip>
 							<Tooltip title={'Download Contract'}>
 								<div >
-									<Button
-										//	disabled={this.state.loading || !this.state.enableCancelButton}
-										//id="btnDownloadpdf"
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.createPDFContractHandler}
-									>
-										<DownloadIcon />
-									</Button>
+									<a href="http://localhost:4000/public/Contract_dasdasdadas.pdf"
+										className={buttonClassname} target="_blank"
+									> Download
+									</a>
 								</div>
 
 							</Tooltip>

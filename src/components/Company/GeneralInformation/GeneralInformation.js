@@ -472,6 +472,7 @@ class GeneralInformation extends Component {
      **********************************************************/
 
 	loadCountries = (func = () => { }) => {
+		console.log("vamos a leer coountrue");
 		this.setState({
 			loadingCountries: true
 		});
@@ -618,11 +619,22 @@ class GeneralInformation extends Component {
      */
 	componentWillMount() {
 		if (window.location.pathname === '/home/company/add') {
-
-			console.log(this.props.idCompany);
-			console.log(this.props.toggleStepper);
-
-			if (this.props.idCompany == 0) { this.props.toggleStepper(); }
+			if (this.props.idCompany == 0) {
+				this.props.toggleStepper();
+				this.setState({ firstLoad: true }, () => {
+					this.loadCompany(() => {
+						this.loadCountries(() => {
+							this.loadCities(() => {
+								this.loadStates(() => {
+									this.loadCompanyProperties(() => {
+										this.setState({ indexView: 1, firstLoad: false });
+									});
+								});
+							});
+						});
+					});
+				});
+			}
 		}
 		if (window.location.pathname === '/home/company/edit') {
 			this.setState(
@@ -974,6 +986,7 @@ class GeneralInformation extends Component {
      */
 	render() {
 		const { classes } = this.props;
+
 		let isLoading =
 			this.state.loading ||
 			this.state.loadingCities ||
@@ -1334,53 +1347,55 @@ class GeneralInformation extends Component {
 						</div>
 					</div>
 				</div>
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<div className={classes.wrapper}>
-							<Button
-								className={classes.buttonSuccess}
-								onClick={() => {
-									this.updateCompany(this.props.idCompany);
-								}}
-								disabled={isLoading}
-							>
-								Save
-							</Button>
-							{this.state.loadingUpdate && (
-								<CircularProgress size={24} className={classes.buttonProgress} />
-							)}
-						</div>
-						{this.props.showStepper && (
+				{
+					this.props.showStepper ? (
+						<div className="advanced-tab-options">
 							<div className={classes.wrapper}>
 								<Button
 									className={classes.buttonSuccess}
-									disabled={isLoading}
 									onClick={() => {
-										this.setState({ firstLoad: true }, () => {
-											this.loadCompany(() => {
-												this.loadCountries(() => {
-													this.loadCities(() => {
-														this.loadStates(() => {
-															this.loadCompanyProperties(() => {
-																this.props.toggleStepper();
-																this.setState({ indexView: 1, firstLoad: false });
+										this.updateCompany(this.props.idCompany);
+									}}
+									disabled={isLoading}
+								>
+									Save
+							</Button>
+								{this.state.loadingUpdate && (
+									<CircularProgress size={24} className={classes.buttonProgress} />
+								)}
+							</div>
+							{this.props.showStepper && (
+								<div className={classes.wrapper}>
+									<Button
+										className={classes.buttonSuccess}
+										disabled={isLoading}
+										onClick={() => {
+											this.setState({ firstLoad: true }, () => {
+												this.loadCompany(() => {
+													this.loadCountries(() => {
+														this.loadCities(() => {
+															this.loadStates(() => {
+																this.loadCompanyProperties(() => {
+																	this.props.toggleStepper();
+																	this.setState({ indexView: 1, firstLoad: false });
+																});
 															});
 														});
 													});
 												});
 											});
-										});
-									}}
-								>
-									Cancel
+										}}
+									>
+										Cancel
 								</Button>
-								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-							</div>
-						)}
-					</div>
-				) : (
-						''
-					)}
+									{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+								</div>
+							)}
+						</div>
+					) : (
+							''
+						)
+				}
 
 				<Dialog
 					open={this.state.open}
@@ -1420,7 +1435,7 @@ class GeneralInformation extends Component {
 							)}
 					</DialogContent>
 				</Dialog>
-			</div>
+			</div >
 		);
 	}
 }

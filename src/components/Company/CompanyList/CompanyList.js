@@ -98,9 +98,10 @@ class CompanyList extends Component {
 					if (error)
 						return (
 
-							<ErrorMessageComponent
+
+							< ErrorMessageComponent
 								title="Oops!"
-								message={this.state.errorMessage}
+								message={"Something went wrong"}
 								type="Error-danger"
 								icon="danger"
 							/>
