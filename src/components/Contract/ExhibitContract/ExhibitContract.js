@@ -396,9 +396,8 @@ class ExhibitContract extends Component {
 							</Tooltip>
 							<Tooltip title={'Download Contract'}>
 								<div >
-									<a href="http://localhost:4000/public/Contract_dasdasdadas.pdf"
-										className={buttonClassname} target="_blank"
-									> Download
+									<a href="http://localhost:4000/public/Contract_dasdasdadas.pdf" className={"MuiButtonBase-root-52 MuiButton-root-349 MuiButton-fab-366 MuiButton-contained-360 MuiButton-containedPrimary-361 MuiButton-raised-363 MuiButton-raisedPrimary-364"} target="_blank">
+										<DownloadIcon />
 									</a>
 								</div>
 
