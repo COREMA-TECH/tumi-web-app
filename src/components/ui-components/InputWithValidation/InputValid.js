@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 
 class InputValid extends Component {
@@ -11,7 +11,7 @@ class InputValid extends Component {
                 className={'input-form'}
                 required
                 min="0"
-                placeholder={this.props.placeholder && ''}
+                placeholder={this.props.placeholder}
                 maxLength={this.props.maxLength}
                 disabled={this.props.disabled}
                 onChange={(event) => {
