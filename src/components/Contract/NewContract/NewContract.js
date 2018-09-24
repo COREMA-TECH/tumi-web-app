@@ -91,8 +91,7 @@ class NewContract extends Component {
 			contractTemplateId: 1,
 			contractExpiration: this.getNewDate(),
 			Id_Contract_Template: 1,
-
-			Id_Entity: this.props.Id_Entity,
+			Id_Entity: props.Id_Entity,
 			Id_User_Signed: '',
 			User_Signed_Title: '',
 			Signed_Date: this.getNewDate(),
@@ -114,7 +113,8 @@ class NewContract extends Component {
 			Exhibit_D: '',
 			Exhibit_E: '',
 			Exhibit_F: '',
-			IsActive: 0,
+			IsActive: 1,
+			Management: '',
 			User_Created: '',
 			User_Updated: '',
 			Date_Created: '',
@@ -535,6 +535,15 @@ class NewContract extends Component {
 		}
 	`;
 
+	getbusinesscompaniesQuery = gql`
+	query getbusinesscompanies($Id: Int!) {
+		getbusinesscompanies(Id: $Id, IsActive: 1,Contract_Status:"'C'") {
+			Id
+			Parent
+		}
+	}
+`;
+
 	getNewDate = () => {
 		var today = new Date();
 		var dd = today.getDate();
@@ -561,10 +570,33 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
+				console.log(data.getcompanies[0].LegalName);
 				this.setState({
+
 					CompanySignedName: this.getString(data.getcompanies[0].LegalName),
 					CompanySignedNameValid: true,
 					Primary_Email: this.getString(data.getcompanies[0].Primary_Email)
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+
+	getBusinessCompanies = (id) => {
+		console.log("Entro al getBusinesscompany");
+		console.log(id);
+		this.props.client
+			.query({
+				query: this.getbusinesscompaniesQuery,
+				variables: {
+					Id: id
+				}
+			})
+			.then(({ data }) => {
+				this.setState({
+					Management: this.getString(data.getbusinesscompanies[0].Parent)
 				});
 			})
 			.catch((error) => {
@@ -931,6 +963,16 @@ class NewContract extends Component {
 										</div>
 										<div className="card-form-row">
 											<span className="input-label primary">* Management Company</span>
+
+											<InputForm
+												value={this.state.Management}
+												change={(text) => { }}
+											//error={!this.state.CompanySignedNameValid}
+											/>
+										</div>
+
+										<div className="card-form-row">
+											<span className="input-label primary">* Hotel</span>
 											<AccountDialog
 												valueSelected={this.state.Id_Entity}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
@@ -942,8 +984,10 @@ class NewContract extends Component {
 															Company_Signed: value
 														},
 														() => {
+															console.log("aqui esta el state ", this.state);
 															this.validateField('Company_Signed', value);
 															this.getCompanies(this.state.Company_Signed);
+															this.getBusinessCompanies(this.state.Id_Entity);
 														}
 													);
 												}}
