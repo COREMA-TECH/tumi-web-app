@@ -15,8 +15,10 @@ class MainContainer extends Component {
 		var title;
 		if (pathname[3] != undefined)
 			title = pathname[3] + " " + pathname[2];
-		else 
+		else
 			title = pathname[2];
+		console.log(title);
+		title = title == "Company" ? "Management" : title;
 		return title;
 	}
 
