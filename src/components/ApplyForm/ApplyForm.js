@@ -819,6 +819,61 @@ class ApplyForm extends Component {
             </div>
         );
 
+        let renderSkillsSection = () => (
+            <div className="row">
+                <h4>Skills</h4>
+                <div className="col-12">
+                    <span>What skill do you have?</span>
+                </div>
+                <div className="col-12">
+                    <input
+                        name="skillName"
+                        type="text"
+                        className="input-form"
+                        required
+                        min="0"
+                        maxLength="50"
+                        minLength="3"
+                    />
+                    <span></span>
+                </div>
+                <div className="col-2">
+                    <span className="primary card-input-label"> Time Period years</span>
+                </div>
+                <div className="col-12">
+                    <div className="row">
+                        <div className="col-6">
+                            <input
+                                name="startSkillDate"
+                                type="date"
+                                className="input-form"
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span></span>
+                            <i className="optional"></i>
+                        </div>
+                        <div className="col-1">
+                            <span>To: </span>
+                        </div>
+                        <div className="col-5">
+                            <input
+                                name="endSkillDate"
+                                type="date"
+                                className="input-form"
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span></span>
+                            <i className="optional"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
         return (
             <Mutation mutation={CREATE_APPLICATION}>
                 {(createApplication, {data}) => (
@@ -830,7 +885,7 @@ class ApplyForm extends Component {
                             //input.value = "";
                         }}
                     >
-                        { renderLenguagesSection() }
+                        {renderSkillsSection()}
                         <div className="row">
                             <input type="reset" className="reset" value="Reset"/>
                             <input type="submit" className="submit" value="Apply"/>
