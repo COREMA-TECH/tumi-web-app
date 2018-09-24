@@ -70,6 +70,7 @@ class Contract extends React.Component {
 		contractId: 0,
 		Id_Entity: 0,
 		companyId: 0,
+		ContractName: "",
 		loading: false
 	};
 
@@ -89,6 +90,12 @@ class Contract extends React.Component {
 			companyId: id
 		});
 	};
+
+	getContractName = (contractname) => {
+		this.setState({
+			ContractName: contractname
+		})
+	}
 
 	componentWillMount() {
 		this.setState(
@@ -175,6 +182,7 @@ class Contract extends React.Component {
 						update={this.updateContractId}
 						updateCompanyId={this.updateCompanyId}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						getContractName={this.getContractName}
 					/>
 				)}
 				{value === 1 && (
@@ -182,6 +190,7 @@ class Contract extends React.Component {
 						contractId={this.state.contractId}
 						companyId={this.state.companyId}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						contractname={this.state.ContractName}
 					/>
 				)}
 			</div>

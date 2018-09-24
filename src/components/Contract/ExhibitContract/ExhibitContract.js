@@ -159,6 +159,17 @@ class ExhibitContract extends Component {
 		}
 	`;
 
+	CREATE_CONTRACT_QUERY = gql`
+		query createcontracts($Id: Int) {
+			createcontracts(Id: $Id, IsActive: 1) {
+				Id
+				Electronic_Address
+				Primary_Email
+				Contract_Terms
+			}
+		}
+	`;
+
 	sendContract = () => {
 		this.setState({ loadingData: true });
 		this.props.client
@@ -175,6 +186,32 @@ class ExhibitContract extends Component {
 					this.props.handleOpenSnackbar(
 						'error',
 						'Error: Loading agreement: sendcontracts not exists in query data'
+					);
+					this.setState({ loadingData: false });
+				}
+			})
+			.catch((error) => {
+				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
+				this.setState({ loadingData: false });
+			});
+	};
+
+	createContract = () => {
+		this.setState({ loadingData: true });
+		this.props.client
+			.query({
+				query: this.CREATE_CONTRACT_QUERY,
+				variables: { Id: this.props.contractId },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.createcontracts != null) {
+					//this.props.handleOpenSnackbar('success', 'Contract Sent!');
+					//this.resetState();
+				} else {
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error: Loading agreement: sendcontracts not exists in query datassssssss'
 					);
 					this.setState({ loadingData: false });
 				}
@@ -276,7 +313,9 @@ class ExhibitContract extends Component {
 	}
 
 	handleClickOpenModal = () => {
+		this.createContract();
 		this.setState({ openModal: true });
+
 	};
 
 	cancelContractHandler = () => {
@@ -292,57 +331,6 @@ class ExhibitContract extends Component {
 		pri.focus();
 		pri.print();
 		//pri.download();
-	};
-
-	createPDFContractHandler = () => {
-
-		/*var doc = new jsPDF()
-		var specialElementHandlers = {
-			'#editor': function (element, renderer) {
-				return true;
-			}
-		};
-
-		var textToWrite = document.getElementById('agreement').innerHTML;
-		var textFileAsBlob = new Blob([textToWrite], { type: 'text/html' });
-
-		alert(document.getElementById('agreement').innerHTML);
-		//console.log(this.state.agreement);
-		doc.fromHTML(document.getElementById('agreement').innerHTML, 15, 15, {
-			'width': 170,
-			'elementHandlers': specialElementHandlers
-		});
-		doc.save('Contract.pdf')
-		//doc.fromHTML(textToWrite);
-		//console.log("con value");
-		//console.log(document.getElementById('dvpdf'));
-
-		/*doc.fromHTML(this.state.agreement, 15, 15, {
-			'width': 170,
-			'elementHandlers': specialElementHandlers
-		});
-		doc.save('Contract.pdf')*/
-		//		CreatePDF();
-
-		/*	var textToWrite = document.getElementById('agreement').innerHTML;
-			var textFileAsBlob = new Blob([ textToWrite ], { type: 'text/html' });
-			var fileNameToSaveAs = 'Contract.html';
-	
-			var downloadLink = document.createElement('a');
-			downloadLink.download = fileNameToSaveAs;
-			downloadLink.innerHTML = 'Download File';
-			if (window.webkitURL != null) {
-				// Chrome allows the link to be clicked without actually adding it to the DOM.
-				downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-			} else {
-				// Firefox requires the link to be added to the DOM before it can be clicked.
-				//	downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-				//		downloadLink.onclick = destroyClickedElement;
-				downloadLink.style.display = 'none';
-				document.body.appendChild(downloadLink);
-			}
-	
-			downloadLink.click();*/
 	};
 
 	render() {
@@ -396,7 +384,7 @@ class ExhibitContract extends Component {
 							</Tooltip>
 							<Tooltip title={'Download Contract'}>
 								<div >
-									<a href="http://localhost:4000/public/Contract_dasdasdadas.pdf" className={"MuiButtonBase-root-52 MuiButton-root-349 MuiButton-fab-366 MuiButton-contained-360 MuiButton-containedPrimary-361 MuiButton-raised-363 MuiButton-raisedPrimary-364"} target="_blank">
+									<a href={"https://morning-lake-18657.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf"} className={"MuiButtonBase-root-52 MuiButton-root-349 MuiButton-fab-366 MuiButton-contained-360 MuiButton-containedPrimary-361 MuiButton-raised-363 MuiButton-raisedPrimary-364"} target="_blank">
 										<DownloadIcon />
 									</a>
 								</div>
@@ -565,7 +553,9 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>*/}
-							<div className="contract-next-button" onClick={this.handleClickOpenModal}>
+							<div className="contract-next-button" onClick={
+								this.handleClickOpenModal
+							}>
 								Create Contract
 							</div>
 						</div>

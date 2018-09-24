@@ -230,7 +230,7 @@ class GeneralInfoProperty extends Component {
 									Rate: parseFloat(this.state.rate),
 									Zipcode: parseInt(this.state.zipCode),
 									Fax: `'${this.state.fax}'`,
-									Primary_Email: `'email'`,
+									Primary_Email: `'emailssssssss'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
 									Phone_Prefix: `'${this.state.phonePrefix}'`,
 									City: parseInt(this.state.city),
@@ -484,7 +484,7 @@ class GeneralInfoProperty extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:

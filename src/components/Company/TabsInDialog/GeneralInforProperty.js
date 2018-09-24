@@ -174,7 +174,7 @@ class GeneralInfoProperty extends Component {
                             Code: `'${this.state.Code}'`,
                             Code01: `'${this.state.Code01}'`,
                             Id_Contract: 1,
-                            Id_Company: parseInt(id),
+                            Id_Company: 1,
                             BusinessType: 1,
                             Location: `'${this.state.address}'`,
                             Location01: `'${this.state.optionalAddress}'`,
@@ -262,7 +262,7 @@ class GeneralInfoProperty extends Component {
                             Code: `'${this.state.Code}'`,
                             Code01: `'${this.state.Code01}'`,
                             Id_Contract: 1,
-                            Id_Company: parseInt(companyId),
+                            Id_Company: 1,
                             BusinessType: 1,
                             Location: `'${this.state.address}'`,
                             Location01: `'${this.state.optionalAddress}'`,
@@ -545,7 +545,6 @@ class GeneralInfoProperty extends Component {
                                             value={this.state.optionalAddress}
                                             type="text"
                                             maxLength="50"
-                                            required
                                         />
                                     </div>
                                     <div className="col-6">
@@ -840,7 +839,7 @@ class GeneralInfoProperty extends Component {
                                             value={this.state.Other_Name}
                                             type="text"
                                             placeholder="Name File"
-                                            required
+
                                         />
                                     </div>
                                     <div className="col-6">
@@ -863,7 +862,7 @@ class GeneralInfoProperty extends Component {
                                             value={this.state.Other01_Name}
                                             type="text"
                                             placeholder="Name File"
-                                            required
+
                                         />
                                     </div>
                                     <div className="col-6">

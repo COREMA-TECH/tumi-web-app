@@ -193,7 +193,7 @@ class GeneralInformation extends Component {
 									country: item.Country,
 									state: item.State,
 									city: item.City,
-
+									Id_Parent: item.Id_Parent,
 									rate: item.Rate,
 									email: item.Primary_Email.trim(),
 									phoneNumber: item.Phone_Number.trim(),
@@ -371,7 +371,7 @@ class GeneralInformation extends Component {
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
 								City: parseInt(this.state.city),
-								Id_Parent: 0,
+								Id_Parent: this.state.idCompany == 0 ? 0 : this.state.Id_Parent,
 								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
@@ -464,7 +464,7 @@ class GeneralInformation extends Component {
 								Rate: parseFloat(this.state.rate),
 								Zipcode: parseInt(this.state.zipCode),
 								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'${this.state.legalName}'`,
+								Primary_Email: `'${this.state.email}'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
 								City: parseInt(this.state.city),
@@ -713,7 +713,7 @@ class GeneralInformation extends Component {
 			optionalAddress: '',
 			businessType: '',
 			region: '',
-
+			Id_Parent: 0,
 			management: '',
 			phoneNumber: '',
 			startDate: '',
@@ -726,6 +726,7 @@ class GeneralInformation extends Component {
 			rate: '',
 			fax: '',
 			zipCode: '',
+
 			phonePrefix: '505',
 			email: '',
 			Code: '',
@@ -1400,7 +1401,8 @@ class GeneralInformation extends Component {
 								<Button
 									className={classes.buttonSuccess}
 									onClick={() => {
-										window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+										this.state.idCompany != 0 ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+										//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
 									}}
 									disabled={isLoading}
 								>

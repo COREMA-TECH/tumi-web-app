@@ -603,9 +603,8 @@ class PositionsCompanyForm extends React.Component {
                                 loadingData: false
                             },
                             () => {
-                                func(() => {
-                                    this.getRate(this.resetState);
-                                });
+                                this.getRate(this.resetState);
+                                func();
                             }
                         );
                     } else {

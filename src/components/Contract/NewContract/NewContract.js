@@ -345,6 +345,7 @@ class NewContract extends Component {
 						loaded: false
 					},
 					() => {
+						this.props.getContractName(this.state.Contract_Name);
 						this.setState(
 							{
 								loading: false
@@ -422,6 +423,7 @@ class NewContract extends Component {
 							}
 						})
 						.then(({ data }) => {
+							this.props.getContractName(this.state.Contract_Name);
 							this.props.handleOpenSnackbar('success', 'Contract Inserted!');
 							this.setState({
 								loadingInsert: false
@@ -503,6 +505,7 @@ class NewContract extends Component {
 							}
 						})
 						.then(({ data }) => {
+							this.props.getContractName(this.state.Contract_Name);
 							this.props.handleOpenSnackbar('success', 'Contract Updated!');
 							this.setState({
 								loadingUpdate: false
@@ -570,9 +573,7 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-				console.log(data.getcompanies[0].LegalName);
 				this.setState({
-
 					CompanySignedName: this.getString(data.getcompanies[0].LegalName),
 					CompanySignedNameValid: true,
 					Primary_Email: this.getString(data.getcompanies[0].Primary_Email)
