@@ -64,11 +64,15 @@ const styles = (theme) => ({
 });
 
 class CustomizedTabs extends React.Component {
-	state = {
-		value: 0,
-		item: 4,
 
-		activateTabs: true
+	constructor(props) {
+		super(props);
+		this.state = {
+			value: 0,
+			item: 4,
+			activateTabs: true,
+			idCompany: props.idCompany
+		}
 	};
 
 	handleChange = (event, value) => {
@@ -101,12 +105,18 @@ class CustomizedTabs extends React.Component {
 		});
 	};
 
+	updateCompany = (_idCompany) => {
+		this.setState({
+			idCompany: _idCompany
+		});
+	};
+
 	showSelectedTab = (value) => {
 		switch (value) {
 			case 0:
 				return (
 					<GeneralInformation
-						idCompany={this.props.idCompany}
+						idCompany={this.state.idCompany}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
@@ -114,12 +124,13 @@ class CustomizedTabs extends React.Component {
 						valueTab={this.state.value}
 						showStepper={this.state.showStepper}
 						toggleStepper={this.toggleStepper}
+						updateCompany={this.updateCompany}
 					/>
 				);
 			case 1:
 				return (
 					<ContactCompanyForm
-						idCompany={this.props.idCompany}
+						idCompany={this.state.idCompany}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
@@ -132,7 +143,7 @@ class CustomizedTabs extends React.Component {
 			case 2:
 				return (
 					<DepartmentsCompanyForm
-						idCompany={this.props.idCompany}
+						idCompany={this.state.idCompany}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
@@ -145,7 +156,7 @@ class CustomizedTabs extends React.Component {
 			case 3:
 				return (
 					<PositionsCompanyForm
-						idCompany={this.props.idCompany}
+						idCompany={this.state.idCompany}
 						idContract={this.props.idContract}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
