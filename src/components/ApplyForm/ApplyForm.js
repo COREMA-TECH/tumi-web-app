@@ -14,8 +14,8 @@ class ApplyForm extends Component {
 
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
-        if(document.addEventListener){
-            document.addEventListener('invalid', function(e){
+        if (document.addEventListener) {
+            document.addEventListener('invalid', function (e) {
                 e.target.className += ' invalid-apply-form';
             }, true);
         }
@@ -32,7 +32,7 @@ class ApplyForm extends Component {
                 <div className="col-6">
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary card-input-label">* First Name</span>
+                            <span className="primary card-input-label"> First Name</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -63,12 +63,12 @@ class ApplyForm extends Component {
                                 <span></span>
                             </div>
                             <div className="row">
-                                <i></i>
+                                <i className="optional"></i><i></i>
                             </div>
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Last Name</span>
+                            <span className="primary card-input-label"> Last Name</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -84,7 +84,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Date</span>
+                            <span className="primary card-input-label"> Date</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -99,7 +99,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Street Address</span>
+                            <span className="primary card-input-label"> Street Address</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -131,12 +131,12 @@ class ApplyForm extends Component {
                                 <span></span>
                             </div>
                             <div className="row">
-                                <i></i>
+                                <i className="optional"></i>
                             </div>
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* State</span>
+                            <span className="primary card-input-label"> State</span>
                         </div>
                         <div className="col-6">
                             <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
@@ -161,7 +161,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* City</span>
+                            <span className="primary card-input-label"> City</span>
                         </div>
                         <div className="col-6">
                             <Query query={GET_CITIES_QUERY} variables={{parent: 0}}>
@@ -187,7 +187,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Zip Code</span>
+                            <span className="primary card-input-label"> Zip Code</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -204,7 +204,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Home Phone</span>
+                            <span className="primary card-input-label"> Home Phone</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -219,7 +219,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Cell Phone</span>
+                            <span className="primary card-input-label"> Cell Phone</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -235,7 +235,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Social Security Number</span>
+                            <span className="primary card-input-label"> Social Security Number</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -251,7 +251,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Email Address</span>
+                            <span className="primary card-input-label"> Email Address</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -272,7 +272,7 @@ class ApplyForm extends Component {
                 <div className="col-6">
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary card-input-label">* Position Applying for</span>
+                            <span className="primary card-input-label"> Position Applying for</span>
                         </div>
                         <div className="col-6">
                             <Query query={GET_POSITIONS_QUERY}>
@@ -298,7 +298,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* Date Available</span>
+                            <span className="primary card-input-label"> Date Available</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -314,7 +314,7 @@ class ApplyForm extends Component {
 
                         <div className="col-6">
                                 <span
-                                    className="primary card-input-label">* Do you have any schedule restrictions? </span>
+                                    className="primary card-input-label"> Do you have any schedule restrictions? </span>
                         </div>
                         <div className="col-6">
                             <input
@@ -333,7 +333,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* If yes, please explain </span>
+                            <span className="primary card-input-label"> If yes, please explain </span>
                         </div>
                         <div className="col-6">
                             <textarea name="scheduleExplain" cols="30" rows="10" className="input-form"/>
@@ -342,7 +342,7 @@ class ApplyForm extends Component {
 
                         <div className="col-6">
                                 <span
-                                    className="primary card-input-label">* Have you ever been convicted of a felony? </span>
+                                    className="primary card-input-label"> Have you ever been convicted of a felony? </span>
                         </div>
                         <div className="col-6">
                             <input
@@ -362,7 +362,7 @@ class ApplyForm extends Component {
                         </div>
 
                         <div className="col-6">
-                            <span className="primary card-input-label">* If yes, please explain </span>
+                            <span className="primary card-input-label"> If yes, please explain </span>
                         </div>
                         <div className="col-6">
                             <textarea name="convictedExplain" cols="30" rows="10" className="input-form"/>
@@ -371,7 +371,7 @@ class ApplyForm extends Component {
 
                         <div className="col-6">
                                 <span
-                                    className="primary card-input-label">* How did you hear about Tumi Staffing </span>
+                                    className="primary card-input-label"> How did you hear about Tumi Staffing </span>
                         </div>
                         <div className="col-6">
                             <textarea name="comment" cols="30" rows="10" className="input-form"/>
@@ -385,80 +385,117 @@ class ApplyForm extends Component {
         // To render the Education Service Section
         let renderEducationSection = () => (
             <div className="row">
-                <h3>Education</h3>
-                <div className="col-12">
-                    <h5>High School</h5>
-                    <div className="row">
-                        <div className="col-3">
-                            <span className="primary card-input-label">* Name </span>
-                        </div>
-                        <div className="col-3">
-                            <input
-                                name="highSchoolName"
-                                type="text"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                        </div>
+                <div className="row">
+                    <div className="col-3">
+                        <span className="primary card-input-label"> Time Period</span>
                     </div>
-                    <div className="row">
-                        <div className="col-3">
-                            <span className="primary card-input-label">* Address </span>
-                        </div>
-                        <div className="col-3">
-                            <input
-                                name="highSchoolAddress"
-                                type="text"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-3">
-                            <span className="primary card-input-label">* Time Period </span>
-                        </div>
-                        <div className="col-3">
-                            <div className="row">
-                                <div className="col-6">
-                                    <span className="primary card-input-label">* Start </span>
-                                </div>
-                                <div className="col-6">
-                                    <input
-                                        name="startTimePeriod"
-                                        type="date"
-                                        className="input-form"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                </div>
-                                <div className="col-6">
-                                    <div className="col-6">
-                                        <span className="primary card-input-label">* End </span>
-                                    </div>
-                                    <div className="col-6">
-                                        <input
-                                            name="endTimePeriod"
-                                            type="date"
-                                            className="input-form"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="col-6"></div>
+                    <div className="col-6">
+                        <div className="row">
+                            <div className="col-5">
+                                <input
+                                    name="startPeriod"
+                                    type="date"
+                                    className="input-form"
+                                    required
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="3"
+                                />
                             </div>
-
+                            <div className="col-2">
+                                <span className="card-input-label">To</span>
+                            </div>
+                            <div className="col-5">
+                                <input
+                                    name="endPeriod"
+                                    type="date"
+                                    className="input-form"
+                                    required
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="3"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-6">
+                                <span
+                                    className="primary card-input-label"> Graduated </span>
+                    </div>
+                    <div className="col-6">
+                        <div className="row">
+                            <div className="col-6">
+                                <span className="col-12">Yes</span>
+                                <input
+                                    value="1"
+                                    type="radio"
+                                    name="graduated"
+                                    className="input-form"
+                                    required
+                                    checked
+                                />
+                            </div>
+                            <div className="col-6">
+                                <span className="col-12">No</span>
+                                <input
+                                    value="0"
+                                    type="radio"
+                                    name="graduated"
+                                    className="input-form"
+                                    required
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3">
+                        <div className="row">
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Type </span>
+                            </div>
+                            <div className="col-6">
+                                <select name="typeStudy" id="typeStudy" required
+                                        className="input-form">
+                                    <option value="">Select a option</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-3">
+                        <div className="row">
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Institution</span>
+                            </div>
+                            <div className="col-6">
+                                <input
+                                    name="institutionName"
+                                    type="text"
+                                    className="input-form"
+                                    required
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="3"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-3">
+                        <div className="row">
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Address</span>
+                            </div>
+                            <div className="col-6">
+                                <input
+                                    name="addressInstitution"
+                                    type="text"
+                                    className="input-form"
+                                    required
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="3"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -472,7 +509,7 @@ class ApplyForm extends Component {
                 <div className="col-6">
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary card-input-label">* Branch</span>
+                            <span className="primary card-input-label"> Branch</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -488,7 +525,7 @@ class ApplyForm extends Component {
                     </div>
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary card-input-label">* Rank at Discharge</span>
+                            <span className="primary card-input-label"> Rank at Discharge</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -506,7 +543,7 @@ class ApplyForm extends Component {
                 <div className="col-6">
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary card-input-label">* Dates</span>
+                            <span className="primary card-input-label"> Dates</span>
                         </div>
                         <div className="col-6">
                             <input
@@ -522,7 +559,7 @@ class ApplyForm extends Component {
                     </div>
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary card-input-label">* Type of Discharge</span>
+                            <span className="primary card-input-label"> Type of Discharge</span>
                         </div>
                         <div className="col-6">
                             <input

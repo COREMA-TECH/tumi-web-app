@@ -39,7 +39,7 @@ form select:optional:valid + span::after{
 
 
 
-i::after {
+.optional::after {
     content: "Optional";
     color: #888888;
     font-size: 11px;
@@ -47,5 +47,5 @@ i::after {
 }
 
 .invalid-apply-form {
-    border: 1px solid red;
+    border: 1px solid orangered;
 }
