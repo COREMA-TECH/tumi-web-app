@@ -5,6 +5,7 @@ import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import {GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "./Queries";
+import './index.css';
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -38,6 +39,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="3"
                                         />
                                     </div>
 
@@ -52,6 +54,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="3"
                                         />
                                     </div>
 
@@ -66,6 +69,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="3"
                                         />
                                     </div>
 
@@ -94,6 +98,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="5"
                                         />
                                     </div>
 
@@ -108,6 +113,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="5"
                                         />
                                     </div>
 
@@ -172,7 +178,8 @@ class ApplyForm extends Component {
                                             className="input-form"
                                             required
                                             min="0"
-                                            maxLength="50"
+                                            maxLength="7"
+                                            minLength="4"
                                         />
                                     </div>
 
@@ -182,11 +189,12 @@ class ApplyForm extends Component {
                                     <div className="col-6">
                                         <input
                                             name="homePhone"
-                                            type="number"
+                                            type="tel"
                                             className="input-form"
                                             required
                                             min="0"
-                                            maxLength="50"
+                                            maxLength="10"
+                                            minLength="10"
                                         />
                                     </div>
 
@@ -196,11 +204,12 @@ class ApplyForm extends Component {
                                     <div className="col-6">
                                         <input
                                             name="cellPhone"
-                                            type="number"
+                                            type="tel"
                                             className="input-form"
                                             required
                                             min="0"
-                                            maxLength="50"
+                                            maxLength="10"
+                                            minLength="10"
                                         />
                                     </div>
 
@@ -215,6 +224,7 @@ class ApplyForm extends Component {
                                             required
                                             min="0"
                                             maxLength="50"
+                                            minLength="10"
                                         />
                                     </div>
 
@@ -230,6 +240,7 @@ class ApplyForm extends Component {
                                             min="0"
                                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                             maxLength="50"
+                                            minLength="8"
                                         />
                                     </div>
 
@@ -344,7 +355,8 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                         <div className="row">
-                            <input type="submit" value="Apply"/>
+                            <input type="reset" className="reset" value="Reset"/>
+                            <input type="submit" className="submit" value="Apply" />
                         </div>
                     </form>
                 )}

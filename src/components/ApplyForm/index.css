@@ -1,0 +1,13 @@
+.submit, .reset {
+    padding: .8em 1.5em;
+    border: 1px solid #eeeeee;
+    background: #41afd7;
+    color: #ffffff;
+    border-radius: 8px;
+}
+
+.reset {
+    color: #41afd7;
+    background: #ffffff;
+    border-color: #41afd7;
+}
