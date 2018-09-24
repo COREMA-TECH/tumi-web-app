@@ -329,49 +329,83 @@ class GeneralInformation extends Component {
 	`;
 
 	insertCompany = () => {
-		//Create the mutation using apollo global client
-		this.props.client
-			.mutate({
-				// Pass the mutation structure
-				mutation: this.ADD_COMPANY_QUERY,
-				variables: {
-					input: {
-						Id: 150,
-						Code: `'${this.state.Code}'`,
-						Code01: `'${this.state.Code}'`,
-						Id_Company: 1,
-						BusinessType: 1,
-						Location: `'${this.state.address}'`,
-						Location01: `'${this.state.optionalAddress}'`,
-						Name: `'${this.state.name}'`,
-						Description: `'${this.state.description}'`,
-						Start_Week: this.state.startWeek,
-						End_Week: this.state.endWeek,
-						Legal_Name: `'${this.state.legalName}'`,
-						Country: parseInt(this.state.country),
-						State: parseInt(this.state.state),
-						Rate: parseFloat(this.state.rate),
-						Zipcode: parseInt(this.state.zipCode),
-						Fax: `'${this.state.fax}'`,
-						Primary_Email: `'${this.state.position}'`,
-						Phone_Number: `'${this.state.phoneNumber}'`,
-						Phone_Prefix: `'${this.state.phonePrefix}'`,
-						City: parseInt(this.state.city),
-						Id_Parent: 1,
-						IsActive: parseInt(this.state.active),
-						User_Created: 1,
-						User_Updated: 1,
-						Date_Created: "'2018-08-14'",
-						Date_Updated: "'2018-08-14'",
-						ImageURL: `'${this.state.avatar}'`,
-						Start_Date: "'2018-08-14'"
-					}
+		this.setState({ loadingUpdate: true }, () => {
+			this.validateAllFields(() => {
+				if (!this.state.formValid) {
+					this.props.handleOpenSnackbar(
+						'warning',
+						'Error: Saving Information: You must fill all the required fields'
+					);
+					this.setState({ loadingUpdate: false });
+					return true;
 				}
-			})
-			.then((data) => {
-				console.log('Server data response is: ' + data);
-			})
-			.catch((err) => console.log('The error is: ' + err));
+				//Create the mutation using apollo global client
+				this.props.client
+					.mutate({
+						// Pass the mutation structure
+						mutation: this.ADD_COMPANY_QUERY,
+						variables: {
+							input: {
+								Id: 0,
+								Other_Name: `'${this.state.otherName}'`,
+								Other01_Name: `'${this.state.otherName1}'`,
+								Rooms: 0,
+								Code: `'${this.state.Code}'`,
+								Code01: `'${this.state.Code}'`,
+								Id_Contract: 1,
+								Id_Company: 1,
+								BusinessType: 1,
+								Location: `'${this.state.address}'`,
+								Location01: `'${this.state.optionalAddress}'`,
+								Name: `'${this.state.name}'`,
+								Description: `'${this.state.description}'`,
+								Start_Week: this.state.startWeek,
+								End_Week: this.state.endWeek,
+								Legal_Name: `'${this.state.legalName}'`,
+								Country: parseInt(this.state.country),
+								State: parseInt(this.state.state),
+								Rate: parseFloat(this.state.rate),
+								Zipcode: parseInt(this.state.zipCode),
+								Fax: `'${this.state.fax}'`,
+								Primary_Email: `'${this.state.email}'`,
+								Phone_Number: `'${this.state.phoneNumber}'`,
+								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+								City: parseInt(this.state.city),
+								Id_Parent: 0,
+								IsActive: 1,
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-08-14'",
+								Date_Updated: "'2018-08-14'",
+								ImageURL: `'${this.state.avatar}'`,
+								Start_Date: `'${this.state.startDate}'`,
+								Contract_URL: `'${this.state.contractURL}'`,
+								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Other_URL: `'${this.state.otherURL}'`,
+								Other01_URL: `'${this.state.other01URL}'`,
+								Suite: `'${this.state.suite}'`,
+								Contract_Status: "'C'"
+							}
+						}
+					})
+					.then((data) => {
+						console.log(data)
+						var id = data.data.insbusinesscompanies.Id;
+						this.props.updateCompany(id);
+						this.setState({ loadingUpdate: false });
+						this.props.handleOpenSnackbar('success', 'General Information Inserted!');
+						// When the user click Next button, open second tab
+						this.props.toggleStepper();
+						this.props.next();
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
+						this.setState({
+							loadingUpdate: false
+						});
+					});
+			});
+		});
 	};
 	/**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
@@ -618,25 +652,23 @@ class GeneralInformation extends Component {
      * End of the events
      */
 	componentWillMount() {
-		if (window.location.pathname === '/home/company/add') {
-			if (this.props.idCompany == 0) {
-				this.props.toggleStepper();
-				this.setState({ firstLoad: true }, () => {
-					this.loadCompany(() => {
-						this.loadCountries(() => {
-							this.loadCities(() => {
-								this.loadStates(() => {
-									this.loadCompanyProperties(() => {
-										this.setState({ indexView: 1, firstLoad: false });
-									});
-								});
+		if (this.props.idCompany == 0) {
+			this.props.toggleStepper();
+			this.setState({ firstLoad: true }, () => {
+
+				this.loadCountries(() => {
+					this.loadCities(() => {
+						this.loadStates(() => {
+							this.loadCompanyProperties(() => {
+								this.setState({ indexView: 1, firstLoad: false });
 							});
 						});
 					});
 				});
-			}
+
+			});
 		}
-		if (window.location.pathname === '/home/company/edit') {
+		else {
 			this.setState(
 				{
 					inputEnabled: false
@@ -659,6 +691,8 @@ class GeneralInformation extends Component {
 				}
 			);
 		}
+
+
 	}
 
 	constructor(props) {
@@ -1041,7 +1075,7 @@ class GeneralInformation extends Component {
 						/>
 					</div>
 				</div>
-				{window.location.pathname === '/home/company/edit' ? (
+				{this.props.idCompany != 0 ? (
 					<div className="options-company">
 						{!this.props.showStepper && (
 							<button
@@ -1083,6 +1117,18 @@ class GeneralInformation extends Component {
 										this.updateInput(text, 'name');
 									}}
 									error={!this.state.nameValid}
+									maxLength="35"
+									disabled={!this.props.showStepper}
+								/>
+							</div>
+							<div className="card-form-row">
+								<span className="input-label primary">* Email</span>
+								<InputForm
+									value={this.state.email}
+									change={(text) => {
+										this.updateInput(text, 'email');
+									}}
+									error={!this.state.email}
 									maxLength="35"
 									disabled={!this.props.showStepper}
 								/>
@@ -1354,7 +1400,7 @@ class GeneralInformation extends Component {
 								<Button
 									className={classes.buttonSuccess}
 									onClick={() => {
-										this.updateCompany(this.props.idCompany);
+										window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
 									}}
 									disabled={isLoading}
 								>
