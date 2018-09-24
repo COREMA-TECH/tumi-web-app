@@ -15,7 +15,7 @@ class ApplyForm extends Component {
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
         if (document.addEventListener) {
-            document.addEventListener('invalid', function (e) {
+            document.addEventListener('invalid', (e) => {
                 e.target.className += ' invalid-apply-form';
             }, true);
         }
@@ -885,7 +885,12 @@ class ApplyForm extends Component {
                             //input.value = "";
                         }}
                     >
-                        {renderSkillsSection()}
+                        {/*{renderApplicantInformationSection()}*/}
+                        {/*{renderLenguagesSection()}*/}
+                        {/*{renderEducationSection()}*/}
+                        {/*{renderMilitaryServiceSection()}*/}
+                        {/*{renderPreviousEmploymentSection()}*/}
+                        {/*{renderSkillsSection()}*/}
                         <div className="row">
                             <input type="reset" className="reset" value="Reset"/>
                             <input type="submit" className="submit" value="Apply"/>
