@@ -28,10 +28,12 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import withGlobalContent from 'Generic/Global';
 
 import './index.css';
+import { withRouter } from 'react-router-dom'
+import { Route } from 'react-router-dom';
 
-import Route from 'react-router-dom/es/Route';
 
 const styles = (theme) => ({
     container: {
@@ -527,6 +529,14 @@ class PositionsCompanyForm extends React.Component {
         this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
     };
 
+
+    redirectToCreateContract = () => {
+        this.props.history.push({
+            pathname: '/home/contract/add',
+            state: { contract: 0 }
+        });
+    };
+
     componentWillMount() {
         this.setState({ firstLoad: true }, () => {
             this.loadPositions(() => {
@@ -836,6 +846,7 @@ class PositionsCompanyForm extends React.Component {
         const { loading } = this.state;
         const { classes } = this.props;
         const { fullScreen } = this.props;
+
         var isLoading =
             this.state.loadingData || this.state.loadingDepartments || this.state.firstLoad || this.state.loading;
 
@@ -1029,7 +1040,7 @@ class PositionsCompanyForm extends React.Component {
                         />
                     </div>
                 </div>
-                {this.props.showStepper ? (
+                {
                     <div className="advanced-tab-options">
                         <span
                             className="options-button options-button--back"
@@ -1039,19 +1050,25 @@ class PositionsCompanyForm extends React.Component {
                         >
                             Back
 						</span>
-                        <span
-                            className="options-button options-button--next"
-                            onClick={() => {
-                                // When the user click Next button, open second tab
-                                this.props.next();
-                            }}
-                        >
-                            {this.props.valueTab < 3 ? 'Next' : 'Finish'}
-                        </span>
+                        <Route render={({ history }) => (
+                            <span
+                                className="options-button options-button--next"
+                                onClick={() => {
+
+                                    // When the user click Next button, open second tab
+                                    history.push({
+                                        pathname: '/home/contract/add',
+                                        state: { contract: 0, Id_Entity: this.state.idCompany }
+                                    });
+
+                                }}
+                            >
+                                {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
+                            </span>
+                        )} />
+
                     </div>
-                ) : (
-                        ''
-                    )}
+                }
             </div>
         );
     }
@@ -1062,4 +1079,5 @@ PositionsCompanyForm.propTypes = {
     fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(withMobileDialog()(PositionsCompanyForm)));
+//export default withStyles(styles)(withApollo(withMobileDialog()(PositionsCompanyForm)));
+export default withStyles(styles)(withApollo(withGlobalContent(PositionsCompanyForm)));

@@ -60,6 +60,11 @@ const styles = (theme) => ({
 });
 
 class Contract extends React.Component {
+	constructor(props) {
+		super(props);
+		//	console.log("aqui viene el push", props);
+	}
+
 	state = {
 		value: 0,
 		contractId: 0,
@@ -95,7 +100,9 @@ class Contract extends React.Component {
 					if (this.props.location.state.contract !== 0) {
 						this.setState(
 							{
-								contractId: this.props.location.state.contract
+								contractId: this.props.location.state.contract,
+								Id_Entity: this.props.location.state.Id_Entity
+
 							},
 							() => {
 								this.setState({
@@ -107,7 +114,7 @@ class Contract extends React.Component {
 
 						this.setState({
 							contractId: 0,
-							Id_Entity: this.props.location.state.IdEntity,
+							Id_Entity: this.props.location.state.Id_Entity,
 
 							loading: false
 						});
