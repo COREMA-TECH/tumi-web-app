@@ -588,6 +588,173 @@ class ApplyForm extends Component {
             </div>
         );
 
+        let renderPreviousEmploymentSection = () => (
+            <div className="row">
+                <div className="col-12">
+                    <div className="row">
+                        <div className="col-9">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Company</span>
+                                </div>
+                                <div className="col-9">
+                                    <input
+                                        name="companyNameEmployment"
+                                        type="text"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Phone</span>
+                                </div>
+                                <div className="col-9">
+                                    <input
+                                        name="phoneEmployment"
+                                        type="number"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-9">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Address</span>
+                                </div>
+                                <div className="col-9">
+                                    <input
+                                        name="addressEmployment"
+                                        type="text"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Supervisor</span>
+                                </div>
+                                <div className="col-9">
+                                    <input
+                                        name="supervisorEmployment"
+                                        type="text"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-9">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Job Title</span>
+                                </div>
+                                <div className="col-9">
+                                    <input
+                                        name="jobTitleEmployment"
+                                        type="text"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Pay Rate</span>
+                                </div>
+                                <div className="col-9">
+                                    <input
+                                        name="payRateEmployment"
+                                        type="number"
+                                        className="input-form"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-6">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Dates</span>
+                                </div>
+                                <div className="col-9">
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <input
+                                                name="startPreviousEmployment"
+                                                type="date"
+                                                className="input-form"
+                                                required
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="3"
+                                            />
+                                        </div>
+                                        <div className="col-1">
+                                            <span>To: </span>
+                                        </div>
+                                        <div className="col-5">
+                                            <input
+                                                name="endPreviousEmployment"
+                                                type="date"
+                                                className="input-form"
+                                                required
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="3"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-6">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span className="primary card-input-label"> Reason for leaving</span>
+                                </div>
+                                <div className="col-9">
+                                    <textarea
+                                        name="reasonForLeavingEmployment"
+                                        className="input-form"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
         return (
             <Mutation mutation={CREATE_APPLICATION}>
                 {(createApplication, {data}) => (
@@ -599,7 +766,7 @@ class ApplyForm extends Component {
                             //input.value = "";
                         }}
                     >
-                        {renderMilitaryServiceSection()}
+                        {renderPreviousEmploymentSection()}
                         <div className="row">
                             <input type="reset" className="reset" value="Reset"/>
                             <input type="submit" className="submit" value="Apply"/>
