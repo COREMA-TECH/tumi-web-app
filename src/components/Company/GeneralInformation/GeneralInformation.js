@@ -242,7 +242,7 @@ class GeneralInformation extends Component {
 				this.props.client
 					.query({
 						query: this.GET_COMPANY_PROPERTY_QUERY,
-						variables: { Id_Parent: parseInt(this.props.idCompany) },
+						variables: { Id_Parent: parseInt(this.props.idCompany == 0 ? -1 : this.props.idCompany) },
 						fetchPolicy: 'no-cache'
 					})
 					.then((data) => {
@@ -468,7 +468,7 @@ class GeneralInformation extends Component {
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
 								City: parseInt(this.state.city),
-								Id_Parent: 1,
+								Id_Parent: parseInt(this.state.Id_Parent),
 								IsActive: parseInt(this.state.active),
 								User_Created: 1,
 								User_Updated: 1,
