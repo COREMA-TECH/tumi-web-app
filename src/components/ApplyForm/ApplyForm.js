@@ -447,14 +447,21 @@ class ApplyForm extends Component {
                                 });
                             }}
                             value={this.state.convictedExplain}
-                            name="form-control" cols="30" required rows="3" className="form-control"/>
+                            name="form-control" cols="30" required rows="3" className="form-control textarea-apply-form"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> How did you hear about Tumi Staffing </span>
-                        <textarea name="comment" cols="20" rows="10" className="form-control textarea-apply-form"/>
+                        <textarea
+                            onChange={(event) => {
+                                this.setState({
+                                    comment: event.target.value
+                                })
+                            }}
+                            value={this.state.comment}
+                            name="comment" cols="20" rows="10" className="form-control textarea-apply-form"/>
                         <span></span>
                     </div>
                 </div>
