@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {Mutation} from "react-apollo";
-import {CREATE_APPLICATION} from "./Mutations";
+import React, { Component } from 'react';
+import { Mutation } from "react-apollo";
+import { CREATE_APPLICATION } from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import {GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "./Queries";
+import { GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
 import './index.css';
 
 class ApplyForm extends Component {
@@ -27,355 +27,258 @@ class ApplyForm extends Component {
 
         // To render the Applicant Information Section
         let renderApplicantInformationSection = () => (
-            <div className="row">
-                <h4>Applicant Information</h4>
-                <div className="col-6">
-                    <div className="row">
-                        <div className="col-6">
-                            <span className="primary card-input-label"> First Name</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="firstName"
-                                type="text"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">Applicant Information</h4>
+                <div className="row">
+                    <div className="col-3">
+                        <span className="primary"> First Name</span>
+                        <input name="firstName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+
+                    <div className="col-3">
+                        <div className="row">
+                            <span className="primary">Middle Name</span>
+                            <input name="midleName" type="text" className="form-control" min="0" maxLength="50" minLength="3" />
                             <span></span>
                         </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label">Middle Name</span>
+                        <div className="row">
+                            <i className="optional"></i><i></i>
                         </div>
-                        <div className="col-6">
-                            <div className="row">
+                    </div>
+
+                    <div className="col-3">
+                        <span className="primary"> Last Name</span>
+                        <input name="lastName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+
+                    <div className="col-3">
+                        <span className="primary"> Date</span>
+                        <input name="date" type="date" className="form-control" required min="0" maxLength="50" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-8">
+                        <span className="primary"> Street Address</span>
+                        <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50" minLength="5" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary">Apt Number</span>
+                        <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50" minLength="5" />
+                        <span></span>
+                        <div className="row">
+                            <i className="optional"></i>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> State</span>
+                        <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (loading) return <LinearProgress />;
+                                if (error) return <p>Error </p>;
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    return <select name="state" id="state" required
+                                        className="form-control">
+                                        <option value="">Select a state</option>
+                                        {
+                                            data.getcatalogitem.map(item => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))
+                                        }
+                                    </select>
+                                }
+                                return <SelectNothingToDisplay />
+                            }}
+                        </Query>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> City</span>
+                        <Query query={GET_CITIES_QUERY} variables={{ parent: 0 }}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (loading) return <LinearProgress />;
+                                if (error) return <p>Error </p>;
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    return <select name="city" id="city" required
+                                        className="form-control">
+                                        <option value="">Select a city</option>
+                                        {
+                                            data.getcatalogitem.map(item => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))
+                                        }
+                                    </select>
+
+                                }
+                                return <SelectNothingToDisplay />
+                            }}
+                        </Query>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Zip Code</span>
+                        <input name="zipCode" type="number" className="form-control" required maxLength="5" minLength="4" min="10000" max="99999" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Home Phone</span>
+                        <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10" minLength="10" />
+                        <span></span>
+                    </div>
+
+                    <div className="col-4">
+                        <span className="primary"> Cell Phone</span>
+                        <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10" minLength="10" />
+                        <span></span>
+                    </div>
+
+                    <div className="col-4">
+                        <span className="primary"> Social Security Number</span>
+                        <input name="socialSecurityNumber" type="number" className="form-control" required min="0" maxLength="50" minLength="10" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+
+                    <div className="col-6">
+                        <div className="row">
+
+
+
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Email Address</span>
+                            </div>
+                            <div className="col-6">
                                 <input
-                                    name="midleName"
-                                    type="text"
-                                    className="input-form"
+                                    name="emailAddress"
+                                    type="email"
+                                    className="form-control"
+                                    required
                                     min="0"
+                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                     maxLength="50"
-                                    minLength="3"
+                                    minLength="8"
                                 />
                                 <span></span>
                             </div>
-                            <div className="row">
-                                <i className="optional"></i><i></i>
+
+                        </div>
+                    </div>
+                    <div className="col-6">
+                        <div className="row">
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Position Applying for</span>
                             </div>
-                        </div>
+                            <div className="col-6">
+                                <Query query={GET_POSITIONS_QUERY}>
+                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                        //if (networkStatus === 4) return <LinearProgress />;
+                                        if (loading) return <LinearProgress />;
+                                        if (error) return <p>Error </p>;
+                                        if (data.getposition != null && data.getposition.length > 0) {
+                                            return <select name="city" id="city" required
+                                                className="form-control">
+                                                <option value="">Select a position</option>
+                                                {
+                                                    data.getposition.map(item => (
+                                                        <option value={item.Id}>{item.Position}</option>
+                                                    ))
+                                                }
+                                            </select>
 
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Last Name</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="lastName"
-                                type="text"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span></span>
-                        </div>
+                                        }
+                                        return <SelectNothingToDisplay />
+                                    }}
+                                </Query>
+                            </div>
 
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Date</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="date"
-                                type="date"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Street Address</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="streetAddress"
-                                type="text"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="5"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label">Apt Number</span>
-                        </div>
-                        <div className="col-6">
-                            <div className="row">
+                            <div className="col-6">
+                                <span className="primary card-input-label"> Date Available</span>
+                            </div>
+                            <div className="col-6">
                                 <input
-                                    name="aptNumber"
-                                    type="number"
-                                    className="input-form"
+                                    name="dateAvailable"
+                                    type="date"
+                                    className="form-control"
                                     required
                                     min="0"
                                     maxLength="50"
-                                    minLength="5"
                                 />
                                 <span></span>
                             </div>
-                            <div className="row">
-                                <i className="optional"></i>
-                            </div>
-                        </div>
 
-                        <div className="col-6">
-                            <span className="primary card-input-label"> State</span>
-                        </div>
-                        <div className="col-6">
-                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                {({loading, error, data, refetch, networkStatus}) => {
-                                    //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
-                                    if (error) return <p>Error </p>;
-                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        return <select name="state" id="state" required
-                                                       className="input-form">
-                                            <option value="">Select a state</option>
-                                            {
-                                                data.getcatalogitem.map(item => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))
-                                            }
-                                        </select>
-                                    }
-                                    return <SelectNothingToDisplay/>
-                                }}
-                            </Query>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> City</span>
-                        </div>
-                        <div className="col-6">
-                            <Query query={GET_CITIES_QUERY} variables={{parent: 0}}>
-                                {({loading, error, data, refetch, networkStatus}) => {
-                                    //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
-                                    if (error) return <p>Error </p>;
-                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                        return <select name="city" id="city" required
-                                                       className="input-form">
-                                            <option value="">Select a city</option>
-                                            {
-                                                data.getcatalogitem.map(item => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))
-                                            }
-                                        </select>
-
-                                    }
-                                    return <SelectNothingToDisplay/>
-                                }}
-                            </Query>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Zip Code</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="zipCode"
-                                type="number"
-                                className="input-form"
-                                required
-                                maxLength="5"
-                                minLength="4"
-                                min="10000"
-                                max="99999"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Home Phone</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="homePhone"
-                                type="tel"
-                                className="input-form"
-                                min="999"
-                                maxLength="10"
-                                minLength="10"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Cell Phone</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="cellPhone"
-                                type="tel"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="10"
-                                minLength="10"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Social Security Number</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="socialSecurityNumber"
-                                type="number"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="10"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Email Address</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="emailAddress"
-                                type="email"
-                                className="input-form"
-                                required
-                                min="0"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                maxLength="50"
-                                minLength="8"
-                            />
-                            <span></span>
-                        </div>
-
-                    </div>
-                </div>
-                <div className="col-6">
-                    <div className="row">
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Position Applying for</span>
-                        </div>
-                        <div className="col-6">
-                            <Query query={GET_POSITIONS_QUERY}>
-                                {({loading, error, data, refetch, networkStatus}) => {
-                                    //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
-                                    if (error) return <p>Error </p>;
-                                    if (data.getposition != null && data.getposition.length > 0) {
-                                        return <select name="city" id="city" required
-                                                       className="input-form">
-                                            <option value="">Select a position</option>
-                                            {
-                                                data.getposition.map(item => (
-                                                    <option value={item.Id}>{item.Position}</option>
-                                                ))
-                                            }
-                                        </select>
-
-                                    }
-                                    return <SelectNothingToDisplay/>
-                                }}
-                            </Query>
-                        </div>
-
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Date Available</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="dateAvailable"
-                                type="date"
-                                className="input-form"
-                                required
-                                min="0"
-                                maxLength="50"
-                            />
-                            <span></span>
-                        </div>
-
-                        <div className="col-6">
+                            <div className="col-6">
                                 <span
                                     className="primary card-input-label"> Do you have any schedule restrictions? </span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                value="1"
-                                type="radio"
-                                name="scheduleRestrictions"
-                                className="input-form"
-                            />
-                            <input
-                                value="0"
-                                type="radio"
-                                name="scheduleRestrictions"
-                                className="input-form"
-                            />
-                            <span></span>
-                        </div>
+                            </div>
+                            <div className="col-6">
+                                <input
+                                    value="1"
+                                    type="radio"
+                                    name="scheduleRestrictions"
+                                    className="form-control"
+                                />
+                                <input
+                                    value="0"
+                                    type="radio"
+                                    name="scheduleRestrictions"
+                                    className="form-control"
+                                />
+                                <span></span>
+                            </div>
 
-                        <div className="col-6">
-                            <span className="primary card-input-label"> If yes, please explain </span>
-                        </div>
-                        <div className="col-6">
-                            <textarea name="scheduleExplain" cols="30" rows="10" className="input-form"/>
-                            <span></span>
-                        </div>
+                            <div className="col-6">
+                                <span className="primary card-input-label"> If yes, please explain </span>
+                            </div>
+                            <div className="col-6">
+                                <textarea name="scheduleExplain" cols="30" rows="10" className="form-control" />
+                                <span></span>
+                            </div>
 
-                        <div className="col-6">
+                            <div className="col-6">
                                 <span
                                     className="primary card-input-label"> Have you ever been convicted of a felony? </span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                value="1"
-                                type="radio"
-                                name="convicted"
-                                className="input-form"
-                            />
+                            </div>
+                            <div className="col-6">
+                                <input
+                                    value="1"
+                                    type="radio"
+                                    name="convicted"
+                                    className="form-control"
+                                />
 
-                            <input
-                                value="0"
-                                type="radio"
-                                name="convicted"
-                                className="input-form"
-                            />
-                            <span></span>
-                        </div>
+                                <input
+                                    value="0"
+                                    type="radio"
+                                    name="convicted"
+                                    className="form-control"
+                                />
+                                <span></span>
+                            </div>
 
-                        <div className="col-6">
-                            <span className="primary card-input-label"> If yes, please explain </span>
-                        </div>
-                        <div className="col-6">
-                            <textarea name="convictedExplain" cols="30" rows="10" className="input-form"/>
-                            <span></span>
-                        </div>
+                            <div className="col-6">
+                                <span className="primary card-input-label"> If yes, please explain </span>
+                            </div>
+                            <div className="col-6">
+                                <textarea name="convictedExplain" cols="30" rows="10" className="form-control" />
+                                <span></span>
+                            </div>
 
-                        <div className="col-6">
+                            <div className="col-6">
                                 <span
                                     className="primary card-input-label"> How did you hear about Tumi Staffing </span>
-                        </div>
-                        <div className="col-6">
-                            <textarea name="comment" cols="30" rows="10" className="input-form"/>
-                            <span></span>
+                            </div>
+                            <div className="col-6">
+                                <textarea name="comment" cols="30" rows="10" className="form-control" />
+                                <span></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -396,7 +299,7 @@ class ApplyForm extends Component {
                                 <input
                                     name="startPeriod"
                                     type="date"
-                                    className="input-form"
+                                    className="form-control"
                                     required
                                     min="0"
                                     maxLength="50"
@@ -410,7 +313,7 @@ class ApplyForm extends Component {
                                 <input
                                     name="endPeriod"
                                     type="date"
-                                    className="input-form"
+                                    className="form-control"
                                     required
                                     min="0"
                                     maxLength="50"
@@ -420,8 +323,8 @@ class ApplyForm extends Component {
                         </div>
                     </div>
                     <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> Graduated </span>
+                        <span
+                            className="primary card-input-label"> Graduated </span>
                     </div>
                     <div className="col-6">
                         <div className="row">
@@ -431,7 +334,7 @@ class ApplyForm extends Component {
                                     value="1"
                                     type="radio"
                                     name="graduated"
-                                    className="input-form"
+                                    className="form-control"
                                     required
                                     checked
                                 />
@@ -442,7 +345,7 @@ class ApplyForm extends Component {
                                     value="0"
                                     type="radio"
                                     name="graduated"
-                                    className="input-form"
+                                    className="form-control"
                                     required
                                 />
                             </div>
@@ -457,7 +360,7 @@ class ApplyForm extends Component {
                             </div>
                             <div className="col-6">
                                 <select name="typeStudy" id="typeStudy" required
-                                        className="input-form">
+                                    className="form-control">
                                     <option value="">Select a option</option>
                                 </select>
                             </div>
@@ -472,7 +375,7 @@ class ApplyForm extends Component {
                                 <input
                                     name="institutionName"
                                     type="text"
-                                    className="input-form"
+                                    className="form-control"
                                     required
                                     min="0"
                                     maxLength="50"
@@ -490,7 +393,7 @@ class ApplyForm extends Component {
                                 <input
                                     name="addressInstitution"
                                     type="text"
-                                    className="input-form"
+                                    className="form-control"
                                     required
                                     min="0"
                                     maxLength="50"
@@ -516,7 +419,7 @@ class ApplyForm extends Component {
                             <input
                                 name="militaryBranch"
                                 type="text"
-                                className="input-form"
+                                className="form-control"
                                 required
                                 min="0"
                                 maxLength="50"
@@ -533,7 +436,7 @@ class ApplyForm extends Component {
                             <input
                                 name="militaryRankDischarge"
                                 type="text"
-                                className="input-form"
+                                className="form-control"
                                 required
                                 min="0"
                                 maxLength="50"
@@ -554,7 +457,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="militaryStartDate"
                                         type="date"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -566,7 +469,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="militaryEndDate"
                                         type="date"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -581,7 +484,7 @@ class ApplyForm extends Component {
                             </div>
                             <div className="col-6">
                                 <select name="dischargeType" id="dischargeType" required
-                                        className="input-form">
+                                    className="form-control">
                                     <option value="">Select a type</option>
                                 </select>
                                 <span></span>
@@ -606,7 +509,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="companyNameEmployment"
                                         type="text"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -625,7 +528,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="phoneEmployment"
                                         type="number"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -644,7 +547,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="addressEmployment"
                                         type="text"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -663,7 +566,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="supervisorEmployment"
                                         type="text"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -682,7 +585,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="jobTitleEmployment"
                                         type="text"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -701,7 +604,7 @@ class ApplyForm extends Component {
                                     <input
                                         name="payRateEmployment"
                                         type="number"
-                                        className="input-form"
+                                        className="form-control"
                                         required
                                         min="0"
                                         maxLength="50"
@@ -723,7 +626,7 @@ class ApplyForm extends Component {
                                             <input
                                                 name="startPreviousEmployment"
                                                 type="date"
-                                                className="input-form"
+                                                className="form-control"
                                                 required
                                                 min="0"
                                                 maxLength="50"
@@ -738,7 +641,7 @@ class ApplyForm extends Component {
                                             <input
                                                 name="endPreviousEmployment"
                                                 type="date"
-                                                className="input-form"
+                                                className="form-control"
                                                 required
                                                 min="0"
                                                 maxLength="50"
@@ -758,7 +661,7 @@ class ApplyForm extends Component {
                                 <div className="col-9">
                                     <textarea
                                         name="reasonForLeavingEmployment"
-                                        className="input-form"
+                                        className="form-control"
                                     />
                                 </div>
                             </div>
@@ -778,7 +681,7 @@ class ApplyForm extends Component {
                     <input
                         name="lenguageName"
                         type="text"
-                        className="input-form"
+                        className="form-control"
                         required
                         min="0"
                         maxLength="50"
@@ -793,7 +696,7 @@ class ApplyForm extends Component {
                     <input
                         name="conversationLenguage"
                         type="number"
-                        className="input-form"
+                        className="form-control"
                         required
                         min="0"
                         maxLength="50"
@@ -808,7 +711,7 @@ class ApplyForm extends Component {
                     <input
                         name="writingLenguage"
                         type="number"
-                        className="input-form"
+                        className="form-control"
                         required
                         min="0"
                         maxLength="50"
@@ -829,7 +732,7 @@ class ApplyForm extends Component {
                     <input
                         name="skillName"
                         type="text"
-                        className="input-form"
+                        className="form-control"
                         required
                         min="0"
                         maxLength="50"
@@ -846,7 +749,7 @@ class ApplyForm extends Component {
                             <input
                                 name="startSkillDate"
                                 type="date"
-                                className="input-form"
+                                className="form-control"
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
@@ -861,7 +764,7 @@ class ApplyForm extends Component {
                             <input
                                 name="endSkillDate"
                                 type="date"
-                                className="input-form"
+                                className="form-control"
                                 min="0"
                                 maxLength="50"
                                 minLength="3"
@@ -876,7 +779,7 @@ class ApplyForm extends Component {
 
         return (
             <Mutation mutation={CREATE_APPLICATION}>
-                {(createApplication, {data}) => (
+                {(createApplication, { data }) => (
                     <form
                         onSubmit={e => {
                             e.preventDefault();
@@ -885,15 +788,15 @@ class ApplyForm extends Component {
                             //input.value = "";
                         }}
                     >
-                        {/*{renderApplicantInformationSection()}*/}
-                        {/*{renderLenguagesSection()}*/}
-                        {/*{renderEducationSection()}*/}
-                        {/*{renderMilitaryServiceSection()}*/}
-                        {/*{renderPreviousEmploymentSection()}*/}
-                        {/*{renderSkillsSection()}*/}
+                        {renderApplicantInformationSection()}
+                        {renderLenguagesSection()}*/}
+                        {renderEducationSection()}*/}
+                        {renderMilitaryServiceSection()}*/}
+                        {renderPreviousEmploymentSection()}*/}
+                        {renderSkillsSection()}*/}
                         <div className="row">
-                            <input type="reset" className="reset" value="Reset"/>
-                            <input type="submit" className="submit" value="Apply"/>
+                            <input type="reset" className="reset" value="Reset" />
+                            <input type="submit" className="submit" value="Apply" />
                         </div>
                     </form>
                 )}

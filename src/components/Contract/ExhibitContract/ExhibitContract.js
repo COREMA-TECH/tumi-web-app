@@ -28,7 +28,6 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
-import * as jsPDF from 'jspdf'
 
 const styles = (theme) => ({
 	container: {
@@ -323,14 +322,9 @@ class ExhibitContract extends Component {
 	};
 
 	printContractHandler = () => {
-		var content = document.getElementById('agreement');
-		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
-		pri.document.open();
-		pri.document.write(content.innerHTML);
-		pri.document.close();
-		pri.focus();
-		pri.print();
+		var url = "https://morning-lake-18657.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
 		//pri.download();
+		window.open(url, '_blank');
 	};
 
 	render() {
@@ -384,9 +378,15 @@ class ExhibitContract extends Component {
 							</Tooltip>
 							<Tooltip title={'Download Contract'}>
 								<div >
-									<a href={"https://morning-lake-18657.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf"} className={"MuiButtonBase-root-52 MuiButton-root-349 MuiButton-fab-366 MuiButton-contained-360 MuiButton-containedPrimary-361 MuiButton-raised-363 MuiButton-raisedPrimary-364"} target="_blank">
+									<Button
+										//	disabled={this.state.loading || !this.state.enableCancelButton}
+										variant="fab"
+										color="primary"
+										className={buttonClassname}
+										onClick={this.printContractHandler}
+									>
 										<DownloadIcon />
-									</a>
+									</Button>
 								</div>
 
 							</Tooltip>
