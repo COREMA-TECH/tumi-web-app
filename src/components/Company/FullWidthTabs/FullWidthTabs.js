@@ -163,7 +163,7 @@ class CustomizedTabs extends React.Component {
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
 						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
+						showStepper={true}
 						toggleStepper={this.toggleStepper}
 						showBillRate={true}
 					/>
