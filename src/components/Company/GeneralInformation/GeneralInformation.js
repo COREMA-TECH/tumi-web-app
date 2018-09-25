@@ -1471,7 +1471,7 @@ class GeneralInformation extends Component {
 							<TabsInDialog
 								idCompany={this.props.idCompany}
 								idProperty={this.state.idProperty}
-								Markup={this.state.rate}
+								Markup={this.props.Markup}
 								handleClose={this.handleClose}
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
@@ -1480,6 +1480,7 @@ class GeneralInformation extends Component {
 								//para que no cargue niguna información relacionada con ese Id
 								<TabsInDialog
 									idCompany={this.props.idCompany}
+									Markup={this.state.rate}
 									handleClose={this.handleClose}
 									handleOpenSnackbar={this.props.handleOpenSnackbar}
 								/>

@@ -63,11 +63,11 @@ const styles = (theme) => ({
 });
 
 class CustomizedTabs extends Component {
-    state = {
-        value: 0,
-        activeTab: false,
+	state = {
+		value: 0,
+		activeTab: false,
 		idProperty: null
-    };
+	};
 
 
 	handleChange = (event, value) => {
@@ -80,17 +80,20 @@ class CustomizedTabs extends Component {
 		}));
 	};
 
-	componentWillMount(){
-		if(this.props.idProperty){
+	componentWillMount() {
+		if (this.props.idProperty) {
 			this.setState({
-                idProperty: this.props.idProperty
-            })
-        }
-    }
+				idProperty: this.props.idProperty
+			})
+		}
+	}
 
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;
+		console.log("aqui estamos en tabs");
+		console.log(this.props);
+		console.log(this.state);
 
 		return (
 			<div className={classes.root}>
@@ -105,19 +108,19 @@ class CustomizedTabs extends Component {
 						label="General Information"
 					/>
 					<Tab
-                        disabled={this.state.idProperty === null}
+						disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Contacts"
 					/>
 					<Tab
-                        disabled={this.state.idProperty === null}
+						disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Departments"
 					/>
 					<Tab
-                        disabled={this.state.idProperty === null}
+						disabled={this.state.idProperty === null}
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Positions and Rates"
@@ -127,9 +130,10 @@ class CustomizedTabs extends Component {
 					<GeneralInforProperty
 						idCompany={this.props.idCompany}
 						idProperty={this.state.idProperty}
+						Markup={this.props.Markup}
 						updateIdProperty={(id) => {
 							this.setState({
-                                idProperty: id
+								idProperty: id
 							})
 						}}
 						handleClose={this.props.handleClose}
@@ -151,7 +155,7 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 2 && (
 					<DepartmentsCompanyForm
-                        idCompany={this.state.idProperty}
+						idCompany={this.state.idProperty}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
@@ -163,13 +167,13 @@ class CustomizedTabs extends Component {
 				)}
 				{value === 3 && (
 					<PositionsCompanyForm
-                        idCompany={this.state.idProperty}
+						idCompany={this.state.idProperty}
 						idContract={1}
 						item={this.state.item}
 						next={this.nextHandleChange}
 						back={this.backHandleChange}
 						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
+						showStepper={true}
 						toggleStepper={this.toggleStepper}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						showBillRate={true}

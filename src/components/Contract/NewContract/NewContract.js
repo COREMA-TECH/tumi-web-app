@@ -177,10 +177,11 @@ class NewContract extends Component {
 		);
 	};
 
+	//aqui esta el id
 	updateIdCompany = (id) => {
 		this.setState(
 			{
-				Id_Entity: id,
+				Id_Entity: id == 0 ? this.state.Id_Entity : id,
 				loadingCompanies: true
 			},
 			() => {

@@ -77,3 +77,45 @@
 .cancel-skill-button {
     background: rgba(85, 85, 85, 0.2) !important;
 }
+
+/**
+ * Skills Section
+ */
+.skills-container{
+    width: 100%;
+    padding: .75em;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid #eeeeee;
+
+    border-radius: 5px;
+    margin-bottom: 5px;
+    color: #3ca2c8;
+    font-weight: 100;
+}
+
+.skills-container--header {
+    border-radius: 5px 5px 0 0;
+    color: #ffffff;
+    background: #3ca2c8;
+}
+
+textarea {
+    background: #ffffff !important;
+    color: #555555 !important;
+    resize: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

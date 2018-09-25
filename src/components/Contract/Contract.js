@@ -188,7 +188,7 @@ class Contract extends React.Component {
 				{value === 1 && (
 					<ExhibitContract
 						contractId={this.state.contractId}
-						companyId={this.state.companyId}
+						companyId={this.state.companyId == 0 ? this.props.location.state.Id_Entity : this.state.companyId}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						contractname={this.state.ContractName}
 						showStepper={false}
