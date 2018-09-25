@@ -4,13 +4,33 @@ import { CREATE_APPLICATION } from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import { GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
+import { GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
 import './index.css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 class ApplyForm extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            open: false,
+        };
     }
+
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
@@ -24,6 +44,37 @@ class ApplyForm extends Component {
     render() {
         this.validateInvalidInput();
 
+        // To render the Skills Dialog
+        let renderSkillsDialog = () => (
+            <Dialog
+                open={this.state.open}
+                onClose={this.handleClose}
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">Skills</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Add a new skill
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="description"
+                        label="Description"
+                        type="text"
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={this.handleClose} color="primary">
+                        Subscribe
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
 
         // To render the Applicant Information Section
         let renderApplicantInformationSection = () => (
@@ -32,14 +83,16 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> First Name</span>
-                        <input name="firstName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <input name="firstName" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="3" />
                         <span></span>
                     </div>
 
                     <div className="col-3">
                         <div className="row">
                             <span className="primary">Middle Name</span>
-                            <input name="midleName" type="text" className="form-control" min="0" maxLength="50" minLength="3" />
+                            <input name="midleName" type="text" className="form-control" min="0" maxLength="50"
+                                minLength="3" />
                             <span></span>
                         </div>
                         <div className="row">
@@ -49,7 +102,8 @@ class ApplyForm extends Component {
 
                     <div className="col-3">
                         <span className="primary"> Last Name</span>
-                        <input name="lastName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <input name="lastName" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="3" />
                         <span></span>
                     </div>
 
@@ -62,12 +116,14 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
-                        <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50" minLength="5" />
+                        <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="5" />
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
-                        <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50" minLength="5" />
+                        <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
+                            minLength="5" />
                         <span></span>
                         <div className="row">
                             <i className="optional"></i>
@@ -99,49 +155,36 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
-                        <Query query={GET_CITIES_QUERY} variables={{ parent: 0 }}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress />;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <select name="city" id="city" required
-                                        className="form-control">
-                                        <option value="">Select a city</option>
-                                        {
-                                            data.getcatalogitem.map(item => (
-                                                <option value={item.Id}>{item.Name}</option>
-                                            ))
-                                        }
-                                    </select>
-
-                                }
-                                return <SelectNothingToDisplay />
-                            }}
-                        </Query>
+                        <input name="city" type="text" className="form-control" required min="0" maxLength="10"
+                            minLength="3" />
+                        <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
-                        <input name="zipCode" type="number" className="form-control" required maxLength="5" minLength="4" min="10000" max="99999" />
+                        <input name="zipCode" type="number" className="form-control" required maxLength="5"
+                            minLength="4" min="10000" max="99999" />
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Home Phone</span>
-                        <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10" minLength="10" />
+                        <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
+                            minLength="10" />
                         <span></span>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Cell Phone</span>
-                        <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10" minLength="10" />
+                        <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
+                            minLength="10" />
                         <span></span>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Social Security Number</span>
-                        <input name="socialSecurityNumber" type="number" className="form-control" required min="0" maxLength="50" minLength="10" />
+                        <input name="socialSecurityNumber" type="number" className="form-control" required min="0"
+                            maxLength="50" minLength="10" />
                         <span></span>
                     </div>
                 </div>
