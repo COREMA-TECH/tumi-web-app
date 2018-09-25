@@ -277,6 +277,9 @@ p {
   .input-search-contract:focus {
     width: 100% !important; }
 
+.radio-label {
+  margin-right: 10px; }
+
 .search-container {
   display: -webkit-box;
   display: -ms-flexbox;

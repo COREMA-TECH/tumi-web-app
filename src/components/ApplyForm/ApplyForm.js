@@ -146,136 +146,113 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-
+                    <div className="col-12">
+                        <span className="primary"> Email Address</span>
+                        <input name="emailAddress" type="email" className="form-control" required min="0" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
                     <div className="col-6">
-                        <div className="row">
+                        <span className="primary"> Position Applying for</span>
+                        <Query query={GET_POSITIONS_QUERY}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (loading) return <LinearProgress />;
+                                if (error) return <p>Error </p>;
+                                if (data.getposition != null && data.getposition.length > 0) {
+                                    return <select name="city" id="city" required
+                                        className="form-control">
+                                        <option value="">Select a position</option>
+                                        {
+                                            data.getposition.map(item => (
+                                                <option value={item.Id}>{item.Position}</option>
+                                            ))
+                                        }
+                                    </select>
 
-
-
-                            <div className="col-6">
-                                <span className="primary card-input-label"> Email Address</span>
-                            </div>
-                            <div className="col-6">
-                                <input
-                                    name="emailAddress"
-                                    type="email"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                    maxLength="50"
-                                    minLength="8"
-                                />
-                                <span></span>
-                            </div>
-
-                        </div>
+                                }
+                                return <SelectNothingToDisplay />
+                            }}
+                        </Query>
                     </div>
                     <div className="col-6">
+                        <span className="primary"> Date Available</span>
+                        <input name="dateAvailable" type="date" className="form-control" required min="0" maxLength="50" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Do you have any schedule restrictions? </span>
+                        <div className="col-12">
+                            <input value="1" type="radio" name="scheduleRestrictions" className="" />
+                            <label className="radio-label"> Yes</label>
+                            <input value="0" type="radio" name="scheduleRestrictions" className="" />
+                            <label className="radio-label"> No</label>
+                        </div>
+                        <span></span>
+                    </div>
+                    <div className="col-8">
+                        <span className="primary"> If yes, please explain </span>
+                        <textarea name="form-control" cols="30" rows="3" className="form-control" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Have you ever been convicted of a felony? </span>
+                        <input value="1" type="radio" name="convicted" className="" />
+                        <label className="radio-label"> Yes</label>
+                        <input value="0" type="radio" name="convicted" className="" />
+                        <label className="radio-label"> No</label>
+                        <span></span>
+                    </div>
+                    <div className="col-8">
+                        <span className="primary"> If yes, please explain </span>
+                        <textarea name="form-control" cols="30" rows="3" className="form-control" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+
+
+                    <div className="col-6">
                         <div className="row">
                             <div className="col-6">
-                                <span className="primary card-input-label"> Position Applying for</span>
                             </div>
                             <div className="col-6">
-                                <Query query={GET_POSITIONS_QUERY}>
-                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                        //if (networkStatus === 4) return <LinearProgress />;
-                                        if (loading) return <LinearProgress />;
-                                        if (error) return <p>Error </p>;
-                                        if (data.getposition != null && data.getposition.length > 0) {
-                                            return <select name="city" id="city" required
-                                                className="form-control">
-                                                <option value="">Select a position</option>
-                                                {
-                                                    data.getposition.map(item => (
-                                                        <option value={item.Id}>{item.Position}</option>
-                                                    ))
-                                                }
-                                            </select>
-
-                                        }
-                                        return <SelectNothingToDisplay />
-                                    }}
-                                </Query>
                             </div>
 
                             <div className="col-6">
-                                <span className="primary card-input-label"> Date Available</span>
                             </div>
                             <div className="col-6">
-                                <input
-                                    name="dateAvailable"
-                                    type="date"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> Do you have any schedule restrictions? </span>
                             </div>
                             <div className="col-6">
-                                <input
-                                    value="1"
-                                    type="radio"
-                                    name="scheduleRestrictions"
-                                    className="form-control"
-                                />
-                                <input
-                                    value="0"
-                                    type="radio"
-                                    name="scheduleRestrictions"
-                                    className="form-control"
-                                />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span className="primary card-input-label"> If yes, please explain </span>
                             </div>
                             <div className="col-6">
-                                <textarea name="scheduleExplain" cols="30" rows="10" className="form-control" />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> Have you ever been convicted of a felony? </span>
                             </div>
                             <div className="col-6">
-                                <input
-                                    value="1"
-                                    type="radio"
-                                    name="convicted"
-                                    className="form-control"
-                                />
-
-                                <input
-                                    value="0"
-                                    type="radio"
-                                    name="convicted"
-                                    className="form-control"
-                                />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span className="primary card-input-label"> If yes, please explain </span>
                             </div>
                             <div className="col-6">
-                                <textarea name="convictedExplain" cols="30" rows="10" className="form-control" />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> How did you hear about Tumi Staffing </span>
                             </div>
                             <div className="col-6">
+                                <span className="primary"> How did you hear about Tumi Staffing </span>
                                 <textarea name="comment" cols="30" rows="10" className="form-control" />
                                 <span></span>
                             </div>
