@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
-import { Mutation } from "react-apollo";
-import { CREATE_APPLICATION } from "./Mutations";
+import React, {Component} from 'react';
+import {Mutation} from "react-apollo";
+import {CREATE_APPLICATION} from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import { GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
+import {GET_POSITIONS_QUERY, GET_STATES_QUERY} from "./Queries";
 import './index.css';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import InputRange from "./ui/InputRange/InputRange";
 
 
 class ApplyForm extends Component {
@@ -25,11 +24,11 @@ class ApplyForm extends Component {
     }
 
     handleClickOpen = () => {
-        this.setState({ open: true });
+        this.setState({open: true});
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -51,28 +50,34 @@ class ApplyForm extends Component {
                 onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">Skills</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Add a new skill
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="description"
-                        label="Description"
-                        type="text"
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={this.handleClose} color="primary">
-                        Subscribe
-                    </Button>
-                </DialogActions>
+                <form id="skill-form" onSubmit={this.handleClose}>
+                    <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Add a new skill</DialogTitle>
+                    <br/>
+                    <DialogContent style={{width: '500px'}}>
+                        <input
+                            placeholder="Skill Description"
+                            name="skillName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                            form="skill-form"
+                        />
+                        <br/>
+                        <InputRange/>
+                        <br/><br/>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="default">
+                            Cancel
+                        </Button>
+                        <Button type="submit" form="skill-form" color="primary">
+                            Add
+                        </Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         );
 
@@ -84,7 +89,7 @@ class ApplyForm extends Component {
                     <div className="col-3">
                         <span className="primary"> First Name</span>
                         <input name="firstName" type="text" className="form-control" required min="0" maxLength="50"
-                            minLength="3" />
+                               minLength="3"/>
                         <span></span>
                     </div>
 
@@ -92,7 +97,7 @@ class ApplyForm extends Component {
                         <div className="row">
                             <span className="primary">Middle Name</span>
                             <input name="midleName" type="text" className="form-control" min="0" maxLength="50"
-                                minLength="3" />
+                                   minLength="3"/>
                             <span></span>
                         </div>
                         <div className="row">
@@ -103,13 +108,13 @@ class ApplyForm extends Component {
                     <div className="col-3">
                         <span className="primary"> Last Name</span>
                         <input name="lastName" type="text" className="form-control" required min="0" maxLength="50"
-                            minLength="3" />
+                               minLength="3"/>
                         <span></span>
                     </div>
 
                     <div className="col-3">
                         <span className="primary"> Date</span>
-                        <input name="date" type="date" className="form-control" required min="0" maxLength="50" />
+                        <input name="date" type="date" className="form-control" required min="0" maxLength="50"/>
                         <span></span>
                     </div>
                 </div>
@@ -117,13 +122,13 @@ class ApplyForm extends Component {
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
                         <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
-                            minLength="5" />
+                               minLength="5"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
                         <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
-                            minLength="5" />
+                               minLength="5"/>
                         <span></span>
                         <div className="row">
                             <i className="optional"></i>
@@ -133,14 +138,14 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> State</span>
-                        <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
+                        <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
+                            {({loading, error, data, refetch, networkStatus}) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress />;
+                                if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return <select name="state" id="state" required
-                                        className="form-control">
+                                                   className="form-control">
                                         <option value="">Select a state</option>
                                         {
                                             data.getcatalogitem.map(item => (
@@ -149,20 +154,20 @@ class ApplyForm extends Component {
                                         }
                                     </select>
                                 }
-                                return <SelectNothingToDisplay />
+                                return <SelectNothingToDisplay/>
                             }}
                         </Query>
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
                         <input name="city" type="text" className="form-control" required min="0" maxLength="10"
-                            minLength="3" />
+                               minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
                         <input name="zipCode" type="number" className="form-control" required maxLength="5"
-                            minLength="4" min="10000" max="99999" />
+                               minLength="4" min="10000" max="99999"/>
                         <span></span>
                     </div>
                 </div>
@@ -170,28 +175,29 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Home Phone</span>
                         <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
-                            minLength="10" />
+                               minLength="10"/>
                         <span></span>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Cell Phone</span>
                         <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
-                            minLength="10" />
+                               minLength="10"/>
                         <span></span>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Social Security Number</span>
                         <input name="socialSecurityNumber" type="number" className="form-control" required min="0"
-                            maxLength="50" minLength="10" />
+                               maxLength="50" minLength="10"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> Email Address</span>
-                        <input name="emailAddress" type="email" className="form-control" required min="0" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8" />
+                        <input name="emailAddress" type="email" className="form-control" required min="0"
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8"/>
                         <span></span>
                     </div>
                 </div>
@@ -199,13 +205,13 @@ class ApplyForm extends Component {
                     <div className="col-6">
                         <span className="primary"> Position Applying for</span>
                         <Query query={GET_POSITIONS_QUERY}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
+                            {({loading, error, data, refetch, networkStatus}) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress />;
+                                if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
                                 if (data.getposition != null && data.getposition.length > 0) {
                                     return <select name="city" id="city" required
-                                        className="form-control">
+                                                   className="form-control">
                                         <option value="">Select a position</option>
                                         {
                                             data.getposition.map(item => (
@@ -215,13 +221,14 @@ class ApplyForm extends Component {
                                     </select>
 
                                 }
-                                return <SelectNothingToDisplay />
+                                return <SelectNothingToDisplay/>
                             }}
                         </Query>
                     </div>
                     <div className="col-6">
                         <span className="primary"> Date Available</span>
-                        <input name="dateAvailable" type="date" className="form-control" required min="0" maxLength="50" />
+                        <input name="dateAvailable" type="date" className="form-control" required min="0"
+                               maxLength="50"/>
                         <span></span>
                     </div>
                 </div>
@@ -229,31 +236,31 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Do you have any schedule restrictions? </span>
                         <div className="col-12">
-                            <input value="1" type="radio" name="scheduleRestrictions" className="" />
+                            <input value="1" type="radio" name="scheduleRestrictions" className=""/>
                             <label className="radio-label"> Yes</label>
-                            <input value="0" type="radio" name="scheduleRestrictions" className="" />
+                            <input value="0" type="radio" name="scheduleRestrictions" className=""/>
                             <label className="radio-label"> No</label>
                         </div>
                         <span></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea name="form-control" cols="30" rows="3" className="form-control" />
+                        <textarea name="form-control" cols="30" rows="3" className="form-control"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Have you ever been convicted of a felony? </span>
-                        <input value="1" type="radio" name="convicted" className="" />
+                        <input value="1" type="radio" name="convicted" className=""/>
                         <label className="radio-label"> Yes</label>
-                        <input value="0" type="radio" name="convicted" className="" />
+                        <input value="0" type="radio" name="convicted" className=""/>
                         <label className="radio-label"> No</label>
                         <span></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea name="form-control" cols="30" rows="3" className="form-control" />
+                        <textarea name="form-control" cols="30" rows="3" className="form-control"/>
                         <span></span>
                     </div>
                 </div>
@@ -296,7 +303,7 @@ class ApplyForm extends Component {
                             </div>
                             <div className="col-6">
                                 <span className="primary"> How did you hear about Tumi Staffing </span>
-                                <textarea name="comment" cols="30" rows="10" className="form-control" />
+                                <textarea name="comment" cols="30" rows="10" className="form-control"/>
                                 <span></span>
                             </div>
                         </div>
@@ -380,7 +387,7 @@ class ApplyForm extends Component {
                             </div>
                             <div className="col-6">
                                 <select name="typeStudy" id="typeStudy" required
-                                    className="form-control">
+                                        className="form-control">
                                     <option value="">Select a option</option>
                                 </select>
                             </div>
@@ -504,7 +511,7 @@ class ApplyForm extends Component {
                             </div>
                             <div className="col-6">
                                 <select name="dischargeType" id="dischargeType" required
-                                    className="form-control">
+                                        className="form-control">
                                     <option value="">Select a type</option>
                                 </select>
                                 <span></span>
@@ -748,6 +755,8 @@ class ApplyForm extends Component {
                 <div className="col-12">
                     <span>What skill do you have?</span>
                 </div>
+                <Button onClick={this.handleClickOpen}>Open form dialog</Button>
+                {renderSkillsDialog()}
                 <div className="col-12">
                     <input
                         name="skillName"
@@ -799,7 +808,7 @@ class ApplyForm extends Component {
 
         return (
             <Mutation mutation={CREATE_APPLICATION}>
-                {(createApplication, { data }) => (
+                {(createApplication, {data}) => (
                     <form
                         onSubmit={e => {
                             e.preventDefault();
@@ -809,14 +818,14 @@ class ApplyForm extends Component {
                         }}
                     >
                         {renderApplicantInformationSection()}
-                        {renderLenguagesSection()}*/}
-                        {renderEducationSection()}*/}
-                        {renderMilitaryServiceSection()}*/}
-                        {renderPreviousEmploymentSection()}*/}
-                        {renderSkillsSection()}*/}
+                        {renderLenguagesSection()}
+                        {renderEducationSection()}
+                        {renderMilitaryServiceSection()}
+                        {renderPreviousEmploymentSection()}
+                        {renderSkillsSection()}
                         <div className="row">
-                            <input type="reset" className="reset" value="Reset" />
-                            <input type="submit" className="submit" value="Apply" />
+                            <input type="reset" className="reset" value="Reset"/>
+                            <input type="submit" className="submit" value="Apply"/>
                         </div>
                     </form>
                 )}
