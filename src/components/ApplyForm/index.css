@@ -55,6 +55,18 @@
     padding: .75em;
     border-bottom: 1px solid #e5e5e5;
     margin-bottom: .5em;
+    font-weight: 300;
+}
+
+.save-skill-button,
+.cancel-skill-button {
+    border-radius: 20px !important;
+    padding: .1em 2.5em !important;
+}
+
+.save-skill-button:hover,
+.cancel-skill-button:hover {
+    box-shadow: 1px 1px 5px #cccccc;
 }
 
 .save-skill-button {

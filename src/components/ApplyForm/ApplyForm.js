@@ -10,9 +10,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import InputRange from "./ui/InputRange/InputRange";
-
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -50,8 +48,9 @@ class ApplyForm extends Component {
                 onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <form id="skill-form" onSubmit={this.handleClose}>
-                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>New Skill</h1>
+                <form id="skill-form" onSubmit={this.handleClose} className="apply-form">
+                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>New
+                        Skill</h1>
                     <br/>
                     <DialogContent style={{width: '450px'}}>
                         <input
@@ -813,12 +812,12 @@ class ApplyForm extends Component {
             <Mutation mutation={CREATE_APPLICATION}>
                 {(createApplication, {data}) => (
                     <form className="apply-form"
-                        onSubmit={e => {
-                            e.preventDefault();
-                            let formSubmitted = e.target.classList.add('form-submitted');
-                            // createApplication({variables: {type: input.value}});
-                            //input.value = "";
-                        }}
+                          onSubmit={e => {
+                              e.preventDefault();
+                              let formSubmitted = e.target.classList.add('form-submitted');
+                              // createApplication({variables: {type: input.value}});
+                              //input.value = "";
+                          }}
                     >
                         {renderApplicantInformationSection()}
                         {renderLenguagesSection()}
