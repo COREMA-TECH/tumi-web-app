@@ -11,6 +11,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import InputRange from "./ui/InputRange/InputRange";
+import InputRangeDisabled from "./ui/InputRange/InputRangeDisabled";
+
+const uuidv4 = require('uuid/v4');
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -18,7 +21,28 @@ class ApplyForm extends Component {
 
         this.state = {
             open: false,
-            skills: []
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            date: '',
+            streetAddress: '',
+            aptNumber: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            homePhone: '',
+            cellPhone: '',
+            socialSecurityNumber: '',
+            emailAddress: '',
+            positionApplyingFor: '',
+            dateAvailable: '',
+            scheduleRestrictions: '',
+            scheduleExplain: '',
+            convicted: '',
+            convictedExplain: '',
+            comment: '',
+            skills: [],
+            percent: 50
         };
     }
 
@@ -51,7 +75,8 @@ class ApplyForm extends Component {
             >
                 <form autoComplete="off" id="skill-form" onSubmit={() => {
                     let item = {
-                        skillName: document.getElementById('skillName').value,
+                        description: document.getElementById('description').value,
+                        level: this.state.percent
                     };
 
                     this.setState(prevState => ({
@@ -63,23 +88,36 @@ class ApplyForm extends Component {
                         Skill</h1>
                     <br/>
                     <DialogContent style={{width: '450px'}}>
-                        <input
-                            id="skillName"
-                            placeholder="Skill Description"
-                            name="skillName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                            form="skill-form"
-                        />
+                        <div className="row">
+                            <div className="col-12">
+                                <span className="primary">Skill Name</span>
+                                <br/>
+                                <input
+                                    id="description"
+                                    name="description"
+                                    type="text"
+                                    className="form-control"
+                                    required
+                                    min="0"
+                                    maxLength="20"
+                                    minLength="3"
+                                    form="skill-form"
+                                />
+                            </div>
+                        </div>
                         <br/>
-                        <InputRange getPercentSkill={(percent) => {
-                            // update the percent skill
-                            console.log("Percent: " + percent);
-                        }}/>
+                        <div className="row">
+                            <div className="col-12">
+                                <span className="primary">Skill Level</span>
+                                <br/>
+                                <InputRange getPercentSkill={(percent) => {
+                                    // update the percent skill
+                                    this.setState({
+                                        percent: percent
+                                    })
+                                }}/>
+                            </div>
+                        </div>
                         <br/><br/>
                     </DialogContent>
                     <DialogActions>
@@ -101,16 +139,38 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> First Name</span>
-                        <input name="firstName" type="text" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    firstName: event.target.value
+                                });
+                            }}
+                            value={this.state.firstName}
+                            name="firstName"
+                            type="text"
+                            className="form-control"
+                            required min="0"
+                            maxLength="50"
+                            minLength="3"/>
                         <span></span>
                     </div>
 
                     <div className="col-3">
                         <div className="row">
                             <span className="primary">Middle Name</span>
-                            <input name="midleName" type="text" className="form-control" min="0" maxLength="50"
-                                   minLength="3"/>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        middleName: event.target.value
+                                    });
+                                }}
+                                value={this.state.middleName}
+                                name="midleName"
+                                type="text"
+                                className="form-control"
+                                min="0" maxLength="50"
+                                minLength="3"
+                            />
                             <span></span>
                             <i className="optional"></i>
                         </div>
@@ -118,28 +178,56 @@ class ApplyForm extends Component {
 
                     <div className="col-3">
                         <span className="primary"> Last Name</span>
-                        <input name="lastName" type="text" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    lastName: event.target.value
+                                });
+                            }}
+                            value={this.state.lastName}
+                            name="lastName" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="3"/>
                         <span></span>
                     </div>
 
                     <div className="col-3">
                         <span className="primary"> Date</span>
-                        <input name="date" type="date" className="form-control" required min="0" maxLength="50"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    date: event.target.value
+                                });
+                            }}
+                            value={this.state.date}
+                            name="date" type="date" className="form-control" required min="0" maxLength="50"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
-                        <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
-                               minLength="5"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    streetAddress: event.target.value
+                                });
+                            }}
+                            value={this.state.streetAddress}
+                            name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="5"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
-                        <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
-                               minLength="5"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    aptNumber: event.target.value
+                                });
+                            }}
+                            value={this.state.aptNumber}
+                            name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
+                            minLength="5"/>
                         <span></span>
                         <div className="row">
                             <i className="optional"></i>
@@ -171,44 +259,86 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
-                        <input name="city" type="text" className="form-control" required min="0" maxLength="10"
-                               minLength="3"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    city: event.target.value
+                                });
+                            }}
+                            value={this.state.city}
+                            name="city" type="text" className="form-control" required min="0" maxLength="10"
+                            minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
-                        <input name="zipCode" type="number" className="form-control" required maxLength="5"
-                               minLength="4" min="10000" max="99999"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    zipCode: event.target.value
+                                });
+                            }}
+                            value={this.state.zipCode}
+                            name="zipCode" type="number" className="form-control" required maxLength="5"
+                            minLength="4" min="10000" max="99999"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Home Phone</span>
-                        <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
-                               minLength="10"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    homePhone: event.target.value
+                                });
+                            }}
+                            value={this.state.homePhone}
+                            name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
+                            minLength="10"/>
                         <span></span>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Cell Phone</span>
-                        <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
-                               minLength="10"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    cellPhone: event.target.value
+                                });
+                            }}
+                            value={this.state.cellPhone}
+                            name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
+                            minLength="10"/>
                         <span></span>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Social Security Number</span>
-                        <input name="socialSecurityNumber" type="number" className="form-control" required min="0"
-                               maxLength="50" minLength="10"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    socialSecurityNumber: event.target.value
+                                });
+                            }}
+                            value={this.state.socialSecurityNumber}
+                            name="socialSecurityNumber" type="number" className="form-control" required min="0"
+                            maxLength="50" minLength="10"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> Email Address</span>
-                        <input name="emailAddress" type="email" className="form-control" required min="0"
-                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    emailAddress: event.target.value
+                                });
+                            }}
+                            value={this.state.emailAddress}
+                            name="emailAddress" type="email" className="form-control" required min="0"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8"/>
                         <span></span>
                     </div>
                 </div>
@@ -238,8 +368,15 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Date Available</span>
-                        <input name="dateAvailable" type="date" className="form-control" required min="0"
-                               maxLength="50"/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    dateAvailable: event.target.value
+                                });
+                            }}
+                            value={this.state.dateAvailable}
+                            name="dateAvailable" type="date" className="form-control" required min="0"
+                            maxLength="50"/>
                         <span></span>
                     </div>
                 </div>
@@ -247,38 +384,77 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Do you have any schedule restrictions? </span>
                         <div className="col-12">
-                            <input value="1" type="radio" name="scheduleRestrictions" className=""/>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleRestrictions: event.target.value
+                                    });
+                                }}
+                                value="1" type="radio" name="scheduleRestrictions" className=""/>
                             <label className="radio-label"> Yes</label>
-                            <input value="0" type="radio" name="scheduleRestrictions" className=""/>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleRestrictions: event.target.value
+                                    });
+                                }}
+                                value="0" type="radio" name="scheduleRestrictions" className=""/>
                             <label className="radio-label"> No</label>
                         </div>
                         <span></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea name="form-control" cols="30" rows="3" className="form-control"/>
+                        <textarea
+                            onChange={(event) => {
+                                this.setState({
+                                    scheduleExplain: event.target.value
+                                });
+                            }}
+                            value={this.state.scheduleExplain}
+                            name="form-control" cols="30" rows="3" required
+                            className="form-control textarea-apply-form"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Have you ever been convicted of a felony? </span>
-                        <input value="1" type="radio" name="convicted" className=""/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    convicted: event.target.value
+                                });
+                            }}
+                            value="1" type="radio" name="convicted" className=""/>
                         <label className="radio-label"> Yes</label>
-                        <input value="0" type="radio" name="convicted" className=""/>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    convicted: event.target.value
+                                });
+                            }}
+                            value="0" type="radio" name="convicted" className=""/>
                         <label className="radio-label"> No</label>
                         <span></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea name="form-control" cols="30" rows="3" className="form-control"/>
+                        <textarea
+                            onChange={(event) => {
+                                this.setState({
+                                    convictedExplain: event.target.value
+                                });
+                            }}
+                            value={this.state.convictedExplain}
+                            name="form-control" cols="30" required rows="3" className="form-control"/>
                         <span></span>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> How did you hear about Tumi Staffing </span>
-                        <textarea name="comment" cols="20" rows="10" className="form-control"/>
+                        <textarea name="comment" cols="20" rows="10" className="form-control textarea-apply-form"/>
                         <span></span>
                     </div>
                 </div>
@@ -498,39 +674,40 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Reason for leaving</span>
-                        <textarea name="reasonForLeavingEmployment" className="form-control"/>
+                        <textarea name="reasonForLeavingEmployment" className="form-control textarea-apply-form"/>
                     </div>
                 </div>
             </div>
         );
 
-        let renderLenguagesSection = () => (
+        let renderlanguagesSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">
-                    Lenguages
+                    Languages
                 </h4>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Language</span>
-                        <input name="lenguageName" type="text" className="form-control" required min="0" maxLength="50"
+                        <input name="languageName" type="text" className="form-control" required min="0" maxLength="50"
                                minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Conversation</span>
-                        <input name="conversationLenguage" type="number" className="form-control" required min="0"
+                        <input name="conversationlanguage" type="number" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Writing</span>
-                        <input name="writingLenguage" type="number" className="form-control" required min="0"
+                        <input name="writinglanguage" type="number" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                 </div>
             </div>
         );
+
 
         let renderSkillsSection = () => (
             <div className="ApplyBlock">
@@ -551,7 +728,7 @@ class ApplyForm extends Component {
                                             <span>Skill Name</span>
                                         </div>
                                         <div className="col-6">
-                                            <span>Skill Percent</span>
+                                            <span>Skill Level</span>
                                         </div>
                                     </div>
                                 </div>
@@ -560,34 +737,30 @@ class ApplyForm extends Component {
                             )
                         }
                         {
-                            this.state.skills.reverse().map(skillItem => (
-                                <div className="skills-container">
+                            this.state.skills.map(skillItem => (
+                                <div key={uuidv4()} className="skills-container">
                                     <div className="row">
                                         <div className="col-6">
-                                            <span>{skillItem.skillName}</span>
+                                            <span>{skillItem.description}</span>
                                         </div>
-                                        <div className="col-6">
-                                            <span></span>
+                                        <div className="col-5">
+                                            <InputRangeDisabled percent={skillItem.level}/>
+                                        </div>
+                                        <div className="col-1">
+                                            <Button className="deleteSkillSection" onClick={() => {
+                                                this.setState(prevState => ({
+                                                    skills: this.state.skills.filter((_, i) => {
+                                                        console.log(this.state.skills);
+                                                        return _.description !== skillItem.description
+                                                    })
+                                                }))
+                                            }}>x</Button>
                                         </div>
                                     </div>
                                 </div>
                             ))
                         }
                     </div>
-
-
-                    {/*<div className="col-6">*/}
-                    {/*<span className="primary card-input-label"> Time Period years</span>*/}
-                    {/*<input name="startSkillDate" type="date" className="form-control" min="0" maxLength="50" minLength="3" />*/}
-                    {/*<span></span>*/}
-                    {/*<i className="optional"></i>*/}
-                    {/*</div>*/}
-                    {/*<div className="col-6">*/}
-                    {/*<span>To: </span>*/}
-                    {/*<input name="endSkillDate" type="date" className="form-control" min="0" maxLength="50" minLength="3" />*/}
-                    {/*<span></span>*/}
-                    {/*<i className="optional"></i>*/}
-                    {/*</div>*/}
                 </div>
             </div>
         );
@@ -604,7 +777,7 @@ class ApplyForm extends Component {
                           }}
                     >
                         {renderApplicantInformationSection()}
-                        {renderLenguagesSection()}
+                        {renderlanguagesSection()}
                         {renderEducationSection()}
                         {renderMilitaryServiceSection()}
                         {renderPreviousEmploymentSection()}

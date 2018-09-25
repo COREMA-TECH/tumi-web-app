@@ -24,14 +24,13 @@
 
 .apply-form input:required:valid,
 .apply-form input:optional:valid,
-.apply-form select:required:valid  {
+.apply-form select:required:valid {
     border-color: green;
 }
 
-
 .apply-form input:required:valid + span::after,
 .apply-form input:optional:valid + span::after,
-.apply-form select:optional:valid + span::after{
+.apply-form select:optional:valid + span::after {
     content: "\2713";
     color: green;
     margin-left: 5px;
@@ -81,16 +80,24 @@
 /**
  * Skills Section
  */
-.skills-container{
+.skills-container {
     width: 100%;
     padding: .75em;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid #eeeeee;
+    background: rgba(0, 0, 0, 0.01);
+    border: 1px solid #efefef;
 
     border-radius: 5px;
     margin-bottom: 5px;
     color: #3ca2c8;
     font-weight: 100;
+
+    position: relative;
+
+    transition: all .800s;
+}
+
+.skills-container:hover {
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .skills-container--header {
@@ -99,20 +106,41 @@
     background: #3ca2c8;
 }
 
-textarea {
+.textarea-apply-form {
     background: #ffffff !important;
     color: #555555 !important;
     resize: none;
 }
 
+.deleteSkillSection {
+    position: absolute;
+    top: 25%;
+    right: 0;
+    margin-right: .5em;
+    cursor: pointer;
+    padding: .2em;
+    height: 1.8em;
+    display: none !important;
+    justify-content: center;
+    align-items: center;
 
+    border-radius: 10px !important;
+    background: rgba(0, 0, 0, .08) !important;
 
+    min-width: 15px !important;
+}
 
+.deleteSkillSection span {
+    color: #999999;
+}
 
+.skills-container:hover .deleteSkillSection {
+    display: flex !important;
+}
 
-
-
-
+.skills-container .row {
+    transition: all .450s;
+}
 
 
 
