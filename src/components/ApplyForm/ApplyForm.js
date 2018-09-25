@@ -99,26 +99,8 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
-                        <Query query={GET_CITIES_QUERY} variables={{ parent: 0 }}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress />;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return <select name="city" id="city" required
-                                        className="form-control">
-                                        <option value="">Select a city</option>
-                                        {
-                                            data.getcatalogitem.map(item => (
-                                                <option value={item.Id}>{item.Name}</option>
-                                            ))
-                                        }
-                                    </select>
-
-                                }
-                                return <SelectNothingToDisplay />
-                            }}
-                        </Query>
+                        <input name="city" type="text" className="form-control" required min="0" maxLength="10" minLength="3" />
+                        <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
