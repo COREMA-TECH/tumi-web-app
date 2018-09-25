@@ -94,9 +94,7 @@ class ApplyForm extends Component {
                             <input name="midleName" type="text" className="form-control" min="0" maxLength="50"
                                 minLength="3" />
                             <span></span>
-                        </div>
-                        <div className="row">
-                            <i className="optional"></i><i></i>
+                            <i className="optional"></i>
                         </div>
                     </div>
 
@@ -258,48 +256,10 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-
-
-                    <div className="col-6">
-                        <div className="row">
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                            </div>
-
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                            </div>
-
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                            </div>
-
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                            </div>
-
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                            </div>
-
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                            </div>
-
-                            <div className="col-6">
-                            </div>
-                            <div className="col-6">
-                                <span className="primary"> How did you hear about Tumi Staffing </span>
-                                <textarea name="comment" cols="30" rows="10" className="form-control" />
-                                <span></span>
-                            </div>
-                        </div>
+                    <div className="col-12">
+                        <span className="primary"> How did you hear about Tumi Staffing </span>
+                        <textarea name="comment" cols="20" rows="10" className="form-control" />
+                        <span></span>
                     </div>
                 </div>
             </div>
@@ -307,120 +267,101 @@ class ApplyForm extends Component {
 
         // To render the Education Service Section
         let renderEducationSection = () => (
-            <div className="row">
-                <h4>Education</h4>
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">Education</h4>
                 <div className="row">
-                    <div className="col-3">
-                        <span className="primary card-input-label"> Time Period</span>
+                    <div className="col-12">
+                        <h3 className="ApplyBlock-subtitle">High School</h3>
                     </div>
-                    <div className="col-6">
-                        <div className="row">
-                            <div className="col-5">
-                                <input
-                                    name="startPeriod"
-                                    type="date"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                />
-                            </div>
-                            <div className="col-2">
-                                <span className="card-input-label">To</span>
-                            </div>
-                            <div className="col-5">
-                                <input
-                                    name="endPeriod"
-                                    type="date"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                />
-                            </div>
-                        </div>
+                    <div className="col-4">
+                        <label className="primary">Name (Institution)</label>
+                        <input name="institutionName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
                     </div>
-                    <div className="col-6">
-                        <span
-                            className="primary card-input-label"> Graduated </span>
-                    </div>
-                    <div className="col-6">
-                        <div className="row">
-                            <div className="col-6">
-                                <span className="col-12">Yes</span>
-                                <input
-                                    value="1"
-                                    type="radio"
-                                    name="graduated"
-                                    className="form-control"
-                                    required
-                                    checked
-                                />
-                            </div>
-                            <div className="col-6">
-                                <span className="col-12">No</span>
-                                <input
-                                    value="0"
-                                    type="radio"
-                                    name="graduated"
-                                    className="form-control"
-                                    required
-                                />
-                            </div>
-                        </div>
+                    <div className="col-8">
+                        <label className="primary">Address</label>
+                        <input name="addressInstitution" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-3">
-                        <div className="row">
-                            <div className="col-6">
-                                <span className="primary card-input-label"> Type </span>
-                            </div>
-                            <div className="col-6">
-                                <select name="typeStudy" id="typeStudy" required
-                                    className="form-control">
-                                    <option value="">Select a option</option>
-                                </select>
-                            </div>
-                        </div>
+                        <span className="primary"> Time Period</span>
+                        <input name="startPeriod" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
                     </div>
                     <div className="col-3">
-                        <div className="row">
-                            <div className="col-6">
-                                <span className="primary card-input-label"> Institution</span>
-                            </div>
-                            <div className="col-6">
-                                <input
-                                    name="institutionName"
-                                    type="text"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                />
-                            </div>
-                        </div>
+                        <span className="primary">To</span>
+                        <input name="endPeriod" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-2">
+                        <label className="primary">Graduated</label> <br />
+                        <input type="checkbox" name="graduated" className="" />
+                    </div>
+                    <div className="col-4">
+                        <label className="primary">Degree</label>
+                        <input name="degree" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                </div>
+                <hr className="separator" />
+                <div className="row">
+                    <div className="col-12">
+                        <h3 className="ApplyBlock-subtitle">Collage</h3>
+                    </div>
+                    <div className="col-4">
+                        <label className="primary">Name (Institution)</label>
+                        <input name="institutionName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-8">
+                        <label className="primary">Address</label>
+                        <input name="addressInstitution" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3">
+                        <span className="primary"> Time Period</span>
+                        <input name="startPeriod" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
                     </div>
                     <div className="col-3">
-                        <div className="row">
-                            <div className="col-6">
-                                <span className="primary card-input-label"> Address</span>
-                            </div>
-                            <div className="col-6">
-                                <input
-                                    name="addressInstitution"
-                                    type="text"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                />
-                            </div>
-                        </div>
+                        <span className="primary">To</span>
+                        <input name="endPeriod" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-2">
+                        <label className="primary">Graduated</label> <br />
+                        <input type="checkbox" name="graduated" className="" />
+                    </div>
+                    <div className="col-4">
+                        <label className="primary">Degree</label>
+                        <input name="degree" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                </div>
+                <hr className="separator" />
+                <div className="row">
+                    <div className="col-12">
+                        <h3 className="ApplyBlock-subtitle">Other</h3>
+                    </div>
+                    <div className="col-4">
+                        <label className="primary">Name (Institution)</label>
+                        <input name="institutionName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-8">
+                        <label className="primary">Address</label>
+                        <input name="addressInstitution" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-3">
+                        <span className="primary"> Time Period</span>
+                        <input name="startPeriod" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-3">
+                        <span className="primary">To</span>
+                        <input name="endPeriod" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-2">
+                        <label className="primary">Graduated</label> <br />
+                        <input type="checkbox" name="graduated" className="" />
+                    </div>
+                    <div className="col-4">
+                        <label className="primary">Degree</label>
+                        <input name="degree" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
                     </div>
                 </div>
             </div>
@@ -428,370 +369,139 @@ class ApplyForm extends Component {
 
         // To render the Military Service Section
         let renderMilitaryServiceSection = () => (
-            <div className="row">
-                <h4>Military Service</h4>
-                <div className="col-3">
-                    <div className="row">
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Branch</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="militaryBranch"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span></span>
-                        </div>
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">Military Service</h4>
+                <div className="row">
+                    <div className="col-6">
+                        <span className="primary"> Branch</span>
+                        <input name="militaryBranch" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
                     </div>
-                    <div className="row">
-                        <div className="col-6">
-                            <span className="primary card-input-label"> Rank at Discharge</span>
-                        </div>
-                        <div className="col-6">
-                            <input
-                                name="militaryRankDischarge"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span></span>
-                        </div>
+                    <div className="col-6">
+                        <span className="primary"> Rank at Discharge</span>
+                        <input name="militaryRankDischarge" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
                     </div>
                 </div>
-                <div className="col-9">
-                    <div className="row">
-                        <div className="col-3">
-                            <span className="primary card-input-label"> Dates</span>
-                        </div>
-                        <div className="col-9">
-                            <div className="row">
-                                <div className="col-6">
-                                    <input
-                                        name="militaryStartDate"
-                                        type="date"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                </div>
-                                <span className="col-1">To: </span>
-                                <div className="col-5">
-                                    <input
-                                        name="militaryEndDate"
-                                        type="date"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-6">
-                                <span className="primary card-input-label"> Type of Discharge</span>
-                            </div>
-                            <div className="col-6">
-                                <select name="dischargeType" id="dischargeType" required
-                                    className="form-control">
-                                    <option value="">Select a type</option>
-                                </select>
-                                <span></span>
-                            </div>
-                        </div>
+                <div className="row">
+                    <div className="col-3">
+                        <span className="primary"> Dates</span>
+                        <input name="militaryStartDate" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-3">
+                        <span className="primary">To: </span>
+                        <input name="militaryEndDate" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                    </div>
+                    <div className="col-6">
+                        <span className="primary"> Type of Discharge</span>
+                        <select name="dischargeType" id="dischargeType" required
+                            className="form-control">
+                            <option value="">Select a type</option>
+                        </select>
+                        <span></span>
                     </div>
                 </div>
             </div>
         );
 
         let renderPreviousEmploymentSection = () => (
-            <div className="row">
-                <h4>Previous Employment</h4>
-                <div className="col-12">
-                    <div className="row">
-                        <div className="col-9">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Company</span>
-                                </div>
-                                <div className="col-9">
-                                    <input
-                                        name="companyNameEmployment"
-                                        type="text"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-3">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Phone</span>
-                                </div>
-                                <div className="col-9">
-                                    <input
-                                        name="phoneEmployment"
-                                        type="number"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-9">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Address</span>
-                                </div>
-                                <div className="col-9">
-                                    <input
-                                        name="addressEmployment"
-                                        type="text"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-3">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Supervisor</span>
-                                </div>
-                                <div className="col-9">
-                                    <input
-                                        name="supervisorEmployment"
-                                        type="text"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-9">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Job Title</span>
-                                </div>
-                                <div className="col-9">
-                                    <input
-                                        name="jobTitleEmployment"
-                                        type="text"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-3">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Pay Rate</span>
-                                </div>
-                                <div className="col-9">
-                                    <input
-                                        name="payRateEmployment"
-                                        type="number"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <span></span>
-                                </div>
-                            </div>
-                        </div>
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">Previous Employment</h4>
 
-                        <div className="col-6">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Dates</span>
-                                </div>
-                                <div className="col-9">
-                                    <div className="row">
-                                        <div className="col-6">
-                                            <input
-                                                name="startPreviousEmployment"
-                                                type="date"
-                                                className="form-control"
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
-                                            <span></span>
-                                        </div>
-                                        <div className="col-1">
-                                            <span>To: </span>
-                                        </div>
-                                        <div className="col-5">
-                                            <input
-                                                name="endPreviousEmployment"
-                                                type="date"
-                                                className="form-control"
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
-                                            <span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-6">
-                            <div className="row">
-                                <div className="col-3">
-                                    <span className="primary card-input-label"> Reason for leaving</span>
-                                </div>
-                                <div className="col-9">
-                                    <textarea
-                                        name="reasonForLeavingEmployment"
-                                        className="form-control"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                <div className="row">
+                    <div className="col-8">
+                        <span className="primary"> Company</span>
+                        <input name="companyNameEmployment" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Phone</span>
+                        <input name="phoneEmployment" type="number" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-8">
+                        <span className="primary"> Address</span>
+                        <input name="addressEmployment" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Supervisor</span>
+                        <input name="supervisorEmployment" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-8">
+                        <span className="primary"> Job Title</span>
+                        <input name="jobTitleEmployment" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Pay Rate</span>
+                        <input name="payRateEmployment" type="number" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary"> Dates</span>
+                        <input name="startPreviousEmployment" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary">To: </span>
+                        <input name="endPreviousEmployment" type="date" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-6">
+                        <span className="primary"> Reason for leaving</span>
+                        <textarea name="reasonForLeavingEmployment" className="form-control" />
                     </div>
                 </div>
             </div>
         );
 
         let renderLenguagesSection = () => (
-            <div className="row">
-                <h4>Lenguages</h4>
-                <div className="col-1">
-                    <span className="primary card-input-label"> Lenguage</span>
-                </div>
-                <div className="col-3">
-                    <input
-                        name="lenguageName"
-                        type="text"
-                        className="form-control"
-                        required
-                        min="0"
-                        maxLength="50"
-                        minLength="3"
-                    />
-                    <span></span>
-                </div>
-                <div className="col-1">
-                    <span className="primary card-input-label"> Conversation</span>
-                </div>
-                <div className="col-3">
-                    <input
-                        name="conversationLenguage"
-                        type="number"
-                        className="form-control"
-                        required
-                        min="0"
-                        maxLength="50"
-                        minLength="3"
-                    />
-                    <span></span>
-                </div>
-                <div className="col-1">
-                    <span className="primary card-input-label"> Writing</span>
-                </div>
-                <div className="col-3">
-                    <input
-                        name="writingLenguage"
-                        type="number"
-                        className="form-control"
-                        required
-                        min="0"
-                        maxLength="50"
-                        minLength="3"
-                    />
-                    <span></span>
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">
+                    Lenguages
+                </h4>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Language</span>
+                        <input name="lenguageName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Conversation</span>
+                        <input name="conversationLenguage" type="number" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Writing</span>
+                        <input name="writingLenguage" type="number" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
                 </div>
             </div>
         );
 
         let renderSkillsSection = () => (
-            <div className="row">
-                <h4>Skills</h4>
-                <div className="col-12">
-                    <span>What skill do you have?</span>
-                </div>
-                <div className="col-12">
-                    <input
-                        name="skillName"
-                        type="text"
-                        className="form-control"
-                        required
-                        min="0"
-                        maxLength="50"
-                        minLength="3"
-                    />
-                    <span></span>
-                </div>
-                <div className="col-2">
-                    <span className="primary card-input-label"> Time Period years</span>
-                </div>
-                <div className="col-12">
-                    <div className="row">
-                        <div className="col-6">
-                            <input
-                                name="startSkillDate"
-                                type="date"
-                                className="form-control"
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span></span>
-                            <i className="optional"></i>
-                        </div>
-                        <div className="col-1">
-                            <span>To: </span>
-                        </div>
-                        <div className="col-5">
-                            <input
-                                name="endSkillDate"
-                                type="date"
-                                className="form-control"
-                                min="0"
-                                maxLength="50"
-                                minLength="3"
-                            />
-                            <span></span>
-                            <i className="optional"></i>
-                        </div>
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">Skills</h4>
+                <div className="row">
+                    <div className="col-12">
+                        <span>What skill do you have?</span>
+                        <input name="skillName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-6">
+                        <span className="primary card-input-label"> Time Period years</span>
+                        <input name="startSkillDate" type="date" className="form-control" min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                        <i className="optional"></i>
+                    </div>
+                    <div className="col-6">
+                        <span>To: </span>
+                        <input name="endSkillDate" type="date" className="form-control" min="0" maxLength="50" minLength="3" />
+                        <span></span>
+                        <i className="optional"></i>
                     </div>
                 </div>
             </div>
@@ -800,7 +510,7 @@ class ApplyForm extends Component {
         return (
             <Mutation mutation={CREATE_APPLICATION}>
                 {(createApplication, { data }) => (
-                    <form
+                    <form className="ApplyForm"
                         onSubmit={e => {
                             e.preventDefault();
                             let formSubmitted = e.target.classList.add('form-submitted');
@@ -809,11 +519,11 @@ class ApplyForm extends Component {
                         }}
                     >
                         {renderApplicantInformationSection()}
-                        {renderLenguagesSection()}*/}
-                        {renderEducationSection()}*/}
-                        {renderMilitaryServiceSection()}*/}
-                        {renderPreviousEmploymentSection()}*/}
-                        {renderSkillsSection()}*/}
+                        {renderLenguagesSection()}
+                        {renderEducationSection()}
+                        {renderMilitaryServiceSection()}
+                        {renderPreviousEmploymentSection()}
+                        {renderSkillsSection()}
                         <div className="row">
                             <input type="reset" className="reset" value="Reset" />
                             <input type="submit" className="submit" value="Apply" />
