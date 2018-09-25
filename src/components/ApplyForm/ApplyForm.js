@@ -7,13 +7,10 @@ import Query from "react-apollo/Query";
 import { GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
 import './index.css';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
+import InputRange from "./ui/InputRange/InputRange";
 
 class ApplyForm extends Component {
     constructor(props) {
@@ -51,28 +48,38 @@ class ApplyForm extends Component {
                 onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
             >
-                <DialogTitle id="form-dialog-title">Skills</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        Add a new skill
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="description"
-                        label="Description"
-                        type="text"
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={this.handleClose} color="primary">
-                        Subscribe
-                    </Button>
-                </DialogActions>
+                <form id="skill-form" onSubmit={this.handleClose} className="apply-form">
+                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{ textAlign: 'center' }}>New
+                        Skill</h1>
+                    <br />
+                    <DialogContent style={{ width: '450px' }}>
+                        <input
+                            placeholder="Skill Description"
+                            name="skillName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"
+                            form="skill-form"
+                        />
+                        <br />
+                        <InputRange getPercentSkill={(percent) => {
+                            // update the percent skill
+                            console.log("Percent: " + percent);
+                        }} />
+                        <br /><br />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button className="cancel-skill-button" onClick={this.handleClose} color="default">
+                            Cancel
+                        </Button>
+                        <Button className="save-skill-button" type="submit" form="skill-form" color="primary">
+                            Add
+                        </Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         );
 
@@ -189,7 +196,8 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> Email Address</span>
-                        <input name="emailAddress" type="email" className="form-control" required min="0" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8" />
+                        <input name="emailAddress" type="email" className="form-control" required min="0"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8" />
                         <span></span>
                     </div>
                 </div>
@@ -219,7 +227,8 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Date Available</span>
-                        <input name="dateAvailable" type="date" className="form-control" required min="0" maxLength="50" />
+                        <input name="dateAvailable" type="date" className="form-control" required min="0"
+                            maxLength="50" />
                         <span></span>
                     </div>
                 </div>
