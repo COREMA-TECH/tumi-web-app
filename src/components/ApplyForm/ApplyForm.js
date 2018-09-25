@@ -4,13 +4,33 @@ import { CREATE_APPLICATION } from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import { GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
+import { GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
 import './index.css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 class ApplyForm extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            open: false,
+        };
     }
+
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
@@ -24,6 +44,37 @@ class ApplyForm extends Component {
     render() {
         this.validateInvalidInput();
 
+        // To render the Skills Dialog
+        let renderSkillsDialog = () => (
+            <Dialog
+                open={this.state.open}
+                onClose={this.handleClose}
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">Skills</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Add a new skill
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="description"
+                        label="Description"
+                        type="text"
+                        fullWidth
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={this.handleClose} color="primary">
+                        Subscribe
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        );
 
         // To render the Applicant Information Section
         let renderApplicantInformationSection = () => (
@@ -32,14 +83,16 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> First Name</span>
-                        <input name="firstName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <input name="firstName" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="3" />
                         <span></span>
                     </div>
 
                     <div className="col-3">
                         <div className="row">
                             <span className="primary">Middle Name</span>
-                            <input name="midleName" type="text" className="form-control" min="0" maxLength="50" minLength="3" />
+                            <input name="midleName" type="text" className="form-control" min="0" maxLength="50"
+                                minLength="3" />
                             <span></span>
                         </div>
                         <div className="row">
@@ -49,7 +102,8 @@ class ApplyForm extends Component {
 
                     <div className="col-3">
                         <span className="primary"> Last Name</span>
-                        <input name="lastName" type="text" className="form-control" required min="0" maxLength="50" minLength="3" />
+                        <input name="lastName" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="3" />
                         <span></span>
                     </div>
 
@@ -62,12 +116,14 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
-                        <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50" minLength="5" />
+                        <input name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
+                            minLength="5" />
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
-                        <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50" minLength="5" />
+                        <input name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
+                            minLength="5" />
                         <span></span>
                         <div className="row">
                             <i className="optional"></i>
@@ -99,18 +155,61 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
-                        <Query query={GET_CITIES_QUERY} variables={{ parent: 0 }}>
+                        <input name="city" type="text" className="form-control" required min="0" maxLength="10"
+                            minLength="3" />
+                        <span></span>
+                    </div>
+                    <div className="col-4">
+                        <span className="primary"> Zip Code</span>
+                        <input name="zipCode" type="number" className="form-control" required maxLength="5"
+                            minLength="4" min="10000" max="99999" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Home Phone</span>
+                        <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
+                            minLength="10" />
+                        <span></span>
+                    </div>
+
+                    <div className="col-4">
+                        <span className="primary"> Cell Phone</span>
+                        <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
+                            minLength="10" />
+                        <span></span>
+                    </div>
+
+                    <div className="col-4">
+                        <span className="primary"> Social Security Number</span>
+                        <input name="socialSecurityNumber" type="number" className="form-control" required min="0"
+                            maxLength="50" minLength="10" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <span className="primary"> Email Address</span>
+                        <input name="emailAddress" type="email" className="form-control" required min="0" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-6">
+                        <span className="primary"> Position Applying for</span>
+                        <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                if (data.getposition != null && data.getposition.length > 0) {
                                     return <select name="city" id="city" required
                                         className="form-control">
-                                        <option value="">Select a city</option>
+                                        <option value="">Select a position</option>
                                         {
-                                            data.getcatalogitem.map(item => (
-                                                <option value={item.Id}>{item.Name}</option>
+                                            data.getposition.map(item => (
+                                                <option value={item.Id}>{item.Position}</option>
                                             ))
                                         }
                                     </select>
@@ -120,162 +219,83 @@ class ApplyForm extends Component {
                             }}
                         </Query>
                     </div>
-                    <div className="col-4">
-                        <span className="primary"> Zip Code</span>
-                        <input name="zipCode" type="number" className="form-control" required maxLength="5" minLength="4" min="10000" max="99999" />
-                        <span></span>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-4">
-                        <span className="primary"> Home Phone</span>
-                        <input name="homePhone" type="tel" className="form-control" min="999" maxLength="10" minLength="10" />
-                        <span></span>
-                    </div>
-
-                    <div className="col-4">
-                        <span className="primary"> Cell Phone</span>
-                        <input name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10" minLength="10" />
-                        <span></span>
-                    </div>
-
-                    <div className="col-4">
-                        <span className="primary"> Social Security Number</span>
-                        <input name="socialSecurityNumber" type="number" className="form-control" required min="0" maxLength="50" minLength="10" />
-                        <span></span>
-                    </div>
-                </div>
-                <div className="row">
-
                     <div className="col-6">
-                        <div className="row">
-
-
-
-                            <div className="col-6">
-                                <span className="primary card-input-label"> Email Address</span>
-                            </div>
-                            <div className="col-6">
-                                <input
-                                    name="emailAddress"
-                                    type="email"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                    maxLength="50"
-                                    minLength="8"
-                                />
-                                <span></span>
-                            </div>
-
+                        <span className="primary"> Date Available</span>
+                        <input name="dateAvailable" type="date" className="form-control" required min="0" maxLength="50" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Do you have any schedule restrictions? </span>
+                        <div className="col-12">
+                            <input value="1" type="radio" name="scheduleRestrictions" className="" />
+                            <label className="radio-label"> Yes</label>
+                            <input value="0" type="radio" name="scheduleRestrictions" className="" />
+                            <label className="radio-label"> No</label>
                         </div>
+                        <span></span>
                     </div>
+                    <div className="col-8">
+                        <span className="primary"> If yes, please explain </span>
+                        <textarea name="form-control" cols="30" rows="3" className="form-control" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-4">
+                        <span className="primary"> Have you ever been convicted of a felony? </span>
+                        <input value="1" type="radio" name="convicted" className="" />
+                        <label className="radio-label"> Yes</label>
+                        <input value="0" type="radio" name="convicted" className="" />
+                        <label className="radio-label"> No</label>
+                        <span></span>
+                    </div>
+                    <div className="col-8">
+                        <span className="primary"> If yes, please explain </span>
+                        <textarea name="form-control" cols="30" rows="3" className="form-control" />
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
+
+
                     <div className="col-6">
                         <div className="row">
                             <div className="col-6">
-                                <span className="primary card-input-label"> Position Applying for</span>
                             </div>
                             <div className="col-6">
-                                <Query query={GET_POSITIONS_QUERY}>
-                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                        //if (networkStatus === 4) return <LinearProgress />;
-                                        if (loading) return <LinearProgress />;
-                                        if (error) return <p>Error </p>;
-                                        if (data.getposition != null && data.getposition.length > 0) {
-                                            return <select name="city" id="city" required
-                                                className="form-control">
-                                                <option value="">Select a position</option>
-                                                {
-                                                    data.getposition.map(item => (
-                                                        <option value={item.Id}>{item.Position}</option>
-                                                    ))
-                                                }
-                                            </select>
-
-                                        }
-                                        return <SelectNothingToDisplay />
-                                    }}
-                                </Query>
                             </div>
 
                             <div className="col-6">
-                                <span className="primary card-input-label"> Date Available</span>
                             </div>
                             <div className="col-6">
-                                <input
-                                    name="dateAvailable"
-                                    type="date"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> Do you have any schedule restrictions? </span>
                             </div>
                             <div className="col-6">
-                                <input
-                                    value="1"
-                                    type="radio"
-                                    name="scheduleRestrictions"
-                                    className="form-control"
-                                />
-                                <input
-                                    value="0"
-                                    type="radio"
-                                    name="scheduleRestrictions"
-                                    className="form-control"
-                                />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span className="primary card-input-label"> If yes, please explain </span>
                             </div>
                             <div className="col-6">
-                                <textarea name="scheduleExplain" cols="30" rows="10" className="form-control" />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> Have you ever been convicted of a felony? </span>
                             </div>
                             <div className="col-6">
-                                <input
-                                    value="1"
-                                    type="radio"
-                                    name="convicted"
-                                    className="form-control"
-                                />
-
-                                <input
-                                    value="0"
-                                    type="radio"
-                                    name="convicted"
-                                    className="form-control"
-                                />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span className="primary card-input-label"> If yes, please explain </span>
                             </div>
                             <div className="col-6">
-                                <textarea name="convictedExplain" cols="30" rows="10" className="form-control" />
-                                <span></span>
                             </div>
 
                             <div className="col-6">
-                                <span
-                                    className="primary card-input-label"> How did you hear about Tumi Staffing </span>
                             </div>
                             <div className="col-6">
+                                <span className="primary"> How did you hear about Tumi Staffing </span>
                                 <textarea name="comment" cols="30" rows="10" className="form-control" />
                                 <span></span>
                             </div>
