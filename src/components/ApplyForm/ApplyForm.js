@@ -51,9 +51,9 @@ class ApplyForm extends Component {
                 aria-labelledby="form-dialog-title"
             >
                 <form id="skill-form" onSubmit={this.handleClose}>
-                    <DialogTitle id="form-dialog-title" style={{textAlign: 'center'}}>Add a new skill</DialogTitle>
+                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>New Skill</h1>
                     <br/>
-                    <DialogContent style={{width: '500px'}}>
+                    <DialogContent style={{width: '450px'}}>
                         <input
                             placeholder="Skill Description"
                             name="skillName"
@@ -66,14 +66,17 @@ class ApplyForm extends Component {
                             form="skill-form"
                         />
                         <br/>
-                        <InputRange/>
+                        <InputRange getPercentSkill={(percent) => {
+                            // update the percent skill
+                            console.log("Percent: " + percent);
+                        }}/>
                         <br/><br/>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleClose} color="default">
+                        <Button className="cancel-skill-button" onClick={this.handleClose} color="default">
                             Cancel
                         </Button>
-                        <Button type="submit" form="skill-form" color="primary">
+                        <Button className="save-skill-button" type="submit" form="skill-form" color="primary">
                             Add
                         </Button>
                     </DialogActions>
@@ -809,7 +812,7 @@ class ApplyForm extends Component {
         return (
             <Mutation mutation={CREATE_APPLICATION}>
                 {(createApplication, {data}) => (
-                    <form
+                    <form className="apply-form"
                         onSubmit={e => {
                             e.preventDefault();
                             let formSubmitted = e.target.classList.add('form-submitted');

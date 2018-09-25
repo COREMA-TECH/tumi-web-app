@@ -7,7 +7,6 @@ import Slider from '@material-ui/lab/Slider';
 const styles = {
     root: {
         width: '100%',
-        marginTop: '3px'
     },
     slider: {
         background: '#3ca2c8',
@@ -17,10 +16,11 @@ const styles = {
     labelSlider: {
         color: '#777',
         display: 'flex',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        padding: '8px'
     },
     labelLevelSkill: {
-        color: '#3ca2c8',
+        color: '#777',
         fontSize: '12px',
         fontStyle: 'italic'
     },
@@ -36,10 +36,12 @@ class SimpleSlider extends React.Component {
     };
 
     handleChange = (event, value) => {
-        this.setState({value});
-
-        // Update state parent component - percent skill
-
+        this.setState(
+            {value},
+            () => {
+                // Update state parent component - percent skill
+                this.props.getPercentSkill(parseInt(Math.floor(this.state.value)));
+            });
     };
 
     render() {
@@ -51,7 +53,8 @@ class SimpleSlider extends React.Component {
                 <Slider value={value} className={'input-form'} aria-labelledby="label" onChange={this.handleChange}/>
                 <div className={classes.labelSlider}>
                     <span className={classes.labelLevelSkill}>Newbie</span>
-                    <Typography className={classes.labelPercentSkill} id="label">{Math.floor(this.state.value) + "%"} </Typography>
+                    <Typography className={classes.labelPercentSkill}
+                                id="label">{Math.floor(this.state.value) + "%"} </Typography>
                     <span className={classes.labelLevelSkill}>Expert</span>
                 </div>
             </div>
