@@ -848,11 +848,14 @@ class ContactcontactForm extends React.Component {
 				this.setState({ openModal: false, showCircularLoading: true }, () => {
 					this.loadContacts(() => {
 						this.loadDepartments(() => {
-							this.loadAllSupervisors(() => {
-								this.loadSupervisors(0, () => {
-									this.resetState();
+							this.loadTitles(() => {
+								this.loadAllSupervisors(() => {
+									this.loadSupervisors(0, () => {
+										this.resetState();
+									});
 								});
-							});
+							})
+
 						});
 					});
 				});
@@ -867,6 +870,7 @@ class ContactcontactForm extends React.Component {
 				});
 			});
 	};
+
 	insertDepartment = () => {
 		this.setState(
 			{
@@ -885,105 +889,115 @@ class ContactcontactForm extends React.Component {
 					return obj.Name.trim() === this.state.titleName.trim();
 				});
 
-				if (department) {
-					IdDeparment = department.Id;
-				} else {
-					let InsertDepartmentNew = async () => {
-						console.log("Llamada de async");
-						await this.props.client
-							.mutate({
-								mutation: this.INSERT_DEPARTMENTS_QUERY,
-								variables: {
-									input: {
-										Id: 0,
-										Id_Catalog: 8,
-										Id_Parent: 0,
-										Name: `''`,
-										DisplayLabel: `'${this.state.departmentName}'`,
-										Description: `'${this.state.departmentName}'`,
-										Value: null,
-										Value01: null,
-										Value02: null,
-										Value03: null,
-										Value04: null,
-										IsActive: 1,
-										User_Created: 1,
-										User_Updated: 1,
-										Date_Created: "'2018-09-20 08:10:25+00'",
-										Date_Updated: "'2018-09-20 08:10:25+00'"
+				console.log("estoy entrando a la validacion");
+
+				let insdepartmentAsync =
+					async () => {
+
+						if (department) {
+							console.log(department.Id);
+							IdDeparment = department.Id;
+						} else {
+							console.log("Llamada de async");
+							//const InsertDepartmentNew =
+							await this.props.client
+								.mutate({
+									mutation: this.INSERT_DEPARTMENTS_QUERY,
+									variables: {
+										input: {
+											Id: 0,
+											Id_Catalog: 8,
+											Id_Parent: 0,
+											Name: `'${this.state.departmentName}'`,
+											DisplayLabel: `'${this.state.departmentName}'`,
+											Description: `'${this.state.departmentName}'`,
+											Value: null,
+											Value01: null,
+											Value02: null,
+											Value03: null,
+											Value04: null,
+											IsActive: 1,
+											User_Created: 1,
+											User_Updated: 1,
+											Date_Created: "'2018-09-20 08:10:25+00'",
+											Date_Updated: "'2018-09-20 08:10:25+00'"
+										}
 									}
-								}
-							})
-							.then((data) => {
-								console.log("Dentro del datassss ");
-								IdDeparment = data.data.inscatalogitem.Id;
+								})
+								.then((data) => {
+									console.log("Dentro del datassss ");
+									IdDeparment = data.data.inscatalogitem.Id;
+									console.log(IdDeparment);
 
-								/*this.setState({ openModal: false }, () => {
-									this.insertContacts(data.data.inscatalogitem.Id);
-								});*/
-							})
-							.catch((error) => {
-								this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-								this.setState({
-									loading: false
-								});
-								return true;
-							})
+								})
+								.catch((error) => {
+									console.log("Catch del departamento");
+									this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+									this.setState({
+										loading: false
+									});
 
-						console.log("Llamando al titles ");
+								})
+						}
+
+						console.log("este es el nuevo ID ", IdDeparment);
+
 						if (title) {
+							console.log(title.Id);
 							IdTitle = title.Id;
 						} else {
-							let InsertTitleNew = async () => {
-								await this.props.client
-									.mutate({
-										mutation: this.INSERT_DEPARTMENTS_QUERY,
-										variables: {
-											input: {
-												Id: 0,
-												Id_Catalog: 6,
-												Id_Parent: 0,
-												Name: `''`,
-												DisplayLabel: `'${this.state.titleName}'`,
-												Description: `'${this.state.titleName}'`,
-												Value: null,
-												Value01: null,
-												Value02: null,
-												Value03: null,
-												Value04: null,
-												IsActive: 1,
-												User_Created: 1,
-												User_Updated: 1,
-												Date_Created: "'2018-09-20 08:10:25+00'",
-												Date_Updated: "'2018-09-20 08:10:25+00'"
-											}
+							console.log("Llamada de async");
+							//const InsertDepartmentNew =
+							await this.props.client
+								.mutate({
+									mutation: this.INSERT_DEPARTMENTS_QUERY,
+									variables: {
+										input: {
+											Id: 0,
+											Id_Catalog: 6,
+											Id_Parent: 0,
+											Name: `'${this.state.titleName}'`,
+											DisplayLabel: `'${this.state.titleName}'`,
+											Description: `'${this.state.titleName}'`,
+											Value: null,
+											Value01: null,
+											Value02: null,
+											Value03: null,
+											Value04: null,
+											IsActive: 1,
+											User_Created: 1,
+											User_Updated: 1,
+											Date_Created: "'2018-09-20 08:10:25+00'",
+											Date_Updated: "'2018-09-20 08:10:25+00'"
 										}
-									})
-									.then((data) => {
-										IdTitle = data.data.inscatalogitem.Id;
-										/*this.setState({ openModal: false }, () => {
-											this.insertContacts(data.data.inscatalogitem.Id);
-										});*/
-									})
-									.catch((error) => {
-										this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-										this.setState({
-											loading: false
-										});
-										return true;
-									})
+									}
+								})
+								.then((data) => {
+									console.log("Dentro del datassss ");
+									IdTitle = data.data.inscatalogitem.Id;
+									console.log(IdTitle);
 
-								InsertTitleNew();
+								})
+								.catch((error) => {
+									console.log("Catch del IdTitle");
+									this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
+									this.setState({
+										loading: false
+									});
 
-								console.log("ambas varables ", IdDeparment, IdTitle);
-								this.insertContacts(IdDeparment, IdTitle);
-
-							}
+								})
 						}
+
+
+						this.setState({ openModal: false }, () => {
+							this.insertContacts(IdDeparment, IdTitle);
+						});
 					}
-					InsertDepartmentNew();
-					console.log("Finalizando todo ", IdDeparment);
-				}
+
+
+				console.log("llamada a la funcion insdepartmentAsync");
+				insdepartmentAsync();
+
 
 
 			}
