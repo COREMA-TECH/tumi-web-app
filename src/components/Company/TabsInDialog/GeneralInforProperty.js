@@ -12,12 +12,14 @@ import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectN
 import './valid.css';
 
 class GeneralInfoProperty extends Component {
+
     state = {
         inputEnabled: true,
         open: false,
         scroll: 'paper',
         completedInput: false,
         loaded: false,
+        //rate: 0,
         name: '',
         legalName: '',
         description: '',
@@ -38,7 +40,7 @@ class GeneralInfoProperty extends Component {
         avatar: 'url',
         otherPhoneNumber: '',
         room: '',
-        rate: 0,
+        rate: 2,
         fax: '',
         zipCode: '',
         phonePrefix: '505',
@@ -49,6 +51,7 @@ class GeneralInfoProperty extends Component {
         suite: '',
         linearProgress: false,
         idProperty: null,
+        Markup: null,
         validState: '',
         validCity: '',
         validStartWeek: '',
@@ -500,6 +503,27 @@ class GeneralInfoProperty extends Component {
                             <div className="card-wrapper">
                                 <div class="card-form-header grey">General Information</div>
                                 <div className="row">
+                                    <div className="col-6">
+                                        <span className="primary card-input-label">* Markup</span>
+                                    </div>
+
+                                    <div className="col-6">
+                                        <InputValid
+                                            type="number"
+                                            value={this.state.rate}
+                                            change={(text) => {
+                                                this.setState({
+                                                    rate: text
+                                                })
+                                            }}
+                                            error={!this.state.rateValid}
+                                            maxLength="10"
+                                        //disabled={!this.props.showStepper}
+                                        />
+                                    </div>
+
+
+
                                     <div className="col-6">
                                         <span className="primary card-input-label">* Hotel Name</span>
                                     </div>

@@ -627,12 +627,13 @@ class GeneralInformation extends Component {
 	/**
      * Events of the component
      */
-	handleClickOpen = (scroll, boolValue, id) => () => {
+	handleClickOpen = (scroll, boolValue, id, rate) => () => {
 		if (!this.props.showStepper) return false;
 		this.setState(
 			{
 				propertyClick: boolValue,
-				idProperty: id
+				idProperty: id,
+				Markup: rate
 			},
 			() => {
 				this.setState({ open: true, scroll });
@@ -736,6 +737,7 @@ class GeneralInformation extends Component {
 			dialogTabValue: 1,
 			propertyClick: false,
 			idProperty: 0,
+			Markup: 0,
 			openSnackbar: false,
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!',
@@ -1375,7 +1377,7 @@ class GeneralInformation extends Component {
 									<div
 										title="Watch Property"
 										className="table__item"
-										onClick={this.handleClickOpen('paper', true, item.Id)}
+										onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
 									>
 										<li>{item.Code}</li>
 										<li>{item.Name}</li>
@@ -1387,7 +1389,7 @@ class GeneralInformation extends Component {
 							<button
 								className={!this.props.showStepper ? 'add-property__disabled' : 'add-property'}
 								disabled={!this.props.showStepper}
-								onClick={this.handleClickOpen('paper', false, 0)}
+								onClick={this.handleClickOpen('paper', false, 0, 0)}
 							>
 								+ Add Property
 							</button>
@@ -1469,6 +1471,7 @@ class GeneralInformation extends Component {
 							<TabsInDialog
 								idCompany={this.props.idCompany}
 								idProperty={this.state.idProperty}
+								Markup={this.state.rate}
 								handleClose={this.handleClose}
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>

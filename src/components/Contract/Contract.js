@@ -191,6 +191,7 @@ class Contract extends React.Component {
 						companyId={this.state.companyId}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						contractname={this.state.ContractName}
+						showStepper={false}
 					/>
 				)}
 			</div>

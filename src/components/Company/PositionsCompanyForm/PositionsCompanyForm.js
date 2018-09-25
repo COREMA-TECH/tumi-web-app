@@ -1040,33 +1040,35 @@ class PositionsCompanyForm extends React.Component {
                     </div>
                 </div>
                 {
-                    <div className="advanced-tab-options">
-                        <span
-                            className="options-button options-button--back"
-                            onClick={() => {
-                                this.props.back();
-                            }}
-                        >
-                            Back
-						</span>
-                        <Route render={({ history }) => (
+                    this.props.showStepper ? (
+                        <div className="advanced-tab-options">
                             <span
-                                className="options-button options-button--next"
+                                className="options-button options-button--back"
                                 onClick={() => {
-
-                                    // When the user click Next button, open second tab
-                                    history.push({
-                                        pathname: '/home/contract/add',
-                                        state: { contract: 0, Id_Entity: this.state.idCompany }
-                                    });
-
+                                    this.props.back();
                                 }}
                             >
-                                {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
-                            </span>
-                        )} />
+                                Back
+						</span>
+                            <Route render={({ history }) => (
+                                <span
+                                    className="options-button options-button--next"
+                                    onClick={() => {
 
-                    </div>
+                                        // When the user click Next button, open second tab
+                                        history.push({
+                                            pathname: '/home/contract/add',
+                                            state: { contract: 0, Id_Entity: this.state.idCompany }
+                                        });
+
+                                    }}
+                                >
+                                    {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
+                                </span>
+                            )} />
+
+                        </div>
+                    ) : ('')
                 }
             </div>
         );

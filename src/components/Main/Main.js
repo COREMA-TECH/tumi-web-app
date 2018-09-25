@@ -10,7 +10,7 @@ class Main extends Component {
     LoginId = sessionStorage.getItem('LoginId');
 
     render() {
-        alert(window.location.pathname);
+
         if (!this.LoginId & (window.location.pathname != '/login') & (window.location.pathname != '/home/signature/')) {
             window.location.href = '/login';
             return false;
