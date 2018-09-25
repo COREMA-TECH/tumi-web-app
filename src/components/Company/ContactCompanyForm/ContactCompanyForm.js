@@ -198,6 +198,7 @@ class ContactcontactForm extends React.Component {
 		idSupervisor: 0,
 		idDepartment: 0,
 		departmentName: '',
+		titleName: '',
 		type: 0,
 
 		firstnameValid: true,
@@ -205,10 +206,11 @@ class ContactcontactForm extends React.Component {
 		lastnameValid: true,
 		emailValid: true,
 		numberValid: true,
-		titleValid: true,
+		//titleValid: true,
 		typeValid: true,
 		idDepartmentValid: true,
 		departmentNameValid: true,
+		titleNameValid: true,
 		idSupervisorValid: true,
 
 		firstnameHasValue: false,
@@ -221,6 +223,8 @@ class ContactcontactForm extends React.Component {
 		idSupervisorHasValue: false,
 		idDepartmentHasValue: false,
 		departmentNameHasValue: false,
+		titleNameHasValue: false,
+
 		formValid: true,
 		opendialog: false,
 		buttonTitle: this.TITLE_ADD,
@@ -353,13 +357,15 @@ class ContactcontactForm extends React.Component {
 		let numberValid =
 			this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 				.length == 10; //this.state.number.trim().length >= 2;
-		let titleValid = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
+		//let titleValid = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
 		let typeValid = this.state.type !== null && this.state.type !== '';
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
 		let idSupervisorValid =
 			this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
 		let departmentNameValid = this.state.departmentName.trim().length >= 2;
+		let titleNameValid = this.state.titleName.trim().length >= 2;
+
 		this.setState(
 			{
 				emailValid,
@@ -367,11 +373,12 @@ class ContactcontactForm extends React.Component {
 				//	middlenameValid,
 				lastnameValid,
 				numberValid,
-				titleValid,
+				//titleValid,
 				//idDepartmentValid,
 				idSupervisorValid,
 				typeValid,
-				departmentNameValid
+				departmentNameValid,
+				titleNameValid
 			},
 			() => {
 				this.validateForm(fun);
@@ -384,10 +391,11 @@ class ContactcontactForm extends React.Component {
 		//	let middlenameValid = this.state.middlenameValid;
 		let lastnameValid = this.state.lastnameValid;
 		let numberValid = this.state.numberValid;
-		let titleValid = this.state.titleValid;
+		//let titleValid = this.state.titleValid;
 		let typeValid = this.state.typeValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
 		let departmentNameValid = this.state.departmentNameValid;
+		let titleNameValid = this.state.titleNameValid;
 		let idSupervisorValid = this.state.idSupervisorValid;
 
 		let emailHasValue = this.state.emailHasValue;
@@ -399,6 +407,7 @@ class ContactcontactForm extends React.Component {
 		let typeHasValue = this.state.typeHasValue;
 		let idDepartmentHasValue = this.state.idDepartmentHasValue;
 		let departmentNameHasValue = this.state.departmentName;
+		let titleNameHasValue = this.state.titleName;
 		let idSupervisorHasValue = this.state.idSupervisorHasValue;
 
 		switch (fieldName) {
@@ -424,10 +433,10 @@ class ContactcontactForm extends React.Component {
 						.length == 10;
 				numberHasValue = value != '';
 				break;
-			case 'title':
+			/*case 'title':
 				titleValid = value !== null && value !== 0 && value !== '';
 				titleHasValue = value !== null && value !== 0 && value !== '';
-				break;
+				break;*/
 			case 'type':
 				typeValid = value !== null && value !== '';
 				typeHasValue = value !== null && value !== '';
@@ -439,6 +448,10 @@ class ContactcontactForm extends React.Component {
 			case 'departmentName':
 				departmentNameValid = value.trim().length >= 2;
 				departmentNameHasValue = value != '';
+				break;
+			case 'titleName':
+				titleNameValid = value.trim().length >= 2;
+				titleNameHasValue = value != '';
 				break;
 			case 'idSupervisor':
 				idSupervisorValid = value !== null && value !== -1 && value !== '';
@@ -454,10 +467,11 @@ class ContactcontactForm extends React.Component {
 				//	middlenameValid,
 				lastnameValid,
 				numberValid,
-				titleValid,
+				//titleValid,
 				typeValid,
 				//idDepartmentValid,
 				departmentNameValid,
+				titleNameValid,
 				idSupervisorValid,
 				emailHasValue,
 				firstnameHasValue,
@@ -468,6 +482,7 @@ class ContactcontactForm extends React.Component {
 				typeHasValue,
 				idDepartmentHasValue,
 				departmentNameHasValue,
+				titleNameHasValue,
 				idSupervisorHasValue
 			},
 			this.validateForm
@@ -483,10 +498,11 @@ class ContactcontactForm extends React.Component {
 					//		this.state.middlenameValid &&
 					this.state.lastnameValid &&
 					this.state.numberValid &&
-					this.state.titleValid &&
+					//this.state.titleValid &&
 					this.state.typeValid &&
 					//this.state.idDepartmentValid &&
 					this.state.departmentNameValid &&
+					this.state.titleNameValid &&
 					this.state.idSupervisorValid,
 				enableCancelButton:
 					this.state.emailHasValue ||
@@ -498,6 +514,7 @@ class ContactcontactForm extends React.Component {
 					this.state.typeHasValue ||
 					//	this.state.idDepartmentHasValue ||
 					this.state.departmentName ||
+					this.state.titleName ||
 					this.state.idSupervisorHasValue
 			},
 			func
@@ -527,6 +544,13 @@ class ContactcontactForm extends React.Component {
 			var department = this.state.departments.find(function (obj) {
 				return obj.Id === idDepartment;
 			});
+			var titleRecord = this.state.titles.find(function (obj) {
+				return obj.Id === title;
+			});
+
+			console.log(this.state.titles);
+			console.log(title);
+			console.log(titleRecord);
 
 			this.loadSupervisors(idSearch, () => {
 				this.setState(
@@ -540,6 +564,7 @@ class ContactcontactForm extends React.Component {
 						idSupervisor: idSupervisor,
 						idDepartment: idDepartment,
 						departmentName: department ? department.Name.trim() : '',
+						titleName: titleRecord ? titleRecord.Name.trim() : '',
 						title: title,
 						type: type,
 						formValid: true,
@@ -547,10 +572,11 @@ class ContactcontactForm extends React.Component {
 						firstnameValid: true,
 						//	middlenameValid: true,
 						lastnameValid: true,
-						titleValid: true,
+						//titleValid: true,
 						typeValid: true,
 						idDepartmentValid: true,
 						departmentNameValid: true,
+						titleNameValid: true,
 						idSupervisorValid: true,
 						enableCancelButton: true,
 						emailHasValue: true,
@@ -562,6 +588,7 @@ class ContactcontactForm extends React.Component {
 						idDepartmentHasValue: true,
 						idSupervisorHasValue: true,
 						departmentNameHasValue: true,
+						titleNameHasValue: true,
 
 						numberValid: true,
 						buttonTitle: this.TITLE_EDIT,
@@ -783,8 +810,12 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	insertContacts = (idDepartment) => {
+	insertContacts = (idDepartment, idTitle) => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
+
+		console.log("insertContacts");
+		console.log(this.props);
+		console.log(this.state);
 
 		this.props.client
 			.mutate({
@@ -798,7 +829,8 @@ class ContactcontactForm extends React.Component {
 						Last_Name: `'${this.state.lastname}'`,
 						Electronic_Address: `'${this.state.email}'`,
 						Phone_Number: `'${this.state.number}'`,
-						Contact_Title: this.state.title,
+						//Contact_Title: this.state.title,
+						Contact_Title: idTitle,
 						Contact_Type: this.state.type,
 						Id_Deparment: idDepartment,
 						Id_Supervisor: this.state.idSupervisor,
@@ -811,6 +843,7 @@ class ContactcontactForm extends React.Component {
 				}
 			})
 			.then((data) => {
+				console.log(data);
 				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
 				this.setState({ openModal: false, showCircularLoading: true }, () => {
 					this.loadContacts(() => {
@@ -841,49 +874,118 @@ class ContactcontactForm extends React.Component {
 				showCircularLoading: true
 			},
 			() => {
+
+				var IdDeparment = 0, IdTitle = 0;
+
 				var department = this.state.departments.find((obj) => {
 					return obj.Name.trim() === this.state.departmentName.trim();
 				});
 
+				var title = this.state.titles.find((obj) => {
+					return obj.Name.trim() === this.state.titleName.trim();
+				});
+
 				if (department) {
-					this.insertContacts(department.Id);
+					IdDeparment = department.Id;
 				} else {
-					this.props.client
-						.mutate({
-							mutation: this.INSERT_DEPARTMENTS_QUERY,
-							variables: {
-								input: {
-									Id: 0,
-									Id_Catalog: 8,
-									Id_Parent: 0,
-									Name: `''`,
-									DisplayLabel: `'${this.state.departmentName}'`,
-									Description: `'${this.state.departmentName}'`,
-									Value: null,
-									Value01: null,
-									Value02: null,
-									Value03: null,
-									Value04: null,
-									IsActive: 1,
-									User_Created: 1,
-									User_Updated: 1,
-									Date_Created: "'2018-09-20 08:10:25+00'",
-									Date_Updated: "'2018-09-20 08:10:25+00'"
+					let InsertDepartmentNew = async () => {
+						console.log("Llamada de async");
+						await this.props.client
+							.mutate({
+								mutation: this.INSERT_DEPARTMENTS_QUERY,
+								variables: {
+									input: {
+										Id: 0,
+										Id_Catalog: 8,
+										Id_Parent: 0,
+										Name: `''`,
+										DisplayLabel: `'${this.state.departmentName}'`,
+										Description: `'${this.state.departmentName}'`,
+										Value: null,
+										Value01: null,
+										Value02: null,
+										Value03: null,
+										Value04: null,
+										IsActive: 1,
+										User_Created: 1,
+										User_Updated: 1,
+										Date_Created: "'2018-09-20 08:10:25+00'",
+										Date_Updated: "'2018-09-20 08:10:25+00'"
+									}
 								}
+							})
+							.then((data) => {
+								console.log("Dentro del datassss ");
+								IdDeparment = data.data.inscatalogitem.Id;
+
+								/*this.setState({ openModal: false }, () => {
+									this.insertContacts(data.data.inscatalogitem.Id);
+								});*/
+							})
+							.catch((error) => {
+								this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+								this.setState({
+									loading: false
+								});
+								return true;
+							})
+
+						console.log("Llamando al titles ");
+						if (title) {
+							IdTitle = title.Id;
+						} else {
+							let InsertTitleNew = async () => {
+								await this.props.client
+									.mutate({
+										mutation: this.INSERT_DEPARTMENTS_QUERY,
+										variables: {
+											input: {
+												Id: 0,
+												Id_Catalog: 6,
+												Id_Parent: 0,
+												Name: `''`,
+												DisplayLabel: `'${this.state.titleName}'`,
+												Description: `'${this.state.titleName}'`,
+												Value: null,
+												Value01: null,
+												Value02: null,
+												Value03: null,
+												Value04: null,
+												IsActive: 1,
+												User_Created: 1,
+												User_Updated: 1,
+												Date_Created: "'2018-09-20 08:10:25+00'",
+												Date_Updated: "'2018-09-20 08:10:25+00'"
+											}
+										}
+									})
+									.then((data) => {
+										IdTitle = data.data.inscatalogitem.Id;
+										/*this.setState({ openModal: false }, () => {
+											this.insertContacts(data.data.inscatalogitem.Id);
+										});*/
+									})
+									.catch((error) => {
+										this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
+										this.setState({
+											loading: false
+										});
+										return true;
+									})
+
+								InsertTitleNew();
+
+								console.log("ambas varables ", IdDeparment, IdTitle);
+								this.insertContacts(IdDeparment, IdTitle);
+
 							}
-						})
-						.then((data) => {
-							this.setState({ openModal: false }, () => {
-								this.insertContacts(data.data.inscatalogitem.Id);
-							});
-						})
-						.catch((error) => {
-							this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-							this.setState({
-								loading: false
-							});
-						});
+						}
+					}
+					InsertDepartmentNew();
+					console.log("Finalizando todo ", IdDeparment);
 				}
+
+
 			}
 		);
 	};
@@ -987,6 +1089,17 @@ class ContactcontactForm extends React.Component {
 			},
 			() => {
 				this.validateField('departmentName', value);
+			}
+		);
+	};
+
+	updateTitleName = (value) => {
+		this.setState(
+			{
+				titleName: value
+			},
+			() => {
+				this.validateField('titleName', value);
 			}
 		);
 	};
@@ -1184,8 +1297,19 @@ class ContactcontactForm extends React.Component {
 										placeholder="+(999) 999-9999"
 									/>
 								</div>
+
+
 								<div className="card-form-row">
 									<span className="input-label primary">* Contact Title</span>
+									<AutosuggestInput
+										id="title"
+										name="title"
+										data={this.state.titles}
+										error={!this.state.titleNameValid}
+										value={this.state.titleName}
+										onChange={this.updateTitleName}
+										onSelect={this.updateTitleName}
+									/>{/*
 									<SelectForm
 										name="title"
 										data={this.state.titles}
@@ -1193,7 +1317,7 @@ class ContactcontactForm extends React.Component {
 										showNone={false}
 										value={this.state.title}
 										error={!this.state.titleValid}
-									/>
+									/>*/}
 								</div>
 							</div>
 						</div>
