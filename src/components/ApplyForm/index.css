@@ -99,6 +99,11 @@
     background: #3ca2c8;
 }
 
+textarea {
+    background: #ffffff !important;
+    color: #555555 !important;
+    resize: none;
+}
 
 
 

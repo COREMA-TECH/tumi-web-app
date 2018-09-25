@@ -609,9 +609,18 @@ class ApplyForm extends Component {
                         {renderMilitaryServiceSection()}
                         {renderPreviousEmploymentSection()}
                         {renderSkillsSection()}
-                        <div className="row">
-                            <input type="reset" className="reset" value="Reset"/>
-                            <input type="submit" className="submit" value="Apply"/>
+
+                        <div className="Apply-container">
+                            <div className="row">
+                                <div className="col-12 buttons-group-right">
+                                    <button type="reset" className="btn-circle btn-lg red">
+                                        <i className="fas fa-eraser"></i>
+                                    </button>
+                                    <button type="submit" className="btn-circle btn-lg">
+                                        <i className="fas fa-save"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 )}
