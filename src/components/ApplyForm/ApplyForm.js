@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {CREATE_APPLICATION} from "./Mutations";
+import React, { Component } from 'react';
+import { CREATE_APPLICATION } from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
-import {GET_POSITIONS_QUERY, GET_STATES_QUERY} from "./Queries";
+import { GET_POSITIONS_QUERY, GET_STATES_QUERY } from "./Queries";
 import './index.css';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -84,11 +84,11 @@ class ApplyForm extends Component {
     }
 
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -162,14 +162,14 @@ class ApplyForm extends Component {
                         })
                     })
                 }} className="apply-form">
-                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>New
+                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{ textAlign: 'center' }}>New
                         Skill</h1>
-                    <br/>
-                    <DialogContent style={{width: '450px'}}>
+                    <br />
+                    <DialogContent style={{ width: '450px' }}>
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">Skill Name</span>
-                                <br/>
+                                <br />
                                 <input
                                     id="description"
                                     name="description"
@@ -183,20 +183,20 @@ class ApplyForm extends Component {
                                 />
                             </div>
                         </div>
-                        <br/>
+                        <br />
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">Skill Level</span>
-                                <br/>
+                                <br />
                                 <InputRange getPercentSkill={(percent) => {
                                     // update the percent skill
                                     this.setState({
                                         percent: percent
                                     })
-                                }}/>
+                                }} />
                             </div>
                         </div>
-                        <br/><br/>
+                        <br /><br />
                     </DialogContent>
                     <DialogActions>
                         <Button className="cancel-skill-button" onClick={this.handleClose} color="default">
@@ -229,8 +229,13 @@ class ApplyForm extends Component {
                             className="form-control"
                             required min="0"
                             maxLength="50"
+<<<<<<< HEAD
                             minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
 
                     <div className="col-3">
@@ -264,8 +269,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.lastName}
                             name="lastName" type="text" className="form-control" required min="0" maxLength="50"
+<<<<<<< HEAD
                             minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
 
                     <div className="col-3">
@@ -277,8 +287,13 @@ class ApplyForm extends Component {
                                 });
                             }}
                             value={this.state.date}
+<<<<<<< HEAD
                             name="date" type="date" className="form-control" required min="0" maxLength="50"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            name="date" type="date" className="form-control" required min="0" maxLength="50" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -292,8 +307,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.streetAddress}
                             name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
+<<<<<<< HEAD
                             minLength="5"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="5" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
@@ -304,23 +324,32 @@ class ApplyForm extends Component {
                                 });
                             }}
                             value={this.state.aptNumber}
+<<<<<<< HEAD
                             name="aptNumber" type="number" className="form-control" min="0" maxLength="50"
                             minLength="5"/>
                         <span className="Apply-okCheck"></span>
                         <i className="optional"></i>
+=======
+                            name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
+                            minLength="5" />
+                        <span></span>
+                        <div className="row">
+                            <i className="optional"></i>
+                        </div>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> State</span>
-                        <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                            {({loading, error, data, refetch, networkStatus}) => {
+                        <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
+                                if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return <select name="state" id="state" required
-                                                   className="form-control">
+                                        className="form-control">
                                         <option value="">Select a state</option>
                                         {
                                             data.getcatalogitem.map(item => (
@@ -329,7 +358,7 @@ class ApplyForm extends Component {
                                         }
                                     </select>
                                 }
-                                return <SelectNothingToDisplay/>
+                                return <SelectNothingToDisplay />
                             }}
                         </Query>
                     </div>
@@ -343,8 +372,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.city}
                             name="city" type="text" className="form-control" required min="0" maxLength="10"
+<<<<<<< HEAD
                             minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
@@ -356,8 +390,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.zipCode}
                             name="zipCode" type="number" className="form-control" required maxLength="5"
+<<<<<<< HEAD
                             minLength="4" min="10000" max="99999"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="4" min="10000" max="99999" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -371,9 +410,14 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.homePhone}
                             name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
+<<<<<<< HEAD
                             minLength="10"/>
                         <span className="Apply-okCheck"></span>
                         <i className="optional"></i>
+=======
+                            minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
 
                     <div className="col-4">
@@ -386,8 +430,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.cellPhone}
                             name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
+<<<<<<< HEAD
                             minLength="10"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
 
                     <div className="col-4">
@@ -400,8 +449,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.socialSecurityNumber}
                             name="socialSecurityNumber" type="number" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="10"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -415,8 +469,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.birthDay}
                             name="birthDay" type="date" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="10"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-3">
                         <span className="primary"> Car</span>
@@ -428,7 +487,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.car}
                             name="car" type="checkbox" className="form-control" required min="0"
-                            maxLength="50" minLength="10"/>
+                            maxLength="50" minLength="10" />
                     </div>
                     <div className="col-3">
                         <span className="primary"> Type Of ID</span>
@@ -440,8 +499,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.typeOfId}
                             name="typeOfID" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="10"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-3">
                         <span className="primary"> Expire Date ID</span>
@@ -453,8 +517,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.expireDateId}
                             name="expireDateId" type="date" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="10"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -468,26 +537,31 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.emailAddress}
                             name="emailAddress" type="email" className="form-control" required min="0"
+<<<<<<< HEAD
                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Position Applying for</span>
                         <Query query={GET_POSITIONS_QUERY}>
-                            {({loading, error, data, refetch, networkStatus}) => {
+                            {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
+                                if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
                                 if (data.getposition != null && data.getposition.length > 0) {
                                     return <select name="city" id="city"
-                                                   onChange={(event) => {
-                                                       this.setState({
-                                                           positionApplyingFor: event.target.value
-                                                       });
-                                                   }}
-                                                   className="form-control">
+                                        onChange={(event) => {
+                                            this.setState({
+                                                positionApplyingFor: event.target.value
+                                            });
+                                        }}
+                                        className="form-control">
                                         <option value="">Select a position</option>
                                         <option value="0">Open Position</option>
                                         {
@@ -497,7 +571,7 @@ class ApplyForm extends Component {
                                         }
                                     </select>
                                 }
-                                return <SelectNothingToDisplay/>
+                                return <SelectNothingToDisplay />
                             }}
                         </Query>
                         <i className="optional"></i>
@@ -526,8 +600,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.dateAvailable}
                             name="dateAvailable" type="date" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -540,7 +619,7 @@ class ApplyForm extends Component {
                                         scheduleRestrictions: event.target.value
                                     });
                                 }}
-                                value="1" type="radio" name="scheduleRestrictions" className=""/>
+                                value="1" type="radio" name="scheduleRestrictions" className="" />
                             <label className="radio-label"> Yes</label>
                             <input
                                 onChange={(event) => {
@@ -548,7 +627,7 @@ class ApplyForm extends Component {
                                         scheduleRestrictions: event.target.value
                                     });
                                 }}
-                                value="0" type="radio" name="scheduleRestrictions" className=""/>
+                                value="0" type="radio" name="scheduleRestrictions" className="" />
                             <label className="radio-label"> No</label>
                         </div>
                         <span className="Apply-okCheck"></span>
@@ -563,8 +642,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.scheduleExplain}
                             name="form-control" cols="30" rows="3" required
+<<<<<<< HEAD
                             className="form-control textarea-apply-form"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            className="form-control textarea-apply-form" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -576,7 +660,7 @@ class ApplyForm extends Component {
                                     convicted: event.target.value
                                 });
                             }}
-                            value="1" type="radio" name="convicted" className=""/>
+                            value="1" type="radio" name="convicted" className="" />
                         <label className="radio-label"> Yes</label>
                         <input
                             onChange={(event) => {
@@ -584,7 +668,7 @@ class ApplyForm extends Component {
                                     convicted: event.target.value
                                 });
                             }}
-                            value="0" type="radio" name="convicted" className=""/>
+                            value="0" type="radio" name="convicted" className="" />
                         <label className="radio-label"> No</label>
                         <span className="Apply-okCheck"></span>
                     </div>
@@ -598,8 +682,13 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.convictedExplain}
                             name="form-control" cols="30" required rows="3"
+<<<<<<< HEAD
                             className="form-control textarea-apply-form"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            className="form-control textarea-apply-form" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
@@ -621,7 +710,7 @@ class ApplyForm extends Component {
                                                 });
                                             }}
                                             name="socialNetworks" type="radio" className="form-control" required
-                                            value="facebook"/>
+                                            value="facebook" />
                                     </div>
                                 </div>
                             </div>
@@ -638,7 +727,7 @@ class ApplyForm extends Component {
                                                 });
                                             }}
                                             name="socialNetworks" type="radio" className="form-control" required
-                                            value="linkedin"/>
+                                            value="linkedin" />
                                     </div>
                                 </div>
                             </div>
@@ -655,7 +744,7 @@ class ApplyForm extends Component {
                                                 });
                                             }}
                                             name="socialNetworks" type="radio" className="form-control" required
-                                            value="instagram"/>
+                                            value="instagram" />
                                     </div>
                                 </div>
                             </div>
@@ -672,7 +761,7 @@ class ApplyForm extends Component {
                                                 });
                                             }}
                                             name="socialNetworks" type="radio" className="form-control" required
-                                            value="newspaper"/>
+                                            value="newspaper" />
                                     </div>
                                 </div>
                             </div>
@@ -689,7 +778,7 @@ class ApplyForm extends Component {
                                                 });
                                             }}
                                             name="socialNetworks" type="radio" className="form-control" required
-                                            value="journals"/>
+                                            value="journals" />
                                     </div>
                                 </div>
                             </div>
@@ -706,13 +795,14 @@ class ApplyForm extends Component {
                                                 });
                                             }}
                                             name="socialNetworks" type="radio" className="form-control" required
-                                            value="others"/>
+                                            value="others" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-12">
+<<<<<<< HEAD
                         <div className="row">
                             <div className="col-12">
                                 {this.state.socialNetwork === 'others' ? (
@@ -733,6 +823,22 @@ class ApplyForm extends Component {
                                 }
                             </div>
                         </div>
+=======
+                        {this.state.socialNetwork === 'others' ? (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        comment: event.target.value
+                                    })
+                                }}
+                                placeholder="Explain"
+                                value={this.state.comment}
+                                name="comment" cols="20" rows="10" className="form-control textarea-apply-form" />
+                        ) : (
+                                ''
+                            )
+                        }
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
             </div>
@@ -797,8 +903,8 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                     ) : (
-                        ''
-                    )
+                            ''
+                        )
                 }
                 {
                     this.state.schools.map(schoolItem => (
@@ -836,7 +942,7 @@ class ApplyForm extends Component {
                         </div>
                     ))
                 }
-                <hr className="separator"/>
+                <hr className="separator" />
                 <div className="row">
                     <div className="col-3">
                         <label className="primary">Study</label>
@@ -860,7 +966,7 @@ class ApplyForm extends Component {
                             required
                             min="0"
                             maxLength="50"
-                            minLength="3"/>
+                            minLength="3" />
                     </div>
                     <div className="col-6">
                         <label className="primary">Address</label>
@@ -873,7 +979,7 @@ class ApplyForm extends Component {
                             required
                             min="0"
                             maxLength="50"
-                            minLength="3"/>
+                            minLength="3" />
                     </div>
                 </div>
                 <div className="row">
@@ -882,24 +988,24 @@ class ApplyForm extends Component {
                         <input
                             form="education-form" name="startPeriod" id="startPeriod" type="date"
                             className="form-control" required min="0" maxLength="50"
-                            minLength="3"/>
+                            minLength="3" />
                     </div>
                     <div className="col-3">
                         <span className="primary">To</span>
                         <input form="education-form" name="endPeriod" id="endPeriod" type="date"
-                               className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
+                            className="form-control" required min="0" maxLength="50"
+                            minLength="3" />
                     </div>
                     <div className="col-2">
-                        <label className="primary">Graduated</label> <br/>
-                        <input form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
+                        <label className="primary">Graduated</label> <br />
+                        <input form="education-form" type="checkbox" name="graduated" id="graduated" className="" />
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
                         <input form="education-form" name="degree" id="degree" type="text" className="form-control"
-                               required min="0"
-                               maxLength="50"
-                               minLength="3"/>
+                            required min="0"
+                            maxLength="50"
+                            minLength="3" />
                     </div>
                 </div>
                 <div className="row">
@@ -918,31 +1024,41 @@ class ApplyForm extends Component {
                     <div className="col-6">
                         <span className="primary"> Branch</span>
                         <input name="militaryBranch" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                                maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-6">
                         <span className="primary"> Rank at Discharge</span>
                         <input name="militaryRankDischarge" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                                maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> Dates</span>
                         <input name="militaryStartDate" type="date" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3" />
                     </div>
                     <div className="col-3">
                         <span className="primary">To: </span>
                         <input name="militaryEndDate" type="date" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3" />
                     </div>
                     <div className="col-6">
                         <span className="primary"> Type of Discharge</span>
                         <select name="dischargeType" id="dischargeType" required
-                                className="form-control">
+                            className="form-control">
                             <option value="">Select a type</option>
                             <option value="typeOne">Example</option>
                         </select>
@@ -1018,8 +1134,8 @@ class ApplyForm extends Component {
                                 </div>
                             </div>
                         ) : (
-                            ''
-                        )
+                                ''
+                            )
                     }
 
                     {
@@ -1066,7 +1182,7 @@ class ApplyForm extends Component {
                         ))
                     }
 
-                    <hr className="separator"/>
+                    <hr className="separator" />
                 </div>
                 <div className="row">
                     <div className="col-8">
@@ -1075,8 +1191,13 @@ class ApplyForm extends Component {
                             id="companyNameEmployment"
                             form="form-previous-employment"
                             name="companyNameEmployment" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-4">
                         <span className="primary"> Phone</span>
@@ -1084,8 +1205,13 @@ class ApplyForm extends Component {
                             id="companyPhoneEmployment"
                             form="form-previous-employment"
                             name="phoneEmployment" type="number" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="10" minLength="10"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="10" minLength="10" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-8">
                         <span className="primary"> Address</span>
@@ -1093,8 +1219,13 @@ class ApplyForm extends Component {
                             id="companyAddressEmployment"
                             form="form-previous-employment"
                             name="addressEmployment" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-4">
                         <span className="primary"> Supervisor</span>
@@ -1102,8 +1233,13 @@ class ApplyForm extends Component {
                             id="companySupervisor"
                             form="form-previous-employment"
                             name="supervisorEmployment" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-8">
                         <span className="primary"> Job Title</span>
@@ -1111,8 +1247,13 @@ class ApplyForm extends Component {
                             id="companyJobTitle"
                             form="form-previous-employment"
                             name="jobTitleEmployment" type="text" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-4">
                         <span className="primary"> Pay Rate</span>
@@ -1120,8 +1261,13 @@ class ApplyForm extends Component {
                             id="companyPayRate"
                             form="form-previous-employment"
                             name="payRateEmployment" type="number" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-3">
                         <span className="primary"> Dates</span>
@@ -1129,8 +1275,13 @@ class ApplyForm extends Component {
                             id="companyStartDate"
                             form="form-previous-employment"
                             name="startPreviousEmployment" type="date" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-3">
                         <span className="primary">To: </span>
@@ -1138,15 +1289,20 @@ class ApplyForm extends Component {
                             id="companyEndDate"
                             form="form-previous-employment"
                             name="endPreviousEmployment" type="date" className="form-control" required min="0"
+<<<<<<< HEAD
                             maxLength="50" minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            maxLength="50" minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-6">
                         <span className="primary"> Reason for leaving</span>
                         <textarea
                             id="companyReasonForLeaving"
                             form="form-previous-employment"
-                            name="reasonForLeavingEmployment" className="form-control textarea-apply-form"/>
+                            name="reasonForLeavingEmployment" className="form-control textarea-apply-form" />
                     </div>
                 </div>
                 <div className="row">
@@ -1178,8 +1334,8 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                     ) : (
-                        ''
-                    )
+                            ''
+                        )
                 }
                 {
                     this.state.languages.map(languageItem => (
@@ -1208,13 +1364,13 @@ class ApplyForm extends Component {
                         </div>
                     ))
                 }
-                <br/><br/>
+                <br /><br />
                 {
                     this.state.languages.length > 0 ? (
-                        <hr/>
+                        <hr />
                     ) : (
-                        ''
-                    )
+                            ''
+                        )
                 }
                 <form className="row" id="form-language" autoComplete="off" onSubmit={(e) => {
                     e.preventDefault();
@@ -1248,16 +1404,21 @@ class ApplyForm extends Component {
                             required
                             min="0"
                             maxLength="50"
+<<<<<<< HEAD
                             minLength="3"/>
                         <span className="Apply-okCheck"></span>
+=======
+                            minLength="3" />
+                        <span></span>
+>>>>>>> 3859e80b528e2ae5e50e527e5e4b1fa0398440d5
                     </div>
                     <div className="col-3">
                         <span className="primary"> Conversation</span>
                         <select required
-                                id="conversationLanguage"
-                                form="form-language"
-                                name="conversationLanguage"
-                                className="form-control">
+                            id="conversationLanguage"
+                            form="form-language"
+                            name="conversationLanguage"
+                            className="form-control">
                             <option value="">Select an option</option>
                             {
                                 languageLevelsJSON.map(item => (
@@ -1270,10 +1431,10 @@ class ApplyForm extends Component {
                     <div className="col-3">
                         <span className="primary"> Writing</span>
                         <select required
-                                id="writingLanguage"
-                                form="form-language"
-                                name="writingLanguage"
-                                className="form-control">
+                            id="writingLanguage"
+                            form="form-language"
+                            name="writingLanguage"
+                            className="form-control">
                             <option value="">Select an option</option>
                             {
                                 languageLevelsJSON.map(item => (
@@ -1284,7 +1445,7 @@ class ApplyForm extends Component {
                         <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
-                        <br/>
+                        <br />
                         <Button type="submit" form="form-language" className="save-skill-button">Add</Button>
                     </div>
                 </form>
@@ -1316,8 +1477,8 @@ class ApplyForm extends Component {
                                     </div>
                                 </div>
                             ) : (
-                                ''
-                            )
+                                    ''
+                                )
                         }
                         {
                             this.state.skills.map(skillItem => (
@@ -1327,7 +1488,7 @@ class ApplyForm extends Component {
                                             <span>{skillItem.description}</span>
                                         </div>
                                         <div className="col-5">
-                                            <InputRangeDisabled percent={skillItem.level}/>
+                                            <InputRangeDisabled percent={skillItem.level} />
                                         </div>
                                         <div className="col-1">
                                             <Button className="deleteSkillSection" onClick={() => {
@@ -1354,13 +1515,13 @@ class ApplyForm extends Component {
                     Application Form
                 </header>
                 <form className="ApplyForm apply-form"
-                      onSubmit={e => {
-                          // To cancel the default submit event
-                          e.preventDefault();
+                    onSubmit={e => {
+                        // To cancel the default submit event
+                        e.preventDefault();
 
-                          // Call mutation to create a application
-                          this.insertApplicationInformation();
-                      }}
+                        // Call mutation to create a application
+                        this.insertApplicationInformation();
+                    }}
                 >
                     {renderApplicantInformationSection()}
                     {/*{renderlanguagesSection()}*/}

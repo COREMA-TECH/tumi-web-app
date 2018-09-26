@@ -4,6 +4,11 @@
         max-width: 1200px;
         width: 80%;
     }
+    &-okCheck {
+        position: absolute;
+        top: 30px;
+        right: 10px;
+    }
 }
 .ApplyBlock {
     background-color: $white;
