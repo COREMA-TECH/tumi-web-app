@@ -42,6 +42,7 @@ class ApplyForm extends Component {
             expireDateId: '',
             emailAddress: '',
             positionApplyingFor: 1,
+            idealJob: '',
             dateAvailable: '',
             scheduleRestrictions: '',
             scheduleExplain: '',
@@ -104,30 +105,32 @@ class ApplyForm extends Component {
             .mutate({
                 mutation: CREATE_APPLICATION,
                 variables: {
-                    firstName: this.state.firstName,
-                    middleName: this.state.middleName,
-                    lastName: this.state.lastName,
-                    date: this.state.date,
-                    streetAddress: this.state.streetAddress,
-                    aptNumber: this.state.aptNumber,
-                    city: this.state.city,
-                    state: this.state.state,
-                    zipCode: this.state.zipCode,
-                    homePhone: this.state.homePhone,
-                    cellPhone: this.state.cellPhone,
-                    socialSecurityNumber: this.state.socialSecurityNumber,
-                    birthDay: this.state.birthDay,
-                    car: this.state.car,
-                    typeOfId: this.state.typeOfId,
-                    expireDateId: this.state.expireDateId,
-                    emailAddress: this.state.emailAddress,
-                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                    dateAvailable: this.state.dateAvailable,
-                    scheduleRestrictions: this.state.scheduleRestrictions,
-                    scheduleExplain: this.state.scheduleExplain,
-                    convicted: this.state.convicted,
-                    convictedExplain: this.state.convictedExplain,
-                    comment: this.state.comment,
+                    application: {
+                        firstName: `'${this.state.firstName}'`,
+                        middleName: `'${this.state.middleName}'`,
+                        lastName: `'${this.state.lastName}'`,
+                        date: `'${this.state.date}'`,
+                        streetAddress: `'${this.state.streetAddress}'`,
+                        aptNumber: `'${this.state.aptNumber}'`,
+                        city: `'${this.state.city}'`,
+                        state: `'${this.state.state}'`,
+                        zipCode: `'${this.state.zipCode}'`,
+                        homePhone: `'${this.state.homePhone}'`,
+                        cellPhone: `'${this.state.cellPhone}'`,
+                        socialSecurityNumber: `'${this.state.socialSecurityNumber}'`,
+                        birthDay: `'${this.state.birthDay}'`,
+                        car: `'${this.state.car}'`,
+                        typeOfId: `'${this.state.typeOfId}'`,
+                        expireDateId: `'${this.state.expireDateId}'`,
+                        emailAddress: `'${this.state.emailAddress}'`,
+                        positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        dateAvailable: `'${this.state.dateAvailable}'`,
+                        scheduleRestrictions: `'${this.state.scheduleRestrictions}'`,
+                        scheduleExplain: `'${this.state.scheduleExplain}'`,
+                        convicted: `'${this.state.convicted}'`,
+                        convictedExplain: `'${this.state.convictedExplain}'`,
+                        comment: `'${this.state.comment}'`,
+                    }
                 }
             })
     };
@@ -227,7 +230,7 @@ class ApplyForm extends Component {
                             required min="0"
                             maxLength="50"
                             minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
 
                     <div className="col-3">
@@ -246,7 +249,7 @@ class ApplyForm extends Component {
                                 min="0" maxLength="50"
                                 minLength="3"
                             />
-                            <span></span>
+                            <span className="Apply-okCheck"></span>
                             <i className="optional"></i>
                         </div>
                     </div>
@@ -262,7 +265,7 @@ class ApplyForm extends Component {
                             value={this.state.lastName}
                             name="lastName" type="text" className="form-control" required min="0" maxLength="50"
                             minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
 
                     <div className="col-3">
@@ -275,7 +278,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.date}
                             name="date" type="date" className="form-control" required min="0" maxLength="50"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -290,7 +293,7 @@ class ApplyForm extends Component {
                             value={this.state.streetAddress}
                             name="streetAddress" type="text" className="form-control" required min="0" maxLength="50"
                             minLength="5"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
@@ -301,12 +304,10 @@ class ApplyForm extends Component {
                                 });
                             }}
                             value={this.state.aptNumber}
-                            name="aptNumber" type="number" className="form-control" required min="0" maxLength="50"
+                            name="aptNumber" type="number" className="form-control" min="0" maxLength="50"
                             minLength="5"/>
-                        <span></span>
-                        <div className="row">
-                            <i className="optional"></i>
-                        </div>
+                        <span className="Apply-okCheck"></span>
+                        <i className="optional"></i>
                     </div>
                 </div>
                 <div className="row">
@@ -343,7 +344,7 @@ class ApplyForm extends Component {
                             value={this.state.city}
                             name="city" type="text" className="form-control" required min="0" maxLength="10"
                             minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
@@ -356,7 +357,7 @@ class ApplyForm extends Component {
                             value={this.state.zipCode}
                             name="zipCode" type="number" className="form-control" required maxLength="5"
                             minLength="4" min="10000" max="99999"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -371,7 +372,8 @@ class ApplyForm extends Component {
                             value={this.state.homePhone}
                             name="homePhone" type="tel" className="form-control" min="999" maxLength="10"
                             minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
+                        <i className="optional"></i>
                     </div>
 
                     <div className="col-4">
@@ -385,7 +387,7 @@ class ApplyForm extends Component {
                             value={this.state.cellPhone}
                             name="cellPhone" type="tel" className="form-control" required min="0" maxLength="10"
                             minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
 
                     <div className="col-4">
@@ -399,7 +401,7 @@ class ApplyForm extends Component {
                             value={this.state.socialSecurityNumber}
                             name="socialSecurityNumber" type="number" className="form-control" required min="0"
                             maxLength="50" minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -414,7 +416,7 @@ class ApplyForm extends Component {
                             value={this.state.birthDay}
                             name="birthDay" type="date" className="form-control" required min="0"
                             maxLength="50" minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Car</span>
@@ -439,7 +441,7 @@ class ApplyForm extends Component {
                             value={this.state.typeOfId}
                             name="typeOfID" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Expire Date ID</span>
@@ -452,7 +454,7 @@ class ApplyForm extends Component {
                             value={this.state.expireDateId}
                             name="expireDateId" type="date" className="form-control" required min="0"
                             maxLength="50" minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -467,11 +469,11 @@ class ApplyForm extends Component {
                             value={this.state.emailAddress}
                             name="emailAddress" type="email" className="form-control" required min="0"
                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" maxLength="50" minLength="8"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-4">
                         <span className="primary"> Position Applying for</span>
                         <Query query={GET_POSITIONS_QUERY}>
                             {({loading, error, data, refetch, networkStatus}) => {
@@ -487,19 +489,34 @@ class ApplyForm extends Component {
                                                    }}
                                                    className="form-control">
                                         <option value="">Select a position</option>
+                                        <option value="0">Open Position</option>
                                         {
                                             data.getposition.map(item => (
                                                 <option value={item.Id}>{item.Position}</option>
                                             ))
                                         }
                                     </select>
-
                                 }
                                 return <SelectNothingToDisplay/>
                             }}
                         </Query>
+                        <i className="optional"></i>
                     </div>
-                    <div className="col-6">
+                    <div className="col-4">
+                        <span className="primary"> Ideal Job</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    idealJob: event.target.value
+                                });
+                            }}
+                            value={this.state.idealJob}
+                            name="idealJob" type="text" className="form-control" required min="0"
+                            minLength="3"
+                            maxLength="50"/>
+                        <span className="Apply-okCheck"></span>
+                    </div>
+                    <div className="col-4">
                         <span className="primary"> Date Available</span>
                         <input
                             onChange={(event) => {
@@ -510,7 +527,7 @@ class ApplyForm extends Component {
                             value={this.state.dateAvailable}
                             name="dateAvailable" type="date" className="form-control" required min="0"
                             maxLength="50"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -534,7 +551,7 @@ class ApplyForm extends Component {
                                 value="0" type="radio" name="scheduleRestrictions" className=""/>
                             <label className="radio-label"> No</label>
                         </div>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
@@ -547,7 +564,7 @@ class ApplyForm extends Component {
                             value={this.state.scheduleExplain}
                             name="form-control" cols="30" rows="3" required
                             className="form-control textarea-apply-form"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -569,7 +586,7 @@ class ApplyForm extends Component {
                             }}
                             value="0" type="radio" name="convicted" className=""/>
                         <label className="radio-label"> No</label>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
@@ -582,7 +599,7 @@ class ApplyForm extends Component {
                             value={this.state.convictedExplain}
                             name="form-control" cols="30" required rows="3"
                             className="form-control textarea-apply-form"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -696,20 +713,26 @@ class ApplyForm extends Component {
                         </div>
                     </div>
                     <div className="col-12">
-                        {this.state.socialNetwork === 'others' ? (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        comment: event.target.value
-                                    })
-                                }}
-                                placeholder="Explain"
-                                value={this.state.comment}
-                                name="comment" cols="20" rows="10" className="form-control textarea-apply-form"/>
-                        ) : (
-                            ''
-                        )
-                        }
+                        <div className="row">
+                            <div className="col-12">
+                                {this.state.socialNetwork === 'others' ? (
+                                    <textarea
+                                        onChange={(event) => {
+                                            this.setState({
+                                                comment: event.target.value
+                                            })
+                                        }}
+                                        placeholder="Explain how did you hear about Tumi Staffing"
+                                        value={this.state.comment}
+                                        required
+                                        name="comment" cols="20" rows="10"
+                                        className="form-control textarea-apply-form"/>
+                                ) : (
+                                    ''
+                                )
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -896,13 +919,13 @@ class ApplyForm extends Component {
                         <span className="primary"> Branch</span>
                         <input name="militaryBranch" type="text" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-6">
                         <span className="primary"> Rank at Discharge</span>
                         <input name="militaryRankDischarge" type="text" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
                 <div className="row">
@@ -923,7 +946,7 @@ class ApplyForm extends Component {
                             <option value="">Select a type</option>
                             <option value="typeOne">Example</option>
                         </select>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                 </div>
             </div>
@@ -1053,7 +1076,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="companyNameEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Phone</span>
@@ -1062,7 +1085,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="phoneEmployment" type="number" className="form-control" required min="0"
                             maxLength="10" minLength="10"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> Address</span>
@@ -1071,7 +1094,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="addressEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Supervisor</span>
@@ -1080,7 +1103,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="supervisorEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> Job Title</span>
@@ -1089,7 +1112,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="jobTitleEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Pay Rate</span>
@@ -1098,7 +1121,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="payRateEmployment" type="number" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Dates</span>
@@ -1107,7 +1130,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="startPreviousEmployment" type="date" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <span className="primary">To: </span>
@@ -1116,7 +1139,7 @@ class ApplyForm extends Component {
                             form="form-previous-employment"
                             name="endPreviousEmployment" type="date" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-6">
                         <span className="primary"> Reason for leaving</span>
@@ -1226,7 +1249,7 @@ class ApplyForm extends Component {
                             min="0"
                             maxLength="50"
                             minLength="3"/>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Conversation</span>
@@ -1242,7 +1265,7 @@ class ApplyForm extends Component {
                                 ))
                             }
                         </select>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Writing</span>
@@ -1258,7 +1281,7 @@ class ApplyForm extends Component {
                                 ))
                             }
                         </select>
-                        <span></span>
+                        <span className="Apply-okCheck"></span>
                     </div>
                     <div className="col-3">
                         <br/>
