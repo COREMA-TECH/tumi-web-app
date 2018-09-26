@@ -790,7 +790,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyAddress}
                             name="addressEmployment" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
@@ -1071,12 +1071,12 @@ class ApplyForm extends Component {
                       this.insertApplicationInformation();
                   }}
             >
-                {/*{renderApplicantInformationSection()}*/}
-                {/*{renderlanguagesSection()}*/}
-                {/*{renderEducationSection()}*/}
-                {/*{renderMilitaryServiceSection()}*/}
+                {renderApplicantInformationSection()}
+                {renderlanguagesSection()}
+                {renderEducationSection()}
+                {renderMilitaryServiceSection()}
                 {renderPreviousEmploymentSection()}
-                {/*{renderSkillsSection()}*/}
+                {renderSkillsSection()}
 
                 <div className="Apply-container">
                     <div className="row">
