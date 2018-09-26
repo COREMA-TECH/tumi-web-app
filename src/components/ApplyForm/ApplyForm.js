@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Mutation} from "react-apollo";
 import {CREATE_APPLICATION} from "./Mutations";
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
@@ -12,6 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import InputRange from "./ui/InputRange/InputRange";
 import InputRangeDisabled from "./ui/InputRange/InputRangeDisabled";
+import withApollo from "react-apollo/withApollo";
 
 const uuidv4 = require('uuid/v4');
 
@@ -62,6 +62,36 @@ class ApplyForm extends Component {
             }, true);
         }
     };
+
+    insertApplicationInformation = () => {
+        this.props.client
+            .mutate({
+                mutation: CREATE_APPLICATION,
+                variables: {
+                    firstName: this.state.firstName,
+                    middleName: this.state.middleName,
+                    lastName: this.state.lastName,
+                    date: this.state.date,
+                    streetAddress: this.state.streetAddress,
+                    aptNumber: this.state.aptNumber,
+                    city: this.state.city,
+                    state: this.state.state,
+                    zipCode: this.state.zipCode,
+                    homePhone: this.state.homePhone,
+                    cellPhone: this.state.cellPhone,
+                    socialSecurityNumber: this.state.socialSecurityNumber,
+                    emailAddress: this.state.emailAddress,
+                    positionApplyingFor: this.state.positionApplyingFor,
+                    dateAvailable: this.state.dateAvailable,
+                    scheduleRestrictions: this.state.scheduleRestrictions,
+                    scheduleExplain: this.state.scheduleExplain,
+                    convicted: this.state.convicted,
+                    convictedExplain: this.state.convictedExplain,
+                    comment: this.state.comment
+                }
+            })
+    };
+
 
     render() {
         this.validateInvalidInput();
@@ -447,7 +477,8 @@ class ApplyForm extends Component {
                                 });
                             }}
                             value={this.state.convictedExplain}
-                            name="form-control" cols="30" required rows="3" className="form-control textarea-apply-form"/>
+                            name="form-control" cols="30" required rows="3"
+                            className="form-control textarea-apply-form"/>
                         <span></span>
                     </div>
                 </div>
@@ -773,41 +804,34 @@ class ApplyForm extends Component {
         );
 
         return (
-            <Mutation mutation={CREATE_APPLICATION}>
-                {(createApplication, {data}) => (
-                    <form className="ApplyForm apply-form"
-                          onSubmit={e => {
-                              e.preventDefault();
-                              let formSubmitted = e.target.classList.add('form-submitted');
-                              // createApplication({variables: {type: input.value}});
-                              //input.value = "";
-                          }}
-                    >
-                        {renderApplicantInformationSection()}
-                        {renderlanguagesSection()}
-                        {renderEducationSection()}
-                        {renderMilitaryServiceSection()}
-                        {renderPreviousEmploymentSection()}
-                        {renderSkillsSection()}
+            <form className="ApplyForm apply-form"
+                  onSubmit={e => {
+                      e.preventDefault();
+                  }}
+            >
+                {renderApplicantInformationSection()}
+                {renderlanguagesSection()}
+                {renderEducationSection()}
+                {renderMilitaryServiceSection()}
+                {renderPreviousEmploymentSection()}
+                {renderSkillsSection()}
 
-                        <div className="Apply-container">
-                            <div className="row">
-                                <div className="col-12 buttons-group-right">
-                                    <button type="reset" className="btn-circle btn-lg red">
-                                        <i className="fas fa-eraser"></i>
-                                    </button>
-                                    <button type="submit" className="btn-circle btn-lg">
-                                        <i className="fas fa-save"></i>
-                                    </button>
-                                </div>
-                            </div>
+                <div className="Apply-container">
+                    <div className="row">
+                        <div className="col-12 buttons-group-right">
+                            <button type="reset" className="btn-circle btn-lg red">
+                                <i className="fas fa-eraser"></i>
+                            </button>
+                            <button type="submit" className="btn-circle btn-lg">
+                                <i className="fas fa-save"></i>
+                            </button>
                         </div>
-                    </form>
-                )}
-            </Mutation>
+                    </div>
+                </div>
+            </form>
         );
     }
 }
 
 
-export default ApplyForm;
+export default withApollo(ApplyForm);
