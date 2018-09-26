@@ -24,6 +24,9 @@
     padding: 6px 0;
     text-align: center;
     width: 30px;
+    &:active {
+        outline: none;
+    }
     &.red {
         background-color: $red !important;
     }
