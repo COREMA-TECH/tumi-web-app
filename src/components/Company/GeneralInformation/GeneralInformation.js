@@ -367,10 +367,10 @@ class GeneralInformation extends Component {
 								Rate: parseFloat(this.state.rate),
 								Zipcode: parseInt(this.state.zipCode),
 								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'${this.state.email}'`,
+								Primary_Email: `'correo@gmail.com'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-								City: parseInt(this.state.city),
+								City: 0,
 								Id_Parent: this.state.idCompany == 0 ? 0 : this.state.Id_Parent,
 								IsActive: 1,
 								User_Created: 1,
@@ -378,7 +378,7 @@ class GeneralInformation extends Component {
 								Date_Created: "'2018-08-14'",
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'${this.state.startDate}'`,
+								Start_Date: `'2018-08-14'`,
 								Contract_URL: `'${this.state.contractURL}'`,
 								Insurace_URL: `'${this.state.insuranceURL}'`,
 								Other_URL: `'${this.state.otherURL}'`,
@@ -464,10 +464,11 @@ class GeneralInformation extends Component {
 								Rate: parseFloat(this.state.rate),
 								Zipcode: parseInt(this.state.zipCode),
 								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'${this.state.email}'`,
+								//Primary_Email: `'${this.state.email}'`,
+								Primary_Email: `'coreo@gmail.com'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-								City: parseInt(this.state.city),
+								City: 0,
 								Id_Parent: parseInt(this.state.Id_Parent),
 								IsActive: parseInt(this.state.active),
 								User_Created: 1,
@@ -475,7 +476,7 @@ class GeneralInformation extends Component {
 								Date_Created: "'2018-08-14'",
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'${this.state.startDate}'`,
+								Start_Date: `'2018-08-14'`,
 								Contract_URL: `'${this.state.contractURL}'`,
 								Insurace_URL: `'${this.state.insuranceURL}'`,
 								Other_URL: `'${this.state.otherURL}'`,
@@ -699,6 +700,7 @@ class GeneralInformation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+
 			inputEnabled: true,
 			open: false,
 			scroll: 'paper',
@@ -847,7 +849,7 @@ class GeneralInformation extends Component {
 		let countryValid = this.state.country !== null && this.state.country !== 0 && this.state.country !== '';
 		let stateValid = this.state.state !== null && this.state.state !== 0 && this.state.state !== '';
 
-		let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
+		//let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
 		let suiteValid = parseInt(this.state.suite) >= 0;
 
 		let phoneNumberValid =
@@ -875,11 +877,11 @@ class GeneralInformation extends Component {
 				zipCodeValid,
 				countryValid,
 				stateValid,
-				cityValid,
+				//cityValid,
 				suiteValid,
 				phoneNumberValid,
-				faxValid,
-				startDateValid
+				faxValid
+				//startDateValid
 			},
 			() => {
 				this.validateForm(fun);
@@ -1006,11 +1008,11 @@ class GeneralInformation extends Component {
 					this.state.zipCodeValid &&
 					this.state.countryValid &&
 					this.state.stateValid &&
-					this.state.cityValid &&
+					//this.state.cityValid &&
 					this.state.suiteValid &&
 					this.state.phoneNumberValid &&
-					this.state.faxValid &&
-					this.state.startDateValid
+					this.state.faxValid
+				//this.state.startDateValid
 			},
 			func
 		);
@@ -1124,9 +1126,10 @@ class GeneralInformation extends Component {
 									disabled={!this.props.showStepper}
 								/>
 							</div>
-							<div className="card-form-row">
+							{/*<div className="card-form-row">
 								<span className="input-label primary">* Email</span>
 								<InputForm
+
 									value={this.state.email}
 									change={(text) => {
 										this.updateInput(text, 'email');
@@ -1135,7 +1138,7 @@ class GeneralInformation extends Component {
 									maxLength="35"
 									disabled={!this.props.showStepper}
 								/>
-							</div>
+								</div>*/}
 							<div className="card-form-row">
 								<span className="input-label primary">* Address</span>
 								<InputForm
@@ -1198,7 +1201,7 @@ class GeneralInformation extends Component {
 									showNone={false}
 								/>
 							</div>
-							<div className="card-form-row">
+							{/*<div className="card-form-row">
 								<span className="input-label primary">* City</span>
 								<SelectForm
 									name="city"
@@ -1210,7 +1213,7 @@ class GeneralInformation extends Component {
 									disabled={!this.props.showStepper}
 									showNone={false}
 								/>
-							</div>
+								</div>*/}
 							<div className="card-form-row">
 								<span className="input-label primary">* Zip Code</span>
 								<InputForm
@@ -1261,7 +1264,7 @@ class GeneralInformation extends Component {
 					<div className="card-form-company">
 						<div className="card-form-header yellow">Legal Docs</div>
 						<div className="card-form-body">
-							<div className="card-form-row">
+							{/*<div className="card-form-row">
 								<span className="input-label primary">* Contract Start Date</span>
 								<InputDateForm
 									value={this.state.startDate}
@@ -1271,7 +1274,7 @@ class GeneralInformation extends Component {
 									error={!this.state.startDateValid}
 									disabled={!this.props.showStepper}
 								/>
-							</div>
+							</div>*/}
 							<div className="card-form-row">
 								<span className="input-label primary">* Week Start</span>
 								<SelectForm
@@ -1403,7 +1406,8 @@ class GeneralInformation extends Component {
 								<Button
 									className={classes.buttonSuccess}
 									onClick={() => {
-										this.state.idCompany != 0 ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+										console.log("aqio estams ", this.props.idCompany);
+										this.props.idCompany != 0 ? this.updateCompany(this.props.idCompany) : this.insertCompany();
 										//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
 									}}
 									disabled={isLoading}
