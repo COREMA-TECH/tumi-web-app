@@ -176,7 +176,7 @@ class CustomizedTabs extends Component {
 						showStepper={true}
 						toggleStepper={this.toggleStepper}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						showBillRate={true}
+						showPayRate={true}
 					/>
 				)}
 			</div>
