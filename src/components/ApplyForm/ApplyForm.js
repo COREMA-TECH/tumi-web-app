@@ -59,7 +59,16 @@ class ApplyForm extends Component {
             rankAtDischarge: '',
             typeOfDischarge: '',
 
-            // Education
+            // Previous Employment
+            companyName: '',
+            companyPhone: '',
+            companyAddress: '',
+            companySupervisor: '',
+            companyJobTitle: '',
+            companyPayRate: '',
+            companyStartDate: '',
+            companyEndDate: '',
+            companyReasonForLeaving: '',
 
             percent: 50
         };
@@ -747,55 +756,118 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Company</span>
-                        <input name="companyNameEmployment" type="text" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyName: event.target.value
+                                });
+                            }}
+                            value={this.state.companyName}
+                            name="companyNameEmployment" type="text" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Phone</span>
-                        <input name="phoneEmployment" type="number" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyPhone: event.target.value
+                                });
+                            }}
+                            value={this.state.companyPhone}
+                            name="phoneEmployment" type="number" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> Address</span>
-                        <input name="addressEmployment" type="text" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyAddress: event.target.value
+                                });
+                            }}
+                            value={this.state.companyAddress}
+                            name="addressEmployment" type="text" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Supervisor</span>
-                        <input name="supervisorEmployment" type="text" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companySupervisor: event.target.value
+                                });
+                            }}
+                            value={this.state.companySupervisor}
+                            name="supervisorEmployment" type="text" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-8">
                         <span className="primary"> Job Title</span>
-                        <input name="jobTitleEmployment" type="text" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyJobTitle: event.target.value
+                                });
+                            }}
+                            value={this.state.companyJobTitle}
+                            name="jobTitleEmployment" type="text" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Pay Rate</span>
-                        <input name="payRateEmployment" type="number" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyPayRate: event.target.value
+                                });
+                            }}
+                            value={this.state.companyPayRate}
+                            name="payRateEmployment" type="number" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Dates</span>
-                        <input name="startPreviousEmployment" type="date" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyStartDate: event.target.value
+                                });
+                            }}
+                            value={this.state.companyStartDate}
+                            name="startPreviousEmployment" type="date" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-3">
                         <span className="primary">To: </span>
-                        <input name="endPreviousEmployment" type="date" className="form-control" required min="0"
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    companyEndDate: event.target.value
+                                });
+                            }}
+                            value={this.state.companyEndDate}
+                            name="endPreviousEmployment" type="date" className="form-control" required min="0"
                                maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-6">
                         <span className="primary"> Reason for leaving</span>
-                        <textarea name="reasonForLeavingEmployment" className="form-control textarea-apply-form"/>
+                        <textarea
+                            onChange={(event) => {
+                                this.setState({
+                                    companyReasonForLeaving: event.target.value
+                                });
+                            }}
+                            value={this.state.companyReasonForLeaving}
+                            name="reasonForLeavingEmployment" className="form-control textarea-apply-form"/>
                     </div>
                 </div>
             </div>
@@ -1001,9 +1073,9 @@ class ApplyForm extends Component {
             >
                 {/*{renderApplicantInformationSection()}*/}
                 {/*{renderlanguagesSection()}*/}
-                {renderEducationSection()}
+                {/*{renderEducationSection()}*/}
                 {/*{renderMilitaryServiceSection()}*/}
-                {/*{renderPreviousEmploymentSection()}*/}
+                {renderPreviousEmploymentSection()}
                 {/*{renderSkillsSection()}*/}
 
                 <div className="Apply-container">
