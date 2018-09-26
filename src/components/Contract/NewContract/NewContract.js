@@ -1231,7 +1231,7 @@ class NewContract extends Component {
 
 											<Query
 												query={this.getStatesQuery}
-												variables={{ parent: this.state.Billing_Country }}
+												variables={{ parent: 6 }}
 											>
 												{({ loading, error, data, refetch, networkStatus }) => {
 													//if (networkStatus === 4) return <LinearProgress />;

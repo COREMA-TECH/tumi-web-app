@@ -671,7 +671,9 @@ class PositionsCompanyForm extends React.Component {
                 this.setState({ showCircularLoading: true, openModal: false }, () => {
                     this.loadPositions(() => {
                         this.loadDepartments(() => {
-                            this.setState({ indexView: 1, showCircularLoading: false, loading: false });
+                            this.resetState(() => {
+                                this.setState({ indexView: 1, showCircularLoading: false, loading: false });
+                            });
                         });
                     });
                 });
@@ -934,35 +936,36 @@ class PositionsCompanyForm extends React.Component {
                                     change={(value) => this.onChangeHandler(value, 'position')}
                                 />
                             </div>
-                            <div className="card-form-row">
-                                <span className="input-label primary">* Pay Rate</span>
-
-                                <InputForm
-                                    id="payrate"
-                                    name="payrate"
-                                    maxLength="10"
-                                    error={!this.state.payrateValid}
-                                    value={this.state.payrate}
-                                    type="number"
-                                    allowZero={false}
-                                    change={(text) => this.onNumberChangeHandler(text, 'payrate')}
-                                />
-                            </div>
-                            {this.props.showBillRate && (
+                            {this.props.showPayRate && (
                                 <div className="card-form-row">
-                                    <span className="input-label primary">* Bill Rate</span>
+                                    <span className="input-label primary">* Pay Rate</span>
+
                                     <InputForm
-                                        id="billrate"
-                                        name="billrate"
+                                        id="payrate"
+                                        name="payrate"
                                         maxLength="10"
-                                        error={!this.state.billrateValid}
-                                        value={this.state.billrate}
+                                        error={!this.state.payrateValid}
+                                        value={this.state.payrate}
                                         type="number"
                                         allowZero={false}
-                                        change={(text) => this.onNumberChangeHandler(text, 'billrate')}
+                                        change={(text) => this.onNumberChangeHandler(text, 'payrate')}
                                     />
                                 </div>
                             )}
+                            <div className="card-form-row">
+                                <span className="input-label primary">* Bill Rate</span>
+                                <InputForm
+                                    id="billrate"
+                                    name="billrate"
+                                    maxLength="10"
+                                    error={!this.state.billrateValid}
+                                    value={this.state.billrate}
+                                    type="number"
+                                    allowZero={false}
+                                    change={(text) => this.onNumberChangeHandler(text, 'billrate')}
+                                />
+                            </div>
+
                             <div className="card-form-row">
                                 <span className="input-label primary">* Shift</span>
                                 <SelectForm
@@ -1035,7 +1038,7 @@ class PositionsCompanyForm extends React.Component {
                             shifts={this.state.shifts}
                             onEditHandler={this.onEditHandler}
                             onDeleteHandler={this.onDeleteHandler}
-                            showBillRate={this.props.showBillRate}
+                            showPayRate={this.props.showPayRate}
                         />
                     </div>
                 </div>
