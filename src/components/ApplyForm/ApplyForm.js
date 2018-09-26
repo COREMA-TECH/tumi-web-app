@@ -13,6 +13,7 @@ import InputRange from "./ui/InputRange/InputRange";
 import InputRangeDisabled from "./ui/InputRange/InputRangeDisabled";
 import withApollo from "react-apollo/withApollo";
 import studyTypes from "./data/studyTypes";
+import languageLevelsJSON from "./data/languagesLevels";
 
 const uuidv4 = require('uuid/v4');
 
@@ -35,6 +36,10 @@ class ApplyForm extends Component {
             homePhone: '',
             cellPhone: '',
             socialSecurityNumber: '',
+            birthDay: '',
+            car: '',
+            typeOfId: '',
+            expireDateId: '',
             emailAddress: '',
             positionApplyingFor: 1,
             dateAvailable: '',
@@ -42,6 +47,7 @@ class ApplyForm extends Component {
             scheduleExplain: '',
             convicted: '',
             convictedExplain: '',
+            socialNetwork: '',
             comment: '',
 
             // Languages array
@@ -110,6 +116,10 @@ class ApplyForm extends Component {
                     homePhone: this.state.homePhone,
                     cellPhone: this.state.cellPhone,
                     socialSecurityNumber: this.state.socialSecurityNumber,
+                    birthDay: this.state.birthDay,
+                    car: this.state.car,
+                    typeOfId: this.state.typeOfId,
+                    expireDateId: this.state.expireDateId,
                     emailAddress: this.state.emailAddress,
                     positionApplyingFor: parseInt(this.state.positionApplyingFor),
                     dateAvailable: this.state.dateAvailable,
@@ -393,6 +403,59 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
+                    <div className="col-3">
+                        <span className="primary"> Birth Day</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    birthDay: event.target.value
+                                });
+                            }}
+                            value={this.state.birthDay}
+                            name="birthDay" type="date" className="form-control" required min="0"
+                            maxLength="50" minLength="10"/>
+                        <span></span>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary"> Car</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    car: event.target.value
+                                });
+                            }}
+                            value={this.state.car}
+                            name="car" type="checkbox" className="form-control" required min="0"
+                            maxLength="50" minLength="10"/>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary"> Type Of ID</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    typeOfId: event.target.value
+                                });
+                            }}
+                            value={this.state.typeOfId}
+                            name="typeOfID" type="text" className="form-control" required min="0"
+                            maxLength="50" minLength="10"/>
+                        <span></span>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary"> Expire Date ID</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    expireDateId: event.target.value
+                                });
+                            }}
+                            value={this.state.expireDateId}
+                            name="expireDateId" type="date" className="form-control" required min="0"
+                            maxLength="50" minLength="10"/>
+                        <span></span>
+                    </div>
+                </div>
+                <div className="row">
                     <div className="col-12">
                         <span className="primary"> Email Address</span>
                         <input
@@ -525,15 +588,128 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> How did you hear about Tumi Staffing </span>
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    comment: event.target.value
-                                })
-                            }}
-                            value={this.state.comment}
-                            name="comment" cols="20" rows="10" className="form-control textarea-apply-form"/>
-                        <span></span>
+                    </div>
+                    <div className="col-10">
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <label className="radio-label"> Facebook</label>
+                                    </div>
+                                    <div className="col-1">
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    socialNetwork: event.target.value
+                                                });
+                                            }}
+                                            name="socialNetworks" type="radio" className="form-control" required
+                                            value="facebook"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <label className="radio-label"> Linkedin</label>
+                                    </div>
+                                    <div className="col-1">
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    socialNetwork: event.target.value
+                                                });
+                                            }}
+                                            name="socialNetworks" type="radio" className="form-control" required
+                                            value="linkedin"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <label className="radio-label"> Instagram</label>
+                                    </div>
+                                    <div className="col-1">
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    socialNetwork: event.target.value
+                                                });
+                                            }}
+                                            name="socialNetworks" type="radio" className="form-control" required
+                                            value="instagram"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <label className="radio-label"> News Paper</label>
+                                    </div>
+                                    <div className="col-1">
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    socialNetwork: event.target.value
+                                                });
+                                            }}
+                                            name="socialNetworks" type="radio" className="form-control" required
+                                            value="newspaper"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <label className="radio-label"> Journals</label>
+                                    </div>
+                                    <div className="col-1">
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    socialNetwork: event.target.value
+                                                });
+                                            }}
+                                            name="socialNetworks" type="radio" className="form-control" required
+                                            value="journals"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-12">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <label className="radio-label"> Other</label>
+                                    </div>
+                                    <div className="col-1">
+                                        <input
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    socialNetwork: event.target.value
+                                                });
+                                            }}
+                                            name="socialNetworks" type="radio" className="form-control" required
+                                            value="others"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12">
+                        {this.state.socialNetwork === 'others' ? (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        comment: event.target.value
+                                    })
+                                }}
+                                placeholder="Explain"
+                                value={this.state.comment}
+                                name="comment" cols="20" rows="10" className="form-control textarea-apply-form"/>
+                        ) : (
+                            ''
+                        )
+                        }
                     </div>
                 </div>
             </div>
@@ -1023,7 +1199,7 @@ class ApplyForm extends Component {
                     let item = {
                         uuid: uuidv4(),
                         ApplicationId: 1,
-                        idLanguage: 1,
+                        idLanguage: document.getElementById('nameLanguage').value,
                         writing: document.getElementById('writingLanguage').value,
                         conversation: document.getElementById('conversationLanguage').value
                     };
@@ -1054,32 +1230,34 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-3">
                         <span className="primary"> Conversation</span>
-                        <input
-                            id="conversationLanguage"
-                            form="form-language"
-                            name="conversationLanguage"
-                            type="number"
-                            className="form-control"
-                            required
-                            min="0"
-                            max="100"
-                            maxLength="50"
-                            minLength="3"/>
+                        <select required
+                                id="conversationLanguage"
+                                form="form-language"
+                                name="conversationLanguage"
+                                className="form-control">
+                            <option value="">Select an option</option>
+                            {
+                                languageLevelsJSON.map(item => (
+                                    <option value={item.Id}>{item.Name}</option>
+                                ))
+                            }
+                        </select>
                         <span></span>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Writing</span>
-                        <input
-                            id="writingLanguage"
-                            form="form-language"
-                            name="writingLanguage"
-                            type="number"
-                            className="form-control"
-                            required
-                            max="100"
-                            min="0"
-                            maxLength="50"
-                            minLength="3"/>
+                        <select required
+                                id="writingLanguage"
+                                form="form-language"
+                                name="writingLanguage"
+                                className="form-control">
+                            <option value="">Select an option</option>
+                            {
+                                languageLevelsJSON.map(item => (
+                                    <option value={item.Id}>{item.Name}</option>
+                                ))
+                            }
+                        </select>
                         <span></span>
                     </div>
                     <div className="col-3">
@@ -1162,11 +1340,11 @@ class ApplyForm extends Component {
                       }}
                 >
                     {renderApplicantInformationSection()}
-                    {renderlanguagesSection()}
-                    {renderEducationSection()}
-                    {renderMilitaryServiceSection()}
-                    {renderPreviousEmploymentSection()}
-                    {renderSkillsSection()}
+                    {/*{renderlanguagesSection()}*/}
+                    {/*{renderEducationSection()}*/}
+                    {/*{renderMilitaryServiceSection()}*/}
+                    {/*{renderPreviousEmploymentSection()}*/}
+                    {/*{renderSkillsSection()}*/}
 
                     <div className="Apply-container">
                         <div className="row">

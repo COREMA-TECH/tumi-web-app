@@ -17,6 +17,10 @@ const CREATE_APPLICATION = gql`
         $homePhone: String,
         $cellPhone: String!,
         $socialSecurityNumber: String!,
+        $birthDay:  String!,
+        $car:  Boolean!,
+        $typeOfId:  String!,
+        $expireDateId:  String!,
         $emailAddress: String!,
         $positionApplyingFor: Int!,
         $dateAvailable: String!,
@@ -39,6 +43,10 @@ const CREATE_APPLICATION = gql`
             homePhone: $homePhone
             cellPhone: $cellPhone
             socialSecurityNumber: $socialSecurityNumber
+            birthDay: $birthDay
+            car: $car
+            typeOfId: $typeOfId
+            expireDateId: $expireDateId
             emailAddress: $emailAddress
             positionApplyingFor: $positionApplyingFor
             dateAvailable: $dateAvailable
