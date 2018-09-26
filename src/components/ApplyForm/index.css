@@ -96,10 +96,6 @@
     transition: all .800s;
 }
 
-.skills-container:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
 .skills-container--header {
     border-radius: 5px 5px 0 0;
     color: #ffffff;

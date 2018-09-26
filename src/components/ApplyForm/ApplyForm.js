@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import InputRange from "./ui/InputRange/InputRange";
 import InputRangeDisabled from "./ui/InputRange/InputRangeDisabled";
 import withApollo from "react-apollo/withApollo";
+import studyTypes from "./data/studyTypes";
 
 const uuidv4 = require('uuid/v4');
 
@@ -41,7 +42,25 @@ class ApplyForm extends Component {
             convicted: '',
             convictedExplain: '',
             comment: '',
+
+            // Languages array
+            languages: [],
+
+            // Skills array
             skills: [],
+
+            // Schools array
+            schools: [],
+
+            // Military Service state fields
+            branch: '',
+            startDateMilitaryService: '',
+            endDateMilitaryService: '',
+            rankAtDischarge: '',
+            typeOfDischarge: '',
+
+            // Education
+
             percent: 50
         };
     }
@@ -81,13 +100,13 @@ class ApplyForm extends Component {
                     cellPhone: this.state.cellPhone,
                     socialSecurityNumber: this.state.socialSecurityNumber,
                     emailAddress: this.state.emailAddress,
-                    positionApplyingFor: this.state.positionApplyingFor,
+                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
                     dateAvailable: this.state.dateAvailable,
                     scheduleRestrictions: this.state.scheduleRestrictions,
                     scheduleExplain: this.state.scheduleExplain,
                     convicted: this.state.convicted,
                     convictedExplain: this.state.convictedExplain,
-                    comment: this.state.comment
+                    comment: this.state.comment,
                 }
             })
     };
@@ -112,7 +131,11 @@ class ApplyForm extends Component {
                     this.setState(prevState => ({
                         open: false,
                         skills: [...prevState.skills, item]
-                    }))
+                    }), () => {
+                        this.setState({
+                            percent: 50
+                        })
+                    })
                 }} className="apply-form">
                     <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>New
                         Skill</h1>
@@ -382,6 +405,11 @@ class ApplyForm extends Component {
                                 if (error) return <p>Error </p>;
                                 if (data.getposition != null && data.getposition.length > 0) {
                                     return <select name="city" id="city" required
+                                                   onChange={(event) => {
+                                                       this.setState({
+                                                           positionApplyingFor: event.target.value
+                                                       });
+                                                   }}
                                                    className="form-control">
                                         <option value="">Select a position</option>
                                         {
@@ -501,119 +529,173 @@ class ApplyForm extends Component {
 
         // To render the Education Service Section
         let renderEducationSection = () => (
-            <div className="ApplyBlock">
+            <form id="education-form" className="ApplyBlock" onSubmit={(e) => {
+                e.preventDefault();
+
+                let item = {
+                    schoolType: parseInt(document.getElementById('studyType').value),
+                    educationName: document.getElementById('institutionName').value,
+                    educationAddress: document.getElementById('addressInstitution').value,
+                    startDate: document.getElementById('startPeriod').value,
+                    endDate: document.getElementById('endPeriod').value,
+                    graduated: document.getElementById('graduated').checked,
+                    degree: document.getElementById('degree').value,
+                    ApplicationId: 1 // Static application id
+                };
+
+                console.log(item);
+
+                this.setState(prevState => ({
+                    open: false,
+                    schools: [...prevState.schools, item]
+                }), () => {
+                    document.getElementById('education-form').reset();
+                    document.getElementById('studyType').classList.remove('invalid-apply-form');
+                    document.getElementById('institutionName').classList.remove('invalid-apply-form');
+                    document.getElementById('addressInstitution').classList.remove('invalid-apply-form');
+                    document.getElementById('startPeriod').classList.remove('invalid-apply-form');
+                    document.getElementById('endPeriod').classList.remove('invalid-apply-form');
+                    document.getElementById('graduated').classList.remove('invalid-apply-form');
+                    document.getElementById('degree').classList.remove('invalid-apply-form');
+                })
+            }}>
                 <h4 className="ApplyBlock-title">Education</h4>
-                <div className="row">
-                    <div className="col-12">
-                        <h3 className="ApplyBlock-subtitle">High School</h3>
-                    </div>
-                    <div className="col-4">
-                        <label className="primary">Name (Institution)</label>
-                        <input name="institutionName" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
-                    </div>
-                    <div className="col-8">
-                        <label className="primary">Address</label>
-                        <input name="addressInstitution" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-3">
-                        <span className="primary"> Time Period</span>
-                        <input name="startPeriod" type="date" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
-                    </div>
-                    <div className="col-3">
-                        <span className="primary">To</span>
-                        <input name="endPeriod" type="date" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
-                    </div>
-                    <div className="col-2">
-                        <label className="primary">Graduated</label> <br/>
-                        <input type="checkbox" name="graduated" className=""/>
-                    </div>
-                    <div className="col-4">
-                        <label className="primary">Degree</label>
-                        <input name="degree" type="text" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
-                    </div>
-                </div>
+                {
+                    this.state.schools.length > 0 ? (
+                        <div key={uuidv4()} className="skills-container skills-container--header">
+                            <div className="row">
+                                <div className="col-2">
+                                    <span>Study</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>Institution</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>Address</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>Start Date</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>End Date</span>
+                                </div>
+                                <div className="col-1">
+                                    <span>Graduated</span>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
+                {
+                    this.state.schools.map(schoolItem => (
+                        <div key={uuidv4()} className="skills-container">
+                            <div className="row">
+                                <div className="col-2">
+                                    <span>{schoolItem.schoolType}</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>{schoolItem.educationName}</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>{schoolItem.educationAddress}</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>{schoolItem.startDate}</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>{schoolItem.endDate}</span>
+                                </div>
+                                <div className="col-1">
+                                    <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
+                                </div>
+                                <div className="col-1">
+                                    <Button className="deleteSkillSection" onClick={() => {
+                                        this.setState(prevState => ({
+                                            schools: this.state.schools.filter((_, i) => {
+                                                console.log(this.state.languages);
+                                                return _.schoolType !== schoolItem.schoolType
+                                            })
+                                        }))
+                                    }}>x</Button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                }
                 <hr className="separator"/>
                 <div className="row">
-                    <div className="col-12">
-                        <h3 className="ApplyBlock-subtitle">Collage</h3>
+                    <div className="col-3">
+                        <label className="primary">Study</label>
+                        <select form="education-form" name="studyType" id="studyType" required className="form-control">
+                            <option value="">Select an option</option>
+                            {
+                                studyTypes.map(item => (
+                                    <option value={item.Id}>{item.Name}</option>
+                                ))
+                            }
+                        </select>
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                         <label className="primary">Name (Institution)</label>
-                        <input name="institutionName" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                        <input
+                            form="education-form"
+                            name="institutionName"
+                            id="institutionName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"/>
                     </div>
-                    <div className="col-8">
+                    <div className="col-6">
                         <label className="primary">Address</label>
-                        <input name="addressInstitution" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                        <input
+                            form="education-form"
+                            name="addressInstitution"
+                            id="addressInstitution"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"/>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> Time Period</span>
-                        <input name="startPeriod" type="date" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
+                        <input
+                            form="education-form" name="startPeriod" id="startPeriod" type="date"
+                            className="form-control" required min="0" maxLength="50"
+                            minLength="3"/>
                     </div>
                     <div className="col-3">
                         <span className="primary">To</span>
-                        <input name="endPeriod" type="date" className="form-control" required min="0" maxLength="50"
+                        <input form="education-form" name="endPeriod" id="endPeriod" type="date"
+                               className="form-control" required min="0" maxLength="50"
                                minLength="3"/>
                     </div>
                     <div className="col-2">
                         <label className="primary">Graduated</label> <br/>
-                        <input type="checkbox" name="graduated" className=""/>
+                        <input form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
-                        <input name="degree" type="text" className="form-control" required min="0" maxLength="50"
+                        <input form="education-form" name="degree" id="degree" type="text" className="form-control"
+                               required min="0"
+                               maxLength="50"
                                minLength="3"/>
-                    </div>
-                </div>
-                <hr className="separator"/>
-                <div className="row">
-                    <div className="col-12">
-                        <h3 className="ApplyBlock-subtitle">Other</h3>
-                    </div>
-                    <div className="col-4">
-                        <label className="primary">Name (Institution)</label>
-                        <input name="institutionName" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
-                    </div>
-                    <div className="col-8">
-                        <label className="primary">Address</label>
-                        <input name="addressInstitution" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-3">
-                        <span className="primary"> Time Period</span>
-                        <input name="startPeriod" type="date" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
-                    </div>
-                    <div className="col-3">
-                        <span className="primary">To</span>
-                        <input name="endPeriod" type="date" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
-                    </div>
-                    <div className="col-2">
-                        <label className="primary">Graduated</label> <br/>
-                        <input type="checkbox" name="graduated" className=""/>
-                    </div>
-                    <div className="col-4">
-                        <label className="primary">Degree</label>
-                        <input name="degree" type="text" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
+                    <div className="col-12">
+                        <Button type="submit" form="education-form" className="save-skill-button">Add</Button>
                     </div>
                 </div>
-            </div>
+            </form>
         );
 
         // To render the Military Service Section
@@ -650,6 +732,7 @@ class ApplyForm extends Component {
                         <select name="dischargeType" id="dischargeType" required
                                 className="form-control">
                             <option value="">Select a type</option>
+                            <option value="typeOne">Example</option>
                         </select>
                         <span></span>
                     </div>
@@ -723,26 +806,129 @@ class ApplyForm extends Component {
                 <h4 className="ApplyBlock-title">
                     Languages
                 </h4>
-                <div className="row">
-                    <div className="col-4">
+                {
+                    this.state.languages.length > 0 ? (
+                        <div className="skills-container skills-container--header">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span>Language Name</span>
+                                </div>
+                                <div className="col-4">
+                                    <span>Conversation %</span>
+                                </div>
+                                <div className="col-4">
+                                    <span>Writing %</span>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
+                {
+                    this.state.languages.map(languageItem => (
+                        <div key={uuidv4()} className="skills-container">
+                            <div className="row">
+                                <div className="col-3">
+                                    <span>{languageItem.idLanguage}</span>
+                                </div>
+                                <div className="col-4">
+                                    <span>{languageItem.conversation}</span>
+                                </div>
+                                <div className="col-4">
+                                    <span>{languageItem.writing}</span>
+                                </div>
+                                <div className="col-1">
+                                    <Button className="deleteSkillSection" onClick={() => {
+                                        this.setState(prevState => ({
+                                            languages: this.state.languages.filter((_, i) => {
+                                                console.log(this.state.languages);
+                                                return _.idLanguage !== languageItem.idLanguage
+                                            })
+                                        }))
+                                    }}>x</Button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                }
+                <br/><br/>
+                {
+                    this.state.languages.length > 0 ? (
+                        <hr/>
+                    ) : (
+                        ''
+                    )
+                }
+                <form className="row" id="form-language" autoComplete="off" onSubmit={(e) => {
+                    e.preventDefault();
+
+                    let item = {
+                        ApplicationId: 1,
+                        idLanguage: 1,
+                        writing: document.getElementById('writingLanguage').value,
+                        conversation: document.getElementById('conversationLanguage').value
+                    };
+
+                    this.setState(prevState => ({
+                        open: false,
+                        languages: [...prevState.languages, item]
+                    }), () => {
+                        document.getElementById("form-language").reset();
+                        document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
+                        document.getElementById('conversationLanguage').classList.remove('invalid-apply-form');
+                        document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
+                    })
+                }}>
+                    <div className="col-3">
                         <span className="primary"> Language</span>
-                        <input name="languageName" type="text" className="form-control" required min="0" maxLength="50"
-                               minLength="3"/>
+                        <input
+                            id="nameLanguage"
+                            form="form-language"
+                            name="languageName"
+                            type="text"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="3"/>
                         <span></span>
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                         <span className="primary"> Conversation</span>
-                        <input name="conversationlanguage" type="number" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                        <input
+                            id="conversationLanguage"
+                            form="form-language"
+                            name="conversationLanguage"
+                            type="number"
+                            className="form-control"
+                            required
+                            min="0"
+                            max="100"
+                            maxLength="50"
+                            minLength="3"/>
                         <span></span>
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                         <span className="primary"> Writing</span>
-                        <input name="writinglanguage" type="number" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                        <input
+                            id="writingLanguage"
+                            form="form-language"
+                            name="writingLanguage"
+                            type="number"
+                            className="form-control"
+                            required
+                            max="100"
+                            min="0"
+                            maxLength="50"
+                            minLength="3"/>
                         <span></span>
                     </div>
-                </div>
+                    <div className="col-3">
+                        <br/>
+                        <Button type="submit" form="form-language" className="save-skill-button">Add</Button>
+                    </div>
+                </form>
             </div>
         );
 
@@ -806,15 +992,19 @@ class ApplyForm extends Component {
         return (
             <form className="ApplyForm apply-form"
                   onSubmit={e => {
+                      // To cancel the default submit event
                       e.preventDefault();
+
+                      // Call mutation to create a application
+                      this.insertApplicationInformation();
                   }}
             >
-                {renderApplicantInformationSection()}
-                {renderlanguagesSection()}
+                {/*{renderApplicantInformationSection()}*/}
+                {/*{renderlanguagesSection()}*/}
                 {renderEducationSection()}
-                {renderMilitaryServiceSection()}
-                {renderPreviousEmploymentSection()}
-                {renderSkillsSection()}
+                {/*{renderMilitaryServiceSection()}*/}
+                {/*{renderPreviousEmploymentSection()}*/}
+                {/*{renderSkillsSection()}*/}
 
                 <div className="Apply-container">
                     <div className="row">
