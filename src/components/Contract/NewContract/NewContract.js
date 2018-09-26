@@ -697,7 +697,7 @@ class NewContract extends Component {
 
 				break;
 			case 'User_Signed_Title':
-				User_Signed_TitleValid = value.trim().length >= 5;
+				User_Signed_TitleValid = value.trim().length >= 3;
 				Id_User_SignedValid = true;
 				break;
 			case 'Signed_Date':
@@ -794,7 +794,7 @@ class NewContract extends Component {
 			this.state.Owner_Expiration_Notification !== null &&
 			this.state.Owner_Expiration_Notification !== 0 &&
 			this.state.Owner_Expiration_Notification !== '';
-		let CompanySignedNameValid = this.state.CompanySignedName.trim().length >= 5;
+		let CompanySignedNameValid = this.state.CompanySignedName.trim().length >= 3;
 		let Company_Signed_DateValid = this.state.Company_Signed_Date.trim().length == 10;
 
 		let Id_User_Billing_ContactValid =
