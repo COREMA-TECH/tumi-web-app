@@ -155,7 +155,7 @@ function TextMaskCustom(props) {
 		<MaskedInput
 			{...other}
 			ref={inputRef}
-			mask={[ '(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/ ]}
+			mask={['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
 			placeholderChar={'\u2000'}
 			showMask
 		/>
@@ -182,7 +182,7 @@ function NumberFormatCustom(props) {
 				});
 			}}
 			thousandSeparator
-			//prefix="$"
+		//prefix="$"
 		/>
 	);
 }
@@ -255,10 +255,12 @@ class PositionsTable extends React.Component {
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
-							{this.props.showBillRate && (
-								<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+
+							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+
+							{this.props.showPayRate && (
+								<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
 							)}
-							<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
 							<CustomTableCell padding="none" className={classes.th}>
 								Shift
 							</CustomTableCell>
@@ -327,8 +329,8 @@ class PositionsTable extends React.Component {
 									<CustomTableCell style={{ width: '180px' }}>
 										<TextField
 											className={classes.formControl}
-											value={row.Pay_Rate}
-											id="payrate"
+											value={row.Bill_Rate}
+											id="billrate"
 											readOnly
 											InputProps={{
 												inputComponent: NumberFormatCustom,
@@ -336,12 +338,13 @@ class PositionsTable extends React.Component {
 											}}
 										/>
 									</CustomTableCell>
-									{this.props.showBillRate && (
+
+									{this.props.showPayRate && (
 										<CustomTableCell style={{ width: '180px' }}>
 											<TextField
 												className={classes.formControl}
-												value={row.Bill_Rate}
-												id="billrate"
+												value={row.Pay_Rate}
+												id="payrate"
 												readOnly
 												InputProps={{
 													inputComponent: NumberFormatCustom,

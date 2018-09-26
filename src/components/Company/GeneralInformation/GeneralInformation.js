@@ -507,7 +507,7 @@ class GeneralInformation extends Component {
      **********************************************************/
 
 	loadCountries = (func = () => { }) => {
-		console.log("vamos a leer coountrue");
+
 		this.setState({
 			loadingCountries: true
 		});
@@ -748,7 +748,7 @@ class GeneralInformation extends Component {
 			states: [],
 			cities: [],
 			companyProperties: [],
-			country: 0,
+			country: 6,
 			state: 0,
 			city: 0,
 			loadingCountries: false,
@@ -1201,7 +1201,7 @@ class GeneralInformation extends Component {
 									showNone={false}
 								/>
 							</div>
-							{/*<div className="card-form-row">
+							<div className="card-form-row">
 								<span className="input-label primary">* City</span>
 								<SelectForm
 									name="city"
@@ -1213,7 +1213,7 @@ class GeneralInformation extends Component {
 									disabled={!this.props.showStepper}
 									showNone={false}
 								/>
-								</div>*/}
+							</div>
 							<div className="card-form-row">
 								<span className="input-label primary">* Zip Code</span>
 								<InputForm

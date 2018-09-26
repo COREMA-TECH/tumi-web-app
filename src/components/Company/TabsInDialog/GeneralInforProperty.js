@@ -573,7 +573,8 @@ class GeneralInfoProperty extends Component {
                                         <span className="primary card-input-label">* Address 2</span>
                                     </div>
                                     <div className="col-6">
-                                        <InputValid
+                                        <input
+                                            className={'input-form'}
                                             change={(text) => {
                                                 this.setState({
                                                     optionalAddress: text
@@ -867,7 +868,8 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <InputValid
+                                        <input
+                                            className={'input-form'}
                                             change={(text) => {
                                                 this.setState({
                                                     Other_Name: text
@@ -890,7 +892,8 @@ class GeneralInfoProperty extends Component {
                                         />
                                     </div>
                                     <div className="col-6">
-                                        <InputValid
+                                        <input
+                                            className={'input-form'}
                                             change={(text) => {
                                                 this.setState({
                                                     Other01_Name: text
