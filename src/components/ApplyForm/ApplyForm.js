@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 import React, { Component } from 'react';
-import { Mutation } from "react-apollo";
 import { CREATE_APPLICATION } from "./Mutations";
-=======
-import React, {Component} from 'react';
-import {CREATE_APPLICATION} from "./Mutations";
->>>>>>> dbe83b1701bf26c867aa7acdc2cd16b6269d5e29
 import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
