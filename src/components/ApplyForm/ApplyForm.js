@@ -16,6 +16,7 @@ import studyTypes from "./data/studyTypes";
 
 const uuidv4 = require('uuid/v4');
 
+
 class ApplyForm extends Component {
     constructor(props) {
         super(props);
@@ -35,7 +36,7 @@ class ApplyForm extends Component {
             cellPhone: '',
             socialSecurityNumber: '',
             emailAddress: '',
-            positionApplyingFor: '',
+            positionApplyingFor: 1,
             dateAvailable: '',
             scheduleRestrictions: '',
             scheduleExplain: '',
@@ -413,7 +414,7 @@ class ApplyForm extends Component {
                                 if (loading) return <LinearProgress/>;
                                 if (error) return <p>Error </p>;
                                 if (data.getposition != null && data.getposition.length > 0) {
-                                    return <select name="city" id="city" required
+                                    return <select name="city" id="city"
                                                    onChange={(event) => {
                                                        this.setState({
                                                            positionApplyingFor: event.target.value
@@ -764,7 +765,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyName}
                             name="companyNameEmployment" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
@@ -777,7 +778,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyPhone}
                             name="phoneEmployment" type="number" className="form-control" required min="0"
-                               maxLength="10" minLength="10"/>
+                            maxLength="10" minLength="10"/>
                         <span></span>
                     </div>
                     <div className="col-8">
@@ -803,7 +804,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companySupervisor}
                             name="supervisorEmployment" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-8">
@@ -816,7 +817,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyJobTitle}
                             name="jobTitleEmployment" type="text" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-4">
@@ -829,7 +830,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyPayRate}
                             name="payRateEmployment" type="number" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-3">
@@ -842,7 +843,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyStartDate}
                             name="startPreviousEmployment" type="date" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-3">
@@ -855,7 +856,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyEndDate}
                             name="endPreviousEmployment" type="date" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                            maxLength="50" minLength="3"/>
                         <span></span>
                     </div>
                     <div className="col-6">
