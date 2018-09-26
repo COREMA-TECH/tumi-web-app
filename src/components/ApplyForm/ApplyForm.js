@@ -82,46 +82,9 @@ class ApplyForm extends Component {
 		};
 	}
 
-<<<<<<< HEAD
 	handleClickOpen = () => {
 		this.setState({ open: true });
 	};
-=======
-    insertApplicationInformation = () => {
-        this.props.client
-            .mutate({
-                mutation: CREATE_APPLICATION,
-                variables: {
-                    application: {
-                        firstName: `'${this.state.firstName}'`,
-                        middleName: `'${this.state.middleName}'`,
-                        lastName: `'${this.state.lastName}'`,
-                        date: `'${this.state.date}'`,
-                        streetAddress: `'${this.state.streetAddress}'`,
-                        aptNumber: `'${this.state.aptNumber}'`,
-                        city: `'${this.state.city}'`,
-                        state: `'${this.state.state}'`,
-                        zipCode: `'${this.state.zipCode}'`,
-                        homePhone: `'${this.state.homePhone}'`,
-                        cellPhone: `'${this.state.cellPhone}'`,
-                        socialSecurityNumber: `'${this.state.socialSecurityNumber}'`,
-                        birthDay: `'${this.state.birthDay}'`,
-                        car: `'${this.state.car}'`,
-                        typeOfId: parseInt(this.state.typeOfId),
-                        expireDateId: `'${this.state.expireDateId}'`,
-                        emailAddress: `'${this.state.emailAddress}'`,
-                        positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                        dateAvailable: `'${this.state.dateAvailable}'`,
-                        scheduleRestrictions: `'${this.state.scheduleRestrictions}'`,
-                        scheduleExplain: `'${this.state.scheduleExplain}'`,
-                        convicted: `'${this.state.convicted}'`,
-                        convictedExplain: `'${this.state.convictedExplain}'`,
-                        comment: `'${this.state.comment}'`,
-                    }
-                }
-            })
-    };
->>>>>>> d5174d1de7aadb0d35ed9b79cad01f5bac64594f
 
 	handleClose = () => {
 		this.setState({ open: false });
@@ -159,7 +122,7 @@ class ApplyForm extends Component {
 					socialSecurityNumber: this.state.socialSecurityNumber,
 					birthDay: this.state.birthDay,
 					car: this.state.car,
-					typeOfId: this.state.typeOfId,
+					typeOfId: parseInt(this.state.typeOfId),
 					expireDateId: this.state.expireDateId,
 					emailAddress: this.state.emailAddress,
 					positionApplyingFor: parseInt(this.state.positionApplyingFor),
@@ -485,7 +448,6 @@ class ApplyForm extends Component {
 						<span className="Apply-okCheck" />
 					</div>
 
-<<<<<<< HEAD
 					<div className="col-4">
 						<span className="primary"> Social Security Number</span>
 						<input
@@ -554,7 +516,7 @@ class ApplyForm extends Component {
 							}}
 							value={this.state.typeOfId}
 							name="typeOfID"
-							type="text"
+							type="number"
 							className="form-control"
 							required
 							min="0"
@@ -933,60 +895,6 @@ class ApplyForm extends Component {
 				</div>
 			</div>
 		);
-=======
-                    <div className="col-4">
-                        <span className="primary"> Social Security Number</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    socialSecurityNumber: event.target.value
-                                });
-                            }}
-                            value={this.state.socialSecurityNumber}
-                            name="socialSecurityNumber" type="number" className="form-control" required min="0"
-                            maxLength="50" minLength="10"/>
-                        <span className="Apply-okCheck"></span>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-3">
-                        <span className="primary"> Birth Day</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    birthDay: event.target.value
-                                });
-                            }}
-                            value={this.state.birthDay}
-                            name="birthDay" type="date" className="form-control" required min="0"
-                            maxLength="50" minLength="10"/>
-                        <span className="Apply-okCheck"></span>
-                    </div>
-                    <div className="col-3">
-                        <span className="primary"> Car</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    car: event.target.value
-                                });
-                            }}
-                            value={this.state.car}
-                            name="car" type="checkbox" className="form-control" required min="0"
-                            maxLength="50" minLength="10" />
-                    </div>
-                    <div className="col-3">
-                        <span className="primary"> Type Of ID</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    typeOfId: event.target.value
-                                });
-                            }}
-                            value={this.state.typeOfId}
-                            name="typeOfID" type="number" className="form-control" required min="0"
-                            maxLength="50" minLength="10"/>
-                        <span className="Apply-okCheck"></span>
->>>>>>> d5174d1de7aadb0d35ed9b79cad01f5bac64594f
 
 		// To render the Education Service Section
 		let renderEducationSection = () => (
@@ -1731,11 +1639,11 @@ class ApplyForm extends Component {
 					}}
 				>
 					{renderApplicantInformationSection()}
-					{/*{renderlanguagesSection()}*/}
-					{/*{renderEducationSection()}*/}
-					{/*{renderMilitaryServiceSection()}*/}
-					{/*{renderPreviousEmploymentSection()}*/}
-					{/*{renderSkillsSection()}*/}
+					{renderlanguagesSection()}
+					{renderEducationSection()}
+					{renderMilitaryServiceSection()}
+					{renderPreviousEmploymentSection()}
+					{renderSkillsSection()}
 
 					<div className="Apply-container">
 						<div className="row">
