@@ -61,6 +61,7 @@ class ApplyForm extends Component {
             typeOfDischarge: '',
 
             // Previous Employment
+            previousEmployment: [],
             companyName: '',
             companyPhone: '',
             companyAddress: '',
@@ -751,19 +752,116 @@ class ApplyForm extends Component {
         );
 
         let renderPreviousEmploymentSection = () => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Previous Employment</h4>
+            <form id="form-previous-employment" className="ApplyBlock" onSubmit={(e) => {
+                e.preventDefault();
 
+                let item = {
+                    companyName: document.getElementById('companyNameEmployment').value,
+                    phone: document.getElementById('companyPhoneEmployment').value,
+                    address: document.getElementById('companyAddressEmployment').value,
+                    supervisor: document.getElementById('companySupervisor').value,
+                    jobTitle: document.getElementById('companyJobTitle').value,
+                    payRate: document.getElementById('companyPayRate').value,
+                    startDate: document.getElementById('companyStartDate').value,
+                    endDate: document.getElementById('companyEndDate').value,
+                    reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
+                };
+
+                this.setState(prevState => ({
+                    open: false,
+                    previousEmployment: [...prevState.previousEmployment, item]
+                }), () => {
+                    document.getElementById('form-previous-employment').reset();
+                    document.getElementById('companyNameEmployment').classList.remove('invalid-apply-form');
+                    document.getElementById('companyPhoneEmployment').classList.remove('invalid-apply-form');
+                    document.getElementById('companyAddressEmployment').classList.remove('invalid-apply-form');
+                    document.getElementById('companySupervisor').classList.remove('invalid-apply-form');
+                    document.getElementById('companyJobTitle').classList.remove('invalid-apply-form');
+                    document.getElementById('companyPayRate').classList.remove('invalid-apply-form');
+                    document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
+                    document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
+                    document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
+                })
+            }}>
+                <h4 className="ApplyBlock-title">Previous Employment</h4>
+                <div className="row">
+                    {
+                        this.state.previousEmployment.length > 0 ? (
+                            <div key={uuidv4()} className="skills-container skills-container--header">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <span>Company</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>Address</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>Job Title</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>Phone</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>Supervisor</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>Pay Rate</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>Start Date</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>End Date</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            ''
+                        )
+                    }
+
+                    {
+                        this.state.previousEmployment.map(employmentItem => (
+                            <div key={uuidv4()} className="skills-container">
+                                <div className="row">
+                                    <div className="col-2">
+                                        <span>{employmentItem.schoolType}</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>{employmentItem.educationName}</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>{employmentItem.educationAddress}</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>{employmentItem.startDate}</span>
+                                    </div>
+                                    <div className="col-2">
+                                        <span>{employmentItem.endDate}</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>{employmentItem.graduated ? 'Yes' : 'No'}</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <Button className="deleteSkillSection" onClick={() => {
+                                            this.setState(prevState => ({
+                                                previousEmployment: this.state.previousEmployment.filter((_, i) => {
+                                                    return _.previousEmployment !== employmentItem.schoolType
+                                                })
+                                            }))
+                                        }}>x</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Company</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyName: event.target.value
-                                });
-                            }}
-                            value={this.state.companyName}
+                            id="companyNameEmployment"
+                            form="form-previous-employment"
                             name="companyNameEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -771,12 +869,8 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Phone</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyPhone: event.target.value
-                                });
-                            }}
-                            value={this.state.companyPhone}
+                            id="companyPhoneEmployment"
+                            form="form-previous-employment"
                             name="phoneEmployment" type="number" className="form-control" required min="0"
                             maxLength="10" minLength="10"/>
                         <span></span>
@@ -784,12 +878,8 @@ class ApplyForm extends Component {
                     <div className="col-8">
                         <span className="primary"> Address</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyAddress: event.target.value
-                                });
-                            }}
-                            value={this.state.companyAddress}
+                            id="companyAddressEmployment"
+                            form="form-previous-employment"
                             name="addressEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -797,12 +887,8 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Supervisor</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companySupervisor: event.target.value
-                                });
-                            }}
-                            value={this.state.companySupervisor}
+                            id="companySupervisor"
+                            form="form-previous-employment"
                             name="supervisorEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -810,12 +896,8 @@ class ApplyForm extends Component {
                     <div className="col-8">
                         <span className="primary"> Job Title</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyJobTitle: event.target.value
-                                });
-                            }}
-                            value={this.state.companyJobTitle}
+                            id="companyJobTitle"
+                            form="form-previous-employment"
                             name="jobTitleEmployment" type="text" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -823,12 +905,8 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Pay Rate</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyPayRate: event.target.value
-                                });
-                            }}
-                            value={this.state.companyPayRate}
+                            id="companyPayRate"
+                            form="form-previous-employment"
                             name="payRateEmployment" type="number" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -836,12 +914,8 @@ class ApplyForm extends Component {
                     <div className="col-3">
                         <span className="primary"> Dates</span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyStartDate: event.target.value
-                                });
-                            }}
-                            value={this.state.companyStartDate}
+                            id="companyStartDate"
+                            form="form-previous-employment"
                             name="startPreviousEmployment" type="date" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -849,12 +923,8 @@ class ApplyForm extends Component {
                     <div className="col-3">
                         <span className="primary">To: </span>
                         <input
-                            onChange={(event) => {
-                                this.setState({
-                                    companyEndDate: event.target.value
-                                });
-                            }}
-                            value={this.state.companyEndDate}
+                            id="companyEndDate"
+                            form="form-previous-employment"
                             name="endPreviousEmployment" type="date" className="form-control" required min="0"
                             maxLength="50" minLength="3"/>
                         <span></span>
@@ -862,16 +932,17 @@ class ApplyForm extends Component {
                     <div className="col-6">
                         <span className="primary"> Reason for leaving</span>
                         <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    companyReasonForLeaving: event.target.value
-                                });
-                            }}
-                            value={this.state.companyReasonForLeaving}
+                            id="companyReasonForLeaving"
+                            form="form-previous-employment"
                             name="reasonForLeavingEmployment" className="form-control textarea-apply-form"/>
                     </div>
                 </div>
-            </div>
+                <div className="row">
+                    <div className="col-12">
+                        <Button type="submit" form="form-previous-employment" className="save-skill-button">Add</Button>
+                    </div>
+                </div>
+            </form>
         );
 
         let renderlanguagesSection = () => (
@@ -1076,12 +1147,12 @@ class ApplyForm extends Component {
                           this.insertApplicationInformation();
                       }}
                 >
-                    {renderApplicantInformationSection()}
-                    {renderlanguagesSection()}
-                    {renderEducationSection()}
-                    {renderMilitaryServiceSection()}
+                    {/*{renderApplicantInformationSection()}*/}
+                    {/*{renderlanguagesSection()}*/}
+                    {/*{renderEducationSection()}*/}
+                    {/*{renderMilitaryServiceSection()}*/}
                     {renderPreviousEmploymentSection()}
-                    {renderSkillsSection()}
+                    {/*{renderSkillsSection()}*/}
 
                     <div className="Apply-container">
                         <div className="row">
