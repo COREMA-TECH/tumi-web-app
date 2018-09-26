@@ -599,6 +599,11 @@ p {
   max-width: 1200px;
   width: 80%; }
 
+.Apply-okCheck {
+  position: absolute;
+  top: 30px;
+  right: 10px; }
+
 .ApplyBlock {
   background-color: #FFF;
   border-radius: 5px;
