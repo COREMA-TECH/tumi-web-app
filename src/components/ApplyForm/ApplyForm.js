@@ -1367,11 +1367,11 @@ class ApplyForm extends Component {
                     }}
                 >
                     {renderApplicantInformationSection()}
-                    {/*{renderlanguagesSection()}*/}
-                    {/*{renderEducationSection()}*/}
-                    {/*{renderMilitaryServiceSection()}*/}
-                    {/*{renderPreviousEmploymentSection()}*/}
-                    {/*{renderSkillsSection()}*/}
+                    {renderlanguagesSection()}
+                    {renderEducationSection()}
+                    {renderMilitaryServiceSection()}
+                    {renderPreviousEmploymentSection()}
+                    {renderSkillsSection()}
 
                     <div className="Apply-container">
                         <div className="row">
