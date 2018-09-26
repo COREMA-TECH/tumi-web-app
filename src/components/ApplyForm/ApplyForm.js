@@ -777,7 +777,7 @@ class ApplyForm extends Component {
                             }}
                             value={this.state.companyPhone}
                             name="phoneEmployment" type="number" className="form-control" required min="0"
-                               maxLength="50" minLength="3"/>
+                               maxLength="10" minLength="10"/>
                         <span></span>
                     </div>
                     <div className="col-8">
