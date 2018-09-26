@@ -135,6 +135,7 @@ class ApplyForm extends Component {
             >
                 <form autoComplete="off" id="skill-form" onSubmit={() => {
                     let item = {
+                        uuid: uuidv4(),
                         description: document.getElementById('description').value,
                         level: this.state.percent
                     };
@@ -544,6 +545,7 @@ class ApplyForm extends Component {
                 e.preventDefault();
 
                 let item = {
+                    uuid: uuidv4(),
                     schoolType: parseInt(document.getElementById('studyType').value),
                     educationName: document.getElementById('institutionName').value,
                     educationAddress: document.getElementById('addressInstitution').value,
@@ -626,7 +628,7 @@ class ApplyForm extends Component {
                                         this.setState(prevState => ({
                                             schools: this.state.schools.filter((_, i) => {
                                                 console.log(this.state.languages);
-                                                return _.schoolType !== schoolItem.schoolType
+                                                return _.uuid !== schoolItem.uuid
                                             })
                                         }))
                                     }}>x</Button>
@@ -756,6 +758,7 @@ class ApplyForm extends Component {
                 e.preventDefault();
 
                 let item = {
+                    uuid: uuidv4(),
                     companyName: document.getElementById('companyNameEmployment').value,
                     phone: document.getElementById('companyPhoneEmployment').value,
                     address: document.getElementById('companyAddressEmployment').value,
@@ -801,7 +804,7 @@ class ApplyForm extends Component {
                                     <div className="col-1">
                                         <span>Phone</span>
                                     </div>
-                                    <div className="col-2">
+                                    <div className="col-1">
                                         <span>Supervisor</span>
                                     </div>
                                     <div className="col-1">
@@ -825,28 +828,36 @@ class ApplyForm extends Component {
                             <div key={uuidv4()} className="skills-container">
                                 <div className="row">
                                     <div className="col-2">
-                                        <span>{employmentItem.schoolType}</span>
+                                        <span>{employmentItem.companyName}</span>
                                     </div>
                                     <div className="col-2">
-                                        <span>{employmentItem.educationName}</span>
+                                        <span>{employmentItem.address}</span>
                                     </div>
                                     <div className="col-2">
-                                        <span>{employmentItem.educationAddress}</span>
-                                    </div>
-                                    <div className="col-2">
-                                        <span>{employmentItem.startDate}</span>
-                                    </div>
-                                    <div className="col-2">
-                                        <span>{employmentItem.endDate}</span>
+                                        <span>{employmentItem.jobTitle}</span>
                                     </div>
                                     <div className="col-1">
-                                        <span>{employmentItem.graduated ? 'Yes' : 'No'}</span>
+                                        <span>{employmentItem.phone}</span>
                                     </div>
+                                    <div className="col-1">
+                                        <span>{employmentItem.supervisor}</span>
+                                    </div>
+
+                                    <div className="col-1">
+                                        <span>{employmentItem.payRate}</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>{employmentItem.startDate}</span>
+                                    </div>
+                                    <div className="col-1">
+                                        <span>{employmentItem.endDate}</span>
+                                    </div>
+
                                     <div className="col-1">
                                         <Button className="deleteSkillSection" onClick={() => {
                                             this.setState(prevState => ({
                                                 previousEmployment: this.state.previousEmployment.filter((_, i) => {
-                                                    return _.previousEmployment !== employmentItem.schoolType
+                                                    return _.uuid !== employmentItem.uuid
                                                 })
                                             }))
                                         }}>x</Button>
@@ -855,6 +866,8 @@ class ApplyForm extends Component {
                             </div>
                         ))
                     }
+
+                    <hr className="separator"/>
                 </div>
                 <div className="row">
                     <div className="col-8">
@@ -987,7 +1000,7 @@ class ApplyForm extends Component {
                                         this.setState(prevState => ({
                                             languages: this.state.languages.filter((_, i) => {
                                                 console.log(this.state.languages);
-                                                return _.idLanguage !== languageItem.idLanguage
+                                                return _.uuid !== languageItem.uuid
                                             })
                                         }))
                                     }}>x</Button>
@@ -1008,6 +1021,7 @@ class ApplyForm extends Component {
                     e.preventDefault();
 
                     let item = {
+                        uuid: uuidv4(),
                         ApplicationId: 1,
                         idLanguage: 1,
                         writing: document.getElementById('writingLanguage').value,
@@ -1119,7 +1133,7 @@ class ApplyForm extends Component {
                                                 this.setState(prevState => ({
                                                     skills: this.state.skills.filter((_, i) => {
                                                         console.log(this.state.skills);
-                                                        return _.description !== skillItem.description
+                                                        return _.uuid !== skillItem.uuid
                                                     })
                                                 }))
                                             }}>x</Button>
@@ -1147,12 +1161,12 @@ class ApplyForm extends Component {
                           this.insertApplicationInformation();
                       }}
                 >
-                    {/*{renderApplicantInformationSection()}*/}
-                    {/*{renderlanguagesSection()}*/}
-                    {/*{renderEducationSection()}*/}
-                    {/*{renderMilitaryServiceSection()}*/}
+                    {renderApplicantInformationSection()}
+                    {renderlanguagesSection()}
+                    {renderEducationSection()}
+                    {renderMilitaryServiceSection()}
                     {renderPreviousEmploymentSection()}
-                    {/*{renderSkillsSection()}*/}
+                    {renderSkillsSection()}
 
                     <div className="Apply-container">
                         <div className="row">
