@@ -192,6 +192,8 @@ p {
   padding: 6px 0;
   text-align: center;
   width: 30px; }
+  .btn-circle:active {
+    outline: none; }
   .btn-circle.red {
     background-color: #f50057 !important; }
 
@@ -308,6 +310,12 @@ p {
   margin: 0 auto !important; }
   .table-elements li {
     padding: 5px !important; }
+
+#agreement {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  padding-right: 150px;
+  padding-left: 80px; }
 
 .modal-overflow {
   overflow-x: scroll; }

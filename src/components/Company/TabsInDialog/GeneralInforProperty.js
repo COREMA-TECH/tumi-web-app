@@ -13,60 +13,64 @@ import './valid.css';
 
 class GeneralInfoProperty extends Component {
 
-    state = {
-        inputEnabled: true,
-        open: false,
-        scroll: 'paper',
-        completedInput: false,
-        loaded: false,
-        //rate: 0,
-        name: '',
-        legalName: '',
-        description: '',
-        location: '',
-        address: '',
-        optionalAddress: '',
-        businessType: '',
-        country: 6,
-        state: 0,
-        region: '',
-        city: 0,
-        management: '',
-        phoneNumber: '',
-        startDate: '',
-        startWeek: '',
-        endWeek: '',
-        workWeek: '',
-        avatar: 'url',
-        otherPhoneNumber: '',
-        room: '',
-        rate: 2,
-        fax: '',
-        zipCode: '',
-        phonePrefix: '505',
-        email: '',
-        Code: '',
-        Code01: '',
-        active: 1,
-        suite: '',
-        linearProgress: false,
-        idProperty: null,
-        Markup: null,
-        validState: '',
-        validCity: '',
-        validStartWeek: '',
-        validEndWeek: '',
-        contractURL: '',
-        insuranceURL: '',
-        Other_Name: '',
-        Other01_Name: '',
-        otherURL: '',
-        other01URL: '',
-        phoneNumberValid: true,
-        faxNumberValid: true,
-    };
 
+    constructor(props) {
+        console.log(props);
+        super(props);
+        this.state = {
+            inputEnabled: true,
+            open: false,
+            scroll: 'paper',
+            completedInput: false,
+            loaded: false,
+            //rate: 0,
+            name: '',
+            legalName: '',
+            description: '',
+            location: '',
+            address: '',
+            optionalAddress: '',
+            businessType: '',
+            country: 6,
+            state: 0,
+            region: '',
+            city: 0,
+            management: '',
+            phoneNumber: '',
+            startDate: '',
+            startWeek: '',
+            endWeek: '',
+            workWeek: '',
+            avatar: 'url',
+            otherPhoneNumber: '',
+            room: '',
+            rate: this.props.Markup,
+            fax: '',
+            zipCode: '',
+            phonePrefix: '505',
+            email: '',
+            Code: '',
+            Code01: '',
+            active: 1,
+            suite: '',
+            linearProgress: false,
+            idProperty: null,
+            Markup: null,
+            validState: '',
+            validCity: '',
+            validStartWeek: '',
+            validEndWeek: '',
+            contractURL: '',
+            insuranceURL: '',
+            Other_Name: '',
+            Other01_Name: '',
+            otherURL: '',
+            other01URL: '',
+            phoneNumberValid: true,
+            faxNumberValid: true
+        };
 
+    }
     /**
      *  QUERIES to get the countries, cities and states
      */
@@ -276,7 +280,8 @@ class GeneralInfoProperty extends Component {
                             Legal_Name: "''",
                             Country: parseInt(this.state.country),
                             State: parseInt(this.state.state),
-                            Rate: parseFloat(this.state.rate),
+                            // Rate: parseFloat(this.state.rate),
+                            Rate: parseFloat(companyId),
                             Zipcode: parseInt(this.state.zipCode),
                             Fax: `'${this.state.fax}'`,
                             Primary_Email: `'email'`,
@@ -385,12 +390,20 @@ class GeneralInfoProperty extends Component {
                 validated = false;
             }
 
+            if (this.state.rate === 0) {
+                this.setState({
+                    validrate: 'valid'
+                });
+
+                validated = false;
+            }
+
             if (validated) {
                 //Show loading component
                 if (this.props.idProperty === null) {
                     this.insertCompany(this.props.idCompany);
                 } else {
-                    this.updateCompany(this.props.idCompany, this.props.idProperty)
+                    this.updateCompany(this.props.idCompany, this.props.idProperty, this.props.Markup)
                 }
             } else {
                 // Show snackbar warning
