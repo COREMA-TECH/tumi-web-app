@@ -120,7 +120,7 @@ class ApplyForm extends Component {
                         socialSecurityNumber: `'${this.state.socialSecurityNumber}'`,
                         birthDay: `'${this.state.birthDay}'`,
                         car: `'${this.state.car}'`,
-                        typeOfId: `'${this.state.typeOfId}'`,
+                        typeOfId: parseInt(this.state.typeOfId),
                         expireDateId: `'${this.state.expireDateId}'`,
                         emailAddress: `'${this.state.emailAddress}'`,
                         positionApplyingFor: parseInt(this.state.positionApplyingFor),
@@ -441,7 +441,7 @@ class ApplyForm extends Component {
                                 });
                             }}
                             value={this.state.typeOfId}
-                            name="typeOfID" type="text" className="form-control" required min="0"
+                            name="typeOfID" type="number" className="form-control" required min="0"
                             maxLength="50" minLength="10"/>
                         <span className="Apply-okCheck"></span>
 
