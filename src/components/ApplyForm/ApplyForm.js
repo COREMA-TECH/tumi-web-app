@@ -1063,35 +1063,40 @@ class ApplyForm extends Component {
         );
 
         return (
-            <form className="ApplyForm apply-form"
-                  onSubmit={e => {
-                      // To cancel the default submit event
-                      e.preventDefault();
+            <div>
+                <header className="Header">
+                    Application Form
+                </header>
+                <form className="ApplyForm apply-form"
+                      onSubmit={e => {
+                          // To cancel the default submit event
+                          e.preventDefault();
 
-                      // Call mutation to create a application
-                      this.insertApplicationInformation();
-                  }}
-            >
-                {renderApplicantInformationSection()}
-                {renderlanguagesSection()}
-                {renderEducationSection()}
-                {renderMilitaryServiceSection()}
-                {renderPreviousEmploymentSection()}
-                {renderSkillsSection()}
+                          // Call mutation to create a application
+                          this.insertApplicationInformation();
+                      }}
+                >
+                    {renderApplicantInformationSection()}
+                    {renderlanguagesSection()}
+                    {renderEducationSection()}
+                    {renderMilitaryServiceSection()}
+                    {renderPreviousEmploymentSection()}
+                    {renderSkillsSection()}
 
-                <div className="Apply-container">
-                    <div className="row">
-                        <div className="col-12 buttons-group-right">
-                            <button type="reset" className="btn-circle btn-lg red">
-                                <i className="fas fa-eraser"></i>
-                            </button>
-                            <button type="submit" className="btn-circle btn-lg">
-                                <i className="fas fa-save"></i>
-                            </button>
+                    <div className="Apply-container">
+                        <div className="row">
+                            <div className="col-12 buttons-group-right">
+                                <button type="reset" className="btn-circle btn-lg red">
+                                    <i className="fas fa-eraser"></i>
+                                </button>
+                                <button type="submit" className="btn-circle btn-lg">
+                                    <i className="fas fa-save"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         );
     }
 }
