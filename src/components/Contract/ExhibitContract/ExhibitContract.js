@@ -322,11 +322,22 @@ class ExhibitContract extends Component {
 		this.resetState();
 	};
 
-	printContractHandler = () => {
+	downladContractHandler = () => {
 		var url = "https://morning-lake-18657.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
 		//pri.download();
 		window.open(url, '_blank');
 	};
+
+	printContractHandler = () => {
+		var content = document.getElementById('agreement');
+		var pri = document.getElementById('ifmcontentstoprint').contentWindow;
+		pri.document.open();
+		pri.document.write(content.innerHTML);
+		pri.document.close();
+		pri.focus();
+		pri.print();
+	};
+
 
 	render() {
 		const { loading, success } = this.state;
@@ -384,7 +395,7 @@ class ExhibitContract extends Component {
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
-										onClick={this.printContractHandler}
+										onClick={this.downloadContractHandler}
 									>
 										<DownloadIcon />
 									</Button>
