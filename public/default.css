@@ -576,6 +576,24 @@ p {
 .main-contract__content {
   width: 100% !important; }
 
+.Header {
+  background-color: #3ca2c8;
+  color: #FFF;
+  font-weight: 700;
+  line-height: 50px;
+  height: 50px;
+  padding-left: 1rem;
+  width: 100%; }
+  .Header:before {
+    background-color: #78bed9;
+    content: " ";
+    -webkit-clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
+    clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
+    display: block;
+    float: right;
+    height: 50px;
+    width: 50%; }
+
 .Apply-container {
   margin: 0 auto;
   max-width: 1200px;
