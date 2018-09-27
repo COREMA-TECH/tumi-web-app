@@ -210,7 +210,7 @@ class RolesForm extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
-		console.log('onSelectChangeHandler', name, value);
+
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
@@ -325,7 +325,6 @@ class RolesForm extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading roles: ', error);
 				this.props.handleOpenSnackbar('error', 'Error: Loading roles: ' + error);
 			});
 	};
@@ -355,7 +354,6 @@ class RolesForm extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading Companies: ', error);
 				this.props.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
 			});
 	};
@@ -397,13 +395,11 @@ class RolesForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						console.log('Guardando');
 						this.props.handleOpenSnackbar('success', isEdition ? 'Roles Updated!' : 'Roles Inserted!');
 						this.loadRoles();
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log(isEdition ? 'Error: Updating Roles: ' : 'Error: Inserting Roles: ', error);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Roles: ' + error : 'Error: Inserting Roles: ' + error
@@ -435,7 +431,6 @@ class RolesForm extends React.Component {
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Role: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Role: ' + error);
 						this.setState({
 							loadingConfirm: false
@@ -479,7 +474,6 @@ class RolesForm extends React.Component {
 			[classes.buttonSuccess]: success
 		});
 
-		console.log(this.state.openSnackbar);
 		return (
 			<div className={classes.container}>
 				<AlertDialogSlide

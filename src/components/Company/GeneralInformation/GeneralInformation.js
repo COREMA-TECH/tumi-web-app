@@ -162,7 +162,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	loadCompany = (func = () => { }) => {
+	loadCompany = (func = () => {}) => {
 		this.setState(
 			{
 				loading: true
@@ -233,7 +233,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => { }) => {
+	loadCompanyProperties = (func = () => {}) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -389,7 +389,6 @@ class GeneralInformation extends Component {
 						}
 					})
 					.then((data) => {
-						console.log(data)
 						var id = data.data.insbusinesscompanies.Id;
 						this.props.updateCompany(id);
 						this.setState({ loadingUpdate: false });
@@ -506,8 +505,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => { }) => {
-
+	loadCountries = (func = () => {}) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -545,7 +543,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => { }) => {
+	loadStates = (func = () => {}) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -587,7 +585,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => { }) => {
+	loadCities = (func = () => {}) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -657,7 +655,6 @@ class GeneralInformation extends Component {
 		if (this.props.idCompany == 0) {
 			this.props.toggleStepper();
 			this.setState({ firstLoad: true }, () => {
-
 				this.loadCountries(() => {
 					this.loadCities(() => {
 						this.loadStates(() => {
@@ -667,16 +664,13 @@ class GeneralInformation extends Component {
 						});
 					});
 				});
-
 			});
-		}
-		else {
+		} else {
 			this.setState(
 				{
 					inputEnabled: false
 				},
 				() => {
-
 					this.setState({ firstLoad: true }, () => {
 						this.loadCompany(() => {
 							this.loadCountries(() => {
@@ -693,14 +687,11 @@ class GeneralInformation extends Component {
 				}
 			);
 		}
-
-
 	}
 
 	constructor(props) {
 		super(props);
 		this.state = {
-
 			inputEnabled: true,
 			open: false,
 			scroll: 'paper',
@@ -994,7 +985,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -1108,8 +1099,8 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 				<div className="general-information__content">
 					<div className="card-form-company">
 						<div className="card-form-header grey">General Information</div>
@@ -1399,57 +1390,56 @@ class GeneralInformation extends Component {
 						</div>
 					</div>
 				</div>
-				{
-					this.props.showStepper ? (
-						<div className="advanced-tab-options">
+				{this.props.showStepper ? (
+					<div className="advanced-tab-options">
+						<div className={classes.wrapper}>
+							<Button
+								className={classes.buttonSuccess}
+								onClick={() => {
+									this.props.idCompany != 0
+										? this.updateCompany(this.props.idCompany)
+										: this.insertCompany();
+									//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+								}}
+								disabled={isLoading}
+							>
+								Save
+							</Button>
+							{this.state.loadingUpdate && (
+								<CircularProgress size={24} className={classes.buttonProgress} />
+							)}
+						</div>
+						{this.props.showStepper && (
 							<div className={classes.wrapper}>
 								<Button
 									className={classes.buttonSuccess}
-									onClick={() => {
-										console.log("aqio estams ", this.props.idCompany);
-										this.props.idCompany != 0 ? this.updateCompany(this.props.idCompany) : this.insertCompany();
-										//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
-									}}
 									disabled={isLoading}
-								>
-									Save
-							</Button>
-								{this.state.loadingUpdate && (
-									<CircularProgress size={24} className={classes.buttonProgress} />
-								)}
-							</div>
-							{this.props.showStepper && (
-								<div className={classes.wrapper}>
-									<Button
-										className={classes.buttonSuccess}
-										disabled={isLoading}
-										onClick={() => {
-											this.setState({ firstLoad: true }, () => {
-												this.loadCompany(() => {
-													this.loadCountries(() => {
-														this.loadCities(() => {
-															this.loadStates(() => {
-																this.loadCompanyProperties(() => {
-																	this.props.toggleStepper();
-																	this.setState({ indexView: 1, firstLoad: false });
-																});
+									onClick={() => {
+										this.setState({ firstLoad: true }, () => {
+											this.loadCompany(() => {
+												this.loadCountries(() => {
+													this.loadCities(() => {
+														this.loadStates(() => {
+															this.loadCompanyProperties(() => {
+																this.props.toggleStepper();
+																this.setState({ indexView: 1, firstLoad: false });
 															});
 														});
 													});
 												});
 											});
-										}}
-									>
-										Cancel
+										});
+									}}
+								>
+									Cancel
 								</Button>
-									{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-								</div>
-							)}
-						</div>
-					) : (
-							''
-						)
-				}
+								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+							</div>
+						)}
+					</div>
+				) : (
+					''
+				)}
 
 				<Dialog
 					open={this.state.open}
@@ -1480,18 +1470,18 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-								//Si el click no es en esa property : pasar el Id en nulo
-								//para que no cargue niguna información relacionada con ese Id
-								<TabsInDialog
-									idCompany={this.props.idCompany}
-									Markup={this.state.rate}
-									handleClose={this.handleClose}
-									handleOpenSnackbar={this.props.handleOpenSnackbar}
-								/>
-							)}
+							//Si el click no es en esa property : pasar el Id en nulo
+							//para que no cargue niguna información relacionada con ese Id
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								Markup={this.state.rate}
+								handleClose={this.handleClose}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
+						)}
 					</DialogContent>
 				</Dialog>
-			</div >
+			</div>
 		);
 	}
 }
