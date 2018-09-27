@@ -532,7 +532,7 @@ class GeneralInfoProperty extends Component {
 											}}
 											error={!this.state.rateValid}
 											maxLength="10"
-											//disabled={!this.props.showStepper}
+										//disabled={!this.props.showStepper}
 										/>
 									</div>
 
@@ -870,7 +870,7 @@ class GeneralInfoProperty extends Component {
 									</div>
 									<div className="col-6">
 										<input
-											className={'input-form'}
+											className={'input-form input-file-modal'}
 											change={(text) => {
 												this.setState({
 													Other_Name: text
@@ -893,7 +893,7 @@ class GeneralInfoProperty extends Component {
 									</div>
 									<div className="col-6">
 										<input
-											className={'input-form'}
+											className={'input-form input-file-modal'}
 											change={(text) => {
 												this.setState({
 													Other01_Name: text

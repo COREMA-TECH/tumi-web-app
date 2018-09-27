@@ -277,6 +277,9 @@ p {
   height: 32px;
   width: 75%; }
 
+.input-file-modal {
+  border: 0 !important; }
+
 .input-search-contract {
   border-radius: 0px 5px 5px 0 !important;
   -webkit-transition: width .5s;
@@ -600,6 +603,10 @@ p {
   margin: 0 auto;
   max-width: 1200px;
   width: 80%; }
+
+.Apply-emoji {
+  background-color: #f5f7f9;
+  text-align: center; }
 
 .Apply-okCheck {
   position: absolute;
