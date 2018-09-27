@@ -1154,15 +1154,16 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">* Suite</span>
-								<InputForm
+								<span className="input-label primary">Suite</span>
+								<input
 									value={this.state.suite}
-									change={(text) => {
+									onbChange={(text) => {
 										this.updateInput(text, 'suite');
 									}}
 									error={!this.state.suiteValid}
 									maxLength="10"
 									disabled={!this.props.showStepper}
+									className={'input-form'}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1214,6 +1215,7 @@ class GeneralInformation extends Component {
 									}}
 									error={!this.state.zipCodeValid}
 									maxLength="10"
+									min={0}
 									type="number"
 									disabled={!this.props.showStepper}
 								/>
