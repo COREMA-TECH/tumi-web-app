@@ -17,6 +17,7 @@ import languageLevelsJSON from './data/languagesLevels';
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import CircularProgressLoading from "../material-ui/CircularProgressLoading";
 import Route from "react-router-dom/es/Route";
+import InputMask from 'react-input-mask';
 
 const uuidv4 = require('uuid/v4');
 
@@ -82,7 +83,8 @@ class ApplyForm extends Component {
             companyReasonForLeaving: '',
 
             percent: 50,
-            insertDialogLoading: false
+            insertDialogLoading: false,
+            graduated: false
         };
     }
 
@@ -410,63 +412,112 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
-                        <input
+                        <InputMask
+                            id="zipCode"
+                            name="zipCode"
+                            mask="99999-99999"
+                            maskChar=" "
+                            className={'input-form'}
                             onChange={(event) => {
                                 this.setState({
                                     zipCode: event.target.value
                                 });
                             }}
                             value={this.state.zipCode}
-                            name="zipCode"
-                            type="number"
-                            className="form-control"
+                            placeholder="99999-99999"
                             required
-                            maxLength="5"
-                            minLength="4"
-                            min="10000"
-                            max="99999"
+                            minLength="15"
                         />
+                        {/*<input*/}
+                            {/*onChange={(event) => {*/}
+                                {/*this.setState({*/}
+                                    {/*zipCode: event.target.value*/}
+                                {/*});*/}
+                            {/*}}*/}
+                            {/*value={this.state.zipCode}*/}
+                            {/*name="zipCode"*/}
+                            {/*type="number"*/}
+                            {/*className="form-control"*/}
+                            {/*required*/}
+                            {/*maxLength="5"*/}
+                            {/*minLength="4"*/}
+                            {/*min="10000"*/}
+                            {/*max="99999"*/}
+                        {/*/>*/}
                         <span className="Apply-okCheck"/>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Home Phone</span>
-                        <input
+                        <InputMask
+                            id="home-number"
+                            name="homePhone"
+                            mask="+(999) 999-9999"
+                            maskChar=" "
+                            value={this.state.homePhone}
+                            className={'input-form'}
                             onChange={(event) => {
                                 this.setState({
                                     homePhone: event.target.value
                                 });
                             }}
-                            value={this.state.homePhone}
-                            name="homePhone"
-                            type="tel"
-                            className="form-control"
-                            min="999"
-                            maxLength="10"
-                            minLength="10"
+                            placeholder="+(999) 999-9999"
+                            minLength="15"
                         />
+                        {/*<input*/}
+                            {/*onChange={(event) => {*/}
+                                {/*this.setState({*/}
+                                    {/*homePhone: event.target.value*/}
+                                {/*});*/}
+                            {/*}}*/}
+                            {/*value={this.state.homePhone}*/}
+                            {/*name="homePhone"*/}
+                            {/*type="tel"*/}
+                            {/*className="form-control"*/}
+                            {/*min="999"*/}
+                            {/*maxLength="10"*/}
+                            {/*minLength="10"*/}
+                        {/*/>*/}
                         <span className="Apply-okCheck"/>
                         <i className="optional"/>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Cell Phone</span>
-                        <input
+                        <InputMask
+                            id="cell-number"
+                            name="cellPhone"
+                            mask="+(999) 999-9999"
+                            maskChar=" "
+                            value={this.state.cellPhone}
+                            className={'input-form'}
                             onChange={(event) => {
                                 this.setState({
                                     cellPhone: event.target.value
                                 });
                             }}
-                            value={this.state.cellPhone}
-                            name="cellPhone"
-                            type="tel"
-                            className="form-control"
+                            placeholder="+(999) 999-9999"
                             required
-                            min="0"
-                            maxLength="10"
-                            minLength="10"
+                            minLength="15"
                         />
+
+
+                        {/*<input*/}
+                            {/*onChange={(event) => {*/}
+                                {/*this.setState({*/}
+                                    {/*cellPhone: event.target.value*/}
+                                {/*});*/}
+                            {/*}}*/}
+                            {/*value={this.state.cellPhone}*/}
+                            {/*name="cellPhone"*/}
+                            {/*type="tel"*/}
+                            {/*className="form-control"*/}
+                            {/*required*/}
+                            {/*min="0"*/}
+                            {/*maxLength="10"*/}
+                            {/*minLength="10"*/}
+                        {/*/>*/}
                         <span className="Apply-okCheck"/>
                     </div>
 
@@ -530,21 +581,16 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-3">
                         <span className="primary"> Type Of ID</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    typeOfId: event.target.value
-                                });
-                            }}
-                            value={this.state.typeOfId}
-                            name="typeOfID"
-                            type="number"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
-                        />
+                        <select name="typeOfID" id="typeOfID" className="form-control">
+                            <option value="">Select an option</option>
+                            <option value="1">Birth certificate</option>
+                            <option value="2">Social Security card</option>
+                            <option value="3">State-issued driver's license</option>
+                            <option value="4">State-issued ID</option>
+                            <option value="5">Passport</option>
+                            <option value="6">Department of Defense Identification Card</option>
+                            <option value="7">Green Card</option>
+                        </select>
                         <span className="Apply-okCheck"/>
                     </div>
                     <div className="col-3">
@@ -693,19 +739,35 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    scheduleExplain: event.target.value
-                                });
-                            }}
-                            value={this.state.scheduleExplain}
-                            name="form-control"
-                            cols="30"
-                            rows="3"
-                            required
-                            className="form-control textarea-apply-form"
-                        />
+                        {this.state.scheduleRestrictions === "0" ? (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.scheduleExplain}
+                                name="form-control"
+                                cols="30"
+                                rows="3"
+                                disabled
+                                className="form-control textarea-apply-form"
+                            />
+                        ) : (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.scheduleExplain}
+                                name="form-control"
+                                cols="30"
+                                rows="3"
+                                required
+                                className="form-control textarea-apply-form"
+                            />
+                        )}
                         <span className="Apply-okCheck"/>
                     </div>
                 </div>
@@ -740,19 +802,35 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    convictedExplain: event.target.value
-                                });
-                            }}
-                            value={this.state.convictedExplain}
-                            name="form-control"
-                            cols="30"
-                            required
-                            rows="3"
-                            className="form-control textarea-apply-form"
-                        />
+                        {this.state.convicted === "0" ? (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        convictedExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.convictedExplain}
+                                name="form-control"
+                                cols="30"
+                                disabled
+                                rows="3"
+                                className="form-control textarea-apply-form"
+                            />
+                        ) : (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        convictedExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.convictedExplain}
+                                name="form-control"
+                                cols="30"
+                                required
+                                rows="3"
+                                className="form-control textarea-apply-form"
+                            />
+                        )}
                         <span className="Apply-okCheck"/>
                     </div>
                 </div>
@@ -989,21 +1067,45 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-2">
                         <label className="primary">Graduated</label> <br/>
-                        <input form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
+                        <input
+                            onChange={(e) => {
+                                this.setState({
+                                    graduated: e.target.value
+                                });
+
+                                alert(e.target.value)
+                            }}
+                            form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
-                        <input
-                            form="education-form"
-                            name="degree"
-                            id="degree"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+                        {
+                            this.state.graduated ? (
+                                <input
+                                    form="education-form"
+                                    name="degree"
+                                    id="degree"
+                                    type="text"
+                                    className="form-control"
+                                    required
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="3"
+                                />
+                            ) : (
+                                <input
+                                    form="education-form"
+                                    name="degree"
+                                    id="degree"
+                                    type="text"
+                                    className="form-control"
+                                    disabled
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="3"
+                                />
+                            )
+                        }
                     </div>
                 </div>
                 <div className="row">
@@ -1027,7 +1129,6 @@ class ApplyForm extends Component {
                             name="militaryBranch"
                             type="text"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1040,7 +1141,6 @@ class ApplyForm extends Component {
                             name="militaryRankDischarge"
                             type="text"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1055,7 +1155,6 @@ class ApplyForm extends Component {
                             name="militaryStartDate"
                             type="date"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1067,7 +1166,6 @@ class ApplyForm extends Component {
                             name="militaryEndDate"
                             type="date"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1075,7 +1173,7 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Type of Discharge</span>
-                        <select name="dischargeType" id="dischargeType" required className="form-control">
+                        <select name="dischargeType" id="dischargeType" className="form-control">
                             <option value="">Select an option</option>
                             <option value="typeOne">Honorable discharge</option>
                             <option value="typeTwo">General discharge</option>
@@ -1366,10 +1464,10 @@ class ApplyForm extends Component {
                                 <span>Language Name</span>
                             </div>
                             <div className="col-4">
-                                <span>Conversation %</span>
+                                <span>Conversation</span>
                             </div>
                             <div className="col-4">
-                                <span>Writing %</span>
+                                <span>Writing</span>
                             </div>
                         </div>
                     </div>
@@ -1383,10 +1481,22 @@ class ApplyForm extends Component {
                                 <span>{languageItem.idLanguage}</span>
                             </div>
                             <div className="col-4">
-                                <span>{languageItem.conversation}</span>
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.conversation) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-4">
-                                <span>{languageItem.writing}</span>
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.writing) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-1">
                                 <Button
