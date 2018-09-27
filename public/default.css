@@ -310,6 +310,9 @@ p {
   .table-elements li {
     padding: 5px !important; }
 
+.cell-align-right {
+  text-align: right !important; }
+
 #agreement {
   padding-top: 100px;
   padding-bottom: 100px;

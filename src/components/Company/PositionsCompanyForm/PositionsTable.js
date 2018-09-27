@@ -256,10 +256,10 @@ class PositionsTable extends React.Component {
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
 
-							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+							<CustomTableCell className={classes.th + " cell-align-right"}>Bill Rate</CustomTableCell>
 
 							{this.props.showPayRate && (
-								<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
+								<CustomTableCell className={classes.th + " cell-align-right"}>Pay Rate</CustomTableCell>
 							)}
 							<CustomTableCell padding="none" className={classes.th}>
 								Shift
