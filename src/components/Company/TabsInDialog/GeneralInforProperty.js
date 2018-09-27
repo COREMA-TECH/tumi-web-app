@@ -869,7 +869,7 @@ class GeneralInfoProperty extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
-                                            className={'input-form'}
+                                            className={'input-form input-file-modal'}
                                             change={(text) => {
                                                 this.setState({
                                                     Other_Name: text
@@ -893,7 +893,7 @@ class GeneralInfoProperty extends Component {
                                     </div>
                                     <div className="col-6">
                                         <input
-                                            className={'input-form'}
+                                            className={'input-form input-file-modal'}
                                             change={(text) => {
                                                 this.setState({
                                                     Other01_Name: text

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Route from "react-router-dom/es/Route";
 
@@ -6,8 +6,11 @@ class ApplyFormMessage extends Component {
     render() {
         return (
             <Route
-                render={({history}) => (
-                    <div className="apply-form-container">
+                render={({ history }) => (
+                    <div className="Apply-emoji">
+                        <div className="row">
+                            <img src="/icons/successfully.png" />
+                        </div>
                         <div className="row">
                             <div className="apply-form-container__messages">
                                 <div className="col-12">
@@ -24,7 +27,7 @@ class ApplyFormMessage extends Component {
                             </div>
                         </div>
                     </div>
-                )}/>
+                )} />
         );
     }
 }

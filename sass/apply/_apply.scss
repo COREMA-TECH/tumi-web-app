@@ -4,6 +4,10 @@
         max-width: 1200px;
         width: 80%;
     }
+    &-emoji {
+        background-color: $light-gray;
+        text-align: center;
+    }
     &-okCheck {
         position: absolute;
         top: 30px;
