@@ -71,6 +71,8 @@
 .save-skill-button {
     background: #41afd7 !important;
     color: #ffffff !important;
+    border: none;
+    outline: none;
 }
 
 .cancel-skill-button {
@@ -147,6 +149,14 @@
     transition: all .450s;
 }
 
+.apply-form-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 
 

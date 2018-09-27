@@ -1668,7 +1668,7 @@ class ApplyForm extends Component {
                                         });
 
                                         history.push({
-                                            pathname: '/home/'
+                                            pathname: '/employment-application-message'
                                         });
                                     }, 3000);
                                 });
