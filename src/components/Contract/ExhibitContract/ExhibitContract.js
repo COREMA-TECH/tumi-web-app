@@ -197,6 +197,7 @@ class ExhibitContract extends Component {
 	};
 
 	createContract = () => {
+		console.log("creando contrato");
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
