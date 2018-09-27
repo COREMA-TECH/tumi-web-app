@@ -31,7 +31,7 @@
 .apply-form input:required:valid + span::after,
 .apply-form input:optional:valid + span::after,
 .apply-form select:optional:valid + span::after {
-    content: "\2713";
+    content: "";
     color: green;
     margin-left: 5px;
 }
@@ -75,6 +75,15 @@
 
 .cancel-skill-button {
     background: rgba(85, 85, 85, 0.2) !important;
+}
+
+.center-progress-dialog {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /**
