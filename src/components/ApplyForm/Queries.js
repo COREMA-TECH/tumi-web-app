@@ -53,3 +53,16 @@ export const GET_POSITIONS_QUERY = gql`
 //     }
 // `;
 
+
+/**
+ * Query to get lenguages
+ */
+export const GET_LANGUAGES_QUERY = gql`
+    {
+        getcatalogitem(Id: null, Id_Catalog: 9){
+            Id
+            Name
+        }
+    }
+`;
+
