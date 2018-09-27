@@ -747,9 +747,9 @@ class GeneralInfoProperty extends Component {
 										<input
 											type="text"
 											value={this.state.Code01}
-											onChange={(text) => {
+											onChange={(e) => {
 												this.setState({
-													Code01: text
+													Code01: e.target.value
 												});
 											}}
 											maxLength="10"
