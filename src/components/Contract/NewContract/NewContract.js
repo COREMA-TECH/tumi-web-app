@@ -317,7 +317,6 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-				console.log("aqui estamos con el link ", data.getcontracts[0].Contract_Status);
 				this.setState(
 					{
 						Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
@@ -434,7 +433,6 @@ class NewContract extends Component {
 							this.props.update(data.inscontracts.Id);
 						})
 						.catch((err) => {
-							console.log('Error: Inserting Contract: ', err);
 							this.props.handleOpenSnackbar('error', 'Error: Inserting Contract: ' + err);
 							this.setState({
 								loadingUpdate: false
@@ -516,7 +514,6 @@ class NewContract extends Component {
 							this.props.update(id);
 						})
 						.catch((err) => {
-							console.log('Error: Updating Contract: ', err);
 							this.props.handleOpenSnackbar('error', 'Error: Updating Contract: ' + err);
 							this.setState({
 								loadingUpdate: false
@@ -542,13 +539,13 @@ class NewContract extends Component {
 	`;
 
 	getbusinesscompaniesQuery = gql`
-	query getbusinesscompanies($Id: Int!) {
-		getbusinesscompanies(Id: $Id, IsActive: 1,Contract_Status:"'C'") {
-			Id
-			Parent
+		query getbusinesscompanies($Id: Int!) {
+			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
+				Id
+				Parent
+			}
 		}
-	}
-`;
+	`;
 
 	getNewDate = () => {
 		var today = new Date();
@@ -587,10 +584,7 @@ class NewContract extends Component {
 			});
 	};
 
-
 	getBusinessCompanies = (id) => {
-		console.log("Entro al getBusinesscompany");
-		console.log(id);
 		this.props.client
 			.query({
 				query: this.getbusinesscompaniesQuery,
@@ -840,7 +834,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -970,8 +964,8 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.Management}
-												change={(text) => { }}
-											//error={!this.state.CompanySignedNameValid}
+												change={(text) => {}}
+												//error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
 
@@ -988,7 +982,6 @@ class NewContract extends Component {
 															Company_Signed: value
 														},
 														() => {
-															console.log("aqui esta el state ", this.state);
 															this.validateField('Company_Signed', value);
 															this.getCompanies(this.state.Company_Signed);
 															this.getBusinessCompanies(this.state.Id_Entity);
@@ -1033,7 +1026,7 @@ class NewContract extends Component {
 											<span className="input-label primary">* Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1062,8 +1055,7 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">* Status</span>
-											{console.log("Estatus Id", this.state.Contract_Status)}
-											{console.log("Estatus array", status)}
+
 											<SelectForm
 												data={status}
 												update={this.updateStatus}
@@ -1158,7 +1150,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1207,8 +1199,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => { }}
-												updateTypeContact={(type) => { }}
+												updateEmailContact={(email) => {}}
+												updateTypeContact={(type) => {}}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>
@@ -1233,10 +1225,7 @@ class NewContract extends Component {
 										<div className="card-form-row">
 											<span className="input-label primary">* Billing State / Providence</span>
 
-											<Query
-												query={this.getStatesQuery}
-												variables={{ parent: 6 }}
-											>
+											<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 												{({ loading, error, data, refetch, networkStatus }) => {
 													//if (networkStatus === 4) return <LinearProgress />;
 													if (loading) return <LinearProgress />;

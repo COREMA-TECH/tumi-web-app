@@ -13,7 +13,6 @@ import './valid.css';
 
 class GeneralInfoProperty extends Component {
 	constructor(props) {
-		console.log(props);
 		super(props);
 		this.state = {
 			inputEnabled: true,
@@ -228,7 +227,7 @@ class GeneralInfoProperty extends Component {
 
 						this.props.handleOpenSnackbar('success', 'Success: Property created');
 					})
-					.catch((err) => console.log('The error is: ' + err));
+					.catch((err) => this.props.handleOpenSnackbar('error', 'The error is: ' + err));
 			}
 		);
 	};
@@ -316,8 +315,7 @@ class GeneralInfoProperty extends Component {
 					})
 					.catch((err) => {
 						//Capture error and show a specific message
-
-						console.log('The error is: ' + err);
+						this.props.handleOpenSnackbar('error', 'The error is: ' + err);
 					});
 			}
 		);
@@ -532,7 +530,7 @@ class GeneralInfoProperty extends Component {
 											}}
 											error={!this.state.rateValid}
 											maxLength="10"
-										//disabled={!this.props.showStepper}
+											//disabled={!this.props.showStepper}
 										/>
 									</div>
 
@@ -585,11 +583,11 @@ class GeneralInfoProperty extends Component {
 										/>
 									</div>
 									<div className="col-6">
-										<span className="primary card-input-label">* Suite</span>
+										<span className="primary card-input-label">Suite</span>
 									</div>
 									<div className="col-6">
-										<InputValid
-											change={(text) => {
+										<input
+											onChange={(text) => {
 												this.setState({
 													suite: text
 												});
@@ -597,7 +595,7 @@ class GeneralInfoProperty extends Component {
 											value={this.state.suite}
 											type="text"
 											maxLength="10"
-											required
+											className={'input-form'}
 										/>
 									</div>
 									<div className="col-6">
@@ -610,7 +608,6 @@ class GeneralInfoProperty extends Component {
 												if (loading) return <LinearProgress />;
 												if (error) return <p>Error </p>;
 												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-													console.log('VALUE: ' + data.getcatalogitem);
 													return (
 														<SelectForm
 															name="state"
@@ -640,7 +637,6 @@ class GeneralInfoProperty extends Component {
 												if (loading) return <LinearProgress />;
 												if (error) return <p>Error </p>;
 												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-													console.log('Data of cities' + data.getcatalogitem);
 													return (
 														<SelectForm
 															name="city"
@@ -745,19 +741,19 @@ class GeneralInfoProperty extends Component {
 										/>
 									</div>
 									<div className="col-6">
-										<span className="primary card-input-label">* Cost Center</span>
+										<span className="primary card-input-label">Cost Center</span>
 									</div>
 									<div className="col-6">
-										<InputValid
+										<input
 											type="text"
-											required
 											value={this.state.Code01}
-											change={(text) => {
+											onChange={(text) => {
 												this.setState({
 													Code01: text
 												});
 											}}
 											maxLength="10"
+											className={'input-form'}
 										/>
 									</div>
 									<div className="col-6">

@@ -3,7 +3,7 @@ import {CREATE_APPLICATION} from './Mutations';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
-import {GET_POSITIONS_QUERY, GET_STATES_QUERY} from './Queries';
+import {GET_LANGUAGES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from './Queries';
 import './index.css';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -250,22 +250,24 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> First Name</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    firstName: event.target.value
-                                });
-                            }}
-                            value={this.state.firstName}
-                            name="firstName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        firstName: event.target.value
+                                    });
+                                }}
+                                value={this.state.firstName}
+                                name="firstName"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
 
                     <div className="col-3">
@@ -283,71 +285,77 @@ class ApplyForm extends Component {
                                 className="form-control"
                                 min="0"
                                 maxLength="50"
-                                minLength="3"
+                                minLength="1"
                             />
-                            <span className="Apply-okCheck"/>
+                            <span className="check-icon"/>
                             <i className="optional"/>
                         </div>
                     </div>
 
                     <div className="col-3">
                         <span className="primary"> Last Name</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    lastName: event.target.value
-                                });
-                            }}
-                            value={this.state.lastName}
-                            name="lastName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        lastName: event.target.value
+                                    });
+                                }}
+                                value={this.state.lastName}
+                                name="lastName"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
 
                     <div className="col-3">
                         <span className="primary"> Date</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    date: event.target.value
-                                });
-                            }}
-                            value={this.state.date}
-                            name="date"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        date: event.target.value
+                                    });
+                                }}
+                                value={this.state.date}
+                                name="date"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    streetAddress: event.target.value
-                                });
-                            }}
-                            value={this.state.streetAddress}
-                            name="streetAddress"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="5"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        streetAddress: event.target.value
+                                    });
+                                }}
+                                value={this.state.streetAddress}
+                                name="streetAddress"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="5"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-4">
                         <span className="primary">Apt Number</span>
@@ -365,7 +373,7 @@ class ApplyForm extends Component {
                             maxLength="50"
                             minLength="5"
                         />
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                         <i className="optional"/>
                     </div>
                 </div>
@@ -393,58 +401,64 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    city: event.target.value
-                                });
-                            }}
-                            value={this.state.city}
-                            name="city"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="10"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        city: event.target.value
+                                    });
+                                }}
+                                value={this.state.city}
+                                name="city"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="10"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>
-                        <InputMask
-                            id="zipCode"
-                            name="zipCode"
-                            mask="99999-99999"
-                            maskChar=" "
-                            className={'input-form'}
-                            onChange={(event) => {
-                                this.setState({
-                                    zipCode: event.target.value
-                                });
-                            }}
-                            value={this.state.zipCode}
-                            placeholder="99999-99999"
-                            required
-                            minLength="15"
-                        />
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="zipCode"
+                                name="zipCode"
+                                mask="99999-99999"
+                                maskChar=" "
+                                className="form-control"
+                                onChange={(event) => {
+                                    this.setState({
+                                        zipCode: event.target.value
+                                    });
+                                }}
+                                value={this.state.zipCode}
+                                placeholder="99999-99999"
+                                required
+                                minLength="15"
+                            />
+
+                            <span className="check-icon"/>
+                        </div>
+
                         {/*<input*/}
-                            {/*onChange={(event) => {*/}
-                                {/*this.setState({*/}
-                                    {/*zipCode: event.target.value*/}
-                                {/*});*/}
-                            {/*}}*/}
-                            {/*value={this.state.zipCode}*/}
-                            {/*name="zipCode"*/}
-                            {/*type="number"*/}
-                            {/*className="form-control"*/}
-                            {/*required*/}
-                            {/*maxLength="5"*/}
-                            {/*minLength="4"*/}
-                            {/*min="10000"*/}
-                            {/*max="99999"*/}
+                        {/*onChange={(event) => {*/}
+                        {/*this.setState({*/}
+                        {/*zipCode: event.target.value*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*value={this.state.zipCode}*/}
+                        {/*name="zipCode"*/}
+                        {/*type="number"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*maxLength="5"*/}
+                        {/*minLength="4"*/}
+                        {/*min="10000"*/}
+                        {/*max="99999"*/}
                         {/*/>*/}
-                        <span className="Apply-okCheck"/>
                     </div>
                 </div>
                 <div className="row">
@@ -456,7 +470,7 @@ class ApplyForm extends Component {
                             mask="+(999) 999-9999"
                             maskChar=" "
                             value={this.state.homePhone}
-                            className={'input-form'}
+                            className="form-control"
                             onChange={(event) => {
                                 this.setState({
                                     homePhone: event.target.value
@@ -465,104 +479,96 @@ class ApplyForm extends Component {
                             placeholder="+(999) 999-9999"
                             minLength="15"
                         />
-                        {/*<input*/}
-                            {/*onChange={(event) => {*/}
-                                {/*this.setState({*/}
-                                    {/*homePhone: event.target.value*/}
-                                {/*});*/}
-                            {/*}}*/}
-                            {/*value={this.state.homePhone}*/}
-                            {/*name="homePhone"*/}
-                            {/*type="tel"*/}
-                            {/*className="form-control"*/}
-                            {/*min="999"*/}
-                            {/*maxLength="10"*/}
-                            {/*minLength="10"*/}
-                        {/*/>*/}
-                        <span className="Apply-okCheck"/>
                         <i className="optional"/>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Cell Phone</span>
-                        <InputMask
-                            id="cell-number"
-                            name="cellPhone"
-                            mask="+(999) 999-9999"
-                            maskChar=" "
-                            value={this.state.cellPhone}
-                            className={'input-form'}
-                            onChange={(event) => {
-                                this.setState({
-                                    cellPhone: event.target.value
-                                });
-                            }}
-                            placeholder="+(999) 999-9999"
-                            required
-                            minLength="15"
-                        />
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="cell-number"
+                                name="cellPhone"
+                                mask="+(999) 999-9999"
+                                maskChar=" "
+                                value={this.state.cellPhone}
+                                className="form-control"
+                                onChange={(event) => {
+                                    this.setState({
+                                        cellPhone: event.target.value
+                                    });
+                                }}
+                                placeholder="+(999) 999-9999"
+                                required
+                                minLength="15"
+                            />
+                            <span className="check-icon"/>
+                        </div>
 
 
                         {/*<input*/}
-                            {/*onChange={(event) => {*/}
-                                {/*this.setState({*/}
-                                    {/*cellPhone: event.target.value*/}
-                                {/*});*/}
-                            {/*}}*/}
-                            {/*value={this.state.cellPhone}*/}
-                            {/*name="cellPhone"*/}
-                            {/*type="tel"*/}
-                            {/*className="form-control"*/}
-                            {/*required*/}
-                            {/*min="0"*/}
-                            {/*maxLength="10"*/}
-                            {/*minLength="10"*/}
+                        {/*onChange={(event) => {*/}
+                        {/*this.setState({*/}
+                        {/*cellPhone: event.target.value*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*value={this.state.cellPhone}*/}
+                        {/*name="cellPhone"*/}
+                        {/*type="tel"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*min="0"*/}
+                        {/*maxLength="10"*/}
+                        {/*minLength="10"*/}
                         {/*/>*/}
-                        <span className="Apply-okCheck"/>
                     </div>
 
                     <div className="col-4">
                         <span className="primary"> Social Security Number</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    socialSecurityNumber: event.target.value
-                                });
-                            }}
-                            value={this.state.socialSecurityNumber}
-                            name="socialSecurityNumber"
-                            type="number"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="socialSecurityNumber"
+                                name="socialSecurityNumber"
+                                mask="999-99-9999"
+                                maskChar=" "
+                                className="form-control"
+                                onChange={(event) => {
+                                    this.setState({
+                                        socialSecurityNumber: event.target.value
+                                    });
+                                }}
+                                value={this.state.socialSecurityNumber}
+                                placeholder="999-99-9999"
+                                required
+                                minLength="15"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-6">
                         <span className="primary"> Birth Day</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    birthDay: event.target.value
-                                });
-                            }}
-                            value={this.state.birthDay}
-                            name="birthDay"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        birthDay: event.target.value
+                                    });
+                                }}
+                                value={this.state.birthDay}
+                                name="birthDay"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="10"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
-                    <div className="col-3">
-                        <span className="primary"> Car</span>
+                    <div className="col-6">
+                        <span className="primary"> Do you own transportation?</span>
                         <input
                             onChange={(event) => {
                                 this.setState({
@@ -579,7 +585,9 @@ class ApplyForm extends Component {
                             minLength="10"
                         />
                     </div>
-                    <div className="col-3">
+                </div>
+                <div className="row">
+                    <div className="col-6">
                         <span className="primary"> Type Of ID</span>
                         <select name="typeOfID" id="typeOfID" className="form-control">
                             <option value="">Select an option</option>
@@ -591,48 +599,51 @@ class ApplyForm extends Component {
                             <option value="6">Department of Defense Identification Card</option>
                             <option value="7">Green Card</option>
                         </select>
-                        <span className="Apply-okCheck"/>
                     </div>
-                    <div className="col-3">
+                    <div className="col-6">
                         <span className="primary"> Expire Date ID</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    expireDateId: event.target.value
-                                });
-                            }}
-                            value={this.state.expireDateId}
-                            name="expireDateId"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        expireDateId: event.target.value
+                                    });
+                                }}
+                                value={this.state.expireDateId}
+                                name="expireDateId"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="10"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-12">
                         <span className="primary"> Email Address</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    emailAddress: event.target.value
-                                });
-                            }}
-                            value={this.state.emailAddress}
-                            name="emailAddress"
-                            type="email"
-                            className="form-control"
-                            required
-                            min="0"
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                            maxLength="50"
-                            minLength="8"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        emailAddress: event.target.value
+                                    });
+                                }}
+                                value={this.state.emailAddress}
+                                name="emailAddress"
+                                type="email"
+                                className="form-control"
+                                required
+                                min="0"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                maxLength="50"
+                                minLength="8"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
@@ -670,40 +681,44 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> Ideal Job</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    idealJob: event.target.value
-                                });
-                            }}
-                            value={this.state.idealJob}
-                            name="idealJob"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            minLength="3"
-                            maxLength="50"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        idealJob: event.target.value
+                                    });
+                                }}
+                                value={this.state.idealJob}
+                                name="idealJob"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                minLength="3"
+                                maxLength="50"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Date Available</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    dateAvailable: event.target.value
-                                });
-                            }}
-                            value={this.state.dateAvailable}
-                            name="dateAvailable"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        dateAvailable: event.target.value
+                                    });
+                                }}
+                                value={this.state.dateAvailable}
+                                name="dateAvailable"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
@@ -735,7 +750,7 @@ class ApplyForm extends Component {
                             />
                             <label className="radio-label"> No</label>
                         </div>
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
@@ -768,7 +783,6 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         )}
-                        <span className="Apply-okCheck"/>
                     </div>
                 </div>
                 <div className="row">
@@ -798,7 +812,7 @@ class ApplyForm extends Component {
                             className=""
                         />
                         <label className="radio-label"> No</label>
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
@@ -831,7 +845,7 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         )}
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                 </div>
                 <div className="row">
@@ -857,8 +871,7 @@ class ApplyForm extends Component {
                             <option value="journals">Journals</option>
                             <option value="others">Other</option>
                         </select>
-                    </div>
-                    <div className="col-12">
+
                         <div className="row">
                             <div className="col-12">
                                 {this.state.socialNetwork === 'others' ? (
@@ -882,10 +895,10 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         );
-
         // To render the Education Service Section
         let renderEducationSection = () => (
             <form
@@ -894,7 +907,6 @@ class ApplyForm extends Component {
                 onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-
                     let item = {
                         uuid: uuidv4(),
                         schoolType: parseInt(document.getElementById('studyType').value),
@@ -906,9 +918,7 @@ class ApplyForm extends Component {
                         degree: document.getElementById('degree').value,
                         ApplicationId: 1 // Static application id
                     };
-
                     console.log(item);
-
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -1009,61 +1019,73 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-3">
                         <label className="primary">Name (Institution)</label>
-                        <input
-                            form="education-form"
-                            name="institutionName"
-                            id="institutionName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="institutionName"
+                                id="institutionName"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"></span>
+                        </div>
                     </div>
                     <div className="col-6">
                         <label className="primary">Address</label>
-                        <input
-                            form="education-form"
-                            name="addressInstitution"
-                            id="addressInstitution"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="addressInstitution"
+                                id="addressInstitution"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"></span>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> Time Period</span>
-                        <input
-                            form="education-form"
-                            name="startPeriod"
-                            id="startPeriod"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="startPeriod"
+                                id="startPeriod"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"></span>
+                        </div>
                     </div>
                     <div className="col-3">
                         <span className="primary">To</span>
-                        <input
-                            form="education-form"
-                            name="endPeriod"
-                            id="endPeriod"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+                        <div className="input-container--validated">
+                            <input
+                                form="education-form"
+                                name="endPeriod"
+                                id="endPeriod"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"></span>
+                        </div>
                     </div>
                     <div className="col-2">
                         <label className="primary">Graduated</label> <br/>
@@ -1072,8 +1094,6 @@ class ApplyForm extends Component {
                                 this.setState({
                                     graduated: e.target.value
                                 });
-
-                                alert(e.target.value)
                             }}
                             form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
                     </div>
@@ -1081,17 +1101,20 @@ class ApplyForm extends Component {
                         <label className="primary">Degree</label>
                         {
                             this.state.graduated ? (
-                                <input
-                                    form="education-form"
-                                    name="degree"
-                                    id="degree"
-                                    type="text"
-                                    className="form-control"
-                                    required
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                />
+                                <div className="input-container--validated">
+                                    <input
+                                        form="education-form"
+                                        name="degree"
+                                        id="degree"
+                                        type="text"
+                                        className="form-control"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
+                                    <div className="check-icon"></div>
+                                </div>
                             ) : (
                                 <input
                                     form="education-form"
@@ -1117,7 +1140,6 @@ class ApplyForm extends Component {
                 </div>
             </form>
         );
-
         // To render the Military Service Section
         let renderMilitaryServiceSection = () => (
             <div className="ApplyBlock">
@@ -1133,7 +1155,7 @@ class ApplyForm extends Component {
                             maxLength="50"
                             minLength="3"
                         />
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                     <div className="col-6">
                         <span className="primary"> Rank at Discharge</span>
@@ -1145,7 +1167,7 @@ class ApplyForm extends Component {
                             maxLength="50"
                             minLength="3"
                         />
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                 </div>
                 <div className="row">
@@ -1182,12 +1204,11 @@ class ApplyForm extends Component {
                             <option value="typeFive">Dishonorable discharge</option>
                             <option value="typeSix">Entry-level separation.</option>
                         </select>
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                 </div>
             </div>
         );
-
         let renderPreviousEmploymentSection = () => (
             <form
                 id="form-previous-employment"
@@ -1195,7 +1216,6 @@ class ApplyForm extends Component {
                 onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-
                     let item = {
                         uuid: uuidv4(),
                         companyName: document.getElementById('companyNameEmployment').value,
@@ -1208,7 +1228,6 @@ class ApplyForm extends Component {
                         endDate: document.getElementById('companyEndDate').value,
                         reasonForLeaving: document.getElementById('companyReasonForLeaving').value
                     };
-
                     this.setState(
                         (prevState) => ({
                             open: false,
@@ -1263,7 +1282,6 @@ class ApplyForm extends Component {
                     ) : (
                         ''
                     )}
-
                     {this.state.previousEmployment.map((employmentItem) => (
                         <div key={uuidv4()} className="skills-container">
                             <div className="row">
@@ -1282,7 +1300,6 @@ class ApplyForm extends Component {
                                 <div className="col-1">
                                     <span>{employmentItem.supervisor}</span>
                                 </div>
-
                                 <div className="col-1">
                                     <span>{employmentItem.payRate}</span>
                                 </div>
@@ -1292,7 +1309,6 @@ class ApplyForm extends Component {
                                 <div className="col-1">
                                     <span>{employmentItem.endDate}</span>
                                 </div>
-
                                 <div className="col-1">
                                     <Button
                                         className="deleteSkillSection"
@@ -1310,129 +1326,144 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                     ))}
-
                     <hr className="separator"/>
                 </div>
                 <div className="row">
                     <div className="col-8">
                         <span className="primary"> Company</span>
-                        <input
-                            id="companyNameEmployment"
-                            form="form-previous-employment"
-                            name="companyNameEmployment"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyNameEmployment"
+                                form="form-previous-employment"
+                                name="companyNameEmployment"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Phone</span>
-                        <input
-                            id="companyPhoneEmployment"
-                            form="form-previous-employment"
-                            name="phoneEmployment"
-                            type="tel"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="10"
-                            minLength="10"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyPhoneEmployment"
+                                form="form-previous-employment"
+                                name="phoneEmployment"
+                                type="number"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="10"
+                                minLength="10"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-8">
                         <span className="primary"> Address</span>
-                        <input
-                            id="companyAddressEmployment"
-                            form="form-previous-employment"
-                            name="addressEmployment"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyAddressEmployment"
+                                form="form-previous-employment"
+                                name="addressEmployment"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Supervisor</span>
-                        <input
-                            id="companySupervisor"
-                            form="form-previous-employment"
-                            name="supervisorEmployment"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companySupervisor"
+                                form="form-previous-employment"
+                                name="supervisorEmployment"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-8">
                         <span className="primary"> Job Title</span>
-                        <input
-                            id="companyJobTitle"
-                            form="form-previous-employment"
-                            name="jobTitleEmployment"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyJobTitle"
+                                form="form-previous-employment"
+                                name="jobTitleEmployment"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Pay Rate</span>
-                        <input
-                            id="companyPayRate"
-                            form="form-previous-employment"
-                            name="payRateEmployment"
-                            type="number"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyPayRate"
+                                form="form-previous-employment"
+                                name="payRateEmployment"
+                                type="number"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Dates</span>
-                        <input
-                            id="companyStartDate"
-                            form="form-previous-employment"
-                            name="startPreviousEmployment"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyStartDate"
+                                form="form-previous-employment"
+                                name="startPreviousEmployment"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-3">
                         <span className="primary">To: </span>
-                        <input
-                            id="companyEndDate"
-                            form="form-previous-employment"
-                            name="endPreviousEmployment"
-                            type="date"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                id="companyEndDate"
+                                form="form-previous-employment"
+                                name="endPreviousEmployment"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="check-icon"/>
+                        </div>
                     </div>
                     <div className="col-6">
                         <span className="primary"> Reason for leaving</span>
@@ -1453,7 +1484,6 @@ class ApplyForm extends Component {
                 </div>
             </form>
         );
-
         let renderlanguagesSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Languages</h4>
@@ -1526,7 +1556,6 @@ class ApplyForm extends Component {
                     onSubmit={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-
                         let item = {
                             uuid: uuidv4(),
                             ApplicationId: 1,
@@ -1534,7 +1563,6 @@ class ApplyForm extends Component {
                             writing: document.getElementById('writingLanguage').value,
                             conversation: document.getElementById('conversationLanguage').value
                         };
-
                         this.setState(
                             (prevState) => ({
                                 open: false,
@@ -1549,20 +1577,41 @@ class ApplyForm extends Component {
                         );
                     }}
                 >
-                    <div className="col-3">
+                    <div className="col-4">
                         <span className="primary"> Language</span>
-                        <input
-                            id="nameLanguage"
-                            form="form-language"
-                            name="languageName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <Query query={GET_LANGUAGES_QUERY}>
+                            {({loading, error, data, refetch, networkStatus}) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (loading) return <LinearProgress/>;
+                                if (error) return <p>Error </p>;
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    return (
+                                        <select
+                                            id="nameLanguage"
+                                            name="languageName"
+                                            required
+                                            className="form-control"
+                                            form="form-language">
+                                            <option value="">Select an option</option>
+                                            {data.getcatalogitem.map((item) => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))}
+                                        </select>
+                                    );
+                                }
+                                return <SelectNothingToDisplay/>;
+                            }}
+                        </Query>
+                        {/*<input*/}
+
+                        {/*type="text"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*min="0"*/}
+                        {/*maxLength="50"*/}
+                        {/*minLength="3"*/}
+                        {/*/>*/}
+                        <span className="check-icon"/>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Conversation</span>
@@ -1576,7 +1625,7 @@ class ApplyForm extends Component {
                             <option value="">Select an option</option>
                             {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                         </select>
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
                     <div className="col-3">
                         <span className="primary"> Writing</span>
@@ -1590,9 +1639,9 @@ class ApplyForm extends Component {
                             <option value="">Select an option</option>
                             {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                         </select>
-                        <span className="Apply-okCheck"/>
+                        <span className="check-icon"/>
                     </div>
-                    <div className="col-3">
+                    <div className="col-2">
                         <br/>
                         <Button type="submit" form="form-language" className="save-skill-button">
                             Add
@@ -1601,7 +1650,6 @@ class ApplyForm extends Component {
                 </form>
             </div>
         );
-
         let renderSkillsSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Skills</h4>
@@ -1659,7 +1707,6 @@ class ApplyForm extends Component {
                 </div>
             </div>
         );
-
         return (
             <Route
                 render={({history}) => (
@@ -1670,10 +1717,8 @@ class ApplyForm extends Component {
                             onSubmit={(e) => {
                                 // To cancel the default submit event
                                 e.preventDefault();
-
                                 // Call mutation to create a application
                                 //this.insertApplicationInformation();
-
                                 // Set interval and show dialog
                                 this.setState({
                                     insertDialogLoading: true
@@ -1682,7 +1727,6 @@ class ApplyForm extends Component {
                                         this.setState({
                                             insertDialogLoading: false
                                         });
-
                                         history.push({
                                             pathname: '/employment-application-message'
                                         });

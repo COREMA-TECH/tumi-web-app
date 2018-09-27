@@ -1,24 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Tooltip from '@material-ui/core/Tooltip';
-import TablePagination from '@material-ui/core/TablePagination';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import TableFooter from '@material-ui/core/TableFooter';
-import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Route from 'react-router-dom/es/Route';
+import Table from '@material-ui/core/Table/Table';
+import TableHead from '@material-ui/core/TableHead/TableHead';
+import TableRow from '@material-ui/core/TableRow/TableRow';
+import TableBody from '@material-ui/core/TableBody/TableBody';
+import Tooltip from '@material-ui/core/Tooltip/Tooltip';
+import TableFooter from '@material-ui/core/TableFooter/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination/TablePagination';
+import Paper from '@material-ui/core/Paper/Paper';
+import DeleteIcon from '@material-ui/icons/Delete';
+import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
+import withApollo from 'react-apollo/withApollo';
+import EditIcon from '@material-ui/icons/Edit';
+import InputMask from 'react-input-mask';
+
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
 	root: {
@@ -141,10 +144,10 @@ const styles = (theme) => ({
 
 let id = 0;
 
-class DepartmentsTable extends React.Component {
+class ApplicationTable extends React.Component {
 	state = {
 		page: 0,
-		rowsPerPage: 5
+		rowsPerPage: 7
 	};
 	handleChangePage = (event, page) => {
 		this.setState({ page });
@@ -153,6 +156,7 @@ class DepartmentsTable extends React.Component {
 	handleChangeRowsPerPage = (event) => {
 		this.setState({ rowsPerPage: event.target.value });
 	};
+
 	shouldComponentUpdate(nextProps, nextState) {
 		if (this.props.data !== nextProps.data || this.props.loading !== nextProps.loading) {
 			return true;
@@ -167,112 +171,105 @@ class DepartmentsTable extends React.Component {
 		}
 		return false;
 	}
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
 		const { rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
-		if (this.props.loading) {
-			return (
-				<React.Fragment>
-					<div className="nothing-container">
-						<CircularProgress size={150} />
-					</div>
-				</React.Fragment>
-			);
+		if (this.state.loadingRemoving) {
+			return <LinearProgress />;
 		}
-		if (items.length == 0) {
-			return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
-		}
-		return (
-			<Paper className={classes.root}>
-				<Table className={classes.table}>
-					<TableHead>
-						<TableRow>
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th + " company-th"}>Department Code</CustomTableCell>
-							<CustomTableCell className={classes.th + " company-th"}>Department Name</CustomTableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-							return (
-								<TableRow
-									hover
-									className={classes.row}
-									key={uuidv4()}
-									onClick={() => {
-										return this.props.onEditHandler({ ...row });
-									}}
-								>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-										{' '}
-										<Tooltip title="Edit">
-											<div>
-												<IconButton
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onEditHandler({ ...row });
-													}}
-												>
-													<EditIcon color="primary" />
-												</IconButton>
-											</div>
-										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-										<Tooltip title="Delete">
-											<div>
-												<IconButton
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onDeleteHandler(row.Id);
-													}}
-												>
-													<DeleteIcon color="primary" />
-												</IconButton>
-											</div>
-										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell style={{ width: '150px' }}>{row.Code}</CustomTableCell>
-									<CustomTableCell>{row.Description}</CustomTableCell>
-								</TableRow>
-							);
-						})}
 
-						{emptyRows > 0 && (
-							<TableRow style={{ height: 48 * emptyRows }}>
-								<TableCell colSpan={4} />
-							</TableRow>
-						)}
-					</TableBody>
-					<TableFooter>
-						<TableRow>
-							{items.length > 0 && (
-								<TablePagination
-									colSpan={3}
-									count={items.length}
-									rowsPerPage={rowsPerPage}
-									page={page}
-									onChangePage={this.handleChangePage}
-									onChangeRowsPerPage={this.handleChangeRowsPerPage}
-									ActionsComponent={TablePaginationActionsWrapped}
-								/>
-							)}
-						</TableRow>
-					</TableFooter>
-				</Table>
-			</Paper>
+		return (
+			<Route
+				render={({ history }) => (
+					<Paper className={classes.root}>
+						<Table className={classes.table}>
+							<TableHead>
+								<TableRow>
+									<CustomTableCell padding="none" className={classes.th} />
+									<CustomTableCell className={classes.th}>First Name</CustomTableCell>
+									<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
+									<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
+									<CustomTableCell className={classes.th}>Social Secutiry Number</CustomTableCell>
+									<CustomTableCell className={classes.th}>Email Address</CustomTableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+									return (
+										<TableRow
+											hover
+											className={classes.row}
+											key={uuidv4()}
+											onClick={() => {
+												history.push({
+													pathname: '/employment-application',
+													state: { ApplicationId: row.id }
+												});
+											}}
+										>
+											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+												{' '}
+												<Tooltip title="Edit">
+													<div>
+														<IconButton
+															disabled={this.props.loading}
+															onClick={() => {
+																history.push({
+																	pathname: '/employment-application',
+																	state: { ApplicationId: row.id }
+																});
+															}}
+														>
+															<EditIcon color="primary" />
+														</IconButton>
+													</div>
+												</Tooltip>
+											</CustomTableCell>
+
+											<CustomTableCell>{row.firstName}</CustomTableCell>
+											<CustomTableCell>{row.middleName}</CustomTableCell>
+											<CustomTableCell>{row.lastName}</CustomTableCell>
+											<CustomTableCell>{row.socialSecurityNumber}</CustomTableCell>
+											<CustomTableCell>{row.emailAddress}</CustomTableCell>
+										</TableRow>
+									);
+								})}
+
+								{emptyRows > 0 && (
+									<TableRow style={{ height: 48 * emptyRows }}>
+										<TableCell colSpan={6} />
+									</TableRow>
+								)}
+							</TableBody>
+							<TableFooter>
+								<TableRow>
+									{items.length > 0 && (
+										<TablePagination
+											colSpan={3}
+											count={items.length}
+											rowsPerPage={rowsPerPage}
+											page={page}
+											onChangePage={this.handleChangePage}
+											onChangeRowsPerPage={this.handleChangeRowsPerPage}
+											ActionsComponent={TablePaginationActionsWrapped}
+										/>
+									)}
+								</TableRow>
+							</TableFooter>
+						</Table>
+					</Paper>
+				)}
+			/>
 		);
 	}
 }
 
-DepartmentsTable.propTypes = {
+ApplicationTable.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(DepartmentsTable);
+export default withStyles(styles)(withApollo(ApplicationTable));

@@ -278,7 +278,8 @@ p {
   width: 75%; }
 
 .input-file-modal {
-  border: 0 !important; }
+  border: 0 !important;
+  text-align: right; }
 
 .input-search-contract {
   border-radius: 0px 5px 5px 0 !important;
@@ -315,6 +316,9 @@ p {
 
 .cell-align-right {
   text-align: right !important; }
+
+.company-th, .contact-th {
+  padding-right: 0 !important; }
 
 #agreement {
   padding-top: 100px;

@@ -98,7 +98,6 @@ const styles = (theme) => ({
 
 class ExhibitContract extends Component {
 	constructor(props) {
-		console.log(props);
 		super(props);
 
 		this.state = {
@@ -197,7 +196,6 @@ class ExhibitContract extends Component {
 	};
 
 	createContract = () => {
-		console.log("creando contrato");
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
@@ -316,7 +314,6 @@ class ExhibitContract extends Component {
 	handleClickOpenModal = () => {
 		this.createContract();
 		this.setState({ openModal: true });
-
 	};
 
 	cancelContractHandler = () => {
@@ -324,7 +321,7 @@ class ExhibitContract extends Component {
 	};
 
 	downloadContractHandler = () => {
-		var url = "https://corema-new-api.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
+		var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
 		//pri.download();
 		window.open(url, '_blank');
 	};
@@ -338,7 +335,6 @@ class ExhibitContract extends Component {
 		pri.focus();
 		pri.print();
 	};
-
 
 	render() {
 		const { loading, success } = this.state;
@@ -566,9 +562,7 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>*/}
-							<div className="contract-next-button" onClick={
-								this.handleClickOpenModal
-							}>
+							<div className="contract-next-button" onClick={this.handleClickOpenModal}>
 								Create Contract
 							</div>
 						</div>

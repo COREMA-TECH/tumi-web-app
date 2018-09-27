@@ -242,8 +242,8 @@ class ContactcontactForm extends React.Component {
 		this.state = {
 			data: [],
 			idCompany: this.props.idCompany,
-			titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
-			departments: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
+			titles: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
+			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
 			supervisors: [],
 			allSupervisors: [],
 			inputEnabled: true,
@@ -285,7 +285,7 @@ class ContactcontactForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => { }) => {
+	resetState = (func = () => {}) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -489,7 +489,7 @@ class ContactcontactForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -541,16 +541,12 @@ class ContactcontactForm extends React.Component {
 		type
 	}) => {
 		this.setState({ showCircularLoading: false }, () => {
-			var department = this.state.departments.find(function (obj) {
+			var department = this.state.departments.find(function(obj) {
 				return obj.Id === idDepartment;
 			});
-			var titleRecord = this.state.titles.find(function (obj) {
+			var titleRecord = this.state.titles.find(function(obj) {
 				return obj.Id === title;
 			});
-
-			console.log(this.state.titles);
-			console.log(title);
-			console.log(titleRecord);
 
 			this.loadSupervisors(idSearch, () => {
 				this.setState(
@@ -629,7 +625,7 @@ class ContactcontactForm extends React.Component {
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	loadContacts = (func = () => { }) => {
+	loadContacts = (func = () => {}) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -665,7 +661,7 @@ class ContactcontactForm extends React.Component {
 				});
 		});
 	};
-	loadSupervisors = (idContact = 0, func = () => { }) => {
+	loadSupervisors = (idContact = 0, func = () => {}) => {
 		this.setState({ loadingSupervisor: true }, () => {
 			this.props.client
 				.query({
@@ -702,7 +698,7 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	loadAllSupervisors = (func = () => { }) => {
+	loadAllSupervisors = (func = () => {}) => {
 		this.setState({ loadingAllSupervisors: true }, () => {
 			this.props.client
 				.query({
@@ -739,7 +735,7 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	loadTitles = (func = () => { }) => {
+	loadTitles = (func = () => {}) => {
 		this.setState({ loadingTitles: true }, () => {
 			this.props.client
 				.query({
@@ -774,7 +770,7 @@ class ContactcontactForm extends React.Component {
 				});
 		});
 	};
-	loadDepartments = (func = () => { }) => {
+	loadDepartments = (func = () => {}) => {
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -813,10 +809,6 @@ class ContactcontactForm extends React.Component {
 	insertContacts = (idDepartment, idTitle) => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
-		console.log("insertContacts");
-		console.log(this.props);
-		console.log(this.state);
-
 		this.props.client
 			.mutate({
 				mutation: query,
@@ -843,7 +835,6 @@ class ContactcontactForm extends React.Component {
 				}
 			})
 			.then((data) => {
-				console.log(data);
 				this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
 				this.setState({ openModal: false, showCircularLoading: true }, () => {
 					this.loadContacts(() => {
@@ -854,8 +845,7 @@ class ContactcontactForm extends React.Component {
 										this.resetState();
 									});
 								});
-							})
-
+							});
 						});
 					});
 				});
@@ -878,8 +868,8 @@ class ContactcontactForm extends React.Component {
 				showCircularLoading: true
 			},
 			() => {
-
-				var IdDeparment = 0, IdTitle = 0;
+				var IdDeparment = 0,
+					IdTitle = 0;
 
 				var department = this.state.departments.find((obj) => {
 					return obj.Name.trim() === this.state.departmentName.trim();
@@ -889,117 +879,91 @@ class ContactcontactForm extends React.Component {
 					return obj.Name.trim() === this.state.titleName.trim();
 				});
 
-				console.log("estoy entrando a la validacion");
-
-				let insdepartmentAsync =
-					async () => {
-
-						if (department) {
-							console.log(department.Id);
-							IdDeparment = department.Id;
-						} else {
-							console.log("Llamada de async");
-							//const InsertDepartmentNew =
-							await this.props.client
-								.mutate({
-									mutation: this.INSERT_DEPARTMENTS_QUERY,
-									variables: {
-										input: {
-											Id: 0,
-											Id_Catalog: 8,
-											Id_Parent: 0,
-											Name: `'${this.state.departmentName}'`,
-											DisplayLabel: `'${this.state.departmentName}'`,
-											Description: `'${this.state.departmentName}'`,
-											Value: null,
-											Value01: null,
-											Value02: null,
-											Value03: null,
-											Value04: null,
-											IsActive: 1,
-											User_Created: 1,
-											User_Updated: 1,
-											Date_Created: "'2018-09-20 08:10:25+00'",
-											Date_Updated: "'2018-09-20 08:10:25+00'"
-										}
+				let insdepartmentAsync = async () => {
+					if (department) {
+						IdDeparment = department.Id;
+					} else {
+						//const InsertDepartmentNew =
+						await this.props.client
+							.mutate({
+								mutation: this.INSERT_DEPARTMENTS_QUERY,
+								variables: {
+									input: {
+										Id: 0,
+										Id_Catalog: 8,
+										Id_Parent: 0,
+										Name: `'${this.state.departmentName}'`,
+										DisplayLabel: `'${this.state.departmentName}'`,
+										Description: `'${this.state.departmentName}'`,
+										Value: null,
+										Value01: null,
+										Value02: null,
+										Value03: null,
+										Value04: null,
+										IsActive: 1,
+										User_Created: 1,
+										User_Updated: 1,
+										Date_Created: "'2018-09-20 08:10:25+00'",
+										Date_Updated: "'2018-09-20 08:10:25+00'"
 									}
-								})
-								.then((data) => {
-									console.log("Dentro del datassss ");
-									IdDeparment = data.data.inscatalogitem.Id;
-									console.log(IdDeparment);
-
-								})
-								.catch((error) => {
-									console.log("Catch del departamento");
-									this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-									this.setState({
-										loading: false
-									});
-
-								})
-						}
-
-						console.log("este es el nuevo ID ", IdDeparment);
-
-						if (title) {
-							console.log(title.Id);
-							IdTitle = title.Id;
-						} else {
-							console.log("Llamada de async");
-							//const InsertDepartmentNew =
-							await this.props.client
-								.mutate({
-									mutation: this.INSERT_DEPARTMENTS_QUERY,
-									variables: {
-										input: {
-											Id: 0,
-											Id_Catalog: 6,
-											Id_Parent: 0,
-											Name: `'${this.state.titleName}'`,
-											DisplayLabel: `'${this.state.titleName}'`,
-											Description: `'${this.state.titleName}'`,
-											Value: null,
-											Value01: null,
-											Value02: null,
-											Value03: null,
-											Value04: null,
-											IsActive: 1,
-											User_Created: 1,
-											User_Updated: 1,
-											Date_Created: "'2018-09-20 08:10:25+00'",
-											Date_Updated: "'2018-09-20 08:10:25+00'"
-										}
-									}
-								})
-								.then((data) => {
-									console.log("Dentro del datassss ");
-									IdTitle = data.data.inscatalogitem.Id;
-									console.log(IdTitle);
-
-								})
-								.catch((error) => {
-									console.log("Catch del IdTitle");
-									this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-									this.setState({
-										loading: false
-									});
-
-								})
-						}
-
-
-						this.setState({ openModal: false }, () => {
-							this.insertContacts(IdDeparment, IdTitle);
-						});
+								}
+							})
+							.then((data) => {
+								IdDeparment = data.data.inscatalogitem.Id;
+							})
+							.catch((error) => {
+								this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+								this.setState({
+									loading: false
+								});
+							});
 					}
 
+					if (title) {
+						IdTitle = title.Id;
+					} else {
+						//const InsertDepartmentNew =
+						await this.props.client
+							.mutate({
+								mutation: this.INSERT_DEPARTMENTS_QUERY,
+								variables: {
+									input: {
+										Id: 0,
+										Id_Catalog: 6,
+										Id_Parent: 0,
+										Name: `'${this.state.titleName}'`,
+										DisplayLabel: `'${this.state.titleName}'`,
+										Description: `'${this.state.titleName}'`,
+										Value: null,
+										Value01: null,
+										Value02: null,
+										Value03: null,
+										Value04: null,
+										IsActive: 1,
+										User_Created: 1,
+										User_Updated: 1,
+										Date_Created: "'2018-09-20 08:10:25+00'",
+										Date_Updated: "'2018-09-20 08:10:25+00'"
+									}
+								}
+							})
+							.then((data) => {
+								IdTitle = data.data.inscatalogitem.Id;
+							})
+							.catch((error) => {
+								this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
+								this.setState({
+									loading: false
+								});
+							});
+					}
 
-				console.log("llamada a la funcion insdepartmentAsync");
+					this.setState({ openModal: false }, () => {
+						this.insertContacts(IdDeparment, IdTitle);
+					});
+				};
+
 				insdepartmentAsync();
-
-
-
 			}
 		);
 	};
@@ -1199,8 +1163,8 @@ class ContactcontactForm extends React.Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Contact'
 							) : (
-									'Create Contact'
-								)}
+								'Create Contact'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
@@ -1312,7 +1276,6 @@ class ContactcontactForm extends React.Component {
 									/>
 								</div>
 
-
 								<div className="card-form-row">
 									<span className="input-label primary">* Contact Title</span>
 									<AutosuggestInput
@@ -1323,7 +1286,8 @@ class ContactcontactForm extends React.Component {
 										value={this.state.titleName}
 										onChange={this.updateTitleName}
 										onSelect={this.updateTitleName}
-									/>{/*
+									/>
+									{/*
 									<SelectForm
 										name="title"
 										data={this.state.titles}
@@ -1342,12 +1306,12 @@ class ContactcontactForm extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-											this.state.idToEdit != '' &&
-											this.state.idToEdit != 0 ? (
-												'Save Changes'
-											) : (
-												'Insert Record'
-											)
+										this.state.idToEdit != '' &&
+										this.state.idToEdit != 0 ? (
+											'Save Changes'
+										) : (
+											'Insert Record'
+										)
 									}
 								>
 									<div>
@@ -1417,8 +1381,8 @@ class ContactcontactForm extends React.Component {
 						</span>
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 			</div>
 		);
 	}

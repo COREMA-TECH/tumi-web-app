@@ -173,7 +173,7 @@ class Login extends Component {
 			})
 			.catch((error) => {
 				this.props.handleOpenSnackbar('error', 'Error: Validating user: ' + error);
-				console.log('Error: Loading users: ', error);
+
 				this.setState({ loadingLogin: false });
 			});
 	}
