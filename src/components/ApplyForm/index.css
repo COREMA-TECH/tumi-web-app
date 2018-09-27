@@ -16,6 +16,11 @@
     position: relative;
 }
 
+.apply-form,
+.input-container--validated {
+
+}
+
 .apply-form input:required:focus:valid,
 .apply-form input:optional:focus:valid,
 .apply-form select:required:focus:valid,

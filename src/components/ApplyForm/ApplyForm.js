@@ -3,7 +3,7 @@ import { CREATE_APPLICATION } from './Mutations';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
-import { GET_POSITIONS_QUERY, GET_STATES_QUERY } from './Queries';
+import { GET_LANGUAGES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from './Queries';
 import './index.css';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -15,7 +15,7 @@ import withApollo from 'react-apollo/withApollo';
 import studyTypes from './data/studyTypes';
 import languageLevelsJSON from './data/languagesLevels';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgressLoading from '../material-ui/CircularProgressLoading';
 import Route from 'react-router-dom/es/Route';
 import InputMask from 'react-input-mask';
 
@@ -155,7 +155,7 @@ class ApplyForm extends Component {
 				<DialogTitle id="responsive-dialog-title">Sending Application</DialogTitle>
 				<DialogContent>
 					<div className="center-progress-dialog">
-						<CircularProgress />
+						<CircularProgressLoading />
 					</div>
 				</DialogContent>
 			</Dialog>
@@ -250,22 +250,24 @@ class ApplyForm extends Component {
 				<div className="row">
 					<div className="col-3">
 						<span className="primary"> First Name</span>
-						<input
-							onChange={(event) => {
-								this.setState({
-									firstName: event.target.value
-								});
-							}}
-							value={this.state.firstName}
-							name="firstName"
-							type="text"
-							className="form-control"
-							required
-							min="0"
-							maxLength="50"
-							minLength="3"
-						/>
-						<span className="Apply-okCheck" />
+						<div className="input-container--validated">
+							<input
+								onChange={(event) => {
+									this.setState({
+										firstName: event.target.value
+									});
+								}}
+								value={this.state.firstName}
+								name="firstName"
+								type="text"
+								className="form-control"
+								required
+								min="0"
+								maxLength="50"
+								minLength="3"
+							/>
+							<span className="Apply-okCheck" />
+						</div>
 					</div>
 
 					<div className="col-3">
@@ -417,7 +419,7 @@ class ApplyForm extends Component {
 							name="zipCode"
 							mask="99999-99999"
 							maskChar=" "
-							className={'input-form'}
+							className="form-control"
 							onChange={(event) => {
 								this.setState({
 									zipCode: event.target.value
@@ -456,7 +458,7 @@ class ApplyForm extends Component {
 							mask="+(999) 999-9999"
 							maskChar=" "
 							value={this.state.homePhone}
-							className={'input-form'}
+							className="form-control"
 							onChange={(event) => {
 								this.setState({
 									homePhone: event.target.value
@@ -491,7 +493,7 @@ class ApplyForm extends Component {
 							mask="+(999) 999-9999"
 							maskChar=" "
 							value={this.state.cellPhone}
-							className={'input-form'}
+							className="form-control"
 							onChange={(event) => {
 								this.setState({
 									cellPhone: event.target.value
@@ -886,7 +888,6 @@ class ApplyForm extends Component {
 				</div>
 			</div>
 		);
-
 		// To render the Education Service Section
 		let renderEducationSection = () => (
 			<form
@@ -895,7 +896,6 @@ class ApplyForm extends Component {
 				onSubmit={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
-
 					let item = {
 						uuid: uuidv4(),
 						schoolType: parseInt(document.getElementById('studyType').value),
@@ -907,9 +907,7 @@ class ApplyForm extends Component {
 						degree: document.getElementById('degree').value,
 						ApplicationId: 1 // Static application id
 					};
-
 					console.log(item);
-
 					this.setState(
 						(prevState) => ({
 							open: false,
@@ -1073,7 +1071,6 @@ class ApplyForm extends Component {
 								this.setState({
 									graduated: e.target.value
 								});
-
 								alert(e.target.value);
 							}}
 							form="education-form"
@@ -1121,7 +1118,6 @@ class ApplyForm extends Component {
 				</div>
 			</form>
 		);
-
 		// To render the Military Service Section
 		let renderMilitaryServiceSection = () => (
 			<div className="ApplyBlock">
@@ -1191,7 +1187,6 @@ class ApplyForm extends Component {
 				</div>
 			</div>
 		);
-
 		let renderPreviousEmploymentSection = () => (
 			<form
 				id="form-previous-employment"
@@ -1199,7 +1194,6 @@ class ApplyForm extends Component {
 				onSubmit={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
-
 					let item = {
 						uuid: uuidv4(),
 						companyName: document.getElementById('companyNameEmployment').value,
@@ -1212,7 +1206,6 @@ class ApplyForm extends Component {
 						endDate: document.getElementById('companyEndDate').value,
 						reasonForLeaving: document.getElementById('companyReasonForLeaving').value
 					};
-
 					this.setState(
 						(prevState) => ({
 							open: false,
@@ -1267,7 +1260,6 @@ class ApplyForm extends Component {
 					) : (
 						''
 					)}
-
 					{this.state.previousEmployment.map((employmentItem) => (
 						<div key={uuidv4()} className="skills-container">
 							<div className="row">
@@ -1286,7 +1278,6 @@ class ApplyForm extends Component {
 								<div className="col-1">
 									<span>{employmentItem.supervisor}</span>
 								</div>
-
 								<div className="col-1">
 									<span>{employmentItem.payRate}</span>
 								</div>
@@ -1296,7 +1287,6 @@ class ApplyForm extends Component {
 								<div className="col-1">
 									<span>{employmentItem.endDate}</span>
 								</div>
-
 								<div className="col-1">
 									<Button
 										className="deleteSkillSection"
@@ -1314,7 +1304,6 @@ class ApplyForm extends Component {
 							</div>
 						</div>
 					))}
-
 					<hr className="separator" />
 				</div>
 				<div className="row">
@@ -1457,7 +1446,6 @@ class ApplyForm extends Component {
 				</div>
 			</form>
 		);
-
 		let renderlanguagesSection = () => (
 			<div className="ApplyBlock">
 				<h4 className="ApplyBlock-title">Languages</h4>
@@ -1530,7 +1518,6 @@ class ApplyForm extends Component {
 					onSubmit={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-
 						let item = {
 							uuid: uuidv4(),
 							ApplicationId: 1,
@@ -1538,7 +1525,6 @@ class ApplyForm extends Component {
 							writing: document.getElementById('writingLanguage').value,
 							conversation: document.getElementById('conversationLanguage').value
 						};
-
 						this.setState(
 							(prevState) => ({
 								open: false,
@@ -1553,19 +1539,40 @@ class ApplyForm extends Component {
 						);
 					}}
 				>
-					<div className="col-3">
+					<div className="col-4">
 						<span className="primary"> Language</span>
-						<input
-							id="nameLanguage"
-							form="form-language"
-							name="languageName"
-							type="text"
-							className="form-control"
-							required
-							min="0"
-							maxLength="50"
-							minLength="3"
-						/>
+						<Query query={GET_LANGUAGES_QUERY}>
+							{({ loading, error, data, refetch, networkStatus }) => {
+								//if (networkStatus === 4) return <LinearProgress />;
+								if (loading) return <LinearProgress />;
+								if (error) return <p>Error </p>;
+								if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+									return (
+										<select
+											id="nameLanguage"
+											name="languageName"
+											required
+											className="form-control"
+											form="form-language"
+										>
+											<option value="">Select an option</option>
+											{data.getcatalogitem.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									);
+								}
+								return <SelectNothingToDisplay />;
+							}}
+						</Query>
+						{/*<input*/}
+						{/*type="text"*/}
+						{/*className="form-control"*/}
+						{/*required*/}
+						{/*min="0"*/}
+						{/*maxLength="50"*/}
+						{/*minLength="3"*/}
+						{/*/>*/}
 						<span className="Apply-okCheck" />
 					</div>
 					<div className="col-3">
@@ -1596,7 +1603,7 @@ class ApplyForm extends Component {
 						</select>
 						<span className="Apply-okCheck" />
 					</div>
-					<div className="col-3">
+					<div className="col-2">
 						<br />
 						<Button type="submit" form="form-language" className="save-skill-button">
 							Add
@@ -1605,7 +1612,6 @@ class ApplyForm extends Component {
 				</form>
 			</div>
 		);
-
 		let renderSkillsSection = () => (
 			<div className="ApplyBlock">
 				<h4 className="ApplyBlock-title">Skills</h4>
@@ -1663,7 +1669,6 @@ class ApplyForm extends Component {
 				</div>
 			</div>
 		);
-
 		return (
 			<Route
 				render={({ history }) => (
@@ -1674,10 +1679,8 @@ class ApplyForm extends Component {
 							onSubmit={(e) => {
 								// To cancel the default submit event
 								e.preventDefault();
-
 								// Call mutation to create a application
 								//this.insertApplicationInformation();
-
 								// Set interval and show dialog
 								this.setState(
 									{
@@ -1688,7 +1691,6 @@ class ApplyForm extends Component {
 											this.setState({
 												insertDialogLoading: false
 											});
-
 											history.push({
 												pathname: '/employment-application-message'
 											});
@@ -1723,5 +1725,4 @@ class ApplyForm extends Component {
 		);
 	}
 }
-
 export default withApollo(ApplyForm);
