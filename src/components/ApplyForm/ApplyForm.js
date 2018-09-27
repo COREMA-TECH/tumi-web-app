@@ -1667,7 +1667,9 @@ class ApplyForm extends Component {
                                             insertDialogLoading: false
                                         });
 
-
+                                        history.push({
+                                            pathname: '/home/'
+                                        });
                                     }, 3000);
                                 });
                             }}
