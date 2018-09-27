@@ -16,9 +16,26 @@
     position: relative;
 }
 
-.apply-form,
-.input-container--validated {
+.apply-form .input-container--validated {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
 
+.apply-form .input-container--validated .check-icon {
+    background: green;
+    height: 100%;
+    padding: .375rem .2rem;
+    border-radius: 0 5px 5px 0;
+    box-sizing: border-box;
+    border: 1px solid green;
+
+    transition: all .450s;
+}
+
+.apply-form .input-container--validated .form-control {
+    border-radius: 5px 0 0 5px;
+    border-right: none;
 }
 
 .apply-form input:required:focus:valid,
@@ -39,16 +56,36 @@
 .apply-form input:optional:valid + span::after,
 .apply-form select:optional:valid + span::after,
 .apply-form textarea:optional:valid + span::after {
-    content: "";
-    color: green;
+    content: "\2713";
+    color: #ffffff;
     margin-left: 5px;
+}
+
+.apply-form input:required:invalid + span::after,
+.apply-form input:optional:invalid + span::after,
+.apply-form select:optional:invalid + span::after,
+.apply-form textarea:optional:invalid + span::after {
+    content: "\2713";
+    color: #ffffff;
+    margin-left: 5px;
+}
+
+.apply-form .invalid-apply-form:required:invalid + .check-icon {
+    border: 1px solid orangered;
+    border-left: none;
+}
+
+.apply-form input:required:invalid + .check-icon {
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-left: none;
+    color: #ffffff;
 }
 
 .optional::after {
     content: "Optional";
     color: #888888;
     font-size: 11px;
-    margin-left: 5px;
 }
 
 .invalid-apply-form {
