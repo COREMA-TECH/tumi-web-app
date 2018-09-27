@@ -165,7 +165,10 @@ class ApplyForm extends Component {
                 <form
                     autoComplete="off"
                     id="skill-form"
-                    onSubmit={() => {
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+
                         let item = {
                             uuid: uuidv4(),
                             description: document.getElementById('description').value,
@@ -757,135 +760,25 @@ class ApplyForm extends Component {
                     <div className="col-12">
                         <span className="primary"> How did you hear about Tumi Staffing </span>
                     </div>
-                    <div className="col-10">
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="col-2">
-                                        <label className="radio-label"> Facebook</label>
-                                    </div>
-                                    <div className="col-1">
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    socialNetwork: event.target.value
-                                                });
-                                            }}
-                                            name="socialNetworks"
-                                            type="radio"
-                                            className="form-control"
-                                            required
-                                            value="facebook"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="col-2">
-                                        <label className="radio-label"> Linkedin</label>
-                                    </div>
-                                    <div className="col-1">
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    socialNetwork: event.target.value
-                                                });
-                                            }}
-                                            name="socialNetworks"
-                                            type="radio"
-                                            className="form-control"
-                                            required
-                                            value="linkedin"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="col-2">
-                                        <label className="radio-label"> Instagram</label>
-                                    </div>
-                                    <div className="col-1">
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    socialNetwork: event.target.value
-                                                });
-                                            }}
-                                            name="socialNetworks"
-                                            type="radio"
-                                            className="form-control"
-                                            required
-                                            value="instagram"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="col-2">
-                                        <label className="radio-label"> News Paper</label>
-                                    </div>
-                                    <div className="col-1">
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    socialNetwork: event.target.value
-                                                });
-                                            }}
-                                            name="socialNetworks"
-                                            type="radio"
-                                            className="form-control"
-                                            required
-                                            value="newspaper"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="col-2">
-                                        <label className="radio-label"> Journals</label>
-                                    </div>
-                                    <div className="col-1">
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    socialNetwork: event.target.value
-                                                });
-                                            }}
-                                            name="socialNetworks"
-                                            type="radio"
-                                            className="form-control"
-                                            required
-                                            value="journals"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-12">
-                                <div className="row">
-                                    <div className="col-2">
-                                        <label className="radio-label"> Other</label>
-                                    </div>
-                                    <div className="col-1">
-                                        <input
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    socialNetwork: event.target.value
-                                                });
-                                            }}
-                                            name="socialNetworks"
-                                            type="radio"
-                                            className="form-control"
-                                            required
-                                            value="others"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="col-12">
+                        <select
+                            name="networks" id="networks"
+                            onChange={(event) => {
+                                this.setState({
+                                    socialNetwork: event.target.value
+                                });
+                            }}
+                            required
+                            className="form-control">
+                            <option value="">Select a option</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="linkedin">Linkedin</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="newspaper">News Paper</option>
+                            <option value="journals">Journals</option>
+                            <option value="journals">Journals</option>
+                            <option value="others">Other</option>
+                        </select>
                     </div>
                     <div className="col-12">
                         <div className="row">
@@ -989,11 +882,11 @@ class ApplyForm extends Component {
                             <div className="col-2">
                                 <span>{
                                     studyTypes.map(item => {
-                                        if (item.Id === schoolItem.schoolType){
+                                        if (item.Id === schoolItem.schoolType) {
                                             return item.Name + "";
                                         }
                                     })
-                            }</span>
+                                }</span>
                             </div>
                             <div className="col-2">
                                 <span>{schoolItem.educationName}</span>
@@ -1183,8 +1076,13 @@ class ApplyForm extends Component {
                     <div className="col-6">
                         <span className="primary"> Type of Discharge</span>
                         <select name="dischargeType" id="dischargeType" required className="form-control">
-                            <option value="">Select a type</option>
-                            <option value="typeOne">Example</option>
+                            <option value="">Select an option</option>
+                            <option value="typeOne">Honorable discharge</option>
+                            <option value="typeTwo">General discharge</option>
+                            <option value="typeThree">Other than honorable (OTH) discharge</option>
+                            <option value="typeFour">Bad conduct discharge</option>
+                            <option value="typeFive">Dishonorable discharge</option>
+                            <option value="typeSix">Entry-level separation.</option>
                         </select>
                         <span className="Apply-okCheck"/>
                     </div>
@@ -1339,7 +1237,7 @@ class ApplyForm extends Component {
                             id="companyPhoneEmployment"
                             form="form-previous-employment"
                             name="phoneEmployment"
-                            type="number"
+                            type="tel"
                             className="form-control"
                             required
                             min="0"
