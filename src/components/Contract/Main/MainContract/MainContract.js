@@ -141,7 +141,7 @@ class MainContract extends Component {
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[classes.root, 'company-list__header'].join(' ')}>
+			<div className={[ classes.root, 'company-list__header' ].join(' ')}>
 				<Grid container spacing={24}>
 					<Grid item xs={12} sm={6}>
 						<div className="search-container">
@@ -194,8 +194,10 @@ class MainContract extends Component {
 							if (error)
 								return (
 									<ErrorMessageComponent
-										url="https://www.materialui.co/materialIcons/alert/error_red_192x192.png"
-										message="Error loading contracts"
+										title="Oops!"
+										message={'Error loading contracts'}
+										type="Error-danger"
+										icon="danger"
 									/>
 								);
 							if (data.getcontracts != null && data.getcontracts.length > 0) {

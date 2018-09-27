@@ -20,10 +20,9 @@ const styles = (theme) => ({
 });
 class CompanyList extends Component {
 	state = {
-		data: [], open: false
+		data: [],
+		open: false
 	};
-
-
 
 	getCompaniesQuery = gql`
 		{
@@ -55,16 +54,12 @@ class CompanyList extends Component {
 		return source;
 	};
 
-
-
 	// To render the content of the header
 	renderHeaderContent = ({ history }) => (
-		<div className={[this.props.root, 'company-list__header'].join(' ')}>
+		<div className={[ this.props.root, 'company-list__header' ].join(' ')}>
 			<Grid container spacing={24}>
 				<Grid item xs={12} sm={6}>
-					<div className="search-container">
-
-					</div>
+					<div className="search-container" />
 				</Grid>
 				<Grid item xs={12} sm={6}>
 					<button
@@ -77,7 +72,7 @@ class CompanyList extends Component {
 						}}
 					>
 						Add Management
-								</button>
+					</button>
 				</Grid>
 			</Grid>
 		</div>
@@ -88,7 +83,6 @@ class CompanyList extends Component {
 	}
 
 	render() {
-
 		const LoadCompanyList = () => (
 			<Query query={this.getCompaniesQuery} pollInterval={500}>
 				{({ loading, error, data, refetch, networkStatus }) => {
@@ -97,29 +91,32 @@ class CompanyList extends Component {
 					if (loading) return <LinearProgress />;
 					if (error)
 						return (
-
-
-							< ErrorMessageComponent
+							<ErrorMessageComponent
 								title="Oops!"
-								message={"Something went wrong"}
+								message={'Something went wrong'}
 								type="Error-danger"
 								icon="danger"
 							/>
 						);
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-
 						return (
 							<Route
 								render={({ history }) => (
 									<div className="main-contract">
-										<div className="main-contract__header main-contract__header-sg-container">{this.renderHeaderContent({ history })}</div>
-										<div className="company-list">{this.renderCards(data.getbusinesscompanies)}</div>
+										<div className="main-contract__header main-contract__header-sg-container">
+											{this.renderHeaderContent({ history })}
+										</div>
+										<div className="company-list">
+											{this.renderCards(data.getbusinesscompanies)}
+										</div>
 									</div>
 								)}
 							/>
 						);
 					}
-					return <NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />;
+					return (
+						<NothingToDisplay title="Wow!" message="Nothing to display!" type="Error-success" icon="wow" />
+					);
 				}}
 			</Query>
 		);
