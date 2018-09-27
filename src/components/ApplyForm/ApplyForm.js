@@ -3,7 +3,7 @@ import {CREATE_APPLICATION} from './Mutations';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
-import {GET_POSITIONS_QUERY, GET_STATES_QUERY} from './Queries';
+import {GET_LANGUAGES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from './Queries';
 import './index.css';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -250,22 +250,24 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> First Name</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    firstName: event.target.value
-                                });
-                            }}
-                            value={this.state.firstName}
-                            name="firstName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
-                        <span className="Apply-okCheck"/>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        firstName: event.target.value
+                                    });
+                                }}
+                                value={this.state.firstName}
+                                name="firstName"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="3"
+                            />
+                            <span className="Apply-okCheck"/>
+                        </div>
                     </div>
 
                     <div className="col-3">
@@ -1533,19 +1535,40 @@ class ApplyForm extends Component {
                         );
                     }}
                 >
-                    <div className="col-3">
+                    <div className="col-4">
                         <span className="primary"> Language</span>
-                        <input
-                            id="nameLanguage"
-                            form="form-language"
-                            name="languageName"
-                            type="text"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="3"
-                        />
+                        <Query query={GET_LANGUAGES_QUERY}>
+                            {({loading, error, data, refetch, networkStatus}) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (loading) return <LinearProgress/>;
+                                if (error) return <p>Error </p>;
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    return (
+                                        <select
+                                            id="nameLanguage"
+                                            name="languageName"
+                                            required
+                                            className="form-control"
+                                            form="form-language">
+                                            <option value="">Select an option</option>
+                                            {data.getcatalogitem.map((item) => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))}
+                                        </select>
+                                    );
+                                }
+                                return <SelectNothingToDisplay/>;
+                            }}
+                        </Query>
+                        {/*<input*/}
+
+                        {/*type="text"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*min="0"*/}
+                        {/*maxLength="50"*/}
+                        {/*minLength="3"*/}
+                        {/*/>*/}
                         <span className="Apply-okCheck"/>
                     </div>
                     <div className="col-3">
@@ -1576,7 +1599,7 @@ class ApplyForm extends Component {
                         </select>
                         <span className="Apply-okCheck"/>
                     </div>
-                    <div className="col-3">
+                    <div className="col-2">
                         <br/>
                         <Button type="submit" form="form-language" className="save-skill-button">
                             Add
@@ -1694,4 +1717,5 @@ class ApplyForm extends Component {
         );
     }
 }
+
 export default withApollo(ApplyForm);

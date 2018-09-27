@@ -55,7 +55,7 @@ export const GET_POSITIONS_QUERY = gql`
 
 
 /**
- * Query to get lenguages
+ * Query to get languages
  */
 export const GET_LANGUAGES_QUERY = gql`
     {
