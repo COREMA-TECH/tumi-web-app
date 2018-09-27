@@ -199,7 +199,7 @@ class ContactcontactForm extends React.Component {
 		idDepartment: 0,
 		departmentName: '',
 		titleName: '',
-		type: 0,
+		type: 1,
 
 		firstnameValid: true,
 		middlenameValid: true,
@@ -1214,8 +1214,8 @@ class ContactcontactForm extends React.Component {
 										name="type"
 										data={this.state.contactTypes}
 										update={this.updateType}
-										showNone={true}
-										noneName="Employee"
+										showNone={false}
+										//noneName="Employee"
 										error={!this.state.typeValid}
 										value={this.state.type}
 									/>
