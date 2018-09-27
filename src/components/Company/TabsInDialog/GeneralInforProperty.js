@@ -587,9 +587,9 @@ class GeneralInfoProperty extends Component {
 									</div>
 									<div className="col-6">
 										<input
-											onChange={(text) => {
+											onChange={(e) => {
 												this.setState({
-													suite: text
+													suite: e.target.value
 												});
 											}}
 											value={this.state.suite}
