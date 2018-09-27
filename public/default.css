@@ -277,6 +277,9 @@ p {
   height: 32px;
   width: 75%; }
 
+.input-file-modal {
+  border: 0 !important; }
+
 .input-search-contract {
   border-radius: 0px 5px 5px 0 !important;
   -webkit-transition: width .5s;
@@ -309,6 +312,9 @@ p {
   margin: 0 auto !important; }
   .table-elements li {
     padding: 5px !important; }
+
+.cell-align-right {
+  text-align: right !important; }
 
 #agreement {
   padding-top: 100px;
@@ -598,6 +604,9 @@ p {
   max-width: 1200px;
   width: 80%; }
 
+.Apply-emoji {
+  text-align: center; }
+
 .Apply-okCheck {
   position: absolute;
   top: 30px;
@@ -653,6 +662,15 @@ p {
     margin: 2em auto;
     padding: 0;
     width: 95%; }
+
+.ApplyEmoji-wrapper {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  height: 500px;
+  border-radius: 500px;
+  padding: 100px; }
 
 .ApplyForm {
   background-color: #f5f7f9;

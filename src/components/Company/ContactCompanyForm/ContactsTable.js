@@ -264,9 +264,7 @@ class ContactsTable extends React.Component {
 											IconComponent="div"
 											disableUnderline={true}
 										>
-											<MenuItem key={0} value={0} name="Employee">
-												<em>Employee</em>
-											</MenuItem>
+
 
 											{this.props.types.map(({ Id, Name }) => (
 												<MenuItem key={Id} value={Id} name={Name}>

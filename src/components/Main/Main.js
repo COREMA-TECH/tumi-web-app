@@ -5,6 +5,7 @@ import Login from '../Login/Login';
 import Private from '../Private/Private';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import ApplyForm from "../ApplyForm/ApplyForm";
+import ApplyFormMessage from "../ApplyForm/ApplyFormMessage";
 
 class Main extends Component {
     LoginId = sessionStorage.getItem('LoginId');
@@ -21,6 +22,7 @@ class Main extends Component {
             <div>
                 <Route path="/login" component={Login} />
                 <Route path="/employment-application" component={ApplyForm} />
+                <Route path="/employment-application-message" component={ApplyFormMessage} />
                 <PrivateRoute path="/home" component={Private} />
             </div>
         );

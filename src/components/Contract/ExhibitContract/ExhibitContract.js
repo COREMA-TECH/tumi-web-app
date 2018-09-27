@@ -197,6 +197,7 @@ class ExhibitContract extends Component {
 	};
 
 	createContract = () => {
+		console.log("creando contrato");
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
@@ -322,8 +323,8 @@ class ExhibitContract extends Component {
 		this.resetState();
 	};
 
-	downladContractHandler = () => {
-		var url = "https://morning-lake-18657.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
+	downloadContractHandler = () => {
+		var url = "https://corema-new-api.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
 		//pri.download();
 		window.open(url, '_blank');
 	};

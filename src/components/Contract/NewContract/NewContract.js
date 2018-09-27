@@ -317,12 +317,14 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
+				console.log("aqui estamos con el link ", data.getcontracts[0].Contract_Status);
 				this.setState(
 					{
 						Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
 						Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
 						Id_Entity: data.getcontracts[0].Id_Entity,
 						Id_User_Signed: data.getcontracts[0].Id_User_Signed,
+						Contract_Status: data.getcontracts[0].Contract_Status,
 						User_Signed_Title: this.getString(data.getcontracts[0].User_Signed_Title),
 						Id_User_Billing_Contact: data.getcontracts[0].Id_User_Billing_Contact,
 						Signed_Date: data.getcontracts[0].Signed_Date,
@@ -1060,10 +1062,12 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">* Status</span>
+											{console.log("Estatus Id", this.state.Contract_Status)}
+											{console.log("Estatus array", status)}
 											<SelectForm
 												data={status}
 												update={this.updateStatus}
-												value={this.state.Contract_Status}
+												value={parseInt(this.state.Contract_Status)}
 												//error={!this.state.IsActiveValid}
 												error={!this.state.Contract_StatusValid}
 												showNone={false}
