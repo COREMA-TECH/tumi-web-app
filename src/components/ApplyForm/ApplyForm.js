@@ -14,9 +14,9 @@ import InputRangeDisabled from './ui/InputRange/InputRangeDisabled';
 import withApollo from 'react-apollo/withApollo';
 import studyTypes from './data/studyTypes';
 import languageLevelsJSON from './data/languagesLevels';
-import CircularProgress from "../material-ui/CircularProgress";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import CircularProgressLoading from "../material-ui/CircularProgressLoading";
+import Route from "react-router-dom/es/Route";
 
 const uuidv4 = require('uuid/v4');
 
@@ -153,7 +153,7 @@ class ApplyForm extends Component {
                 <DialogTitle id="responsive-dialog-title">Sending Application</DialogTitle>
                 <DialogContent>
                     <div className="center-progress-dialog">
-                        <CircularProgressLoading />
+                        <CircularProgressLoading/>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -1645,50 +1645,57 @@ class ApplyForm extends Component {
         );
 
         return (
-            <div>
-                <header className="Header">Application Form</header>
-                <form
-                    className="ApplyForm apply-form"
-                    onSubmit={(e) => {
-                        // To cancel the default submit event
-                        e.preventDefault();
+            <Route
+                render={({history}) => (
+                    <div>
+                        <header className="Header">Application Form</header>
+                        <form
+                            className="ApplyForm apply-form"
+                            onSubmit={(e) => {
+                                // To cancel the default submit event
+                                e.preventDefault();
 
-                        // Call mutation to create a application
-                        //this.insertApplicationInformation();
+                                // Call mutation to create a application
+                                //this.insertApplicationInformation();
 
-                        // Set interval and show dialog
-                        this.setState({
-                            insertDialogLoading: true
-                        }, () => {
-                            setTimeout(() => {
+                                // Set interval and show dialog
                                 this.setState({
-                                    insertDialogLoading: false
+                                    insertDialogLoading: true
+                                }, () => {
+                                    setTimeout(() => {
+                                        this.setState({
+                                            insertDialogLoading: false
+                                        });
+
+                                        history.push({
+                                            pathname: '/home/'
+                                        });
+                                    }, 3000);
                                 });
-                            }, 3000);
-                        });
-                    }}
-                >
-                    {renderApplicantInformationSection()}
-                    {/*{renderlanguagesSection()}*/}
-					{/*{renderEducationSection()}*/}
-					{/*{renderMilitaryServiceSection()}*/}
-					{/*{renderPreviousEmploymentSection()}*/}
-					{/*{renderSkillsSection()}*/}
-                    { renderInsertDialogLoading() }
-                    <div className="Apply-container">
-                        <div className="row">
-                            <div className="col-12 buttons-group-right">
-                                <button type="reset" className="btn-circle btn-lg red">
-                                    <i className="fas fa-eraser"/>
-                                </button>
-                                <button type="submit" className="btn-circle btn-lg">
-                                    <i className="fas fa-save"/>
-                                </button>
+                            }}
+                        >
+                            {renderApplicantInformationSection()}
+                            {/*{renderlanguagesSection()}*/}
+                            {/*{renderEducationSection()}*/}
+                            {/*{renderMilitaryServiceSection()}*/}
+                            {/*{renderPreviousEmploymentSection()}*/}
+                            {/*{renderSkillsSection()}*/}
+                            {renderInsertDialogLoading()}
+                            <div className="Apply-container">
+                                <div className="row">
+                                    <div className="col-12 buttons-group-right">
+                                        <button type="reset" className="btn-circle btn-lg red">
+                                            <i className="fas fa-eraser"/>
+                                        </button>
+                                        <button type="submit" className="btn-circle btn-lg">
+                                            <i className="fas fa-save"/>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-            </div>
+                )}/>
         );
     }
 }
