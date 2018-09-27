@@ -1022,7 +1022,6 @@ class ApplyForm extends Component {
                             name="militaryBranch"
                             type="text"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1035,7 +1034,6 @@ class ApplyForm extends Component {
                             name="militaryRankDischarge"
                             type="text"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1050,7 +1048,6 @@ class ApplyForm extends Component {
                             name="militaryStartDate"
                             type="date"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1062,7 +1059,6 @@ class ApplyForm extends Component {
                             name="militaryEndDate"
                             type="date"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="3"
@@ -1070,7 +1066,7 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Type of Discharge</span>
-                        <select name="dischargeType" id="dischargeType" required className="form-control">
+                        <select name="dischargeType" id="dischargeType" className="form-control">
                             <option value="">Select an option</option>
                             <option value="typeOne">Honorable discharge</option>
                             <option value="typeTwo">General discharge</option>
