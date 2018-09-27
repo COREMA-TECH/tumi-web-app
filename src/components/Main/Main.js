@@ -9,11 +9,12 @@ import ApplyFormMessage from '../ApplyForm/ApplyFormMessage';
 
 class Main extends Component {
 	LoginId = sessionStorage.getItem('LoginId');
+
 	//(window.location.pathname != '/home/signature/')
 	render() {
 		if (
 			!(
-				window.location.pathname == '/home/signature' ||
+				window.location.pathname == '/home/signature/' ||
 				window.location.pathname == '/employment-application' ||
 				window.location.pathname == '/employment-application-message'
 			)

@@ -567,7 +567,7 @@ class GeneralInfoProperty extends Component {
 										/>
 									</div>
 									<div className="col-6">
-										<span className="primary card-input-label">* Address 2</span>
+										<span className="primary card-input-label">Address 2</span>
 									</div>
 									<div className="col-6">
 										<input
