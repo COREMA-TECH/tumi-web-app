@@ -417,7 +417,7 @@ class ApplyForm extends Component {
                             name="zipCode"
                             mask="99999-99999"
                             maskChar=" "
-                            className={'input-form'}
+                            className={'form-control'}
                             onChange={(event) => {
                                 this.setState({
                                     zipCode: event.target.value
@@ -456,7 +456,7 @@ class ApplyForm extends Component {
                             mask="+(999) 999-9999"
                             maskChar=" "
                             value={this.state.homePhone}
-                            className={'input-form'}
+                            className={'form-control'}
                             onChange={(event) => {
                                 this.setState({
                                     homePhone: event.target.value
@@ -491,7 +491,7 @@ class ApplyForm extends Component {
                             mask="+(999) 999-9999"
                             maskChar=" "
                             value={this.state.cellPhone}
-                            className={'input-form'}
+                            className={'form-control'}
                             onChange={(event) => {
                                 this.setState({
                                     cellPhone: event.target.value
