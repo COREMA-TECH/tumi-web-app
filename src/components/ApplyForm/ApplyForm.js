@@ -740,7 +740,8 @@ class ApplyForm extends Component {
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        scheduleRestrictions: event.target.value
+                                        scheduleRestrictions: event.target.value,
+                                        scheduleExplain: ''
                                     });
                                 }}
                                 value="0"
@@ -803,7 +804,8 @@ class ApplyForm extends Component {
                         <input
                             onChange={(event) => {
                                 this.setState({
-                                    convicted: event.target.value
+                                    convicted: event.target.value,
+                                    convictedExplain: ''
                                 });
                             }}
                             value="0"
@@ -845,7 +847,6 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         )}
-                        <span className="check-icon"/>
                     </div>
                 </div>
                 <div className="row">
@@ -868,7 +869,6 @@ class ApplyForm extends Component {
                             <option value="instagram">Instagram</option>
                             <option value="newspaper">News Paper</option>
                             <option value="journals">Journals</option>
-                            <option value="journals">Journals</option>
                             <option value="others">Other</option>
                         </select>
 
@@ -886,7 +886,7 @@ class ApplyForm extends Component {
                                         required
                                         name="comment"
                                         cols="20"
-                                        rows="10"
+                                        rows="4"
                                         className="form-control textarea-apply-form"
                                     />
                                 ) : (
@@ -942,7 +942,7 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">
                             <div className="col-2">
-                                <span>Study</span>
+                                <span>Field of Study</span>
                             </div>
                             <div className="col-2">
                                 <span>Institution</span>
@@ -953,11 +953,14 @@ class ApplyForm extends Component {
                             <div className="col-2">
                                 <span>Start Date</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-1">
                                 <span>End Date</span>
                             </div>
                             <div className="col-1">
                                 <span>Graduated</span>
+                            </div>
+                            <div className="col-1">
+                                <span>Degree</span>
                             </div>
                         </div>
                     </div>
@@ -985,11 +988,14 @@ class ApplyForm extends Component {
                             <div className="col-2">
                                 <span>{schoolItem.startDate}</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-1">
                                 <span>{schoolItem.endDate}</span>
                             </div>
                             <div className="col-1">
                                 <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
+                            </div>
+                            <div className="col-1">
+                                <span>{schoolItem.degree}</span>
                             </div>
                             <div className="col-1">
                                 <Button
@@ -1092,10 +1098,10 @@ class ApplyForm extends Component {
                         <input
                             onChange={(e) => {
                                 this.setState({
-                                    graduated: e.target.value
+                                    graduated: document.getElementById('graduated').checked
                                 });
                             }}
-                            form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
+                            form="education-form" type="checkbox" value="" name="graduated" id="graduated" className=""/>
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
