@@ -688,19 +688,35 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    scheduleExplain: event.target.value
-                                });
-                            }}
-                            value={this.state.scheduleExplain}
-                            name="form-control"
-                            cols="30"
-                            rows="3"
-                            required
-                            className="form-control textarea-apply-form"
-                        />
+                        {this.state.scheduleRestrictions === "0" ? (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.scheduleExplain}
+                                name="form-control"
+                                cols="30"
+                                rows="3"
+                                disabled
+                                className="form-control textarea-apply-form"
+                            />
+                        ) : (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        scheduleExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.scheduleExplain}
+                                name="form-control"
+                                cols="30"
+                                rows="3"
+                                required
+                                className="form-control textarea-apply-form"
+                            />
+                        )}
                         <span className="Apply-okCheck"/>
                     </div>
                 </div>
@@ -735,19 +751,35 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
-                        <textarea
-                            onChange={(event) => {
-                                this.setState({
-                                    convictedExplain: event.target.value
-                                });
-                            }}
-                            value={this.state.convictedExplain}
-                            name="form-control"
-                            cols="30"
-                            required
-                            rows="3"
-                            className="form-control textarea-apply-form"
-                        />
+                        {this.state.convicted === "0" ? (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        convictedExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.convictedExplain}
+                                name="form-control"
+                                cols="30"
+                                disabled
+                                rows="3"
+                                className="form-control textarea-apply-form"
+                            />
+                        ) : (
+                            <textarea
+                                onChange={(event) => {
+                                    this.setState({
+                                        convictedExplain: event.target.value
+                                    });
+                                }}
+                                value={this.state.convictedExplain}
+                                name="form-control"
+                                cols="30"
+                                required
+                                rows="3"
+                                className="form-control textarea-apply-form"
+                            />
+                        )}
                         <span className="Apply-okCheck"/>
                     </div>
                 </div>

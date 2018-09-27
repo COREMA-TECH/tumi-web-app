@@ -18,19 +18,22 @@
 
 .apply-form input:required:focus:valid,
 .apply-form input:optional:focus:valid,
-.apply-form select:required:focus:valid {
+.apply-form select:required:focus:valid,
+.apply-form textarea:required:focus:valid{
     border-color: green;
 }
 
 .apply-form input:required:valid,
 .apply-form input:optional:valid,
-.apply-form select:required:valid {
+.apply-form select:required:valid,
+.apply-form textarea:required:valid {
     border-color: green;
 }
 
 .apply-form input:required:valid + span::after,
 .apply-form input:optional:valid + span::after,
-.apply-form select:optional:valid + span::after {
+.apply-form select:optional:valid + span::after,
+.apply-form textarea:optional:valid + span::after {
     content: "";
     color: green;
     margin-left: 5px;
