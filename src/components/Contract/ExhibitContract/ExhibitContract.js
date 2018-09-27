@@ -323,7 +323,7 @@ class ExhibitContract extends Component {
 		this.resetState();
 	};
 
-	downladContractHandler = () => {
+	downloadContractHandler = () => {
 		var url = "https://morning-lake-18657.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
 		//pri.download();
 		window.open(url, '_blank');
