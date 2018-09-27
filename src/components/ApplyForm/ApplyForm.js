@@ -530,21 +530,16 @@ class ApplyForm extends Component {
                     </div>
                     <div className="col-3">
                         <span className="primary"> Type Of ID</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    typeOfId: event.target.value
-                                });
-                            }}
-                            value={this.state.typeOfId}
-                            name="typeOfID"
-                            type="number"
-                            className="form-control"
-                            required
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
-                        />
+                        <select name="typeOfID" id="typeOfID" className="form-control">
+                            <option value="">Select an option</option>
+                            <option value="1">Birth certificate</option>
+                            <option value="2">Social Security card</option>
+                            <option value="3">State-issued driver's license</option>
+                            <option value="4">State-issued ID</option>
+                            <option value="5">Passport</option>
+                            <option value="6">Department of Defense Identification Card</option>
+                            <option value="7">Green Card</option>
+                        </select>
                         <span className="Apply-okCheck"/>
                     </div>
                     <div className="col-3">
