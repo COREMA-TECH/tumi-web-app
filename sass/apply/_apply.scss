@@ -5,8 +5,8 @@
         width: 80%;
     }
     &-emoji {
-        background-color: $light-gray;
         text-align: center;
+        
     }
     &-okCheck {
         position: absolute;
@@ -69,7 +69,15 @@
         width: 95%;
     }
 }
-
+.ApplyEmoji-wrapper {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    background: #fff;
+    height: 500px;
+    border-radius: 500px;
+    padding: 100px;
+}
 .ApplyForm {
     background-color: $light-gray;
     padding: 2rem 0;

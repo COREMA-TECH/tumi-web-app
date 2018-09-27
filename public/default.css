@@ -605,7 +605,6 @@ p {
   width: 80%; }
 
 .Apply-emoji {
-  background-color: #f5f7f9;
   text-align: center; }
 
 .Apply-okCheck {
@@ -663,6 +662,15 @@ p {
     margin: 2em auto;
     padding: 0;
     width: 95%; }
+
+.ApplyEmoji-wrapper {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  background: #fff;
+  height: 500px;
+  border-radius: 500px;
+  padding: 100px; }
 
 .ApplyForm {
   background-color: #f5f7f9;
