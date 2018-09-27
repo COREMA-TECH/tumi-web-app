@@ -383,13 +383,13 @@ class ExhibitContract extends Component {
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
-										onClick={this.printContractHandler}
+										onClick={this.downloadContractHandler}
 									>
 										<PrintIcon />
 									</Button>
 								</div>
 							</Tooltip>
-							<Tooltip title={'Download Contract'}>
+							{/*<Tooltip title={'Download Contract'}>
 								<div >
 									<Button
 										//	disabled={this.state.loading || !this.state.enableCancelButton}
@@ -402,7 +402,7 @@ class ExhibitContract extends Component {
 									</Button>
 								</div>
 
-							</Tooltip>
+							</Tooltip>*/}
 							<Tooltip title={'Send Contract by email'}>
 								<div>
 									<Button
