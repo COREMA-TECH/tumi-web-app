@@ -69,7 +69,6 @@ class CustomizedTabs extends Component {
 		idProperty: null
 	};
 
-
 	handleChange = (event, value) => {
 		this.setState({ value });
 	};
@@ -84,16 +83,13 @@ class CustomizedTabs extends Component {
 		if (this.props.idProperty) {
 			this.setState({
 				idProperty: this.props.idProperty
-			})
+			});
 		}
 	}
 
 	render() {
 		const { classes } = this.props;
 		const { value } = this.state;
-		console.log("aqui estamos en tabs");
-		console.log(this.props);
-		console.log(this.state);
 
 		return (
 			<div className={classes.root}>
@@ -134,7 +130,7 @@ class CustomizedTabs extends Component {
 						updateIdProperty={(id) => {
 							this.setState({
 								idProperty: id
-							})
+							});
 						}}
 						handleClose={this.props.handleClose}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}

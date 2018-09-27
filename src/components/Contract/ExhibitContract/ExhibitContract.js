@@ -98,7 +98,6 @@ const styles = (theme) => ({
 
 class ExhibitContract extends Component {
 	constructor(props) {
-		console.log(props);
 		super(props);
 
 		this.state = {
@@ -197,7 +196,6 @@ class ExhibitContract extends Component {
 	};
 
 	createContract = () => {
-		console.log("creando contrato");
 		this.setState({ loadingData: true });
 		this.props.client
 			.query({
@@ -289,7 +287,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => { }
+			() => {}
 		);
 	};
 	insertExhibit = () => {
@@ -316,7 +314,6 @@ class ExhibitContract extends Component {
 	handleClickOpenModal = () => {
 		this.createContract();
 		this.setState({ openModal: true });
-
 	};
 
 	cancelContractHandler = () => {
@@ -324,7 +321,7 @@ class ExhibitContract extends Component {
 	};
 
 	downloadContractHandler = () => {
-		var url = "https://corema-new-api.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
+		var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
 		//pri.download();
 		window.open(url, '_blank');
 	};
@@ -338,7 +335,6 @@ class ExhibitContract extends Component {
 		pri.focus();
 		pri.print();
 	};
-
 
 	render() {
 		const { loading, success } = this.state;
@@ -362,8 +358,8 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-									'New Contract Preview'
-								)}
+								'New Contract Preview'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
@@ -390,7 +386,7 @@ class ExhibitContract extends Component {
 								</div>
 							</Tooltip>
 							<Tooltip title={'Download Contract'}>
-								<div >
+								<div>
 									<Button
 										//	disabled={this.state.loading || !this.state.enableCancelButton}
 										variant="fab"
@@ -401,7 +397,6 @@ class ExhibitContract extends Component {
 										<DownloadIcon />
 									</Button>
 								</div>
-
 							</Tooltip>
 							<Tooltip title={'Send Contract by email'}>
 								<div>
@@ -566,9 +561,7 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>*/}
-							<div className="contract-next-button" onClick={
-								this.handleClickOpenModal
-							}>
+							<div className="contract-next-button" onClick={this.handleClickOpenModal}>
 								Create Contract
 							</div>
 						</div>

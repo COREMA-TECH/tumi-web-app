@@ -13,7 +13,6 @@ import './valid.css';
 
 class GeneralInfoProperty extends Component {
 	constructor(props) {
-		console.log(props);
 		super(props);
 		this.state = {
 			inputEnabled: true,
@@ -228,7 +227,7 @@ class GeneralInfoProperty extends Component {
 
 						this.props.handleOpenSnackbar('success', 'Success: Property created');
 					})
-					.catch((err) => console.log('The error is: ' + err));
+					.catch((err) => this.props.handleOpenSnackbar('error', 'The error is: ' + err));
 			}
 		);
 	};
@@ -316,8 +315,7 @@ class GeneralInfoProperty extends Component {
 					})
 					.catch((err) => {
 						//Capture error and show a specific message
-
-						console.log('The error is: ' + err);
+						this.props.handleOpenSnackbar('error', 'The error is: ' + err);
 					});
 			}
 		);
@@ -532,7 +530,7 @@ class GeneralInfoProperty extends Component {
 											}}
 											error={!this.state.rateValid}
 											maxLength="10"
-										//disabled={!this.props.showStepper}
+											//disabled={!this.props.showStepper}
 										/>
 									</div>
 
@@ -610,7 +608,6 @@ class GeneralInfoProperty extends Component {
 												if (loading) return <LinearProgress />;
 												if (error) return <p>Error </p>;
 												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-													console.log('VALUE: ' + data.getcatalogitem);
 													return (
 														<SelectForm
 															name="state"
@@ -640,7 +637,6 @@ class GeneralInfoProperty extends Component {
 												if (loading) return <LinearProgress />;
 												if (error) return <p>Error </p>;
 												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-													console.log('Data of cities' + data.getcatalogitem);
 													return (
 														<SelectForm
 															name="city"

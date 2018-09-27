@@ -263,7 +263,6 @@ class GeneralInfoProperty extends Component {
 							);
 						})
 						.catch((err) => {
-							console.log('Error: Inserting Company: ', err);
 							this.props.handleOpenSnackbar('error', 'Error: Inserting Company: ' + err);
 							this.setState({
 								loadingInsert: false
@@ -484,7 +483,7 @@ class GeneralInfoProperty extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -582,7 +581,6 @@ class GeneralInfoProperty extends Component {
 									if (loading) return <LinearProgress />;
 									if (error) return <p>Error </p>;
 									if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-										console.log('Data of cities' + data.getcatalogitem);
 										return (
 											<SelectForm
 												name="city"
@@ -621,8 +619,6 @@ class GeneralInfoProperty extends Component {
 								value={this.state.phoneNumber}
 								className={this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'}
 								onChange={(e) => {
-									console.log('Changed');
-									console.log('Evento', e.target.value);
 									this.updateInput(e.target.value, 'phoneNumber');
 								}}
 								placeholder="+(999) 999-9999"

@@ -280,7 +280,6 @@ class Signature extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading agreement: ', error);
 				this.setState({ loadingToken: false }, () => {
 					this.props.history.push('/home/');
 				});
@@ -318,7 +317,6 @@ class Signature extends React.Component {
 						);
 					})
 					.catch((error) => {
-						console.log('Error: Signing Document: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Signing Document: ' + error);
 						this.setState({
 							success: false,

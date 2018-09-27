@@ -97,8 +97,6 @@ class MainContract extends Component {
 						);
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Contract: ', error);
-
 						this.setState(
 							{
 								opendialog: false,
