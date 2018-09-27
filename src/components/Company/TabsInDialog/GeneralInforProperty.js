@@ -583,11 +583,11 @@ class GeneralInfoProperty extends Component {
 										/>
 									</div>
 									<div className="col-6">
-										<span className="primary card-input-label">* Suite</span>
+										<span className="primary card-input-label">Suite</span>
 									</div>
 									<div className="col-6">
-										<InputValid
-											change={(text) => {
+										<input
+											onChange={(text) => {
 												this.setState({
 													suite: text
 												});
@@ -595,7 +595,7 @@ class GeneralInfoProperty extends Component {
 											value={this.state.suite}
 											type="text"
 											maxLength="10"
-											required
+											className={'input-form'}
 										/>
 									</div>
 									<div className="col-6">
@@ -741,19 +741,19 @@ class GeneralInfoProperty extends Component {
 										/>
 									</div>
 									<div className="col-6">
-										<span className="primary card-input-label">* Cost Center</span>
+										<span className="primary card-input-label">Cost Center</span>
 									</div>
 									<div className="col-6">
-										<InputValid
+										<input
 											type="text"
-											required
 											value={this.state.Code01}
-											change={(text) => {
+											onChange={(text) => {
 												this.setState({
 													Code01: text
 												});
 											}}
 											maxLength="10"
+											className={'input-form'}
 										/>
 									</div>
 									<div className="col-6">

@@ -526,9 +526,9 @@ class ApplyForm extends Component {
                         <span className="primary"> Social Security Number</span>
                         <div className="input-container--validated">
                             <InputMask
-                                id="zipCode"
-                                name="zipCode"
-                                mask="000-00-0000"
+                                id="socialSecurityNumber"
+                                name="socialSecurityNumber"
+                                mask="999-99-9999"
                                 maskChar=" "
                                 className="form-control"
                                 onChange={(event) => {
@@ -537,7 +537,7 @@ class ApplyForm extends Component {
                                     });
                                 }}
                                 value={this.state.socialSecurityNumber}
-                                placeholder="000-00-0000"
+                                placeholder="999-99-9999"
                                 required
                                 minLength="15"
                             />
@@ -783,7 +783,6 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         )}
-                        <span className="check-icon"/>
                     </div>
                 </div>
                 <div className="row">
@@ -875,7 +874,6 @@ class ApplyForm extends Component {
 
                         <div className="row">
                             <div className="col-12">
-                                <span className="primary"></span>
                                 {this.state.socialNetwork === 'others' ? (
                                     <textarea
                                         onChange={(event) => {
