@@ -922,6 +922,7 @@ class ApplyForm extends Component {
                 className="ApplyBlock"
                 onSubmit={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
 
                     let item = {
                         uuid: uuidv4(),
@@ -986,7 +987,13 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-2">
-                                <span>{schoolItem.schoolType}</span>
+                                <span>{
+                                    studyTypes.map(item => {
+                                        if (item.Id === schoolItem.schoolType){
+                                            return item.Name + "";
+                                        }
+                                    })
+                            }</span>
                             </div>
                             <div className="col-2">
                                 <span>{schoolItem.educationName}</span>
@@ -1009,7 +1016,6 @@ class ApplyForm extends Component {
                                     onClick={() => {
                                         this.setState((prevState) => ({
                                             schools: this.state.schools.filter((_, i) => {
-                                                console.log(this.state.languages);
                                                 return _.uuid !== schoolItem.uuid;
                                             })
                                         }));
@@ -1192,6 +1198,7 @@ class ApplyForm extends Component {
                 className="ApplyBlock"
                 onSubmit={(e) => {
                     e.preventDefault();
+                    e.stopPropagation();
 
                     let item = {
                         uuid: uuidv4(),
@@ -1510,6 +1517,7 @@ class ApplyForm extends Component {
                     autoComplete="off"
                     onSubmit={(e) => {
                         e.preventDefault();
+                        e.stopPropagation();
 
                         let item = {
                             uuid: uuidv4(),
@@ -1675,11 +1683,11 @@ class ApplyForm extends Component {
                             }}
                         >
                             {renderApplicantInformationSection()}
-                            {/*{renderlanguagesSection()}*/}
-                            {/*{renderEducationSection()}*/}
-                            {/*{renderMilitaryServiceSection()}*/}
-                            {/*{renderPreviousEmploymentSection()}*/}
-                            {/*{renderSkillsSection()}*/}
+                            {renderlanguagesSection()}
+                            {renderEducationSection()}
+                            {renderMilitaryServiceSection()}
+                            {renderPreviousEmploymentSection()}
+                            {renderSkillsSection()}
                             {renderInsertDialogLoading()}
                             <div className="Apply-container">
                                 <div className="row">
