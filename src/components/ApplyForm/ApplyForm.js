@@ -1072,8 +1072,6 @@ class ApplyForm extends Component {
                                 this.setState({
                                     graduated: e.target.value
                                 });
-
-                                alert(e.target.value)
                             }}
                             form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
                     </div>
