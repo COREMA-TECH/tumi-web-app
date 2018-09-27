@@ -75,6 +75,10 @@
         font-size: 1.35rem;
         margin-right: 1.5rem;
         text-decoration: none;
+        width: 45px;
+        &.fa, &.fas, &.far {
+            font-size: 1.75rem;
+        }
     }
     &-link {
         align-items: center;
@@ -107,6 +111,9 @@
         font-family: $font-family-sans-serif;
         padding: 1rem;
         text-decoration: none !important;
+        .fa, .fas, .far {
+            font-size: 1.75rem;
+        }
         .nav-expanded & {
             justify-content: flex-start !important;
         }
