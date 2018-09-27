@@ -1366,10 +1366,10 @@ class ApplyForm extends Component {
                                 <span>Language Name</span>
                             </div>
                             <div className="col-4">
-                                <span>Conversation %</span>
+                                <span>Conversation</span>
                             </div>
                             <div className="col-4">
-                                <span>Writing %</span>
+                                <span>Writing</span>
                             </div>
                         </div>
                     </div>
@@ -1383,10 +1383,22 @@ class ApplyForm extends Component {
                                 <span>{languageItem.idLanguage}</span>
                             </div>
                             <div className="col-4">
-                                <span>{languageItem.conversation}</span>
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.conversation) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-4">
-                                <span>{languageItem.writing}</span>
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.writing) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-1">
                                 <Button
