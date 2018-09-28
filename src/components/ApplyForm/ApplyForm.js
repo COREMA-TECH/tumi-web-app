@@ -18,6 +18,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import CircularProgressLoading from "../material-ui/CircularProgressLoading";
 import Route from "react-router-dom/es/Route";
 import InputMask from 'react-input-mask';
+import withGlobalContent from '../Generic/Global';
 
 const uuidv4 = require('uuid/v4');
 
@@ -86,6 +87,9 @@ class ApplyForm extends Component {
             insertDialogLoading: false,
             graduated: false,
             previousEmploymentPhone: '',
+
+            // Application id property state is used to save languages, education, mulitary services, skills
+            applicationId: 0
         };
     }
 
@@ -110,37 +114,73 @@ class ApplyForm extends Component {
         }
     };
 
-    insertApplicationInformation = () => {
-        this.props.client.mutate({
-            mutation: CREATE_APPLICATION,
-            variables: {
-                application: {
-                    firstName: this.state.firstName,
-                    middleName: this.state.middleName,
-                    lastName: this.state.lastName,
-                    date: this.state.date,
-                    streetAddress: this.state.streetAddress,
-                    aptNumber: this.state.aptNumber,
-                    city: this.state.city,
-                    state: this.state.state,
-                    zipCode: this.state.zipCode,
-                    homePhone: this.state.homePhone,
-                    cellPhone: this.state.cellPhone,
-                    socialSecurityNumber: this.state.socialSecurityNumber,
-                    birthDay: this.state.birthDay,
-                    car: this.state.car,
-                    typeOfId: parseInt(this.state.typeOfId),
-                    expireDateId: this.state.expireDateId,
-                    emailAddress: this.state.emailAddress,
-                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                    dateAvailable: this.state.dateAvailable,
-                    scheduleRestrictions: this.state.scheduleRestrictions,
-                    scheduleExplain: this.state.scheduleExplain,
-                    convicted: this.state.convicted,
-                    convictedExplain: this.state.convictedExplain,
-                    comment: this.state.comment
+    insertApplicationInformation = (history) => {
+        this.setState({
+            insertDialogLoading: true
+        }, () => {
+
+            this.props.client.mutate({
+                mutation: CREATE_APPLICATION,
+                variables: {
+                    application: {
+                        firstName: this.state.firstName,
+                        middleName: this.state.middleName,
+                        lastName: this.state.lastName,
+                        date: this.state.date,
+                        streetAddress: this.state.streetAddress,
+                        aptNumber: this.state.aptNumber,
+                        city: this.state.city,
+                        state: this.state.state,
+                        zipCode: this.state.zipCode,
+                        homePhone: this.state.homePhone,
+                        cellPhone: this.state.cellPhone,
+                        socialSecurityNumber: this.state.socialSecurityNumber,
+                        birthDay: this.state.birthDay,
+                        car: this.state.car,
+                        typeOfId: parseInt(this.state.typeOfId),
+                        expireDateId: this.state.expireDateId,
+                        emailAddress: this.state.emailAddress,
+                        positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        dateAvailable: this.state.dateAvailable,
+                        scheduleRestrictions: this.state.scheduleRestrictions,
+                        scheduleExplain: this.state.scheduleExplain,
+                        convicted: this.state.convicted,
+                        convictedExplain: this.state.convictedExplain,
+                        comment: this.state.comment
+                    }
                 }
-            }
+            })
+                .then(({data}) => {
+                    let idApplication = data.addApplication.id;
+
+                    this.setState({
+                        applicationId: idApplication
+                    }, () => {
+                        // When the application id state property is updated, insert the other form sections
+
+                        // Hide the loading dialog and redirect to component with success message
+                        this.setState({
+                            insertDialogLoading: false
+                        }, () => {
+                            // Insert Languages
+
+                            history.push({
+                                pathname: '/employment-application-message'
+                            });
+                        });
+                    })
+                })
+                .catch(() => {
+                    this.setState({
+                        insertDialogLoading: false
+                    }, () => {
+                        // Show a error message
+                        this.props.handleOpenSnackbar(
+                            'Error',
+                            'Error: Saving Information: Please Try Again'
+                        );
+                    });
+                });
         });
     };
 
@@ -415,7 +455,7 @@ class ApplyForm extends Component {
                                 className="form-control"
                                 required
                                 min="0"
-                                maxLength="10"
+                                maxLength="30"
                                 minLength="3"
                             />
                             <span className="check-icon"/>
@@ -590,7 +630,11 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-6">
                         <span className="primary"> Type Of ID</span>
-                        <select name="typeOfID" id="typeOfID" className="form-control">
+                        <select name="typeOfID" id="typeOfID" className="form-control" onChange={(e) => {
+                            this.setState({
+                                typeOfId: e.target.value
+                            })
+                        }}>
                             <option value="">Select an option</option>
                             <option value="1">Birth certificate</option>
                             <option value="2">Social Security card</option>
@@ -1397,15 +1441,15 @@ class ApplyForm extends Component {
                                 minLength="15"
                             />
                             {/*<input*/}
-                                {/*id="companyPhoneEmployment"*/}
-                                {/*form="form-previous-employment"*/}
-                                {/*name="phoneEmployment"*/}
-                                {/*type="number"*/}
-                                {/*className="form-control"*/}
-                                {/*required*/}
-                                {/*min="0"*/}
-                                {/*maxLength="10"*/}
-                                {/*minLength="10"*/}
+                            {/*id="companyPhoneEmployment"*/}
+                            {/*form="form-previous-employment"*/}
+                            {/*name="phoneEmployment"*/}
+                            {/*type="number"*/}
+                            {/*className="form-control"*/}
+                            {/*required*/}
+                            {/*min="0"*/}
+                            {/*maxLength="10"*/}
+                            {/*minLength="10"*/}
                             {/*/>*/}
                             <span className="check-icon"/>
                         </div>
@@ -1765,28 +1809,15 @@ class ApplyForm extends Component {
                                 // To cancel the default submit event
                                 e.preventDefault();
                                 // Call mutation to create a application
-                                //this.insertApplicationInformation();
-                                // Set interval and show dialog
-                                this.setState({
-                                    insertDialogLoading: true
-                                }, () => {
-                                    setTimeout(() => {
-                                        this.setState({
-                                            insertDialogLoading: false
-                                        });
-                                        history.push({
-                                            pathname: '/employment-application-message'
-                                        });
-                                    }, 3000);
-                                });
+                                this.insertApplicationInformation(history);
                             }}
                         >
                             {renderApplicantInformationSection()}
-                            {renderlanguagesSection()}
-                            {renderEducationSection()}
-                            {renderMilitaryServiceSection()}
-                            {renderPreviousEmploymentSection()}
-                            {renderSkillsSection()}
+                            {/*{renderlanguagesSection()}*/}
+                            {/*{renderEducationSection()}*/}
+                            {/*{renderMilitaryServiceSection()}*/}
+                            {/*{renderPreviousEmploymentSection()}*/}
+                            {/*{renderSkillsSection()}*/}
                             {renderInsertDialogLoading()}
                             <div className="Apply-container">
                                 <div className="row">
@@ -1807,4 +1838,4 @@ class ApplyForm extends Component {
     }
 }
 
-export default withApollo(ApplyForm);
+export default withApollo(withGlobalContent(ApplyForm));
