@@ -565,6 +565,14 @@ p {
   div[class*="MuiTabs-fixed-"] {
     overflow-x: scroll !important; } }
 
+#signatureMainContainer {
+  text-align: left !important; }
+  #signatureMainContainer .signature-information {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-right: 150px;
+    padding-left: 80px; }
+
 .avatar-uploaded {
   margin-left: auto;
   margin-right: auto;
