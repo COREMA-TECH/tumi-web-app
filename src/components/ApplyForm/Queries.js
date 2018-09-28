@@ -59,7 +59,7 @@ export const GET_POSITIONS_QUERY = gql`
  */
 export const GET_LANGUAGES_QUERY = gql`
     {
-        getcatalogitem(Id: null, Id_Catalog: 9){
+        getcatalogitem(Id: null, Id_Catalog: 9, IsActive: 1){
             Id
             Name
         }
