@@ -52,6 +52,14 @@
     border-color: green;
 }
 
+.apply-form input:disabled,
+.apply-form select:disabled,
+.apply-form textarea:disabled {
+    background: rgba(206, 212, 218, 0.35) !important;
+    border: 1px solid #ced4da !important;
+    cursor: not-allowed;
+}
+
 .apply-form input:required:valid + span::after,
 .apply-form input:optional:valid + span::after,
 .apply-form select:optional:valid + span::after,

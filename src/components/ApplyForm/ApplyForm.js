@@ -84,7 +84,8 @@ class ApplyForm extends Component {
 
             percent: 50,
             insertDialogLoading: false,
-            graduated: false
+            graduated: false,
+            previousEmploymentPhone: '',
         };
     }
 
@@ -740,7 +741,8 @@ class ApplyForm extends Component {
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        scheduleRestrictions: event.target.value
+                                        scheduleRestrictions: event.target.value,
+                                        scheduleExplain: ''
                                     });
                                 }}
                                 value="0"
@@ -803,7 +805,8 @@ class ApplyForm extends Component {
                         <input
                             onChange={(event) => {
                                 this.setState({
-                                    convicted: event.target.value
+                                    convicted: event.target.value,
+                                    convictedExplain: ''
                                 });
                             }}
                             value="0"
@@ -845,7 +848,6 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         )}
-                        <span className="check-icon"/>
                     </div>
                 </div>
                 <div className="row">
@@ -868,7 +870,6 @@ class ApplyForm extends Component {
                             <option value="instagram">Instagram</option>
                             <option value="newspaper">News Paper</option>
                             <option value="journals">Journals</option>
-                            <option value="journals">Journals</option>
                             <option value="others">Other</option>
                         </select>
 
@@ -886,7 +887,7 @@ class ApplyForm extends Component {
                                         required
                                         name="comment"
                                         cols="20"
-                                        rows="10"
+                                        rows="4"
                                         className="form-control textarea-apply-form"
                                     />
                                 ) : (
@@ -909,7 +910,7 @@ class ApplyForm extends Component {
                     e.stopPropagation();
                     let item = {
                         uuid: uuidv4(),
-                        schoolType: parseInt(document.getElementById('studyType').value),
+                        schoolType: document.getElementById('studyType').value,
                         educationName: document.getElementById('institutionName').value,
                         educationAddress: document.getElementById('addressInstitution').value,
                         startDate: document.getElementById('startPeriod').value,
@@ -932,7 +933,12 @@ class ApplyForm extends Component {
                             document.getElementById('startPeriod').classList.remove('invalid-apply-form');
                             document.getElementById('endPeriod').classList.remove('invalid-apply-form');
                             document.getElementById('graduated').classList.remove('invalid-apply-form');
+                            document.getElementById('graduated').checked = false;
                             document.getElementById('degree').classList.remove('invalid-apply-form');
+
+                            this.setState({
+                                graduated: false
+                            });
                         }
                     );
                 }}
@@ -942,7 +948,7 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">
                             <div className="col-2">
-                                <span>Study</span>
+                                <span>Field of Study</span>
                             </div>
                             <div className="col-2">
                                 <span>Institution</span>
@@ -953,11 +959,14 @@ class ApplyForm extends Component {
                             <div className="col-2">
                                 <span>Start Date</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-1">
                                 <span>End Date</span>
                             </div>
                             <div className="col-1">
                                 <span>Graduated</span>
+                            </div>
+                            <div className="col-1">
+                                <span>Degree</span>
                             </div>
                         </div>
                     </div>
@@ -968,13 +977,7 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-2">
-                                <span>{
-                                    studyTypes.map(item => {
-                                        if (item.Id === schoolItem.schoolType) {
-                                            return item.Name + "";
-                                        }
-                                    })
-                                }</span>
+                                <span>{schoolItem.schoolType}</span>
                             </div>
                             <div className="col-2">
                                 <span>{schoolItem.educationName}</span>
@@ -985,11 +988,22 @@ class ApplyForm extends Component {
                             <div className="col-2">
                                 <span>{schoolItem.startDate}</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-1">
                                 <span>{schoolItem.endDate}</span>
                             </div>
                             <div className="col-1">
                                 <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
+                            </div>
+                            <div className="col-1">
+                                <span>
+                                    {
+                                        studyTypes.map(item => {
+                                            if (item.Id == schoolItem.degree) {
+                                                return item.Name + "";
+                                            }
+                                        })
+                                    }
+                                </span>
                             </div>
                             <div className="col-1">
                                 <Button
@@ -1011,11 +1025,21 @@ class ApplyForm extends Component {
                 <hr className="separator"/>
                 <div className="row">
                     <div className="col-3">
-                        <label className="primary">Study</label>
-                        <select form="education-form" name="studyType" id="studyType" required className="form-control">
-                            <option value="">Select an option</option>
-                            {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                        </select>
+                        <label className="primary">Field of Study</label>
+                        <div className="input-container--validated">
+                            <input
+                                id="studyType"
+                                form="education-form"
+                                name="studyType"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="2"
+                            />
+                            <span className="check-icon"></span>
+                        </div>
                     </div>
                     <div className="col-3">
                         <label className="primary">Name (Institution)</label>
@@ -1092,41 +1116,43 @@ class ApplyForm extends Component {
                         <input
                             onChange={(e) => {
                                 this.setState({
-                                    graduated: e.target.value
+                                    graduated: document.getElementById('graduated').checked
                                 });
                             }}
-                            form="education-form" type="checkbox" name="graduated" id="graduated" className=""/>
+                            form="education-form" type="checkbox" value="graduated" name="graduated" id="graduated"
+                        />
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
                         {
                             this.state.graduated ? (
                                 <div className="input-container--validated">
-                                    <input
-                                        form="education-form"
-                                        name="degree"
-                                        id="degree"
-                                        type="text"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="3"
-                                    />
-                                    <div className="check-icon"></div>
+                                    {/*<input*/}
+                                    {/*form="education-form"*/}
+                                    {/*name="degree"*/}
+                                    {/*id="degree"*/}
+                                    {/*type="text"*/}
+                                    {/*className="form-control"*/}
+                                    {/*required*/}
+                                    {/*min="0"*/}
+                                    {/*maxLength="50"*/}
+                                    {/*minLength="3"*/}
+                                    {/*/>*/}
+                                    <select form="education-form" name="degree" id="degree"
+                                            className="form-control">
+                                        <option value="">Select an option</option>
+                                        {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                    </select>
                                 </div>
+
                             ) : (
-                                <input
-                                    form="education-form"
-                                    name="degree"
-                                    id="degree"
-                                    type="text"
-                                    className="form-control"
-                                    disabled
-                                    min="0"
-                                    maxLength="50"
-                                    minLength="3"
-                                />
+                                <div className="input-container--validated">
+                                    <select form="education-form" name="degree" id="degree" disabled
+                                            className="form-control">
+                                        <option value="">Select an option</option>
+                                        {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                    </select>
+                                </div>
                             )
                         }
                     </div>
@@ -1244,6 +1270,10 @@ class ApplyForm extends Component {
                             document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
                             document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
                             document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
+
+                            this.setState({
+                                previousEmploymentPhone: ''
+                            })
                         }
                     );
                 }}
@@ -1349,17 +1379,34 @@ class ApplyForm extends Component {
                     <div className="col-4">
                         <span className="primary"> Phone</span>
                         <div className="input-container--validated">
-                            <input
+                            <InputMask
                                 id="companyPhoneEmployment"
                                 form="form-previous-employment"
                                 name="phoneEmployment"
-                                type="number"
+                                mask="+(999) 999-9999"
+                                maskChar=" "
+                                value={this.state.previousEmploymentPhone}
                                 className="form-control"
+                                onChange={(event) => {
+                                    this.setState({
+                                        previousEmploymentPhone: event.target.value
+                                    });
+                                }}
                                 required
-                                min="0"
-                                maxLength="10"
-                                minLength="10"
+                                placeholder="+(999) 999-9999"
+                                minLength="15"
                             />
+                            {/*<input*/}
+                                {/*id="companyPhoneEmployment"*/}
+                                {/*form="form-previous-employment"*/}
+                                {/*name="phoneEmployment"*/}
+                                {/*type="number"*/}
+                                {/*className="form-control"*/}
+                                {/*required*/}
+                                {/*min="0"*/}
+                                {/*maxLength="10"*/}
+                                {/*minLength="10"*/}
+                            {/*/>*/}
                             <span className="check-icon"/>
                         </div>
                     </div>

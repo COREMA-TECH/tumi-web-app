@@ -567,7 +567,7 @@ class GeneralInfoProperty extends Component {
 										/>
 									</div>
 									<div className="col-6">
-										<span className="primary card-input-label">* Address 2</span>
+										<span className="primary card-input-label">Address 2</span>
 									</div>
 									<div className="col-6">
 										<input
@@ -587,9 +587,9 @@ class GeneralInfoProperty extends Component {
 									</div>
 									<div className="col-6">
 										<input
-											onChange={(text) => {
+											onChange={(e) => {
 												this.setState({
-													suite: text
+													suite: e.target.value
 												});
 											}}
 											value={this.state.suite}
@@ -747,9 +747,9 @@ class GeneralInfoProperty extends Component {
 										<input
 											type="text"
 											value={this.state.Code01}
-											onChange={(text) => {
+											onChange={(e) => {
 												this.setState({
-													Code01: text
+													Code01: e.target.value
 												});
 											}}
 											maxLength="10"
