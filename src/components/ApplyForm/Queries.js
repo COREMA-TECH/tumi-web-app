@@ -45,16 +45,6 @@ export const GET_POSITIONS_QUERY = gql`
 
 
 /**
- * Query to get types of study
- */
-// export const GET_TYPES_OF_STUDY = gql`
-//     {
-//
-//     }
-// `;
-
-
-/**
  * Query to get languages
  */
 export const GET_LANGUAGES_QUERY = gql`

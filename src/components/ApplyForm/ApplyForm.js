@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {CREATE_APPLICATION} from './Mutations';
+import {ADD_APLICANT_EDUCATION, ADD_APLICANT_PREVIOUS_EMPLOYMENT, ADD_LANGUAGES, CREATE_APPLICATION} from './Mutations';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -18,7 +18,6 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import CircularProgressLoading from "../material-ui/CircularProgressLoading";
 import Route from "react-router-dom/es/Route";
 import InputMask from 'react-input-mask';
-import withGlobalContent from '../Generic/Global';
 
 const uuidv4 = require('uuid/v4');
 
@@ -158,16 +157,72 @@ class ApplyForm extends Component {
                     }, () => {
                         // When the application id state property is updated, insert the other form sections
 
-                        // Hide the loading dialog and redirect to component with success message
-                        this.setState({
-                            insertDialogLoading: false
-                        }, () => {
-                            // Insert Languages
-
-                            history.push({
-                                pathname: '/employment-application-message'
-                            });
+                        // to remove all the uuid properties in the object
+                        this.state.languages.forEach((item) => {
+                            delete item.uuid
                         });
+
+                        this.state.languages.forEach((item) => {
+                            item.ApplicationId = idApplication
+                        });
+
+                        this.props.client.mutate({
+                            mutation: ADD_LANGUAGES,
+                            variables: {
+                                application: this.state.languages
+                            }
+                        })
+                            .then(() => {
+                                // to remove all the uuid properties in the object
+                                this.state.schools.forEach((item) => {
+                                    delete item.uuid
+                                });
+
+                                this.state.schools.forEach((item) => {
+                                    item.ApplicationId = idApplication
+                                });
+
+                                // Then insert education list
+                                this.props.client.mutate({
+                                    mutation: ADD_APLICANT_EDUCATION,
+                                    variables: {
+                                        application: this.state.schools
+                                    }
+                                })
+                                    .then(() => {
+                                        // to remove all the uuid properties in the object
+                                        this.state.previousEmployment.forEach((item) => {
+                                            delete item.uuid
+                                        });
+
+                                        this.state.previousEmployment.forEach((item) => {
+                                            item.ApplicationId = idApplication
+                                        });
+
+                                        // Then insert previous employment
+                                        this.props.client.mutate({
+                                            mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
+                                            variables: {
+                                                application: this.state.previousEmployment
+                                            }
+                                        })
+                                            .then(() => {
+                                                // Hide the loading dialog and redirect to component with success message
+                                                this.setState({
+                                                    insertDialogLoading: false
+                                                }, () => {
+                                                    // Insert Languages
+
+                                                    history.push({
+                                                        pathname: '/employment-application-message'
+                                                    });
+                                                });
+                                            })
+                                            .catch();
+                                    })
+                                    .catch();
+                            })
+                            .catch();
                     })
                 })
                 .catch(() => {
@@ -175,10 +230,7 @@ class ApplyForm extends Component {
                         insertDialogLoading: false
                     }, () => {
                         // Show a error message
-                        this.props.handleOpenSnackbar(
-                            'Error',
-                            'Error: Saving Information: Please Try Again'
-                        );
+                        alert("Error saving information");
                     });
                 });
         });
@@ -960,7 +1012,7 @@ class ApplyForm extends Component {
                         startDate: document.getElementById('startPeriod').value,
                         endDate: document.getElementById('endPeriod').value,
                         graduated: document.getElementById('graduated').checked,
-                        degree: document.getElementById('degree').value,
+                        degree: parseInt(document.getElementById('degree').value),
                         ApplicationId: 1 // Static application id
                     };
                     console.log(item);
@@ -1171,17 +1223,6 @@ class ApplyForm extends Component {
                         {
                             this.state.graduated ? (
                                 <div className="input-container--validated">
-                                    {/*<input*/}
-                                    {/*form="education-form"*/}
-                                    {/*name="degree"*/}
-                                    {/*id="degree"*/}
-                                    {/*type="text"*/}
-                                    {/*className="form-control"*/}
-                                    {/*required*/}
-                                    {/*min="0"*/}
-                                    {/*maxLength="50"*/}
-                                    {/*minLength="3"*/}
-                                    {/*/>*/}
                                     <select form="education-form" name="degree" id="degree"
                                             className="form-control">
                                         <option value="">Select an option</option>
@@ -1293,10 +1334,11 @@ class ApplyForm extends Component {
                         address: document.getElementById('companyAddressEmployment').value,
                         supervisor: document.getElementById('companySupervisor').value,
                         jobTitle: document.getElementById('companyJobTitle').value,
-                        payRate: document.getElementById('companyPayRate').value,
+                        payRate: parseFloat(document.getElementById('companyPayRate').value),
                         startDate: document.getElementById('companyStartDate').value,
                         endDate: document.getElementById('companyEndDate').value,
-                        reasonForLeaving: document.getElementById('companyReasonForLeaving').value
+                        reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
+                        ApplicationId: 1 // Static application id
                     };
                     this.setState(
                         (prevState) => ({
@@ -1599,7 +1641,7 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-                                <span>{languageItem.idLanguage}</span>
+                                <span>{languageItem.language}</span>
                             </div>
                             <div className="col-4">
                                 <span>
@@ -1649,10 +1691,10 @@ class ApplyForm extends Component {
                         e.stopPropagation();
                         let item = {
                             uuid: uuidv4(),
-                            ApplicationId: 1,
-                            idLanguage: document.getElementById('nameLanguage').value,
-                            writing: document.getElementById('writingLanguage').value,
-                            conversation: document.getElementById('conversationLanguage').value
+                            ApplicationId: this.state.applicationId,
+                            language: document.getElementById('nameLanguage').value,
+                            writing: parseInt(document.getElementById('writingLanguage').value),
+                            conversation: parseInt(document.getElementById('conversationLanguage').value)
                         };
                         this.setState(
                             (prevState) => ({
@@ -1813,10 +1855,10 @@ class ApplyForm extends Component {
                             }}
                         >
                             {renderApplicantInformationSection()}
-                            {/*{renderlanguagesSection()}*/}
-                            {/*{renderEducationSection()}*/}
+                            {renderlanguagesSection()}
+                            {renderEducationSection()}
                             {/*{renderMilitaryServiceSection()}*/}
-                            {/*{renderPreviousEmploymentSection()}*/}
+                            {renderPreviousEmploymentSection()}
                             {/*{renderSkillsSection()}*/}
                             {renderInsertDialogLoading()}
                             <div className="Apply-container">
@@ -1838,4 +1880,4 @@ class ApplyForm extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(ApplyForm));
+export default withApollo(ApplyForm);
