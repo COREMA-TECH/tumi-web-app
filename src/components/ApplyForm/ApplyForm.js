@@ -88,7 +88,10 @@ class ApplyForm extends Component {
             previousEmploymentPhone: '',
 
             // Application id property state is used to save languages, education, mulitary services, skills
-            applicationId: 0
+            applicationId: 0,
+
+            // Languages catalog
+            languagesLoaded: []
         };
     }
 
@@ -235,6 +238,25 @@ class ApplyForm extends Component {
                 });
         });
     };
+
+    // To get a list of languages from API
+    getLanguagesList = () => {
+        this.props.client
+            .query({
+                query: GET_LANGUAGES_QUERY
+            })
+            .then(({data}) => {
+                  this.setState({
+                      languagesLoaded: data.getcatalogitem
+                  })
+            })
+            .catch();
+    };
+
+    componentWillMount() {
+        // Get languages list from catalogs
+        this.getLanguagesList();
+    }
 
     render() {
         this.validateInvalidInput();
@@ -1641,7 +1663,14 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-                                <span>{languageItem.language}</span>
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
+                                        
+                                        if (item.Id == languageItem.language) {
+                                            return item.Name.trim();
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-4">
                                 <span>
@@ -1711,39 +1740,33 @@ class ApplyForm extends Component {
                     }}
                 >
                     <div className="col-4">
-                        <span className="primary"> Language</span>
-                        <Query query={GET_LANGUAGES_QUERY}>
-                            {({loading, error, data, refetch, networkStatus}) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return (
-                                        <select
-                                            id="nameLanguage"
-                                            name="languageName"
-                                            required
-                                            className="form-control"
-                                            form="form-language">
-                                            <option value="">Select an option</option>
-                                            {data.getcatalogitem.map((item) => (
-                                                <option value={item.Id}>{item.Name}</option>
-                                            ))}
-                                        </select>
-                                    );
-                                }
-                                return <SelectNothingToDisplay/>;
-                            }}
-                        </Query>
-                        {/*<input*/}
+                        <span className="primary"> Languages</span>
+                        <select
+                            id="nameLanguage"
+                            name="languageName"
+                            required
+                            className="form-control"
+                            form="form-language">
+                            <option value="">Select an option</option>
+                            {this.state.languagesLoaded.map((item) => (
+                                <option value={item.Id}>{item.Name}</option>
+                            ))}
+                        </select>
 
-                        {/*type="text"*/}
-                        {/*className="form-control"*/}
-                        {/*required*/}
-                        {/*min="0"*/}
-                        {/*maxLength="50"*/}
-                        {/*minLength="3"*/}
-                        {/*/>*/}
+                        {/*<Query query={GET_LANGUAGES_QUERY}>*/}
+                            {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                {/*if (loading) return <LinearProgress/>;*/}
+                                {/*if (error) return <p>Error </p>;*/}
+                                {/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
+                                    {/*return (*/}
+                                        {/**/}
+                                    {/*);*/}
+                                {/*}*/}
+                                {/*return <SelectNothingToDisplay/>;*/}
+                            {/*}}*/}
+                        {/*</Query>*/}
+                        {/*<input*/}
                         <span className="check-icon"/>
                     </div>
                     <div className="col-3">
@@ -1783,6 +1806,7 @@ class ApplyForm extends Component {
                 </form>
             </div>
         );
+
         let renderSkillsSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Skills</h4>
