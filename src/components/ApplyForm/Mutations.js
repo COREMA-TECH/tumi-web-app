@@ -42,3 +42,12 @@ export const ADD_MILITARY_SERVICES = gql`
         }
     }
 `;
+
+export const ADD_SKILL = gql`
+    mutation addApplicantSkill($application: [inputInsertApplicantSkill]) {
+        addApplicantSkill(applicantSkill: $application) {
+            id
+        }
+    }
+`;
+

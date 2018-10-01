@@ -30,7 +30,7 @@ import {
     ADD_APLICANT_EDUCATION,
     ADD_APLICANT_PREVIOUS_EMPLOYMENT,
     ADD_LANGUAGES,
-    ADD_MILITARY_SERVICES,
+    ADD_MILITARY_SERVICES, ADD_SKILL,
     CREATE_APPLICATION
 } from "../Mutations";
 import Route from "react-router-dom/es/Route";
@@ -310,31 +310,58 @@ class VerticalLinearStepper extends Component {
 
     // To insert a object with mnilitary service information
     insertMilitaryServicesApplication = () => {
-        this.props.client.mutate({
-            mutation: ADD_MILITARY_SERVICES,
-            variables: {
-                application: [{
-                    branch: this.state.branch,
-                    startDate: this.state.startDateMilitaryService,
-                    endDate: this.state.endDateMilitaryService,
-                    rankAtDischarge: this.state.rankAtDischarge,
-                    typeOfDischarge: parseInt(this.state.typeOfDischarge),
-                    ApplicationId: this.state.applicationId
-                }]
-            }
-        })
-            .then(() => {
-                this.handleNext();
+        // TODO: validate empty fields in this sections
+        if(
+            this.state.branch ||
+            this.state.startDateMilitaryService ||
+            this.state.endDateMilitaryService ||
+            this.state.rankAtDischarge ||
+            this.state.typeOfDischarge
+        ) {
+            this.props.client.mutate({
+                mutation: ADD_MILITARY_SERVICES,
+                variables: {
+                    application: [{
+                        branch: this.state.branch,
+                        startDate: this.state.startDateMilitaryService,
+                        endDate: this.state.endDateMilitaryService,
+                        rankAtDischarge: this.state.rankAtDischarge,
+                        typeOfDischarge: parseInt(this.state.typeOfDischarge),
+                        ApplicationId: this.state.applicationId
+                    }]
+                }
             })
-            .catch(error => {
-                // Replace this alert with a Snackbar message error
-                alert("Error");
-            });
+                .then(() => {
+                    this.handleNext();
+                })
+                .catch(error => {
+                    // Replace this alert with a Snackbar message error
+                    alert("Error");
+                });
+        } else {
+            this.handleNext();
+        }
     };
 
     // To insert a list of skills
     insertSkillsApplication = () => {
-
+        if(this.state.skills.length > 0) {
+            this.props.client.mutate({
+                mutation: ADD_SKILL,
+                variables: {
+                    application: this.state.skills
+                }
+            })
+                .then(() => {
+                    this.handleNext();
+                })
+                .catch(error => {
+                    // Replace this alert with a Snackbar message error
+                    alert("Error");
+                });
+        } else {
+            this.handleNext();
+        }
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -2092,7 +2119,7 @@ class VerticalLinearStepper extends Component {
                         variant="contained"
                         color="primary"
                         onClick={() => {
-                            this.insertMilitaryServicesApplication();
+                            this.insertSkillsApplication();
                         }}
                         className={classes.button}
                     >
