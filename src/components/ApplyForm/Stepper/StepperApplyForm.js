@@ -88,7 +88,7 @@ class VerticalLinearStepper extends Component {
             cellPhone: '',
             socialSecurityNumber: '',
             birthDay: '',
-            car: '',
+            car: false,
             typeOfId: '',
             expireDateId: '',
             emailAddress: '',
@@ -734,7 +734,6 @@ class VerticalLinearStepper extends Component {
                             name="car"
                             type="checkbox"
                             className="form-control"
-                            required
                             min="0"
                             maxLength="50"
                             minLength="10"
@@ -2078,6 +2077,7 @@ class VerticalLinearStepper extends Component {
             </div>
         );
 
+        // To render the skills section
         let renderSkillsSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Skills</h4>
@@ -2155,7 +2155,64 @@ class VerticalLinearStepper extends Component {
             </div>
         );
 
-        let getStepContent = (step) => {
+        // To render the disclaimer section
+        let renderDisclaimerSection = (history) => (
+            <div className="ApplyBlock">
+                <h4 className="ApplyBlock-title">Disclaimer</h4>
+                <div className="row">
+                    <div className="col-12">
+                        <p className="disclaimer-text">
+                            I certify that the information on this application is correct and I understand that any
+                            misrepresentation or omission of any information will result in my disqualification from
+                            consideration for employment or, if employed, my dismissal.
+                            I hereby acknowledge and agree that, as part of my application for employment, Tumi
+                            Staffing, Inc., may request background information about me from a consumer reporting agency
+                            for employment purposes in accordance with federal and state law. I authorize law
+                            enforcement agencies, learning institutions (including public and private schools and
+                            universities), information service bureaus, credit bureaus, record/data repositories, courts
+                            (federal, state and local), motor vehicle records agencies, my past or present employers,
+                            the military, and other individuals and sources to furnish any and all information on me
+                            that is requested by the consumer reporting agency. By my acceptance below, I certify the
+                            information I provided on this form is true and correct. I agree that this Disclosure and
+                            Authorization form will be valid for any reports that may be requested by or on behalf of
+                            the Company. By my acceptance below, the company may obtain a consumer report as discussed
+                            above.
+                        </p>
+                    </div>
+                    <div className="row">
+                        <div className="col-1">
+                            <input type="checkbox" className="form-control"/>
+                        </div>
+                        <div className="col-10">
+                            <span>Accept</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="bottom-container-stepper">
+                    <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            history.push({
+                                pathname: '/employment-application-message'
+                            });
+                        }}
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                </div>
+            </div>
+        );
+
+        let getStepContent = (step, history) => {
             switch (step) {
                 case 0:
                     return renderApplicantInformationSection();
@@ -2169,6 +2226,8 @@ class VerticalLinearStepper extends Component {
                     return renderMilitaryServiceSection();
                 case 5:
                     return renderSkillsSection();
+                case 6:
+                    return renderDisclaimerSection(history);
                 default:
                     return 'Unknown step';
             }
@@ -2214,7 +2273,7 @@ class VerticalLinearStepper extends Component {
                                     console.log("DEBUG");
                                 }}
                             >
-                                {getStepContent(this.state.activeStep)}
+                                {getStepContent(this.state.activeStep, history)}
                             </form>
                         )}/>
                 </Typography>

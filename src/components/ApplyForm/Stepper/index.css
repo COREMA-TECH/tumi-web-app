@@ -23,7 +23,6 @@ body {
     height: calc(100vh - 50px);
     background: #f5f7f9 !important;
 
-
     overflow-y: auto;
 
     display: flex;
@@ -54,4 +53,11 @@ body {
     position: fixed;
     bottom: 0;
     right: 0;
+}
+
+.disclaimer-text {
+    color: #555555;
+    font-weight: 300;
+    text-align: justify;
+    margin: .3em;
 }
