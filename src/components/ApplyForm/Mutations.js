@@ -34,3 +34,11 @@ export const ADD_APLICANT_PREVIOUS_EMPLOYMENT = gql`
         }
     }
 `;
+
+export const ADD_MILITARY_SERVICES = gql`
+    mutation addMilitaryService($application: [inputInsertApplicantMilitaryService]) {
+        addMilitaryService(militaryService: $application) {
+            id
+        }
+    }
+`;

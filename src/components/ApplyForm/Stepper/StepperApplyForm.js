@@ -30,6 +30,7 @@ import {
     ADD_APLICANT_EDUCATION,
     ADD_APLICANT_PREVIOUS_EMPLOYMENT,
     ADD_LANGUAGES,
+    ADD_MILITARY_SERVICES,
     CREATE_APPLICATION
 } from "../Mutations";
 import Route from "react-router-dom/es/Route";
@@ -305,6 +306,35 @@ class VerticalLinearStepper extends Component {
         } else {
             this.handleNext();
         }
+    };
+
+    // To insert a object with mnilitary service information
+    insertMilitaryServicesApplication = () => {
+        this.props.client.mutate({
+            mutation: ADD_MILITARY_SERVICES,
+            variables: {
+                application: [{
+                    branch: this.state.branch,
+                    startDate: this.state.startDateMilitaryService,
+                    endDate: this.state.endDateMilitaryService,
+                    rankAtDischarge: this.state.rankAtDischarge,
+                    typeOfDischarge: parseInt(this.state.typeOfDischarge),
+                    ApplicationId: this.state.applicationId
+                }]
+            }
+        })
+            .then(() => {
+                this.handleNext();
+            })
+            .catch(error => {
+                // Replace this alert with a Snackbar message error
+                alert("Error");
+            });
+    };
+
+    // To insert a list of skills
+    insertSkillsApplication = () => {
+
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -1378,6 +1408,12 @@ class VerticalLinearStepper extends Component {
                     <div className="col-6">
                         <span className="primary"> Branch</span>
                         <input
+                            onChange={(e) => {
+                                this.setState({
+                                    branch: e.target.value
+                                })
+                            }}
+                            value={this.state.branch}
                             name="militaryBranch"
                             type="text"
                             className="form-control"
@@ -1390,6 +1426,12 @@ class VerticalLinearStepper extends Component {
                     <div className="col-6">
                         <span className="primary"> Rank at Discharge</span>
                         <input
+                            onChange={(e) => {
+                                this.setState({
+                                    rankAtDischarge: e.target.value
+                                })
+                            }}
+                            value={this.state.rankAtDischarge}
                             name="militaryRankDischarge"
                             type="text"
                             className="form-control"
@@ -1404,6 +1446,12 @@ class VerticalLinearStepper extends Component {
                     <div className="col-3">
                         <span className="primary"> Dates</span>
                         <input
+                            onChange={(e) => {
+                                this.setState({
+                                    startDateMilitaryService: e.target.value
+                                })
+                            }}
+                            value={this.state.startDateMilitaryService}
                             name="militaryStartDate"
                             type="date"
                             className="form-control"
@@ -1415,6 +1463,12 @@ class VerticalLinearStepper extends Component {
                     <div className="col-3">
                         <span className="primary">To: </span>
                         <input
+                            onChange={(e) => {
+                                this.setState({
+                                    endDateMilitaryService: e.target.value
+                                })
+                            }}
+                            value={this.state.endDateMilitaryService}
                             name="militaryEndDate"
                             type="date"
                             className="form-control"
@@ -1425,14 +1479,23 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Type of Discharge</span>
-                        <select name="dischargeType" id="dischargeType" className="form-control">
-                            <option value="">Select an option</option>
-                            <option value="typeOne">Honorable discharge</option>
-                            <option value="typeTwo">General discharge</option>
-                            <option value="typeThree">Other than honorable (OTH) discharge</option>
-                            <option value="typeFour">Bad conduct discharge</option>
-                            <option value="typeFive">Dishonorable discharge</option>
-                            <option value="typeSix">Entry-level separation.</option>
+                        <select
+                            onChange={(e) => {
+                                this.setState({
+                                    typeOfDischarge: e.target.value
+                                })
+                            }}
+                            value={this.state.typeOfDischarge}
+                            name="dischargeType"
+                            id="dischargeType"
+                            className="form-control">
+                                <option value="">Select an option</option>
+                                <option value="1">Honorable discharge</option>
+                                <option value="2">General discharge</option>
+                                <option value="3">Other than honorable (OTH) discharge</option>
+                                <option value="4">Bad conduct discharge</option>
+                                <option value="5">Dishonorable discharge</option>
+                                <option value="6">Entry-level separation.</option>
                         </select>
                         <span className="check-icon"/>
                     </div>
@@ -1449,7 +1512,7 @@ class VerticalLinearStepper extends Component {
                         variant="contained"
                         color="primary"
                         onClick={() => {
-                            this.insertEducationApplication();
+                            this.insertMilitaryServicesApplication();
                         }}
                         className={classes.button}
                     >
@@ -2016,6 +2079,25 @@ class VerticalLinearStepper extends Component {
                             </div>
                         ))}
                     </div>
+                </div>
+                <div className="bottom-container-stepper">
+                    <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            this.insertMilitaryServicesApplication();
+                        }}
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
                 </div>
             </div>
         );
