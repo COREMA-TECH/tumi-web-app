@@ -1,0 +1,46 @@
+.main-stepper-container {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+}
+
+.main-stepper-nav {
+    width: 20%;
+    height: 5vh !important;
+    z-index: 20;
+
+    color: #3AC5F8;
+    background: red;
+}
+
+.main-stepper-content {
+    width: 80%;
+    height: 100vh;
+
+    overflow-y: auto;
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.label-stepper {
+    color: #41afd7 !important;
+}
+
+.bottom-container-stepper {
+    width: 100%;
+    height: 70px;
+    background: #ffffff;
+    box-shadow: 10px -5px 8px #eeeeee;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: sticky;
+    bottom: 0;
+    left: 0;
+}
