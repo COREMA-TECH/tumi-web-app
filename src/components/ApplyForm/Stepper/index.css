@@ -1,14 +1,18 @@
+body {
+    position: relative;
+}
+
 .main-stepper-container {
     width: 100%;
     height: 100%;
 
     display: flex;
+    flex-wrap: wrap;
 }
 
 .main-stepper-nav {
     width: 20%;
     height: 5vh !important;
-    z-index: 20;
 
     color: #3AC5F8;
     background: red;
@@ -16,14 +20,18 @@
 
 .main-stepper-content {
     width: 80%;
-    height: 100vh;
+    height: calc(100vh - 50px);
 
     overflow-y: auto;
-    position: relative;
 
     display: flex;
     justify-content: center;
     align-items: center;
+
+    padding-bottom: 10vh;
+    padding-top: .5em;
+    border-left: 1px solid #eeeeee;
+    z-index: 20;
 }
 
 .label-stepper {
@@ -31,16 +39,17 @@
 }
 
 .bottom-container-stepper {
-    width: 100%;
+    width: 80%;
     height: 70px;
     background: #ffffff;
-    box-shadow: 10px -5px 8px #eeeeee;
+    box-shadow: 3px -5px 8px #eeeeee;
+    border-left: 1px solid #eeeeee;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    position: sticky;
+    position: fixed;
     bottom: 0;
-    left: 0;
+    right: 0;
 }
