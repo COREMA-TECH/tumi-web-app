@@ -1663,7 +1663,14 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-                                <span>{languageItem.language}</span>
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
+                                        
+                                        if (item.Id == languageItem.language) {
+                                            return item.Name.trim();
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-4">
                                 <span>
@@ -1733,7 +1740,7 @@ class ApplyForm extends Component {
                     }}
                 >
                     <div className="col-4">
-                        <span className="primary"> Language</span>
+                        <span className="primary"> Languages</span>
                         <select
                             id="nameLanguage"
                             name="languageName"
