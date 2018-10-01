@@ -246,9 +246,9 @@ class ApplyForm extends Component {
                 query: GET_LANGUAGES_QUERY
             })
             .then(({data}) => {
-                  this.setState({
-                      languagesLoaded: data.getcatalogitem
-                  })
+                this.setState({
+                    languagesLoaded: data.getcatalogitem
+                })
             })
             .catch();
     };
@@ -1665,7 +1665,7 @@ class ApplyForm extends Component {
                             <div className="col-3">
                                 <span>
                                     {this.state.languagesLoaded.map((item) => {
-                                        
+
                                         if (item.Id == languageItem.language) {
                                             return item.Name.trim();
                                         }
@@ -1754,17 +1754,17 @@ class ApplyForm extends Component {
                         </select>
 
                         {/*<Query query={GET_LANGUAGES_QUERY}>*/}
-                            {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                {/*if (loading) return <LinearProgress/>;*/}
-                                {/*if (error) return <p>Error </p>;*/}
-                                {/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
-                                    {/*return (*/}
-                                        {/**/}
-                                    {/*);*/}
-                                {/*}*/}
-                                {/*return <SelectNothingToDisplay/>;*/}
-                            {/*}}*/}
+                        {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                        {/*if (loading) return <LinearProgress/>;*/}
+                        {/*if (error) return <p>Error </p>;*/}
+                        {/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
+                        {/*return (*/}
+                        {/**/}
+                        {/*);*/}
+                        {/*}*/}
+                        {/*return <SelectNothingToDisplay/>;*/}
+                        {/*}}*/}
                         {/*</Query>*/}
                         {/*<input*/}
                         <span className="check-icon"/>
