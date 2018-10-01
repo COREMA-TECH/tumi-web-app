@@ -8,6 +8,9 @@ const withGlobalContent = (WrappedComponent) => {
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!'
 		};
+
+		baseUrl = "http://192.168.0.108:4000";
+
 		handleCloseSnackbar = (event, reason) => {
 			if (reason === 'clickaway') {
 				return;
@@ -25,13 +28,14 @@ const withGlobalContent = (WrappedComponent) => {
 		};
 
 		closeMenu = (event) => {
-			document.getElementById("MenuMobile-callback").checked = false; 
+			document.getElementById("MenuMobile-callback").checked = false;
 		};
 
 		customProps = {
 			handleCloseSnackbar: this.handleCloseSnackbar,
 			handleOpenSnackbar: this.handleOpenSnackbar,
-			handleCloseMenu: this.closeMenu
+			handleCloseMenu: this.closeMenu,
+			baseUrl: this.baseUrl
 		};
 
 		render() {

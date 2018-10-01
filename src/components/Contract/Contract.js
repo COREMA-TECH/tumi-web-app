@@ -189,6 +189,7 @@ class Contract extends React.Component {
 							this.state.companyId == 0 ? this.props.location.state.Id_Entity : this.state.companyId
 						}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						baseUrl={this.props.baseUrl}
 						contractname={this.state.ContractName}
 						showStepper={false}
 					/>
