@@ -10,7 +10,7 @@ import amber from '@material-ui/core/colors/amber';
 import IconButton from '@material-ui/core/IconButton';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const variantIcon = {
 	success: CheckCircleIcon,
@@ -20,6 +20,10 @@ const variantIcon = {
 };
 
 const styles1 = (theme) => ({
+	snackbar: {
+		margin: theme.spacing.unit,
+		padding: '4px 20px'
+	},
 	success: {
 		backgroundColor: green[600]
 	},
@@ -46,12 +50,12 @@ const styles1 = (theme) => ({
 });
 
 export function MySnackbarContent(props) {
-	const { classes, className, message, onClose, variant, ...other } = props;
+	const { classes, className, message, onClose, variant, snackbar, ...other } = props;
 	const Icon = variantIcon[variant];
 
 	return (
 		<SnackbarContent
-			className={classNames(classes[variant], className)}
+			className={classNames(classes[variant], className, classes.snackbar)}
 			aria-describedby="client-snackbar"
 			message={
 				<span id="client-snackbar" className={classes.message}>
@@ -78,9 +82,3 @@ MySnackbarContent.propTypes = {
 };
 
 export const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
-
-const styles2 = (theme) => ({
-	margin: {
-		margin: theme.spacing.unit
-	}
-});
