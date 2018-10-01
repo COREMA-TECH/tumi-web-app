@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {CREATE_APPLICATION} from './Mutations';
+import {ADD_APLICANT_EDUCATION, ADD_APLICANT_PREVIOUS_EMPLOYMENT, ADD_LANGUAGES, CREATE_APPLICATION} from './Mutations';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -86,6 +86,12 @@ class ApplyForm extends Component {
             insertDialogLoading: false,
             graduated: false,
             previousEmploymentPhone: '',
+
+            // Application id property state is used to save languages, education, mulitary services, skills
+            applicationId: 0,
+
+            // Languages catalog
+            languagesLoaded: []
         };
     }
 
@@ -110,39 +116,147 @@ class ApplyForm extends Component {
         }
     };
 
-    insertApplicationInformation = () => {
-        this.props.client.mutate({
-            mutation: CREATE_APPLICATION,
-            variables: {
-                application: {
-                    firstName: this.state.firstName,
-                    middleName: this.state.middleName,
-                    lastName: this.state.lastName,
-                    date: this.state.date,
-                    streetAddress: this.state.streetAddress,
-                    aptNumber: this.state.aptNumber,
-                    city: this.state.city,
-                    state: this.state.state,
-                    zipCode: this.state.zipCode,
-                    homePhone: this.state.homePhone,
-                    cellPhone: this.state.cellPhone,
-                    socialSecurityNumber: this.state.socialSecurityNumber,
-                    birthDay: this.state.birthDay,
-                    car: this.state.car,
-                    typeOfId: parseInt(this.state.typeOfId),
-                    expireDateId: this.state.expireDateId,
-                    emailAddress: this.state.emailAddress,
-                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                    dateAvailable: this.state.dateAvailable,
-                    scheduleRestrictions: this.state.scheduleRestrictions,
-                    scheduleExplain: this.state.scheduleExplain,
-                    convicted: this.state.convicted,
-                    convictedExplain: this.state.convictedExplain,
-                    comment: this.state.comment
+    insertApplicationInformation = (history) => {
+        this.setState({
+            insertDialogLoading: true
+        }, () => {
+
+            this.props.client.mutate({
+                mutation: CREATE_APPLICATION,
+                variables: {
+                    application: {
+                        firstName: this.state.firstName,
+                        middleName: this.state.middleName,
+                        lastName: this.state.lastName,
+                        date: this.state.date,
+                        streetAddress: this.state.streetAddress,
+                        aptNumber: this.state.aptNumber,
+                        city: this.state.city,
+                        state: this.state.state,
+                        zipCode: this.state.zipCode,
+                        homePhone: this.state.homePhone,
+                        cellPhone: this.state.cellPhone,
+                        socialSecurityNumber: this.state.socialSecurityNumber,
+                        birthDay: this.state.birthDay,
+                        car: this.state.car,
+                        typeOfId: parseInt(this.state.typeOfId),
+                        expireDateId: this.state.expireDateId,
+                        emailAddress: this.state.emailAddress,
+                        positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        dateAvailable: this.state.dateAvailable,
+                        scheduleRestrictions: this.state.scheduleRestrictions,
+                        scheduleExplain: this.state.scheduleExplain,
+                        convicted: this.state.convicted,
+                        convictedExplain: this.state.convictedExplain,
+                        comment: this.state.comment
+                    }
                 }
-            }
+            })
+                .then(({data}) => {
+                    let idApplication = data.addApplication.id;
+
+                    this.setState({
+                        applicationId: idApplication
+                    }, () => {
+                        // When the application id state property is updated, insert the other form sections
+
+                        // to remove all the uuid properties in the object
+                        this.state.languages.forEach((item) => {
+                            delete item.uuid
+                        });
+
+                        this.state.languages.forEach((item) => {
+                            item.ApplicationId = idApplication
+                        });
+
+                        this.props.client.mutate({
+                            mutation: ADD_LANGUAGES,
+                            variables: {
+                                application: this.state.languages
+                            }
+                        })
+                            .then(() => {
+                                // to remove all the uuid properties in the object
+                                this.state.schools.forEach((item) => {
+                                    delete item.uuid
+                                });
+
+                                this.state.schools.forEach((item) => {
+                                    item.ApplicationId = idApplication
+                                });
+
+                                // Then insert education list
+                                this.props.client.mutate({
+                                    mutation: ADD_APLICANT_EDUCATION,
+                                    variables: {
+                                        application: this.state.schools
+                                    }
+                                })
+                                    .then(() => {
+                                        // to remove all the uuid properties in the object
+                                        this.state.previousEmployment.forEach((item) => {
+                                            delete item.uuid
+                                        });
+
+                                        this.state.previousEmployment.forEach((item) => {
+                                            item.ApplicationId = idApplication
+                                        });
+
+                                        // Then insert previous employment
+                                        this.props.client.mutate({
+                                            mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
+                                            variables: {
+                                                application: this.state.previousEmployment
+                                            }
+                                        })
+                                            .then(() => {
+                                                // Hide the loading dialog and redirect to component with success message
+                                                this.setState({
+                                                    insertDialogLoading: false
+                                                }, () => {
+                                                    // Insert Languages
+
+                                                    history.push({
+                                                        pathname: '/employment-application-message'
+                                                    });
+                                                });
+                                            })
+                                            .catch();
+                                    })
+                                    .catch();
+                            })
+                            .catch();
+                    })
+                })
+                .catch(() => {
+                    this.setState({
+                        insertDialogLoading: false
+                    }, () => {
+                        // Show a error message
+                        alert("Error saving information");
+                    });
+                });
         });
     };
+
+    // To get a list of languages from API
+    getLanguagesList = () => {
+        this.props.client
+            .query({
+                query: GET_LANGUAGES_QUERY
+            })
+            .then(({data}) => {
+                  this.setState({
+                      languagesLoaded: data.getcatalogitem
+                  })
+            })
+            .catch();
+    };
+
+    componentWillMount() {
+        // Get languages list from catalogs
+        this.getLanguagesList();
+    }
 
     render() {
         this.validateInvalidInput();
@@ -415,7 +529,7 @@ class ApplyForm extends Component {
                                 className="form-control"
                                 required
                                 min="0"
-                                maxLength="10"
+                                maxLength="30"
                                 minLength="3"
                             />
                             <span className="check-icon"/>
@@ -590,7 +704,11 @@ class ApplyForm extends Component {
                 <div className="row">
                     <div className="col-6">
                         <span className="primary"> Type Of ID</span>
-                        <select name="typeOfID" id="typeOfID" className="form-control">
+                        <select name="typeOfID" id="typeOfID" className="form-control" onChange={(e) => {
+                            this.setState({
+                                typeOfId: e.target.value
+                            })
+                        }}>
                             <option value="">Select an option</option>
                             <option value="1">Birth certificate</option>
                             <option value="2">Social Security card</option>
@@ -916,7 +1034,7 @@ class ApplyForm extends Component {
                         startDate: document.getElementById('startPeriod').value,
                         endDate: document.getElementById('endPeriod').value,
                         graduated: document.getElementById('graduated').checked,
-                        degree: document.getElementById('degree').value,
+                        degree: parseInt(document.getElementById('degree').value),
                         ApplicationId: 1 // Static application id
                     };
                     console.log(item);
@@ -1127,17 +1245,6 @@ class ApplyForm extends Component {
                         {
                             this.state.graduated ? (
                                 <div className="input-container--validated">
-                                    {/*<input*/}
-                                    {/*form="education-form"*/}
-                                    {/*name="degree"*/}
-                                    {/*id="degree"*/}
-                                    {/*type="text"*/}
-                                    {/*className="form-control"*/}
-                                    {/*required*/}
-                                    {/*min="0"*/}
-                                    {/*maxLength="50"*/}
-                                    {/*minLength="3"*/}
-                                    {/*/>*/}
                                     <select form="education-form" name="degree" id="degree"
                                             className="form-control">
                                         <option value="">Select an option</option>
@@ -1249,10 +1356,11 @@ class ApplyForm extends Component {
                         address: document.getElementById('companyAddressEmployment').value,
                         supervisor: document.getElementById('companySupervisor').value,
                         jobTitle: document.getElementById('companyJobTitle').value,
-                        payRate: document.getElementById('companyPayRate').value,
+                        payRate: parseFloat(document.getElementById('companyPayRate').value),
                         startDate: document.getElementById('companyStartDate').value,
                         endDate: document.getElementById('companyEndDate').value,
-                        reasonForLeaving: document.getElementById('companyReasonForLeaving').value
+                        reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
+                        ApplicationId: 1 // Static application id
                     };
                     this.setState(
                         (prevState) => ({
@@ -1397,15 +1505,15 @@ class ApplyForm extends Component {
                                 minLength="15"
                             />
                             {/*<input*/}
-                                {/*id="companyPhoneEmployment"*/}
-                                {/*form="form-previous-employment"*/}
-                                {/*name="phoneEmployment"*/}
-                                {/*type="number"*/}
-                                {/*className="form-control"*/}
-                                {/*required*/}
-                                {/*min="0"*/}
-                                {/*maxLength="10"*/}
-                                {/*minLength="10"*/}
+                            {/*id="companyPhoneEmployment"*/}
+                            {/*form="form-previous-employment"*/}
+                            {/*name="phoneEmployment"*/}
+                            {/*type="number"*/}
+                            {/*className="form-control"*/}
+                            {/*required*/}
+                            {/*min="0"*/}
+                            {/*maxLength="10"*/}
+                            {/*minLength="10"*/}
                             {/*/>*/}
                             <span className="check-icon"/>
                         </div>
@@ -1555,7 +1663,14 @@ class ApplyForm extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-                                <span>{languageItem.idLanguage}</span>
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
+                                        
+                                        if (item.Id == languageItem.language) {
+                                            return item.Name.trim();
+                                        }
+                                    })}
+                                </span>
                             </div>
                             <div className="col-4">
                                 <span>
@@ -1605,10 +1720,10 @@ class ApplyForm extends Component {
                         e.stopPropagation();
                         let item = {
                             uuid: uuidv4(),
-                            ApplicationId: 1,
-                            idLanguage: document.getElementById('nameLanguage').value,
-                            writing: document.getElementById('writingLanguage').value,
-                            conversation: document.getElementById('conversationLanguage').value
+                            ApplicationId: this.state.applicationId,
+                            language: document.getElementById('nameLanguage').value,
+                            writing: parseInt(document.getElementById('writingLanguage').value),
+                            conversation: parseInt(document.getElementById('conversationLanguage').value)
                         };
                         this.setState(
                             (prevState) => ({
@@ -1625,39 +1740,33 @@ class ApplyForm extends Component {
                     }}
                 >
                     <div className="col-4">
-                        <span className="primary"> Language</span>
-                        <Query query={GET_LANGUAGES_QUERY}>
-                            {({loading, error, data, refetch, networkStatus}) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
-                                if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return (
-                                        <select
-                                            id="nameLanguage"
-                                            name="languageName"
-                                            required
-                                            className="form-control"
-                                            form="form-language">
-                                            <option value="">Select an option</option>
-                                            {data.getcatalogitem.map((item) => (
-                                                <option value={item.Id}>{item.Name}</option>
-                                            ))}
-                                        </select>
-                                    );
-                                }
-                                return <SelectNothingToDisplay/>;
-                            }}
-                        </Query>
-                        {/*<input*/}
+                        <span className="primary"> Languages</span>
+                        <select
+                            id="nameLanguage"
+                            name="languageName"
+                            required
+                            className="form-control"
+                            form="form-language">
+                            <option value="">Select an option</option>
+                            {this.state.languagesLoaded.map((item) => (
+                                <option value={item.Id}>{item.Name}</option>
+                            ))}
+                        </select>
 
-                        {/*type="text"*/}
-                        {/*className="form-control"*/}
-                        {/*required*/}
-                        {/*min="0"*/}
-                        {/*maxLength="50"*/}
-                        {/*minLength="3"*/}
-                        {/*/>*/}
+                        {/*<Query query={GET_LANGUAGES_QUERY}>*/}
+                            {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                {/*if (loading) return <LinearProgress/>;*/}
+                                {/*if (error) return <p>Error </p>;*/}
+                                {/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
+                                    {/*return (*/}
+                                        {/**/}
+                                    {/*);*/}
+                                {/*}*/}
+                                {/*return <SelectNothingToDisplay/>;*/}
+                            {/*}}*/}
+                        {/*</Query>*/}
+                        {/*<input*/}
                         <span className="check-icon"/>
                     </div>
                     <div className="col-3">
@@ -1697,6 +1806,7 @@ class ApplyForm extends Component {
                 </form>
             </div>
         );
+
         let renderSkillsSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Skills</h4>
@@ -1765,28 +1875,15 @@ class ApplyForm extends Component {
                                 // To cancel the default submit event
                                 e.preventDefault();
                                 // Call mutation to create a application
-                                //this.insertApplicationInformation();
-                                // Set interval and show dialog
-                                this.setState({
-                                    insertDialogLoading: true
-                                }, () => {
-                                    setTimeout(() => {
-                                        this.setState({
-                                            insertDialogLoading: false
-                                        });
-                                        history.push({
-                                            pathname: '/employment-application-message'
-                                        });
-                                    }, 3000);
-                                });
+                                this.insertApplicationInformation(history);
                             }}
                         >
                             {renderApplicantInformationSection()}
                             {renderlanguagesSection()}
                             {renderEducationSection()}
-                            {renderMilitaryServiceSection()}
+                            {/*{renderMilitaryServiceSection()}*/}
                             {renderPreviousEmploymentSection()}
-                            {renderSkillsSection()}
+                            {/*{renderSkillsSection()}*/}
                             {renderInsertDialogLoading()}
                             <div className="Apply-container">
                                 <div className="row">

@@ -45,21 +45,11 @@ export const GET_POSITIONS_QUERY = gql`
 
 
 /**
- * Query to get types of study
- */
-// export const GET_TYPES_OF_STUDY = gql`
-//     {
-//
-//     }
-// `;
-
-
-/**
  * Query to get languages
  */
 export const GET_LANGUAGES_QUERY = gql`
     {
-        getcatalogitem(Id: null, Id_Catalog: 9,IsActive: 1){
+        getcatalogitem(Id: null, Id_Catalog: 9, IsActive: 1){
             Id
             Name
         }
