@@ -142,22 +142,31 @@ class VerticalLinearStepper extends Component {
         };
     }
 
+    // To handle the stepper
     handleNext = () => {
         this.setState(state => ({
             activeStep: state.activeStep + 1,
         }));
     };
-
     handleBack = () => {
         this.setState(state => ({
             activeStep: state.activeStep - 1,
         }));
     };
-
     handleReset = () => {
         this.setState({
             activeStep: 0,
         });
+    };
+
+    // To open the skill dialog
+    handleClickOpen = () => {
+        this.setState({open: true});
+    };
+
+    // To close the skill dialog
+    handleClose = () => {
+        this.setState({open: false});
     };
 
     // To insert general applicant information
@@ -391,6 +400,7 @@ class VerticalLinearStepper extends Component {
             .catch();
     };
 
+    // Execute methods before rendering
     componentWillMount() {
         // Get languages list from catalogs
         this.getLanguagesList();
@@ -402,6 +412,7 @@ class VerticalLinearStepper extends Component {
         const {activeStep} = this.state;
         this.validateInvalidInput();
 
+        // To render the applicant information section
         let renderApplicantInformationSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Applicant Information</h4>
@@ -1056,6 +1067,7 @@ class VerticalLinearStepper extends Component {
             </div>
         );
 
+        // To render a dialog loading when the mutation is loading
         let renderInsertDialogLoading = () => (
             <Dialog
                 open={this.state.insertDialogLoading}
@@ -1427,6 +1439,7 @@ class VerticalLinearStepper extends Component {
                 </div>
             </form>
         );
+
         // To render the Military Service Section
         let renderMilitaryServiceSection = () => (
             <div className="ApplyBlock">
@@ -1548,6 +1561,8 @@ class VerticalLinearStepper extends Component {
                 </div>
             </div>
         );
+
+        // To render the Previous Employment Section
         let renderPreviousEmploymentSection = () => (
             <form
                 id="form-previous-employment"
@@ -1865,6 +1880,7 @@ class VerticalLinearStepper extends Component {
             </form>
         );
 
+        // To render the Languages Section
         let renderlanguagesSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Languages</h4>
