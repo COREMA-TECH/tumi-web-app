@@ -322,19 +322,13 @@ p {
 .company-th, .contact-th {
   padding-right: 0 !important; }
 
-#agreement {
-  padding-top: 100px;
-  padding-bottom: 100px;
-  padding-right: 150px;
-  padding-left: 80px; }
-
 .modal-overflow {
   overflow-x: scroll; }
   .modal-overflow .list-item-container-scroll {
     min-width: 500px; }
 
-.MuiDialog-paperFullScreen-174 {
-  width: 80% !important; }
+div[class*=MuiDialog-paperWidthSm-] {
+  max-width: 70% !important; }
 
 @media only screen and (max-width: 480px) {
   .select-form-customized {
@@ -434,6 +428,7 @@ p {
   .MenuMobile-icon {
     font-size: 1.35rem;
     margin-right: 1.5rem;
+    text-align: center;
     text-decoration: none;
     width: 45px; }
     .MenuMobile-icon.fa, .MenuMobile-icon.fas, .MenuMobile-icon.far {
@@ -469,11 +464,16 @@ p {
   padding: 1rem;
   text-decoration: none !important; }
   .menu__item .fa, .menu__item .fas, .menu__item .far {
-    font-size: 1.75rem; }
+    font-size: 1.75rem;
+    text-align: center;
+    width: 35px; }
   .nav-expanded .menu__item {
     -webkit-box-pack: start !important;
     -ms-flex-pack: start !important;
     justify-content: flex-start !important; }
+  .menu__item .nav-title {
+    margin-left: 1rem;
+    white-space: nowrap; }
 
 .menu-item__icon {
   font-size: 1.35rem !important; }

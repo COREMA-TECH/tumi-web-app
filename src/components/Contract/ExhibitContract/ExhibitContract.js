@@ -364,7 +364,7 @@ class ExhibitContract extends Component {
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
-							{renderHTML(this.state.agreement)}
+							<iframe src={`${this.props.baseUrl}/public/Contract_${this.props.contractname}.pdf`} width="100%" height="100%"></iframe>
 						</div>
 					</DialogContent>
 					<DialogActions>
@@ -372,7 +372,7 @@ class ExhibitContract extends Component {
 							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 						</div>
 						<div className="exhibit-button-left">
-							<Tooltip title={'Print Contract'}>
+							{/*<Tooltip title={'Print Contract'}>
 								<div>
 									<Button
 										//	disabled={this.state.loading || !this.state.enableCancelButton}
@@ -385,7 +385,7 @@ class ExhibitContract extends Component {
 									</Button>
 								</div>
 							</Tooltip>
-							{/*<Tooltip title={'Download Contract'}>
+							<Tooltip title={'Download Contract'}>
 								<div >
 									<Button
 										//	disabled={this.state.loading || !this.state.enableCancelButton}
@@ -569,7 +569,7 @@ class ExhibitContract extends Component {
 					</div>
 				</div>
 				<iframe id="ifmcontentstoprint" allowtransparency="true" />
-			</div>
+			</div >
 		);
 	}
 }
