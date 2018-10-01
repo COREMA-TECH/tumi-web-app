@@ -41,7 +41,7 @@
 .apply-form input:required:focus:valid,
 .apply-form input:optional:focus:valid,
 .apply-form select:required:focus:valid,
-.apply-form textarea:required:focus:valid{
+.apply-form textarea:required:focus:valid {
     border-color: green;
 }
 
@@ -67,6 +67,8 @@
     content: "\2713";
     color: #ffffff;
     margin-left: 5px;
+    font-weight: 300;
+    font-size: .9em;
 }
 
 .apply-form input:required:invalid + span::after,
@@ -76,6 +78,8 @@
     content: "\2713";
     color: #ffffff;
     margin-left: 5px;
+    font-weight: 300;
+    font-size: .9em;
 }
 
 .apply-form .invalid-apply-form:required:invalid + .check-icon {
