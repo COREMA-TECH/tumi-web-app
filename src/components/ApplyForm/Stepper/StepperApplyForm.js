@@ -30,7 +30,8 @@ import {
     ADD_APLICANT_EDUCATION,
     ADD_APLICANT_PREVIOUS_EMPLOYMENT,
     ADD_LANGUAGES,
-    ADD_MILITARY_SERVICES, ADD_SKILL,
+    ADD_MILITARY_SERVICES,
+    ADD_SKILL,
     CREATE_APPLICATION
 } from "../Mutations";
 import Route from "react-router-dom/es/Route";
@@ -320,7 +321,7 @@ class VerticalLinearStepper extends Component {
     // To insert a object with mnilitary service information
     insertMilitaryServicesApplication = () => {
         // TODO: validate empty fields in this sections
-        if(
+        if (
             this.state.branch ||
             this.state.startDateMilitaryService ||
             this.state.endDateMilitaryService ||
@@ -354,7 +355,16 @@ class VerticalLinearStepper extends Component {
 
     // To insert a list of skills
     insertSkillsApplication = () => {
-        if(this.state.skills.length > 0) {
+        if (this.state.skills.length > 0) {
+            // to remove all the uuid properties in the object
+            this.state.skills.forEach((item) => {
+                delete item.uuid
+            });
+
+            this.state.skills.forEach((item) => {
+                item.ApplicationId = this.state.applicationId
+            });
+
             this.props.client.mutate({
                 mutation: ADD_SKILL,
                 variables: {
@@ -1529,13 +1539,13 @@ class VerticalLinearStepper extends Component {
                             name="dischargeType"
                             id="dischargeType"
                             className="form-control">
-                                <option value="">Select an option</option>
-                                <option value="1">Honorable discharge</option>
-                                <option value="2">General discharge</option>
-                                <option value="3">Other than honorable (OTH) discharge</option>
-                                <option value="4">Bad conduct discharge</option>
-                                <option value="5">Dishonorable discharge</option>
-                                <option value="6">Entry-level separation.</option>
+                            <option value="">Select an option</option>
+                            <option value="1">Honorable discharge</option>
+                            <option value="2">General discharge</option>
+                            <option value="3">Other than honorable (OTH) discharge</option>
+                            <option value="4">Bad conduct discharge</option>
+                            <option value="5">Dishonorable discharge</option>
+                            <option value="6">Entry-level separation.</option>
                         </select>
                         <span className="check-icon"/>
                     </div>
