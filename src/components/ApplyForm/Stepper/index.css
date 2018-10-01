@@ -12,15 +12,17 @@ body {
 
 .main-stepper-nav {
     width: 20%;
+    background: #ffffff !important;
     height: 5vh !important;
 
     color: #3AC5F8;
-    background: red;
 }
 
 .main-stepper-content {
     width: 80%;
     height: calc(100vh - 50px);
+    background: #f5f7f9 !important;
+
 
     overflow-y: auto;
 

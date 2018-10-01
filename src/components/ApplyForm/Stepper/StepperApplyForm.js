@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
+import StepContent from '@material-ui/core/StepContent';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
@@ -41,13 +42,14 @@ const styles = theme => ({
         display: 'flex'
     },
     button: {
-        marginTop: theme.spacing.unit,
+        marginTop: 0,
         marginRight: theme.spacing.unit,
         backgroundColor: '#41afd7',
         color: '#fff',
         '&:hover': {
             backgroundColor: '#3d93b9'
         }
+
     },
     actionsContainer: {
         marginBottom: theme.spacing.unit * 2,
@@ -61,7 +63,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['Applicant Information', 'Languages', 'Education', 'Military Service', 'Previous Employment', 'Skills', 'Disclaimer'];
+    return ['Applicant Information', 'Languages', 'Education', 'Previous Employment', 'Military Service', 'Skills', 'Disclaimer'];
 }
 
 class VerticalLinearStepper extends Component {
@@ -157,6 +159,7 @@ class VerticalLinearStepper extends Component {
         });
     };
 
+    // To insert general applicant information
     insertApplicationInformation = (history) => {
         this.setState({
             insertDialogLoading: true
@@ -195,79 +198,11 @@ class VerticalLinearStepper extends Component {
             })
                 .then(({data}) => {
                     let idApplication = data.addApplication.id;
-
                     this.setState({
                         applicationId: idApplication
-                    }, () => {
-                        // When the application id state property is updated, insert the other form sections
+                    });
 
-                        // to remove all the uuid properties in the object
-                        this.state.languages.forEach((item) => {
-                            delete item.uuid
-                        });
-
-                        this.state.languages.forEach((item) => {
-                            item.ApplicationId = idApplication
-                        });
-
-                        this.props.client.mutate({
-                            mutation: ADD_LANGUAGES,
-                            variables: {
-                                application: this.state.languages
-                            }
-                        })
-                            .then(() => {
-                                // to remove all the uuid properties in the object
-                                this.state.schools.forEach((item) => {
-                                    delete item.uuid
-                                });
-
-                                this.state.schools.forEach((item) => {
-                                    item.ApplicationId = idApplication
-                                });
-
-                                // Then insert education list
-                                this.props.client.mutate({
-                                    mutation: ADD_APLICANT_EDUCATION,
-                                    variables: {
-                                        application: this.state.schools
-                                    }
-                                })
-                                    .then(() => {
-                                        // to remove all the uuid properties in the object
-                                        this.state.previousEmployment.forEach((item) => {
-                                            delete item.uuid
-                                        });
-
-                                        this.state.previousEmployment.forEach((item) => {
-                                            item.ApplicationId = idApplication
-                                        });
-
-                                        // Then insert previous employment
-                                        this.props.client.mutate({
-                                            mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
-                                            variables: {
-                                                application: this.state.previousEmployment
-                                            }
-                                        })
-                                            .then(() => {
-                                                // Hide the loading dialog and redirect to component with success message
-                                                this.setState({
-                                                    insertDialogLoading: false
-                                                }, () => {
-                                                    // Insert Languages
-
-                                                    history.push({
-                                                        pathname: '/employment-application-message'
-                                                    });
-                                                });
-                                            })
-                                            .catch();
-                                    })
-                                    .catch();
-                            })
-                            .catch();
-                    })
+                    console.log(idApplication);
                 })
                 .catch(() => {
                     this.setState({
@@ -278,6 +213,98 @@ class VerticalLinearStepper extends Component {
                     });
                 });
         });
+    };
+
+    // To insert languages
+    insertLanguagesApplication = () => {
+        if (this.state.languages.length > 0) {
+            // to remove all the uuid properties in the object
+            this.state.languages.forEach((item) => {
+                delete item.uuid
+            });
+
+            this.state.languages.forEach((item) => {
+                item.ApplicationId = this.state.applicationId
+            });
+
+            this.props.client.mutate({
+                mutation: ADD_LANGUAGES,
+                variables: {
+                    application: this.state.languages
+                }
+            })
+                .then(() => {
+                    this.handleNext();
+                })
+                .catch(error => {
+                    // Replace this alert with a Snackbar message error
+                    alert("Error");
+                });
+        } else {
+            this.handleNext();
+        }
+    };
+
+    // To insert education
+    insertEducationApplication = () => {
+        if (this.state.schools.length > 0) {
+            // to remove all the uuid properties in the object
+            this.state.schools.forEach((item) => {
+                delete item.uuid
+            });
+
+            this.state.schools.forEach((item) => {
+                item.ApplicationId = this.state.applicationId
+            });
+
+            // Then insert education list
+            this.props.client.mutate({
+                mutation: ADD_APLICANT_EDUCATION,
+                variables: {
+                    application: this.state.schools
+                }
+            })
+                .then(() => {
+                    this.handleNext();
+                })
+                .catch(error => {
+                    // Replace this alert with a Snackbar message error
+                    alert("Error");
+                });
+        } else {
+            this.handleNext();
+        }
+    };
+
+    // To insert Military services section
+    insertPreviousEmploymentApplication = () => {
+        if (this.state.previousEmployment.length > 0) {
+            // to remove all the uuid properties in the object
+            this.state.previousEmployment.forEach((item) => {
+                delete item.uuid
+            });
+
+            this.state.previousEmployment.forEach((item) => {
+                item.ApplicationId = this.state.applicationId
+            });
+
+            // Then insert previous employment
+            this.props.client.mutate({
+                mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
+                variables: {
+                    application: this.state.previousEmployment
+                }
+            })
+                .then(() => {
+                    this.handleNext();
+                })
+                .catch(error => {
+                    // Replace this alert with a Snackbar message error
+                    alert("Error");
+                })
+        } else {
+            this.handleNext();
+        }
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -461,7 +488,17 @@ class VerticalLinearStepper extends Component {
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return (
-                                        <select name="state" id="state" required className="form-control">
+                                        <select
+                                            name="state"
+                                            id="state"
+                                            required
+                                            className="form-control"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    state: e.target.value
+                                                })
+                                            }}
+                                            value={this.state.state}>
                                             <option value="">Select a state</option>
                                             {data.getcatalogitem.map((item) => (
                                                 <option value={item.Id}>{item.Name}</option>
@@ -708,6 +745,7 @@ class VerticalLinearStepper extends Component {
                                                     positionApplyingFor: event.target.value
                                                 });
                                             }}
+                                            value={this.state.positionApplyingFor}
                                             className="form-control"
                                         >
                                             <option value="">Select a position</option>
@@ -905,6 +943,7 @@ class VerticalLinearStepper extends Component {
                                     socialNetwork: event.target.value
                                 });
                             }}
+                            value={this.state.socialNetwork}
                             required
                             className="form-control">
                             <option value="">Select a option</option>
@@ -939,7 +978,23 @@ class VerticalLinearStepper extends Component {
                             </div>
                         </div>
                     </div>
-
+                </div>
+                <div className="bottom-container-stepper">
+                    <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
                 </div>
             </div>
         );
@@ -1294,6 +1349,25 @@ class VerticalLinearStepper extends Component {
                         </Button>
                     </div>
                 </div>
+                <div className="bottom-container-stepper">
+                    <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            this.insertEducationApplication();
+                        }}
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                </div>
             </form>
         );
         // To render the Military Service Section
@@ -1362,6 +1436,25 @@ class VerticalLinearStepper extends Component {
                         </select>
                         <span className="check-icon"/>
                     </div>
+                </div>
+                <div className="bottom-container-stepper">
+                    <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            this.insertEducationApplication();
+                        }}
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
                 </div>
             </div>
         );
@@ -1660,6 +1753,25 @@ class VerticalLinearStepper extends Component {
                         </Button>
                     </div>
                 </div>
+                <div className="bottom-container-stepper">
+                    <Button
+                        disabled={activeStep === 0}
+                        onClick={this.handleBack}
+                        className={classes.button}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            this.insertPreviousEmploymentApplication();
+                        }}
+                        className={classes.button}
+                    >
+                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                    </Button>
+                </div>
             </form>
         );
 
@@ -1827,6 +1939,25 @@ class VerticalLinearStepper extends Component {
                             Add
                         </Button>
                     </div>
+                    <div className="bottom-container-stepper">
+                        <Button
+                            disabled={activeStep === 0}
+                            onClick={this.handleBack}
+                            className={classes.button}
+                        >
+                            Back
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => {
+                                this.insertLanguagesApplication();
+                            }}
+                            className={classes.button}
+                        >
+                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+                        </Button>
+                    </div>
                 </form>
             </div>
         );
@@ -1898,9 +2029,9 @@ class VerticalLinearStepper extends Component {
                 case 2:
                     return renderEducationSection();
                 case 3:
-                    return renderMilitaryServiceSection();
-                case 4:
                     return renderPreviousEmploymentSection();
+                case 4:
+                    return renderMilitaryServiceSection();
                 case 5:
                     return renderSkillsSection();
                 default:
@@ -1918,6 +2049,9 @@ class VerticalLinearStepper extends Component {
                                 <StepLabel className={classes.stepper}>
                                     {label}
                                 </StepLabel>
+                                <StepContent>
+                                    <Typography variant="caption">{index === 0 ? 'Required' : 'Optional'}</Typography>
+                                </StepContent>
                             </Step>
                         );
                     })}
@@ -1940,29 +2074,12 @@ class VerticalLinearStepper extends Component {
                                     // To cancel the default submit event
                                     e.preventDefault();
                                     // Call mutation to create a application
-                                    //this.insertApplicationInformation(history);
-                                    alert("Send dialog");
+                                    this.insertApplicationInformation(history);
+                                    this.handleNext();
+                                    console.log("DEBUG");
                                 }}
                             >
                                 {getStepContent(this.state.activeStep)}
-                                <div className="bottom-container-stepper">
-                                    <Button
-                                        disabled={activeStep === 0}
-                                        onClick={this.handleBack}
-                                        className={classes.button}
-                                    >
-                                        Back
-                                    </Button>
-                                    <Button
-                                        type="submit"
-                                        variant="contained"
-                                        color="primary"
-                                        // onClick={this.handleNext}
-                                        className={classes.button}
-                                    >
-                                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                                    </Button>
-                                </div>
                             </form>
                         )}/>
                 </Typography>
