@@ -787,8 +787,6 @@ class VerticalLinearStepper extends Component {
                                         onChange={(event) => {
                                             this.setState({
                                                 car: event.target.checked
-                                            }, () => {
-                                                alert(this.state.car)
                                             });
                                         }}
                                         checked={this.state.car}
