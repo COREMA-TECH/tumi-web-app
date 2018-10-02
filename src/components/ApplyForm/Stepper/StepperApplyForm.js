@@ -32,7 +32,8 @@ import {
     ADD_LANGUAGES,
     ADD_MILITARY_SERVICES,
     ADD_SKILL,
-    CREATE_APPLICATION, UPDATE_APPLICATION
+    CREATE_APPLICATION,
+    UPDATE_APPLICATION
 } from "../Mutations";
 import Route from "react-router-dom/es/Route";
 
@@ -776,21 +777,33 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-6">
-                        <span className="primary"> Do you own transportation?</span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    car: event.target.value
-                                });
-                            }}
-                            value={this.state.car}
-                            name="car"
-                            type="checkbox"
-                            className="form-control"
-                            min="0"
-                            maxLength="50"
-                            minLength="10"
-                        />
+                        <div className="row">
+                            <div className="col-12">
+                                <span className="primary"> Do you own transportation?</span>
+                            </div>
+                            <div className="col-12">
+                                <label className="switch">
+                                    <input
+                                        onChange={(event) => {
+                                            this.setState({
+                                                car: event.target.checked
+                                            }, () => {
+                                                alert(this.state.car)
+                                            });
+                                        }}
+                                        checked={this.state.car}
+                                        value={this.state.car}
+                                        name="car"
+                                        type="checkbox"
+                                        className="form-control"
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="10"
+                                    />
+                                    <p className="slider round"></p>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
@@ -2321,7 +2334,7 @@ class VerticalLinearStepper extends Component {
                                     // To cancel the default submit event
                                     e.preventDefault();
                                     // Call mutation to create a application
-                                    if(this.state.applicationId === null) {
+                                    if (this.state.applicationId === null) {
                                         this.insertApplicationInformation(history);
                                     } else {
                                         this.updateApplicationInformation();
