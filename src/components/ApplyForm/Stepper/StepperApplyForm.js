@@ -1451,14 +1451,17 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-2">
                         <label className="primary">Graduated</label> <br/>
-                        <input
-                            onChange={(e) => {
-                                this.setState({
-                                    graduated: document.getElementById('graduated').checked
-                                });
-                            }}
-                            form="education-form" type="checkbox" value="graduated" name="graduated" id="graduated"
-                        />
+                        <label className="switch">
+                            <input
+                                onChange={(e) => {
+                                    this.setState({
+                                        graduated: document.getElementById('graduated').checked
+                                    });
+                                }}
+                                form="education-form" type="checkbox" value="graduated" name="graduated" id="graduated"
+                            />
+                            <p className="slider round"></p>
+                        </label>
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
