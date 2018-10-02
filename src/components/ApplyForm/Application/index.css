@@ -15,6 +15,8 @@
     overflow: hidden;
     margin: .5em;
     box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
+
+    font-weight: 100 !important;
 }
 
 .applicant-card__header {
@@ -32,7 +34,8 @@
 
 .applicant-card__title {
     color: #0092BD;
-    font-weight: 100;
+    font-weight: 100 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
 .applicant-card__edit-button {
@@ -44,6 +47,8 @@
 
     transition: all .450s;
     font-size: .85em;
+    font-weight: 100 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
 .fa-edit {
@@ -53,4 +58,10 @@
 .applicant-card__edit-button:hover {
     background: #0092BD;
     color: #ffffff;
+}
+
+.applicant-card__label {
+    font-size: .9em;
+    font-weight: 100 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
