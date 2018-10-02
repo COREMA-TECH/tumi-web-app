@@ -251,7 +251,6 @@ class Catalogs extends React.Component {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
 	resetState = (func = () => {}) => {
-		console.log('Reset State');
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -617,7 +616,6 @@ class Catalogs extends React.Component {
 	};
 
 	loadAllParents = (func = () => {}) => {
-		console.log('Load all parents');
 		this.setState({ loadingAllParents: true });
 		this.props.client
 			.query({
@@ -626,9 +624,7 @@ class Catalogs extends React.Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				console.log('Load all parents data 01', data);
 				if (data.data.getparentcatalogitem != null) {
-					console.log('Load all parents data', data.data.getparentcatalogitem);
 					this.setState(
 						{
 							allparents: data.data.getparentcatalogitem,
@@ -1034,6 +1030,7 @@ class Catalogs extends React.Component {
 			</div>
 		);
 	}
+
 }
 
 Catalogs.propTypes = {

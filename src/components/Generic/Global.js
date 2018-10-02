@@ -1,6 +1,7 @@
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from './SnackBar';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 const styles = (theme) => ({
 	snackbar: {
@@ -15,8 +16,6 @@ const withGlobalContent = (WrappedComponent) => {
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!'
 		};
-
-		baseUrl = "http://192.168.0.108:4000";
 
 		handleCloseSnackbar = (event, reason) => {
 			if (reason === 'clickaway') {
@@ -41,8 +40,7 @@ const withGlobalContent = (WrappedComponent) => {
 		customProps = {
 			handleCloseSnackbar: this.handleCloseSnackbar,
 			handleOpenSnackbar: this.handleOpenSnackbar,
-			handleCloseMenu: this.closeMenu,
-			baseUrl: this.baseUrl
+			handleCloseMenu: this.closeMenu
 		};
 
 		render() {
@@ -68,6 +66,13 @@ const withGlobalContent = (WrappedComponent) => {
 				</React.Fragment>
 			);
 		}
+		static childContextTypes = {
+			baseUrl: PropTypes.string
+		};
+
+		getChildContext = () => ({
+			baseUrl: 'http://192.168.0.108:4000'
+		});
 	};
 };
 
