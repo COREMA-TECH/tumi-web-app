@@ -642,8 +642,6 @@ class Application extends Component {
                                                 name="idealJob"
                                                 type="text"
                                                 className="form-control"
-                                                required
-
                                                 min="0"
                                                 minLength="3"
                                                 maxLength="50"
