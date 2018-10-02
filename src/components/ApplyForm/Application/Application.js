@@ -161,7 +161,7 @@ class Application extends Component {
                     firstName: applicantData.firstName,
                     middleName: applicantData.middleName,
                     lastName: applicantData.lastName,
-                    date: applicantData.date,
+                    date: applicantData.date.substring(0,9),
                     streetAddress: applicantData.streetAddress,
                     emailAddress: applicantData.emailAddress,
                     aptNumber: applicantData.aptNumber,
@@ -172,10 +172,10 @@ class Application extends Component {
                     cellPhone: applicantData.cellPhone,
                     socialSecurityNumber: applicantData.socialSecurityNumber,
                     positionApplyingFor: applicantData.positionApplyingFor,
-                    birthDay: applicantData.birthDay,
+                    birthDay: applicantData.birthDay.substring(0,9),
                     car: applicantData.car,
                     typeOfId: applicantData.typeOfId,
-                    expireDateId: applicantData.expireDateId,
+                    expireDateId: applicantData.expireDateId.substring(0,9),
                     dateAvailable: applicantData.dateAvailable,
                     scheduleRestrictions: applicantData.scheduleRestrictions,
                     scheduleExplain: applicantData.scheduleExplain,
@@ -217,9 +217,7 @@ class Application extends Component {
     };
 
     componentWillMount() {
-        setTimeout(() => {
-            this.getApplicationById(70)
-        }, 3000);
+        this.getApplicationById(70);
     }
 
     render() {
@@ -433,6 +431,7 @@ class Application extends Component {
                                                 min="0"
                                                 maxLength="30"
                                                 minLength="3"
+                                            />
                                             />
                                         </div>
                                         <div className="col-6 ">
