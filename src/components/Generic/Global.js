@@ -1,6 +1,13 @@
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from './SnackBar';
 import React, { Component } from 'react';
+
+const styles = (theme) => ({
+	snackbar: {
+		margin: theme.spacing.unit
+	}
+});
+
 const withGlobalContent = (WrappedComponent) => {
 	return class Global extends Component {
 		state = {
@@ -8,6 +15,9 @@ const withGlobalContent = (WrappedComponent) => {
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!'
 		};
+
+		baseUrl = "http://192.168.0.108:4000";
+
 		handleCloseSnackbar = (event, reason) => {
 			if (reason === 'clickaway') {
 				return;
@@ -25,13 +35,14 @@ const withGlobalContent = (WrappedComponent) => {
 		};
 
 		closeMenu = (event) => {
-			document.getElementById("MenuMobile-callback").checked = false; 
+			document.getElementById('MenuMobile-callback').checked = false;
 		};
 
 		customProps = {
 			handleCloseSnackbar: this.handleCloseSnackbar,
 			handleOpenSnackbar: this.handleOpenSnackbar,
-			handleCloseMenu: this.closeMenu
+			handleCloseMenu: this.closeMenu,
+			baseUrl: this.baseUrl
 		};
 
 		render() {
@@ -40,11 +51,11 @@ const withGlobalContent = (WrappedComponent) => {
 				<React.Fragment>
 					<Snackbar
 						anchorOrigin={{
-							vertical: 'top',
+							vertical: 'bottom',
 							horizontal: 'center'
 						}}
 						open={this.state.openSnackbar}
-						autoHideDuration={3000}
+						autoHideDuration={5000}
 						onClose={this.handleCloseSnackbar}
 					>
 						<MySnackbarContentWrapper

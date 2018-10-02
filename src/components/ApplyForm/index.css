@@ -25,9 +25,8 @@
 .apply-form .input-container--validated .check-icon {
     background: green;
     height: 100%;
-    padding: .375rem .2rem;
+    padding: .375rem .5rem;
     border-radius: 0 5px 5px 0;
-    box-sizing: border-box;
     border: 1px solid green;
 
     transition: all .450s;

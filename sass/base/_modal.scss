@@ -1,8 +1,5 @@
 #agreement {
-    padding-top: 100px;
-    padding-bottom: 100px;
-    padding-right: 150px;
-    padding-left: 80px;
+
 }
 
 .modal {
@@ -14,8 +11,8 @@
     }
 }
 
-.MuiDialog-paperFullScreen-174 {
-    width: 80% !important;
+div[class*=MuiDialog-paperWidthSm-] {
+    max-width: 70% !important;
 }
 
 @media only screen and (max-width: 480px) {

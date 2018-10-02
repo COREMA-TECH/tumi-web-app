@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -21,6 +20,10 @@ const variantIcon = {
 };
 
 const styles1 = (theme) => ({
+	snackbar: {
+		margin: theme.spacing.unit,
+		padding: '4px 20px'
+	},
 	success: {
 		backgroundColor: green[600]
 	},
@@ -47,12 +50,12 @@ const styles1 = (theme) => ({
 });
 
 export function MySnackbarContent(props) {
-	const { classes, className, message, onClose, variant, ...other } = props;
+	const { classes, className, message, onClose, variant, snackbar, ...other } = props;
 	const Icon = variantIcon[variant];
 
 	return (
 		<SnackbarContent
-			className={classNames(classes[variant], className)}
+			className={classNames(classes[variant], className, classes.snackbar)}
 			aria-describedby="client-snackbar"
 			message={
 				<span id="client-snackbar" className={classes.message}>
@@ -79,9 +82,3 @@ MySnackbarContent.propTypes = {
 };
 
 export const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
-
-const styles2 = (theme) => ({
-	margin: {
-		margin: theme.spacing.unit
-	}
-});
