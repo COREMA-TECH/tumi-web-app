@@ -32,7 +32,7 @@ import {
     ADD_LANGUAGES,
     ADD_MILITARY_SERVICES,
     ADD_SKILL,
-    CREATE_APPLICATION
+    CREATE_APPLICATION, UPDATE_APPLICATION
 } from "../Mutations";
 import Route from "react-router-dom/es/Route";
 
@@ -136,7 +136,7 @@ class VerticalLinearStepper extends Component {
             previousEmploymentPhone: '',
 
             // Application id property state is used to save languages, education, mulitary services, skills
-            applicationId: 0,
+            applicationId: null,
 
             // Languages catalog
             languagesLoaded: []
@@ -214,6 +214,8 @@ class VerticalLinearStepper extends Component {
                     });
 
                     console.log(idApplication);
+
+                    this.handleNext();
                 })
                 .catch(() => {
                     this.setState({
@@ -225,6 +227,57 @@ class VerticalLinearStepper extends Component {
                 });
         });
     };
+
+    updateApplicationInformation = () => {
+        this.setState({
+            insertDialogLoading: true
+        }, () => {
+            this.props.client.mutate({
+                mutation: UPDATE_APPLICATION,
+                variables: {
+                    application: {
+                        id: parseInt(this.state.applicationId),
+                        firstName: this.state.firstName,
+                        middleName: this.state.middleName,
+                        lastName: this.state.lastName,
+                        date: this.state.date,
+                        streetAddress: this.state.streetAddress,
+                        aptNumber: this.state.aptNumber,
+                        city: this.state.city,
+                        state: this.state.state,
+                        zipCode: this.state.zipCode,
+                        homePhone: this.state.homePhone,
+                        cellPhone: this.state.cellPhone,
+                        socialSecurityNumber: this.state.socialSecurityNumber,
+                        birthDay: this.state.birthDay,
+                        car: this.state.car,
+                        typeOfId: parseInt(this.state.typeOfId),
+                        expireDateId: this.state.expireDateId,
+                        emailAddress: this.state.emailAddress,
+                        positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        dateAvailable: this.state.dateAvailable,
+                        scheduleRestrictions: this.state.scheduleRestrictions,
+                        scheduleExplain: this.state.scheduleExplain,
+                        convicted: this.state.convicted,
+                        convictedExplain: this.state.convictedExplain,
+                        comment: this.state.comment
+                    }
+                }
+            })
+                .then(({data}) => {
+                    this.handleNext();
+                })
+                .catch(() => {
+                    this.setState({
+                        insertDialogLoading: false
+                    }, () => {
+                        // Show a error message
+                        alert("Error updating information");
+                    });
+                });
+        });
+    };
+
 
     // To insert languages
     insertLanguagesApplication = () => {
@@ -2268,9 +2321,11 @@ class VerticalLinearStepper extends Component {
                                     // To cancel the default submit event
                                     e.preventDefault();
                                     // Call mutation to create a application
-                                    this.insertApplicationInformation(history);
-                                    this.handleNext();
-                                    console.log("DEBUG");
+                                    if(this.state.applicationId === null) {
+                                        this.insertApplicationInformation(history);
+                                    } else {
+                                        this.updateApplicationInformation();
+                                    }
                                 }}
                             >
                                 {getStepContent(this.state.activeStep, history)}
