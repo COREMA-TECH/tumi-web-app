@@ -2,9 +2,12 @@ import React, {Component} from 'react';
 import './index.css';
 import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
-import {GET_APPLICATION_BY_ID} from "../Queries";
+import {GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "../Queries";
 import {updateApplicationInformation} from "../utils";
 import {UPDATE_APPLICATION} from "../Mutations";
+import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
+import Query from "react-apollo/Query";
 
 class Application extends Component {
     constructor(props) {
@@ -385,37 +388,52 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label">State</span>
-                                            <select
-                                                name="state"
-                                                id="state"
-                                                required
-
-                                                className="form-control"
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        state: e.target.value
-                                                    })
+                                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="state"
+                                                                id="state"
+                                                                required
+                                                                className="form-control"
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        state: e.target.value
+                                                                    })
+                                                                }}
+                                                                value={this.state.state}>
+                                                                <option value="">Select a state</option>
+                                                                {data.getcatalogitem.map((item) => (
+                                                                    <option value={item.Id}>{item.Name}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay/>;
                                                 }}
-                                                value={this.state.state}>
-                                                <option value="">Select a state</option>
-                                            </select>
+                                            </Query>
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label">City</span>
-                                            <select
-                                                name="city"
-                                                id="city"
-                                                required
-
-                                                className="form-control"
-                                                onChange={(e) => {
+                                            <input
+                                                onChange={(event) => {
                                                     this.setState({
-                                                        city: e.target.value
-                                                    })
+                                                        city: event.target.value
+                                                    });
                                                 }}
-                                                value={this.state.city}>
-                                                <option value="">Select a city</option>
-                                            </select>
+                                                value={this.state.city}
+                                                name="city"
+                                                type="text"
+                                                className="form-control"
+                                                required
+                                                min="0"
+                                                maxLength="30"
+                                                minLength="3"
+                                            />
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label">Home Phone</span>
@@ -582,20 +600,35 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span className="primary applicant-card__label">Position Applying For</span>
-                                            <select
-                                                name="position"
-                                                id="position"
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        positionApplyingFor: event.target.value
-                                                    });
+                                            <Query query={GET_POSITIONS_QUERY}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getposition != null && data.getposition.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="city"
+                                                                id="city"
+                                                                onChange={(event) => {
+                                                                    this.setState({
+                                                                        positionApplyingFor: event.target.value
+                                                                    });
+                                                                }}
+                                                                value={this.state.positionApplyingFor}
+                                                                className="form-control"
+                                                            >
+                                                                <option value="">Select a position</option>
+                                                                <option value="0">Open Position</option>
+                                                                {data.getposition.map((item) => (
+                                                                    <option value={item.Id}>{item.Position}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay/>;
                                                 }}
-                                                value={this.state.positionApplyingFor}
-                                                className="form-control"
-                                            >
-                                                <option value="">Select a position</option>
-                                                <option value="0">Open Position</option>
-                                            </select>
+                                            </Query>
                                         </div>
                                         <div className="col-6">
                                             <span
