@@ -267,7 +267,7 @@ class ApplyForm extends Component {
                 <h4 className="ApplyBlock-title">Applicant Information</h4>
                 <div className="row">
                     <div className="col-3">
-                        <span className="primary"> First Name</span>
+                        <span className="primary">First Name</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -311,7 +311,7 @@ class ApplyForm extends Component {
                     </div>
 
                     <div className="col-3">
-                        <span className="primary"> Last Name</span>
+                        <span className="primary">Last Name</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {

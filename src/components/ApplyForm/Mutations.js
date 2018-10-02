@@ -11,6 +11,17 @@ export const CREATE_APPLICATION = gql`
     }
 `;
 
+/**
+ * Mutation to update a application
+ */
+export const UPDATE_APPLICATION = gql`
+    mutation updateApplication($application: inputUpdateApplication) {
+        updateApplication(application: $application) {
+            id
+        }
+    }
+`;
+
 export const ADD_LANGUAGES = gql`
     mutation addApplicantLanguage($application: [inputInsertApplicantLanguage]) {
         addApplicantLanguage(applicantLanguage: $application) {
