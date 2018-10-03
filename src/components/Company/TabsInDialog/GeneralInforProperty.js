@@ -513,7 +513,7 @@ class GeneralInfoProperty extends Component {
 					<div className="row">
 						<div className="col-6">
 							<div className="card-wrapper">
-								<div class="card-form-header grey">General Information</div>
+								<div className="card-form-header grey">General Information</div>
 								<div className="row">
 									<div className="col-6">
 										<span className="primary card-input-label">* Markup</span>
@@ -722,7 +722,7 @@ class GeneralInfoProperty extends Component {
 						</div>
 						<div className="col-6">
 							<div className="card-wrapper">
-								<div class="card-form-header yellow">Legal Docs</div>
+								<div className="card-form-header yellow">Legal Docs</div>
 								<div className="row">
 									<div className="col-6">
 										<span className="primary card-input-label">* Hotel Code</span>
