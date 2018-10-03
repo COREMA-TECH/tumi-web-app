@@ -25,9 +25,7 @@ firebase.initializeApp({
 const httpLink = createHttpLink({
     //uri: 'https://morning-lake-18657.herokuapp.com/graphql'
     uri: 'https://corema-new-api.herokuapp.com/graphql'
-    // uri: 'http://192.168.0.108:4000/graphql'
-    //Url de Produccion
-    // uri: 'http://13.58.18.163:4000/graphql'
+    //uri: 'http://192.168.0.107:4000/graphql'
 });
 
 // To configure Apollo client with link (url) endpoint and cache option

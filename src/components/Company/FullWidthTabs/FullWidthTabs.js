@@ -7,6 +7,7 @@ import GeneralInformation from '../GeneralInformation/GeneralInformation';
 import ContactCompanyForm from '../ContactCompanyForm';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm';
+import Preferences from '../Preferences';
 
 import withGlobalContent from 'Generic/Global';
 
@@ -168,6 +169,13 @@ class CustomizedTabs extends React.Component {
 						showPayRate={true}
 					/>
 				);
+			case 4:
+				return (
+					<Preferences
+						idCompany={this.state.idCompany}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
+				);
 		}
 	};
 
@@ -203,6 +211,12 @@ class CustomizedTabs extends React.Component {
 						disableRipple
 						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
 						label="Positions and Rates"
+						disabled={!this.state.activateTabs}
+					/>
+					<Tab
+						disableRipple
+						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
+						label="Preferences"
 						disabled={!this.state.activateTabs}
 					/>
 				</Tabs>
