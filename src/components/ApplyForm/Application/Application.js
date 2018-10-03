@@ -161,7 +161,7 @@ class Application extends Component {
                     firstName: applicantData.firstName,
                     middleName: applicantData.middleName,
                     lastName: applicantData.lastName,
-                    date: applicantData.date.substring(0,10),
+                    date: applicantData.date.substring(0, 10),
                     streetAddress: applicantData.streetAddress,
                     emailAddress: applicantData.emailAddress,
                     aptNumber: applicantData.aptNumber,
@@ -172,11 +172,11 @@ class Application extends Component {
                     cellPhone: applicantData.cellPhone,
                     socialSecurityNumber: applicantData.socialSecurityNumber,
                     positionApplyingFor: applicantData.positionApplyingFor,
-                    birthDay: applicantData.birthDay.substring(0,10),
+                    birthDay: applicantData.birthDay.substring(0, 10),
                     car: applicantData.car,
                     typeOfId: applicantData.typeOfId,
-                    expireDateId: applicantData.expireDateId.substring(0,10),
-                    dateAvailable: applicantData.dateAvailable.substring(0,10),
+                    expireDateId: applicantData.expireDateId.substring(0, 10),
+                    dateAvailable: applicantData.dateAvailable.substring(0, 10),
                     scheduleRestrictions: applicantData.scheduleRestrictions,
                     scheduleExplain: applicantData.scheduleExplain,
                     convicted: applicantData.convicted,
@@ -196,12 +196,9 @@ class Application extends Component {
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {
         if (document.addEventListener) {
-            document.addEventListener(
-                'invalid',
-                (e) => {
+            document.addEventListener('invalid', (e) => {
                     e.target.className += ' invalid-apply-form';
-                },
-                true
+                }, true
             );
         }
     };
@@ -210,7 +207,7 @@ class Application extends Component {
     removeSkeletonAnimation = () => {
         let inputs, index;
 
-        inputs = document.getElementsByTagName('div');
+        inputs = document.getElementsByTagName('span');
         for (index = 0; index < inputs.length; ++index) {
             inputs[index].classList.remove('skeleton');
         }
@@ -258,7 +255,7 @@ class Application extends Component {
                                 <div className="col-6">
                                     <div className="row">
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label">First Name</span>
+                                            <span className="primary applicant-card__label skeleton">First Name</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -268,7 +265,8 @@ class Application extends Component {
                                                 value={this.state.firstName}
                                                 name="firstName"
                                                 type="text"
-                                                className="form-control "
+                                                className="form-control"
+                                                disabled={!this.state.editing}
                                                 required
                                                 min="0"
                                                 maxLength="50"
@@ -276,7 +274,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">Middle Name</span>
+                                            <span className="primary applicant-card__label skeleton">Middle Name</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -287,13 +285,14 @@ class Application extends Component {
                                                 name="midleName"
                                                 type="text"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="1"
                                             />
                                         </div>
                                         <div className="col-12 ">
-                                            <span className="primary applicant-card__label">Last Name</span>
+                                            <span className="primary applicant-card__label skeleton">Last Name</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -304,6 +303,7 @@ class Application extends Component {
                                                 name="lastName"
                                                 type="text"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 required
                                                 min="0"
                                                 maxLength="50"
@@ -311,7 +311,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-12 ">
-                                            <span className="primary applicant-card__label">Date</span>
+                                            <span className="primary applicant-card__label skeleton">Date</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -322,14 +322,15 @@ class Application extends Component {
                                                 name="date"
                                                 type="date"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 required
-
                                                 min="0"
                                                 maxLength="50"
                                             />
                                         </div>
                                         <div className="col-12 ">
-                                            <span className="primary applicant-card__label">Street Address</span>
+                                            <span
+                                                className="primary applicant-card__label skeleton">Street Address</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -341,14 +342,14 @@ class Application extends Component {
                                                 type="text"
                                                 className="form-control"
                                                 required
-
+                                                disabled={!this.state.editing}
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="5"
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">Apt Number</span>
+                                            <span className="primary applicant-card__label skeleton">Apt Number</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -359,19 +360,21 @@ class Application extends Component {
                                                 name="aptNumber"
                                                 type="number"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="5"
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">Zip Code</span>
+                                            <span className="primary applicant-card__label skeleton">Zip Code</span>
                                             <InputMask
                                                 id="zipCode"
                                                 name="zipCode"
                                                 mask="99999-99999"
                                                 maskChar=" "
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 onChange={(event) => {
                                                     this.setState({
                                                         zipCode: event.target.value
@@ -380,12 +383,11 @@ class Application extends Component {
                                                 value={this.state.zipCode}
                                                 placeholder="99999-99999"
                                                 required
-
                                                 minLength="15"
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">State</span>
+                                            <span className="primary applicant-card__label skeleton">State</span>
                                             <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
@@ -398,6 +400,7 @@ class Application extends Component {
                                                                 id="state"
                                                                 required
                                                                 className="form-control"
+                                                                disabled={!this.state.editing}
                                                                 onChange={(e) => {
                                                                     this.setState({
                                                                         state: e.target.value
@@ -416,7 +419,7 @@ class Application extends Component {
                                             </Query>
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">City</span>
+                                            <span className="primary applicant-card__label skeleton">City</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -427,6 +430,7 @@ class Application extends Component {
                                                 name="city"
                                                 type="text"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 required
                                                 min="0"
                                                 maxLength="30"
@@ -434,7 +438,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">Home Phone</span>
+                                            <span className="primary applicant-card__label skeleton">Home Phone</span>
                                             <InputMask
                                                 id="home-number"
                                                 name="homePhone"
@@ -442,6 +446,7 @@ class Application extends Component {
                                                 maskChar=" "
                                                 value={this.state.homePhone}
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 onChange={(event) => {
                                                     this.setState({
                                                         homePhone: event.target.value
@@ -452,7 +457,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label">Cell Phone</span>
+                                            <span className="primary applicant-card__label skeleton">Cell Phone</span>
                                             <InputMask
                                                 id="cell-number"
                                                 name="cellPhone"
@@ -460,6 +465,7 @@ class Application extends Component {
                                                 maskChar=" "
                                                 value={this.state.cellPhone}
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 onChange={(event) => {
                                                     this.setState({
                                                         cellPhone: event.target.value
@@ -473,13 +479,14 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12 ">
                                             <span
-                                                className="primary applicant-card__label">Social Security Number</span>
+                                                className="primary applicant-card__label skeleton">Social Security Number</span>
                                             <InputMask
                                                 id="socialSecurityNumber"
                                                 name="socialSecurityNumber"
                                                 mask="999-99-9999"
                                                 maskChar=" "
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 onChange={(event) => {
                                                     this.setState({
                                                         socialSecurityNumber: event.target.value
@@ -497,7 +504,7 @@ class Application extends Component {
                                 <div className="col-6">
                                     <div className="row">
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label">Birth Day</span>
+                                            <span className="primary applicant-card__label skeleton">Birth Day</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -508,8 +515,8 @@ class Application extends Component {
                                                 name="birthDay"
                                                 type="date"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 required
-
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="10"
@@ -517,7 +524,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">Do you own transportation?</span>
+                                                className="primary applicant-card__label skeleton">Do you own transportation?</span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -530,6 +537,7 @@ class Application extends Component {
                                                     name="car"
                                                     type="checkbox"
                                                     className="form-control"
+                                                    disabled={!this.state.editing}
                                                     min="0"
                                                     maxLength="50"
                                                     minLength="10"
@@ -539,7 +547,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12">
                                             <span
-                                                className="primary applicant-card__label">Email Address</span>
+                                                className="primary applicant-card__label skeleton">Email Address</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -551,7 +559,7 @@ class Application extends Component {
                                                 type="email"
                                                 className="form-control"
                                                 required
-
+                                                disabled={!this.state.editing}
                                                 min="0"
                                                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                 maxLength="50"
@@ -559,8 +567,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label">Type of ID</span>
+                                            <span className="primary applicant-card__label skeleton">Type of ID</span>
                                             <select name="typeOfID" id="typeOfID" className="form-control"
+                                                    disabled={!this.state.editing}
                                                     onChange={(e) => {
                                                         this.setState({
                                                             typeOfId: e.target.value
@@ -578,7 +587,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">Expire Date ID</span>
+                                                className="primary applicant-card__label skeleton">Expire Date ID</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -590,14 +599,14 @@ class Application extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 required
-
+                                                disabled={!this.state.editing}
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="10"
                                             />
                                         </div>
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label">Position Applying For</span>
+                                            <span className="primary applicant-card__label skeleton">Position Applying For</span>
                                             <Query query={GET_POSITIONS_QUERY}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
@@ -615,6 +624,7 @@ class Application extends Component {
                                                                 }}
                                                                 value={this.state.positionApplyingFor}
                                                                 className="form-control"
+                                                                disabled={!this.state.editing}
                                                             >
                                                                 <option value="">Select a position</option>
                                                                 <option value="0">Open Position</option>
@@ -630,7 +640,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">Ideal Job</span>
+                                                className="primary applicant-card__label skeleton">Ideal Job</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -641,6 +651,7 @@ class Application extends Component {
                                                 name="idealJob"
                                                 type="text"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 min="0"
                                                 minLength="3"
                                                 maxLength="50"
@@ -648,7 +659,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12">
                                             <span
-                                                className="primary applicant-card__label">Date Available</span>
+                                                className="primary applicant-card__label skeleton">Date Available</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -659,15 +670,15 @@ class Application extends Component {
                                                 name="dateAvailable"
                                                 type="date"
                                                 className="form-control"
+                                                disabled={!this.state.editing}
                                                 required
-
                                                 min="0"
                                                 maxLength="50"
                                             />
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">Do you have any schedule restrictions?</span>
+                                                className="primary applicant-card__label skeleton">Do you have any schedule restrictions?</span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -680,13 +691,14 @@ class Application extends Component {
                                                     name="scheduleRestrictions"
                                                     type="checkbox"
                                                     className="form-control"
+                                                    disabled={!this.state.editing}
                                                 />
                                                 <p className="slider round"></p>
                                             </label>
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">If yes, explain</span>
+                                                className="primary applicant-card__label skeleton">If yes, explain</span>
                                             <textarea
                                                 onChange={(event) => {
                                                     this.setState({
@@ -697,13 +709,13 @@ class Application extends Component {
                                                 name="form-control"
                                                 cols="30"
                                                 rows="3"
-
+                                                disabled={!this.state.editing}
                                                 className="form-control textarea-apply-form"
                                             />
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">Have you ever been convicted of a felony?</span>
+                                                className="primary applicant-card__label skeleton">Have you ever been convicted of a felony?</span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -716,13 +728,14 @@ class Application extends Component {
                                                     name="convicted"
                                                     type="checkbox"
                                                     className="form-control"
+                                                    disabled={!this.state.editing}
                                                 />
                                                 <p className="slider round"></p>
                                             </label>
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label">If yes, explain</span>
+                                                className="primary applicant-card__label skeleton">If yes, explain</span>
                                             <textarea
                                                 onChange={(event) => {
                                                     this.setState({
@@ -731,8 +744,8 @@ class Application extends Component {
                                                 }}
                                                 value={this.state.convictedExplain}
                                                 name="form-control"
+                                                disabled={!this.state.editing}
                                                 cols="30"
-
                                                 rows="3"
                                                 className="form-control textarea-apply-form"
                                             />
