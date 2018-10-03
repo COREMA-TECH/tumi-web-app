@@ -158,12 +158,12 @@ You can find the most recent version of this guide <a href="https://github.com/f
     App.js
     App.test.js
     index.css
-    index.js
+    Language.js
     logo.svg
 </code></pre><p>For the project to build, <strong>these files must exist with exact filenames</strong>:</p>
 <ul>
 <li><code>public/index.html</code> is the page template;</li>
-<li><code>src/index.js</code> is the JavaScript entry point.</li>
+<li><code>src/Language.js</code> is the JavaScript entry point.</li>
 </ul>
 <p>You can delete or rename the other files.</p>
 <p>You may create subdirectories inside <code>src</code>. For faster rebuilds, only files inside <code>src</code> are processed by Webpack.<br>
@@ -409,7 +409,7 @@ class Button extends Component {
 </code></pre>
 <p><strong>This is not required for React</strong> but many people find this feature convenient. You can read about the benefits of this approach <a href="https://medium.com/seek-ui-engineering/block-element-modifying-your-javascript-components-d7f99fcab52b">here</a>. However you should be aware that this makes your code less portable to other build tools and environments than Webpack.</p>
 <p>In development, expressing dependencies this way allows your styles to be reloaded on the fly as you edit them. In production, all CSS files will be concatenated into a single minified <code>.css</code> file in the build output.</p>
-<p>If you are concerned about using Webpack-specific semantics, you can put all your CSS right into <code>src/index.css</code>. It would still be imported from <code>src/index.js</code>, but you could always remove that import if you later migrate to a different build tool.</p>
+<p>If you are concerned about using Webpack-specific semantics, you can put all your CSS right into <code>src/index.css</code>. It would still be imported from <code>src/Language.js</code>, but you could always remove that import if you later migrate to a different build tool.</p>
 <h2 id="post-processing-css">Post-Processing CSS</h2>
 <p>This project setup minifies your CSS and adds vendor prefixes to it automatically through <a href="https://github.com/postcss/autoprefixer">Autoprefixer</a> so you don’t need to worry about it.</p>
 <p>For example, this:</p>
@@ -586,7 +586,7 @@ The <code>public</code> folder is useful as a workaround for a number of less co
 <p>Alternatively you may use <code>yarn</code>:</p>
 <pre><code class="lang-sh">yarn add react-bootstrap bootstrap@3
 </code></pre>
-<p>Import Bootstrap CSS and optionally Bootstrap theme CSS in the beginning of your <code>src/index.js</code> file:</p>
+<p>Import Bootstrap CSS and optionally Bootstrap theme CSS in the beginning of your <code>src/Language.js</code> file:</p>
 <pre><code class="lang-js">import &#39;bootstrap/dist/css/bootstrap.css&#39;;
 import &#39;bootstrap/dist/css/bootstrap-theme.css&#39;;
 // Put any other imports below so that CSS from your
@@ -1300,11 +1300,11 @@ that your web app is reliably fast, even on a slow or unreliable network.</p>
 <h3 id="opting-out-of-caching">Opting Out of Caching</h3>
 <p>If you would prefer not to enable service workers prior to your initial
 production deployment, then remove the call to <code>registerServiceWorker()</code>
-from <a href="src/index.js"><code>src/index.js</code></a>.</p>
+from <a href="src/index.js"><code>src/Language.js</code></a>.</p>
 <p>If you had previously enabled service workers in your production deployment and
 have decided that you would like to disable them for all your existing users,
 you can swap out the call to <code>registerServiceWorker()</code> in
-<a href="src/index.js"><code>src/index.js</code></a> first by modifying the service worker import:</p>
+<a href="src/index.js"><code>src/Language.js</code></a> first by modifying the service worker import:</p>
 <pre><code class="lang-javascript">import { unregister } from &#39;./registerServiceWorker&#39;;
 </code></pre>
 <p>and then call <code>unregister()</code> instead.
@@ -1749,7 +1749,7 @@ netlify deploy
 If this doesn’t happen, try one of the following workarounds:</p>
 <ul>
 <li>If your project is in a Dropbox folder, try moving it out.</li>
-<li>If the watcher doesn’t see a file called <code>index.js</code> and you’re referencing it by the folder name, you <a href="https://github.com/facebookincubator/create-react-app/issues/1164">need to restart the watcher</a> due to a Webpack bug.</li>
+<li>If the watcher doesn’t see a file called <code>Language.js</code> and you’re referencing it by the folder name, you <a href="https://github.com/facebookincubator/create-react-app/issues/1164">need to restart the watcher</a> due to a Webpack bug.</li>
 <li>Some editors like Vim and IntelliJ have a “safe write” feature that currently breaks the watcher. You will need to disable it. Follow the instructions in <a href="https://webpack.js.org/guides/development/#adjusting-your-text-editor">“Adjusting Your Text Editor”</a>.</li>
 <li>If your project path contains parentheses, try moving the project to a path without them. This is caused by a <a href="https://github.com/webpack/watchpack/issues/42">Webpack watcher bug</a>.</li>
 <li>On Linux and macOS, you might need to <a href="https://github.com/webpack/docs/wiki/troubleshooting#not-enough-watchers">tweak system settings</a> to allow more watchers.</li>

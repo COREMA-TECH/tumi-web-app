@@ -287,7 +287,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => {}
+			() => { }
 		);
 	};
 	insertExhibit = () => {
@@ -351,6 +351,7 @@ class ExhibitContract extends Component {
 					open={this.state.openModal}
 					onClose={this.cancelContractHandler}
 					aria-labelledby="responsive-dialog-title"
+					style={{ width: '90%', padding: '0px', margin: '0 auto' }}
 				>
 					<DialogTitle style={{ padding: '0px' }}>
 						<div className="card-form-header orange">
@@ -358,8 +359,8 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-								'New Contract Preview'
-							)}
+									'New Contract Preview'
+								)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>

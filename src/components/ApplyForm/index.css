@@ -28,13 +28,18 @@
     padding: .375rem .5rem;
     border-radius: 0 5px 5px 0;
     border: 1px solid green;
-
+    font-size: 1rem;
     transition: all .450s;
 }
 
 .apply-form .input-container--validated .form-control {
     border-radius: 5px 0 0 5px;
     border-right: none;
+}
+
+.apply-form .input-container--validated .form-control--without-validation {
+    border-radius: 5px;
+    border-right: 1px solid #ced4da;
 }
 
 .apply-form input:required:focus:valid,
@@ -77,10 +82,16 @@
     margin-left: 5px;
 }
 
+
 .apply-form .invalid-apply-form:required:invalid + .check-icon {
     border: 1px solid orangered;
     border-left: none;
 }
+
+.ideal-job-form-input:required:valid {
+    border: 1px solid #ced4da !important;
+}
+
 
 .apply-form input:required:invalid + .check-icon {
     background: #ffffff;

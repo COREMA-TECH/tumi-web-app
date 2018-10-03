@@ -1,0 +1,33 @@
+/**
+ * Stepper design
+ */
+.stepper-label {
+    padding: 1em 1.5em;
+    background: #ffffff;
+    border-bottom: 1px solid #f5f5f5;
+    cursor: pointer !important;
+    margin: 0 !important;
+
+    width: 100%;
+}
+
+span[class^="MuiStepConnector-line"] {
+    min-height: 0;
+    height: 0;
+    border-left: none !important;
+}
+
+div[class^="MuiStepConnector-root"],
+div[class^="MuiStepConnector-root"],
+div[class^="MuiStepper-root"] {
+    padding: 0 !important;
+}
+
+.stepper-label:hover {
+    background: rgba(85, 85, 85, 0.1);
+    color: #ffffff !important;
+}
+
+.main-stepper-nav {
+    padding: 0 !important;
+}

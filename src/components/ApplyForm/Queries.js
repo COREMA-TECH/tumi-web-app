@@ -56,3 +56,37 @@ export const GET_LANGUAGES_QUERY = gql`
     }
 `;
 
+/**
+ * Query to get application by id
+ */
+export const GET_APPLICATION_BY_ID = gql`
+    query applications($id: Int!) {
+        applications(id: $id){
+            firstName
+            middleName
+            lastName
+            date
+            streetAddress
+            emailAddress
+            aptNumber
+            city
+            state
+            zipCode
+            homePhone
+            cellPhone
+            socialSecurityNumber
+            positionApplyingFor
+            birthDay
+            car
+            typeOfId
+            expireDateId
+            dateAvailable
+            scheduleRestrictions
+            scheduleExplain
+            convicted
+            convictedExplain
+            comment
+        }
+    }
+`;
+

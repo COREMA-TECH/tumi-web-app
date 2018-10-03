@@ -95,6 +95,7 @@ class VerticalLinearStepper extends Component {
             emailAddress: '',
             positionApplyingFor: 1,
             idealJob: '',
+            idealJobs: [],
             dateAvailable: '',
             scheduleRestrictions: '',
             scheduleExplain: '',
@@ -502,7 +503,6 @@ class VerticalLinearStepper extends Component {
                             <span className="check-icon"/>
                         </div>
                     </div>
-
                     <div className="col-3">
                         <div className="row">
                             <span className="primary">Middle Name</span>
@@ -524,7 +524,6 @@ class VerticalLinearStepper extends Component {
                             <i className="optional"/>
                         </div>
                     </div>
-
                     <div className="col-3">
                         <span className="primary"> Last Name</span>
                         <div className="input-container--validated">
@@ -546,7 +545,6 @@ class VerticalLinearStepper extends Component {
                             <span className="check-icon"/>
                         </div>
                     </div>
-
                     <div className="col-3">
                         <span className="primary"> Date</span>
                         <div className="input-container--validated">
@@ -807,7 +805,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-6">
                         <span className="primary"> Type Of ID</span>
-                        <select name="typeOfID" id="typeOfID" className="form-control" onChange={(e) => {
+                        <select name="typeOfID" id="typeOfID" required className="form-control" onChange={(e) => {
                             this.setState({
                                 typeOfId: e.target.value
                             })
@@ -869,7 +867,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-6">
                         <span className="primary"> Position Applying for</span>
                         <Query query={GET_POSITIONS_QUERY}>
                             {({loading, error, data, refetch, networkStatus}) => {
@@ -902,28 +900,7 @@ class VerticalLinearStepper extends Component {
                         </Query>
                         <i className="optional"/>
                     </div>
-                    <div className="col-4">
-                        <span className="primary"> Ideal Job</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        idealJob: event.target.value
-                                    });
-                                }}
-                                value={this.state.idealJob}
-                                name="idealJob"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                minLength="3"
-                                maxLength="50"
-                            />
-                            <span className="check-icon"/>
-                        </div>
-                    </div>
-                    <div className="col-4">
+                    <div className="col-6">
                         <span className="primary"> Date Available</span>
                         <div className="input-container--validated">
                             <input
@@ -943,7 +920,59 @@ class VerticalLinearStepper extends Component {
                             <span className="check-icon"/>
                         </div>
                     </div>
+                    <form id="ideal-job-form" className="col-12 ideal-job-form" onSubmit={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+
+                        let item = {
+                            description: document.getElementById("idealJob").value,
+                            uuid: uuidv4()
+                        };
+
+                        this.setState((prevState) => ({
+                                idealJobs: [...prevState.idealJobs, item]
+                            }), () => {
+                                document.getElementById("idealJob").value = '';
+                            }
+                        );
+
+                    }}>
+                        <span className="primary">Ideal Job</span>
+                        <div className="row">
+                            <div className="col-12">
+                                <div className="input-container--validated input-container--ideal-job">
+                                    <input
+                                        id="idealJob"
+                                        name="idealJob"
+                                        type="text"
+                                        className="form-control ideal-job-form-input"
+                                        min="0"
+                                        minLength="3"
+                                        maxLength="50"
+                                    />
+                                    <button type="submit" form="ideal-job-form" className="add-ideal-job">Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div className="col-12">
+                        {
+                            this.state.idealJobs.map(idealJobItem => (
+                                <span className="idealJobItem"><span>{idealJobItem.description}</span> <i
+                                    className="far fa-times-circle" onClick={
+                                    () => {
+                                        this.setState((prevState) => ({
+                                            idealJobs: this.state.idealJobs.filter((_, i) => {
+                                                return _.uuid !== idealJobItem.uuid;
+                                            })
+                                        }));
+                                    }
+                                }></i></span>
+                            ))
+                        }
+                    </div>
                 </div>
+                <hr className="separator"/>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Do you have any schedule restrictions? </span>

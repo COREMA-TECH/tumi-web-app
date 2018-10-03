@@ -322,13 +322,13 @@ p {
 .company-th, .contact-th {
   padding-right: 0 !important; }
 
+.social-link {
+  text-decoration: none; }
+
 .modal-overflow {
   overflow-x: scroll; }
   .modal-overflow .list-item-container-scroll {
     min-width: 500px; }
-
-div[class*=MuiDialog-paperWidthSm-] {
-  max-width: 70% !important; }
 
 @media only screen and (max-width: 480px) {
   .select-form-customized {
@@ -600,6 +600,10 @@ div[class*=MuiDialog-paperWidthSm-] {
 .main-contract__content {
   width: 100% !important; }
 
+.Preferences-form .options-company {
+  height: auto !important;
+  padding: 0 !important; }
+
 .Header {
   background-color: #3ca2c8;
   color: #FFF;
@@ -622,14 +626,6 @@ div[class*=MuiDialog-paperWidthSm-] {
   margin: 0 auto;
   max-width: 1200px;
   width: 80%; }
-
-.Apply-container--application {
-    margin: 0;
-    width: 100%;
-    position: relative;
-
-    background: #FAFAFA;
-}
 
 .Apply-emoji {
   text-align: center; }
