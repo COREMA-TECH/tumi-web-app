@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.css';
-import {Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
@@ -11,14 +11,14 @@ class CompanyCard extends React.Component {
         open: false
     };
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
     handleConfirm = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     render() {
@@ -33,10 +33,10 @@ class CompanyCard extends React.Component {
 
         return (
             <Route
-                render={({history}) => (
+                render={({ history }) => (
                     <div className="card">
                         <div className="card__body">
-                            <img src={this.props.imageUrl} className="card-image"/>
+                            <img src={this.props.imageUrl} className="card-image" />
 
                             <div className="card-description">
                                 <p className="company-code">{this.props.code}</p>
@@ -54,12 +54,12 @@ class CompanyCard extends React.Component {
                                 onClick={() => {
                                     history.push({
                                         pathname: '/company/edit',
-                                        state: {idCompany: this.props.idCompany, idContract: this.props.idContract}
+                                        state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
                                     });
                                 }}
                             >
                                 Edit
-                                <EditIcon/>
+                                <EditIcon />
                             </Button>
                             <Button
                                 disabled={true}
