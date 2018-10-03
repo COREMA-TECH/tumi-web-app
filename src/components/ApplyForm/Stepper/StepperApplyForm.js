@@ -199,6 +199,7 @@ class VerticalLinearStepper extends Component {
                         expireDateId: this.state.expireDateId,
                         emailAddress: this.state.emailAddress,
                         positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        idealJob: this.state.idealJob,
                         dateAvailable: this.state.dateAvailable,
                         scheduleRestrictions: this.state.scheduleRestrictions,
                         scheduleExplain: this.state.scheduleExplain,
@@ -256,6 +257,7 @@ class VerticalLinearStepper extends Component {
                         expireDateId: this.state.expireDateId,
                         emailAddress: this.state.emailAddress,
                         positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        idealJob: this.state.idealJob,
                         dateAvailable: this.state.dateAvailable,
                         scheduleRestrictions: this.state.scheduleRestrictions,
                         scheduleExplain: this.state.scheduleExplain,
@@ -807,7 +809,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-6">
                         <span className="primary"> Type Of ID</span>
-                        <select name="typeOfID" id="typeOfID" className="form-control" onChange={(e) => {
+                        <select name="typeOfID" id="typeOfID" required className="form-control" onChange={(e) => {
                             this.setState({
                                 typeOfId: e.target.value
                             })

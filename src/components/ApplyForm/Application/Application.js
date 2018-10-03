@@ -1,6 +1,13 @@
 import React, {Component} from 'react';
 import './index.css';
 import InputMask from "react-input-mask";
+import withApollo from "react-apollo/withApollo";
+import {GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "../Queries";
+import {updateApplicationInformation} from "../utils";
+import {UPDATE_APPLICATION} from "../Mutations";
+import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
+import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
+import Query from "react-apollo/Query";
 
 class Application extends Component {
     constructor(props) {
@@ -73,16 +80,157 @@ class Application extends Component {
             applicationId: null,
 
             // Languages catalog
-            languagesLoaded: []
+            languagesLoaded: [],
+
+            // Editing state properties - To edit general info
+            editing: false
         };
     }
 
+    /**
+     * To update a application by id
+     */
+    updateApplicationInformation = (id) => {
+        this.setState({
+            insertDialogLoading: true
+        }, () => {
+            this.props.client.mutate({
+                mutation: UPDATE_APPLICATION,
+                letiables: {
+                    application: {
+                        id: id,
+                        firstName: this.state.firstName,
+                        middleName: this.state.middleName,
+                        lastName: this.state.lastName,
+                        date: this.state.date,
+                        streetAddress: this.state.streetAddress,
+                        aptNumber: this.state.aptNumber,
+                        city: this.state.city,
+                        state: this.state.state,
+                        zipCode: this.state.zipCode,
+                        homePhone: this.state.homePhone,
+                        cellPhone: this.state.cellPhone,
+                        socialSecurityNumber: this.state.socialSecurityNumber,
+                        birthDay: this.state.birthDay,
+                        car: this.state.car,
+                        typeOfId: parseInt(this.state.typeOfId),
+                        expireDateId: this.state.expireDateId,
+                        emailAddress: this.state.emailAddress,
+                        positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                        idealJob: this.state.idealJob,
+                        dateAvailable: this.state.dateAvailable,
+                        scheduleRestrictions: this.state.scheduleRestrictions,
+                        scheduleExplain: this.state.scheduleExplain,
+                        convicted: this.state.convicted,
+                        convictedExplain: this.state.convictedExplain,
+                        comment: this.state.comment
+                    }
+                }
+            })
+                .then(({data}) => {
+                    this.setState({
+                        editing: false
+                    })
+                })
+                .catch(() => {
+                    this.setState({
+                        insertDialogLoading: false
+                    }, () => {
+                        // Show a error message
+                        alert("Error updating information");
+                    });
+                });
+        });
+    };
+
+    /**
+     * To get applications by id
+     */
+    getApplicationById = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICATION_BY_ID,
+                variables: {
+                    id: id
+                }
+            })
+
+            .then(({data}) => {
+                let applicantData = data.applications[0];
+                this.setState({
+                    firstName: applicantData.firstName,
+                    middleName: applicantData.middleName,
+                    lastName: applicantData.lastName,
+                    date: applicantData.date.substring(0,10),
+                    streetAddress: applicantData.streetAddress,
+                    emailAddress: applicantData.emailAddress,
+                    aptNumber: applicantData.aptNumber,
+                    city: applicantData.city,
+                    state: applicantData.state,
+                    zipCode: applicantData.zipCode,
+                    homePhone: applicantData.homePhone,
+                    cellPhone: applicantData.cellPhone,
+                    socialSecurityNumber: applicantData.socialSecurityNumber,
+                    positionApplyingFor: applicantData.positionApplyingFor,
+                    birthDay: applicantData.birthDay.substring(0,10),
+                    car: applicantData.car,
+                    typeOfId: applicantData.typeOfId,
+                    expireDateId: applicantData.expireDateId.substring(0,10),
+                    dateAvailable: applicantData.dateAvailable.substring(0,10),
+                    scheduleRestrictions: applicantData.scheduleRestrictions,
+                    scheduleExplain: applicantData.scheduleExplain,
+                    convicted: applicantData.convicted,
+                    convictedExplain: applicantData.convictedExplain,
+                    comment: applicantData.comment,
+                    editing: false
+                }, () => {
+                    this.removeSkeletonAnimation();
+                })
+            })
+            .catch(error => {
+                // TODO: replace alert with snackbar error message
+                alert("Error loading applicant information")
+            });
+    };
+
+    // To validate all the inputs and set a red border when the input is invalid
+    validateInvalidInput = () => {
+        if (document.addEventListener) {
+            document.addEventListener(
+                'invalid',
+                (e) => {
+                    e.target.className += ' invalid-apply-form';
+                },
+                true
+            );
+        }
+    };
+
+    // To show skeleton animation in css
+    removeSkeletonAnimation = () => {
+        let inputs, index;
+
+        inputs = document.getElementsByTagName('div');
+        for (index = 0; index < inputs.length; ++index) {
+            inputs[index].classList.remove('skeleton');
+        }
+    };
+
+    componentWillMount() {
+        this.getApplicationById(70);
+    }
 
     render() {
+        this.validateInvalidInput();
+
         return (
             <div className="Apply-container--application">
                 <header className="Header header-application-info">Application</header>
-                <div className="row">
+                <form className="general-info-apply-form row" id="general-info-form" autoComplete="off" onSubmit={
+                    () => {
+                        this.updateApplicationInformation(70)
+                    }
+                }>
                     <div className="col-1"></div>
                     <div className="col-2">
                         <img src="https://cdn3.iconfinder.com/data/icons/outline-style-1/512/profile-512.png"
@@ -92,8 +240,18 @@ class Application extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">General Information</span>
-                                <button className="applicant-card__edit-button">Edit <i className="far fa-edit"></i>
-                                </button>
+                                {
+                                    this.state.editing ? (
+                                        ''
+                                    ) : (
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.setState({
+                                                editing: true
+                                            })
+                                        }}>Edit <i className="far fa-edit"></i>
+                                        </button>
+                                    )
+                                }
                             </div>
                             <br/>
                             <div className="row">
@@ -110,14 +268,14 @@ class Application extends Component {
                                                 value={this.state.firstName}
                                                 name="firstName"
                                                 type="text"
-                                                className="form-control"
+                                                className="form-control "
                                                 required
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="3"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">Middle Name</span>
                                             <input
                                                 onChange={(event) => {
@@ -134,7 +292,7 @@ class Application extends Component {
                                                 minLength="1"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-12 ">
                                             <span className="primary applicant-card__label">Last Name</span>
                                             <input
                                                 onChange={(event) => {
@@ -152,7 +310,7 @@ class Application extends Component {
                                                 minLength="3"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-12 ">
                                             <span className="primary applicant-card__label">Date</span>
                                             <input
                                                 onChange={(event) => {
@@ -165,11 +323,12 @@ class Application extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 required
+
                                                 min="0"
                                                 maxLength="50"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-12 ">
                                             <span className="primary applicant-card__label">Street Address</span>
                                             <input
                                                 onChange={(event) => {
@@ -182,12 +341,13 @@ class Application extends Component {
                                                 type="text"
                                                 className="form-control"
                                                 required
+
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="5"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">Apt Number</span>
                                             <input
                                                 onChange={(event) => {
@@ -204,7 +364,7 @@ class Application extends Component {
                                                 minLength="5"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">Zip Code</span>
                                             <InputMask
                                                 id="zipCode"
@@ -220,42 +380,61 @@ class Application extends Component {
                                                 value={this.state.zipCode}
                                                 placeholder="99999-99999"
                                                 required
+
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">State</span>
-                                            <select
-                                                name="state"
-                                                id="state"
-                                                required
-                                                className="form-control"
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        state: e.target.value
-                                                    })
+                                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="state"
+                                                                id="state"
+                                                                required
+                                                                className="form-control"
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        state: e.target.value
+                                                                    })
+                                                                }}
+                                                                value={this.state.state}>
+                                                                <option value="">Select a state</option>
+                                                                {data.getcatalogitem.map((item) => (
+                                                                    <option value={item.Id}>{item.Name}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay/>;
                                                 }}
-                                                value={this.state.state}>
-                                                <option value="">Select a state</option>
-                                            </select>
+                                            </Query>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">City</span>
-                                            <select
-                                                name="city"
-                                                id="city"
-                                                required
-                                                className="form-control"
-                                                onChange={(e) => {
+                                            <input
+                                                onChange={(event) => {
                                                     this.setState({
-                                                        city: e.target.value
-                                                    })
+                                                        city: event.target.value
+                                                    });
                                                 }}
-                                                value={this.state.city}>
-                                                <option value="">Select a city</option>
-                                            </select>
+                                                value={this.state.city}
+                                                name="city"
+                                                type="text"
+                                                className="form-control"
+                                                required
+                                                min="0"
+                                                maxLength="30"
+                                                minLength="3"
+                                            />
+                                            />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">Home Phone</span>
                                             <InputMask
                                                 id="home-number"
@@ -273,7 +452,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-6 ">
                                             <span className="primary applicant-card__label">Cell Phone</span>
                                             <InputMask
                                                 id="cell-number"
@@ -289,10 +468,11 @@ class Application extends Component {
                                                 }}
                                                 placeholder="+(999) 999-9999"
                                                 required
+
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-12 ">
                                             <span
                                                 className="primary applicant-card__label">Social Security Number</span>
                                             <InputMask
@@ -309,6 +489,7 @@ class Application extends Component {
                                                 value={this.state.socialSecurityNumber}
                                                 placeholder="999-99-9999"
                                                 required
+
                                                 minLength="15"
                                             />
                                         </div>
@@ -329,6 +510,7 @@ class Application extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 required
+
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="10"
@@ -370,6 +552,7 @@ class Application extends Component {
                                                 type="email"
                                                 className="form-control"
                                                 required
+
                                                 min="0"
                                                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                 maxLength="50"
@@ -408,6 +591,7 @@ class Application extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 required
+
                                                 min="0"
                                                 maxLength="50"
                                                 minLength="10"
@@ -415,20 +599,35 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span className="primary applicant-card__label">Position Applying For</span>
-                                            <select
-                                                name="position"
-                                                id="position"
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        positionApplyingFor: event.target.value
-                                                    });
+                                            <Query query={GET_POSITIONS_QUERY}>
+                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (loading) return <LinearProgress/>;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getposition != null && data.getposition.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="city"
+                                                                id="city"
+                                                                onChange={(event) => {
+                                                                    this.setState({
+                                                                        positionApplyingFor: event.target.value
+                                                                    });
+                                                                }}
+                                                                value={this.state.positionApplyingFor}
+                                                                className="form-control"
+                                                            >
+                                                                <option value="">Select a position</option>
+                                                                <option value="0">Open Position</option>
+                                                                {data.getposition.map((item) => (
+                                                                    <option value={item.Id}>{item.Position}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay/>;
                                                 }}
-                                                value={this.state.positionApplyingFor}
-                                                className="form-control"
-                                            >
-                                                <option value="">Select a position</option>
-                                                <option value="0">Open Position</option>
-                                            </select>
+                                            </Query>
                                         </div>
                                         <div className="col-6">
                                             <span
@@ -443,7 +642,6 @@ class Application extends Component {
                                                 name="idealJob"
                                                 type="text"
                                                 className="form-control"
-                                                required
                                                 min="0"
                                                 minLength="3"
                                                 maxLength="50"
@@ -463,6 +661,7 @@ class Application extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 required
+
                                                 min="0"
                                                 maxLength="50"
                                             />
@@ -499,7 +698,7 @@ class Application extends Component {
                                                 name="form-control"
                                                 cols="30"
                                                 rows="3"
-                                                disabled
+
                                                 className="form-control textarea-apply-form"
                                             />
                                         </div>
@@ -534,7 +733,7 @@ class Application extends Component {
                                                 value={this.state.convictedExplain}
                                                 name="form-control"
                                                 cols="30"
-                                                disabled
+
                                                 rows="3"
                                                 className="form-control textarea-apply-form"
                                             />
@@ -542,12 +741,35 @@ class Application extends Component {
                                     </div>
                                 </div>
                             </div>
+                            {
+                                this.state.editing ? (
+                                    <div className="applicant-card__footer">
+                                        <button
+                                            className="applicant-card__cancel-button"
+                                            onClick={
+                                                () => {
+                                                    this.getApplicationById(70);
+                                                }
+                                            }
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="applicant-card__save-button">
+                                            Save
+                                        </button>
+                                    </div>
+                                ) : (
+                                    ''
+                                )
+                            }
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         );
     }
 }
 
-export default Application;
+export default withApollo(Application);

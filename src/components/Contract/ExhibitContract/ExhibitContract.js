@@ -287,7 +287,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => { }
+			() => {}
 		);
 	};
 	insertExhibit = () => {
@@ -358,13 +358,17 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-									'New Contract Preview'
-								)}
+								'New Contract Preview'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
-							<iframe src={`${this.props.baseUrl}/public/Contract_${this.props.contractname}.pdf`} width="100%" height="100%"></iframe>
+							<iframe
+								src={`${this.context.baseUrl}/public/Contract_${this.props.contractname}.pdf`}
+								width="100%"
+								height="100%"
+							/>
 						</div>
 					</DialogContent>
 					<DialogActions>
@@ -569,9 +573,12 @@ class ExhibitContract extends Component {
 					</div>
 				</div>
 				<iframe id="ifmcontentstoprint" allowtransparency="true" />
-			</div >
+			</div>
 		);
 	}
+	static contextTypes = {
+		baseUrl: PropTypes.string
+	};
 }
 
 export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));
