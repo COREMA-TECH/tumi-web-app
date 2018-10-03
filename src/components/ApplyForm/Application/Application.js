@@ -219,7 +219,9 @@ class Application extends Component {
             <div className="Apply-container--application">
                 <header className="Header header-application-info">Application</header>
                 <form className="general-info-apply-form row" id="general-info-form" autoComplete="off" onSubmit={
-                    () => {
+                    (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                         this.updateApplicationInformation(70)
                     }
                 }>
@@ -382,7 +384,6 @@ class Application extends Component {
                                             <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         return (
@@ -602,7 +603,6 @@ class Application extends Component {
                                             <Query query={GET_POSITIONS_QUERY}>
                                                 {({loading, error, data, refetch, networkStatus}) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (loading) return <LinearProgress/>;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getposition != null && data.getposition.length > 0) {
                                                         return (

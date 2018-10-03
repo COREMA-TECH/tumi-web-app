@@ -62,6 +62,47 @@ body {
     margin: .3em;
 }
 
+.idealJobItem {
+    width: fit-content;
+    background: rgba(65, 175, 215, 0.10);
+    color: #41afd7;
+
+    padding: .3em 1em;
+    border-radius: 50px;
+    margin-right: 5px;
+}
+
+.idealJobItem i {
+    margin-left: 10px;
+    font-weight: 100;
+    cursor: pointer;
+    position: relative;
+
+    transition: all .450s;
+}
+
+.idealJobItem i:hover {
+    bottom: 1px;
+}
+
+
+.input-container--ideal-job {
+    display: flex;
+}
+
+
+.input-container--ideal-job .add-ideal-job {
+    background: #41afd7;
+    border: 1px solid #41afd7;
+    color: #ffffff;
+    padding: .375rem .75rem;
+    border-radius: 0 5px 5px 0;
+    font-size: 1rem;
+    cursor: pointer;
+
+    outline: none;
+}
+
 
 /**
  * Switch design
