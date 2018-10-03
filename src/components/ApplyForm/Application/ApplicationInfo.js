@@ -42,7 +42,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['General Information', 'Languages', 'Education', 'Previous Employment', 'Military Service', 'Skills', 'Disclaimer'];
+    return ['General Information', 'Languages', 'Education', 'Previous Employment', 'Military Service', 'Skills'];
 }
 
 class VerticalLinearStepper extends Component {
@@ -86,7 +86,7 @@ class VerticalLinearStepper extends Component {
                 case 0:
                     return <Application applicationId={70}/>;
                 case 1:
-                    return <Language />;
+                    return <Language applicationId={70}/>;
                 case 2:
                     return 'Step 2';
                 case 3:

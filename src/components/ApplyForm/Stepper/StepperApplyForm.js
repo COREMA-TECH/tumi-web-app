@@ -566,7 +566,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row form-section">
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
                         <div className="input-container--validated">

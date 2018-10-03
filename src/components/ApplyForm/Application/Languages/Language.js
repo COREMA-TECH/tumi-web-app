@@ -1,22 +1,236 @@
 import React, {Component} from 'react';
 import '../index.css';
+import languageLevelsJSON from "../../data/languagesLevels";
+import Button from "@material-ui/core/Button/Button";
+import {GET_APPLICATION_LANGUAGES_BY_ID, GET_LANGUAGES_QUERY} from "../../Queries";
+import withApollo from "react-apollo/withApollo";
+
+const uuidv4 = require('uuid/v4');
 
 class Language extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
             // Editing state properties - To edit general info
-            editing: false
+            editing: false,
+            languages: [],
+            languagesLoaded: []
         }
     }
 
+    // To get a list of languages saved from API
+    getLanguagesList = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICATION_LANGUAGES_BY_ID,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                this.setState({
+                    languages: data.applications[0].languages
+                })
+            })
+            .catch();
+    };
+
+    // To get a list of languages from API
+    getAllLanguagesList = () => {
+        this.props.client
+            .query({
+                query: GET_LANGUAGES_QUERY
+            })
+            .then(({data}) => {
+                this.setState({
+                    languagesLoaded: data.getcatalogitem
+                })
+            })
+            .catch();
+    };
+
+    componentWillMount() {
+        this.getAllLanguagesList();
+        this.getLanguagesList(this.props.applicationId);
+    }
+
     render() {
+
+        // To render the Languages Section
+        let renderlanguagesSection = () => (
+            <div>
+                {this.state.languages.length > 0 ? (
+                    <div className="skills-container skills-container--header">
+                        <div className="row">
+                            <div className="col-3">
+                                <span>Language Name</span>
+                            </div>
+                            <div className="col-4">
+                                <span>Conversation</span>
+                            </div>
+                            <div className="col-4">
+                                <span>Writing</span>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    ''
+                )}
+
+                {this.state.languages.map((languageItem) => (
+                    <div key={uuidv4()} className="skills-container">
+                        <div className="row">
+                            <div className="col-3">
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
+
+                                        if (item.Id == languageItem.language) {
+                                            return item.Name.trim();
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-4">
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.conversation) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-4">
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.writing) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-1">
+                                <Button
+                                    className="deleteSkillSection"
+                                    onClick={() => {
+                                        this.setState((prevState) => ({
+                                            languages: this.state.languages.filter((_, i) => {
+                                                console.log(this.state.languages);
+                                                return _.uuid !== languageItem.uuid;
+                                            })
+                                        }));
+                                    }}
+                                >
+                                    x
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                <br/>
+                <br/>
+                {this.state.languages.length > 0 ? <hr/> : ''}
+                <form
+                    className="row"
+                    id="form-language"
+                    autoComplete="off"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        let item = {
+                            uuid: uuidv4(),
+                            ApplicationId: this.state.applicationId,
+                            language: document.getElementById('nameLanguage').value,
+                            writing: parseInt(document.getElementById('writingLanguage').value),
+                            conversation: parseInt(document.getElementById('conversationLanguage').value)
+                        };
+                        this.setState(
+                            (prevState) => ({
+                                open: false,
+                                languages: [...prevState.languages, item]
+                            }),
+                            () => {
+                                document.getElementById('form-language').reset();
+                                document.getElementById('writingLanguage').classList.remove('invalid-apply-form');
+                                document.getElementById('conversationLanguage').classList.remove('invalid-apply-form');
+                                document.getElementById('nameLanguage').classList.remove('invalid-apply-form');
+                            }
+                        );
+                    }}
+                >
+                    <div className="col-4">
+                        <span className="primary"> Languages</span>
+                        <select
+                            id="nameLanguage"
+                            name="languageName"
+                            required
+                            className="form-control"
+                            form="form-language">
+                            <option value="">Select an option</option>
+                            {this.state.languagesLoaded.map((item) => (
+                                <option value={item.Id}>{item.Name}</option>
+                            ))}
+                        </select>
+
+                        {/*<Query query={GET_LANGUAGES_QUERY}>*/}
+                        {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                        {/*if (loading) return <LinearProgress/>;*/}
+                        {/*if (error) return <p>Error </p>;*/}
+                        {/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
+                        {/*return (*/}
+                        {/**/}
+                        {/*);*/}
+                        {/*}*/}
+                        {/*return <SelectNothingToDisplay/>;*/}
+                        {/*}}*/}
+                        {/*</Query>*/}
+                        {/*<input*/}
+                        <span className="check-icon"/>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary"> Conversation</span>
+                        <select
+                            required
+                            id="conversationLanguage"
+                            form="form-language"
+                            name="conversationLanguage"
+                            className="form-control"
+                        >
+                            <option value="">Select an option</option>
+                            {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                        </select>
+                        <span className="check-icon"/>
+                    </div>
+                    <div className="col-3">
+                        <span className="primary"> Writing</span>
+                        <select
+                            required
+                            id="writingLanguage"
+                            form="form-language"
+                            name="writingLanguage"
+                            className="form-control"
+                        >
+                            <option value="">Select an option</option>
+                            {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                        </select>
+                        <span className="check-icon"/>
+                    </div>
+                    <div className="col-2">
+                        <br/>
+                        <Button type="submit" form="form-language" className="save-skill-button">
+                            Add
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        );
+
         return (
             <div className="Apply-container--application">
                 <div className="row">
-                    <div className="col-2"></div>
-                    <div className="col-8">
+                    <div className="col-1"></div>
+                    <div className="col-10">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Languages</span>
@@ -34,7 +248,9 @@ class Language extends Component {
                                 }
                             </div>
                             <div className="row">
-
+                                {
+                                    renderlanguagesSection()
+                                }
                             </div>
                             {
                                 this.state.editing ? (
@@ -73,4 +289,4 @@ class Language extends Component {
     }
 }
 
-export default Language;
+export default withApollo(Language);
