@@ -130,36 +130,37 @@ class Login extends Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				if (data.data.getvalid_users.length == 1) {
-					if (data.data.getvalid_users[0].IsActive == 0) {
+				if (data.data.getvalid_users) {
+					const user = data.data.getvalid_users;
+					if (user.IsActive == 0) {
 						sessionStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
 						this.setState({ loadingLogin: false });
 					} else {
-						sessionStorage.setItem('LoginId', data.data.getvalid_users[0].Id);
-						sessionStorage.setItem('FullName', data.data.getvalid_users[0].Full_Name);
+						sessionStorage.setItem('LoginId', user.Id);
+						sessionStorage.setItem('FullName', user.Full_Name);
 
-						if (data.data.getvalid_users[0].IsAdmin == 1) {
+						if (user.IsAdmin == 1) {
 							sessionStorage.setItem('IsAdmin', true);
 						} else {
 							sessionStorage.setItem('IsAdmin', false);
 						}
-						if (data.data.getvalid_users[0].AllowEdit == 1) {
+						if (user.AllowEdit == 1) {
 							sessionStorage.setItem('AllowEdit', true);
 						} else {
 							sessionStorage.setItem('AllowEdit', false);
 						}
-						if (data.data.getvalid_users[0].AllowDelete == 1) {
+						if (user.AllowDelete == 1) {
 							sessionStorage.setItem('AllowDelete', true);
 						} else {
 							sessionStorage.setItem('AllowDelete', false);
 						}
-						if (data.data.getvalid_users[0].AllowInsert == 1) {
+						if (user.AllowInsert == 1) {
 							sessionStorage.setItem('AllowInsert', true);
 						} else {
 							sessionStorage.setItem('AllowInsert', false);
 						}
-						if (data.data.getvalid_users[0].AllowExport == 1) {
+						if (user.AllowExport == 1) {
 							sessionStorage.setItem('AllowExport', true);
 						} else {
 							sessionStorage.setItem('AllowExport', false);
