@@ -71,7 +71,7 @@ const withGlobalContent = (WrappedComponent) => {
 		};
 
 		getChildContext = () => ({
-			baseUrl: 'http://192.168.0.108:4000'
+			baseUrl: 'http://13.58.18.163:4000'
 		});
 	};
 };
