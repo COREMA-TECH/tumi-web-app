@@ -6,7 +6,7 @@ import Private from '../Private/Private';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import ApplyFormMessage from '../ApplyForm/ApplyFormMessage';
 import StepperApplyForm from "../ApplyForm/Stepper/StepperApplyForm";
-import Application from "../ApplyForm/Application/Application";
+import ApplicationInfo from "../ApplyForm/Application/ApplicationInfo";
 
 class Main extends Component {
     LoginId = sessionStorage.getItem('LoginId');
@@ -38,7 +38,7 @@ class Main extends Component {
         return (
             <div>
                 <Route path="/login" component={Login}/>
-                <Route path="/application/info" component={Application}/>
+                <Route path="/application/info" component={ApplicationInfo}/>
                 <PrivateRoute path="/employment-application" component={StepperApplyForm}/>
                 <PrivateRoute path="/employment-application-message" component={ApplyFormMessage}/>
                 <PrivateRoute path="/home" component={Private}/>
