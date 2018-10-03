@@ -159,7 +159,7 @@ class Preferences extends React.Component {
                     <div className="row">
                         <div className="col-4">
                             <div className="card-wrapper">
-                                <div className="card-form-header yellow">Legal Docs</div>
+                                <div className="card-form-header yellow">Lunch Preferences</div>
                                 <div className="row">
                                     <div className="col-12">
                                         <div className="col-6">
