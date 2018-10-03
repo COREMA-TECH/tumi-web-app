@@ -432,7 +432,6 @@ class Application extends Component {
                                                 maxLength="30"
                                                 minLength="3"
                                             />
-                                            />
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label">Home Phone</span>
