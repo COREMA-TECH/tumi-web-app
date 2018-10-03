@@ -107,6 +107,12 @@ class Login extends Component {
 		}
 	};
 
+	handleKeyPress = event => {
+		if (event.key == 'Enter') {
+			this.handleSubmit(event);
+		}
+	};
+
 	// To check valid credentials and empty fields
 	checkInputs() {
 		return this.state.username && this.state.pass;
@@ -237,6 +243,7 @@ class Login extends Component {
 										onChange={(text) => {
 											this.setState({ pass: text });
 										}}
+										onKeyPress={this.handleKeyPress}
 									/>
 									<span className="focus-input100" data-symbol="&#xf190;" />
 								</div>
@@ -255,6 +262,7 @@ class Login extends Component {
 										disabled={this.state.loadingLogin}
 										value="Login"
 										onClick={this.handleSubmit}
+
 									>
 										Login
 									</Button>
@@ -268,15 +276,15 @@ class Login extends Component {
 								</div>
 
 								<div className="flex-c-m">
-									<a href="#" className="login100-social-item_bg1">
+									<a href="#" className="login100-social-item_bg1 social-link">
 										<i className="fa fa-facebook" />
 									</a>
 
-									<a href="#" className="login100-social-item_bg2">
+									<a href="#" className="login100-social-item_bg2 social-link">
 										<i className="fa fa-twitter" />
 									</a>
 
-									<a href="#" className="login100-social-item_bg3">
+									<a href="#" className="login100-social-item_bg3 social-link">
 										<i className="fa fa-google" />
 									</a>
 								</div>
@@ -300,12 +308,12 @@ const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 			1 === 1 ? (
 				<Component {...props} />
 			) : (
-				<Redirect
-					to={{
-						pathname: '/login',
-						state: { from: props.location }
-					}}
-				/>
-			)}
+					<Redirect
+						to={{
+							pathname: '/login',
+							state: { from: props.location }
+						}}
+					/>
+				)}
 	/>
 );

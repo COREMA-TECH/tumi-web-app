@@ -322,6 +322,9 @@ p {
 .company-th, .contact-th {
   padding-right: 0 !important; }
 
+.social-link {
+  text-decoration: none; }
+
 .modal-overflow {
   overflow-x: scroll; }
   .modal-overflow .list-item-container-scroll {
@@ -596,6 +599,10 @@ p {
 
 .main-contract__content {
   width: 100% !important; }
+
+.Preferences-form .options-company {
+  height: auto !important;
+  padding: 0 !important; }
 
 .Header {
   background-color: #3ca2c8;
