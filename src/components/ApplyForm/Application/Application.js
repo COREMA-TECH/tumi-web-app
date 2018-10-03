@@ -96,7 +96,7 @@ class Application extends Component {
         }, () => {
             this.props.client.mutate({
                 mutation: UPDATE_APPLICATION,
-                letiables: {
+                variables: {
                     application: {
                         id: id,
                         firstName: this.state.firstName,
@@ -132,13 +132,8 @@ class Application extends Component {
                         editing: false
                     })
                 })
-                .catch(() => {
-                    this.setState({
-                        insertDialogLoading: false
-                    }, () => {
-                        // Show a error message
-                        alert("Error updating information");
-                    });
+                .catch((error) => {
+                    alert("Error updating information: " + error);
                 });
         });
     };
