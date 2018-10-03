@@ -228,11 +228,7 @@ class Application extends Component {
                         this.updateApplicationInformation(70)
                     }
                 }>
-                    <div className="col-1"></div>
-                    <div className="col-2">
-                        <img src="https://cdn3.iconfinder.com/data/icons/outline-style-1/512/profile-512.png"
-                             alt="Avatar" className="applicant-avatar"/>
-                    </div>
+                    <div className="col-2"></div>
                     <div className="col-8">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
@@ -501,6 +497,7 @@ class Application extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                <div className="linear-border"></div>
                                 <div className="col-6">
                                     <div className="row">
                                         <div className="col-6">
