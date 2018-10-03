@@ -50,6 +50,7 @@
 .applicant-card__title {
     color: #0092BD;
     font-weight: 100 !important;
+    font-size: 1.4em;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
@@ -63,7 +64,7 @@
     outline: none;
 
     transition: all .450s;
-    font-size: .85em;
+    font-size: .9em;
     font-weight: 100 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
@@ -94,35 +95,46 @@
 }
 
 .applicant-card__label {
+    width: 100%;
     font-size: .85em;
     font-weight: 100 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
+.linear-border {
+    width: 100%;
+    height: 100%;
+    background: red;
+}
+
 .form-control {
+    transition: all .450s;
     font-weight: 100 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.form-control:focus {
+    border: 1px solid #0092BD;
 }
 
 .general-info-apply-form input:disabled,
 .general-info-apply-form select:disabled,
 .general-info-apply-form textarea:disabled {
-    background: rgba(206, 212, 218, 0.35) !important;
-    border: 1px solid #ced4da !important;
-    cursor: not-allowed;
+    background: #ffffff !important;
+    border: 1px solid #ffffff !important;
+    border-bottom: 1px solid #efefef !important;
+    color: #999;
 }
 
 select {
     height: 36px;
 }
 
-
 /** Skeleton effect **/
 .skeleton {
     position: relative;
     overflow: hidden;
     width: 100%;
-    background: #ffffff;
 }
 
 .skeleton::before {
@@ -132,8 +144,8 @@ select {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #dedede;
-
+    background: #dedede !important;
+    border-radius: 5px;
     z-index: 2000;
 }
 
@@ -144,6 +156,7 @@ select {
     left: 0;
     width: 100%;
     height: 100%;
+    border-radius: 5px;
     background: linear-gradient(90deg, #dedede, #cccccc, #dedede);
     animation: progress 1s ease-in-out infinite;
 
@@ -152,9 +165,9 @@ select {
 
 @keyframes progress {
     0% {
-        transform: translate3d(-100%, 0, 0);
+        transform: translate3d(0%, 0, 0);
     }
     100% {
-        transform: translate3d(100%, 0, 0);
+        transform: translate3d(0%, 0, 0);
     }
 }
