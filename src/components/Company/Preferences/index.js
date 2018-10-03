@@ -155,41 +155,54 @@ class Preferences extends React.Component {
     render() {
         return (
             <div className="container">
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.handleSubmit} className="Preferences-form">
                     <div className="row">
                         <div className="col-4">
                             <div className="card-wrapper">
                                 <div className="card-form-header yellow">Legal Docs</div>
                                 <div className="row">
                                     <div className="col-12">
-                                        <label className="primary">
-                                            Charge Lunch Hours?
-                                        </label>
-                                        <br />
-                                        <input type="checkbox" checked={this.state.charge} name="charge" onChange={this.handleChange} />
+                                        <div className="col-6">
+                                            <label className="primary card-input-label">
+                                                Charge Lunch Hours?
+                                            </label>
+                                        </div>
+                                        <div className="col-6">
+                                            <input type="checkbox" checked={this.state.charge} name="charge" onChange={this.handleChange} />
+                                        </div>
                                     </div>
                                     <div className="col-12">
-                                        <label className="primary">
-                                            Period
-                                        </label>
-                                        <CatalogItem
-                                            update={(id) => {
-                                                this.setState({ period: id })
-                                            }}
-                                            PeriodId={11}
-                                            name="period"
-                                            value={this.state.period}
-                                        >
-                                        </CatalogItem>
+                                        <div className="col-6">
+                                            <label className="primary card-input-label">
+                                                Period
+                                            </label>
+                                        </div>
+                                        <div className="col-6">
+                                            <CatalogItem
+                                                update={(id) => {
+                                                    this.setState({ period: id })
+                                                }}
+                                                PeriodId={11}
+                                                name="period"
+                                                value={this.state.period}
+                                            >
+                                            </CatalogItem>
+                                        </div>
                                     </div>
                                     <div className="col-12">
-                                        <label className="primary">
-                                            Amount
-                                        </label>
-                                        <input type="number" name="amount" value={this.state.amount} className="form-control" onChange={this.handleChange} />
+                                        <div className="col-6">
+                                            <label className="primary card-input-label">
+                                                Amount
+                                            </label>
+                                        </div>
+                                        <div className="col-6">
+                                            <input type="number" name="amount" value={this.state.amount} className="form-control" onChange={this.handleChange} />
+                                        </div>
                                     </div>
                                     <div className="col-12">
-                                        <input className="btn btn-success" type="submit" value="Save" />
+                                        <div className="options-company">
+                                            <input className="btn btn-success edit-company-button" type="submit" value="Save" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

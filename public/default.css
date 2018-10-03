@@ -600,6 +600,10 @@ p {
 .main-contract__content {
   width: 100% !important; }
 
+.Preferences-form .options-company {
+  height: auto !important;
+  padding: 0 !important; }
+
 .Header {
   background-color: #3ca2c8;
   color: #FFF;
