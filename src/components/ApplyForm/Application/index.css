@@ -1,3 +1,6 @@
+/**
+ + Application design
+ */
 .applicant-avatar {
     width: 180px;
     height: 180px;
@@ -11,13 +14,10 @@
     min-height: 10vh;
     background: #ffffff;
     border-radius: 8px;
-
     overflow: hidden;
     margin: .5em;
     box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
-
     font-weight: 100 !important;
-
     transition: all .450s;
 }
 
@@ -111,10 +111,6 @@
     transition: all .450s;
     font-weight: 100 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
-}
-
-.form-control:focus {
-    border: 1px solid #0092BD;
 }
 
 .general-info-apply-form input:disabled,

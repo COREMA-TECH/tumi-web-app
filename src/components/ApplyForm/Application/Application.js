@@ -5,7 +5,6 @@ import withApollo from "react-apollo/withApollo";
 import {GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "../Queries";
 import {updateApplicationInformation} from "../utils";
 import {UPDATE_APPLICATION} from "../Mutations";
-import LinearProgress from "@material-ui/core/es/LinearProgress/LinearProgress";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 
@@ -117,7 +116,6 @@ class Application extends Component {
                         expireDateId: this.state.expireDateId,
                         emailAddress: this.state.emailAddress,
                         positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                        idealJob: this.state.idealJob,
                         dateAvailable: this.state.dateAvailable,
                         scheduleRestrictions: this.state.scheduleRestrictions,
                         scheduleExplain: this.state.scheduleExplain,
@@ -209,7 +207,7 @@ class Application extends Component {
     };
 
     componentWillMount() {
-        this.getApplicationById(70);
+        this.getApplicationById(this.props.applicationId);
     }
 
     render() {
@@ -217,7 +215,6 @@ class Application extends Component {
 
         return (
             <div className="Apply-container--application">
-                <header className="Header header-application-info">Application</header>
                 <form className="general-info-apply-form row" id="general-info-form" autoComplete="off" onSubmit={
                     (e) => {
                         e.preventDefault();
@@ -752,7 +749,7 @@ class Application extends Component {
                                             className="applicant-card__cancel-button"
                                             onClick={
                                                 () => {
-                                                    this.getApplicationById(70);
+                                                    this.getApplicationById(this.props.applicationId);
                                                 }
                                             }
                                         >
