@@ -50,7 +50,8 @@ class VerticalLinearStepper extends Component {
         super(props);
 
         this.state = {
-            activeStep: 0
+            activeStep: 0,
+            applicationId: null
         }
     }
 
@@ -74,6 +75,9 @@ class VerticalLinearStepper extends Component {
 
     componentWillMount() {
         // Get id of the application and pass to the components
+        this.setState({
+            applicationId: this.props.location.state.ApplicationId
+        })
     }
 
     render() {
@@ -84,9 +88,9 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application applicationId={70}/>;
+                    return <Application applicationId={this.state.applicationId}/>;
                 case 1:
-                    return <Language applicationId={70}/>;
+                    return <Language applicationId={this.state.applicationId}/>;
                 case 2:
                     return 'Step 2';
                 case 3:
