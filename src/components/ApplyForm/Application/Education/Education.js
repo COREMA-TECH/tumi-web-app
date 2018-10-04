@@ -43,8 +43,8 @@ class Education extends Component {
     // To get a list of languages saved from API
     removeEducationById = (id) => {
         this.props.client
-            .query({
-                query: REMOVE_APPLICANT_EDUCATION,
+            .mutate({
+                mutation: REMOVE_APPLICANT_EDUCATION,
                 variables: {
                     id: id
                 }
@@ -222,6 +222,7 @@ class Education extends Component {
                                             })
                                         }), () => {
                                             if(schoolItem.id !== undefined){
+                                                alert(typeof schoolItem.id);
                                                 this.removeEducationById(schoolItem.id)
                                             }
                                         });
