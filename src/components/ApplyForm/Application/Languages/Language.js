@@ -229,8 +229,7 @@ class Language extends Component {
         return (
             <div className="Apply-container--application">
                 <div className="row">
-                    <div className="col-1"></div>
-                    <div className="col-10">
+                    <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Languages</span>

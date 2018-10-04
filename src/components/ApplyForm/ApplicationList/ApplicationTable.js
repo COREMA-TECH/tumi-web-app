@@ -12,13 +12,11 @@ import Table from '@material-ui/core/Table/Table';
 import TableHead from '@material-ui/core/TableHead/TableHead';
 import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableBody from '@material-ui/core/TableBody/TableBody';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
-import EditIcon from '@material-ui/icons/Edit';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
