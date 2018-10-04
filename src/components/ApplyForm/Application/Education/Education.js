@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import withApollo from "react-apollo/withApollo";
 import studyTypes from "../../data/studyTypes";
 import Button from "@material-ui/core/Button/Button";
-import {GET_APPLICATION_EDUCATION_BY_ID, GET_APPLICATION_LANGUAGES_BY_ID} from "../../Queries";
+import {GET_APPLICATION_EDUCATION_BY_ID} from "../../Queries";
 import {ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION} from "../../Mutations";
 
 const uuidv4 = require('uuid/v4');
@@ -194,10 +194,10 @@ class Education extends Component {
                                 <span>{schoolItem.educationAddress}</span>
                             </div>
                             <div className="col-2">
-                                <span>{schoolItem.startDate.substring(0,10)}</span>
+                                <span>{schoolItem.startDate.substring(0, 10)}</span>
                             </div>
                             <div className="col-2">
-                                <span>{schoolItem.endDate.substring(0,10)}</span>
+                                <span>{schoolItem.endDate.substring(0, 10)}</span>
                             </div>
                             <div className="col-1">
                                 <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
@@ -211,8 +211,7 @@ class Education extends Component {
                                     })}
 								</span>
                             </div>
-                            {
-                                this.state.editing ? (<div className="col-1">
+                            <div className="col-1">
                                 <span
                                     className="delete-school-button"
                                     onClick={() => {
@@ -221,7 +220,7 @@ class Education extends Component {
                                                 return _.uuid !== schoolItem.uuid;
                                             })
                                         }), () => {
-                                            if(schoolItem.id !== undefined){
+                                            if (schoolItem.id !== undefined) {
                                                 this.removeEducationById(schoolItem.id)
                                             }
                                         });
@@ -229,8 +228,7 @@ class Education extends Component {
                                 >
                                     <i className="fas fa-trash-alt"></i>
                                 </span>
-                                </div>) : ''
-                            }
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -349,7 +347,8 @@ class Education extends Component {
                                     <label className="primary">Degree</label>
                                     {this.state.graduated ? (
                                         <div className="input-container--validated">
-                                            <select form="education-form" name="degree" id="degree" className="form-control">
+                                            <select form="education-form" name="degree" id="degree"
+                                                    className="form-control">
                                                 <option value="">Select an option</option>
                                                 {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                             </select>
@@ -401,7 +400,7 @@ class Education extends Component {
                                                 this.setState({
                                                     editing: true
                                                 })
-                                            }}>Edit <i className="far fa-edit"></i>
+                                            }}>Add <i className="fas fa-plus"></i>
                                             </button>
                                         )
                                     }
@@ -418,9 +417,15 @@ class Education extends Component {
                                                 className="applicant-card__cancel-button"
                                                 onClick={
                                                     () => {
-                                                        this.setState({
-                                                            editing: false
-                                                        })
+                                                        this.setState((prevState) => ({
+                                                            schools: this.state.schools.filter((_, i) => {
+                                                                return _.id !== undefined;
+                                                            })
+                                                        }), () => {
+                                                            this.setState({
+                                                                editing: false
+                                                            });
+                                                        });
                                                     }
                                                 }
                                             >
