@@ -27,6 +27,10 @@ import Button from '@material-ui/core/Button';
 import withGlobalContent from 'Generic/Global';
 import { flattenSelections } from 'apollo-utilities';
 
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -63,6 +67,22 @@ const styles = (theme) => ({
 	}
 });
 
+/**
+ *  CONFIGURATION OF APOLLO CLIENT
+ */
+// Endpoint URL
+const loginHttpLink = createHttpLink({
+	//uri: 'https://corema-new-api.herokuapp.com/graphql'
+	uri: 'https://corema-new-api.herokuapp.com/login'
+	//uri: 'http://localhost:4000/login'
+});
+
+// To configure Apollo client with link (url) endpoint and cache option
+const loginClient = new ApolloClient({
+	link: loginHttpLink,
+	cache: new InMemoryCache()
+});
+
 class Login extends Component {
 	// var result;
 	constructor(props) {
@@ -90,6 +110,7 @@ class Login extends Component {
 				AllowInsert
 				AllowExport
 				IsActive
+				Token
 			}
 		}
 	`;
@@ -107,7 +128,7 @@ class Login extends Component {
 		}
 	};
 
-	handleKeyPress = event => {
+	handleKeyPress = (event) => {
 		if (event.key == 'Enter') {
 			this.handleSubmit(event);
 		}
@@ -120,7 +141,7 @@ class Login extends Component {
 
 	// To check valid credentials
 	checkUser() {
-		this.props.client
+		loginClient
 			.query({
 				query: this.GET_USERS_QUERY,
 				variables: {
@@ -139,6 +160,7 @@ class Login extends Component {
 					} else {
 						sessionStorage.setItem('LoginId', user.Id);
 						sessionStorage.setItem('FullName', user.Full_Name);
+						sessionStorage.setItem('Token', user.Token);
 
 						if (user.IsAdmin == 1) {
 							sessionStorage.setItem('IsAdmin', true);
@@ -166,10 +188,6 @@ class Login extends Component {
 							sessionStorage.setItem('AllowExport', false);
 						}
 
-						/*sessionStorage.setItem('AllowEdit', data.data.getvalid_users[0].AllowEdit);
-						sessionStorage.setItem('AllowDelete', data.data.getvalid_users[0].AllowDelete);
-						sessionStorage.setItem('AllowInsert', data.data.getvalid_users[0].AllowInsert);
-						sessionStorage.setItem('AllowExport', data.data.getvalid_users[0].AllowExport);*/
 						window.location.href = '/home';
 					}
 				} else {
@@ -263,7 +281,6 @@ class Login extends Component {
 										disabled={this.state.loadingLogin}
 										value="Login"
 										onClick={this.handleSubmit}
-
 									>
 										Login
 									</Button>
@@ -300,7 +317,7 @@ class Login extends Component {
 Login.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(withGlobalContent(Login)));
+export default withStyles(styles)(withGlobalContent(Login));
 
 const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 	<Route
@@ -309,12 +326,12 @@ const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 			1 === 1 ? (
 				<Component {...props} />
 			) : (
-					<Redirect
-						to={{
-							pathname: '/login',
-							state: { from: props.location }
-						}}
-					/>
-				)}
+				<Redirect
+					to={{
+						pathname: '/login',
+						state: { from: props.location }
+					}}
+				/>
+			)}
 	/>
 );

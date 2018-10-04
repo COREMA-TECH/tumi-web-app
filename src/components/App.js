@@ -7,6 +7,7 @@ import withGlobalContent from 'Generic/Global';
 
 class App extends Component {
 	render() {
+		console.log('Token App', sessionStorage.getItem('Token'));
 		return (
 			<Router>
 				<div className="App">
