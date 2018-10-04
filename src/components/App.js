@@ -4,14 +4,11 @@ import Main from './Main/Main';
 import { BrowserRouter as Router } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import withGlobalContent from 'Generic/Global';
-
 import { ApolloProvider } from 'react-apollo';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
-import { propType } from 'graphql-anywhere';
 
 /**
  *  CONFIGURATION OF APOLLO CLIENT
