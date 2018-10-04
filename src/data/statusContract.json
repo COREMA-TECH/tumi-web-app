@@ -6,5 +6,9 @@
   {
     "Id": 1,
     "Name": "Completed"
+  },
+  {
+    "Id": 2,
+    "Name": "Expired"
   }
 ]

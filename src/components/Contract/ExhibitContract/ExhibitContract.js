@@ -321,7 +321,8 @@ class ExhibitContract extends Component {
 	};
 
 	downloadContractHandler = () => {
-		var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
+		//var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
+		var url = 'localhost:4000/public/Contract_' + this.props.contractname + '.pdf';
 		//pri.download();
 		window.open(url, '_blank');
 	};

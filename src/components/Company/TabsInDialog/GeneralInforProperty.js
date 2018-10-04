@@ -266,6 +266,7 @@ class GeneralInfoProperty extends Component {
 
 						this.props.handleOpenSnackbar('success', 'Success: Property Deleted');
 
+						this.props.handleClose();
 						/*history.push({
 							pathname: '/company/edit',
 							state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
@@ -562,9 +563,12 @@ class GeneralInfoProperty extends Component {
 								disabled={false}
 								className="edit-company-button"
 								onClick={() => {
-									console.log(this.props.idCompany);
 									this.deleteCompany(this.props.idProperty);
 
+									/*	history.push({
+											pathname: '/company/edit',
+											state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
+										});*/
 
 								}}
 							>
