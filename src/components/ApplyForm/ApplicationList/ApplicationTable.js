@@ -12,13 +12,11 @@ import Table from '@material-ui/core/Table/Table';
 import TableHead from '@material-ui/core/TableHead/TableHead';
 import TableRow from '@material-ui/core/TableRow/TableRow';
 import TableBody from '@material-ui/core/TableBody/TableBody';
-import Tooltip from '@material-ui/core/Tooltip/Tooltip';
 import TableFooter from '@material-ui/core/TableFooter/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
-import EditIcon from '@material-ui/icons/Edit';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -187,7 +185,6 @@ class ApplicationTable extends React.Component {
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={classes.th}/>
                                     <CustomTableCell className={classes.th}>First Name</CustomTableCell>
                                     <CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
                                     <CustomTableCell className={classes.th}>Last Name</CustomTableCell>
@@ -209,25 +206,6 @@ class ApplicationTable extends React.Component {
                                                 });
                                             }}
                                         >
-                                            <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
-                                                {' '}
-                                                <Tooltip title="Edit">
-                                                    <div>
-                                                        <IconButton
-                                                            disabled={this.props.loading}
-                                                            onClick={() => {
-                                                                history.push({
-                                                                    pathname: '/application/info',
-                                                                    state: {ApplicationId: row.id}
-                                                                });
-                                                            }}
-                                                        >
-                                                            <EditIcon color="primary"/>
-                                                        </IconButton>
-                                                    </div>
-                                                </Tooltip>
-                                            </CustomTableCell>
-
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.middleName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>

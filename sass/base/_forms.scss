@@ -34,6 +34,9 @@
         &[type="date"] {
             padding: .3rem .75rem; 
         }
+        &:disabled {
+            background: $gray;
+        }
     }   
 }
 

@@ -12,6 +12,7 @@ import '../index.css';
 import withApollo from "react-apollo/withApollo";
 import Application from "./Application";
 import Language from "./Languages/Language";
+import Education from "./Education/Education";
 
 const uuidv4 = require('uuid/v4');
 
@@ -92,7 +93,7 @@ class VerticalLinearStepper extends Component {
                 case 1:
                     return <Language applicationId={this.state.applicationId}/>;
                 case 2:
-                    return 'Step 2';
+                    return <Education applicationId={this.state.applicationId}/>;
                 case 3:
                     return 'Step 3';
                 default:

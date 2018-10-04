@@ -66,7 +66,7 @@ class CatalogItem extends React.Component {
     render() {
         return (
             <div>
-                <select name={this.props.name} value={this.props.value} onChange={this.handleChange} className="form-control">
+                <select name={this.props.name} disabled={(this.props.disabled)} value={this.props.value} onChange={this.handleChange} className="form-control">
                     {
                         this.state.options.map(
                             (item) => {

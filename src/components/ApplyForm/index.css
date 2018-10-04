@@ -170,6 +170,15 @@
     transition: all .800s;
 }
 
+.font-size-table {
+    font-size: .9em;
+}
+
+.delete-school-button:hover {
+    cursor: pointer;
+}
+
+
 .skills-container--header {
     border-radius: 5px 5px 0 0;
     color: #ffffff;
@@ -202,6 +211,11 @@
 
 .deleteSkillSection span {
     color: #999999;
+    cursor: pointer !important;
+}
+
+.fas .fa-trash-alt {
+    font-size: 1em;
 }
 
 .skills-container:hover .deleteSkillSection {
