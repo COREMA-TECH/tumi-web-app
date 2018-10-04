@@ -9,7 +9,7 @@ import StepperApplyForm from "../ApplyForm/Stepper/StepperApplyForm";
 import ApplicationInfo from "../ApplyForm/Application/ApplicationInfo";
 
 class Main extends Component {
-    LoginId = sessionStorage.getItem('LoginId');
+    LoginId = localStorage.getItem('LoginId');
 
     //(window.location.pathname != '/home/signature/')
     render() {

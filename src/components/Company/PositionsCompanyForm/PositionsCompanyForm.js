@@ -226,12 +226,12 @@ class PositionsCompanyForm extends React.Component {
         this.onEditHandler = this.onEditHandler.bind(this);
 
         this.Login = {
-            LoginId: sessionStorage.getItem('LoginId'),
-            IsAdmin: sessionStorage.getItem('IsAdmin'),
-            AllowEdit: sessionStorage.getItem('AllowEdit') === 'true',
-            AllowDelete: sessionStorage.getItem('AllowDelete') === 'true',
-            AllowInsert: sessionStorage.getItem('AllowInsert') === 'true',
-            AllowExport: sessionStorage.getItem('AllowExport') === 'true'
+            LoginId: localStorage.getItem('LoginId'),
+            IsAdmin: localStorage.getItem('IsAdmin'),
+            AllowEdit: localStorage.getItem('AllowEdit') === 'true',
+            AllowDelete: localStorage.getItem('AllowDelete') === 'true',
+            AllowInsert: localStorage.getItem('AllowInsert') === 'true',
+            AllowExport: localStorage.getItem('AllowExport') === 'true'
         };
     }
 

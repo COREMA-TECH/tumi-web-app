@@ -134,44 +134,44 @@ class Login extends Component {
 				if (data.data.getvalid_users) {
 					const user = data.data.getvalid_users;
 					if (user.IsActive == 0) {
-						sessionStorage.clear();
+						localStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
 						this.setState({ loadingLogin: false });
 					} else {
-						sessionStorage.setItem('LoginId', user.Id);
-						sessionStorage.setItem('FullName', user.Full_Name);
-						sessionStorage.setItem('Token', user.Token);
+						localStorage.setItem('LoginId', user.Id);
+						localStorage.setItem('FullName', user.Full_Name);
+						localStorage.setItem('Token', user.Token);
 
 						if (user.IsAdmin == 1) {
-							sessionStorage.setItem('IsAdmin', true);
+							localStorage.setItem('IsAdmin', true);
 						} else {
-							sessionStorage.setItem('IsAdmin', false);
+							localStorage.setItem('IsAdmin', false);
 						}
 						if (user.AllowEdit == 1) {
-							sessionStorage.setItem('AllowEdit', true);
+							localStorage.setItem('AllowEdit', true);
 						} else {
-							sessionStorage.setItem('AllowEdit', false);
+							localStorage.setItem('AllowEdit', false);
 						}
 						if (user.AllowDelete == 1) {
-							sessionStorage.setItem('AllowDelete', true);
+							localStorage.setItem('AllowDelete', true);
 						} else {
-							sessionStorage.setItem('AllowDelete', false);
+							localStorage.setItem('AllowDelete', false);
 						}
 						if (user.AllowInsert == 1) {
-							sessionStorage.setItem('AllowInsert', true);
+							localStorage.setItem('AllowInsert', true);
 						} else {
-							sessionStorage.setItem('AllowInsert', false);
+							localStorage.setItem('AllowInsert', false);
 						}
 						if (user.AllowExport == 1) {
-							sessionStorage.setItem('AllowExport', true);
+							localStorage.setItem('AllowExport', true);
 						} else {
-							sessionStorage.setItem('AllowExport', false);
+							localStorage.setItem('AllowExport', false);
 						}
 
 						window.location.href = '/home';
 					}
 				} else {
-					sessionStorage.clear();
+					localStorage.clear();
 					this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
 					this.setState({ loadingLogin: false });
 				}
@@ -186,7 +186,7 @@ class Login extends Component {
 	render(data) {
 		const { classes } = this.props;
 		// When user is logged redirect to the private routes
-		sessionStorage.clear();
+		localStorage.clear();
 		if (this.state.logged) {
 			return (
 				<Redirect
