@@ -222,7 +222,6 @@ class Education extends Component {
                                             })
                                         }), () => {
                                             if(schoolItem.id !== undefined){
-                                                alert(typeof schoolItem.id);
                                                 this.removeEducationById(schoolItem.id)
                                             }
                                         });
