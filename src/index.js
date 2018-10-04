@@ -14,21 +14,6 @@ firebase.initializeApp({
 	messagingSenderId: '79324693031'
 });
 
-/**
- *  CONFIGURATION OF APOLLO CLIENT
- */
-// Endpoint URL
-const httpLink = createHttpLink({
-	//uri: 'https://morning-lake-18657.herokuapp.com/graphql'
-	uri: 'https://corema-new-api.herokuapp.com/graphql'
-	// uri: 'http://localhost:4000/graphql'
-});
-
-// To configure Apollo client with link (url) endpoint and cache option
-const client = new ApolloClient({
-	link: httpLink,
-	cache: new InMemoryCache()
-});
 
 /**
  * The App is wrapped with the higher-order component ApolloProvider
