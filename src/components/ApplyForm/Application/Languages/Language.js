@@ -82,7 +82,8 @@ class Language extends Component {
                     })
                     .then(() => {
                         this.setState({
-                            editing: false
+                            editing: false,
+                            newLanguages: []
                         });
 
                         this.getLanguagesList(this.props.applicationId);

@@ -2,13 +2,18 @@ import React, {Component} from 'react';
 import {ADD_APLICANT_PREVIOUS_EMPLOYMENT} from "../../Mutations";
 import Button from "@material-ui/core/Button/Button";
 import InputMask from "react-input-mask";
+import withApollo from "react-apollo/withApollo";
+
+const uuidv4 = require('uuid/v4');
 
 class PreviousEmployment extends Component {
-    constructor() {
+    constructor(props) {
         super(props);
 
         this.state = {
             editing: false,
+            applicationId: null,
+            previousEmployment: []
         }
     }
 
@@ -42,6 +47,15 @@ class PreviousEmployment extends Component {
             this.handleNext();
         }
     };
+
+    componentWillMount() {
+        this.setState({
+            applicationId: this.props.applicationId
+        }, () => {
+            this.getAllLanguagesList();
+            this.getLanguagesList(this.state.applicationId);
+        });
+    }
 
     render() {
         // To render the Previous Employment Section
@@ -340,21 +354,6 @@ class PreviousEmployment extends Component {
                         </Button>
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertPreviousEmploymentApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
             </form>
         );
 
@@ -425,4 +424,4 @@ class PreviousEmployment extends Component {
 }
 
 
-export default PreviousEmployment;
+export default withApollo(PreviousEmployment);
