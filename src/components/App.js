@@ -14,7 +14,8 @@ import { setContext } from 'apollo-link-context';
  *  CONFIGURATION OF APOLLO CLIENT
  */
 const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
-
+const token =
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklkIjoxMCwiQ29kZV9Vc2VyIjoiYWRtaW4gICAgICJ9LCJpYXQiOjE1Mzg2NjI4ODgsImV4cCI6MTg1NDIzODg4OH0.3p2Hej6LhKeiNvONYNsJ2S7-5NSeeC-gcKgYyJvc8F0';
 // Endpoint URL
 const httpLink = createHttpLink({
 	uri: baseEndpointURL + '/graphql'
@@ -63,13 +64,15 @@ class App extends Component {
 	static childContextTypes = {
 		baseUrl: PropTypes.string,
 		endpointBaseURL: PropTypes.string,
-		loginClient: PropTypes.object
+		loginClient: PropTypes.object,
+		token: PropTypes.string
 	};
 
 	getChildContext = () => ({
 		baseUrl: 'http://13.58.18.163:4000',
 		endpointBaseURL: baseEndpointURL,
-		loginClient: loginClient
+		loginClient: loginClient,
+		token: token
 	});
 }
 
