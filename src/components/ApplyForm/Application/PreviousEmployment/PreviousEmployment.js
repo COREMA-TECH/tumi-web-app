@@ -52,8 +52,7 @@ class PreviousEmployment extends Component {
         this.setState({
             applicationId: this.props.applicationId
         }, () => {
-            this.getAllLanguagesList();
-            this.getLanguagesList(this.state.applicationId);
+
         });
     }
 
@@ -62,7 +61,7 @@ class PreviousEmployment extends Component {
         let renderPreviousEmploymentSection = () => (
             <form
                 id="form-previous-employment"
-                className="ApplyBlock"
+                className="form-section-1"
                 onSubmit={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -103,7 +102,6 @@ class PreviousEmployment extends Component {
                     );
                 }}
             >
-                <h4 className="ApplyBlock-title">Previous Employment</h4>
                 <div className="row">
                     {this.state.previousEmployment.length > 0 ? (
                         <div key={uuidv4()} className="skills-container skills-container--header">
