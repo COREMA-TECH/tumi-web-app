@@ -103,3 +103,22 @@ export const GET_APPLICATION_LANGUAGES_BY_ID = gql`
     }
 `;
 
+export const GET_APPLICATION_EDUCATION_BY_ID = gql`
+    query applications($id: Int!) {
+        applications(id: $id) {
+            educations {
+                id
+                schoolType
+                educationName
+                educationAddress
+                startDate
+                endDate
+                graduated
+                degree
+                ApplicationId
+            }
+        }
+    }
+`;
+
+
