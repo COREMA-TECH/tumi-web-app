@@ -90,6 +90,7 @@ class Login extends Component {
 				AllowInsert
 				AllowExport
 				IsActive
+				Token
 			}
 		}
 	`;
@@ -107,7 +108,7 @@ class Login extends Component {
 		}
 	};
 
-	handleKeyPress = event => {
+	handleKeyPress = (event) => {
 		if (event.key == 'Enter') {
 			this.handleSubmit(event);
 		}
@@ -120,7 +121,7 @@ class Login extends Component {
 
 	// To check valid credentials
 	checkUser() {
-		this.props.client
+		this.context.loginClient
 			.query({
 				query: this.GET_USERS_QUERY,
 				variables: {
@@ -133,47 +134,44 @@ class Login extends Component {
 				if (data.data.getvalid_users) {
 					const user = data.data.getvalid_users;
 					if (user.IsActive == 0) {
-						sessionStorage.clear();
+						localStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
 						this.setState({ loadingLogin: false });
 					} else {
-						sessionStorage.setItem('LoginId', user.Id);
-						sessionStorage.setItem('FullName', user.Full_Name);
+						localStorage.setItem('LoginId', user.Id);
+						localStorage.setItem('FullName', user.Full_Name);
+						localStorage.setItem('Token', user.Token);
 
 						if (user.IsAdmin == 1) {
-							sessionStorage.setItem('IsAdmin', true);
+							localStorage.setItem('IsAdmin', true);
 						} else {
-							sessionStorage.setItem('IsAdmin', false);
+							localStorage.setItem('IsAdmin', false);
 						}
 						if (user.AllowEdit == 1) {
-							sessionStorage.setItem('AllowEdit', true);
+							localStorage.setItem('AllowEdit', true);
 						} else {
-							sessionStorage.setItem('AllowEdit', false);
+							localStorage.setItem('AllowEdit', false);
 						}
 						if (user.AllowDelete == 1) {
-							sessionStorage.setItem('AllowDelete', true);
+							localStorage.setItem('AllowDelete', true);
 						} else {
-							sessionStorage.setItem('AllowDelete', false);
+							localStorage.setItem('AllowDelete', false);
 						}
 						if (user.AllowInsert == 1) {
-							sessionStorage.setItem('AllowInsert', true);
+							localStorage.setItem('AllowInsert', true);
 						} else {
-							sessionStorage.setItem('AllowInsert', false);
+							localStorage.setItem('AllowInsert', false);
 						}
 						if (user.AllowExport == 1) {
-							sessionStorage.setItem('AllowExport', true);
+							localStorage.setItem('AllowExport', true);
 						} else {
-							sessionStorage.setItem('AllowExport', false);
+							localStorage.setItem('AllowExport', false);
 						}
 
-						/*sessionStorage.setItem('AllowEdit', data.data.getvalid_users[0].AllowEdit);
-						sessionStorage.setItem('AllowDelete', data.data.getvalid_users[0].AllowDelete);
-						sessionStorage.setItem('AllowInsert', data.data.getvalid_users[0].AllowInsert);
-						sessionStorage.setItem('AllowExport', data.data.getvalid_users[0].AllowExport);*/
 						window.location.href = '/home';
 					}
 				} else {
-					sessionStorage.clear();
+					localStorage.clear();
 					this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
 					this.setState({ loadingLogin: false });
 				}
@@ -188,7 +186,7 @@ class Login extends Component {
 	render(data) {
 		const { classes } = this.props;
 		// When user is logged redirect to the private routes
-		sessionStorage.clear();
+		localStorage.clear();
 		if (this.state.logged) {
 			return (
 				<Redirect
@@ -263,7 +261,6 @@ class Login extends Component {
 										disabled={this.state.loadingLogin}
 										value="Login"
 										onClick={this.handleSubmit}
-
 									>
 										Login
 									</Button>
@@ -296,11 +293,14 @@ class Login extends Component {
 			</div>
 		);
 	}
+	static contextTypes = {
+		loginClient: PropTypes.object
+	};
 }
 Login.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(withGlobalContent(Login)));
+export default withStyles(styles)(withGlobalContent(Login));
 
 const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 	<Route
@@ -309,12 +309,12 @@ const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 			1 === 1 ? (
 				<Component {...props} />
 			) : (
-					<Redirect
-						to={{
-							pathname: '/login',
-							state: { from: props.location }
-						}}
-					/>
-				)}
+				<Redirect
+					to={{
+						pathname: '/login',
+						state: { from: props.location }
+					}}
+				/>
+			)}
 	/>
 );

@@ -1,13 +1,10 @@
 import { Snackbar } from '@material-ui/core';
 import { MySnackbarContentWrapper } from './SnackBar';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
-const styles = (theme) => ({
-	snackbar: {
-		margin: theme.spacing.unit
-	}
-});
+/**
+ *  CONFIGURATION OF APOLLO CLIENT
+ */
 
 const withGlobalContent = (WrappedComponent) => {
 	return class Global extends Component {
@@ -66,13 +63,6 @@ const withGlobalContent = (WrappedComponent) => {
 				</React.Fragment>
 			);
 		}
-		static childContextTypes = {
-			baseUrl: PropTypes.string
-		};
-
-		getChildContext = () => ({
-			baseUrl: 'http://13.58.18.163:4000'
-		});
 	};
 };
 

@@ -87,7 +87,7 @@ class NewContract extends Component {
 			Id: '',
 			Id_Company: '',
 			Contract_Name: '',
-			Contrat_Owner: sessionStorage.getItem('FullName'),
+			Contrat_Owner: localStorage.getItem('FullName'),
 			contractTemplateId: 1,
 			contractExpiration: this.getNewDate(),
 			Id_Contract_Template: 1,
