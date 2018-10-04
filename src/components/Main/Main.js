@@ -10,7 +10,7 @@ import ApplicationInfo from '../ApplyForm/Application/ApplicationInfo';
 import PropTypes from 'prop-types';
 class Main extends Component {
 	LoginId = localStorage.getItem('LoginId');
-
+	token = localStorage.getItem('Token');
 	render() {
 		if (
 			!(
@@ -19,7 +19,7 @@ class Main extends Component {
 				window.location.pathname == '/employment-application-message'
 			)
 		)
-			if (!this.LoginId) {
+			if (!this.LoginId || !this.token) {
 				//Not logged in
 				//If not logged in redirect to login form if pahth is not login
 				if (window.location.pathname != '/login') {
