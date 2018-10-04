@@ -1,11 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
-import { ApolloProvider } from 'react-apollo';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { setContext } from 'apollo-link-context';
 
 import firebase from 'firebase';
 
@@ -20,40 +15,7 @@ firebase.initializeApp({
 });
 
 /**
- *  CONFIGURATION OF APOLLO CLIENT
- */
-// Endpoint URL
-const httpLink = createHttpLink({
-	//uri: 'https://morning-lake-18657.herokuapp.com/graphql'
-	uri: 'https://corema-new-api.herokuapp.com/graphql'
-	//uri: 'http://localhost:4000/graphql'
-});
-console.log('Token Index', sessionStorage.getItem('Token'));
-const authLink = setContext((_, { headers }) => {
-	// get the authentication token from local storage if it exists
-	const token = sessionStorage.getItem('Token');
-	// return the headers to the context so httpLink can read them
-	return {
-		headers: {
-			...headers,
-			authentication: token
-		}
-	};
-});
-
-// To configure Apollo client with link (url) endpoint and cache option
-const client = new ApolloClient({
-	link: authLink.concat(httpLink),
-	cache: new InMemoryCache()
-});
-
-/**
  * The App is wrapped with the higher-order component ApolloProvider
  * that gets passed the client as a prop.
  */
-ReactDOM.render(
-	<ApolloProvider client={client}>
-		<App />
-	</ApolloProvider>,
-	document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));

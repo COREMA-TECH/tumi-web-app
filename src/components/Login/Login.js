@@ -27,10 +27,6 @@ import Button from '@material-ui/core/Button';
 import withGlobalContent from 'Generic/Global';
 import { flattenSelections } from 'apollo-utilities';
 
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -65,22 +61,6 @@ const styles = (theme) => ({
 		marginLeft: -12,
 		color: 'white'
 	}
-});
-
-/**
- *  CONFIGURATION OF APOLLO CLIENT
- */
-// Endpoint URL
-const loginHttpLink = createHttpLink({
-	//uri: 'https://corema-new-api.herokuapp.com/graphql'
-	uri: 'https://corema-new-api.herokuapp.com/login'
-	//uri: 'http://localhost:4000/login'
-});
-
-// To configure Apollo client with link (url) endpoint and cache option
-const loginClient = new ApolloClient({
-	link: loginHttpLink,
-	cache: new InMemoryCache()
 });
 
 class Login extends Component {
@@ -141,7 +121,7 @@ class Login extends Component {
 
 	// To check valid credentials
 	checkUser() {
-		loginClient
+		this.context.loginClient
 			.query({
 				query: this.GET_USERS_QUERY,
 				variables: {
@@ -313,6 +293,9 @@ class Login extends Component {
 			</div>
 		);
 	}
+	static contextTypes = {
+		loginClient: PropTypes.object
+	};
 }
 Login.propTypes = {
 	classes: PropTypes.object.isRequired
