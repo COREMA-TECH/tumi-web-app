@@ -222,8 +222,8 @@ class Application extends Component {
                         this.updateApplicationInformation(70)
                     }
                 }>
-                    <div className="col-2"></div>
-                    <div className="col-8">
+                    <div className="col-1"></div>
+                    <div className="col-10">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">General Information</span>
@@ -242,7 +242,7 @@ class Application extends Component {
                             </div>
                             <br/>
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-6 form-section-1">
                                     <div className="row">
                                         <div className="col-6">
                                             <span className="primary applicant-card__label skeleton">First Name</span>
@@ -490,8 +490,7 @@ class Application extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="linear-border"></div>
-                                <div className="col-6">
+                                <div className="col-6 form-section-2">
                                     <div className="row">
                                         <div className="col-6">
                                             <span className="primary applicant-card__label skeleton">Birth Day</span>
