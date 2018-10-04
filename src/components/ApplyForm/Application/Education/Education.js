@@ -15,7 +15,8 @@ class Education extends Component {
             // Editing state properties - To edit general info
             editing: false,
             schools: [],
-            newSchools: []
+            newSchools: [],
+            applicationId: null
         }
     }
 
@@ -93,8 +94,6 @@ class Education extends Component {
                         alert('Error');
                     });
             });
-        } else {
-            this.handleNext();
         }
     };
 

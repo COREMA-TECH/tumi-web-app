@@ -69,3 +69,10 @@ export const REMOVE_APPLICANT_EDUCATION = gql`
 `;
 
 
+export const REMOVE_APPLICANT_LANGUAGE = gql`
+    mutation deleteApplicantLanguange($id: [Int]){
+        deleteApplicantLanguange(id: $id)
+    }
+`;
+
+
