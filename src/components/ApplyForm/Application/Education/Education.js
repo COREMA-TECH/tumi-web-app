@@ -3,7 +3,7 @@ import withApollo from "react-apollo/withApollo";
 import studyTypes from "../../data/studyTypes";
 import Button from "@material-ui/core/Button/Button";
 import {GET_APPLICATION_EDUCATION_BY_ID, GET_APPLICATION_LANGUAGES_BY_ID} from "../../Queries";
-import {ADD_APLICANT_EDUCATION} from "../../Mutations";
+import {ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION} from "../../Mutations";
 
 const uuidv4 = require('uuid/v4');
 
@@ -14,7 +14,8 @@ class Education extends Component {
         this.state = {
             // Editing state properties - To edit general info
             editing: false,
-            schools: []
+            schools: [],
+            newSchools: []
         }
     }
 
@@ -25,7 +26,8 @@ class Education extends Component {
                 query: GET_APPLICATION_EDUCATION_BY_ID,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({data}) => {
                 this.setState({
@@ -34,6 +36,21 @@ class Education extends Component {
                     // console.table(this.state.schools);
                     // this.state.schools.map(item => (item.uuid = uuidv4()));
                 })
+            })
+            .catch();
+    };
+
+    // To get a list of languages saved from API
+    removeEducationById = (id) => {
+        this.props.client
+            .query({
+                query: REMOVE_APPLICANT_EDUCATION,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                this.getEducationList(this.state.applicationId);
             })
             .catch();
     };
@@ -51,30 +68,31 @@ class Education extends Component {
             });
 
             this.setState((prevState) => ({
-                schools: this.state.schools.filter((_, i) => {
-                    return _.id === null;
+                newSchools: this.state.schools.filter((_, i) => {
+                    console.log(_.id);
+                    return _.id === undefined;
                 })
-            }));
+            }), () => {
+                // Then insert education list
+                this.props.client
+                    .mutate({
+                        mutation: ADD_APLICANT_EDUCATION,
+                        variables: {
+                            application: this.state.newSchools
+                        }
+                    })
+                    .then(() => {
+                        this.setState({
+                            editing: false
+                        });
 
-            // Then insert education list
-            this.props.client
-                .mutate({
-                    mutation: ADD_APLICANT_EDUCATION,
-                    variables: {
-                        application: this.state.schools
-                    }
-                })
-                .then(() => {
-                    this.setState({
-                        editing: false
+                        this.getEducationList(this.state.applicationId);
+                    })
+                    .catch((error) => {
+                        // Replace this alert with a Snackbar message error
+                        alert('Error');
                     });
-
-                    this.getEducationList();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    alert('Error');
-                });
+            });
         } else {
             this.handleNext();
         }
@@ -84,7 +102,7 @@ class Education extends Component {
         this.setState({
             applicationId: this.props.applicationId
         }, () => {
-            this.getEducationList();
+            this.getEducationList(this.state.applicationId);
         });
     }
 
@@ -202,7 +220,11 @@ class Education extends Component {
                                             schools: this.state.schools.filter((_, i) => {
                                                 return _.uuid !== schoolItem.uuid;
                                             })
-                                        }));
+                                        }), () => {
+                                            if(schoolItem.id !== undefined){
+                                                this.removeEducationById(schoolItem.id)
+                                            }
+                                        });
                                     }}
                                 >
                                     <i className="fas fa-trash-alt"></i>

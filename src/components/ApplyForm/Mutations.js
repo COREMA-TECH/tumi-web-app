@@ -62,3 +62,10 @@ export const ADD_SKILL = gql`
     }
 `;
 
+export const REMOVE_APPLICANT_EDUCATION = gql`
+    mutation {
+        deleteApplicantEducation(id: 8)
+    }
+`;
+
+
