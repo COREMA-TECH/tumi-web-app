@@ -229,7 +229,7 @@ class Preferences extends React.Component {
                                             </label>
                                         </div>
                                         <div className="col-6">
-                                            <input type="number" min="0" name="amount" disabled={(this.state.disabled) ? "disabled" : ""} value={this.state.amount} className="form-control" onChange={this.handleChange} />
+                                            <input type="number" min="0" name="amount" step=".01" disabled={(this.state.disabled) ? "disabled" : ""} value={this.state.amount} className="form-control" onChange={this.handleChange} />
                                         </div>
                                     </div>
                                     <div className="col-12">
