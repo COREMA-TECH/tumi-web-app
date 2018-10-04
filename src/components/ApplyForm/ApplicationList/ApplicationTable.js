@@ -187,7 +187,6 @@ class ApplicationTable extends React.Component {
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={classes.th}/>
                                     <CustomTableCell className={classes.th}>First Name</CustomTableCell>
                                     <CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
                                     <CustomTableCell className={classes.th}>Last Name</CustomTableCell>
@@ -209,25 +208,6 @@ class ApplicationTable extends React.Component {
                                                 });
                                             }}
                                         >
-                                            <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
-                                                {' '}
-                                                <Tooltip title="Edit">
-                                                    <div>
-                                                        <IconButton
-                                                            disabled={this.props.loading}
-                                                            onClick={() => {
-                                                                history.push({
-                                                                    pathname: '/application/info',
-                                                                    state: {ApplicationId: row.id}
-                                                                });
-                                                            }}
-                                                        >
-                                                            <EditIcon color="primary"/>
-                                                        </IconButton>
-                                                    </div>
-                                                </Tooltip>
-                                            </CustomTableCell>
-
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.middleName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>
