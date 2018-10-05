@@ -7,6 +7,7 @@ import {updateApplicationInformation} from "../utils";
 import {UPDATE_APPLICATION} from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
+import withGlobalContent from "../../Generic/Global";
 
 class Application extends Component {
     constructor(props) {
@@ -82,7 +83,9 @@ class Application extends Component {
             languagesLoaded: [],
 
             // Editing state properties - To edit general info
-            editing: false
+            editing: false,
+
+            loading: false
         };
     }
 
@@ -128,10 +131,22 @@ class Application extends Component {
                 .then(({data}) => {
                     this.setState({
                         editing: false
-                    })
+                    });
+
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Successfully updated',
+                        'bottom',
+                        'right'
+                    );
                 })
                 .catch((error) => {
-                    alert("Error updating information: " + error);
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Errorn to update aaplicant information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         });
     };
@@ -140,50 +155,61 @@ class Application extends Component {
      * To get applications by id
      */
     getApplicationById = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_BY_ID,
-                variables: {
-                    id: id
-                }
-            })
-
-            .then(({data}) => {
-                let applicantData = data.applications[0];
-                this.setState({
-                    firstName: applicantData.firstName,
-                    middleName: applicantData.middleName,
-                    lastName: applicantData.lastName,
-                    date: applicantData.date.substring(0, 10),
-                    streetAddress: applicantData.streetAddress,
-                    emailAddress: applicantData.emailAddress,
-                    aptNumber: applicantData.aptNumber,
-                    city: applicantData.city,
-                    state: applicantData.state,
-                    zipCode: applicantData.zipCode,
-                    homePhone: applicantData.homePhone,
-                    cellPhone: applicantData.cellPhone,
-                    socialSecurityNumber: applicantData.socialSecurityNumber,
-                    positionApplyingFor: applicantData.positionApplyingFor,
-                    birthDay: applicantData.birthDay.substring(0, 10),
-                    car: applicantData.car,
-                    typeOfId: applicantData.typeOfId,
-                    expireDateId: applicantData.expireDateId.substring(0, 10),
-                    dateAvailable: applicantData.dateAvailable.substring(0, 10),
-                    scheduleRestrictions: applicantData.scheduleRestrictions,
-                    scheduleExplain: applicantData.scheduleExplain,
-                    convicted: applicantData.convicted,
-                    convictedExplain: applicantData.convictedExplain,
-                    comment: applicantData.comment,
-                    editing: false
-                }, () => {
-                    this.removeSkeletonAnimation();
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_BY_ID,
+                    variables: {
+                        id: id
+                    }
                 })
-            })
-            .catch(error => {
-                // TODO: replace alert with snackbar error message
-                alert("Error loading applicant information")
-            });
+                .then(({data}) => {
+                    let applicantData = data.applications[0];
+                    this.setState({
+                        firstName: applicantData.firstName,
+                        middleName: applicantData.middleName,
+                        lastName: applicantData.lastName,
+                        date: applicantData.date.substring(0, 10),
+                        streetAddress: applicantData.streetAddress,
+                        emailAddress: applicantData.emailAddress,
+                        aptNumber: applicantData.aptNumber,
+                        city: applicantData.city,
+                        state: applicantData.state,
+                        zipCode: applicantData.zipCode,
+                        homePhone: applicantData.homePhone,
+                        cellPhone: applicantData.cellPhone,
+                        socialSecurityNumber: applicantData.socialSecurityNumber,
+                        positionApplyingFor: applicantData.positionApplyingFor,
+                        birthDay: applicantData.birthDay.substring(0, 10),
+                        car: applicantData.car,
+                        typeOfId: applicantData.typeOfId,
+                        expireDateId: applicantData.expireDateId.substring(0, 10),
+                        dateAvailable: applicantData.dateAvailable.substring(0, 10),
+                        scheduleRestrictions: applicantData.scheduleRestrictions,
+                        scheduleExplain: applicantData.scheduleExplain,
+                        convicted: applicantData.convicted,
+                        convictedExplain: applicantData.convictedExplain,
+                        comment: applicantData.comment,
+                        editing: false
+                    }, () => {
+                        this.removeSkeletonAnimation();
+                        this.setState({
+                            loading: false
+                        });
+                    })
+                })
+                .catch(error => {
+                    // TODO: replace alert with snackbar error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show applicant information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
+        });
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -211,7 +237,7 @@ class Application extends Component {
     }
 
     render() {
-        this.validateInvalidInput();
+        //this.validateInvalidInput();
 
         return (
             <div className="Apply-container--application">
@@ -771,4 +797,4 @@ class Application extends Component {
     }
 }
 
-export default withApollo(Application);
+export default withApollo(withGlobalContent(Application));

@@ -216,6 +216,9 @@ p {
   div[class*="MuiFormControl-root-"].select-form-customized {
     max-width: 267px; } }
 
+.card-form-body {
+  min-height: 504px !important; }
+
 .department__header-inputGroup {
   padding: 0 !important;
   height: auto !important; }

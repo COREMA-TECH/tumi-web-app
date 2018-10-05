@@ -79,6 +79,25 @@ const styles = (theme) => ({
 			backgroundColor: green[700]
 		}
 	},
+	buttonCreateContract: {
+		background: ' #3da2c7',
+		borderRadius: '5px',
+		padding: '.5em 1em',
+
+		fontWeight: '300',
+		fontFamily: 'Segoe UI',
+		fontSize: '1.1em',
+		color: '#fff',
+		textTransform: 'none',
+		//cursor: pointer;
+		margin: '2px',
+
+		//	backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			background: ' #3da2c7'
+		}
+	},
 	fabProgress: {
 		color: green[500],
 		position: 'absolute',
@@ -87,7 +106,7 @@ const styles = (theme) => ({
 		zIndex: 1
 	},
 	buttonProgress: {
-		color: green[500],
+		//color: ,
 		position: 'absolute',
 		top: '50%',
 		left: '50%',
@@ -170,21 +189,23 @@ class ExhibitContract extends Component {
 	`;
 
 	sleep() {
-		return new Promise((resolve) => setTimeout(resolve, 15000));
+		return new Promise((resolve) => setTimeout(resolve, 3000));
 	}
 
 	writePDF = () => {
-		this.sleep().then(() => {
-			// Do something after the sleep!
-			this.setState({
-				PdfUrl:
-					'<iframe src="' +
-					this.context.baseUrl +
-					'/public/Contract_' +
-					this.props.contractname +
-					'.pdf"  width="100%" height="100%" />'
-			});
+		//this.sleep().then(() => {
+		//	this.setState({ openModal: true }, () => {
+		// Do something after the sleep!
+		this.setState({
+			PdfUrl:
+				'<iframe src="' +
+				this.context.baseUrl +
+				'/public/Contract_' +
+				this.props.contractname +
+				'.pdf"  width="100%" height="100%" />'
 		});
+		//	});
+		//});
 	};
 
 	sendContract = () => {
@@ -214,7 +235,7 @@ class ExhibitContract extends Component {
 	};
 
 	createContract = () => {
-		this.setState({ loadingData: true });
+		this.setState({ loadingData: true, loadingContract: true });
 		this.props.client
 			.query({
 				query: this.CREATE_CONTRACT_QUERY,
@@ -223,18 +244,35 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.createcontracts != null) {
-					this.setState({ openModal: true });
+					this.sleep().then(() => {
+						this.setState({
+							openModal: true,
+							loadingContract: false,
+							PdfUrl:
+								'<iframe src="' +
+								this.context.baseUrl +
+								'/public/Contract_' +
+								this.props.contractname +
+								'.pdf"  width="100%" height="100%" />'
+						});
+					});
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
-						'Error: Loading agreement: sendcontracts not exists in query datassssssss'
+						'Error: Loading agreement: createcontracts not exists in query data'
 					);
-					this.setState({ loadingData: false });
+					this.setState({
+						loadingData: false,
+						loadingContract: false
+					});
 				}
 			})
 			.catch((error) => {
 				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
-				this.setState({ loadingData: false });
+				this.setState({
+					loadingData: false,
+					loadingContract: false
+				});
 			});
 	};
 
@@ -382,7 +420,6 @@ class ExhibitContract extends Component {
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
-							{this.state.openModal && this.writePDF()}
 							{this.state.openModal && renderHTML(this.state.PdfUrl)}
 						</div>
 					</DialogContent>
@@ -581,8 +618,19 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>*/}
-							<div className="contract-next-button" onClick={this.handleClickOpenModal}>
-								Create Contract
+							<div className={classes.wrapper}>
+								<Button
+									//className="contract-next-button"
+									className={classes.buttonCreateContract}
+									onClick={this.handleClickOpenModal}
+									disabled={this.state.loadingContract}
+								>
+									Create Contract
+								</Button>
+
+								{this.state.loadingContract && (
+									<CircularProgress size={24} className={classes.buttonProgress} />
+								)}
 							</div>
 						</div>
 					</div>

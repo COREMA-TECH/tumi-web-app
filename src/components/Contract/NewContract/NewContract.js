@@ -657,7 +657,7 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-				this.state.Display_Contract_Term = this.getString(data.getcatalogitem[0].Name)
+				this.state.Display_Contract_Term = this.getString(data.getcatalogitem[0].Name);
 
 				var today = new Date();
 				today.setMonth(today.getMonth() + parseInt(this.state.Display_Contract_Term) + 1);
@@ -765,14 +765,14 @@ class NewContract extends Component {
      */
 
 	getcatalogcontractterm = gql`
-	query getcatalogitemQuery($Id: Int!) {
-		getcatalogitem(Id: $Id, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
-			Id
-			Name
-			IsActive
+		query getcatalogitemQuery($Id: Int!) {
+			getcatalogitem(Id: $Id, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
+				Id
+				Name
+				IsActive
+			}
 		}
-	}
-`;
+	`;
 
 	getContractTermsQuery = gql`
 		{
@@ -983,7 +983,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -1113,8 +1113,8 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.Management}
-												change={(text) => { }}
-											//error={!this.state.CompanySignedNameValid}
+												change={(text) => {}}
+												//error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
 
@@ -1175,7 +1175,7 @@ class NewContract extends Component {
 											<span className="input-label primary">* Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1299,7 +1299,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1348,8 +1348,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => { }}
-												updateTypeContact={(type) => { }}
+												updateEmailContact={(email) => {}}
+												updateTypeContact={(type) => {}}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>

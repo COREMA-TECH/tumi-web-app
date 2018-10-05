@@ -4,6 +4,8 @@ import studyTypes from "../../data/studyTypes";
 import Button from "@material-ui/core/Button/Button";
 import {GET_APPLICATION_EDUCATION_BY_ID} from "../../Queries";
 import {ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION} from "../../Mutations";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+import withGlobalContent from "../../../Generic/Global";
 
 const uuidv4 = require('uuid/v4');
 
@@ -16,29 +18,42 @@ class Education extends Component {
             editing: false,
             schools: [],
             newSchools: [],
-            applicationId: null
+            applicationId: null,
+            loading: false
         }
     }
 
     // To get a list of languages saved from API
     getEducationList = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_EDUCATION_BY_ID,
-                variables: {
-                    id: id
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({data}) => {
-                this.setState({
-                    schools: data.applications[0].educations
-                }, () => {
-                    // console.table(this.state.schools);
-                    // this.state.schools.map(item => (item.uuid = uuidv4()));
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_EDUCATION_BY_ID,
+                    variables: {
+                        id: id
+                    },
+                    fetchPolicy: 'no-cache'
                 })
-            })
-            .catch();
+                .then(({data}) => {
+                    this.setState({
+                        schools: data.applications[0].educations,
+                        loading: false
+                    }, () => {
+                        // console.table(this.state.schools);
+                        // this.state.schools.map(item => (item.uuid = uuidv4()));
+                    })
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show education list. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
+        });
     };
 
     // To get a list of languages saved from API
@@ -51,9 +66,23 @@ class Education extends Component {
                 }
             })
             .then(({data}) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully removed',
+                    'bottom',
+                    'right'
+                );
+
                 this.getEducationList(this.state.applicationId);
             })
-            .catch();
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error: error to remove. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
     };
 
     // To insert education
@@ -84,14 +113,26 @@ class Education extends Component {
                     })
                     .then(() => {
                         this.setState({
-                            editing: false
+                            editing: false,
+                            newSchools: []
                         });
 
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            'Successfully created',
+                            'bottom',
+                            'right'
+                        );
                         this.getEducationList(this.state.applicationId);
                     })
                     .catch((error) => {
                         // Replace this alert with a Snackbar message error
-                        alert('Error');
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error: error to save education. Please try again!',
+                            'bottom',
+                            'right'
+                        );
                     });
             });
         }
@@ -406,7 +447,13 @@ class Education extends Component {
                                 </div>
                                 <div className="row">
                                     {
-                                        renderEducationSection()
+                                        this.state.loading ? (
+                                            <div className="form-section-1 form-section--center">
+                                                <CircularProgressLoading/>
+                                            </div>
+                                        ) : (
+                                            renderEducationSection()
+                                        )
                                     }
                                 </div>
                                 {
@@ -453,4 +500,4 @@ class Education extends Component {
 
 Education.propTypes = {};
 
-export default withApollo(Education);
+export default withApollo(withGlobalContent(Education));
