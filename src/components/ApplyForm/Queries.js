@@ -141,4 +141,20 @@ export const GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID = gql`
     }
 `;
 
+export const GET_APPLICATION_MILITARY_SERVICES_BY_ID = gql`
+    query applications($id: Int!) {
+        applications(id: $id) {
+            militaryServices {
+                id
+                branch
+                startDate
+                endDate
+                rankAtDischarge
+                typeOfDischarge
+                ApplicationId
+            }
+        }
+    }
+`;
+
 
