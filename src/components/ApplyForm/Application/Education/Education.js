@@ -4,6 +4,7 @@ import studyTypes from "../../data/studyTypes";
 import Button from "@material-ui/core/Button/Button";
 import {GET_APPLICATION_EDUCATION_BY_ID} from "../../Queries";
 import {ADD_APLICANT_EDUCATION, REMOVE_APPLICANT_EDUCATION} from "../../Mutations";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 
 const uuidv4 = require('uuid/v4');
 
@@ -16,29 +17,35 @@ class Education extends Component {
             editing: false,
             schools: [],
             newSchools: [],
-            applicationId: null
+            applicationId: null,
+            loading: false
         }
     }
 
     // To get a list of languages saved from API
     getEducationList = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_EDUCATION_BY_ID,
-                variables: {
-                    id: id
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({data}) => {
-                this.setState({
-                    schools: data.applications[0].educations
-                }, () => {
-                    // console.table(this.state.schools);
-                    // this.state.schools.map(item => (item.uuid = uuidv4()));
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_EDUCATION_BY_ID,
+                    variables: {
+                        id: id
+                    },
+                    fetchPolicy: 'no-cache'
                 })
-            })
-            .catch();
+                .then(({data}) => {
+                    this.setState({
+                        schools: data.applications[0].educations,
+                        loading: false
+                    }, () => {
+                        // console.table(this.state.schools);
+                        // this.state.schools.map(item => (item.uuid = uuidv4()));
+                    })
+                })
+                .catch();
+        });
     };
 
     // To get a list of languages saved from API
@@ -407,7 +414,13 @@ class Education extends Component {
                                 </div>
                                 <div className="row">
                                     {
-                                        renderEducationSection()
+                                        this.state.loading ? (
+                                            <div className="form-section-1 form-section--center">
+                                                <CircularProgressLoading/>
+                                            </div>
+                                        ) : (
+                                            renderEducationSection()
+                                        )
                                     }
                                 </div>
                                 {

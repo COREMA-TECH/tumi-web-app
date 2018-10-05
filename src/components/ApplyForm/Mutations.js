@@ -54,6 +54,16 @@ export const ADD_MILITARY_SERVICES = gql`
     }
 `;
 
+export const UPDATE_MILITARY_SERVICES = gql`
+    mutation updateMilitaryService($application: inputUpdateApplicantMilitaryService) {
+        updateMilitaryService(militaryService: $application) {
+            id
+        }
+    }
+`;
+
+
+
 export const ADD_SKILL = gql`
     mutation addApplicantSkill($application: [inputInsertApplicantSkill]) {
         addApplicantSkill(applicantSkill: $application) {
@@ -80,6 +90,12 @@ export const REMOVE_APPLICANT_LANGUAGE = gql`
 export const REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT = gql`
     mutation deleteApplicantPreviousEmployment($id: [Int]){
         deleteApplicantPreviousEmployment(id: $id)
+    }
+`;
+
+export const REMOVE_APPLICANT_SKILL = gql`
+    mutation deleteApplicantSkill($id: [Int]){
+        deleteApplicantSkill(id: $id)
     }
 `;
 

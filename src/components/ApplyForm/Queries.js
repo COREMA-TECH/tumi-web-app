@@ -157,4 +157,16 @@ export const GET_APPLICATION_MILITARY_SERVICES_BY_ID = gql`
     }
 `;
 
+export const GET_APPLICATION_SKILLS_BY_ID = gql`
+    query applications($id: Int!) {
+        applications(id: $id) {
+            skills {
+                id
+                description
+                level
+            }
+        }
+    }
+`;
+
 

@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button/Button";
 import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
 import {GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID} from "../../Queries";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 
 const uuidv4 = require('uuid/v4');
 
@@ -20,6 +21,7 @@ class PreviousEmployment extends Component {
             applicationId: null,
             previousEmployment: [],
             newPreviousEmployment: [],
+            loading: false
         }
     }
 
@@ -68,20 +70,25 @@ class PreviousEmployment extends Component {
 
     // To get a list of previous employments saved from API
     getPreviousEmploymentList = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID,
-                variables: {
-                    id: id
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({data}) => {
-                this.setState({
-                    previousEmployment: data.applications[0].employments
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID,
+                    variables: {
+                        id: id
+                    },
+                    fetchPolicy: 'no-cache'
                 })
-            })
-            .catch();
+                .then(({data}) => {
+                    this.setState({
+                        previousEmployment: data.applications[0].employments,
+                        loading: false
+                    });
+                })
+                .catch();
+        });
     };
 
     removePreviousEmploymentById = (id) => {
@@ -441,7 +448,13 @@ class PreviousEmployment extends Component {
                             </div>
                             <div className="row">
                                 {
-                                    renderPreviousEmploymentSection()
+                                    this.state.loading ? (
+                                        <div className="form-section-1 form-section--center">
+                                            <CircularProgressLoading/>
+                                        </div>
+                                    ) : (
+                                        renderPreviousEmploymentSection()
+                                    )
                                 }
                             </div>
                             {
