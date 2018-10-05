@@ -13,6 +13,8 @@ import withApollo from "react-apollo/withApollo";
 import Application from "./Application";
 import Language from "./Languages/Language";
 import Education from "./Education/Education";
+import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
+import MilitaryService from "./MilitaryService/MilitaryService";
 
 const uuidv4 = require('uuid/v4');
 
@@ -95,7 +97,9 @@ class VerticalLinearStepper extends Component {
                 case 2:
                     return <Education applicationId={this.state.applicationId}/>;
                 case 3:
-                    return 'Step 3';
+                    return <PreviousEmployment applicationId={this.state.applicationId}/>;
+                case 4:
+                    return <MilitaryService applicationId={this.state.applicationId}/>;
                 default:
                     return 'Unknown step';
             }

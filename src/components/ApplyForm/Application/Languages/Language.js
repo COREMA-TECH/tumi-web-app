@@ -82,10 +82,11 @@ class Language extends Component {
                     })
                     .then(() => {
                         this.setState({
-                            editing: false
+                            editing: false,
+                            newLanguages: []
                         });
 
-                        this.getLanguagesList(this.props.applicationId);
+                        this.getLanguagesList(this.state.applicationId);
                     })
                     .catch((error) => {
                         // Replace this alert with a Snackbar message error
