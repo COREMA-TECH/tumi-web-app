@@ -526,7 +526,8 @@ class NewContract extends Component {
 		);
 	};
 
-	renewalContract = (id) => {
+	renewalContract = () => {
+		console.table(this.state);
 		this.setState(
 			{
 				loadingInsert: true
@@ -557,14 +558,14 @@ class NewContract extends Component {
 									Id_Entity: parseInt(this.state.Id_Entity),
 									Id_User_Signed: parseInt(this.state.Id_User_Signed),
 									User_Signed_Title: `'${this.state.User_Signed_Title}'`,
-									Signed_Date: `'${this.state.Signed_Date}'`,
-									Contract_Status: `'${this.state.Contract_Status}'`,
+									Signed_Date: `'${this.getNewDate()}'`,
+									Contract_Status: `'0'`,
 									Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
 									Contract_Term: parseInt(this.state.Contract_Term),
 									Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
 									Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
 									Company_Signed: `'${this.state.CompanySignedName}'`,
-									Company_Signed_Date: `'${this.state.Company_Signed_Date}'`,
+									Company_Signed_Date: `'${this.getNewDate()}'`,
 									Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
 									Billing_Street: `'${this.state.Billing_Street}'`,
 									Billing_City: parseInt(this.state.Billing_City),
@@ -672,8 +673,30 @@ class NewContract extends Component {
 					mm = '0' + mm;
 				}
 				var today = yyyy + '-' + mm + '-' + dd;
-				//console.log(this.state.Display_Contract_Term);
-				this.state.NewContract_Term = today;
+
+				var todayExpiration = new Date();
+				todayExpiration.setMonth(todayExpiration.getMonth() + (parseInt(this.state.Display_Contract_Term) * 2) + 1);
+
+				var dd = todayExpiration.getDate();
+				var mm = todayExpiration.getMonth(); //January is 0!
+
+				var yyyy = todayExpiration.getFullYear();
+				if (dd < 10) {
+					dd = '0' + dd;
+				}
+				if (mm < 10) {
+					mm = '0' + mm;
+				}
+				var todayExpiration = yyyy + '-' + mm + '-' + dd;
+
+
+				this.state.Contract_Start_Date = today;
+				this.state.contractExpiration = todayExpiration;
+
+				console.log("aqui estoy en getcatalogitem", this.state.Contract_Start_Date);
+				console.log("aqui estoy en getcatalogitem", this.state.Contract_Expiration_Date);
+
+				this.renewalContract();
 			})
 			.catch((error) => {
 				console.log(error);

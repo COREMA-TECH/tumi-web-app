@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import gql from 'graphql-tag';
-
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 class CompanyCard extends React.Component {
     state = {
         open: false
@@ -21,6 +21,8 @@ class CompanyCard extends React.Component {
         this.setState({ open: false });
     };
 
+
+
     render() {
         const deleteCompany = gql`
 			mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
@@ -35,6 +37,15 @@ class CompanyCard extends React.Component {
             <Route
                 render={({ history }) => (
                     <div className="card">
+
+                        <AlertDialogSlide
+                            handleClose={this.handleClose}
+                            handleConfirm={this.handleConfirm}
+                            open={this.state.open}
+                            loadingConfirm={this.state.loadingRemoving}
+                            content="Do you really want to continue whit this operation?"
+                        />
+
                         <div className="card__body">
                             <img src={this.props.imageUrl} className="card-image" />
 
@@ -66,13 +77,16 @@ class CompanyCard extends React.Component {
                                 variant="contained"
                                 color="secondary"
                                 className="card__button"
-                                onClick={this.handleClickOpen}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    this.handleClickOpen
+                                }}
                             >
                                 Delete
                                 <DeleteIcon>send</DeleteIcon>
                             </Button>
                         </div>
-                    </div>
+                    </ div>
                 )}
             />
         );
