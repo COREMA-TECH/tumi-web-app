@@ -62,6 +62,8 @@ export const ADD_SKILL = gql`
     }
 `;
 
+
+
 export const REMOVE_APPLICANT_EDUCATION = gql`
     mutation deleteApplicantEducation($id: [Int]){
         deleteApplicantEducation(id: $id)
@@ -72,6 +74,12 @@ export const REMOVE_APPLICANT_EDUCATION = gql`
 export const REMOVE_APPLICANT_LANGUAGE = gql`
     mutation deleteApplicantLanguange($id: [Int]){
         deleteApplicantLanguange(id: $id)
+    }
+`;
+
+export const REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT = gql`
+    mutation deleteApplicantPreviousEmployment($id: [Int]){
+        deleteApplicantPreviousEmployment(id: $id)
     }
 `;
 

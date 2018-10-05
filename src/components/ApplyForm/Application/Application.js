@@ -211,7 +211,7 @@ class Application extends Component {
     }
 
     render() {
-        this.validateInvalidInput();
+        //this.validateInvalidInput();
 
         return (
             <div className="Apply-container--application">

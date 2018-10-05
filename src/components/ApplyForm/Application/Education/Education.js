@@ -84,7 +84,8 @@ class Education extends Component {
                     })
                     .then(() => {
                         this.setState({
-                            editing: false
+                            editing: false,
+                            newSchools: []
                         });
 
                         this.getEducationList(this.state.applicationId);
