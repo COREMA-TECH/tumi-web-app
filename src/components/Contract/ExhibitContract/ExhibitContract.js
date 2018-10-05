@@ -300,7 +300,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => { }
+			() => {}
 		);
 	};
 	insertExhibit = () => {
@@ -374,8 +374,8 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-									'New Contract Preview'
-								)}
+								'New Contract Preview'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
