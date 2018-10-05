@@ -1,8 +1,13 @@
 import React, {Component} from 'react';
-import {ADD_APLICANT_PREVIOUS_EMPLOYMENT} from "../../Mutations";
+import {
+    ADD_APLICANT_PREVIOUS_EMPLOYMENT,
+    REMOVE_APPLICANT_LANGUAGE,
+    REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT
+} from "../../Mutations";
 import Button from "@material-ui/core/Button/Button";
 import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
+import {GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID} from "../../Queries";
 
 const uuidv4 = require('uuid/v4');
 
@@ -13,7 +18,8 @@ class PreviousEmployment extends Component {
         this.state = {
             editing: false,
             applicationId: null,
-            previousEmployment: []
+            previousEmployment: [],
+            newPreviousEmployment: [],
         }
     }
 
@@ -28,31 +34,75 @@ class PreviousEmployment extends Component {
                 item.ApplicationId = this.state.applicationId;
             });
 
-            // Then insert previous employment
-            this.props.client
-                .mutate({
-                    mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
-                    variables: {
-                        application: this.state.previousEmployment
-                    }
+            this.setState((prevState) => ({
+                newPreviousEmployment: this.state.previousEmployment.filter((_, i) => {
+                    console.log(_.id);
+                    return _.id === undefined;
                 })
-                .then(() => {
-                    this.handleNext();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    alert('Error');
-                });
+            }), () => {
+                // Then insert previous employment
+                this.props.client
+                    .mutate({
+                        mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
+                        variables: {
+                            application: this.state.newPreviousEmployment
+                        }
+                    })
+                    .then(() => {
+                        this.setState({
+                            editing: false,
+                            newPreviousEmployment: []
+                        });
+
+                        this.getPreviousEmploymentList(this.state.applicationId);
+                    })
+                    .catch((error) => {
+                        // Replace this alert with a Snackbar message error
+                        alert('Error');
+                    });
+            });
         } else {
             this.handleNext();
         }
+    };
+
+    // To get a list of previous employments saved from API
+    getPreviousEmploymentList = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID,
+                variables: {
+                    id: id
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                this.setState({
+                    previousEmployment: data.applications[0].employments
+                })
+            })
+            .catch();
+    };
+
+    removePreviousEmploymentById = (id) => {
+        this.props.client
+            .mutate({
+                mutation: REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                this.getPreviousEmploymentList(this.state.applicationId);
+            })
+            .catch();
     };
 
     componentWillMount() {
         this.setState({
             applicationId: this.props.applicationId
         }, () => {
-
+            this.getPreviousEmploymentList(this.state.applicationId);
         });
     }
 
@@ -106,13 +156,13 @@ class PreviousEmployment extends Component {
                     {this.state.previousEmployment.length > 0 ? (
                         <div key={uuidv4()} className="skills-container skills-container--header">
                             <div className="row">
-                                <div className="col-2">
+                                <div className="col-1">
                                     <span>Company</span>
                                 </div>
                                 <div className="col-2">
                                     <span>Address</span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-1">
                                     <span>Job Title</span>
                                 </div>
                                 <div className="col-1">
@@ -124,10 +174,10 @@ class PreviousEmployment extends Component {
                                 <div className="col-1">
                                     <span>Pay Rate</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-2">
                                     <span>Start Date</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-2">
                                     <span>End Date</span>
                                 </div>
                             </div>
@@ -138,13 +188,13 @@ class PreviousEmployment extends Component {
                     {this.state.previousEmployment.map((employmentItem) => (
                         <div key={uuidv4()} className="skills-container">
                             <div className="row">
-                                <div className="col-2">
+                                <div className="col-1">
                                     <span>{employmentItem.companyName}</span>
                                 </div>
                                 <div className="col-2">
                                     <span>{employmentItem.address}</span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-1">
                                     <span>{employmentItem.jobTitle}</span>
                                 </div>
                                 <div className="col-1">
@@ -156,25 +206,29 @@ class PreviousEmployment extends Component {
                                 <div className="col-1">
                                     <span>{employmentItem.payRate}</span>
                                 </div>
-                                <div className="col-1">
-                                    <span>{employmentItem.startDate}</span>
+                                <div className="col-2">
+                                    <span>{employmentItem.startDate.substring(0, 10)}</span>
+                                </div>
+                                <div className="col-2">
+                                    <span>{employmentItem.endDate.substring(0, 10)}</span>
                                 </div>
                                 <div className="col-1">
-                                    <span>{employmentItem.endDate}</span>
-                                </div>
-                                <div className="col-1">
-                                    <Button
-                                        className="deleteSkillSection"
+                                    <span
+                                        className="delete-school-button"
                                         onClick={() => {
                                             this.setState((prevState) => ({
                                                 previousEmployment: this.state.previousEmployment.filter((_, i) => {
                                                     return _.uuid !== employmentItem.uuid;
                                                 })
-                                            }));
+                                            }), () => {
+                                                if (employmentItem.id !== undefined) {
+                                                    this.removePreviousEmploymentById(employmentItem.id)
+                                                }
+                                            });
                                         }}
                                     >
-                                        x
-                                    </Button>
+                                        <i className="fas fa-trash-alt"></i>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -182,179 +236,184 @@ class PreviousEmployment extends Component {
                 </div>
                 {
                     this.state.editing ? (
-                        <div className="form-section-1">
                             <div className="row">
+                                <div className="col-2"></div>
                                 <div className="col-8">
-                                    <span className="primary"> Company</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companyNameEmployment"
-                                            form="form-previous-employment"
-                                            name="companyNameEmployment"
-                                            type="text"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
+                                    <div className="form-section-1">
+                                        <div className="row">
+                                            <div className="col-8">
+                                                <span className="primary"> Company</span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companyNameEmployment"
+                                                        form="form-previous-employment"
+                                                        name="companyNameEmployment"
+                                                        type="text"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-4">
+                                                <span className="primary"> Phone</span>
+                                                <div className="input-container--validated">
+                                                    <InputMask
+                                                        id="companyPhoneEmployment"
+                                                        form="form-previous-employment"
+                                                        name="phoneEmployment"
+                                                        mask="+(999) 999-9999"
+                                                        maskChar=" "
+                                                        value={this.state.previousEmploymentPhone}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                previousEmploymentPhone: event.target.value
+                                                            });
+                                                        }}
+                                                        required
+                                                        placeholder="+(999) 999-9999"
+                                                        minLength="15"
+                                                    />
+                                                    {/*<input*/}
+                                                    {/*id="companyPhoneEmployment"*/}
+                                                    {/*form="form-previous-employment"*/}
+                                                    {/*name="phoneEmployment"*/}
+                                                    {/*type="number"*/}
+                                                    {/*className="form-control"*/}
+                                                    {/*required*/}
+                                                    {/*min="0"*/}
+                                                    {/*maxLength="10"*/}
+                                                    {/*minLength="10"*/}
+                                                    {/*/>*/}
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-8">
+                                                <span className="primary"> Address</span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companyAddressEmployment"
+                                                        form="form-previous-employment"
+                                                        name="addressEmployment"
+                                                        type="text"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-4">
+                                                <span className="primary"> Supervisor</span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companySupervisor"
+                                                        form="form-previous-employment"
+                                                        name="supervisorEmployment"
+                                                        type="text"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-8">
+                                                <span className="primary"> Job Title</span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companyJobTitle"
+                                                        form="form-previous-employment"
+                                                        name="jobTitleEmployment"
+                                                        type="text"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-4">
+                                                <span className="primary"> Pay Rate</span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companyPayRate"
+                                                        form="form-previous-employment"
+                                                        name="payRateEmployment"
+                                                        type="number"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-3">
+                                                <span className="primary"> Dates</span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companyStartDate"
+                                                        form="form-previous-employment"
+                                                        name="startPreviousEmployment"
+                                                        type="date"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-3">
+                                                <span className="primary">To: </span>
+                                                <div className="input-container--validated">
+                                                    <input
+                                                        id="companyEndDate"
+                                                        form="form-previous-employment"
+                                                        name="endPreviousEmployment"
+                                                        type="date"
+                                                        className="form-control"
+                                                        required
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="3"
+                                                    />
+                                                    <span className="check-icon"/>
+                                                </div>
+                                            </div>
+                                            <div className="col-6">
+                                                <span className="primary"> Reason for leaving</span>
+                                                <textarea
+                                                    id="companyReasonForLeaving"
+                                                    form="form-previous-employment"
+                                                    name="reasonForLeavingEmployment"
+                                                    className="form-control textarea-apply-form"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-12">
+                                                <Button type="submit" form="form-previous-employment" className="save-skill-button">
+                                                    Add
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-4">
-                                    <span className="primary"> Phone</span>
-                                    <div className="input-container--validated">
-                                        <InputMask
-                                            id="companyPhoneEmployment"
-                                            form="form-previous-employment"
-                                            name="phoneEmployment"
-                                            mask="+(999) 999-9999"
-                                            maskChar=" "
-                                            value={this.state.previousEmploymentPhone}
-                                            className="form-control"
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    previousEmploymentPhone: event.target.value
-                                                });
-                                            }}
-                                            required
-                                            placeholder="+(999) 999-9999"
-                                            minLength="15"
-                                        />
-                                        {/*<input*/}
-                                        {/*id="companyPhoneEmployment"*/}
-                                        {/*form="form-previous-employment"*/}
-                                        {/*name="phoneEmployment"*/}
-                                        {/*type="number"*/}
-                                        {/*className="form-control"*/}
-                                        {/*required*/}
-                                        {/*min="0"*/}
-                                        {/*maxLength="10"*/}
-                                        {/*minLength="10"*/}
-                                        {/*/>*/}
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-8">
-                                    <span className="primary"> Address</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companyAddressEmployment"
-                                            form="form-previous-employment"
-                                            name="addressEmployment"
-                                            type="text"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-4">
-                                    <span className="primary"> Supervisor</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companySupervisor"
-                                            form="form-previous-employment"
-                                            name="supervisorEmployment"
-                                            type="text"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-8">
-                                    <span className="primary"> Job Title</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companyJobTitle"
-                                            form="form-previous-employment"
-                                            name="jobTitleEmployment"
-                                            type="text"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-4">
-                                    <span className="primary"> Pay Rate</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companyPayRate"
-                                            form="form-previous-employment"
-                                            name="payRateEmployment"
-                                            type="number"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-3">
-                                    <span className="primary"> Dates</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companyStartDate"
-                                            form="form-previous-employment"
-                                            name="startPreviousEmployment"
-                                            type="date"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-3">
-                                    <span className="primary">To: </span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="companyEndDate"
-                                            form="form-previous-employment"
-                                            name="endPreviousEmployment"
-                                            type="date"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
-                                </div>
-                                <div className="col-6">
-                                    <span className="primary"> Reason for leaving</span>
-                                    <textarea
-                                        id="companyReasonForLeaving"
-                                        form="form-previous-employment"
-                                        name="reasonForLeavingEmployment"
-                                        className="form-control textarea-apply-form"
-                                    />
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-12">
-                                    <Button type="submit" form="form-previous-employment" className="save-skill-button">
-                                        Add
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
                     ) : ''
                 }
             </form>
@@ -408,7 +467,7 @@ class PreviousEmployment extends Component {
                                         </button>
                                         <button
                                             onClick={() => {
-                                                this.insertLanguagesApplication()
+                                                this.insertPreviousEmploymentApplication()
                                             }}
                                             className="applicant-card__save-button">
                                             Save

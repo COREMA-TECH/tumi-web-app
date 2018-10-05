@@ -121,4 +121,24 @@ export const GET_APPLICATION_EDUCATION_BY_ID = gql`
     }
 `;
 
+export const GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID = gql`
+    query applications($id: Int!) {
+        applications(id: $id) {
+            employments {
+                id
+                companyName
+                phone
+                address
+                supervisor
+                jobTitle
+                payRate
+                startDate
+                endDate
+                reasonForLeaving
+                ApplicationId
+            }
+        }
+    }
+`;
+
 

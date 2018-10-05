@@ -77,4 +77,10 @@ export const REMOVE_APPLICANT_LANGUAGE = gql`
     }
 `;
 
+export const REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT = gql`
+    mutation deleteApplicantPreviousEmployment($id: [Int]){
+        deleteApplicantPreviousEmployment(id: $id)
+    }
+`;
+
 

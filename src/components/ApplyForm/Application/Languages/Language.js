@@ -86,7 +86,7 @@ class Language extends Component {
                             newLanguages: []
                         });
 
-                        this.getLanguagesList(this.props.applicationId);
+                        this.getLanguagesList(this.state.applicationId);
                     })
                     .catch((error) => {
                         // Replace this alert with a Snackbar message error
