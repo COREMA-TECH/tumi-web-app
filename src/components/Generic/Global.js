@@ -6,7 +6,7 @@ import React, { Component } from 'react';
  *  CONFIGURATION OF APOLLO CLIENT
  */
 
-const withGlobalContent = (WrappedComponent) => {
+const withGlobalContent = (WrappedComponent,) => {
 	return class Global extends Component {
 		state = {
 			openSnackbar: false,
@@ -22,11 +22,13 @@ const withGlobalContent = (WrappedComponent) => {
 			this.setState({ openSnackbar: false });
 		};
 
-		handleOpenSnackbar = (variant, message) => {
+		handleOpenSnackbar = (variant, message, verticalAlign = 'bottom', horizontalAlign = 'center') => {
 			this.setState({
 				openSnackbar: true,
 				variantSnackbar: variant,
-				messageSnackbar: message
+				messageSnackbar: message,
+                verticalAlign: verticalAlign,
+                horizontalAlign: horizontalAlign
 			});
 		};
 
@@ -46,8 +48,8 @@ const withGlobalContent = (WrappedComponent) => {
 				<React.Fragment>
 					<Snackbar
 						anchorOrigin={{
-							vertical: 'bottom',
-							horizontal: 'center'
+							vertical: this.state.verticalAlign,
+							horizontal: this.state.horizontalAlign
 						}}
 						open={this.state.openSnackbar}
 						autoHideDuration={5000}
