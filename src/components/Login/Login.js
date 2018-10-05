@@ -227,6 +227,7 @@ class Login extends Component {
 										onChange={(text) => {
 											this.setState({ username: text });
 										}}
+										onKeyPress={this.handleKeyPress}
 									/>
 									<span className="focus-input100" data-symbol="&#xf206;" />
 								</div>
@@ -309,12 +310,12 @@ const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 			1 === 1 ? (
 				<Component {...props} />
 			) : (
-				<Redirect
-					to={{
-						pathname: '/login',
-						state: { from: props.location }
-					}}
-				/>
-			)}
+					<Redirect
+						to={{
+							pathname: '/login',
+							state: { from: props.location }
+						}}
+					/>
+				)}
 	/>
 );

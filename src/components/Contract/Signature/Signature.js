@@ -96,8 +96,6 @@ class Signature extends React.Component {
 			idContract: 0,
 			view: 1
 		};
-
-		localStorage.setItem('Token', this.context.token);
 	}
 
 	GET_AGREEMENT_QUERY = gql`
@@ -363,6 +361,8 @@ class Signature extends React.Component {
 	};
 
 	componentWillMount() {
+		localStorage.setItem('Token', this.context.token);
+
 		const values = queryString.parse(this.props.location.search);
 		if (!values.token || !values.signatory) this.props.history.push('/home/');
 
