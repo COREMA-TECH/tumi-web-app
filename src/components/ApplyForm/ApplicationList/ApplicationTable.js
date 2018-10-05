@@ -191,7 +191,7 @@ class ApplicationTable extends React.Component {
 									<CustomTableCell className={classes.th}>First Name</CustomTableCell>
 									<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 									<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
-									<CustomTableCell className={classes.th}>Social Secutiry Number</CustomTableCell>
+
 									<CustomTableCell className={classes.th}>Email Address</CustomTableCell>
 								</TableRow>
 							</TableHead>
@@ -228,7 +228,7 @@ class ApplicationTable extends React.Component {
 											<CustomTableCell>{row.firstName}</CustomTableCell>
 											<CustomTableCell>{row.middleName}</CustomTableCell>
 											<CustomTableCell>{row.lastName}</CustomTableCell>
-											<CustomTableCell>{row.socialSecurityNumber}</CustomTableCell>
+
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
 									);
