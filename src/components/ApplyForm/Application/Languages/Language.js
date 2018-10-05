@@ -6,6 +6,7 @@ import {GET_APPLICATION_LANGUAGES_BY_ID, GET_LANGUAGES_QUERY} from "../../Querie
 import withApollo from "react-apollo/withApollo";
 import {ADD_LANGUAGES, REMOVE_APPLICANT_LANGUAGE} from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+import withGlobalContent from "../../../Generic/Global";
 
 const uuidv4 = require('uuid/v4');
 
@@ -43,7 +44,14 @@ class Language extends Component {
                         loading: false
                     })
                 })
-                .catch();
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show languages list. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
         });
     };
 
@@ -93,11 +101,23 @@ class Language extends Component {
                             newLanguages: []
                         });
 
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            'Successfully created',
+                            'bottom',
+                            'right'
+                        );
+
                         this.getLanguagesList(this.state.applicationId);
                     })
                     .catch((error) => {
                         // Replace this alert with a Snackbar message error
-                        alert('Error');
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to save languages. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
                     });
             });
         }
@@ -112,9 +132,23 @@ class Language extends Component {
                 }
             })
             .then(({data}) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully removed',
+                    'bottom',
+                    'right'
+                );
+
                 this.getLanguagesList(this.state.applicationId);
             })
-            .catch();
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to remove languages. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
     };
 
     componentWillMount() {
@@ -387,4 +421,4 @@ class Language extends Component {
     }
 }
 
-export default withApollo(Language);
+export default withApollo(withGlobalContent(Language));

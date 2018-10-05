@@ -7,6 +7,7 @@ import {updateApplicationInformation} from "../utils";
 import {UPDATE_APPLICATION} from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
+import withGlobalContent from "../../Generic/Global";
 
 class Application extends Component {
     constructor(props) {
@@ -130,10 +131,22 @@ class Application extends Component {
                 .then(({data}) => {
                     this.setState({
                         editing: false
-                    })
+                    });
+
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Successfully updated',
+                        'bottom',
+                        'right'
+                    );
                 })
                 .catch((error) => {
-                    alert("Error updating information: " + error);
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Errorn to update aaplicant information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         });
     };
@@ -189,7 +202,12 @@ class Application extends Component {
                 })
                 .catch(error => {
                     // TODO: replace alert with snackbar error message
-                    alert("Error loading applicant information")
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show applicant information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         });
     };
@@ -779,4 +797,4 @@ class Application extends Component {
     }
 }
 
-export default withApollo(Application);
+export default withApollo(withGlobalContent(Application));

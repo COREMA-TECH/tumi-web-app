@@ -9,6 +9,7 @@ import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import {ADD_SKILL, REMOVE_APPLICANT_LANGUAGE, REMOVE_APPLICANT_SKILL} from "../../Mutations";
 import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+import withGlobalContent from "../../../Generic/Global";
 
 const uuidv4 = require('uuid/v4');
 
@@ -95,11 +96,23 @@ class Skills extends Component {
                             newSkills: []
                         });
 
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            'Successfully created',
+                            'bottom',
+                            'right'
+                        );
+
                         this.getSkillsList(this.state.applicationId);
                     })
                     .catch((error) => {
                         // Replace this alert with a Snackbar message error
-                        alert('Error');
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to remove skill. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
                     });
             });
 
@@ -116,6 +129,12 @@ class Skills extends Component {
                 }
             })
             .then(({data}) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully removed',
+                    'bottom',
+                    'right'
+                );
                 this.getSkillsList(this.state.applicationId);
             })
             .catch();
@@ -371,4 +390,4 @@ class Skills extends Component {
 }
 
 
-export default withApollo(Skills);
+export default withApollo(withGlobalContent(Skills));

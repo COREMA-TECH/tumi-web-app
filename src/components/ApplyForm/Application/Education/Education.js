@@ -45,7 +45,14 @@ class Education extends Component {
                         // this.state.schools.map(item => (item.uuid = uuidv4()));
                     })
                 })
-                .catch();
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show education list. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
         });
     };
 

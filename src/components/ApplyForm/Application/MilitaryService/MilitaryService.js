@@ -3,6 +3,7 @@ import {GET_APPLICATION_MILITARY_SERVICES_BY_ID} from "../../Queries";
 import withApollo from "react-apollo/withApollo";
 import {ADD_MILITARY_SERVICES, UPDATE_MILITARY_SERVICES} from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+import withGlobalContent from "../../../Generic/Global";
 
 class MilitaryService extends Component {
     constructor(props) {
@@ -59,11 +60,21 @@ class MilitaryService extends Component {
                 .then(() => {
                     //TODO: Show a success message
                     this.getMilitaryServiceInfo(this.state.applicationId);
-                    alert("Created");
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Successfully created',
+                        'bottom',
+                        'right'
+                    );
                 })
                 .catch((error) => {
                     // Replace this alert with a Snackbar message error
-                    alert('Error');
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to save military service. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         }
     };
@@ -98,12 +109,22 @@ class MilitaryService extends Component {
                         editing: false
                     });
 
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Successfully updated',
+                        'bottom',
+                        'right'
+                    );
                     this.getMilitaryServiceInfo(this.state.applicationId);
-                    alert("Updated");
                 })
                 .catch((error) => {
                     // Replace this alert with a Snackbar message error
-                    alert('Error');
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to update military services. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         }
     };
@@ -153,7 +174,14 @@ class MilitaryService extends Component {
                 .catch(error => {
                     this.setState({
                         loading: false
-                    })
+                    });
+
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show military service information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
                 });
         });
     };
@@ -346,4 +374,4 @@ class MilitaryService extends Component {
     }
 }
 
-export default withApollo(MilitaryService);
+export default withApollo(withGlobalContent(MilitaryService));

@@ -9,6 +9,7 @@ import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
 import {GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+import withGlobalContent from "../../../Generic/Global";
 
 const uuidv4 = require('uuid/v4');
 
@@ -56,6 +57,13 @@ class PreviousEmployment extends Component {
                             newPreviousEmployment: []
                         });
 
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            'Successfully created',
+                            'bottom',
+                            'right'
+                        );
+
                         this.getPreviousEmploymentList(this.state.applicationId);
                     })
                     .catch((error) => {
@@ -87,7 +95,14 @@ class PreviousEmployment extends Component {
                         loading: false
                     });
                 })
-                .catch();
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show previous employment. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
         });
     };
 
@@ -100,9 +115,22 @@ class PreviousEmployment extends Component {
                 }
             })
             .then(({data}) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully removed',
+                    'bottom',
+                    'right'
+                );
                 this.getPreviousEmploymentList(this.state.applicationId);
             })
-            .catch();
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to remove previous employment. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
     };
 
     componentWillMount() {
@@ -499,4 +527,4 @@ class PreviousEmployment extends Component {
 }
 
 
-export default withApollo(PreviousEmployment);
+export default withApollo(withGlobalContent(PreviousEmployment));
