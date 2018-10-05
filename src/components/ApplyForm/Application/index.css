@@ -147,6 +147,17 @@
     background: transparent !important;
 }
 
+.military-service-form input:disabled,
+.military-service-form select:disabled,
+.military-service-form textarea:disabled {
+    border: 1px solid transparent !important;
+    border-bottom: 1px solid #efefef !important;
+    color: #777777;
+
+    background: transparent !important;
+}
+
+
 select {
     height: 36px;
 }

@@ -54,6 +54,16 @@ export const ADD_MILITARY_SERVICES = gql`
     }
 `;
 
+export const UPDATE_MILITARY_SERVICES = gql`
+    mutation updateMilitaryService($application: inputUpdateApplicantMilitaryService) {
+        updateMilitaryService(militaryService: $application) {
+            id
+        }
+    }
+`;
+
+
+
 export const ADD_SKILL = gql`
     mutation addApplicantSkill($application: [inputInsertApplicantSkill]) {
         addApplicantSkill(applicantSkill: $application) {
