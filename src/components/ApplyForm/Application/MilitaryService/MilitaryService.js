@@ -15,7 +15,8 @@ class MilitaryService extends Component {
             startDateMilitaryService: '',
             endDateMilitaryService: '',
             rankAtDischarge: '',
-            typeOfDischarge: ''
+            typeOfDischarge: '',
+            militaryServiceLength: 0
         }
     }
 
@@ -54,13 +55,14 @@ class MilitaryService extends Component {
                     }
                 })
                 .then(() => {
-                    this.handleNext();
+                    //TODO: Show a success message
+                    alert("Created");
                 })
                 .catch((error) => {
                     // Replace this alert with a Snackbar message error
                     alert('Error');
                 });
-        } 
+        }
     };
 
     // To get a list of previous employments saved from API
@@ -74,7 +76,7 @@ class MilitaryService extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({data}) => {
-                if(data.applications[0].militaryServices.length > 0){
+                if (data.applications[0].militaryServices.length > 0) {
                     this.setState({
                         id: data.applications[0].militaryServices[0].id,
                         branch: data.applications[0].militaryServices[0].branch,
@@ -82,6 +84,11 @@ class MilitaryService extends Component {
                         endDate: data.applications[0].militaryServices[0].endDate,
                         rankAtDischarge: data.applications[0].militaryServices[0].rankAtDischarge,
                         typeOfDischarge: data.applications[0].militaryServices[0].typeOfDischarge,
+                        militaryServiceLength: data.applications[0].militaryServices.length
+                    })
+                } else {
+                    this.setState({
+                        militaryServiceLength: 0
                     })
                 }
             })
@@ -193,7 +200,7 @@ class MilitaryService extends Component {
                                 </div>
                             </div>
                         </div>
-                    ): ''
+                    ) : ''
                 }
             </div>
         );
@@ -209,11 +216,19 @@ class MilitaryService extends Component {
                                     this.state.editing ? (
                                         ''
                                     ) : (
+
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.setState({
                                                 editing: true
                                             })
-                                        }}>Add <i className="fas fa-plus"/>
+                                        }}>
+                                            {
+                                                this.state.militaryServiceLength === 0 ? (
+                                                    <span> Edit <i className="far fa-edit"></i></span>
+                                                ) : (
+                                                    <span> Add <i className="fas fa-plus"/></span>
+                                                )
+                                            }
                                         </button>
                                     )
                                 }
