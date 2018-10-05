@@ -170,18 +170,22 @@ class ExhibitContract extends Component {
 	`;
 
 	sleep() {
-		return new Promise(resolve => setTimeout(resolve, 15000));
+		return new Promise((resolve) => setTimeout(resolve, 15000));
 	}
 
 	writePDF = () => {
 		this.sleep().then(() => {
 			// Do something after the sleep!
 			this.setState({
-				PdfUrl: '<iframe src="' + this.context.baseUrl + '/public/Contract_' + this.props.contractname + '.pdf"  width="100%" height="100%" />'
-			})
+				PdfUrl:
+					'<iframe src="' +
+					this.context.baseUrl +
+					'/public/Contract_' +
+					this.props.contractname +
+					'.pdf"  width="100%" height="100%" />'
+			});
 		});
-
-	}
+	};
 
 	sendContract = () => {
 		this.setState({ loadingData: true });
@@ -219,7 +223,7 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.createcontracts != null) {
-					//this.setState({ openModal: true });
+					this.setState({ openModal: true });
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -326,7 +330,6 @@ class ExhibitContract extends Component {
 
 	handleClickOpenModal = () => {
 		this.createContract();
-		this.setState({ openModal: true });
 	};
 
 	cancelContractHandler = () => {
@@ -359,7 +362,6 @@ class ExhibitContract extends Component {
 		});
 
 		return (
-
 			<div className="contract-container">
 				<Dialog
 					fullScreen={true}
@@ -380,12 +382,8 @@ class ExhibitContract extends Component {
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
-							{
-								this.writePDF()
-							}
-							{renderHTML(this.state.PdfUrl)}
-
-
+							{this.state.openModal && this.writePDF()}
+							{this.state.openModal && renderHTML(this.state.PdfUrl)}
 						</div>
 					</DialogContent>
 					<DialogActions>
