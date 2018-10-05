@@ -4,7 +4,8 @@ import languageLevelsJSON from "../../data/languagesLevels";
 import Button from "@material-ui/core/Button/Button";
 import {GET_APPLICATION_LANGUAGES_BY_ID, GET_LANGUAGES_QUERY} from "../../Queries";
 import withApollo from "react-apollo/withApollo";
-import {ADD_LANGUAGES, REMOVE_APPLICANT_EDUCATION, REMOVE_APPLICANT_LANGUAGE} from "../../Mutations";
+import {ADD_LANGUAGES, REMOVE_APPLICANT_LANGUAGE} from "../../Mutations";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 
 const uuidv4 = require('uuid/v4');
 
@@ -18,26 +19,32 @@ class Language extends Component {
             languages: [],
             languagesLoaded: [],
             newLanguages: [],
-            applicationId: null
+            applicationId: null,
+            loading: false
         }
     }
 
     // To get a list of languages saved from API
     getLanguagesList = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_LANGUAGES_BY_ID,
-                variables: {
-                    id: id
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({data}) => {
-                this.setState({
-                    languages: data.applications[0].languages
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_LANGUAGES_BY_ID,
+                    variables: {
+                        id: id
+                    },
+                    fetchPolicy: 'no-cache'
                 })
-            })
-            .catch();
+                .then(({data}) => {
+                    this.setState({
+                        languages: data.applications[0].languages,
+                        loading: false
+                    })
+                })
+                .catch();
+        });
     };
 
     // To get a list of languages from API
@@ -49,7 +56,7 @@ class Language extends Component {
             .then(({data}) => {
                 this.setState({
                     languagesLoaded: data.getcatalogitem
-                })
+                });
             })
             .catch();
     };
@@ -120,7 +127,6 @@ class Language extends Component {
     }
 
     render() {
-
         // To render the Languages Section
         let renderlanguagesSection = () => (
             <div>
@@ -331,7 +337,13 @@ class Language extends Component {
                             </div>
                             <div className="row">
                                 {
-                                    renderlanguagesSection()
+                                    this.state.loading ? (
+                                        <div className="form-section-1 form-section--center">
+                                            <CircularProgressLoading/>
+                                        </div>
+                                    ) : (
+                                        renderlanguagesSection()
+                                    )
                                 }
                             </div>
                             {

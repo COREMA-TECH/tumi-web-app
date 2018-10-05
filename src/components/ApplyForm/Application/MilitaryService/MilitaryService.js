@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {GET_APPLICATION_MILITARY_SERVICES_BY_ID} from "../../Queries";
 import withApollo from "react-apollo/withApollo";
 import {ADD_MILITARY_SERVICES} from "../../Mutations";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 
 class MilitaryService extends Component {
     constructor(props) {
@@ -16,7 +17,8 @@ class MilitaryService extends Component {
             endDateMilitaryService: '',
             rankAtDischarge: '',
             typeOfDischarge: '',
-            militaryServiceLength: 0
+            militaryServiceLength: 0,
+            loading: false
         }
     }
 
@@ -67,32 +69,40 @@ class MilitaryService extends Component {
 
     // To get a list of previous employments saved from API
     getMilitaryServiceInfo = (id) => {
-        this.props.client
-            .query({
-                query: GET_APPLICATION_MILITARY_SERVICES_BY_ID,
-                variables: {
-                    id: id
-                },
-                fetchPolicy: 'no-cache'
-            })
-            .then(({data}) => {
-                if (data.applications[0].militaryServices.length > 0) {
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_MILITARY_SERVICES_BY_ID,
+                    variables: {
+                        id: id
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({data}) => {
+                    if (data.applications[0].militaryServices.length > 0) {
+                        this.setState({
+                            id: data.applications[0].militaryServices[0].id,
+                            branch: data.applications[0].militaryServices[0].branch,
+                            startDate: data.applications[0].militaryServices[0].startDate,
+                            endDate: data.applications[0].militaryServices[0].endDate,
+                            rankAtDischarge: data.applications[0].militaryServices[0].rankAtDischarge,
+                            typeOfDischarge: data.applications[0].militaryServices[0].typeOfDischarge,
+                            militaryServiceLength: data.applications[0].militaryServices.length
+                        })
+                    } else {
+                        this.setState({
+                            militaryServiceLength: 0,
+                        })
+                    }
+
                     this.setState({
-                        id: data.applications[0].militaryServices[0].id,
-                        branch: data.applications[0].militaryServices[0].branch,
-                        startDate: data.applications[0].militaryServices[0].startDate,
-                        endDate: data.applications[0].militaryServices[0].endDate,
-                        rankAtDischarge: data.applications[0].militaryServices[0].rankAtDischarge,
-                        typeOfDischarge: data.applications[0].militaryServices[0].typeOfDischarge,
-                        militaryServiceLength: data.applications[0].militaryServices.length
+                        loading: false
                     })
-                } else {
-                    this.setState({
-                        militaryServiceLength: 0
-                    })
-                }
-            })
-            .catch();
+                })
+                .catch();
+        });
     };
 
     render() {
@@ -235,7 +245,13 @@ class MilitaryService extends Component {
                             </div>
                             <div className="row">
                                 {
-                                    renderMilitaryServiceSection()
+                                    this.state.loading ? (
+                                        <div className="form-section-1 form-section--center">
+                                            <CircularProgressLoading/>
+                                        </div>
+                                    ) : (
+                                        renderMilitaryServiceSection()
+                                    )
                                 }
                             </div>
                             {
