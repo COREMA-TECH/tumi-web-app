@@ -83,4 +83,10 @@ export const REMOVE_APPLICANT_PREVIOUS_EMPLOYMENT = gql`
     }
 `;
 
+export const REMOVE_APPLICANT_SKILL = gql`
+    mutation deleteApplicantSkill($id: [Int]){
+        deleteApplicantSkill(id: $id)
+    }
+`;
+
 

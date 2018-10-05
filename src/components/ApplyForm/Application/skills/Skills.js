@@ -6,6 +6,10 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import InputRange from "../../ui/InputRange/InputRange";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import {ADD_SKILL, REMOVE_APPLICANT_LANGUAGE, REMOVE_APPLICANT_SKILL} from "../../Mutations";
+import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+
 const uuidv4 = require('uuid/v4');
 
 class Skills extends Component {
@@ -22,25 +26,106 @@ class Skills extends Component {
             newSkills: [],
 
             // skills dialog state
-            open: false
+            open: false,
+            loading: false
         }
     }
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({ open: true });
+        this.setState({open: true});
     };
 
     // To close the skill dialog
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
+    };
+
+    // To get a list of languages saved from API
+    getSkillsList = (id) => {
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_APPLICATION_SKILLS_BY_ID,
+                    variables: {
+                        id: id
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({data}) => {
+                    this.setState({
+                        skills: data.applications[0].skills,
+                        loading: false
+                    })
+                })
+                .catch();
+        });
+    };
+
+    // To insert a list of skills
+    insertSkillsApplication = () => {
+        if (this.state.skills.length > 0) {
+            // to remove all the uuid properties in the object
+            this.state.skills.forEach((item) => {
+                delete item.uuid;
+            });
+
+            this.state.skills.forEach((item) => {
+                item.ApplicationId = this.state.applicationId;
+            });
+
+            this.setState((prevState) => ({
+                newSkills: this.state.skills.filter((_, i) => {
+                    console.log(_.id);
+                    return _.id === undefined;
+                })
+            }), () => {
+                this.props.client
+                    .mutate({
+                        mutation: ADD_SKILL,
+                        variables: {
+                            application: this.state.newSkills
+                        }
+                    })
+                    .then(() => {
+                        this.setState({
+                            editing: false,
+                            newSkills: []
+                        });
+
+                        this.getSkillsList(this.state.applicationId);
+                    })
+                    .catch((error) => {
+                        // Replace this alert with a Snackbar message error
+                        alert('Error');
+                    });
+            });
+
+
+        }
+    };
+
+    removeSkillById = (id) => {
+        this.props.client
+            .mutate({
+                mutation: REMOVE_APPLICANT_SKILL,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                this.getSkillsList(this.state.applicationId);
+            })
+            .catch();
     };
 
     componentWillMount() {
         this.setState({
             applicationId: this.props.applicationId
         }, () => {
-
+            this.getSkillsList(this.state.applicationId);
         });
     }
 
@@ -86,7 +171,7 @@ class Skills extends Component {
                                                     })
                                                 }), () => {
                                                     if (skillItem.id !== undefined) {
-                                                        this.removeLanguageById(skillItem.id)
+                                                        this.removeSkillById(skillItem.id)
                                                     }
                                                 });
                                             }}
@@ -112,9 +197,15 @@ class Skills extends Component {
                         ))}
                     </div>
                     <div className="col-12">
-                        <Button onClick={this.handleClickOpen} className="save-skill-button">
-                            New Skill
-                        </Button>
+                        {
+                            this.state.editing ? (
+                                <Button onClick={this.handleClickOpen} className="save-skill-button">
+                                    New Skill
+                                </Button>
+                            ) : (
+                                ''
+                            )
+                        }
                         {renderSkillsDialog()}
                     </div>
                 </div>
@@ -210,28 +301,67 @@ class Skills extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Skills</span>
-                                {/*{*/}
-                                    {/*this.state.editing ? (*/}
-                                        {/*''*/}
-                                    {/*) : (*/}
+                                {
+                                    this.state.editing ? (
+                                        ''
+                                    ) : (
 
-                                        {/*<button className="applicant-card__edit-button" onClick={() => {*/}
-                                            {/*this.setState({*/}
-                                                {/*editing: true*/}
-                                            {/*})*/}
-                                        {/*}}>*/}
-                                            {/*{*/}
-                                                {/*<span> Add <i className="fas fa-plus"/></span>*/}
-                                            {/*}*/}
-                                        {/*</button>*/}
-                                    {/*)*/}
-                                {/*}*/}
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.setState({
+                                                editing: true
+                                            })
+                                        }}>
+                                            {
+                                                <span> Add <i className="fas fa-plus"/></span>
+                                            }
+                                        </button>
+                                    )
+                                }
                             </div>
                             <div className="row">
                                 {
-                                    renderSkillsSection()
+                                    this.state.loading ? (
+                                        <div className="form-section-1 form-section--center">
+                                            <CircularProgressLoading/>
+                                        </div>
+                                    ) : (
+                                        renderSkillsSection()
+                                    )
                                 }
                             </div>
+                            {
+                                this.state.editing ? (
+                                    <div className="applicant-card__footer">
+                                        <button
+                                            className="applicant-card__cancel-button"
+                                            onClick={
+                                                () => {
+                                                    this.setState((prevState) => ({
+                                                        skills: this.state.skills.filter((_, i) => {
+                                                            return _.id !== undefined;
+                                                        })
+                                                    }), () => {
+                                                        this.setState({
+                                                            editing: false
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                this.insertSkillsApplication()
+                                            }}
+                                            className="applicant-card__save-button">
+                                            Save
+                                        </button>
+                                    </div>
+                                ) : (
+                                    ''
+                                )
+                            }
                         </div>
                     </div>
                 </div>
