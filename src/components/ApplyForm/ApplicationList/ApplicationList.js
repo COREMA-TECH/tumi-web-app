@@ -11,6 +11,7 @@ import ErrorMessageComponent from 'ui-components/ErrorMessageComponent/ErrorMess
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 
 const styles = (theme) => ({
 	root: {
@@ -47,7 +48,7 @@ class ApplicationList extends Component {
 
 	GET_APPLICATION_QUERY = gql`
 		{
-			applications {
+			applications(isActive: true) {
 				id
 				firstName
 				middleName
@@ -57,6 +58,50 @@ class ApplicationList extends Component {
 			}
 		}
 	`;
+	DELETE_APPLICATION_QUERY = gql`
+		mutation disableApplication($id: Int!) {
+			disableApplication(id: $id) {
+				id
+				isActive
+			}
+		}
+	`;
+	deleteApplication = () => {
+		this.setState(
+			{
+				loadingConfirm: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: this.DELETE_APPLICATION_QUERY,
+						variables: {
+							id: this.state.idToDelete
+						}
+					})
+					.then((data) => {
+						this.props.handleOpenSnackbar('success', 'Application Deleted!');
+						this.setState({ opendialog: false, loadingConfirm: false }, () => {});
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Position and Rates: ' + error);
+						this.setState({
+							loadingConfirm: false
+						});
+					});
+			}
+		);
+	};
+
+	onDeleteHandler = (id) => {
+		this.setState({ idToDelete: id, opendialog: true });
+	};
+	handleCloseAlertDialog = () => {
+		this.setState({ opendialog: false });
+	};
+	handleConfirmAlertDialog = () => {
+		this.deleteApplication();
+	};
 
 	render() {
 		const { classes } = this.props;
@@ -108,12 +153,19 @@ class ApplicationList extends Component {
 
 		return (
 			<div className="main-application">
+				<AlertDialogSlide
+					handleClose={this.handleCloseAlertDialog}
+					handleConfirm={this.handleConfirmAlertDialog}
+					open={this.state.opendialog}
+					loadingConfirm={this.state.loadingConfirm}
+					content="Do you really want to continue whit this operation?"
+				/>
 				<div className="main-contract__header main-contract__header-sg-container">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
 					<Query query={this.GET_APPLICATION_QUERY} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
-								if (loading) return <LinearProgress />;
+								if (loading && !this.state.opendialog) return <LinearProgress />;
 							}
 
 							if (error)
@@ -150,7 +202,10 @@ class ApplicationList extends Component {
 											<div className="row">
 												<div className="col-12">
 													<div className="contract_table_wrapper">
-														<ApplicationTable data={dataApplication} />
+														<ApplicationTable
+															data={dataApplication}
+															onDeleteHandler={this.onDeleteHandler}
+														/>
 													</div>
 												</div>
 											</div>
