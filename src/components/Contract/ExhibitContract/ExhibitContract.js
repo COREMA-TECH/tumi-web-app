@@ -9,13 +9,13 @@ import PositionsCompanyForm from '../../Company/PositionsCompanyForm/';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import CheckIcon from '@material-ui/icons/Check';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import SendIcon from '@material-ui/icons/Send';
 import PrintIcon from '@material-ui/icons/Print';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import InputForm from 'ui-components/InputForm/InputForm';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Dialog from '@material-ui/core/Dialog';
@@ -107,7 +107,7 @@ class ExhibitContract extends Component {
 			exhibitD: '',
 			exhibitE: '',
 			exhibitF: '',
-
+			PdfUrl: '',
 			agreement: '',
 			openModal: false
 		};
@@ -169,6 +169,20 @@ class ExhibitContract extends Component {
 		}
 	`;
 
+	sleep() {
+		return new Promise(resolve => setTimeout(resolve, 15000));
+	}
+
+	writePDF = () => {
+		this.sleep().then(() => {
+			// Do something after the sleep!
+			this.setState({
+				PdfUrl: '<iframe src="' + this.context.baseUrl + '/public/Contract_' + this.props.contractname + '.pdf"  width="100%" height="100%" />'
+			})
+		});
+
+	}
+
 	sendContract = () => {
 		this.setState({ loadingData: true });
 		this.props.client
@@ -205,8 +219,7 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.createcontracts != null) {
-					//this.props.handleOpenSnackbar('success', 'Contract Sent!');
-					//this.resetState();
+					//this.setState({ openModal: true });
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
@@ -346,6 +359,7 @@ class ExhibitContract extends Component {
 		});
 
 		return (
+
 			<div className="contract-container">
 				<Dialog
 					fullScreen={true}
@@ -366,11 +380,12 @@ class ExhibitContract extends Component {
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
-							<iframe
-								src={`${this.context.baseUrl}/public/Contract_${this.props.contractname}.pdf`}
-								width="100%"
-								height="100%"
-							/>
+							{
+								this.writePDF()
+							}
+							{renderHTML(this.state.PdfUrl)}
+
+
 						</div>
 					</DialogContent>
 					<DialogActions>
