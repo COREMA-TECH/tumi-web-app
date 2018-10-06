@@ -1045,14 +1045,14 @@ class PositionsCompanyForm extends React.Component {
                 {
                     this.props.showStepper ? (
                         <div className="advanced-tab-options">
-                            <span
+                            { /*<span
                                 className="options-button options-button--back"
                                 onClick={() => {
                                     this.props.back();
                                 }}
                             >
                                 Back
-						</span>
+                            </span>*/}
                             <Route render={({ history }) => (
                                 <span
                                     className="options-button options-button--next"
