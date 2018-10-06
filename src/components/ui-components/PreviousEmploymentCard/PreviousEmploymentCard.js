@@ -6,7 +6,7 @@ class PreviousEmploymentCard extends Component {
         return (
             <div className="previous-employment-card">
                 <span
-                    className="skill-card__remove-button"
+                    className="previous-employment-card__remove-button"
                     onClick={()=> {this.props.removeSkill()}}>
                     <i className="fas fa-trash-alt"></i>
                 </span>
@@ -16,6 +16,9 @@ class PreviousEmploymentCard extends Component {
                 </div>
                 <div className="previous-employment-card__address">
                     <i className="fas fa-map-marker-alt"></i><span> San Francisco, California</span>
+                </div>
+                <div className="previous-employment-card__phone">
+                    <i className="fas fa-phone"></i><span> 5125616165156</span>
                 </div>
             </div>
         );
