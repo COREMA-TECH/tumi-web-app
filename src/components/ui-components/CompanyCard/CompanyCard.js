@@ -21,8 +21,7 @@ class CompanyCard extends React.Component {
 		super(props);
 
 		this.state = {
-			deleted: false,
-			loadingRemoving: false
+			deleted: false
 		};
 
 		this.Login = {
@@ -55,14 +54,6 @@ class CompanyCard extends React.Component {
 							});
 						}}
 					>
-						<AlertDialogSlide
-							handleClose={this.handleCloseAlertDialog}
-							handleConfirm={this.handleConfirmAlertDialog}
-							open={this.state.open}
-							loadingConfirm={this.state.loadingRemoving}
-							content="Do you really want to continue whit this operation?"
-						/>
-
 						<div className="company-card__header">
 							<div className="company-card__header-options">
 								<Mutation mutation={DELETE_COMPANY}>
@@ -83,21 +74,20 @@ class CompanyCard extends React.Component {
 												}
 												className="delete-company-icon"
 												onClick={(e) => {
-													e.stopPropagation();
-													this.setState({ loadingRemoving: true })
+													//this.setState({ loadingRemoving: true })
+													//e.stopPropagation();
+
 													//return this.props.delete(row.Id);
-													/*delbusinesscompanies({
+													delbusinesscompanies({
 														variables: {
 															Id: this.props.idCompany,
 															IsActive: 0
 														}
-													});*/
+													});
 
-													/*	this.setState({
-															deleted: true
-														});*/
-
-
+													this.setState({
+														deleted: true
+													});
 												}}
 											/>
 										);
