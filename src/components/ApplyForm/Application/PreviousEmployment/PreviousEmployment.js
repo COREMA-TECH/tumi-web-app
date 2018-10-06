@@ -10,6 +10,7 @@ import withApollo from "react-apollo/withApollo";
 import {GET_APPLICATION_PREVIOUS_EMPLOYMENT_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
+import PreviousEmploymentCard from "../../../ui-components/PreviousEmploymentCard/PreviousEmploymentCard";
 
 const uuidv4 = require('uuid/v4');
 
@@ -188,86 +189,89 @@ class PreviousEmployment extends Component {
                 }}
             >
                 <div className="row">
-                    {this.state.previousEmployment.length > 0 ? (
-                        <div key={uuidv4()} className="skills-container skills-container--header">
-                            <div className="row">
-                                <div className="col-1">
-                                    <span>Company</span>
-                                </div>
-                                <div className="col-2">
-                                    <span>Address</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>Job Title</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>Phone</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>Supervisor</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>Pay Rate</span>
-                                </div>
-                                <div className="col-2">
-                                    <span>Start Date</span>
-                                </div>
-                                <div className="col-2">
-                                    <span>End Date</span>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        ''
-                    )}
+                    {/*{this.state.previousEmployment.length > 0 ? (*/}
+                        {/*<div key={uuidv4()} className="skills-container skills-container--header">*/}
+                            {/*<div className="row">*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>Company</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-2">*/}
+                                    {/*<span>Address</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>Job Title</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>Phone</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>Supervisor</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>Pay Rate</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-2">*/}
+                                    {/*<span>Start Date</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-2">*/}
+                                    {/*<span>End Date</span>*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                    {/*) : (*/}
+                        {/*''*/}
+                    {/*)}*/}
                     {this.state.previousEmployment.map((employmentItem) => (
-                        <div key={uuidv4()} className="skills-container">
-                            <div className="row">
-                                <div className="col-1">
-                                    <span>{employmentItem.companyName}</span>
-                                </div>
-                                <div className="col-2">
-                                    <span>{employmentItem.address}</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>{employmentItem.jobTitle}</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>{employmentItem.phone}</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>{employmentItem.supervisor}</span>
-                                </div>
-                                <div className="col-1">
-                                    <span>{employmentItem.payRate}</span>
-                                </div>
-                                <div className="col-2">
-                                    <span>{employmentItem.startDate.substring(0, 10)}</span>
-                                </div>
-                                <div className="col-2">
-                                    <span>{employmentItem.endDate.substring(0, 10)}</span>
-                                </div>
-                                <div className="col-1">
-                                    <span
-                                        className="delete-school-button"
-                                        onClick={() => {
-                                            this.setState((prevState) => ({
-                                                previousEmployment: this.state.previousEmployment.filter((_, i) => {
-                                                    return _.uuid !== employmentItem.uuid;
-                                                })
-                                            }), () => {
-                                                if (employmentItem.id !== undefined) {
-                                                    this.removePreviousEmploymentById(employmentItem.id)
-                                                }
-                                            });
-                                        }}
-                                    >
-                                        <i className="fas fa-trash-alt"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                        <div className="col-4">
+                            <PreviousEmploymentCard />
+                        </div>)) }
+
+                        {/*<div key={uuidv4()} className="skills-container">*/}
+                            {/*<div className="row">*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>{employmentItem.companyName}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-2">*/}
+                                    {/*<span>{employmentItem.address}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>{employmentItem.jobTitle}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>{employmentItem.phone}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>{employmentItem.supervisor}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span>{employmentItem.payRate}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-2">*/}
+                                    {/*<span>{employmentItem.startDate.substring(0, 10)}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-2">*/}
+                                    {/*<span>{employmentItem.endDate.substring(0, 10)}</span>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-1">*/}
+                                    {/*<span*/}
+                                        {/*className="delete-school-button"*/}
+                                        {/*onClick={() => {*/}
+                                            {/*this.setState((prevState) => ({*/}
+                                                {/*previousEmployment: this.state.previousEmployment.filter((_, i) => {*/}
+                                                    {/*return _.uuid !== employmentItem.uuid;*/}
+                                                {/*})*/}
+                                            {/*}), () => {*/}
+                                                {/*if (employmentItem.id !== undefined) {*/}
+                                                    {/*this.removePreviousEmploymentById(employmentItem.id)*/}
+                                                {/*}*/}
+                                            {/*});*/}
+                                        {/*}}*/}
+                                    {/*>*/}
+                                        {/*<i className="fas fa-trash-alt"></i>*/}
+                                    {/*</span>*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
                 </div>
                 {
                     this.state.editing ? (

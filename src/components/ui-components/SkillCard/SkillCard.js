@@ -15,10 +15,9 @@ class SkillCard extends Component {
                     className="skill-card__remove-button"
                     onClick={()=> {this.props.removeSkill()}}>
                     <i className="fas fa-trash-alt"></i>
-
                 </span>
                 <div className="skill-card__description applicant-card__label">{this.props.skillDescription}</div>
-                <div className="skill-card__level">{this.props.skillLevel}</div>
+                <div className="skill-card__level applicant-card__label">{this.props.skillLevel}</div>
             </div>
         );
     }
