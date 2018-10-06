@@ -208,7 +208,6 @@ class VerticalLinearStepper extends Component {
                                 homePhone: this.state.homePhone,
                                 cellPhone: this.state.cellPhone,
                                 socialSecurityNumber: this.state.socialSecurityNumber,
-                                birthDay: this.state.birthDay,
                                 car: this.state.car,
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
@@ -281,7 +280,6 @@ class VerticalLinearStepper extends Component {
                                 homePhone: this.state.homePhone,
                                 cellPhone: this.state.cellPhone,
                                 socialSecurityNumber: this.state.socialSecurityNumber,
-                                birthDay: this.state.birthDay,
                                 car: this.state.car,
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
@@ -868,27 +866,27 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6">
-                        <span className="primary"> Birth Day</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        birthDay: event.target.value
-                                    });
-                                }}
-                                value={this.state.birthDay}
-                                name="birthDay"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                                minLength="10"
-                            />
-                            <span className="check-icon"/>
-                        </div>
-                    </div>
+                    {/*<div className="col-6">*/}
+                        {/*<span className="primary"> Birth Day</span>*/}
+                        {/*<div className="input-container--validated">*/}
+                            {/*<input*/}
+                                {/*onChange={(event) => {*/}
+                                    {/*this.setState({*/}
+                                        {/*birthDay: event.target.value*/}
+                                    {/*});*/}
+                                {/*}}*/}
+                                {/*value={this.state.birthDay}*/}
+                                {/*name="birthDay"*/}
+                                {/*type="date"*/}
+                                {/*className="form-control"*/}
+                                {/*required*/}
+                                {/*min="0"*/}
+                                {/*maxLength="50"*/}
+                                {/*minLength="10"*/}
+                            {/*/>*/}
+                            {/*<span className="check-icon"/>*/}
+                        {/*</div>*/}
+                    {/*</div>*/}
                     <div className="col-6">
                         <div className="row">
                             <div className="col-12">
@@ -916,8 +914,6 @@ class VerticalLinearStepper extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="row">
                     <div className="col-6">
                         <span className="primary"> Type Of ID</span>
                         <select
@@ -941,6 +937,8 @@ class VerticalLinearStepper extends Component {
                             <option value="7">Green Card</option>
                         </select>
                     </div>
+                </div>
+                <div className="row">
                     <div className="col-6">
                         <span className="primary"> Expire Date ID</span>
                         <div className="input-container--validated">
@@ -962,9 +960,7 @@ class VerticalLinearStepper extends Component {
                             <span className="check-icon"/>
                         </div>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
+                    <div className="col-6">
                         <span className="primary"> Email Address</span>
                         <div className="input-container--validated">
                             <input
@@ -1041,48 +1037,48 @@ class VerticalLinearStepper extends Component {
                             <span className="check-icon"/>
                         </div>
                     </div>
-                    <form
-                        id="ideal-job-form"
-                        className="col-12 ideal-job-form"
-                        onSubmit={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
+                    {/*<form*/}
+                        {/*id="ideal-job-form"*/}
+                        {/*className="col-12 ideal-job-form"*/}
+                        {/*onSubmit={(e) => {*/}
+                            {/*e.stopPropagation();*/}
+                            {/*e.preventDefault();*/}
 
-                            let item = {
-                                description: document.getElementById('idealJob').value,
-                                uuid: uuidv4()
-                            };
+                            {/*let item = {*/}
+                                {/*description: document.getElementById('idealJob').value,*/}
+                                {/*uuid: uuidv4()*/}
+                            {/*};*/}
 
-                            this.setState(
-                                (prevState) => ({
-                                    idealJobs: [...prevState.idealJobs, item]
-                                }),
-                                () => {
-                                    document.getElementById('idealJob').value = '';
-                                }
-                            );
-                        }}
-                    >
-                        <span className="primary">Ideal Job</span>
-                        <div className="row">
-                            <div className="col-12">
-                                <div className="input-container--validated input-container--ideal-job">
-                                    <input
-                                        id="idealJob"
-                                        name="idealJob"
-                                        type="text"
-                                        className="form-control ideal-job-form-input"
-                                        min="0"
-                                        minLength="3"
-                                        maxLength="50"
-                                    />
-                                    <button type="submit" form="ideal-job-form" className="add-ideal-job">
-                                        Add
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                            {/*this.setState(*/}
+                                {/*(prevState) => ({*/}
+                                    {/*idealJobs: [...prevState.idealJobs, item]*/}
+                                {/*}),*/}
+                                {/*() => {*/}
+                                    {/*document.getElementById('idealJob').value = '';*/}
+                                {/*}*/}
+                            {/*);*/}
+                        {/*}}*/}
+                    {/*>*/}
+                        {/*<span className="primary">Ideal Job</span>*/}
+                        {/*<div className="row">*/}
+                            {/*<div className="col-12">*/}
+                                {/*<div className="input-container--validated input-container--ideal-job">*/}
+                                    {/*<input*/}
+                                        {/*id="idealJob"*/}
+                                        {/*name="idealJob"*/}
+                                        {/*type="text"*/}
+                                        {/*className="form-control ideal-job-form-input"*/}
+                                        {/*min="0"*/}
+                                        {/*minLength="3"*/}
+                                        {/*maxLength="50"*/}
+                                    {/*/>*/}
+                                    {/*<button type="submit" form="ideal-job-form" className="add-ideal-job">*/}
+                                        {/*Add*/}
+                                    {/*</button>*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
+                        {/*</div>*/}
+                    {/*</form>*/}
                     <div className="col-12">
                         {this.state.idealJobs.map((idealJobItem) => (
                             <span className="idealJobItem">

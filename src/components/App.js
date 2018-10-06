@@ -13,7 +13,11 @@ import { setContext } from 'apollo-link-context';
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
+<<<<<<< HEAD
+//const baseEndpointURL = 'http://13.58.18.163:4000';
+=======
 // const baseEndpointURL = 'http://13.58.18.163:4000';
+>>>>>>> 35221164bea26af823cfb5d654d9eb4a1f33c41d
 const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
 //const baseEndpointURL = 'http://localhost:4000';
 const token =
