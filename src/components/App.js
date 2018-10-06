@@ -13,13 +13,8 @@ import { setContext } from 'apollo-link-context';
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
-<<<<<<< HEAD
-const baseEndpointURL = 'ec2-18-223-100-127.us-east-2.compute.amazonaws.com:4000';
+const baseEndpointURL = 'http://ec2-18-223-100-127.us-east-2.compute.amazonaws.com:4000';
 //const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
-=======
-// const baseEndpointURL = 'http://13.58.18.163:4000';
-const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
->>>>>>> 79b85911a69dcb52d0ba39252bc0fc90d296dae2
 //const baseEndpointURL = 'http://localhost:4000';
 const token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklkIjoxMCwiQ29kZV9Vc2VyIjoiYWRtaW4gICAgICJ9LCJpYXQiOjE1Mzg2NjI4ODgsImV4cCI6MTg1NDIzODg4OH0.3p2Hej6LhKeiNvONYNsJ2S7-5NSeeC-gcKgYyJvc8F0';
