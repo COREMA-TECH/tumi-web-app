@@ -73,11 +73,7 @@ class CompanyCard extends React.Component {
 														)
 												}
 												className="delete-company-icon"
-												onClick={(e) => {
-													//this.setState({ loadingRemoving: true })
-													//e.stopPropagation();
-
-													//return this.props.delete(row.Id);
+												onClick={(event) => {
 													delbusinesscompanies({
 														variables: {
 															Id: this.props.idCompany,
@@ -88,6 +84,8 @@ class CompanyCard extends React.Component {
 													this.setState({
 														deleted: true
 													});
+
+													event.stopPropagation();
 												}}
 											/>
 										);
