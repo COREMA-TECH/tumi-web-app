@@ -10,6 +10,7 @@ import {ADD_SKILL, REMOVE_APPLICANT_LANGUAGE, REMOVE_APPLICANT_SKILL} from "../.
 import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
+import SkillCard from "../../../ui-components/SkillCard/SkillCard";
 
 const uuidv4 = require('uuid/v4');
 
@@ -39,7 +40,10 @@ class Skills extends Component {
 
     // To close the skill dialog
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({
+            open: false,
+            editing: false
+        });
     };
 
     // To get a list of languages saved from API
@@ -156,75 +160,28 @@ class Skills extends Component {
             <div className="">
                 <div className="row">
                     <div className="col-12">
-                        {this.state.skills.length > 0 ? (
-                            <div className="skills-container skills-container--header">
-                                <div className="row">
-                                    <div className="col-6">
-                                        <span>Skill Name</span>
-                                    </div>
-                                    <div className="col-6">
-                                        <span>Skill Level</span>
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            ''
-                        )}
                         {this.state.skills.map((skillItem) => (
-                            <div key={uuidv4()} className="skills-container">
-                                <div className="row">
-                                    <div className="col-6">
-                                        <span>{skillItem.description}</span>
-                                    </div>
-                                    <div className="col-5">
-                                        <InputRangeDisabled percent={skillItem.level}/>
-                                    </div>
-                                    <div className="col-1">
-                                        <span
-                                            className="delete-school-button"
-                                            onClick={() => {
-                                                this.setState((prevState) => ({
-                                                    skills: this.state.skills.filter((_, i) => {
-                                                        console.log(this.state.skills);
-                                                        return _.uuid !== skillItem.uuid;
-                                                    })
-                                                }), () => {
-                                                    if (skillItem.id !== undefined) {
-                                                        this.removeSkillById(skillItem.id)
-                                                    }
-                                                });
-                                            }}
-                                        >
-                                            <i className="fas fa-trash-alt"></i>
-                                        </span>
-                                        {/*<Button*/}
-                                        {/*className="deleteSkillSection"*/}
-                                        {/*onClick={() => {*/}
-                                        {/*this.setState((prevState) => ({*/}
-                                        {/*skills: this.state.skills.filter((_, i) => {*/}
-                                        {/*console.log(this.state.skills);*/}
-                                        {/*return _.uuid !== skillItem.uuid;*/}
-                                        {/*})*/}
-                                        {/*}));*/}
-                                        {/*}}*/}
-                                        {/*>*/}
-                                        {/*x*/}
-                                        {/*</Button>*/}
-                                    </div>
-                                </div>
+                            <div className="col-4">
+                                <SkillCard
+                                    skillDescription={skillItem.description}
+                                    skillLevel={skillItem.level}
+                                    removeSkill={() => {
+                                        this.setState((prevState) => ({
+                                            skills: this.state.skills.filter((_, i) => {
+                                                console.log(this.state.skills);
+                                                return _.uuid !== skillItem.uuid;
+                                            })
+                                        }), () => {
+                                            if (skillItem.id !== undefined) {
+                                                this.removeSkillById(skillItem.id)
+                                            }
+                                        });
+                                    }}
+                                />
                             </div>
                         ))}
                     </div>
                     <div className="col-12">
-                        {
-                            this.state.editing ? (
-                                <Button onClick={this.handleClickOpen} className="save-skill-button">
-                                    New Skill
-                                </Button>
-                            ) : (
-                                ''
-                            )
-                        }
                         {renderSkillsDialog()}
                     </div>
                 </div>
@@ -253,6 +210,7 @@ class Skills extends Component {
                                 skills: [...prevState.skills, item]
                             }),
                             () => {
+                                this.insertSkillsApplication();
                                 this.setState({
                                     percent: 50
                                 });
@@ -261,9 +219,6 @@ class Skills extends Component {
                     }}
                     className="apply-form"
                 >
-                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>
-                        New Skill
-                    </h1>
                     <br/>
                     <DialogContent style={{width: '450px'}}>
                         <div className="row">
@@ -327,7 +282,8 @@ class Skills extends Component {
 
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.setState({
-                                                editing: true
+                                                editing: true,
+                                                open: true
                                             })
                                         }}>
                                             {
@@ -348,39 +304,39 @@ class Skills extends Component {
                                     )
                                 }
                             </div>
-                            {
-                                this.state.editing ? (
-                                    <div className="applicant-card__footer">
-                                        <button
-                                            className="applicant-card__cancel-button"
-                                            onClick={
-                                                () => {
-                                                    this.setState((prevState) => ({
-                                                        skills: this.state.skills.filter((_, i) => {
-                                                            return _.id !== undefined;
-                                                        })
-                                                    }), () => {
-                                                        this.setState({
-                                                            editing: false
-                                                        });
-                                                    });
-                                                }
-                                            }
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                this.insertSkillsApplication()
-                                            }}
-                                            className="applicant-card__save-button">
-                                            Save
-                                        </button>
-                                    </div>
-                                ) : (
-                                    ''
-                                )
-                            }
+                            {/*{*/}
+                                {/*this.state.editing ? (*/}
+                                    {/*<div className="applicant-card__footer">*/}
+                                        {/*<button*/}
+                                            {/*className="applicant-card__cancel-button"*/}
+                                            {/*onClick={*/}
+                                                {/*() => {*/}
+                                                    {/*this.setState((prevState) => ({*/}
+                                                        {/*skills: this.state.skills.filter((_, i) => {*/}
+                                                            {/*return _.id !== undefined;*/}
+                                                        {/*})*/}
+                                                    {/*}), () => {*/}
+                                                        {/*this.setState({*/}
+                                                            {/*editing: false*/}
+                                                        {/*});*/}
+                                                    {/*});*/}
+                                                {/*}*/}
+                                            {/*}*/}
+                                        {/*>*/}
+                                            {/*Cancel*/}
+                                        {/*</button>*/}
+                                        {/*<button*/}
+                                            {/*onClick={() => {*/}
+                                                {/*this.insertSkillsApplication()*/}
+                                            {/*}}*/}
+                                            {/*className="applicant-card__save-button">*/}
+                                            {/*Save*/}
+                                        {/*</button>*/}
+                                    {/*</div>*/}
+                                {/*) : (*/}
+                                    {/*''*/}
+                                {/*)*/}
+                            {/*}*/}
                         </div>
                     </div>
                 </div>
