@@ -247,7 +247,7 @@ class DepartmentsTable extends React.Component {
 											<CustomTableCell>{row.Contract_Name}</CustomTableCell>
 											<CustomTableCell>{row.Contrat_Owner}</CustomTableCell>
 											<CustomTableCell style={{ width: '250px' }}>
-												{row.Contract_Status == 0 ? 'Draft' : 'Completed'}
+												{row.Contract_Status == 0 ? 'Draft' : (row.Contract_Status == 1 ? 'Completed' : 'Expired')}
 											</CustomTableCell>
 											<CustomTableCell style={{ width: '250px' }}>
 												{row.Contract_Expiration_Date}

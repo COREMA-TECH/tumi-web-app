@@ -204,6 +204,12 @@ class Catalogs extends React.Component {
 
 		loading: false,
 		loadingConfirm: false,
+		loadingData: false,
+		loadingParents: false,
+		loadingAllParents: false,
+		loadingCatalogs: false,
+		loadingConfirm: false,
+
 		openModal: false,
 		firstLoad: false,
 		showCircularLoading: false
@@ -546,17 +552,10 @@ class Catalogs extends React.Component {
 					this.setState(
 						{
 							data: data.data.getcatalogitem,
-							firstLoad: false
+							firstLoad: false,
+							loadingCatalogs: false
 						},
-						() => {
-							this.setState(
-								{
-									loadingCatalogs: false,
-									firstLoad: false
-								},
-								this.resetState(func)
-							);
-						}
+						func
 					);
 				} else {
 					this.setState({
@@ -703,11 +702,12 @@ class Catalogs extends React.Component {
 						this.setState(
 							{
 								openModal: false,
-								showCircularLoading: true
+								showCircularLoading: true,
+								loading: false
 							},
 							() => {
 								this.loadCatalogsItems(this.state.idCatalog, () => {
-									this.loadAllParents(() => {
+									this.loadParents(this.state.idCatalog, 0, 0, () => {
 										this.resetState();
 									});
 								});
@@ -819,7 +819,9 @@ class Catalogs extends React.Component {
 			this.state.loadingParents ||
 			this.state.loadingAllParents ||
 			this.state.loadingCatalogs ||
-			this.state.loadingConfirm;
+			this.state.loadingConfirm ||
+			this.state.showCircularLoading;
+
 		if (this.state.indexView == 0) {
 			return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
 		}
@@ -827,7 +829,12 @@ class Catalogs extends React.Component {
 			return (
 				<React.Fragment>
 					{isLoading && <LinearProgress />}
-					<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-danger" icon="danger"/>)
+					<NothingToDisplay
+						title="Oops!"
+						message={this.state.errorMessage}
+						type="Error-danger"
+						icon="danger"
+					/>)
 				</React.Fragment>
 			);
 		}
@@ -1013,7 +1020,7 @@ class Catalogs extends React.Component {
 						<CatalogsTable
 							data={this.state.data}
 							catalogs={this.state.catalogs}
-							parents={this.state.allparents}
+							parents={this.state.parents}
 							loading={this.state.showCircularLoading && isLoading}
 							onEditHandler={this.onEditHandler}
 							onDeleteHandler={this.onDeleteHandler}
@@ -1023,6 +1030,7 @@ class Catalogs extends React.Component {
 			</div>
 		);
 	}
+
 }
 
 Catalogs.propTypes = {

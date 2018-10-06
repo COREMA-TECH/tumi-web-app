@@ -202,14 +202,14 @@ class ContactsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th}>Contact Type</CustomTableCell>
+							<CustomTableCell className={classes.th} width="60px">Contact Type</CustomTableCell>
 							<CustomTableCell className={classes.th}>First Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							{/*<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>*/}
 							<CustomTableCell className={classes.th}>Email</CustomTableCell>
-							<CustomTableCell className={classes.th}>Phone Number</CustomTableCell>
+							<CustomTableCell className={classes.th + " contact-th"}>Phone Number</CustomTableCell>
 							<CustomTableCell className={classes.th}>Contact Title</CustomTableCell>
 						</TableRow>
 					</TableHead>
@@ -264,9 +264,7 @@ class ContactsTable extends React.Component {
 											IconComponent="div"
 											disableUnderline={true}
 										>
-											<MenuItem key={0} value={0} name="Employee">
-												<em>Employee</em>
-											</MenuItem>
+
 
 											{this.props.types.map(({ Id, Name }) => (
 												<MenuItem key={Id} value={Id} name={Name}>

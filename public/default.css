@@ -216,6 +216,9 @@ p {
   div[class*="MuiFormControl-root-"].select-form-customized {
     max-width: 267px; } }
 
+.card-form-body {
+  min-height: 504px !important; }
+
 .department__header-inputGroup {
   padding: 0 !important;
   height: auto !important; }
@@ -238,6 +241,10 @@ p {
   -o-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out; }
+  .form-control[type="date"] {
+    padding: .3rem .75rem; }
+  .form-control:disabled {
+    background: #dddddd; }
 
 .input-autocomplete + div {
   padding: 10px !important;
@@ -278,7 +285,8 @@ p {
   width: 75%; }
 
 .input-file-modal {
-  border: 0 !important; }
+  border: 0 !important;
+  text-align: right; }
 
 .input-search-contract {
   border-radius: 0px 5px 5px 0 !important;
@@ -316,19 +324,21 @@ p {
 .cell-align-right {
   text-align: right !important; }
 
-#agreement {
-  padding-top: 100px;
-  padding-bottom: 100px;
-  padding-right: 150px;
-  padding-left: 80px; }
+.company-th, .contact-th {
+  padding-right: 0 !important; }
+
+.logout-link {
+  color: #FFF;
+  margin-right: 1rem;
+  text-decoration: none; }
+
+.social-link {
+  text-decoration: none; }
 
 .modal-overflow {
   overflow-x: scroll; }
   .modal-overflow .list-item-container-scroll {
     min-width: 500px; }
-
-.MuiDialog-paperFullScreen-174 {
-  width: 80% !important; }
 
 @media only screen and (max-width: 480px) {
   .select-form-customized {
@@ -428,7 +438,11 @@ p {
   .MenuMobile-icon {
     font-size: 1.35rem;
     margin-right: 1.5rem;
-    text-decoration: none; }
+    text-align: center;
+    text-decoration: none;
+    width: 45px; }
+    .MenuMobile-icon.fa, .MenuMobile-icon.fas, .MenuMobile-icon.far {
+      font-size: 1.75rem; }
   .MenuMobile-link {
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -459,10 +473,17 @@ p {
   font-family: "Noto Sans", sans-serif;
   padding: 1rem;
   text-decoration: none !important; }
+  .menu__item .fa, .menu__item .fas, .menu__item .far {
+    font-size: 1.75rem;
+    text-align: center;
+    width: 35px; }
   .nav-expanded .menu__item {
     -webkit-box-pack: start !important;
     -ms-flex-pack: start !important;
     justify-content: flex-start !important; }
+  .menu__item .nav-title {
+    margin-left: 1rem;
+    white-space: nowrap; }
 
 .menu-item__icon {
   font-size: 1.35rem !important; }
@@ -554,6 +575,14 @@ p {
   div[class*="MuiTabs-fixed-"] {
     overflow-x: scroll !important; } }
 
+#signatureMainContainer {
+  text-align: left !important; }
+  #signatureMainContainer .signature-information {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-right: 150px;
+    padding-left: 80px; }
+
 .avatar-uploaded {
   margin-left: auto;
   margin-right: auto;
@@ -580,6 +609,10 @@ p {
 
 .main-contract__content {
   width: 100% !important; }
+
+.Preferences-form .options-company {
+  height: auto !important;
+  padding: 0 !important; }
 
 .Header {
   background-color: #3ca2c8;

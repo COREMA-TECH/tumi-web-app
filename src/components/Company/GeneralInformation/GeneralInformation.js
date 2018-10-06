@@ -389,7 +389,6 @@ class GeneralInformation extends Component {
 						}
 					})
 					.then((data) => {
-						console.log(data)
 						var id = data.data.insbusinesscompanies.Id;
 						this.props.updateCompany(id);
 						this.setState({ loadingUpdate: false });
@@ -507,7 +506,6 @@ class GeneralInformation extends Component {
      **********************************************************/
 
 	loadCountries = (func = () => { }) => {
-
 		this.setState({
 			loadingCountries: true
 		});
@@ -657,7 +655,6 @@ class GeneralInformation extends Component {
 		if (this.props.idCompany == 0) {
 			this.props.toggleStepper();
 			this.setState({ firstLoad: true }, () => {
-
 				this.loadCountries(() => {
 					this.loadCities(() => {
 						this.loadStates(() => {
@@ -667,16 +664,13 @@ class GeneralInformation extends Component {
 						});
 					});
 				});
-
 			});
-		}
-		else {
+		} else {
 			this.setState(
 				{
 					inputEnabled: false
 				},
 				() => {
-
 					this.setState({ firstLoad: true }, () => {
 						this.loadCompany(() => {
 							this.loadCountries(() => {
@@ -693,14 +687,11 @@ class GeneralInformation extends Component {
 				}
 			);
 		}
-
-
 	}
 
 	constructor(props) {
 		super(props);
 		this.state = {
-
 			inputEnabled: true,
 			open: false,
 			scroll: 'paper',
@@ -735,7 +726,7 @@ class GeneralInformation extends Component {
 			Code: '',
 			Code01: '',
 			active: 0,
-			suite: 0,
+			suite: '',
 			dialogTabValue: 1,
 			propertyClick: false,
 			idProperty: 0,
@@ -850,7 +841,7 @@ class GeneralInformation extends Component {
 		let stateValid = this.state.state !== null && this.state.state !== 0 && this.state.state !== '';
 
 		//let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
-		let suiteValid = parseInt(this.state.suite) >= 0;
+		//let suiteValid = parseInt(this.state.suite) >= 0;
 
 		let phoneNumberValid =
 			this.state.phoneNumber
@@ -878,7 +869,7 @@ class GeneralInformation extends Component {
 				countryValid,
 				stateValid,
 				//cityValid,
-				suiteValid,
+				//suiteValid,
 				phoneNumberValid,
 				faxValid
 				//startDateValid
@@ -953,10 +944,10 @@ class GeneralInformation extends Component {
 				cityValid = value !== null && value !== 0 && value !== '';
 
 				break;
-			case 'suite':
-				suiteValid = parseInt(value) >= 0;
+			//case 'suite':
+			//suiteValid = value.trim()!='';
 
-				break;
+			//	break;
 			case 'phoneNumber':
 				phoneNumberValid =
 					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
@@ -985,7 +976,7 @@ class GeneralInformation extends Component {
 				countryValid,
 				stateValid,
 				cityValid,
-				suiteValid,
+				//	suiteValid,
 				phoneNumberValid,
 				faxValid,
 				startDateValid
@@ -1009,7 +1000,7 @@ class GeneralInformation extends Component {
 					this.state.countryValid &&
 					this.state.stateValid &&
 					//this.state.cityValid &&
-					this.state.suiteValid &&
+					//this.state.suiteValid &&
 					this.state.phoneNumberValid &&
 					this.state.faxValid
 				//this.state.startDateValid
@@ -1163,15 +1154,16 @@ class GeneralInformation extends Component {
 								/>
 							</div>
 							<div className="card-form-row">
-								<span className="input-label primary">* Suite</span>
-								<InputForm
+								<span className="input-label primary">Suite</span>
+								<input
 									value={this.state.suite}
-									change={(text) => {
-										this.updateInput(text, 'suite');
+									onChange={(e) => {
+										this.updateInput(e.target.value, 'suite');
 									}}
 									error={!this.state.suiteValid}
 									maxLength="10"
 									disabled={!this.props.showStepper}
+									className={'input-form'}
 								/>
 							</div>
 							<div className="card-form-row">
@@ -1223,6 +1215,7 @@ class GeneralInformation extends Component {
 									}}
 									error={!this.state.zipCodeValid}
 									maxLength="10"
+									min={0}
 									type="number"
 									disabled={!this.props.showStepper}
 								/>
@@ -1390,8 +1383,14 @@ class GeneralInformation extends Component {
 						</div>
 						<div className="card-form-footer">
 							<button
-								className={!this.props.showStepper ? 'add-property__disabled' : 'add-property'}
-								disabled={!this.props.showStepper}
+								className={
+									!this.props.showStepper || this.props.idCompany == 0 ? (
+										'add-property__disabled'
+									) : (
+											'add-property'
+										)
+								}
+								disabled={!this.props.showStepper || this.props.idCompany == 0}
 								onClick={this.handleClickOpen('paper', false, 0, 0)}
 							>
 								+ Add Property
@@ -1399,57 +1398,60 @@ class GeneralInformation extends Component {
 						</div>
 					</div>
 				</div>
-				{
-					this.props.showStepper ? (
-						<div className="advanced-tab-options">
+				{this.props.showStepper ? (
+					<div className="advanced-tab-options">
+						<div className={classes.wrapper}>
+							<Button
+								className={classes.buttonSuccess}
+								onClick={() => {
+									this.props.idCompany != 0
+										? this.updateCompany(this.props.idCompany)
+										: this.insertCompany();
+									//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+								}}
+								disabled={isLoading}
+							>
+								Save
+							</Button>
+							{this.state.loadingUpdate && (
+								<CircularProgress size={24} className={classes.buttonProgress} />
+							)}
+						</div>
+						{this.props.showStepper && (
 							<div className={classes.wrapper}>
 								<Button
 									className={classes.buttonSuccess}
-									onClick={() => {
-										console.log("aqio estams ", this.props.idCompany);
-										this.props.idCompany != 0 ? this.updateCompany(this.props.idCompany) : this.insertCompany();
-										//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
-									}}
 									disabled={isLoading}
-								>
-									Save
-							</Button>
-								{this.state.loadingUpdate && (
-									<CircularProgress size={24} className={classes.buttonProgress} />
-								)}
-							</div>
-							{this.props.showStepper && (
-								<div className={classes.wrapper}>
-									<Button
-										className={classes.buttonSuccess}
-										disabled={isLoading}
-										onClick={() => {
-											this.setState({ firstLoad: true }, () => {
-												this.loadCompany(() => {
-													this.loadCountries(() => {
-														this.loadCities(() => {
-															this.loadStates(() => {
-																this.loadCompanyProperties(() => {
-																	this.props.toggleStepper();
-																	this.setState({ indexView: 1, firstLoad: false });
-																});
+									onClick={() => {
+										if (this.props.idCompany == 0) {
+											window.location.href = '/home/company';
+											return true;
+										}
+										this.setState({ firstLoad: true }, () => {
+											this.loadCompany(() => {
+												this.loadCountries(() => {
+													this.loadCities(() => {
+														this.loadStates(() => {
+															this.loadCompanyProperties(() => {
+																this.props.toggleStepper();
+																this.setState({ indexView: 1, firstLoad: false });
 															});
 														});
 													});
 												});
 											});
-										}}
-									>
-										Cancel
+										});
+									}}
+								>
+									Cancel
 								</Button>
-									{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-								</div>
-							)}
-						</div>
-					) : (
-							''
-						)
-				}
+								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+							</div>
+						)}
+					</div>
+				) : (
+						''
+					)}
 
 				<Dialog
 					open={this.state.open}
@@ -1491,7 +1493,7 @@ class GeneralInformation extends Component {
 							)}
 					</DialogContent>
 				</Dialog>
-			</div >
+			</div>
 		);
 	}
 }

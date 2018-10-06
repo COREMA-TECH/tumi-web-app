@@ -87,7 +87,7 @@ class NewContract extends Component {
 			Id: '',
 			Id_Company: '',
 			Contract_Name: '',
-			Contrat_Owner: sessionStorage.getItem('FullName'),
+			Contrat_Owner: localStorage.getItem('FullName'),
 			contractTemplateId: 1,
 			contractExpiration: this.getNewDate(),
 			Id_Contract_Template: 1,
@@ -98,6 +98,8 @@ class NewContract extends Component {
 			Contract_Status: 0,
 			Contract_Start_Date: this.getNewDate(),
 			Contract_Term: '',
+			NewContract_Term: '',
+			Display_Contract_Term: '',
 			Owner_Expiration_Notification: '',
 			Company_Signed: 0,
 			Company_Signed_Date: this.getNewDate(),
@@ -317,7 +319,6 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-				console.log("aqui estamos con el link ", data.getcontracts[0].Contract_Status);
 				this.setState(
 					{
 						Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
@@ -434,7 +435,6 @@ class NewContract extends Component {
 							this.props.update(data.inscontracts.Id);
 						})
 						.catch((err) => {
-							console.log('Error: Inserting Contract: ', err);
 							this.props.handleOpenSnackbar('error', 'Error: Inserting Contract: ' + err);
 							this.setState({
 								loadingUpdate: false
@@ -490,7 +490,7 @@ class NewContract extends Component {
 									Billing_State: parseInt(this.state.Billing_State),
 									Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
 									Billing_Country: 6,
-									Contract_Terms: "''",
+									Contract_Terms: `'${this.state.Contract_Terms}'`,
 									Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
 									Exhibit_B: "''",
 									Exhibit_C: "''",
@@ -516,8 +516,89 @@ class NewContract extends Component {
 							this.props.update(id);
 						})
 						.catch((err) => {
-							console.log('Error: Updating Contract: ', err);
 							this.props.handleOpenSnackbar('error', 'Error: Updating Contract: ' + err);
+							this.setState({
+								loadingUpdate: false
+							});
+						});
+				});
+			}
+		);
+	};
+
+	renewalContract = () => {
+		console.table(this.state);
+		this.setState(
+			{
+				loadingInsert: true
+			},
+			() => {
+				//Create the mutation using apollo global client
+				this.validateAllFields(() => {
+					if (!this.state.formValid) {
+						this.props.handleOpenSnackbar(
+							'warning',
+							'Error: Saving Information: You must fill all the required fields'
+						);
+						this.setState({
+							loadingInsert: false
+						});
+						return true;
+					}
+					this.props.client
+						.mutate({
+							// Pass the mutation structure
+							mutation: this.ADD_CONTRACT,
+							variables: {
+								input: {
+									Id: 1,
+									Id_Company: 1,
+									Contract_Name: `'${this.state.Contract_Name}'`,
+									Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+									Id_Entity: parseInt(this.state.Id_Entity),
+									Id_User_Signed: parseInt(this.state.Id_User_Signed),
+									User_Signed_Title: `'${this.state.User_Signed_Title}'`,
+									Signed_Date: `'${this.getNewDate()}'`,
+									Contract_Status: `'0'`,
+									Contract_Start_Date: `'${this.state.Contract_Start_Date}'`,
+									Contract_Term: parseInt(this.state.Contract_Term),
+									Contract_Expiration_Date: `'${this.state.contractExpiration}'`,
+									Owner_Expiration_Notification: parseInt(this.state.Owner_Expiration_Notification),
+									Company_Signed: `'${this.state.CompanySignedName}'`,
+									Company_Signed_Date: `'${this.getNewDate()}'`,
+									Id_User_Billing_Contact: parseInt(this.state.Id_User_Billing_Contact),
+									Billing_Street: `'${this.state.Billing_Street}'`,
+									Billing_City: parseInt(this.state.Billing_City),
+									Billing_State: parseInt(this.state.Billing_State),
+									Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
+									Billing_Country: 6,
+									Contract_Terms: "''",
+									Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
+									Exhibit_B: "''",
+									Exhibit_C: "''",
+									Exhibit_D: "''",
+									Exhibit_E: "''",
+									Exhibit_F: "''",
+									IsActive: parseInt(this.state.IsActive),
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-08-14'",
+									Date_Updated: "'2018-08-14'",
+									Electronic_Address: `'${this.state.Electronic_Address}'`,
+									Primary_Email: `'${this.state.Primary_Email}'`
+								}
+							}
+						})
+						.then(({ data }) => {
+							this.props.getContractName(this.state.Contract_Name);
+							this.props.handleOpenSnackbar('success', 'Contract Inserted!');
+							this.setState({
+								loadingInsert: false
+							});
+							this.props.update(data.inscontracts.Id);
+						})
+						.catch((err) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting Contract: ' + err);
 							this.setState({
 								loadingUpdate: false
 							});
@@ -542,13 +623,13 @@ class NewContract extends Component {
 	`;
 
 	getbusinesscompaniesQuery = gql`
-	query getbusinesscompanies($Id: Int!) {
-		getbusinesscompanies(Id: $Id, IsActive: 1,Contract_Status:"'C'") {
-			Id
-			Parent
+		query getbusinesscompanies($Id: Int!) {
+			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
+				Id
+				Parent
+			}
 		}
-	}
-`;
+	`;
 
 	getNewDate = () => {
 		var today = new Date();
@@ -565,6 +646,61 @@ class NewContract extends Component {
 		var today = yyyy + '-' + mm + '-' + dd;
 
 		return today;
+	};
+
+	getcatalogitem = (id) => {
+		this.props.client
+			.query({
+				query: this.getcatalogcontractterm,
+				variables: {
+					Id: id
+				}
+			})
+			.then(({ data }) => {
+				this.state.Display_Contract_Term = this.getString(data.getcatalogitem[0].Name);
+
+				var today = new Date();
+				today.setMonth(today.getMonth() + parseInt(this.state.Display_Contract_Term) + 1);
+
+				var dd = today.getDate();
+				var mm = today.getMonth(); //January is 0!
+
+				var yyyy = today.getFullYear();
+				if (dd < 10) {
+					dd = '0' + dd;
+				}
+				if (mm < 10) {
+					mm = '0' + mm;
+				}
+				var today = yyyy + '-' + mm + '-' + dd;
+
+				var todayExpiration = new Date();
+				todayExpiration.setMonth(todayExpiration.getMonth() + (parseInt(this.state.Display_Contract_Term) * 2) + 1);
+
+				var dd = todayExpiration.getDate();
+				var mm = todayExpiration.getMonth(); //January is 0!
+
+				var yyyy = todayExpiration.getFullYear();
+				if (dd < 10) {
+					dd = '0' + dd;
+				}
+				if (mm < 10) {
+					mm = '0' + mm;
+				}
+				var todayExpiration = yyyy + '-' + mm + '-' + dd;
+
+
+				this.state.Contract_Start_Date = today;
+				this.state.contractExpiration = todayExpiration;
+
+				console.log("aqui estoy en getcatalogitem", this.state.Contract_Start_Date);
+				console.log("aqui estoy en getcatalogitem", this.state.Contract_Expiration_Date);
+
+				this.renewalContract();
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	getCompanies = (id) => {
@@ -587,10 +723,7 @@ class NewContract extends Component {
 			});
 	};
 
-
 	getBusinessCompanies = (id) => {
-		console.log("Entro al getBusinesscompany");
-		console.log(id);
 		this.props.client
 			.query({
 				query: this.getbusinesscompaniesQuery,
@@ -630,6 +763,16 @@ class NewContract extends Component {
 	/**
      *  End of the countries, cities and states queries
      */
+
+	getcatalogcontractterm = gql`
+		query getcatalogitemQuery($Id: Int!) {
+			getcatalogitem(Id: $Id, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
+				Id
+				Name
+				IsActive
+			}
+		}
+	`;
 
 	getContractTermsQuery = gql`
 		{
@@ -840,7 +983,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -970,8 +1113,8 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.Management}
-												change={(text) => { }}
-											//error={!this.state.CompanySignedNameValid}
+												change={(text) => {}}
+												//error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
 
@@ -988,7 +1131,6 @@ class NewContract extends Component {
 															Company_Signed: value
 														},
 														() => {
-															console.log("aqui esta el state ", this.state);
 															this.validateField('Company_Signed', value);
 															this.getCompanies(this.state.Company_Signed);
 															this.getBusinessCompanies(this.state.Id_Entity);
@@ -1033,7 +1175,7 @@ class NewContract extends Component {
 											<span className="input-label primary">* Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1062,8 +1204,7 @@ class NewContract extends Component {
 									<div className="card-form-body">
 										<div className="card-form-row">
 											<span className="input-label primary">* Status</span>
-											{console.log("Estatus Id", this.state.Contract_Status)}
-											{console.log("Estatus array", status)}
+
 											<SelectForm
 												data={status}
 												update={this.updateStatus}
@@ -1158,7 +1299,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => { }}
+												change={(text) => {}}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1207,8 +1348,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => { }}
-												updateTypeContact={(type) => { }}
+												updateEmailContact={(email) => {}}
+												updateTypeContact={(type) => {}}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>
@@ -1233,10 +1374,7 @@ class NewContract extends Component {
 										<div className="card-form-row">
 											<span className="input-label primary">* Billing State / Providence</span>
 
-											<Query
-												query={this.getStatesQuery}
-												variables={{ parent: 6 }}
-											>
+											<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 												{({ loading, error, data, refetch, networkStatus }) => {
 													//if (networkStatus === 4) return <LinearProgress />;
 													if (loading) return <LinearProgress />;
@@ -1349,6 +1487,15 @@ class NewContract extends Component {
 							disabled={this.state.loadingInsert || this.state.loadingUpdate}
 						>
 							Save
+						</Button>
+						<Button
+							className={classes.buttonSuccess}
+							onClick={() => {
+								this.getcatalogitem(this.state.Contract_Term);
+							}}
+							disabled={parseInt(this.state.Contract_Status) == 2 ? false : true}
+						>
+							Renewal Contract
 						</Button>
 						{(this.state.loadingInsert || this.state.loadingUpdate) && (
 							<CircularProgress size={24} className={classes.buttonProgress} />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { gql } from 'apollo-boost';
+import { Route } from 'react-router-dom';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Query from 'react-apollo/Query';
@@ -13,7 +14,6 @@ import './valid.css';
 
 class GeneralInfoProperty extends Component {
 	constructor(props) {
-		console.log(props);
 		super(props);
 		this.state = {
 			inputEnabled: true,
@@ -228,13 +228,59 @@ class GeneralInfoProperty extends Component {
 
 						this.props.handleOpenSnackbar('success', 'Success: Property created');
 					})
-					.catch((err) => console.log('The error is: ' + err));
+					.catch((err) => this.props.handleOpenSnackbar('error', 'The error is: ' + err));
 			}
 		);
 	};
 	/**********************************************************
-     *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
+     *  MUTATION TO DELETE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
+	DELETE_COMPANY = gql`
+	mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
+		delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
+			Code
+			Name
+		}
+	}
+`;
+
+	deleteCompany = (updatedId) => {
+		//Create the mutation using apollo global client
+		console.log("Delete Company ", updatedId);
+		this.setState(
+			{
+				linearProgress: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						// Pass the mutation structure
+						mutation: this.DELETE_COMPANY,
+						variables: {
+							Id: parseInt(updatedId),
+							IsActive: 0
+						}
+					})
+					.then((data) => {
+
+
+						this.props.handleOpenSnackbar('success', 'Success: Property Deleted');
+
+						this.props.handleClose();
+						/*history.push({
+							pathname: '/company/edit',
+							state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
+						});*/
+
+
+					})
+					.catch((err) => {
+						//Capture error and show a specific message
+						this.props.handleOpenSnackbar('error', 'The error is: ' + err);
+					});
+			}
+		);
+	};
 
 	/**********************************************************
      *  MUTATION TO UPDATE COMPANIES WITH GENERAL INFORMATION *
@@ -316,8 +362,7 @@ class GeneralInfoProperty extends Component {
 					})
 					.catch((err) => {
 						//Capture error and show a specific message
-
-						console.log('The error is: ' + err);
+						this.props.handleOpenSnackbar('error', 'The error is: ' + err);
 					});
 			}
 		);
@@ -510,419 +555,438 @@ class GeneralInfoProperty extends Component {
 		}
 
 		return (
-			<form onSubmit={this.handleFormSubmit} noValidate>
-				<div className="container container-small">
-					<div className="row">
-						<div className="col-6">
-							<div className="card-wrapper">
-								<div class="card-form-header grey">General Information</div>
-								<div className="row">
-									<div className="col-6">
-										<span className="primary card-input-label">* Markup</span>
-									</div>
+			<Route
+				render={({ history }) => (
+					<form onSubmit={this.handleFormSubmit} noValidate>
+						<div className="options-company">
+							<button
+								disabled={false}
+								className="edit-company-button"
+								onClick={() => {
+									this.deleteCompany(this.props.idProperty);
 
-									<div className="col-6">
-										<InputValid
-											type="number"
-											value={this.state.rate}
-											change={(text) => {
-												this.setState({
-													rate: text
-												});
-											}}
-											error={!this.state.rateValid}
-											maxLength="10"
-										//disabled={!this.props.showStepper}
-										/>
-									</div>
+									/*	history.push({
+											pathname: '/company/edit',
+											state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
+										});*/
 
-									<div className="col-6">
-										<span className="primary card-input-label">* Hotel Name</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													name: text
-												});
-											}}
-											value={this.state.name}
-											type="text"
-											maxLength="35"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Address</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													address: text
-												});
-											}}
-											value={this.state.address}
-											type="text"
-											maxLength="50"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Address 2</span>
-									</div>
-									<div className="col-6">
-										<input
-											className={'input-form'}
-											onChange={(e) => {
-												this.setState({
-													optionalAddress: e.target.value
-												});
-											}}
-											value={this.state.optionalAddress}
-											type="text"
-											maxLength="50"
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Suite</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													suite: text
-												});
-											}}
-											value={this.state.suite}
-											type="text"
-											maxLength="10"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* States</span>
-									</div>
-									<div className="col-6">
-										<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
-											{({ loading, error, data, refetch, networkStatus }) => {
-												//if (networkStatus === 4) return <LinearProgress />;
-												if (loading) return <LinearProgress />;
-												if (error) return <p>Error </p>;
-												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-													console.log('VALUE: ' + data.getcatalogitem);
-													return (
-														<SelectForm
-															name="state"
-															value={this.state.state}
-															data={data.getcatalogitem}
-															error={this.state.validState === '' ? false : true}
-															update={(value) => {
-																this.setState({
-																	state: value,
-																	validState: ''
-																});
-															}}
-														/>
-													);
-												}
-												return <SelectNothingToDisplay />;
-											}}
-										</Query>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* City</span>
-									</div>
-									<div className="col-6">
-										<Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
-											{({ loading, error, data, refetch, networkStatus }) => {
-												//if (networkStatus === 4) return <LinearProgress />;
-												if (loading) return <LinearProgress />;
-												if (error) return <p>Error </p>;
-												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-													console.log('Data of cities' + data.getcatalogitem);
-													return (
-														<SelectForm
-															name="city"
-															value={this.state.city}
-															data={data.getcatalogitem}
-															error={this.state.validCity === '' ? false : true}
-															update={(value) => {
-																this.setState({
-																	city: value,
-																	validCity: ''
-																});
-															}}
-														/>
-													);
-												}
-												return <SelectNothingToDisplay />;
-											}}
-										</Query>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Zip Code</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													zipCode: text
-												});
-											}}
-											value={this.state.zipCode}
-											maxLength="10"
-											type="number"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Phone Number</span>
-									</div>
-									<div className="col-6">
-										<InputMask
-											id="prop-number"
-											name="number"
-											mask="+(999) 999-9999"
-											maskChar=" "
-											value={this.state.phoneNumber}
-											className={
-												this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'
-											}
-											onChange={(e) => {
-												this.setState({
-													phoneNumber: e.target.value,
-													phoneNumberValid: true
-												});
-											}}
-											placeholder="+(999) 999-9999"
-											required
-											minLength="15"
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">Fax Number</span>
-									</div>
-									<div className="col-6">
-										<InputMask
-											id="prop-fax"
-											name="number"
-											mask="+(999) 999-9999"
-											maskChar=" "
-											value={this.state.fax}
-											className={this.state.faxNumberValid ? 'input-form' : 'input-form _invalid'}
-											onChange={(e) => {
-												this.setState({
-													fax: e.target.value,
-													faxNumberValid: true
-												});
-											}}
-											placeholder="+(999) 999-9999"
-											minLength="15"
-										/>
-									</div>
-								</div>
-							</div>
+								}}
+							>
+								Delete Property
+							</button>
 						</div>
-						<div className="col-6">
-							<div className="card-wrapper">
-								<div class="card-form-header yellow">Legal Docs</div>
-								<div className="row">
-									<div className="col-6">
-										<span className="primary card-input-label">* Hotel Code</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													Code: text
-												});
-											}}
-											value={this.state.Code}
-											type="text"
-											maxLength="10"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Cost Center</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											type="text"
-											required
-											value={this.state.Code01}
-											change={(text) => {
-												this.setState({
-													Code01: text
-												});
-											}}
-											maxLength="10"
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Contract Start Date</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													startDate: text
-												});
-											}}
-											value={this.state.startDate}
-											type="date"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Room</span>
-									</div>
-									<div className="col-6">
-										<InputValid
-											change={(text) => {
-												this.setState({
-													room: text
-												});
-											}}
-											value={this.state.room}
-											type="number"
-											required
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">* Week Start</span>
-									</div>
-									<div className="col-6">
+						<div className="container container-small">
+							<div className="row">
+								<div className="col-6">
+									<div className="card-wrapper">
+										<div class="card-form-header grey">General Information</div>
 										<div className="row">
-											<div className="col-5">
-												<SelectForm
-													data={days}
-													update={(value) => {
-														if (value === 0) {
-															this.setState({
-																startWeek: value,
-																validStartWeek: 'valid'
-															});
-														} else {
-															this.setState({
-																startWeek: value,
-																validStartWeek: ''
-															});
-														}
+											<div className="col-6">
+												<span className="primary card-input-label">* Markup</span>
+											</div>
+
+											<div className="col-6">
+												<InputValid
+													type="number"
+													value={this.state.rate}
+													change={(text) => {
+														this.setState({
+															rate: text
+														});
 													}}
-													value={this.state.startWeek}
-													error={this.state.validStartWeek === '' ? false : true}
-													showNone={false}
+													error={!this.state.rateValid}
+													maxLength="10"
+												//disabled={!this.props.showStepper}
 												/>
 											</div>
-											<div className="col-2">
-												<span>To</span>
+
+											<div className="col-6">
+												<span className="primary card-input-label">* Hotel Name</span>
 											</div>
-											<div className="col-5">
-												<SelectForm
-													data={days}
-													update={(value) => {
-														if (value === 0) {
-															this.setState({
-																endWeek: value,
-																validEndWeek: 'valid'
-															});
-														} else {
-															this.setState({
-																endWeek: value,
-																validEndWeek: ''
-															});
-														}
+											<div className="col-6">
+												<InputValid
+													change={(text) => {
+														this.setState({
+															name: text
+														});
 													}}
-													value={this.state.endWeek}
-													error={this.state.validEndWeek === '' ? false : true}
-													showNone={false}
+													value={this.state.name}
+													type="text"
+													maxLength="35"
+													required
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* Address</span>
+											</div>
+											<div className="col-6">
+												<InputValid
+													change={(text) => {
+														this.setState({
+															address: text
+														});
+													}}
+													value={this.state.address}
+													type="text"
+													maxLength="50"
+													required
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">Address 2</span>
+											</div>
+											<div className="col-6">
+												<input
+													className={'input-form'}
+													onChange={(e) => {
+														this.setState({
+															optionalAddress: e.target.value
+														});
+													}}
+													value={this.state.optionalAddress}
+													type="text"
+													maxLength="50"
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">Suite</span>
+											</div>
+											<div className="col-6">
+												<input
+													onChange={(e) => {
+														this.setState({
+															suite: e.target.value
+														});
+													}}
+													value={this.state.suite}
+													type="text"
+													maxLength="10"
+													className={'input-form'}
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* States</span>
+											</div>
+											<div className="col-6">
+												<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+													{({ loading, error, data, refetch, networkStatus }) => {
+														//if (networkStatus === 4) return <LinearProgress />;
+														if (loading) return <LinearProgress />;
+														if (error) return <p>Error </p>;
+														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+															return (
+																<SelectForm
+																	name="state"
+																	value={this.state.state}
+																	data={data.getcatalogitem}
+																	error={this.state.validState === '' ? false : true}
+																	update={(value) => {
+																		this.setState({
+																			state: value,
+																			validState: ''
+																		});
+																	}}
+																/>
+															);
+														}
+														return <SelectNothingToDisplay />;
+													}}
+												</Query>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* City</span>
+											</div>
+											<div className="col-6">
+												<Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
+													{({ loading, error, data, refetch, networkStatus }) => {
+														//if (networkStatus === 4) return <LinearProgress />;
+														if (loading) return <LinearProgress />;
+														if (error) return <p>Error </p>;
+														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+															return (
+																<SelectForm
+																	name="city"
+																	value={this.state.city}
+																	data={data.getcatalogitem}
+																	error={this.state.validCity === '' ? false : true}
+																	update={(value) => {
+																		this.setState({
+																			city: value,
+																			validCity: ''
+																		});
+																	}}
+																/>
+															);
+														}
+														return <SelectNothingToDisplay />;
+													}}
+												</Query>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* Zip Code</span>
+											</div>
+											<div className="col-6">
+												<InputValid
+													change={(text) => {
+														this.setState({
+															zipCode: text
+														});
+													}}
+													value={this.state.zipCode}
+													maxLength="10"
+													type="number"
+													required
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* Phone Number</span>
+											</div>
+											<div className="col-6">
+												<InputMask
+													id="prop-number"
+													name="number"
+													mask="+(999) 999-9999"
+													maskChar=" "
+													value={this.state.phoneNumber}
+													className={
+														this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'
+													}
+													onChange={(e) => {
+														this.setState({
+															phoneNumber: e.target.value,
+															phoneNumberValid: true
+														});
+													}}
+													placeholder="+(999) 999-9999"
+													required
+													minLength="15"
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">Fax Number</span>
+											</div>
+											<div className="col-6">
+												<InputMask
+													id="prop-fax"
+													name="number"
+													mask="+(999) 999-9999"
+													maskChar=" "
+													value={this.state.fax}
+													className={this.state.faxNumberValid ? 'input-form' : 'input-form _invalid'}
+													onChange={(e) => {
+														this.setState({
+															fax: e.target.value,
+															faxNumberValid: true
+														});
+													}}
+													placeholder="+(999) 999-9999"
+													minLength="15"
 												/>
 											</div>
 										</div>
 									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">Contract</span>
-									</div>
-									<div className="col-6">
-										<FileUpload
-											updateURL={(url) => {
-												this.setState({
-													contractURL: url
-												});
-											}}
-											fileNameUploaded={this.state.contractURL}
-										/>
-									</div>
-									<div className="col-6">
-										<span className="primary card-input-label">Insurance</span>
-									</div>
-									<div className="col-6">
-										<FileUpload
-											updateURL={(url) => {
-												this.setState({
-													insuranceURL: url
-												});
-											}}
-											fileNameUploaded={this.state.insuranceURL}
-										/>
-									</div>
-									<div className="col-6">
-										<input
-											className={'input-form input-file-modal'}
-											change={(text) => {
-												this.setState({
-													Other_Name: text
-												});
-											}}
-											value={this.state.Other_Name}
-											type="text"
-											placeholder="Name File"
-										/>
-									</div>
-									<div className="col-6">
-										<FileUpload
-											updateURL={(url) => {
-												this.setState({
-													otherURL: url
-												});
-											}}
-											fileNameUploaded={this.state.otherURL}
-										/>
-									</div>
-									<div className="col-6">
-										<input
-											className={'input-form input-file-modal'}
-											change={(text) => {
-												this.setState({
-													Other01_Name: text
-												});
-											}}
-											value={this.state.Other01_Name}
-											type="text"
-											placeholder="Name File"
-										/>
-									</div>
-									<div className="col-6">
-										<FileUpload
-											updateURL={(url) => {
-												this.setState({
-													other01URL: url
-												});
-											}}
-											fileNameUploaded={this.state.other01URL}
-										/>
+								</div>
+								<div className="col-6">
+									<div className="card-wrapper">
+										<div class="card-form-header yellow">Legal Docs</div>
+										<div className="row">
+											<div className="col-6">
+												<span className="primary card-input-label">* Hotel Code</span>
+											</div>
+											<div className="col-6">
+												<InputValid
+													change={(text) => {
+														this.setState({
+															Code: text
+														});
+													}}
+													value={this.state.Code}
+													type="text"
+													maxLength="10"
+													required
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">Cost Center</span>
+											</div>
+											<div className="col-6">
+												<input
+													type="text"
+													value={this.state.Code01}
+													onChange={(e) => {
+														this.setState({
+															Code01: e.target.value
+														});
+													}}
+													maxLength="10"
+													className={'input-form'}
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* Contract Start Date</span>
+											</div>
+											<div className="col-6">
+												<InputValid
+													change={(text) => {
+														this.setState({
+															startDate: text
+														});
+													}}
+													value={this.state.startDate}
+													type="date"
+													required
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* Room</span>
+											</div>
+											<div className="col-6">
+												<InputValid
+													change={(text) => {
+														this.setState({
+															room: text
+														});
+													}}
+													value={this.state.room}
+													type="number"
+													required
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">* Week Start</span>
+											</div>
+											<div className="col-6">
+												<div className="row">
+													<div className="col-5">
+														<SelectForm
+															data={days}
+															update={(value) => {
+																if (value === 0) {
+																	this.setState({
+																		startWeek: value,
+																		validStartWeek: 'valid'
+																	});
+																} else {
+																	this.setState({
+																		startWeek: value,
+																		validStartWeek: ''
+																	});
+																}
+															}}
+															value={this.state.startWeek}
+															error={this.state.validStartWeek === '' ? false : true}
+															showNone={false}
+														/>
+													</div>
+													<div className="col-2">
+														<span>To</span>
+													</div>
+													<div className="col-5">
+														<SelectForm
+															data={days}
+															update={(value) => {
+																if (value === 0) {
+																	this.setState({
+																		endWeek: value,
+																		validEndWeek: 'valid'
+																	});
+																} else {
+																	this.setState({
+																		endWeek: value,
+																		validEndWeek: ''
+																	});
+																}
+															}}
+															value={this.state.endWeek}
+															error={this.state.validEndWeek === '' ? false : true}
+															showNone={false}
+														/>
+													</div>
+												</div>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">Contract</span>
+											</div>
+											<div className="col-6">
+												<FileUpload
+													updateURL={(url) => {
+														this.setState({
+															contractURL: url
+														});
+													}}
+													fileNameUploaded={this.state.contractURL}
+												/>
+											</div>
+											<div className="col-6">
+												<span className="primary card-input-label">Insurance</span>
+											</div>
+											<div className="col-6">
+												<FileUpload
+													updateURL={(url) => {
+														this.setState({
+															insuranceURL: url
+														});
+													}}
+													fileNameUploaded={this.state.insuranceURL}
+												/>
+											</div>
+											<div className="col-6">
+												<input
+													className={'input-form input-file-modal'}
+													onChange={(e) => {
+														this.setState({
+															Other_Name: e.target.value
+														});
+													}}
+													value={this.state.Other_Name}
+													type="text"
+													placeholder="Name File"
+												/>
+											</div>
+											<div className="col-6">
+												<FileUpload
+													updateURL={(url) => {
+														this.setState({
+															otherURL: url
+														});
+													}}
+													fileNameUploaded={this.state.otherURL}
+												/>
+											</div>
+											<div className="col-6">
+												<input
+													className={'input-form input-file-modal'}
+													onChange={(e) => {
+														this.setState({
+															Other01_Name: e.target.value
+														});
+													}}
+													value={this.state.Other01_Name}
+													type="text"
+													placeholder="Name File"
+												/>
+											</div>
+											<div className="col-6">
+												<FileUpload
+													updateURL={(url) => {
+														this.setState({
+															other01URL: url
+														});
+													}}
+													fileNameUploaded={this.state.other01URL}
+												/>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div className="contract-footer--bottom">
-					<input type="submit" value="Next" className="contract-next-button" />
-				</div>
-			</form>
+						<div className="contract-footer--bottom">
+							<input type="submit" value="Next" className="contract-next-button" />
+						</div>
+					</form>
+				)}
+			/>
 		);
 	}
 }

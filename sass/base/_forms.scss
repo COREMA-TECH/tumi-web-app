@@ -10,6 +10,10 @@
     }
 }
 
+.card-form-body {
+    min-height: 504px !important;
+}
+
 .department__header-inputGroup {
     padding: 0 !important;
     height: auto !important;
@@ -31,6 +35,12 @@
         border: 1px solid #ced4da;
         border-radius: .25rem;
         transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        &[type="date"] {
+            padding: .3rem .75rem; 
+        }
+        &:disabled {
+            background: $gray;
+        }
     }   
 }
 
@@ -84,6 +94,7 @@
 
 .input-file-modal {
     border: 0 !important;
+    text-align: right;
 }
 
 .input-search-contract {

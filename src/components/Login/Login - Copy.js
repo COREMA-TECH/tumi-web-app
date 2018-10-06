@@ -57,15 +57,13 @@ class Login extends Component {
 			})
 			.then((data) => {
 				if (data.data.getvalid_users.length == 1) {
-					console.log('entramos en al true');
 					window.location.href = '/home';
 				} else {
-					console.log('entramos en al false');
 					this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading users: ', error);
+				this.props.handleOpenSnackbar('error', 'Error: Loading users: ', error);
 			});
 	}
 

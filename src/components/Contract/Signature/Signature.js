@@ -280,7 +280,6 @@ class Signature extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading agreement: ', error);
 				this.setState({ loadingToken: false }, () => {
 					this.props.history.push('/home/');
 				});
@@ -318,7 +317,6 @@ class Signature extends React.Component {
 						);
 					})
 					.catch((error) => {
-						console.log('Error: Signing Document: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Signing Document: ' + error);
 						this.setState({
 							success: false,
@@ -363,6 +361,8 @@ class Signature extends React.Component {
 	};
 
 	componentWillMount() {
+		localStorage.setItem('Token', this.context.token);
+
 		const values = queryString.parse(this.props.location.search);
 		if (!values.token || !values.signatory) this.props.history.push('/home/');
 
@@ -657,6 +657,9 @@ class Signature extends React.Component {
 			</div>
 		);
 	}
+	static contextTypes = {
+		token: PropTypes.string
+	};
 }
 Signature.propTypes = {
 	classes: PropTypes.object.isRequired,

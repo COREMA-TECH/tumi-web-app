@@ -205,7 +205,7 @@ class FormsForm extends React.Component {
 	onSelectChangeHandler(e) {
 		const name = e.target.name;
 		const value = e.target.value;
-		console.log('onSelectChangeHandler', name, value);
+
 		this.setState({ [name]: value }, this.validateField(name, value));
 	}
 	enableCancelButton = () => {
@@ -320,7 +320,6 @@ class FormsForm extends React.Component {
 				}
 			})
 			.catch((error) => {
-				console.log('Error: Loading forms: ', error);
 				this.props.handleOpenSnackbar('error', 'Error: Loading forms: ' + error);
 			});
 	};
@@ -350,7 +349,7 @@ class FormsForm extends React.Component {
 					}
 				})
 				.catch((error) => {
-					console.log('Error: Loading Companies: ', error);
+					
 					this.props.handleOpenSnackbar('error', 'Error: Loading Companies: ' + error);
 				});
 		};*/
@@ -397,13 +396,11 @@ class FormsForm extends React.Component {
 						}
 					})
 					.then((data) => {
-						console.log('Guardando');
 						this.props.handleOpenSnackbar('success', isEdition ? 'Forms Updated!' : 'Forms Inserted!');
 						this.loadForms();
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log(isEdition ? 'Error: Updating Forms: ' : 'Error: Inserting Forms: ', error);
 						this.props.handleOpenSnackbar(
 							'error',
 							isEdition ? 'Error: Updating Forms: ' + error : 'Error: Inserting Forms: ' + error
@@ -435,7 +432,6 @@ class FormsForm extends React.Component {
 						this.resetState();
 					})
 					.catch((error) => {
-						console.log('Error: Deleting Forms: ', error);
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Form: ' + error);
 						this.setState({
 							loadingConfirm: false

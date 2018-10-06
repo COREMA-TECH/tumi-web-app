@@ -90,6 +90,7 @@ class Login extends Component {
 				AllowInsert
 				AllowExport
 				IsActive
+				Token
 			}
 		}
 	`;
@@ -107,6 +108,12 @@ class Login extends Component {
 		}
 	};
 
+	handleKeyPress = (event) => {
+		if (event.key == 'Enter') {
+			this.handleSubmit(event);
+		}
+	};
+
 	// To check valid credentials and empty fields
 	checkInputs() {
 		return this.state.username && this.state.pass;
@@ -114,7 +121,7 @@ class Login extends Component {
 
 	// To check valid credentials
 	checkUser() {
-		this.props.client
+		this.context.loginClient
 			.query({
 				query: this.GET_USERS_QUERY,
 				variables: {
@@ -124,56 +131,54 @@ class Login extends Component {
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
-				if (data.data.getvalid_users.length == 1) {
-					if (data.data.getvalid_users[0].IsActive == 0) {
-						sessionStorage.clear();
+				if (data.data.getvalid_users) {
+					const user = data.data.getvalid_users;
+					if (user.IsActive == 0) {
+						localStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
 						this.setState({ loadingLogin: false });
 					} else {
-						sessionStorage.setItem('LoginId', data.data.getvalid_users[0].Id);
-						sessionStorage.setItem('FullName', data.data.getvalid_users[0].Full_Name);
+						localStorage.setItem('LoginId', user.Id);
+						localStorage.setItem('FullName', user.Full_Name);
+						localStorage.setItem('Token', user.Token);
 
-						if (data.data.getvalid_users[0].IsAdmin == 1) {
-							sessionStorage.setItem('IsAdmin', true);
+						if (user.IsAdmin == 1) {
+							localStorage.setItem('IsAdmin', true);
 						} else {
-							sessionStorage.setItem('IsAdmin', false);
+							localStorage.setItem('IsAdmin', false);
 						}
-						if (data.data.getvalid_users[0].AllowEdit == 1) {
-							sessionStorage.setItem('AllowEdit', true);
+						if (user.AllowEdit == 1) {
+							localStorage.setItem('AllowEdit', true);
 						} else {
-							sessionStorage.setItem('AllowEdit', false);
+							localStorage.setItem('AllowEdit', false);
 						}
-						if (data.data.getvalid_users[0].AllowDelete == 1) {
-							sessionStorage.setItem('AllowDelete', true);
+						if (user.AllowDelete == 1) {
+							localStorage.setItem('AllowDelete', true);
 						} else {
-							sessionStorage.setItem('AllowDelete', false);
+							localStorage.setItem('AllowDelete', false);
 						}
-						if (data.data.getvalid_users[0].AllowInsert == 1) {
-							sessionStorage.setItem('AllowInsert', true);
+						if (user.AllowInsert == 1) {
+							localStorage.setItem('AllowInsert', true);
 						} else {
-							sessionStorage.setItem('AllowInsert', false);
+							localStorage.setItem('AllowInsert', false);
 						}
-						if (data.data.getvalid_users[0].AllowExport == 1) {
-							sessionStorage.setItem('AllowExport', true);
+						if (user.AllowExport == 1) {
+							localStorage.setItem('AllowExport', true);
 						} else {
-							sessionStorage.setItem('AllowExport', false);
+							localStorage.setItem('AllowExport', false);
 						}
 
-						/*sessionStorage.setItem('AllowEdit', data.data.getvalid_users[0].AllowEdit);
-						sessionStorage.setItem('AllowDelete', data.data.getvalid_users[0].AllowDelete);
-						sessionStorage.setItem('AllowInsert', data.data.getvalid_users[0].AllowInsert);
-						sessionStorage.setItem('AllowExport', data.data.getvalid_users[0].AllowExport);*/
 						window.location.href = '/home';
 					}
 				} else {
-					sessionStorage.clear();
+					localStorage.clear();
 					this.props.handleOpenSnackbar('error', 'Error: Loading users: User not exists in data base');
 					this.setState({ loadingLogin: false });
 				}
 			})
 			.catch((error) => {
 				this.props.handleOpenSnackbar('error', 'Error: Validating user: ' + error);
-				console.log('Error: Loading users: ', error);
+
 				this.setState({ loadingLogin: false });
 			});
 	}
@@ -181,7 +186,7 @@ class Login extends Component {
 	render(data) {
 		const { classes } = this.props;
 		// When user is logged redirect to the private routes
-		sessionStorage.clear();
+		localStorage.clear();
 		if (this.state.logged) {
 			return (
 				<Redirect
@@ -222,6 +227,7 @@ class Login extends Component {
 										onChange={(text) => {
 											this.setState({ username: text });
 										}}
+										onKeyPress={this.handleKeyPress}
 									/>
 									<span className="focus-input100" data-symbol="&#xf206;" />
 								</div>
@@ -237,6 +243,7 @@ class Login extends Component {
 										onChange={(text) => {
 											this.setState({ pass: text });
 										}}
+										onKeyPress={this.handleKeyPress}
 									/>
 									<span className="focus-input100" data-symbol="&#xf190;" />
 								</div>
@@ -268,15 +275,15 @@ class Login extends Component {
 								</div>
 
 								<div className="flex-c-m">
-									<a href="#" className="login100-social-item_bg1">
+									<a href="#" className="login100-social-item_bg1 social-link">
 										<i className="fa fa-facebook" />
 									</a>
 
-									<a href="#" className="login100-social-item_bg2">
+									<a href="#" className="login100-social-item_bg2 social-link">
 										<i className="fa fa-twitter" />
 									</a>
 
-									<a href="#" className="login100-social-item_bg3">
+									<a href="#" className="login100-social-item_bg3 social-link">
 										<i className="fa fa-google" />
 									</a>
 								</div>
@@ -287,11 +294,14 @@ class Login extends Component {
 			</div>
 		);
 	}
+	static contextTypes = {
+		loginClient: PropTypes.object
+	};
 }
 Login.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(withGlobalContent(Login)));
+export default withStyles(styles)(withGlobalContent(Login));
 
 const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 	<Route
@@ -300,12 +310,12 @@ const PrivateRouteComponent = ({ component: Component, ...rest }) => (
 			1 === 1 ? (
 				<Component {...props} />
 			) : (
-				<Redirect
-					to={{
-						pathname: '/login',
-						state: { from: props.location }
-					}}
-				/>
-			)}
+					<Redirect
+						to={{
+							pathname: '/login',
+							state: { from: props.location }
+						}}
+					/>
+				)}
 	/>
 );

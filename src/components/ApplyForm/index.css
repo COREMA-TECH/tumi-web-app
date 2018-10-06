@@ -16,6 +16,32 @@
     position: relative;
 }
 
+.apply-form .input-container--validated {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.apply-form .input-container--validated .check-icon {
+    background: green;
+    height: 100%;
+    padding: .375rem .5rem;
+    border-radius: 0 5px 5px 0;
+    border: 1px solid green;
+    font-size: 1rem;
+    transition: all .450s;
+}
+
+.apply-form .input-container--validated .form-control {
+    border-radius: 5px 0 0 5px;
+    border-right: none;
+}
+
+.apply-form .input-container--validated .form-control--without-validation {
+    border-radius: 5px;
+    border-right: 1px solid #ced4da;
+}
+
 .apply-form input:required:focus:valid,
 .apply-form input:optional:focus:valid,
 .apply-form select:required:focus:valid,
@@ -30,20 +56,54 @@
     border-color: green;
 }
 
+.apply-form input:disabled,
+.apply-form select:disabled,
+.apply-form textarea:disabled {
+    background: rgba(206, 212, 218, 0.35) !important;
+    border: 1px solid #ced4da !important;
+    cursor: not-allowed;
+}
+
 .apply-form input:required:valid + span::after,
 .apply-form input:optional:valid + span::after,
 .apply-form select:optional:valid + span::after,
 .apply-form textarea:optional:valid + span::after {
-    content: "";
-    color: green;
+    content: "\2713";
+    color: #ffffff;
     margin-left: 5px;
+}
+
+.apply-form input:required:invalid + span::after,
+.apply-form input:optional:invalid + span::after,
+.apply-form select:optional:invalid + span::after,
+.apply-form textarea:optional:invalid + span::after {
+    content: "\2713";
+    color: #ffffff;
+    margin-left: 5px;
+}
+
+
+.apply-form .invalid-apply-form:required:invalid + .check-icon {
+    border: 1px solid orangered;
+    border-left: none;
+}
+
+.ideal-job-form-input:required:valid {
+    border: 1px solid #ced4da !important;
+}
+
+
+.apply-form input:required:invalid + .check-icon {
+    background: #ffffff;
+    border: 1px solid #ced4da;
+    border-left: none;
+    color: #ffffff;
 }
 
 .optional::after {
     content: "Optional";
     color: #888888;
     font-size: 11px;
-    margin-left: 5px;
 }
 
 .invalid-apply-form {
@@ -110,6 +170,15 @@
     transition: all .800s;
 }
 
+.font-size-table {
+    font-size: .9em;
+}
+
+.delete-school-button:hover {
+    cursor: pointer;
+}
+
+
 .skills-container--header {
     border-radius: 5px 5px 0 0;
     color: #ffffff;
@@ -142,6 +211,11 @@
 
 .deleteSkillSection span {
     color: #999999;
+    cursor: pointer !important;
+}
+
+.fas .fa-trash-alt {
+    font-size: 1em;
 }
 
 .skills-container:hover .deleteSkillSection {

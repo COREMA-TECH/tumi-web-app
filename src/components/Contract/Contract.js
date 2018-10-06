@@ -62,7 +62,6 @@ const styles = (theme) => ({
 class Contract extends React.Component {
 	constructor(props) {
 		super(props);
-		//	console.log("aqui viene el push", props);
 	}
 
 	state = {
@@ -70,7 +69,7 @@ class Contract extends React.Component {
 		contractId: 0,
 		Id_Entity: 0,
 		companyId: 0,
-		ContractName: "",
+		ContractName: '',
 		loading: false
 	};
 
@@ -94,8 +93,8 @@ class Contract extends React.Component {
 	getContractName = (contractname) => {
 		this.setState({
 			ContractName: contractname
-		})
-	}
+		});
+	};
 
 	componentWillMount() {
 		this.setState(
@@ -109,7 +108,6 @@ class Contract extends React.Component {
 							{
 								contractId: this.props.location.state.contract,
 								Id_Entity: this.props.location.state.Id_Entity
-
 							},
 							() => {
 								this.setState({
@@ -118,7 +116,6 @@ class Contract extends React.Component {
 							}
 						);
 					} else {
-
 						this.setState({
 							contractId: 0,
 							Id_Entity: this.props.location.state.Id_Entity,
@@ -188,8 +185,11 @@ class Contract extends React.Component {
 				{value === 1 && (
 					<ExhibitContract
 						contractId={this.state.contractId}
-						companyId={this.state.companyId == 0 ? this.props.location.state.Id_Entity : this.state.companyId}
+						companyId={
+							this.state.companyId == 0 ? this.props.location.state.Id_Entity : this.state.companyId
+						}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						baseUrl={this.props.baseUrl}
 						contractname={this.state.ContractName}
 						showStepper={false}
 					/>

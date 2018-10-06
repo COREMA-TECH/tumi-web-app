@@ -9,13 +9,13 @@ import PositionsCompanyForm from '../../Company/PositionsCompanyForm/';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import CheckIcon from '@material-ui/icons/Check';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import SaveIcon from '@material-ui/icons/Save';
 import SendIcon from '@material-ui/icons/Send';
 import PrintIcon from '@material-ui/icons/Print';
 import DownloadIcon from '@material-ui/icons/CloudDownload';
 import ClearIcon from '@material-ui/icons/Clear';
 import Tooltip from '@material-ui/core/Tooltip';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import InputForm from 'ui-components/InputForm/InputForm';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import Dialog from '@material-ui/core/Dialog';
@@ -79,6 +79,25 @@ const styles = (theme) => ({
 			backgroundColor: green[700]
 		}
 	},
+	buttonCreateContract: {
+		background: ' #3da2c7',
+		borderRadius: '5px',
+		padding: '.5em 1em',
+
+		fontWeight: '300',
+		fontFamily: 'Segoe UI',
+		fontSize: '1.1em',
+		color: '#fff',
+		textTransform: 'none',
+		//cursor: pointer;
+		margin: '2px',
+
+		//	backgroundColor: '#357a38',
+		color: 'white',
+		'&:hover': {
+			background: ' #3da2c7'
+		}
+	},
 	fabProgress: {
 		color: green[500],
 		position: 'absolute',
@@ -87,7 +106,7 @@ const styles = (theme) => ({
 		zIndex: 1
 	},
 	buttonProgress: {
-		color: green[500],
+		//color: ,
 		position: 'absolute',
 		top: '50%',
 		left: '50%',
@@ -98,7 +117,6 @@ const styles = (theme) => ({
 
 class ExhibitContract extends Component {
 	constructor(props) {
-		console.log(props);
 		super(props);
 
 		this.state = {
@@ -108,7 +126,7 @@ class ExhibitContract extends Component {
 			exhibitD: '',
 			exhibitE: '',
 			exhibitF: '',
-
+			PdfUrl: '',
 			agreement: '',
 			openModal: false
 		};
@@ -170,6 +188,26 @@ class ExhibitContract extends Component {
 		}
 	`;
 
+	sleep() {
+		return new Promise((resolve) => setTimeout(resolve, 3000));
+	}
+
+	writePDF = () => {
+		//this.sleep().then(() => {
+		//	this.setState({ openModal: true }, () => {
+		// Do something after the sleep!
+		this.setState({
+			PdfUrl:
+				'<iframe src="' +
+				this.context.baseUrl +
+				'/public/Contract_' +
+				this.props.contractname +
+				'.pdf"  width="100%" height="100%" />'
+		});
+		//	});
+		//});
+	};
+
 	sendContract = () => {
 		this.setState({ loadingData: true });
 		this.props.client
@@ -197,8 +235,7 @@ class ExhibitContract extends Component {
 	};
 
 	createContract = () => {
-		console.log("creando contrato");
-		this.setState({ loadingData: true });
+		this.setState({ loadingData: true, loadingContract: true });
 		this.props.client
 			.query({
 				query: this.CREATE_CONTRACT_QUERY,
@@ -207,19 +244,35 @@ class ExhibitContract extends Component {
 			})
 			.then((data) => {
 				if (data.data.createcontracts != null) {
-					//this.props.handleOpenSnackbar('success', 'Contract Sent!');
-					//this.resetState();
+					this.sleep().then(() => {
+						this.setState({
+							openModal: true,
+							loadingContract: false,
+							PdfUrl:
+								'<iframe src="' +
+								this.context.baseUrl +
+								'/public/Contract_' +
+								this.props.contractname +
+								'.pdf"  width="100%" height="100%" />'
+						});
+					});
 				} else {
 					this.props.handleOpenSnackbar(
 						'error',
-						'Error: Loading agreement: sendcontracts not exists in query datassssssss'
+						'Error: Loading agreement: createcontracts not exists in query data'
 					);
-					this.setState({ loadingData: false });
+					this.setState({
+						loadingData: false,
+						loadingContract: false
+					});
 				}
 			})
 			.catch((error) => {
 				this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
-				this.setState({ loadingData: false });
+				this.setState({
+					loadingData: false,
+					loadingContract: false
+				});
 			});
 	};
 
@@ -289,7 +342,7 @@ class ExhibitContract extends Component {
 			{
 				...this.DEFAULT_STATE
 			},
-			() => { }
+			() => {}
 		);
 	};
 	insertExhibit = () => {
@@ -315,8 +368,6 @@ class ExhibitContract extends Component {
 
 	handleClickOpenModal = () => {
 		this.createContract();
-		this.setState({ openModal: true });
-
 	};
 
 	cancelContractHandler = () => {
@@ -324,7 +375,8 @@ class ExhibitContract extends Component {
 	};
 
 	downloadContractHandler = () => {
-		var url = "https://corema-new-api.herokuapp.com/public/Contract_" + this.props.contractname + ".pdf";
+		//var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
+		var url = 'localhost:4000/public/Contract_' + this.props.contractname + '.pdf';
 		//pri.download();
 		window.open(url, '_blank');
 	};
@@ -338,7 +390,6 @@ class ExhibitContract extends Component {
 		pri.focus();
 		pri.print();
 	};
-
 
 	render() {
 		const { loading, success } = this.state;
@@ -355,6 +406,7 @@ class ExhibitContract extends Component {
 					open={this.state.openModal}
 					onClose={this.cancelContractHandler}
 					aria-labelledby="responsive-dialog-title"
+					style={{ width: '90%', padding: '0px', margin: '0 auto' }}
 				>
 					<DialogTitle style={{ padding: '0px' }}>
 						<div className="card-form-header orange">
@@ -362,13 +414,13 @@ class ExhibitContract extends Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-									'New Contract Preview'
-								)}
+								'New Contract Preview'
+							)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 750, padding: '0px' }}>
 						<div id="agreement" className="exhibit-content">
-							{renderHTML(this.state.agreement)}
+							{this.state.openModal && renderHTML(this.state.PdfUrl)}
 						</div>
 					</DialogContent>
 					<DialogActions>
@@ -376,14 +428,14 @@ class ExhibitContract extends Component {
 							{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 						</div>
 						<div className="exhibit-button-left">
-							<Tooltip title={'Print Contract'}>
+							{/*<Tooltip title={'Print Contract'}>
 								<div>
 									<Button
 										//	disabled={this.state.loading || !this.state.enableCancelButton}
 										variant="fab"
 										color="primary"
 										className={buttonClassname}
-										onClick={this.printContractHandler}
+										onClick={this.downloadContractHandler}
 									>
 										<PrintIcon />
 									</Button>
@@ -402,7 +454,7 @@ class ExhibitContract extends Component {
 									</Button>
 								</div>
 
-							</Tooltip>
+							</Tooltip>*/}
 							<Tooltip title={'Send Contract by email'}>
 								<div>
 									<Button
@@ -566,10 +618,19 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>*/}
-							<div className="contract-next-button" onClick={
-								this.handleClickOpenModal
-							}>
-								Create Contract
+							<div className={classes.wrapper}>
+								<Button
+									//className="contract-next-button"
+									className={classes.buttonCreateContract}
+									onClick={this.handleClickOpenModal}
+									disabled={this.state.loadingContract}
+								>
+									Create Contract
+								</Button>
+
+								{this.state.loadingContract && (
+									<CircularProgress size={24} className={classes.buttonProgress} />
+								)}
 							</div>
 						</div>
 					</div>
@@ -578,6 +639,9 @@ class ExhibitContract extends Component {
 			</div>
 		);
 	}
+	static contextTypes = {
+		baseUrl: PropTypes.string
+	};
 }
 
 export default withStyles(styles)(withApollo(withMobileDialog()(ExhibitContract)));

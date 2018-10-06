@@ -12,3 +12,17 @@
 .cell-align-right {
 	text-align: right !important;
 }
+
+.company-th, .contact-th {
+	padding-right: 0 !important;
+}
+
+.logout-link {
+	color: $white;
+	margin-right: 1rem; 
+	text-decoration: none;
+}
+
+.social-link {
+	text-decoration: none;
+}

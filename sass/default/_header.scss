@@ -74,7 +74,12 @@
     &-icon {
         font-size: 1.35rem;
         margin-right: 1.5rem;
+        text-align: center;
         text-decoration: none;
+        width: 45px;
+        &.fa, &.fas, &.far {
+            font-size: 1.75rem;
+        }
     }
     &-link {
         align-items: center;
@@ -107,8 +112,17 @@
         font-family: $font-family-sans-serif;
         padding: 1rem;
         text-decoration: none !important;
+        .fa, .fas, .far {
+            font-size: 1.75rem;
+            text-align: center;
+            width: 35px;
+        }
         .nav-expanded & {
             justify-content: flex-start !important;
+        }
+        .nav-title {
+            margin-left: 1rem;
+            white-space: nowrap;
         }
     }
     &-item__icon {
