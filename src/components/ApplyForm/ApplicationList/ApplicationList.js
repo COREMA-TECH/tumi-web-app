@@ -55,6 +55,15 @@ class ApplicationList extends Component {
 				lastName
 				socialSecurityNumber
 				emailAddress
+				position {
+					Id
+					Id_Contract
+					Id_Department
+					Id_Entity
+					Position
+					Bill_Rate
+					Pay_Rate
+				}
 			}
 		}
 	`;
@@ -187,7 +196,7 @@ class ApplicationList extends Component {
 										(_.firstName +
 											_.middleName +
 											_.lastName +
-											_.socialSecurityNumber +
+											(_.position ? _.position.Position : 'Open Position') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1

@@ -188,6 +188,7 @@ class ApplicationTable extends React.Component {
 							<TableHead>
 								<TableRow>
 									<CustomTableCell padding="none" className={classes.th} />
+									<CustomTableCell className={classes.th}>Application Position</CustomTableCell>
 									<CustomTableCell className={classes.th}>First Name</CustomTableCell>
 									<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 									<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
@@ -224,6 +225,9 @@ class ApplicationTable extends React.Component {
 														</IconButton>
 													</div>
 												</Tooltip>
+											</CustomTableCell>
+											<CustomTableCell>
+												{row.position ? row.position.Position : 'Open Position'}
 											</CustomTableCell>
 											<CustomTableCell>{row.firstName}</CustomTableCell>
 											<CustomTableCell>{row.middleName}</CustomTableCell>
