@@ -716,7 +716,6 @@ class GeneralInformation extends Component {
 			startWeek: '',
 			endWeek: '',
 			workWeek: '',
-			avatar: '',
 			otherPhoneNumber: '',
 			rooms: '',
 			rate: '',

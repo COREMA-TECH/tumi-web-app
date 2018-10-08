@@ -10,6 +10,8 @@ import InputValid from '../../ui-components/InputWithValidation/InputValid';
 import InputMask from 'react-input-mask';
 import FileUpload from 'ui-components/FileUpload/FileUpload';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
+import PropTypes from 'prop-types';
 import './valid.css';
 
 class GeneralInfoProperty extends Component {
@@ -39,7 +41,6 @@ class GeneralInfoProperty extends Component {
 			startWeek: '',
 			endWeek: '',
 			workWeek: '',
-			avatar: 'url',
 			otherPhoneNumber: '',
 			room: '',
 			rate: this.props.Markup,
@@ -236,17 +237,17 @@ class GeneralInfoProperty extends Component {
      *  MUTATION TO DELETE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 	DELETE_COMPANY = gql`
-	mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
-		delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
-			Code
-			Name
+		mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
+			delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
+				Code
+				Name
+			}
 		}
-	}
-`;
+	`;
 
 	deleteCompany = (updatedId) => {
 		//Create the mutation using apollo global client
-		console.log("Delete Company ", updatedId);
+		console.log('Delete Company ', updatedId);
 		this.setState(
 			{
 				linearProgress: true
@@ -262,8 +263,6 @@ class GeneralInfoProperty extends Component {
 						}
 					})
 					.then((data) => {
-
-
 						this.props.handleOpenSnackbar('success', 'Success: Property Deleted');
 
 						this.props.handleClose();
@@ -271,8 +270,6 @@ class GeneralInfoProperty extends Component {
 							pathname: '/company/edit',
 							state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
 						});*/
-
-
 					})
 					.catch((err) => {
 						//Capture error and show a specific message
@@ -524,7 +521,8 @@ class GeneralInfoProperty extends Component {
 								other01URL: item.Other01_URL,
 								Other_Name: item.Other_Name,
 								Other01_Name: item.Other01_Name,
-								room: item.Rooms
+								room: item.Rooms,
+								avatar: item.ImageURL
 							});
 
 							this.setState({
@@ -540,6 +538,7 @@ class GeneralInfoProperty extends Component {
 	};
 
 	componentWillMount() {
+		this.setState({ avatar: this.context.avatarURL });
 		if (this.props.idProperty !== null) {
 			this.getPropertyData(this.props.idProperty, this.props.idCompany);
 		} else {
@@ -569,13 +568,22 @@ class GeneralInfoProperty extends Component {
 											pathname: '/company/edit',
 											state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
 										});*/
-
 								}}
 							>
 								Delete Property
 							</button>
 						</div>
 						<div className="container container-small">
+							<div className="card-form-row">
+								<ImageUpload
+									updateAvatar={(url) => {
+										this.setState({
+											avatar: url
+										});
+									}}
+									fileURL={this.state.avatar}
+								/>
+							</div>
 							<div className="row">
 								<div className="col-6">
 									<div className="card-wrapper">
@@ -596,7 +604,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													error={!this.state.rateValid}
 													maxLength="10"
-												//disabled={!this.props.showStepper}
+													//disabled={!this.props.showStepper}
 												/>
 											</div>
 
@@ -673,7 +681,10 @@ class GeneralInfoProperty extends Component {
 														//if (networkStatus === 4) return <LinearProgress />;
 														if (loading) return <LinearProgress />;
 														if (error) return <p>Error </p>;
-														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+														if (
+															data.getcatalogitem != null &&
+															data.getcatalogitem.length > 0
+														) {
 															return (
 																<SelectForm
 																	name="state"
@@ -697,12 +708,18 @@ class GeneralInfoProperty extends Component {
 												<span className="primary card-input-label">* City</span>
 											</div>
 											<div className="col-6">
-												<Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
+												<Query
+													query={this.getCitiesQuery}
+													variables={{ parent: this.state.state }}
+												>
 													{({ loading, error, data, refetch, networkStatus }) => {
 														//if (networkStatus === 4) return <LinearProgress />;
 														if (loading) return <LinearProgress />;
 														if (error) return <p>Error </p>;
-														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+														if (
+															data.getcatalogitem != null &&
+															data.getcatalogitem.length > 0
+														) {
 															return (
 																<SelectForm
 																	name="city"
@@ -749,7 +766,11 @@ class GeneralInfoProperty extends Component {
 													maskChar=" "
 													value={this.state.phoneNumber}
 													className={
-														this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'
+														this.state.phoneNumberValid ? (
+															'input-form'
+														) : (
+															'input-form _invalid'
+														)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -772,7 +793,9 @@ class GeneralInfoProperty extends Component {
 													mask="+(999) 999-9999"
 													maskChar=" "
 													value={this.state.fax}
-													className={this.state.faxNumberValid ? 'input-form' : 'input-form _invalid'}
+													className={
+														this.state.faxNumberValid ? 'input-form' : 'input-form _invalid'
+													}
 													onChange={(e) => {
 														this.setState({
 															fax: e.target.value,
@@ -989,6 +1012,9 @@ class GeneralInfoProperty extends Component {
 			/>
 		);
 	}
+	static contextTypes = {
+		avatarURL: PropTypes.string
+	};
 }
 
 GeneralInfoProperty.propTypes = {};
