@@ -627,7 +627,7 @@ class GeneralInformation extends Component {
      * Events of the component
      */
 	handleClickOpen = (scroll, boolValue, id, rate) => () => {
-		if (!this.props.showStepper) return false;
+		//if (!this.props.showStepper) return false;
 		this.setState(
 			{
 				propertyClick: boolValue,
@@ -1384,13 +1384,13 @@ class GeneralInformation extends Component {
 						<div className="card-form-footer">
 							<button
 								className={
-									!this.props.showStepper || this.props.idCompany == 0 ? (
+									this.props.idCompany == 0 ? (
 										'add-property__disabled'
 									) : (
 											'add-property'
 										)
 								}
-								disabled={!this.props.showStepper || this.props.idCompany == 0}
+								disabled={this.props.idCompany == 0}
 								onClick={this.handleClickOpen('paper', false, 0, 0)}
 							>
 								+ Add Property

@@ -983,7 +983,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -1113,8 +1113,8 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.Management}
-												change={(text) => {}}
-												//error={!this.state.CompanySignedNameValid}
+												change={(text) => { }}
+											//error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
 
@@ -1175,7 +1175,7 @@ class NewContract extends Component {
 											<span className="input-label primary">* Customer Signed Title</span>
 											<InputForm
 												value={this.state.User_Signed_Title}
-												change={(text) => {}}
+												change={(text) => { }}
 												error={!this.state.User_Signed_TitleValid}
 											/>
 										</div>
@@ -1299,7 +1299,7 @@ class NewContract extends Component {
 
 											<InputForm
 												value={this.state.CompanySignedName}
-												change={(text) => {}}
+												change={(text) => { }}
 												error={!this.state.CompanySignedNameValid}
 											/>
 										</div>
@@ -1348,8 +1348,8 @@ class NewContract extends Component {
 														}
 													);
 												}}
-												updateEmailContact={(email) => {}}
-												updateTypeContact={(type) => {}}
+												updateEmailContact={(email) => { }}
+												updateTypeContact={(type) => { }}
 												handleOpenSnackbar={this.props.handleOpenSnackbar}
 											/>
 										</div>
@@ -1488,15 +1488,18 @@ class NewContract extends Component {
 						>
 							Save
 						</Button>
-						<Button
-							className={classes.buttonSuccess}
-							onClick={() => {
-								this.getcatalogitem(this.state.Contract_Term);
-							}}
-							disabled={parseInt(this.state.Contract_Status) == 2 ? false : true}
-						>
-							Renewal Contract
-						</Button>
+
+						{
+							parseInt(this.state.Contract_Status) == 2 ? (<Button
+								className={classes.buttonSuccess}
+								onClick={() => {
+									this.getcatalogitem(this.state.Contract_Term);
+								}}
+								disabled={parseInt(this.state.Contract_Status) == 2 ? false : true}
+							>
+								Renewal Contract
+							</Button>) : ""
+						}
 						{(this.state.loadingInsert || this.state.loadingUpdate) && (
 							<CircularProgress size={24} className={classes.buttonProgress} />
 						)}

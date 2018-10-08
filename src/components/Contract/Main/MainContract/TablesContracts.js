@@ -235,6 +235,7 @@ class DepartmentsTable extends React.Component {
 														<IconButton
 															disabled={this.props.loading}
 															onClick={(e) => {
+																//console.log(this.props);
 																e.stopPropagation();
 																return this.props.delete(row.Id);
 															}}

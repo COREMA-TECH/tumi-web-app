@@ -34,14 +34,6 @@ class CompanyCard extends React.Component {
 		};
 	}
 
-
-	handleCloseAlertDialog = () => {
-		this.setState({ opendialog: false });
-	};
-	handleConfirmAlertDialog = () => {
-		this.deleteContract();
-	};
-
 	render() {
 		return (
 			<Route
@@ -74,7 +66,7 @@ class CompanyCard extends React.Component {
 												}
 												className="delete-company-icon"
 												onClick={(event) => {
-													delbusinesscompanies({
+													/*delbusinesscompanies({
 														variables: {
 															Id: this.props.idCompany,
 															IsActive: 0
@@ -83,9 +75,11 @@ class CompanyCard extends React.Component {
 
 													this.setState({
 														deleted: true
-													});
-
+													});*/
+													//	alert("en el primer");
+													//console.log(this.props);
 													event.stopPropagation();
+													return this.props.delete(this.props.idCompany);
 												}}
 											/>
 										);
