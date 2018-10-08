@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import gql from 'graphql-tag';
-import {Query} from 'react-apollo';
+import { Query } from 'react-apollo';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Select from "../../material-ui/Select";
 import './index.css';
@@ -221,7 +221,7 @@ class ComposedTextField extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         const ADD_TODO = gql`
             mutation insertCompanies($input: iParamBC!) {
                 inscompanies(input: $input) {
@@ -246,9 +246,9 @@ class ComposedTextField extends React.Component {
 
         if (this.state.loaded === false) {
             return (
-                <Query query={this.getCompanyQuery} variables={{id: this.props.idCompany}}>
-                    {({loading, error, data, refetch,}) => {
-                        if (loading) return <LinearProgress/>;
+                <Query query={this.getCompanyQuery} variables={{ id: this.props.idCompany }}>
+                    {({ loading, error, data, refetch, }) => {
+                        if (loading) return <LinearProgress />;
                         if (error) return <p>Error </p>;
                         if (data.getcompanies != null && data.getcompanies.length > 0) {
                             data.getcompanies.map(item => {
@@ -352,7 +352,7 @@ class ComposedTextField extends React.Component {
                                 <Input
                                     id="name-simple"
                                     value={this.state.name}
-                                    onChange={(text) => this.setState({name: text.target.value})}
+                                    onChange={(text) => this.setState({ name: text.target.value })}
                                 />
                             </FormControl>
                             <FormControl className="input">
@@ -360,7 +360,7 @@ class ComposedTextField extends React.Component {
                                 <Input
                                     id="name-simple"
                                     value={this.state.legalName}
-                                    onChange={(text) => this.setState({legalName: text.target.value})}
+                                    onChange={(text) => this.setState({ legalName: text.target.value })}
                                 />
                             </FormControl>
                             <FormControl className="input">
@@ -368,7 +368,7 @@ class ComposedTextField extends React.Component {
                                 <Input
                                     id="name-simple"
                                     value={this.state.description}
-                                    onChange={(text) => this.setState({description: text.target.value})}
+                                    onChange={(text) => this.setState({ description: text.target.value })}
                                 />
                             </FormControl>
 
@@ -378,7 +378,7 @@ class ComposedTextField extends React.Component {
                                     required={true}
                                     id="name-simple"
                                     value={this.state.address}
-                                    onChange={(text) => this.setState({address: text.target.value})}
+                                    onChange={(text) => this.setState({ address: text.target.value })}
                                 />
                             </FormControl>
                             <FormControl className="input">
@@ -387,35 +387,35 @@ class ComposedTextField extends React.Component {
                                     required={true}
                                     id="name-simple"
                                     value={this.state.optionalAddress}
-                                    onChange={(text) => this.setState({optionalAddress: text.target.value})}
+                                    onChange={(text) => this.setState({ optionalAddress: text.target.value })}
                                 />
                             </FormControl>
 
                             <FormControl className="input">
                                 <Query query={this.getCountriesQuery}>
-                                    {({loading, error, data, refetch, networkStatus}) => {
+                                    {({ loading, error, data, refetch, networkStatus }) => {
                                         //if (networkStatus === 4) return <LinearProgress />;
-                                        if (loading) return <LinearProgress/>;
+                                        if (loading) return <LinearProgress />;
                                         if (error) return <p>Error </p>;
                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                             return (<Select label={"Country"} values={data.getcatalogitem}
-                                                            value={this.state.country}
-                                                            update={this.updateStateCountry}/>)
+                                                value={this.state.country}
+                                                update={this.updateStateCountry} />)
                                         }
                                         return <p>Nothing to display </p>;
                                     }}
                                 </Query>
                             </FormControl>
                             <FormControl className="input">
-                                <Query query={this.getStatesQuery} variables={{parent: this.state.country}}>
-                                    {({loading, error, data, refetch, networkStatus}) => {
+                                <Query query={this.getStatesQuery} variables={{ parent: this.state.country }}>
+                                    {({ loading, error, data, refetch, networkStatus }) => {
                                         //if (networkStatus === 4) return <LinearProgress />;
-                                        if (loading) return <LinearProgress/>;
+                                        if (loading) return <LinearProgress />;
                                         if (error) return <p>Error </p>;
                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                             return <Select label={"States"} update={this.updateStateState}
-                                                           value={this.state.state}
-                                                           values={data.getcatalogitem}/>
+                                                value={this.state.state}
+                                                values={data.getcatalogitem} />
                                         }
 
                                         return <p>Nothing to display </p>;
@@ -424,15 +424,15 @@ class ComposedTextField extends React.Component {
                             </FormControl>
 
                             <FormControl className="input">
-                                <Query query={this.getCitiesQuery} variables={{parent: this.state.state}}>
-                                    {({loading, error, data, refetch, networkStatus}) => {
+                                <Query query={this.getCitiesQuery} variables={{ parent: this.state.state }}>
+                                    {({ loading, error, data, refetch, networkStatus }) => {
                                         //if (networkStatus === 4) return <LinearProgress />;
-                                        if (loading) return <LinearProgress/>;
+                                        if (loading) return <LinearProgress />;
                                         if (error) return <p>Error </p>;
                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                             return <Select label={"Cities"} update={this.updateStateCity}
-                                                           value={this.state.city}
-                                                           values={data.getcatalogitem}/>
+                                                value={this.state.city}
+                                                values={data.getcatalogitem} />
                                         }
                                         return <p>Nothing to display </p>;
                                     }}
@@ -445,7 +445,7 @@ class ComposedTextField extends React.Component {
                                     required={true}
                                     id="name-simple"
                                     value={this.state.zipCode}
-                                    onChange={(text) => this.setState({zipCode: text.target.value})}
+                                    onChange={(text) => this.setState({ zipCode: text.target.value })}
                                 />
                             </FormControl>
 
@@ -456,7 +456,7 @@ class ComposedTextField extends React.Component {
                                         required={true}
                                         id="name-simple"
                                         value={this.state.phoneNumber}
-                                        onChange={(text) => this.setState({phoneNumber: text.target.value})}
+                                        onChange={(text) => this.setState({ phoneNumber: text.target.value })}
                                     />
                                 </FormControl>
 
@@ -466,7 +466,7 @@ class ComposedTextField extends React.Component {
                                         required={true}
                                         id="name-simple"
                                         value={this.state.fax}
-                                        onChange={(text) => this.setState({fax: text.target.value})}
+                                        onChange={(text) => this.setState({ fax: text.target.value })}
                                     />
                                 </FormControl>
                             </div>
@@ -477,7 +477,7 @@ class ComposedTextField extends React.Component {
                                     required={true}
                                     id="name-simple"
                                     value={this.state.email}
-                                    onChange={(text) => this.setState({email: text.target.value})}
+                                    onChange={(text) => this.setState({ email: text.target.value })}
                                 />
                             </FormControl>
 
@@ -522,7 +522,7 @@ class ComposedTextField extends React.Component {
                                         required={true}
                                         id="name-simple"
                                         value={this.state.startWeek}
-                                        onChange={(text) => this.setState({startWeek: text.target.value})}
+                                        onChange={(text) => this.setState({ startWeek: text.target.value })}
                                     />
                                 </FormControl>
                                 <FormControl className="input">
@@ -531,7 +531,7 @@ class ComposedTextField extends React.Component {
                                         required={true}
                                         id="name-simple"
                                         value={this.state.endWeek}
-                                        onChange={(text) => this.setState({endWeek: text.target.value})}
+                                        onChange={(text) => this.setState({ endWeek: text.target.value })}
                                     />
                                 </FormControl>
                             </div>
@@ -543,17 +543,17 @@ class ComposedTextField extends React.Component {
                                     id="name-simple"
                                     type="number"
                                     value={this.state.rate}
-                                    onChange={(text) => this.setState({rate: text.target.value})}
+                                    onChange={(text) => this.setState({ rate: text.target.value })}
                                 />
                             </FormControl>
 
                             <div className="container-row">
                                 <span className="is-active">
                                     <span>Active:</span>
-                                        <Switch
-                                            value={this.state.active}
-                                            update={this.updateStateActive}
-                                        />
+                                    <Switch
+                                        value={this.state.active}
+                                        update={this.updateStateActive}
+                                    />
                                 </span>
                             </div>
                             {/*<FormControl className="input">*/}
