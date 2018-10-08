@@ -188,6 +188,7 @@ class ApplicationTable extends React.Component {
 							<TableHead>
 								<TableRow>
 									<CustomTableCell padding="none" className={classes.th} />
+									<CustomTableCell className={classes.th}>Position</CustomTableCell>
 									<CustomTableCell className={classes.th}>First Name</CustomTableCell>
 									<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
 									<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
@@ -209,6 +210,7 @@ class ApplicationTable extends React.Component {
 												});
 											}}
 										>
+
 											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>
@@ -225,6 +227,7 @@ class ApplicationTable extends React.Component {
 													</div>
 												</Tooltip>
 											</CustomTableCell>
+											<CustomTableCell>{row.id}</CustomTableCell>
 											<CustomTableCell>{row.firstName}</CustomTableCell>
 											<CustomTableCell>{row.middleName}</CustomTableCell>
 											<CustomTableCell>{row.lastName}</CustomTableCell>

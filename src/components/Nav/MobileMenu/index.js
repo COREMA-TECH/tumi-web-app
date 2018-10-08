@@ -21,7 +21,7 @@ const MobileMenu = (props) => (
 				<MenuItem item="Permissions" title="Permissions" icon="far fa-calendar-alt MenuMobile-icon" />
 			</li>
 			<li className="MainMenu-option">
-				<Link to={`/employment-application`} className="MenuMobile-link">
+				<Link to={`/home/application`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
 					<span className="fas fa-file-signature MenuMobile-icon" title={props.title}></span>
 					<span>Apply Form</span>
 				</Link>
