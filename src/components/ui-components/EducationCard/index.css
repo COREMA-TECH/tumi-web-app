@@ -1,4 +1,4 @@
-.previous-employment-card {
+.education-card {
     width: 100%;
 
     display: flex;
@@ -18,7 +18,7 @@
     position: relative;
 }
 
-.previous-employment-card__job-title {
+.education-card__job-title {
     width: 70%;
     margin-top: .8em;
     margin-bottom: .5em;
@@ -31,9 +31,9 @@
     font-size: 1.1em;
 }
 
-.previous-employment-card__company,
-.previous-employment-card__address,
-.previous-employment-card__phone {
+.education-card__company,
+.education-card__address,
+.education-card__phone {
     width: 100%;
     margin-left: 1em;
     padding: .3em;
@@ -42,22 +42,22 @@
     color: #3e88af;
 }
 
-.previous-employment-card__company i,
-.previous-employment-card__address i,
-.previous-employment-card__phone i {
+.education-card__company i,
+.education-card__address i,
+.education-card__phone i {
     width: 4%;
     margin-right: 8px;
     box-sizing: border-box;
 }
 
-.previous-employment-card__company span,
-.previous-employment-card__address span,
-.previous-employment-card__phone span {
+.education-card__company span,
+.education-card__address span,
+.education-card__phone span {
     text-align: right;
 }
 
 
-.previous-employment-card__remove-button {
+.education-card__remove-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -67,6 +67,6 @@
     transition: all .450s;
 }
 
-.previous-employment-card__remove-button:hover {
+.education-card__remove-button:hover {
     color: #0093FF;
 }

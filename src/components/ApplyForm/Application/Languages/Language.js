@@ -164,91 +164,6 @@ class Language extends Component {
         // To render the Languages Section
         let renderlanguagesSection = () => (
             <div>
-                {this.state.languages.length > 0 ? (
-                    <div className="skills-container skills-container--header">
-                        <div className="row">
-                            <div className="col-3">
-                                <span>Language Name</span>
-                            </div>
-                            <div className="col-4">
-                                <span>Conversation</span>
-                            </div>
-                            <div className="col-4">
-                                <span>Writing</span>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    ''
-                )}
-
-                {this.state.languages.map((languageItem) => (
-                    <div key={uuidv4()} className="skills-container">
-                        <div className="row">
-                            <div className="col-3">
-                                <span>
-                                    {this.state.languagesLoaded.map((item) => {
-
-                                        if (item.Id == languageItem.language) {
-                                            return item.Name.trim();
-                                        }
-                                    })}
-                                </span>
-                            </div>
-                            <div className="col-4">
-                                <span>
-                                    {languageLevelsJSON.map((item) => {
-                                        if (item.Id == languageItem.conversation) {
-                                            return item.Name;
-                                        }
-                                    })}
-                                </span>
-                            </div>
-                            <div className="col-4">
-                                <span>
-                                    {languageLevelsJSON.map((item) => {
-                                        if (item.Id == languageItem.writing) {
-                                            return item.Name;
-                                        }
-                                    })}
-                                </span>
-                            </div>
-                            <div className="col-1">
-                                <span
-                                    className="delete-school-button"
-                                    onClick={() => {
-                                        this.setState((prevState) => ({
-                                            languages: this.state.languages.filter((_, i) => {
-                                                return _.uuid !== languageItem.uuid;
-                                            })
-                                        }), () => {
-                                            if (languageItem.id !== undefined) {
-                                                this.removeLanguageById(languageItem.id)
-                                            }
-                                        });
-                                    }}
-                                >
-                                    <i className="fas fa-trash-alt"></i>
-                                </span>
-                                {/*<Button*/}
-                                {/*className="deleteSkillSection"*/}
-                                {/*onClick={() => {*/}
-                                {/*this.setState((prevState) => ({*/}
-                                {/*languages: this.state.languages.filter((_, i) => {*/}
-                                {/*console.log(this.state.languages);*/}
-                                {/*return _.uuid !== languageItem.uuid;*/}
-                                {/*})*/}
-                                {/*}));*/}
-                                {/*}}*/}
-                                {/*>*/}
-                                {/*x*/}
-                                {/*</Button>*/}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-                <br/>
-                <br/>
                 {
                     this.state.editing ? (
                         <form
@@ -346,6 +261,90 @@ class Language extends Component {
                         </form>
                     ) : ''
                 }
+                <br/>
+                {this.state.languages.length > 0 ? (
+                    <div className="skills-container skills-container--header">
+                        <div className="row">
+                            <div className="col-3">
+                                <span>Language Name</span>
+                            </div>
+                            <div className="col-4">
+                                <span>Conversation</span>
+                            </div>
+                            <div className="col-4">
+                                <span>Writing</span>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    ''
+                )}
+
+                {this.state.languages.map((languageItem) => (
+                    <div key={uuidv4()} className="skills-container">
+                        <div className="row">
+                            <div className="col-3">
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
+
+                                        if (item.Id == languageItem.language) {
+                                            return item.Name.trim();
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-4">
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.conversation) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-4">
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
+                                        if (item.Id == languageItem.writing) {
+                                            return item.Name;
+                                        }
+                                    })}
+                                </span>
+                            </div>
+                            <div className="col-1">
+                                <span
+                                    className="delete-school-button"
+                                    onClick={() => {
+                                        this.setState((prevState) => ({
+                                            languages: this.state.languages.filter((_, i) => {
+                                                return _.uuid !== languageItem.uuid;
+                                            })
+                                        }), () => {
+                                            if (languageItem.id !== undefined) {
+                                                this.removeLanguageById(languageItem.id)
+                                            }
+                                        });
+                                    }}
+                                >
+                                    <i className="fas fa-trash-alt"></i>
+                                </span>
+                                {/*<Button*/}
+                                {/*className="deleteSkillSection"*/}
+                                {/*onClick={() => {*/}
+                                {/*this.setState((prevState) => ({*/}
+                                {/*languages: this.state.languages.filter((_, i) => {*/}
+                                {/*console.log(this.state.languages);*/}
+                                {/*return _.uuid !== languageItem.uuid;*/}
+                                {/*})*/}
+                                {/*}));*/}
+                                {/*}}*/}
+                                {/*>*/}
+                                {/*x*/}
+                                {/*</Button>*/}
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
         );
 

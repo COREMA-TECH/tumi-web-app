@@ -6,15 +6,18 @@
     justify-content: center;
     align-items: flex-start;
 
-    padding: 1.3em 1em;
+    padding-bottom: 2em;
 
 
     background: rgba(65, 175, 215, 0.05);
     border: 1px solid rgba(65, 175, 215, .1);
     border-radius: 5px;
     box-shadow: 1px 1px 15px rgba(200, 200, 200, .3);
+    overflow: hidden;
 
     position: relative;
+
+    box-sizing: border-box;
 }
 
 .skill-card__remove-button {
@@ -32,14 +35,20 @@
 }
 
 .skill-card__description {
-    color: #41afd7;
-    font-weight: 100;
+    width: 70%;
+    margin-top: .8em;
+    margin-bottom: .5em;
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+    background: linear-gradient(90deg, #0093FF, #00C4FF);
+
+    padding-left: 1em;
+
+    color: #fff;
     font-size: 1.2em;
-    margin: .5em 0 .5em .1em;
 }
 
 .skill-card__level {
-    width: 100%;
+    width: 90%;
     height: 12px;
     border-radius: 100px;
     background: rgba(65, 175, 215, 0.3);
@@ -47,6 +56,8 @@
     position: relative;
     overflow: hidden;
     color: transparent;
+    box-sizing: border-box;
+    margin: 5%;
 }
 
 .skill-card__level:after {
