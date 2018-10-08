@@ -1115,7 +1115,7 @@ class GeneralInformation extends Component {
 							disabled={!this.props.showStepper}
 						/>
 					</div>
-					{console.log('avatar', this.state.avatar)}
+
 					<div className="card-form-company">
 						<div className="card-form-header grey">General Information</div>
 						<div className="card-form-body">
@@ -1397,13 +1397,7 @@ class GeneralInformation extends Component {
 						</div>
 						<div className="card-form-footer">
 							<button
-								className={
-									this.props.idCompany == 0 ? (
-										'add-property__disabled'
-									) : (
-										'add-property'
-									)
-								}
+								className={this.props.idCompany == 0 ? 'add-property__disabled' : 'add-property'}
 								disabled={this.props.idCompany == 0}
 								onClick={this.handleClickOpen('paper', false, 0, 0)}
 							>
