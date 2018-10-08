@@ -25,6 +25,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -162,7 +163,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	loadCompany = (func = () => { }) => {
+	loadCompany = (func = () => {}) => {
 		this.setState(
 			{
 				loading: true
@@ -197,7 +198,7 @@ class GeneralInformation extends Component {
 									rate: item.Rate,
 									email: item.Primary_Email.trim(),
 									phoneNumber: item.Phone_Number.trim(),
-
+									avatar: item.ImageURL,
 									Code: item.Code.trim(),
 									Code01: item.Code01.trim(),
 									zipCode: item.Zipcode,
@@ -233,7 +234,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => { }) => {
+	loadCompanyProperties = (func = () => {}) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -505,7 +506,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => { }) => {
+	loadCountries = (func = () => {}) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -543,7 +544,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => { }) => {
+	loadStates = (func = () => {}) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -585,7 +586,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => { }) => {
+	loadCities = (func = () => {}) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -652,6 +653,7 @@ class GeneralInformation extends Component {
      * End of the events
      */
 	componentWillMount() {
+		this.setState({ avatar: this.context.avatarURL });
 		if (this.props.idCompany == 0) {
 			this.props.toggleStepper();
 			this.setState({ firstLoad: true }, () => {
@@ -714,7 +716,7 @@ class GeneralInformation extends Component {
 			startWeek: '',
 			endWeek: '',
 			workWeek: '',
-			avatar: 'url',
+			avatar: '',
 			otherPhoneNumber: '',
 			rooms: '',
 			rate: '',
@@ -985,7 +987,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -1099,9 +1101,21 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 				<div className="general-information__content">
+					<div className="card-form-row">
+						<ImageUpload
+							updateAvatar={(url) => {
+								this.setState({
+									avatar: url
+								});
+							}}
+							fileURL={this.state.avatar}
+							disabled={!this.props.showStepper}
+						/>
+					</div>
+					{console.log('avatar', this.state.avatar)}
 					<div className="card-form-company">
 						<div className="card-form-header grey">General Information</div>
 						<div className="card-form-body">
@@ -1387,8 +1401,8 @@ class GeneralInformation extends Component {
 									!this.props.showStepper || this.props.idCompany == 0 ? (
 										'add-property__disabled'
 									) : (
-											'add-property'
-										)
+										'add-property'
+									)
 								}
 								disabled={!this.props.showStepper || this.props.idCompany == 0}
 								onClick={this.handleClickOpen('paper', false, 0, 0)}
@@ -1450,8 +1464,8 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 
 				<Dialog
 					open={this.state.open}
@@ -1482,20 +1496,23 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-								//Si el click no es en esa property : pasar el Id en nulo
-								//para que no cargue niguna información relacionada con ese Id
-								<TabsInDialog
-									idCompany={this.props.idCompany}
-									Markup={this.state.rate}
-									handleClose={this.handleClose}
-									handleOpenSnackbar={this.props.handleOpenSnackbar}
-								/>
-							)}
+							//Si el click no es en esa property : pasar el Id en nulo
+							//para que no cargue niguna información relacionada con ese Id
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								Markup={this.state.rate}
+								handleClose={this.handleClose}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
+						)}
 					</DialogContent>
 				</Dialog>
 			</div>
 		);
 	}
+	static contextTypes = {
+		avatarURL: PropTypes.string
+	};
 }
 
 GeneralInformation.propTypes = {
