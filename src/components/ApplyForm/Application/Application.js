@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
-import {GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY} from "../Queries";
-import {updateApplicationInformation} from "../utils";
-import {UPDATE_APPLICATION} from "../Mutations";
+import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
+import { updateApplicationInformation } from "../utils";
+import { UPDATE_APPLICATION } from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
@@ -128,7 +128,7 @@ class Application extends Component {
                     }
                 }
             })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setState({
                         editing: false
                     });
@@ -165,7 +165,7 @@ class Application extends Component {
                         id: id
                     }
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     let applicantData = data.applications[0];
                     this.setState({
                         firstName: applicantData.firstName,
@@ -216,8 +216,8 @@ class Application extends Component {
     validateInvalidInput = () => {
         if (document.addEventListener) {
             document.addEventListener('invalid', (e) => {
-                    e.target.className += ' invalid-apply-form';
-                }, true
+                e.target.className += ' invalid-apply-form';
+            }, true
             );
         }
     };
@@ -241,14 +241,14 @@ class Application extends Component {
 
         return (
             <div className="Apply-container--application">
-                <form className="general-info-apply-form row" id="general-info-form" autoComplete="off" onSubmit={
+                <form className="general-info-apply-form" id="general-info-form" autoComplete="off" onSubmit={
                     (e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         this.updateApplicationInformation(70)
                     }
                 }>
-                    <div className="col-12">
+                    <div className="">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">General Information</span>
@@ -256,16 +256,16 @@ class Application extends Component {
                                     this.state.editing ? (
                                         ''
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                editing: true
-                                            })
-                                        }}>Edit <i className="far fa-edit"></i>
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    editing: true
+                                                })
+                                            }}>Edit <i className="far fa-edit"></i>
+                                            </button>
+                                        )
                                 }
                             </div>
-                            <br/>
+                            <br />
                             <div className="row">
                                 <div className="col-6 form-section-1">
                                     <div className="row">
@@ -403,8 +403,8 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label skeleton">State</span>
-                                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                            <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -428,7 +428,7 @@ class Application extends Component {
                                                             </select>
                                                         );
                                                     }
-                                                    return <SelectNothingToDisplay/>;
+                                                    return <SelectNothingToDisplay />;
                                                 }}
                                             </Query>
                                         </div>
@@ -583,12 +583,12 @@ class Application extends Component {
                                         <div className="col-6">
                                             <span className="primary applicant-card__label skeleton">Type of ID</span>
                                             <select name="typeOfID" id="typeOfID" className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(e) => {
-                                                        this.setState({
-                                                            typeOfId: e.target.value
-                                                        })
-                                                    }}>
+                                                disabled={!this.state.editing}
+                                                onChange={(e) => {
+                                                    this.setState({
+                                                        typeOfId: e.target.value
+                                                    })
+                                                }}>
                                                 <option value="">Select an option</option>
                                                 <option value="1">Birth certificate</option>
                                                 <option value="2">Social Security card</option>
@@ -622,7 +622,7 @@ class Application extends Component {
                                         <div className="col-6">
                                             <span className="primary applicant-card__label skeleton">Position Applying For</span>
                                             <Query query={GET_POSITIONS_QUERY}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getposition != null && data.getposition.length > 0) {
@@ -647,7 +647,7 @@ class Application extends Component {
                                                             </select>
                                                         );
                                                     }
-                                                    return <SelectNothingToDisplay/>;
+                                                    return <SelectNothingToDisplay />;
                                                 }}
                                             </Query>
                                         </div>
@@ -786,8 +786,8 @@ class Application extends Component {
                                         </button>
                                     </div>
                                 ) : (
-                                    ''
-                                )
+                                        ''
+                                    )
                             }
                         </div>
                     </div>
