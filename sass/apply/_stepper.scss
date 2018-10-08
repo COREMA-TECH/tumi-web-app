@@ -10,6 +10,12 @@
     background: $light-gray;
 }
 
+.MenuStep-item {
+    &.selected {
+        border-left: solid 2px $brand-primary;
+    }
+}
+
 div[class*="MuiStepper-root-"] {
     padding: 0 !important;
 }

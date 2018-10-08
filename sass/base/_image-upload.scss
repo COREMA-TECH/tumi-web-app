@@ -1,0 +1,22 @@
+.avatar-wrapper {
+    &:hover .upload-btn-wrapper { 
+        top: 0px;
+    }
+}
+
+.upload-image {
+    .upload-btn-wrapper {
+        height: 91px;
+        overflow-y: hidden;
+        position: absolute;
+        top: -91px;
+        width: 91px;
+        transition: all 0.5s ease;
+    }
+    .btn {
+        
+        border-radius: 91px;
+        height: 91px;
+        width: 91px;
+    }
+}

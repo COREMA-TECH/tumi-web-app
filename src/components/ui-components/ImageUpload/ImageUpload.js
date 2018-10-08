@@ -81,16 +81,13 @@ class ImageUpload extends Component {
 		return (
 			<div className="upload-image">
 				<div className="avatar-wrapper">
-					<img
-						className="avatar-uploaded"
-						src={this.props.fileURL || this.state.fileURL}
-						alt="Company Avatar"
-					/>
-				</div>
-				<br />
-				<div className="upload-btn-wrapper">
-					<button className="btn">Select Avatar</button>
-					<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
+					<div className="avatarImage-wrapper">
+						<img className="avatar-uploaded" src={this.props.fileURL || this.state.fileURL} alt="Company Avatar" />
+					</div>
+					<div className="upload-btn-wrapper">
+						<button className="btn">Select Avatar</button>
+						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
+					</div>
 				</div>
 			</div>
 		);

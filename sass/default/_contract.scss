@@ -9,6 +9,14 @@
 }
 
 .avatar {
+    &Image-wrapper  {
+        border-radius: 90px;
+        height: 91px;
+        overflow: hidden;
+        position: relative;
+        width: 91px;
+        border: 5px solid $brand-primary !important;
+    }
     &-uploaded {
         margin-left: auto;
         margin-right: auto;
@@ -18,11 +26,7 @@
         height: 100%;
     }
     &-wrapper {
-        border-radius: 90px;
-        height: 91px;
-        overflow: hidden;
         position: relative;
-        width: 91px;
     }
 }
 
