@@ -62,7 +62,8 @@ $wrapper-svg-width: 1332px;
 
 //Sizes
 $border-radius-wrapper: 30px;
-$border-radius-input: 5px;
+$border-radius-standar: 5px;
+$border-radius-input: $border-radius-standar;
 $half-vertical-spacing: 5.5rem;
 $vertical-spacing: 11rem;
 $vertical-spacing-underImage: 29rem;

@@ -708,3 +708,15 @@ p {
 .ApplyForm {
   background-color: #f5f7f9;
   padding: 2rem 0; }
+
+.Stepper-wrapper {
+  background: #FFF;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1);
+  box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1); }
+
+.main-stepper-container {
+  background: #f5f7f9; }
+
+div[class*="MuiStepper-root-"] {
+  padding: 0 !important; }
