@@ -1,0 +1,21 @@
+.Stepper {
+    &-wrapper {
+        background: $white;
+        border-radius: $border-radius-standar;
+        box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
+    }
+}
+
+.main-stepper-container {
+    background: $light-gray;
+}
+
+.MenuStep-item {
+    &.selected {
+        border-left: solid 2px $brand-primary;
+    }
+}
+
+div[class*="MuiStepper-root-"] {
+    padding: 0 !important;
+}

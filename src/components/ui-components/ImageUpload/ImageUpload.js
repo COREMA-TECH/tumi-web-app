@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import './index.css';
 import CircularProgress from '../../material-ui/CircularProgress';
-
+import PropTypes from 'prop-types';
 const uuidv4 = require('uuid/v4');
 
 class ImageUpload extends Component {
@@ -11,13 +11,14 @@ class ImageUpload extends Component {
 
 		this.state = {
 			loading: false,
-			uploadValue: 0,
-			fileURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png'
+			uploadValue: 0
 		};
 
 		this.handleUpload = this.handleUpload.bind(this);
 	}
-
+	componentWillMount() {
+		this.setState({ fileURL: this.context.avatarURL });
+	}
 	handleUpload(event) {
 		// Loading state
 		this.setState({
@@ -71,7 +72,7 @@ class ImageUpload extends Component {
 					<br />
 					<div className="upload-btn-wrapper">
 						<button className="btn">Select Avatar</button>
-						<input type="file" name="myfile" onChange={this.handleUpload} />
+						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
 					</div>
 				</div>
 			);
@@ -80,16 +81,20 @@ class ImageUpload extends Component {
 		return (
 			<div className="upload-image">
 				<div className="avatar-wrapper">
-					<img className="avatar-uploaded" src={this.state.fileURL} alt="Company Avatar" />
-				</div>
-				<br />
-				<div className="upload-btn-wrapper">
-					<button className="btn">Select Avatar</button>
-					<input type="file" name="myfile" onChange={this.handleUpload} />
+					<div className="avatarImage-wrapper">
+						<img className="avatar-uploaded" src={this.props.fileURL || this.state.fileURL} alt="Company Avatar" />
+					</div>
+					<div className="upload-btn-wrapper">
+						<button className="btn">Select Avatar</button>
+						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
+					</div>
 				</div>
 			</div>
 		);
 	}
+	static contextTypes = {
+		avatarURL: PropTypes.string
+	};
 }
 
 export default ImageUpload;

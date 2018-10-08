@@ -21,6 +21,7 @@
 @import "base/mixins";
 @import "base/modal";
 @import "base/error";
+@import "base/image-upload";
 
 
 //Sections 
@@ -36,3 +37,4 @@
 //Apply
 @import "apply/header";
 @import "apply/apply";
+@import "apply/stepper";

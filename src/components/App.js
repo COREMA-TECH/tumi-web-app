@@ -13,69 +13,71 @@ import { setContext } from 'apollo-link-context';
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
-// const baseEndpointURL = 'http://13.58.18.163:4000';
-const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
+const baseEndpointURL = 'http://ec2-18-223-100-127.us-east-2.compute.amazonaws.com:4000';
+//const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
 //const baseEndpointURL = 'http://localhost:4000';
 const token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklkIjoxMCwiQ29kZV9Vc2VyIjoiYWRtaW4gICAgICJ9LCJpYXQiOjE1Mzg2NjI4ODgsImV4cCI6MTg1NDIzODg4OH0.3p2Hej6LhKeiNvONYNsJ2S7-5NSeeC-gcKgYyJvc8F0';
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklkIjoxMCwiQ29kZV9Vc2VyIjoiYWRtaW4gICAgICJ9LCJpYXQiOjE1Mzg2NjI4ODgsImV4cCI6MTg1NDIzODg4OH0.3p2Hej6LhKeiNvONYNsJ2S7-5NSeeC-gcKgYyJvc8F0';
 // Endpoint URL
 const httpLink = createHttpLink({
-    uri: baseEndpointURL + '/graphql'
+	uri: baseEndpointURL + '/graphql'
 });
 
 const authLink = setContext((_, { headers }) => {
-    // get the authentication token from local storage if it exists
-    const token = localStorage.getItem('Token');
-    // return the headers to the context so httpLink can read them
-    return {
-        headers: {
-            ...headers,
-            authentication: token
-        }
-    };
+	// get the authentication token from local storage if it exists
+	const token = localStorage.getItem('Token');
+	// return the headers to the context so httpLink can read them
+	return {
+		headers: {
+			...headers,
+			authentication: token
+		}
+	};
 });
 
 // To configure Apollo client with link (url) endpoint and cache option
 const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache()
+	link: authLink.concat(httpLink),
+	cache: new InMemoryCache()
 });
 
 // Endpoint URL for Login
 const loginHttpLink = createHttpLink({
-    uri: baseEndpointURL + '/login'
+	uri: baseEndpointURL + '/login'
 });
 
 const loginClient = new ApolloClient({
-    link: loginHttpLink,
-    cache: new InMemoryCache()
+	link: loginHttpLink,
+	cache: new InMemoryCache()
 });
 
 class App extends Component {
-    render() {
-        return (
-            <ApolloProvider client={client}>
-                <Router>
-                    <div className="App">
-                        <Main />
-                    </div>
-                </Router>
-            </ApolloProvider>
-        );
-    }
-    static childContextTypes = {
-        baseUrl: PropTypes.string,
-        endpointBaseURL: PropTypes.string,
-        loginClient: PropTypes.object,
-        token: PropTypes.string
-    };
+	render() {
+		return (
+			<ApolloProvider client={client}>
+				<Router>
+					<div className="App">
+						<Main />
+					</div>
+				</Router>
+			</ApolloProvider>
+		);
+	}
+	static childContextTypes = {
+		baseUrl: PropTypes.string,
+		endpointBaseURL: PropTypes.string,
+		loginClient: PropTypes.object,
+		token: PropTypes.string,
+		avatarURL: PropTypes.string
+	};
 
-    getChildContext = () => ({
-        baseUrl: baseEndpointURL,
-        endpointBaseURL: baseEndpointURL,
-        loginClient: loginClient,
-        token: token
-    });
+	getChildContext = () => ({
+		baseUrl: baseEndpointURL,
+		endpointBaseURL: baseEndpointURL,
+		loginClient: loginClient,
+		token: token,
+		avatarURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png'
+	});
 }
 
 export default App;

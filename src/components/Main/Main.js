@@ -40,7 +40,7 @@ class Main extends Component {
 		return (
 			<div>
 				<Route path="/login" component={Login} />
-				<Route path="/application/info" component={ApplicationInfo} />
+				{/*<PrivateRoute path="/application/info" component={ApplicationInfo} />*/}
 				<PrivateRoute path="/employment-application" component={StepperApplyForm} />
 				<PrivateRoute path="/employment-application-message" component={ApplyFormMessage} />
 				<PrivateRoute path="/home" component={Private} />

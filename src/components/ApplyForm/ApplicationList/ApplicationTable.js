@@ -205,11 +205,12 @@ class ApplicationTable extends React.Component {
 											key={uuidv4()}
 											onClick={() => {
 												history.push({
-													pathname: '/application/info',
+													pathname: '/home/application/info',
 													state: { ApplicationId: row.id }
 												});
 											}}
 										>
+
 											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>

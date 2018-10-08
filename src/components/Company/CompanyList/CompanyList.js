@@ -8,6 +8,12 @@ import ErrorMessageComponent from '../../ui-components/ErrorMessageComponent/Err
 import Grid from '@material-ui/core/Grid';
 import { Route } from 'react-router-dom';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
+import withGlobalContent from 'Generic/Global';
+import { withStyles } from '@material-ui/core/styles';
+
+import withApollo from 'react-apollo/withApollo';
+
 const styles = (theme) => ({
 	root: {
 		flexGrow: 1
@@ -19,10 +25,26 @@ const styles = (theme) => ({
 	}
 });
 class CompanyList extends Component {
-	state = {
-		data: [],
-		open: false
-	};
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			data: [],
+			loadingRemoving: false,
+			filterText: '',
+			open: false
+		};
+
+		/*this.state = {
+			loadingContracts: false,
+			data: [],
+			loadingRemoving: false,
+			filterText: '',
+			opendialog: false
+		};*/
+	}
+
+
 
 	getCompaniesQuery = gql`
 		{
@@ -38,6 +60,70 @@ class CompanyList extends Component {
 		}
 	`;
 
+	/**
+     * To delete contracts by id
+     */
+	deleteCompanyQuery = gql`
+	mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
+		delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
+			Code
+			Name
+		}
+	}
+	`;
+
+	deleteCompany = () => {
+		console.log(this.props);
+		this.setState(
+			{
+				loadingRemoving: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: this.deleteCompanyQuery,
+						variables: {
+							Id: this.state.idToDelete,
+							IsActive: 0
+						}
+					})
+					.then((data) => {
+						this.setState(
+							{
+								open: false,
+								loadingRemoving: false
+							},
+							() => {
+								this.props.handleOpenSnackbar('success', 'Company Deleted!');
+							}
+						);
+					})
+					.catch((error) => {
+						this.setState(
+							{
+								open: false,
+								loadingRemoving: false
+							},
+							() => {
+								this.props.handleOpenSnackbar('error', 'Error: Deleting Company: ' + error);
+							}
+						);
+					});
+			}
+		);
+	};
+
+	handleCloseAlertDialog = () => {
+		this.setState({ open: false });
+	};
+	handleConfirmAlertDialog = () => {
+		this.deleteCompany();
+	};
+
+	deleteCompanyById = (id) => {
+		this.setState({ idToDelete: id, open: true, loadingRemoving: false });
+	};
+
 	renderCards = (data, refetch) => {
 		const source = data.map(({ Id, Code, Description, Name, ImageURL, Address, Id_Contract }) => {
 			return (
@@ -48,6 +134,9 @@ class CompanyList extends Component {
 					description={Description}
 					url={ImageURL}
 					idContract={Id_Contract}
+					delete={(id) => {
+						this.deleteCompanyById(id);
+					}}
 				/>
 			);
 		});
@@ -56,7 +145,7 @@ class CompanyList extends Component {
 
 	// To render the content of the header
 	renderHeaderContent = ({ history }) => (
-		<div className={[ this.props.root, 'company-list__header' ].join(' ')}>
+		<div className={[this.props.root, 'company-list__header'].join(' ')}>
 			<Grid container spacing={24}>
 				<Grid item xs={12} sm={6}>
 					<div className="search-container" />
@@ -97,12 +186,21 @@ class CompanyList extends Component {
 								type="Error-danger"
 								icon="danger"
 							/>
+
 						);
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
 						return (
 							<Route
 								render={({ history }) => (
 									<div className="main-contract">
+										<AlertDialogSlide
+											handleClose={this.handleCloseAlertDialog}
+											handleConfirm={this.handleConfirmAlertDialog}
+											open={this.state.open}
+											loadingConfirm={this.state.loadingRemoving}
+											content="Do you really want to continue whit this operation?"
+										/>
+
 										<div className="main-contract__header main-contract__header-sg-container">
 											{this.renderHeaderContent({ history })}
 										</div>
@@ -125,4 +223,7 @@ class CompanyList extends Component {
 	}
 }
 
-export default CompanyList;
+
+export default withStyles(styles)(withApollo(withGlobalContent(CompanyList)));
+
+//export default CompanyList;
