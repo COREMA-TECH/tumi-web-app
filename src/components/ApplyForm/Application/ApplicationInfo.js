@@ -130,7 +130,7 @@ class VerticalLinearStepper extends Component {
                                             onClick={() => {
                                                 this.setState({ activeStep: index })
                                             }}
-                                            className="MenuStep-item"
+                                            className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
                                         >
                                             <StepLabel className={[classes.stepper, 'stepper-label']}>
                                                 {label}
