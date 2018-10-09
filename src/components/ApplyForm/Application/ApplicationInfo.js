@@ -160,6 +160,15 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-10">
                         <div className="StepperForm-wrapper">
+                            <select onChange={(e) => {
+                                localStorage.setItem('languageForm', e.target.value);
+                                this.setState({
+                                    value: 0
+                                })
+                            }}>
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                            </select>
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
                             </Typography>

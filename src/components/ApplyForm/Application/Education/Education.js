@@ -594,7 +594,7 @@ class Education extends Component {
                                                     editing: true,
                                                     open: true
                                                 })
-                                            }}>{spanishActions[0].label}<i className="fas fa-plus"></i>
+                                            }}>{spanishActions[0].label} <i className="fas fa-plus"></i>
                                             </button>
                                         )
                                     }
