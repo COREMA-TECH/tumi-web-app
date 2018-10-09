@@ -85,8 +85,6 @@ class VerticalLinearStepper extends Component {
 
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
-            }, () => {
-                alert(this.state.applicationId);
             })
         } catch (error) {
             window.location.href = "/home/application"
