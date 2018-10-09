@@ -67,14 +67,13 @@ class ImageUpload extends Component {
 		if (this.state.loading) {
 			return (
 				<div className="upload-image">
-					<CircularProgress />
-					<br />
-					<br />
-					<div className="upload-btn-wrapper">
-						<button className="btn">Select Avatar</button>
-						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
+					<div className="avatar-wrapper">
+						<div className="avatarImage-wrapper">
+							<img className="avatar-uploaded" src="https://loading.io/spinners/balls/lg.circle-slack-loading-icon.gif" />
+						</div>
 					</div>
 				</div>
+
 			);
 		}
 

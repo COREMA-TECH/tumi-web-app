@@ -80,8 +80,9 @@ class VerticalLinearStepper extends Component {
     componentWillMount() {
         // Get id of the application and pass to the components
         try {
-            if (this.props.location.state.ApplicationId == undefined)
-                window.location.href = "/home/application"
+            if (this.props.location.state.ApplicationId === undefined)
+                window.location.href = "/home/application";
+
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
             })
