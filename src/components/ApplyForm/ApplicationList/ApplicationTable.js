@@ -210,7 +210,6 @@ class ApplicationTable extends React.Component {
 												});
 											}}
 										>
-
 											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>
