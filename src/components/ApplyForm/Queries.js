@@ -31,14 +31,10 @@ export const GET_CITIES_QUERY = gql`
  */
 export const GET_POSITIONS_QUERY = gql`
     {
-        getposition(IsActive: 1, Id_Entity: null) {
+        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
             Id
-            Id_Department
-            Position
-            Bill_Rate
-            Pay_Rate
-            Shift
             IsActive
+            Description
         }
     }
 `;

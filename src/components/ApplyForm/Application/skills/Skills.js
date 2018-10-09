@@ -9,6 +9,8 @@ import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 import SkillCard from "../../../ui-components/SkillCard/SkillCard";
+import menuSpanish from "../languagesJSON/es/menuSpanish";
+import spanishActions from "../languagesJSON/es/spanishActions";
 
 const uuidv4 = require('uuid/v4');
 
@@ -270,10 +272,10 @@ class Skills extends Component {
                     <DialogActions>
                         <div className="applicant-card__footer">
                             <button className="applicant-card__cancel-button" type="reset" onClick={this.handleClose}>
-                                Cancel
+                                {spanishActions[2].label}
                             </button>
                             <button className="applicant-card__save-button" type="submit" form="skill-form">
-                                Add
+                                {spanishActions[0].label}
                             </button>
                         </div>
                     </DialogActions>
@@ -287,7 +289,7 @@ class Skills extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Skills</span>
+                                <span className="applicant-card__title">{menuSpanish[5].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''

@@ -16,6 +16,8 @@ import Education from "./Education/Education";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import MilitaryService from "./MilitaryService/MilitaryService";
 import Skills from "./skills/Skills";
+import menuSpanish from "./languagesJSON/es/menuSpanish";
+
 
 const uuidv4 = require('uuid/v4');
 
@@ -46,7 +48,11 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['General Information', 'Languages', 'Education', 'Previous Employment', 'Military Service', 'Skills'];
+    let steps = menuSpanish.map(item => {
+        return item.label
+    });
+
+    return steps;
 }
 
 class VerticalLinearStepper extends Component {

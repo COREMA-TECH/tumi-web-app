@@ -10,6 +10,8 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import InputMask from "react-input-mask";
 
+import menuSpanish from "../languagesJSON/es/menuSpanish";
+
 const uuidv4 = require('uuid/v4');
 
 class PreviousEmployment extends Component {
@@ -453,7 +455,7 @@ class PreviousEmployment extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Previous Employment</span>
+                                <span className="applicant-card__title">{menuSpanish[3].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''

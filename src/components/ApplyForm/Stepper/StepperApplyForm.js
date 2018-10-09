@@ -991,7 +991,7 @@ class VerticalLinearStepper extends Component {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
-                                if (data.getposition != null && data.getposition.length > 0) {
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return (
                                         <select
                                             name="city"
@@ -1006,8 +1006,8 @@ class VerticalLinearStepper extends Component {
                                         >
                                             <option value="">Select a position</option>
                                             <option value="0">Open Position</option>
-                                            {data.getposition.map((item) => (
-                                                <option value={item.Id}>{item.Position}</option>
+                                            {data.getcatalogitem.map((item) => (
+                                                <option value={item.Id}>{item.Description}</option>
                                             ))}
                                         </select>
                                     );

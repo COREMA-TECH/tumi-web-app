@@ -228,7 +228,7 @@ class ApplicationTable extends React.Component {
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell>
-												{row.position ? row.position.Position : 'Open Position'}
+												{row.position ? row.position.Description : 'Open Position'}
 											</CustomTableCell>
 											<CustomTableCell>{row.firstName}</CustomTableCell>
 											<CustomTableCell>{row.middleName}</CustomTableCell>

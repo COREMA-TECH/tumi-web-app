@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "label": "Campo de estudio"
+  },
+  {
+    "id": 2,
+    "label": "Nombre (Institución)"
+  },
+  {
+    "id": 3,
+    "label": "Dirección"
+  },
+  {
+    "id": 4,
+    "label": "Fecha de Inicio"
+  },
+  {
+    "id": 5,
+    "label": "Fecha de Fin"
+  },
+  {
+    "id": 6,
+    "label": "Graduado"
+  },
+  {
+    "id": 7,
+    "label": "Título"
+  }
+]

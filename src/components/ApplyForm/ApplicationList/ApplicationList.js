@@ -57,12 +57,7 @@ class ApplicationList extends Component {
 				emailAddress
 				position {
 					Id
-					Id_Contract
-					Id_Department
-					Id_Entity
-					Position
-					Bill_Rate
-					Pay_Rate
+					Description
 				}
 			}
 		}
@@ -196,7 +191,7 @@ class ApplicationList extends Component {
 										(_.firstName +
 											_.middleName +
 											_.lastName +
-											(_.position ? _.position.Position : 'Open Position') +
+											(_.position ? _.position.Description : 'Open Position') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1

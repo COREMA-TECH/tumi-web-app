@@ -10,6 +10,10 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const educationFormLanguage = require(`../languagesJSON/${localStorage.getItem('languageForm')}/education/educationForm`);
+
 const uuidv4 = require('uuid/v4');
 
 class Education extends Component {
@@ -194,7 +198,7 @@ class Education extends Component {
                         <div className="col-12 form-section-1">
                             <div className="row">
                                 <div className="col-6">
-                                    <label className="primary">Field of Study</label>
+                                    <label className="primary">{educationFormLanguage[0].label}</label>
                                     <div className="input-container--validated">
                                         <input
                                             id="studyType"
@@ -211,7 +215,7 @@ class Education extends Component {
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    <label className="primary">Name (Institution)</label>
+                                    <label className="primary">{educationFormLanguage[1].label}</label>
                                     <div className="input-container--validated">
                                         <input
                                             form="education-form"
@@ -228,7 +232,7 @@ class Education extends Component {
                                     </div>
                                 </div>
                                 <div className="col-12">
-                                    <label className="primary">Address</label>
+                                    <label className="primary">{educationFormLanguage[2].label}</label>
                                     <div className="input-container--validated">
                                         <input
                                             form="education-form"
@@ -247,7 +251,7 @@ class Education extends Component {
                             </div>
                             <div className="row">
                                 <div className="col-6">
-                                    <span className="primary"> Time Period</span>
+                                    <span className="primary">{educationFormLanguage[3].label}</span>
                                     <div className="input-container--validated">
                                         <input
                                             form="education-form"
@@ -264,7 +268,7 @@ class Education extends Component {
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    <span className="primary">To</span>
+                                    <span className="primary">{educationFormLanguage[4].label}</span>
                                     <div className="input-container--validated">
                                         <input
                                             form="education-form"
@@ -281,7 +285,7 @@ class Education extends Component {
                                     </div>
                                 </div>
                                 <div className="col-6">
-                                    <label className="primary">Graduated</label> <br/>
+                                    <label className="primary">{educationFormLanguage[5].label}</label> <br/>
                                     <label className="switch">
                                         <input
                                             onChange={(e) => {
@@ -299,12 +303,12 @@ class Education extends Component {
                                     </label>
                                 </div>
                                 <div className="col-6">
-                                    <label className="primary">Degree</label>
+                                    <label className="primary">{educationFormLanguage[6].label}</label>
                                     {this.state.graduated ? (
                                         <div className="input-container--validated">
                                             <select form="education-form" name="degree" id="degree"
                                                     className="form-control">
-                                                <option value="">Select an option</option>
+                                                <option value="">{spanishActions[5].label}</option>
                                                 {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                             </select>
                                         </div>
@@ -317,7 +321,7 @@ class Education extends Component {
                                                 disabled
                                                 className="form-control"
                                             >
-                                                <option value="">Select an option</option>
+                                                <option value="">{spanishActions[5].label}</option>
                                                 {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                             </select>
                                         </div>
@@ -329,10 +333,10 @@ class Education extends Component {
                     <DialogActions>
                         <div className="applicant-card__footer">
                             <button className="applicant-card__cancel-button" type="reset" onClick={this.handleClose}>
-                                Cancel
+                                {spanishActions[2].label}
                             </button>
                             <button className="applicant-card__save-button" type="submit" form="education-form">
-                                Add
+                                {spanishActions[0].label}
                             </button>
                         </div>
                     </DialogActions>
@@ -580,7 +584,7 @@ class Education extends Component {
                         <div className="col-12">
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
-                                    <span className="applicant-card__title">Education</span>
+                                    <span className="applicant-card__title">{menuSpanish[2].label}</span>
                                     {
                                         this.state.editing ? (
                                             ''
@@ -590,7 +594,7 @@ class Education extends Component {
                                                     editing: true,
                                                     open: true
                                                 })
-                                            }}>Add <i className="fas fa-plus"></i>
+                                            }}>{spanishActions[0].label}<i className="fas fa-plus"></i>
                                             </button>
                                         )
                                     }

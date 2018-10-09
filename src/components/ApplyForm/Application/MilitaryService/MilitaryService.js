@@ -4,6 +4,7 @@ import withApollo from "react-apollo/withApollo";
 import {ADD_MILITARY_SERVICES, UPDATE_MILITARY_SERVICES} from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
+import menuSpanish from "../languagesJSON/es/menuSpanish";
 
 class MilitaryService extends Component {
     constructor(props) {
@@ -303,7 +304,7 @@ class MilitaryService extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Military Service</span>
+                                <span className="applicant-card__title">{menuSpanish[4].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
