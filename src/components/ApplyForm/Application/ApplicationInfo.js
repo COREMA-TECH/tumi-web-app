@@ -16,7 +16,9 @@ import Education from "./Education/Education";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import MilitaryService from "./MilitaryService/MilitaryService";
 import Skills from "./skills/Skills";
-import menuSpanish from "./languagesJSON/es/menuSpanish";
+
+
+const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 
 
 const uuidv4 = require('uuid/v4');

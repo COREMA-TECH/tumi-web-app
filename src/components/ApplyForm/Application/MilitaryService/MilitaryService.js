@@ -4,7 +4,11 @@ import withApollo from "react-apollo/withApollo";
 import {ADD_MILITARY_SERVICES, UPDATE_MILITARY_SERVICES} from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
-import menuSpanish from "../languagesJSON/es/menuSpanish";
+
+
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const militaryServiceLabels = require(`../languagesJSON/${localStorage.getItem('languageForm')}/militaryServices`);
 
 class MilitaryService extends Component {
     constructor(props) {
@@ -194,7 +198,7 @@ class MilitaryService extends Component {
                 <div className="military-service-form">
                     <div className="row">
                         <div className="col-6">
-                            <span className="primary"> Branch</span>
+                            <span className="primary"> {militaryServiceLabels[0].label}</span>
                             <input
                                 onChange={(e) => {
                                     this.setState({
@@ -213,7 +217,7 @@ class MilitaryService extends Component {
                             <span className="check-icon"/>
                         </div>
                         <div className="col-6">
-                            <span className="primary"> Rank at Discharge</span>
+                            <span className="primary"> {militaryServiceLabels[1].label}</span>
                             <input
                                 onChange={(e) => {
                                     this.setState({
@@ -234,7 +238,7 @@ class MilitaryService extends Component {
                     </div>
                     <div className="row">
                         <div className="col-3">
-                            <span className="primary"> Dates</span>
+                            <span className="primary"> {militaryServiceLabels[2].label}</span>
                             <input
                                 onChange={(e) => {
                                     this.setState({
@@ -252,7 +256,7 @@ class MilitaryService extends Component {
                             />
                         </div>
                         <div className="col-3">
-                            <span className="primary">To: </span>
+                            <span className="primary">{militaryServiceLabels[3].label}</span>
                             <input
                                 onChange={(e) => {
                                     this.setState({
@@ -270,7 +274,7 @@ class MilitaryService extends Component {
                             />
                         </div>
                         <div className="col-6">
-                            <span className="primary"> Type of Discharge</span>
+                            <span className="primary"> {militaryServiceLabels[4].label}</span>
                             <select
                                 onChange={(e) => {
                                     this.setState({
@@ -283,7 +287,7 @@ class MilitaryService extends Component {
                                 disabled={!this.state.editing}
                                 className="form-control"
                             >
-                                <option value="">Select an option</option>
+                                <option value="">{spanishActions[5].label}</option>
                                 <option value="1">Honorable discharge</option>
                                 <option value="2">General discharge</option>
                                 <option value="3">Other than honorable (OTH) discharge</option>

@@ -9,8 +9,10 @@ import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 import SkillCard from "../../../ui-components/SkillCard/SkillCard";
-import menuSpanish from "../languagesJSON/es/menuSpanish";
-import spanishActions from "../languagesJSON/es/spanishActions";
+
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
 
 const uuidv4 = require('uuid/v4');
 
@@ -302,7 +304,7 @@ class Skills extends Component {
                                             })
                                         }}>
                                             {
-                                                <span> Add <i className="fas fa-plus"/></span>
+                                                <span> {spanishActions[0].label} <i className="fas fa-plus"/></span>
                                             }
                                         </button>
                                     )

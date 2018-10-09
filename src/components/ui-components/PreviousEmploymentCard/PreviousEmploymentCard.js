@@ -4,8 +4,10 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import spanishActions from "../../ApplyForm/Application/languagesJSON/es/spanishActions";
-import dialogMessages from "../../ApplyForm/Application/languagesJSON/es/dialogMessages";
+
+const spanishActions = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const dialogMessages = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
+
 
 class PreviousEmploymentCard extends Component {
     constructor(props) {
