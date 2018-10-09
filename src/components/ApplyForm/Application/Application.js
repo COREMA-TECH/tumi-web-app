@@ -113,7 +113,6 @@ class Application extends Component {
                         homePhone: this.state.homePhone,
                         cellPhone: this.state.cellPhone,
                         socialSecurityNumber: this.state.socialSecurityNumber,
-                        birthDay: this.state.birthDay,
                         car: this.state.car,
                         typeOfId: parseInt(this.state.typeOfId),
                         expireDateId: this.state.expireDateId,
@@ -182,7 +181,6 @@ class Application extends Component {
                         cellPhone: applicantData.cellPhone,
                         socialSecurityNumber: applicantData.socialSecurityNumber,
                         positionApplyingFor: applicantData.positionApplyingFor,
-                        birthDay: applicantData.birthDay.substring(0, 10),
                         car: applicantData.car,
                         typeOfId: applicantData.typeOfId,
                         expireDateId: applicantData.expireDateId.substring(0, 10),
@@ -208,6 +206,8 @@ class Application extends Component {
                         'bottom',
                         'right'
                     );
+
+                    console.error(error);
                 });
         });
     };
