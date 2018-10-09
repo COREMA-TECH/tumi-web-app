@@ -18,7 +18,7 @@ const MobileMenu = (props) => (
 				<MenuItem item="Contracts" title="Contracts" icon="fas fa-handshake MenuMobile-icon" />
 			</li>
 			<li className="MainMenu-option">
-				<MenuItem item="Permissions" title="Permissions" icon="far fa-calendar-alt MenuMobile-icon" />
+				<MenuItem item="Permissions" title="Permissions" icon="far fa-clipboard MenuMobile-icon" />
 			</li>
 			<li className="MainMenu-option">
 				<Link to={`/home/application`} className="MenuMobile-link" onClick={props.handleCloseMenu}>

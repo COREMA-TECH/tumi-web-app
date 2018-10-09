@@ -101,8 +101,8 @@ p {
 
 // grid
 
-$width: 96%;
-$gutter: 4%;
+$width: 98%;
+$gutter: 2%;
 $breakpoint-small: 33.75em; // 540px
 $breakpoint-med: 45em; // 720px
 $breakpoint-large: 60em; // 960px
@@ -131,7 +131,7 @@ $breakpoint-large: 60em; // 960px
 
 .row [class^="col"] {
   float: left;
-  margin: 0.5rem 2%;
+  margin: 0.5rem 1%;
   min-height: 0.125rem;
 }
 

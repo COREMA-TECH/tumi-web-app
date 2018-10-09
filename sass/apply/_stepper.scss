@@ -3,6 +3,9 @@
         background: $white;
         border-radius: $border-radius-standar;
         box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
+        div[class*="col-"] {
+            
+        }
     }
 }
 
