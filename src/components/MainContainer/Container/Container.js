@@ -12,6 +12,7 @@ import Catalogs from '../../Catalogs/';
 import Signature from '../../Contract/Signature';
 import MainContract from '../../Contract/Main/MainContract/MainContract';
 import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
+import ApplicationRecruiter from '../../ApplyForm-Recruiter/ApplicationList/ApplicationList';
 
 class Container extends Component {
 	render() {
@@ -23,6 +24,7 @@ class Container extends Component {
 				<Route exact path="/home/company/edit" component={CreateCompany} />
 				<Route exact path="/home/company/add" component={CreateCompany} />
 				<Route exact path="/home/application" component={ApplicationList} />
+				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
 
 				<Route exact path="/home/Roles" component={CreateRole} />
 				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
