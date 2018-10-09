@@ -10,12 +10,12 @@
 
 .avatar {
     &Image-wrapper  {
-        border-radius: 90px;
-        height: 91px;
+        border-radius: 96px;
+        height: 96px;
         overflow: hidden;
         position: relative;
-        width: 91px;
-        border: 5px solid $brand-primary !important;
+        width: 96px;
+        border: 3px solid $light-gray !important;
     }
     &-uploaded {
         margin-left: auto;

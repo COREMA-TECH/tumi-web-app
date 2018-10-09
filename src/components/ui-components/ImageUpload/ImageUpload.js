@@ -85,7 +85,7 @@ class ImageUpload extends Component {
 						<img className="avatar-uploaded" src={this.props.fileURL || this.state.fileURL} alt="Company Avatar" />
 					</div>
 					<div className="upload-btn-wrapper">
-						<button className="btn">Select Avatar</button>
+						<button className="btn"><i class="fas fa-cloud-upload-alt"></i></button>
 						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
 					</div>
 				</div>
