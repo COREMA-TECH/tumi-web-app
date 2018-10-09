@@ -352,7 +352,7 @@ class MilitaryService extends Component {
                                                 }
                                             }
                                         >
-                                            {spanishActions[3   ].label}
+                                            {spanishActions[2].label}
                                         </button>
                                         <button
                                             onClick={() => {
