@@ -210,7 +210,6 @@ class ApplicationTable extends React.Component {
 												});
 											}}
 										>
-
 											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>
@@ -228,7 +227,7 @@ class ApplicationTable extends React.Component {
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell>
-												{row.position ? row.position.Position : 'Open Position'}
+												{row.position ? row.position.Description : 'Open Position'}
 											</CustomTableCell>
 											<CustomTableCell>{row.firstName}</CustomTableCell>
 											<CustomTableCell>{row.middleName}</CustomTableCell>
