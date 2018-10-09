@@ -1365,6 +1365,7 @@ class GeneralInformation extends Component {
 						<div className="card-form-header orange">Properties</div>
 						<div className="card-form-body">
 							<div className="table-elements">
+								<li className="header-elements">Delete</li>
 								<li className="header-elements">Property Code</li>
 								<li className="header-elements">Property Name</li>
 							</div>
@@ -1375,6 +1376,7 @@ class GeneralInformation extends Component {
 										className="table__item"
 										onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
 									>
+										<li>{item.Code}</li>
 										<li>{item.Code}</li>
 										<li>{item.Name}</li>
 									</div>
