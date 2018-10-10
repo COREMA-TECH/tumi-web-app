@@ -186,7 +186,7 @@ class Login extends Component {
 	render(data) {
 		const { classes } = this.props;
 		// When user is logged redirect to the private routes
-		localStorage.clear();
+		//localStorage.clear();
 		if (this.state.logged) {
 			return (
 				<Redirect

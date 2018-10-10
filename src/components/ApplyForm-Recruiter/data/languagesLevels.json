@@ -1,0 +1,22 @@
+[
+  {
+    "Id": 1,
+    "Name": "Elementary Proficiency"
+  },
+  {
+    "Id": 2,
+    "Name": "Limited Working Proficiency"
+  },
+  {
+    "Id": 3,
+    "Name": "Professional Working Proficiency"
+  },
+  {
+    "Id": 4,
+    "Name": "Full Professional Proficiency"
+  },
+  {
+    "Id": 5,
+    "Name": "Native or Bilingual Proficiency"
+  }
+]

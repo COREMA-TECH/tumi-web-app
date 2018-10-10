@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "label": "Rama"
+  },
+  {
+    "id": 1,
+    "label": "Rango al Alta"
+  },
+  {
+    "id": 2,
+    "label": "Fecha de Inicio"
+  },
+  {
+    "id": 3,
+    "label": "Fecha de Fin"
+  },
+  {
+    "id": 4,
+    "label": "Tipo de Descarga"
+  }
+]

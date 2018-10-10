@@ -423,6 +423,9 @@ body {
 .icon-menu {
   visibility: hidden; }
 
+.Language-icon {
+  width: 25px; }
+
 .main-container__title {
   width: 100% !important; }
 
@@ -542,6 +545,20 @@ body {
   -webkit-filter: FlipH;
   filter: FlipH;
   -ms-filter: "FlipH"; }
+
+.RightMenu-item {
+  display: inline-block;
+  height: 25px; }
+
+.RightMenu-list {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-right: 1rem;
+  text-align: right; }
 
 .card-input-label {
   display: block;

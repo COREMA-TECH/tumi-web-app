@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "label": "Add"
+  },
+  {
+    "id": 2,
+    "label": "Edit"
+  },
+  {
+    "id": 3,
+    "label": "Cancel"
+  },
+  {
+    "id": 4,
+    "label": "Delete"
+  },
+  {
+    "id": 5,
+    "label": "Save"
+  },
+  {
+    "id": 6,
+    "label": "Select an Option"
+  }
+]

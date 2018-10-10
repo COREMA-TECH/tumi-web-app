@@ -17,6 +17,12 @@
     visibility: hidden;
 }
 
+.Language {
+    &-icon {
+        width: 25px;
+    }
+}
+
 .main-container__title {
     width: 100% !important;
 }
@@ -152,5 +158,18 @@
         transform: scaleX(-1);
         filter: FlipH;
         -ms-filter: "FlipH";
+    }
+}
+
+.RightMenu {
+    &-item {
+        display: inline-block;
+        height: 25px;
+    }
+    &-list {
+        align-items: center;
+        display: flex;
+        margin-right: 1rem;
+        text-align: right;
     }
 }
