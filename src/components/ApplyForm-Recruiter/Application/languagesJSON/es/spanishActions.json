@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "label": "Agregar"
+  },
+  {
+    "id": 1,
+    "label": "Editar"
+  },
+  {
+    "id": 2,
+    "label": "Cancelar"
+  },
+  {
+    "id": 3,
+    "label": "Eliminar"
+  },
+  {
+    "id": 4,
+    "label": "Guardar"
+  },
+  {
+    "id": 5,
+    "label": "Seleccionar una Opción"
+  }
+]

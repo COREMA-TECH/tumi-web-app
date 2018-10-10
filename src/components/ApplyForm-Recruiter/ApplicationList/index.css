@@ -1,0 +1,35 @@
+.main-application-tab {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.main-application__header {
+	width: 100%;
+	height: 6vh;
+	background: #ffffff;
+	border-bottom: 3px solid #7e7e7e;
+	padding: 1.5em;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.main-application__content {
+	width: 75%;
+	min-height: 50vh;
+}
+
+.main-application-table {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-bottom: 30px;
+	width: 100%;
+}
+.application_table_wrapper {
+	width: 100%;
+	display: flex;
+	justify-content: space-around;
+}

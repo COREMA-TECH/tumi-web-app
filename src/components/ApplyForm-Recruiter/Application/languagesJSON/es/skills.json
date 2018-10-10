@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "label": "Nombre de la habilidad"
+  },
+  {
+    "id": 1,
+    "label": "Nivel de habilidad"
+  },
+  {
+    "id": 1,
+    "label": "Novato"
+  },
+  {
+    "id": 1,
+    "label": "Experto"
+  }
+]

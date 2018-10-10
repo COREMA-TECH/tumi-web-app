@@ -7,7 +7,7 @@ const Menu = (...props) => (
 	<ul className="menu">
 		<MenuItem item="Company" title="Companies" icon="fa fa-home" />
 		<MenuItem item="Contracts" title="Contracts" icon="fas fa-handshake" />
-		<MenuItem item="Permissions" title="Permissions" icon="fas fa-clipboard" />
+		<MenuItem item="Recruiter" title="Recruiter" icon="fas fa-clipboard" />
 		<Link to={`/home/application`} className="menu__item">
 			<span className="fas fa-file-signature" title={props.title}></span>
 			<span className="nav-title">Apply Form</span>

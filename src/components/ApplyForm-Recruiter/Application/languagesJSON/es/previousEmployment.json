@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "label": "Compañía"
+  },
+  {
+    "id": 1,
+    "label": "Teléfono"
+  },
+  {
+    "id": 2,
+    "label": "Dirección"
+  },
+  {
+    "id": 3,
+    "label": "Supervisor"
+  },
+  {
+    "id": 4,
+    "label": "Título Profesional"
+  },
+  {
+    "id": 5,
+    "label": "Tarifa de Pago"
+  },
+  {
+    "id": 6,
+    "label": "Fecha de Inicio"
+  },
+  {
+    "id": 7,
+    "label": "Fecha de Fin"
+  },
+  {
+    "id": 8,
+    "label": "Razón para Irse"
+  }
+]

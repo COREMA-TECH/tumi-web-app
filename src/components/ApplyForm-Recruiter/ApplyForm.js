@@ -1,91 +1,36 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepContent from '@material-ui/core/StepContent';
-import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import './index.css';
-import '../index.css';
-import Dialog from '@material-ui/core/Dialog/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent/DialogContent';
-import CircularProgressLoading from '../../material-ui/CircularProgressLoading';
-import InputRange from '../ui/InputRange/InputRange';
-import DialogActions from '@material-ui/core/DialogActions/DialogActions';
-import studyTypes from '../data/studyTypes';
-import InputMask from 'react-input-mask';
-import languageLevelsJSON from '../data/languagesLevels';
-import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
-import {GET_LANGUAGES_QUERY} from '../Queries.js';
-import withApollo from 'react-apollo/withApollo';
-import Query from 'react-apollo/Query';
-import {GET_POSITIONS_QUERY, GET_STATES_QUERY} from '../Queries';
-import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import React, { Component } from 'react';
 import {
     ADD_APLICANT_EDUCATION,
     ADD_APLICANT_PREVIOUS_EMPLOYMENT,
     ADD_LANGUAGES,
-    ADD_MILITARY_SERVICES,
-    ADD_SKILL,
-    CREATE_APPLICATION,
-    UPDATE_APPLICATION
-} from '../Mutations';
+    CREATE_APPLICATION
+} from './Mutations';
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
+import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import Query from 'react-apollo/Query';
+import { GET_LANGUAGES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from './Queries';
+import './index.css';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import InputRange from './ui/InputRange/InputRange';
+import InputRangeDisabled from './ui/InputRange/InputRangeDisabled';
+import withApollo from 'react-apollo/withApollo';
+import studyTypes from './data/studyTypes';
+import languageLevelsJSON from './data/languagesLevels';
+import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
+import CircularProgressLoading from '../material-ui/CircularProgressLoading';
 import Route from 'react-router-dom/es/Route';
-import withGlobalContent from "../../Generic/Global";
-import SignatureForm from "../SignatureForm/SignatureForm";
-
-const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+import InputMask from 'react-input-mask';
 
 const uuidv4 = require('uuid/v4');
 
-const styles = (theme) => ({
-    root: {
-        width: '100%',
-        display: 'flex'
-    },
-    button: {
-        marginTop: 0,
-        marginRight: theme.spacing.unit,
-        backgroundColor: '#41afd7',
-        color: '#fff',
-        '&:hover': {
-            backgroundColor: '#3d93b9'
-        }
-    },
-    actionsContainer: {
-        marginBottom: theme.spacing.unit * 2
-    },
-    resetContainer: {
-        padding: theme.spacing.unit * 3
-    },
-    stepper: {
-        color: '#41afd7'
-    }
-});
-
-function getSteps() {
-    return [
-        'Applicant Information',
-        'Languages',
-        'Education',
-        'Previous Employment',
-        'Military Service',
-        'Skills',
-        'Disclaimer'
-    ];
-}
-
-class VerticalLinearStepper extends Component {
+class ApplyForm extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            activeStep: 0,
             open: false,
             firstName: '',
             middleName: '',
@@ -100,13 +45,12 @@ class VerticalLinearStepper extends Component {
             cellPhone: '',
             socialSecurityNumber: '',
             birthDay: '',
-            car: false,
+            car: '',
             typeOfId: '',
             expireDateId: '',
             emailAddress: '',
             positionApplyingFor: 1,
             idealJob: '',
-            idealJobs: [],
             dateAvailable: '',
             scheduleRestrictions: '',
             scheduleExplain: '',
@@ -149,45 +93,34 @@ class VerticalLinearStepper extends Component {
             previousEmploymentPhone: '',
 
             // Application id property state is used to save languages, education, mulitary services, skills
-            applicationId: null,
+            applicationId: 0,
 
             // Languages catalog
-            languagesLoaded: [],
-
-            openSnackbar: true,
-            aceptedDisclaimer: false,
-            openSignature: false
+            languagesLoaded: []
         };
     }
 
-    // To handle the stepper
-    handleNext = () => {
-        this.setState((state) => ({
-            activeStep: state.activeStep + 1
-        }));
-    };
-    handleBack = () => {
-        this.setState((state) => ({
-            activeStep: state.activeStep - 1
-        }));
-    };
-    handleReset = () => {
-        this.setState({
-            activeStep: 0
-        });
-    };
-
-    // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
-    // To close the skill dialog
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
-    // To insert general applicant information
+    // To validate all the inputs and set a red border when the input is invalid
+    validateInvalidInput = () => {
+        if (document.addEventListener) {
+            document.addEventListener(
+                'invalid',
+                (e) => {
+                    e.target.className += ' invalid-apply-form';
+                },
+                true
+            );
+        }
+    };
+
     insertApplicationInformation = (history) => {
         this.setState(
             {
@@ -211,6 +144,7 @@ class VerticalLinearStepper extends Component {
                                 homePhone: this.state.homePhone,
                                 cellPhone: this.state.cellPhone,
                                 socialSecurityNumber: this.state.socialSecurityNumber,
+                                birthDay: this.state.birthDay,
                                 car: this.state.car,
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
@@ -225,88 +159,90 @@ class VerticalLinearStepper extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         let idApplication = data.addApplication.id;
-                        this.setState({
-                            applicationId: idApplication
-                        });
 
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            'Successfully created',
-                            'bottom',
-                            'right'
-                        );
-
-                        this.handleNext();
-                    })
-                    .catch(() => {
                         this.setState(
                             {
-                                insertDialogLoading: false
+                                applicationId: idApplication
                             },
                             () => {
-                                this.props.handleOpenSnackbar(
-                                    'error',
-                                    'Error to create the application: Please, try again!',
-                                    'bottom',
-                                    'right'
-                                );
+                                // When the application id state property is updated, insert the other form sections
+
+                                // to remove all the uuid properties in the object
+                                this.state.languages.forEach((item) => {
+                                    delete item.uuid;
+                                });
+
+                                this.state.languages.forEach((item) => {
+                                    item.ApplicationId = idApplication;
+                                });
+
+                                this.props.client
+                                    .mutate({
+                                        mutation: ADD_LANGUAGES,
+                                        variables: {
+                                            application: this.state.languages
+                                        }
+                                    })
+                                    .then(() => {
+                                        // to remove all the uuid properties in the object
+                                        this.state.schools.forEach((item) => {
+                                            delete item.uuid;
+                                        });
+
+                                        this.state.schools.forEach((item) => {
+                                            item.ApplicationId = idApplication;
+                                        });
+
+                                        // Then insert education list
+                                        this.props.client
+                                            .mutate({
+                                                mutation: ADD_APLICANT_EDUCATION,
+                                                variables: {
+                                                    application: this.state.schools
+                                                }
+                                            })
+                                            .then(() => {
+                                                // to remove all the uuid properties in the object
+                                                this.state.previousEmployment.forEach((item) => {
+                                                    delete item.uuid;
+                                                });
+
+                                                this.state.previousEmployment.forEach((item) => {
+                                                    item.ApplicationId = idApplication;
+                                                });
+
+                                                // Then insert previous employment
+                                                this.props.client
+                                                    .mutate({
+                                                        mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
+                                                        variables: {
+                                                            application: this.state.previousEmployment
+                                                        }
+                                                    })
+                                                    .then(() => {
+                                                        // Hide the loading dialog and redirect to component with success message
+                                                        this.setState(
+                                                            {
+                                                                insertDialogLoading: false
+                                                            },
+                                                            () => {
+                                                                // Insert Languages
+
+                                                                history.push({
+                                                                    pathname: '/employment-application-message'
+                                                                });
+                                                            }
+                                                        );
+                                                    })
+                                                    .catch();
+                                            })
+                                            .catch();
+                                    })
+                                    .catch();
                             }
                         );
-                    });
-            }
-        );
-    };
-
-    updateApplicationInformation = () => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: UPDATE_APPLICATION,
-                        variables: {
-                            application: {
-                                id: parseInt(this.state.applicationId),
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                date: this.state.date,
-                                streetAddress: this.state.streetAddress,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                socialSecurityNumber: this.state.socialSecurityNumber,
-                                car: this.state.car,
-                                typeOfId: parseInt(this.state.typeOfId),
-                                expireDateId: this.state.expireDateId,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                dateAvailable: this.state.dateAvailable,
-                                scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment
-                            }
-                        }
-                    })
-                    .then(({data}) => {
-
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            'Successfully updated',
-                            'bottom',
-                            'right'
-                        );
-
-                        this.handleNext();
                     })
                     .catch(() => {
                         this.setState(
@@ -315,254 +251,12 @@ class VerticalLinearStepper extends Component {
                             },
                             () => {
                                 // Show a error message
-                                this.props.handleOpenSnackbar(
-                                    'error',
-                                    'Error to update the application: Please, try again!',
-                                    'bottom',
-                                    'right'
-                                );
+                                alert('Error saving information');
                             }
                         );
                     });
             }
         );
-    };
-
-    // To insert languages
-    insertLanguagesApplication = () => {
-        if (this.state.languages.length > 0) {
-            // to remove all the uuid properties in the object
-            this.state.languages.forEach((item) => {
-                delete item.uuid;
-            });
-
-            this.state.languages.forEach((item) => {
-                item.ApplicationId = this.state.applicationId;
-            });
-
-            this.props.client
-                .mutate({
-                    mutation: ADD_LANGUAGES,
-                    variables: {
-                        application: this.state.languages
-                    }
-                })
-                .then(() => {
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully created',
-                        'bottom',
-                        'right'
-                    );
-
-                    this.handleNext();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save languages: Please, try again!',
-                        'bottom',
-                        'right'
-                    );
-                });
-        } else {
-            this.handleNext();
-        }
-    };
-
-    // To insert education
-    insertEducationApplication = () => {
-        if (this.state.schools.length > 0) {
-            // to remove all the uuid properties in the object
-            this.state.schools.forEach((item) => {
-                delete item.uuid;
-            });
-
-            this.state.schools.forEach((item) => {
-                item.ApplicationId = this.state.applicationId;
-            });
-
-            // Then insert education list
-            this.props.client
-                .mutate({
-                    mutation: ADD_APLICANT_EDUCATION,
-                    variables: {
-                        application: this.state.schools
-                    }
-                })
-                .then(() => {
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully created',
-                        'bottom',
-                        'right'
-                    );
-
-                    this.handleNext();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save education: Please, try again!',
-                        'bottom',
-                        'right'
-                    );
-                });
-        } else {
-            this.handleNext();
-        }
-    };
-
-    // To insert Military services section
-    insertPreviousEmploymentApplication = () => {
-        if (this.state.previousEmployment.length > 0) {
-            // to remove all the uuid properties in the object
-            this.state.previousEmployment.forEach((item) => {
-                delete item.uuid;
-            });
-
-            this.state.previousEmployment.forEach((item) => {
-                item.ApplicationId = this.state.applicationId;
-            });
-
-            // Then insert previous employment
-            this.props.client
-                .mutate({
-                    mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
-                    variables: {
-                        application: this.state.previousEmployment
-                    }
-                })
-                .then(() => {
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully created',
-                        'bottom',
-                        'right'
-                    );
-
-                    this.handleNext();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save previous employments: Please, try again!',
-                        'bottom',
-                        'right'
-                    );
-                });
-        } else {
-            this.handleNext();
-        }
-    };
-
-    // To insert a object with mnilitary service information
-    insertMilitaryServicesApplication = () => {
-        // TODO: validate empty fields in this sections
-        if (
-            this.state.branch ||
-            this.state.startDateMilitaryService ||
-            this.state.endDateMilitaryService ||
-            this.state.rankAtDischarge ||
-            this.state.typeOfDischarge
-        ) {
-            this.props.client
-                .mutate({
-                    mutation: ADD_MILITARY_SERVICES,
-                    variables: {
-                        application: [
-                            {
-                                branch: this.state.branch,
-                                startDate: this.state.startDateMilitaryService,
-                                endDate: this.state.endDateMilitaryService,
-                                rankAtDischarge: this.state.rankAtDischarge,
-                                typeOfDischarge: parseInt(this.state.typeOfDischarge),
-                                ApplicationId: this.state.applicationId
-                            }
-                        ]
-                    }
-                })
-                .then(() => {
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully created',
-                        'bottom',
-                        'right'
-                    );
-
-                    this.handleNext();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save military services: Please, try again!',
-                        'bottom',
-                        'right'
-                    );
-                });
-        } else {
-            this.handleNext();
-        }
-    };
-
-    // To insert a list of skills
-    insertSkillsApplication = () => {
-        if (this.state.skills.length > 0) {
-            // to remove all the uuid properties in the object
-            this.state.skills.forEach((item) => {
-                delete item.uuid;
-            });
-
-            this.state.skills.forEach((item) => {
-                item.ApplicationId = this.state.applicationId;
-            });
-
-            this.props.client
-                .mutate({
-                    mutation: ADD_SKILL,
-                    variables: {
-                        application: this.state.skills
-                    }
-                })
-                .then(() => {
-                    this.props.handleOpenSnackbar(
-                        'success',
-                        'Successfully created',
-                        'bottom',
-                        'right'
-                    );
-
-                    this.handleNext();
-                })
-                .catch((error) => {
-                    // Replace this alert with a Snackbar message error
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error to save skills: Please, try again!',
-                        'bottom',
-                        'right'
-                    );
-                });
-        } else {
-            this.handleNext();
-        }
-    };
-
-    // To validate all the inputs and set a red border when the input is invalid
-    validateInvalidInput = () => {
-        if (document.addEventListener) {
-            document.addEventListener(
-                'invalid',
-                (e) => {
-                    e.target.className += ' invalid-apply-form';
-                },
-                true
-            );
-        }
     };
 
     // To get a list of languages from API
@@ -571,7 +265,7 @@ class VerticalLinearStepper extends Component {
             .query({
                 query: GET_LANGUAGES_QUERY
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     languagesLoaded: data.getcatalogitem
                 });
@@ -579,26 +273,21 @@ class VerticalLinearStepper extends Component {
             .catch();
     };
 
-    // Execute methods before rendering
     componentWillMount() {
-
         // Get languages list from catalogs
         this.getLanguagesList();
     }
 
     render() {
-        const {classes} = this.props;
-        const steps = getSteps();
-        const {activeStep} = this.state;
         this.validateInvalidInput();
 
-        // To render the applicant information section
+        // To render the Applicant Information Section
         let renderApplicantInformationSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Applicant Information</h4>
                 <div className="row">
                     <div className="col-3">
-                        <span className="primary"> First Name</span>
+                        <span className="primary">First Name</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -615,9 +304,10 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
+
                     <div className="col-3">
                         <div className="row">
                             <span className="primary">Middle Name</span>
@@ -635,12 +325,13 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="1"
                             />
-                            <span className="check-icon"/>
-                            <i className="optional"/>
+                            <span className="check-icon" />
+                            <i className="optional" />
                         </div>
                     </div>
+
                     <div className="col-3">
-                        <span className="primary"> Last Name</span>
+                        <span className="primary">Last Name</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -657,9 +348,10 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
+
                     <div className="col-3">
                         <span className="primary"> Date</span>
                         <div className="input-container--validated">
@@ -677,11 +369,11 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                 </div>
-                <div className="row form-section">
+                <div className="row">
                     <div className="col-8">
                         <span className="primary"> Street Address</span>
                         <div className="input-container--validated">
@@ -700,7 +392,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="5"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-4">
@@ -719,32 +411,21 @@ class VerticalLinearStepper extends Component {
                             maxLength="50"
                             minLength="5"
                         />
-                        <span className="check-icon"/>
-                        <i className="optional"/>
+                        <span className="check-icon" />
+                        <i className="optional" />
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> State</span>
-                        <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                            {({loading, error, data, refetch, networkStatus}) => {
+                        <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
+                                if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return (
-                                        <select
-                                            name="state"
-                                            id="state"
-                                            required
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    state: e.target.value
-                                                });
-                                            }}
-                                            value={this.state.state}
-                                        >
+                                        <select name="state" id="state" required className="form-control">
                                             <option value="">Select a state</option>
                                             {data.getcatalogitem.map((item) => (
                                                 <option value={item.Id}>{item.Name}</option>
@@ -752,7 +433,7 @@ class VerticalLinearStepper extends Component {
                                         </select>
                                     );
                                 }
-                                return <SelectNothingToDisplay/>;
+                                return <SelectNothingToDisplay />;
                             }}
                         </Query>
                     </div>
@@ -774,7 +455,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="30"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-4">
@@ -797,8 +478,25 @@ class VerticalLinearStepper extends Component {
                                 minLength="15"
                             />
 
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
+
+                        {/*<input*/}
+                        {/*onChange={(event) => {*/}
+                        {/*this.setState({*/}
+                        {/*zipCode: event.target.value*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*value={this.state.zipCode}*/}
+                        {/*name="zipCode"*/}
+                        {/*type="number"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*maxLength="5"*/}
+                        {/*minLength="4"*/}
+                        {/*min="10000"*/}
+                        {/*max="99999"*/}
+                        {/*/>*/}
                     </div>
                 </div>
                 <div className="row">
@@ -819,7 +517,7 @@ class VerticalLinearStepper extends Component {
                             placeholder="+(999) 999-9999"
                             minLength="15"
                         />
-                        <i className="optional"/>
+                        <i className="optional" />
                     </div>
 
                     <div className="col-4">
@@ -841,8 +539,24 @@ class VerticalLinearStepper extends Component {
                                 required
                                 minLength="15"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
+
+                        {/*<input*/}
+                        {/*onChange={(event) => {*/}
+                        {/*this.setState({*/}
+                        {/*cellPhone: event.target.value*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*value={this.state.cellPhone}*/}
+                        {/*name="cellPhone"*/}
+                        {/*type="tel"*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*min="0"*/}
+                        {/*maxLength="10"*/}
+                        {/*minLength="10"*/}
+                        {/*/>*/}
                     </div>
 
                     <div className="col-4">
@@ -864,65 +578,57 @@ class VerticalLinearStepper extends Component {
                                 required
                                 minLength="15"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                 </div>
                 <div className="row">
-                    {/*<div className="col-6">*/}
-                    {/*<span className="primary"> Birth Day</span>*/}
-                    {/*<div className="input-container--validated">*/}
-                    {/*<input*/}
-                    {/*onChange={(event) => {*/}
-                    {/*this.setState({*/}
-                    {/*birthDay: event.target.value*/}
-                    {/*});*/}
-                    {/*}}*/}
-                    {/*value={this.state.birthDay}*/}
-                    {/*name="birthDay"*/}
-                    {/*type="date"*/}
-                    {/*className="form-control"*/}
-                    {/*required*/}
-                    {/*min="0"*/}
-                    {/*maxLength="50"*/}
-                    {/*minLength="10"*/}
-                    {/*/>*/}
-                    {/*<span className="check-icon"/>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
                     <div className="col-6">
-                        <div className="row">
-                            <div className="col-12">
-                                <span className="primary"> Do you own transportation?</span>
-                            </div>
-                            <div className="col-12">
-                                <label className="switch">
-                                    <input
-                                        onChange={(event) => {
-                                            this.setState({
-                                                car: event.target.checked
-                                            });
-                                        }}
-                                        checked={this.state.car}
-                                        value={this.state.car}
-                                        name="car"
-                                        type="checkbox"
-                                        className="form-control"
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="10"
-                                    />
-                                    <p className="slider round"/>
-                                </label>
-                            </div>
+                        <span className="primary"> Birth Day</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        birthDay: event.target.value
+                                    });
+                                }}
+                                value={this.state.birthDay}
+                                name="birthDay"
+                                type="date"
+                                className="form-control"
+                                required
+                                min="0"
+                                maxLength="50"
+                                minLength="10"
+                            />
+                            <span className="check-icon" />
                         </div>
                     </div>
+                    <div className="col-6">
+                        <span className="primary"> Do you own transportation?</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    car: event.target.value
+                                });
+                            }}
+                            value={this.state.car}
+                            name="car"
+                            type="checkbox"
+                            className="form-control"
+                            required
+                            min="0"
+                            maxLength="50"
+                            minLength="10"
+                        />
+                    </div>
+                </div>
+                <div className="row">
                     <div className="col-6">
                         <span className="primary"> Type Of ID</span>
                         <select
                             name="typeOfID"
                             id="typeOfID"
-                            required
                             className="form-control"
                             onChange={(e) => {
                                 this.setState({
@@ -940,8 +646,6 @@ class VerticalLinearStepper extends Component {
                             <option value="7">Green Card</option>
                         </select>
                     </div>
-                </div>
-                <div className="row">
                     <div className="col-6">
                         <span className="primary"> Expire Date ID</span>
                         <div className="input-container--validated">
@@ -960,10 +664,12 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="10"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-6">
+                </div>
+                <div className="row">
+                    <div className="col-12">
                         <span className="primary"> Email Address</span>
                         <div className="input-container--validated">
                             <input
@@ -982,19 +688,19 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="8"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-4">
                         <span className="primary"> Position Applying for</span>
                         <Query query={GET_POSITIONS_QUERY}>
-                            {({loading, error, data, refetch, networkStatus}) => {
+                            {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
+                                if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                if (data.getposition != null && data.getposition.length > 0) {
                                     return (
                                         <select
                                             name="city"
@@ -1004,23 +710,43 @@ class VerticalLinearStepper extends Component {
                                                     positionApplyingFor: event.target.value
                                                 });
                                             }}
-                                            value={this.state.positionApplyingFor}
                                             className="form-control"
                                         >
                                             <option value="">Select a position</option>
                                             <option value="0">Open Position</option>
-                                            {data.getcatalogitem.map((item) => (
-                                                <option value={item.Id}>{item.Description}</option>
+                                            {data.getposition.map((item) => (
+                                                <option value={item.Id}>{item.Position}</option>
                                             ))}
                                         </select>
                                     );
                                 }
-                                return <SelectNothingToDisplay/>;
+                                return <SelectNothingToDisplay />;
                             }}
                         </Query>
-                        <i className="optional"/>
+                        <i className="optional" />
                     </div>
-                    <div className="col-6">
+                    <div className="col-4">
+                        <span className="primary"> Ideal Job</span>
+                        <div className="input-container--validated">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        idealJob: event.target.value
+                                    });
+                                }}
+                                value={this.state.idealJob}
+                                name="idealJob"
+                                type="text"
+                                className="form-control"
+                                required
+                                min="0"
+                                minLength="3"
+                                maxLength="50"
+                            />
+                            <span className="check-icon" />
+                        </div>
+                    </div>
+                    <div className="col-4">
                         <span className="primary"> Date Available</span>
                         <div className="input-container--validated">
                             <input
@@ -1037,70 +763,10 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
-                    {/*<form*/}
-                    {/*id="ideal-job-form"*/}
-                    {/*className="col-12 ideal-job-form"*/}
-                    {/*onSubmit={(e) => {*/}
-                    {/*e.stopPropagation();*/}
-                    {/*e.preventDefault();*/}
-
-                    {/*let item = {*/}
-                    {/*description: document.getElementById('idealJob').value,*/}
-                    {/*uuid: uuidv4()*/}
-                    {/*};*/}
-
-                    {/*this.setState(*/}
-                    {/*(prevState) => ({*/}
-                    {/*idealJobs: [...prevState.idealJobs, item]*/}
-                    {/*}),*/}
-                    {/*() => {*/}
-                    {/*document.getElementById('idealJob').value = '';*/}
-                    {/*}*/}
-                    {/*);*/}
-                    {/*}}*/}
-                    {/*>*/}
-                    {/*<span className="primary">Ideal Job</span>*/}
-                    {/*<div className="row">*/}
-                    {/*<div className="col-12">*/}
-                    {/*<div className="input-container--validated input-container--ideal-job">*/}
-                    {/*<input*/}
-                    {/*id="idealJob"*/}
-                    {/*name="idealJob"*/}
-                    {/*type="text"*/}
-                    {/*className="form-control ideal-job-form-input"*/}
-                    {/*min="0"*/}
-                    {/*minLength="3"*/}
-                    {/*maxLength="50"*/}
-                    {/*/>*/}
-                    {/*<button type="submit" form="ideal-job-form" className="add-ideal-job">*/}
-                    {/*Add*/}
-                    {/*</button>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-                    {/*</form>*/}
-                    <div className="col-12">
-                        {this.state.idealJobs.map((idealJobItem) => (
-                            <span className="idealJobItem">
-                                <span>{idealJobItem.description}</span>{' '}
-                                <i
-                                    className="far fa-times-circle"
-                                    onClick={() => {
-                                        this.setState((prevState) => ({
-                                            idealJobs: this.state.idealJobs.filter((_, i) => {
-                                                return _.uuid !== idealJobItem.uuid;
-                                            })
-                                        }));
-                                    }}
-                                />
-                            </span>
-                        ))}
-                    </div>
                 </div>
-                <hr className="separator"/>
                 <div className="row">
                     <div className="col-4">
                         <span className="primary"> Do you have any schedule restrictions? </span>
@@ -1131,7 +797,7 @@ class VerticalLinearStepper extends Component {
                             />
                             <label className="radio-label"> No</label>
                         </div>
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
@@ -1194,7 +860,7 @@ class VerticalLinearStepper extends Component {
                             className=""
                         />
                         <label className="radio-label"> No</label>
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                     <div className="col-8">
                         <span className="primary"> If yes, please explain </span>
@@ -1242,7 +908,6 @@ class VerticalLinearStepper extends Component {
                                     socialNetwork: event.target.value
                                 });
                             }}
-                            value={this.state.socialNetwork}
                             required
                             className="form-control"
                         >
@@ -1254,7 +919,6 @@ class VerticalLinearStepper extends Component {
                             <option value="journals">Journals</option>
                             <option value="others">Other</option>
                         </select>
-
                         <div className="row">
                             <div className="col-12">
                                 {this.state.socialNetwork === 'others' ? (
@@ -1279,18 +943,8 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button type="submit" variant="contained" color="primary" className={classes.button}>
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
             </div>
         );
-
-        // To render a dialog loading when the mutation is loading
         let renderInsertDialogLoading = () => (
             <Dialog
                 open={this.state.insertDialogLoading}
@@ -1300,12 +954,11 @@ class VerticalLinearStepper extends Component {
                 <DialogTitle id="responsive-dialog-title">Sending Application</DialogTitle>
                 <DialogContent>
                     <div className="center-progress-dialog">
-                        <CircularProgressLoading/>
+                        <CircularProgressLoading />
                     </div>
                 </DialogContent>
             </Dialog>
         );
-
         // To render the Skills Dialog
         let renderSkillsDialog = () => (
             <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
@@ -1315,17 +968,15 @@ class VerticalLinearStepper extends Component {
                     onSubmit={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-
                         let item = {
                             uuid: uuidv4(),
                             description: document.getElementById('description').value,
                             level: this.state.percent
                         };
-
                         this.setState(
                             (prevState) => ({
                                 open: false,
-                                skills: [...prevState.skills, item]
+                                skills: [ ...prevState.skills, item ]
                             }),
                             () => {
                                 this.setState({
@@ -1336,15 +987,15 @@ class VerticalLinearStepper extends Component {
                     }}
                     className="apply-form"
                 >
-                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{textAlign: 'center'}}>
+                    <h1 className="title-skill-dialog" id="form-dialog-title" style={{ textAlign: 'center' }}>
                         New Skill
                     </h1>
-                    <br/>
-                    <DialogContent style={{width: '450px'}}>
+                    <br />
+                    <DialogContent style={{ width: '450px' }}>
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">Skill Name</span>
-                                <br/>
+                                <br />
                                 <input
                                     id="description"
                                     name="description"
@@ -1358,11 +1009,11 @@ class VerticalLinearStepper extends Component {
                                 />
                             </div>
                         </div>
-                        <br/>
+                        <br />
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">Skill Level</span>
-                                <br/>
+                                <br />
                                 <InputRange
                                     getPercentSkill={(percent) => {
                                         // update the percent skill
@@ -1373,8 +1024,8 @@ class VerticalLinearStepper extends Component {
                                 />
                             </div>
                         </div>
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
                     </DialogContent>
                     <DialogActions>
                         <Button className="cancel-skill-button" onClick={this.handleClose} color="default">
@@ -1387,7 +1038,6 @@ class VerticalLinearStepper extends Component {
                 </form>
             </Dialog>
         );
-
         // To render the Education Service Section
         let renderEducationSection = () => (
             <form
@@ -1411,7 +1061,7 @@ class VerticalLinearStepper extends Component {
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            schools: [...prevState.schools, item]
+                            schools: [ ...prevState.schools, item ]
                         }),
                         () => {
                             document.getElementById('education-form').reset();
@@ -1423,7 +1073,6 @@ class VerticalLinearStepper extends Component {
                             document.getElementById('graduated').classList.remove('invalid-apply-form');
                             document.getElementById('graduated').checked = false;
                             document.getElementById('degree').classList.remove('invalid-apply-form');
-
                             this.setState({
                                 graduated: false
                             });
@@ -1483,13 +1132,13 @@ class VerticalLinearStepper extends Component {
                                 <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
                             </div>
                             <div className="col-1">
-                                <span>
-                                    {studyTypes.map((item) => {
+								<span>
+									{studyTypes.map((item) => {
                                         if (item.Id == schoolItem.degree) {
                                             return item.Name + '';
                                         }
                                     })}
-                                </span>
+								</span>
                             </div>
                             <div className="col-1">
                                 <Button
@@ -1508,7 +1157,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 ))}
-                <hr className="separator"/>
+                <hr className="separator" />
                 <div className="row">
                     <div className="col-3">
                         <label className="primary">Field of Study</label>
@@ -1524,7 +1173,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="2"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-3">
@@ -1541,7 +1190,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-6">
@@ -1558,7 +1207,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                 </div>
@@ -1577,7 +1226,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-3">
@@ -1594,26 +1243,23 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-2">
-                        <label className="primary">Graduated</label> <br/>
-                        <label className="switch">
-                            <input
-                                onChange={(e) => {
-                                    this.setState({
-                                        graduated: document.getElementById('graduated').checked
-                                    });
-                                }}
-                                form="education-form"
-                                type="checkbox"
-                                value="graduated"
-                                name="graduated"
-                                id="graduated"
-                            />
-                            <p className="slider round"/>
-                        </label>
+                        <label className="primary">Graduated</label> <br />
+                        <input
+                            onChange={(e) => {
+                                this.setState({
+                                    graduated: document.getElementById('graduated').checked
+                                });
+                            }}
+                            form="education-form"
+                            type="checkbox"
+                            value="graduated"
+                            name="graduated"
+                            id="graduated"
+                        />
                     </div>
                     <div className="col-4">
                         <label className="primary">Degree</label>
@@ -1647,24 +1293,8 @@ class VerticalLinearStepper extends Component {
                         </Button>
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertEducationApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
             </form>
         );
-
         // To render the Military Service Section
         let renderMilitaryServiceSection = () => (
             <div className="ApplyBlock">
@@ -1673,12 +1303,6 @@ class VerticalLinearStepper extends Component {
                     <div className="col-6">
                         <span className="primary"> Branch</span>
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    branch: e.target.value
-                                });
-                            }}
-                            value={this.state.branch}
                             name="militaryBranch"
                             type="text"
                             className="form-control"
@@ -1686,17 +1310,11 @@ class VerticalLinearStepper extends Component {
                             maxLength="50"
                             minLength="3"
                         />
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                     <div className="col-6">
                         <span className="primary"> Rank at Discharge</span>
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    rankAtDischarge: e.target.value
-                                });
-                            }}
-                            value={this.state.rankAtDischarge}
                             name="militaryRankDischarge"
                             type="text"
                             className="form-control"
@@ -1704,19 +1322,13 @@ class VerticalLinearStepper extends Component {
                             maxLength="50"
                             minLength="3"
                         />
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-3">
                         <span className="primary"> Dates</span>
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    startDateMilitaryService: e.target.value
-                                });
-                            }}
-                            value={this.state.startDateMilitaryService}
                             name="militaryStartDate"
                             type="date"
                             className="form-control"
@@ -1728,12 +1340,6 @@ class VerticalLinearStepper extends Component {
                     <div className="col-3">
                         <span className="primary">To: </span>
                         <input
-                            onChange={(e) => {
-                                this.setState({
-                                    endDateMilitaryService: e.target.value
-                                });
-                            }}
-                            value={this.state.endDateMilitaryService}
                             name="militaryEndDate"
                             type="date"
                             className="form-control"
@@ -1744,47 +1350,20 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-6">
                         <span className="primary"> Type of Discharge</span>
-                        <select
-                            onChange={(e) => {
-                                this.setState({
-                                    typeOfDischarge: e.target.value
-                                });
-                            }}
-                            value={this.state.typeOfDischarge}
-                            name="dischargeType"
-                            id="dischargeType"
-                            className="form-control"
-                        >
+                        <select name="dischargeType" id="dischargeType" className="form-control">
                             <option value="">Select an option</option>
-                            <option value="1">Honorable discharge</option>
-                            <option value="2">General discharge</option>
-                            <option value="3">Other than honorable (OTH) discharge</option>
-                            <option value="4">Bad conduct discharge</option>
-                            <option value="5">Dishonorable discharge</option>
-                            <option value="6">Entry-level separation.</option>
+                            <option value="typeOne">Honorable discharge</option>
+                            <option value="typeTwo">General discharge</option>
+                            <option value="typeThree">Other than honorable (OTH) discharge</option>
+                            <option value="typeFour">Bad conduct discharge</option>
+                            <option value="typeFive">Dishonorable discharge</option>
+                            <option value="typeSix">Entry-level separation.</option>
                         </select>
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
-                </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertMilitaryServicesApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
                 </div>
             </div>
         );
-
-        // To render the Previous Employment Section
         let renderPreviousEmploymentSection = () => (
             <form
                 id="form-previous-employment"
@@ -1808,7 +1387,7 @@ class VerticalLinearStepper extends Component {
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            previousEmployment: [...prevState.previousEmployment, item]
+                            previousEmployment: [ ...prevState.previousEmployment, item ]
                         }),
                         () => {
                             document.getElementById('form-previous-employment').reset();
@@ -1821,7 +1400,6 @@ class VerticalLinearStepper extends Component {
                             document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
                             document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
                             document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
-
                             this.setState({
                                 previousEmploymentPhone: ''
                             });
@@ -1907,7 +1485,7 @@ class VerticalLinearStepper extends Component {
                             </div>
                         </div>
                     ))}
-                    <hr className="separator"/>
+                    <hr className="separator" />
                 </div>
                 <div className="row">
                     <div className="col-8">
@@ -1924,7 +1502,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-4">
@@ -1958,7 +1536,7 @@ class VerticalLinearStepper extends Component {
                             {/*maxLength="10"*/}
                             {/*minLength="10"*/}
                             {/*/>*/}
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-8">
@@ -1975,7 +1553,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-4">
@@ -1992,7 +1570,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-8">
@@ -2009,7 +1587,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-4">
@@ -2026,7 +1604,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-3">
@@ -2043,7 +1621,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-3">
@@ -2060,7 +1638,7 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-6">
@@ -2080,25 +1658,8 @@ class VerticalLinearStepper extends Component {
                         </Button>
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertPreviousEmploymentApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
             </form>
         );
-
-        // To render the Languages Section
         let renderlanguagesSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Languages</h4>
@@ -2123,31 +1684,31 @@ class VerticalLinearStepper extends Component {
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-                                <span>
-                                    {this.state.languagesLoaded.map((item) => {
+								<span>
+									{this.state.languagesLoaded.map((item) => {
                                         if (item.Id == languageItem.language) {
                                             return item.Name.trim();
                                         }
                                     })}
-                                </span>
+								</span>
                             </div>
                             <div className="col-4">
-                                <span>
-                                    {languageLevelsJSON.map((item) => {
+								<span>
+									{languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.conversation) {
                                             return item.Name;
                                         }
                                     })}
-                                </span>
+								</span>
                             </div>
                             <div className="col-4">
-                                <span>
-                                    {languageLevelsJSON.map((item) => {
+								<span>
+									{languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.writing) {
                                             return item.Name;
                                         }
                                     })}
-                                </span>
+								</span>
                             </div>
                             <div className="col-1">
                                 <Button
@@ -2167,9 +1728,9 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 ))}
-                <br/>
-                <br/>
-                {this.state.languages.length > 0 ? <hr/> : ''}
+                <br />
+                <br />
+                {this.state.languages.length > 0 ? <hr /> : ''}
                 <form
                     className="row"
                     id="form-language"
@@ -2187,7 +1748,7 @@ class VerticalLinearStepper extends Component {
                         this.setState(
                             (prevState) => ({
                                 open: false,
-                                languages: [...prevState.languages, item]
+                                languages: [ ...prevState.languages, item ]
                             }),
                             () => {
                                 document.getElementById('form-language').reset();
@@ -2210,7 +1771,6 @@ class VerticalLinearStepper extends Component {
                             <option value="">Select an option</option>
                             {this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
                         </select>
-
                         {/*<Query query={GET_LANGUAGES_QUERY}>*/}
                         {/*{({loading, error, data, refetch, networkStatus}) => {*/}
                         {/*//if (networkStatus === 4) return <LinearProgress />;*/}
@@ -2225,7 +1785,7 @@ class VerticalLinearStepper extends Component {
                         {/*}}*/}
                         {/*</Query>*/}
                         {/*<input*/}
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                     <div className="col-3">
                         <span className="primary"> Conversation</span>
@@ -2239,7 +1799,7 @@ class VerticalLinearStepper extends Component {
                             <option value="">Select an option</option>
                             {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                         </select>
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                     <div className="col-3">
                         <span className="primary"> Writing</span>
@@ -2253,39 +1813,22 @@ class VerticalLinearStepper extends Component {
                             <option value="">Select an option</option>
                             {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                         </select>
-                        <span className="check-icon"/>
+                        <span className="check-icon" />
                     </div>
                     <div className="col-2">
-                        <br/>
+                        <br />
                         <Button type="submit" form="form-language" className="save-skill-button">
                             Add
-                        </Button>
-                    </div>
-                    <div className="bottom-container-stepper">
-                        <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                            Back
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => {
-                                this.insertLanguagesApplication();
-                            }}
-                            className={classes.button}
-                        >
-                            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
                         </Button>
                     </div>
                 </form>
             </div>
         );
-
-        // To render the skills section
         let renderSkillsSection = () => (
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Skills</h4>
                 <div className="row">
-                    <div className="col-9"/>
+                    <div className="col-9" />
                     <div className="col-3">
                         <Button onClick={this.handleClickOpen} className="save-skill-button">
                             New Skill
@@ -2314,7 +1857,7 @@ class VerticalLinearStepper extends Component {
                                         <span>{skillItem.description}</span>
                                     </div>
                                     <div className="col-5">
-                                        <InputRangeDisabled percent={skillItem.level}/>
+                                        <InputRangeDisabled percent={skillItem.level} />
                                     </div>
                                     <div className="col-1">
                                         <Button
@@ -2336,183 +1879,46 @@ class VerticalLinearStepper extends Component {
                         ))}
                     </div>
                 </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => {
-                            this.insertSkillsApplication();
-                        }}
-                        className={classes.button}
-                    >
-                        {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
-                </div>
             </div>
         );
-
-        // To render the disclaimer section
-        let renderDisclaimerSection = (history) => (
-            <div className="ApplyBlock">
-                <h4 className="ApplyBlock-title">Disclaimer</h4>
-                <div className="row">
-                    <div className="col-12">
-                        <p className="disclaimer-text">
-                            I certify that the information on this application is correct and I understand that any
-                            misrepresentation or omission of any information will result in my disqualification from
-                            consideration for employment or, if employed, my dismissal. I hereby acknowledge and agree
-                            that, as part of my application for employment, Tumi Staffing, Inc., may request background
-                            information about me from a consumer reporting agency for employment purposes in accordance
-                            with federal and state law. I authorize law enforcement agencies, learning institutions
-                            (including public and private schools and universities), information service bureaus, credit
-                            bureaus, record/data repositories, courts (federal, state and local), motor vehicle records
-                            agencies, my past or present employers, the military, and other individuals and sources to
-                            furnish any and all information on me that is requested by the consumer reporting agency. By
-                            my acceptance below, I certify the information I provided on this form is true and correct.
-                            I agree that this Disclosure and Authorization form will be valid for any reports that may
-                            be requested by or on behalf of the Company. By my acceptance below, the company may obtain
-                            a consumer report as discussed above.
-                        </p>
-                    </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <input
-                                type="checkbox"
-                                checked={this.state.aceptedDisclaimer}
-                                onChange={(e) => {
-                                    this.setState({
-                                        aceptedDisclaimer: e.target.checked,
-                                        openSignature: e.target.checked
-                                    });
-                                }}/>
-                            <span className="primary"> Accept and Sign</span>
-                        </div>
-                    </div>
-                    {
-                        this.state.aceptedDisclaimer ? (
-                            <Dialog
-                                open={this.state.openSignature}
-                                onClose={() => {
-                                    this.setState({
-                                        openSignature: false,
-                                        aceptedDisclaimer: false
-                                    })
-                                }}
-                                aria-labelledby="form-dialog-title">
-                                <DialogTitle>
-                                    <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                                </DialogTitle>
-                                <DialogContent>
-                                    <SignatureForm applicationId={this.state.applicationId}/>
-                                </DialogContent>
-                                {/*<DialogActions>*/}
-                                {/*<div className="applicant-card__footer">*/}
-                                {/*<button className="applicant-card__cancel-button" type="reset"*/}
-                                {/*onClick={this.handleClose}>*/}
-                                {/*{spanishActions[2].label}*/}
-                                {/*</button>*/}
-                                {/*<button className="applicant-card__save-button" type="submit"*/}
-                                {/*form="education-form">*/}
-                                {/*{spanishActions[0].label}*/}
-                                {/*</button>*/}
-                                {/*</div>*/}
-                                {/*</DialogActions>*/}
-                            </Dialog>
-                        ) : (
-                            ''
-                        )
-                    }
-                </div>
-                <div className="bottom-container-stepper">
-                    <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
-                        Back
-                    </Button>
-                </div>
-            </div>
-        );
-
-        let getStepContent = (step, history) => {
-            switch (step) {
-                case 0:
-                    return renderApplicantInformationSection();
-                    // return renderlanguagesSection();
-                case 1:
-                    return renderlanguagesSection();
-                case 2:
-                    return renderEducationSection();
-                case 3:
-                    return renderPreviousEmploymentSection();
-                case 4:
-                    return renderMilitaryServiceSection();
-                case 5:
-                    return renderSkillsSection();
-                case 6:
-                    return renderDisclaimerSection(history);
-                default:
-                    return 'Unknown step';
-            }
-        };
-
         return (
-            <div className="main-stepper-container">
-                <header className="Header">Application Form</header>
-                <div className="Stepper-wrapper">
-                    <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav">
-                        {steps.map((label, index) => {
-                            return (
-                                <Step key={label}>
-                                    <StepLabel className={classes.stepper}>{label}</StepLabel>
-                                    <StepContent>
-                                        <Typography
-                                            variant="caption">{index === 0 ? 'Required' : 'Optional'}</Typography>
-                                    </StepContent>
-                                </Step>
-                            );
-                        })}
-                    </Stepper>
-                </div>
-                {activeStep === steps.length && (
-                    <Paper square elevation={0} className={classes.resetContainer}>
-                        <Typography>All steps completed - you&quot;re finished</Typography>
-                        <Button onClick={this.handleReset} className={classes.button}>
-                            Reset
-                        </Button>
-                    </Paper>
+            <Route
+                render={({ history }) => (
+                    <div>
+                        <header className="Header">Application Form</header>
+                        <form
+                            className="ApplyForm apply-form"
+                            onSubmit={(e) => {
+                                // To cancel the default submit event
+                                e.preventDefault();
+                                // Call mutation to create a application
+                                this.insertApplicationInformation(history);
+                            }}
+                        >
+                            {renderApplicantInformationSection()}
+                            {/*{renderlanguagesSection()}*/}
+                            {/*{renderEducationSection()}*/}
+                            {/*/!*{renderMilitaryServiceSection()}*!/*/}
+                            {/*{renderPreviousEmploymentSection()}*/}
+                            {/*{renderSkillsSection()}*/}
+                            {/*{renderInsertDialogLoading()}*/}
+                            <div className="Apply-container">
+                                <div className="row">
+                                    <div className="col-12 buttons-group-right">
+                                        <button type="reset" className="btn-circle btn-lg red">
+                                            <i className="fas fa-eraser" />
+                                        </button>
+                                        <button type="submit" className="btn-circle btn-lg">
+                                            <i className="fas fa-save" />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 )}
-
-                <Typography className="main-stepper-content">
-                    <Route
-                        render={({history}) => (
-                            <form
-                                className="ApplyForm apply-form"
-                                onSubmit={(e) => {
-                                    // To cancel the default submit event
-                                    e.preventDefault();
-                                    // Call mutation to create a application
-                                    if (this.state.applicationId === null) {
-                                        this.insertApplicationInformation(history);
-                                    } else {
-                                        this.updateApplicationInformation();
-                                    }
-                                }}
-                            >
-                                {getStepContent(this.state.activeStep, history)}
-                            </form>
-                        )}
-                    />
-                </Typography>
-            </div>
+            />
         );
     }
-
 }
-
-VerticalLinearStepper.propTypes = {
-    classes: PropTypes.object
-};
-
-export default withStyles(styles)(withApollo(withGlobalContent(VerticalLinearStepper)));
-
+export default withApollo(ApplyForm);
