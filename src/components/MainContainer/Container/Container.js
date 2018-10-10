@@ -12,12 +12,14 @@ import Catalogs from '../../Catalogs/';
 import Signature from '../../Contract/Signature';
 import MainContract from '../../Contract/Main/MainContract/MainContract';
 import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
-import ApplicationRecruiter from '../../ApplyForm-Recruiter/ApplicationList/ApplicationList';
+import ApplicationRecruiter from 'ApplyForm-Recruiter/Stepper/StepperApplyForm';
+import ApplicationInfo from 'ApplyForm/Application/ApplicationInfo';
 
 class Container extends Component {
 	render() {
 		return (
 			<div className="container">
+				<Route exact path="/home/application/info" component={ApplicationInfo} />
 				<Route exact path="/home/contract/add" component={Contract} />
 				<Route exact path="/home/contracts" component={MainContract} />
 				<Route exact path="/home/company" component={CompanyList} />

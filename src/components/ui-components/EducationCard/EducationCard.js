@@ -1,17 +1,17 @@
 import React, {Component} from 'react';
 import './index.css';
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 
-
 const spanishActions = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const dialogMessages = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
 
-class SkillCard extends Component {
+class EducationCard extends Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             open: false
@@ -34,7 +34,7 @@ class SkillCard extends Component {
         let renderQuestionDialog = () => (
             <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle>
-                    Are you sure you want to delete the record?
+                    {dialogMessages[0].label}
                 </DialogTitle>
                 <DialogContent>
 
@@ -46,7 +46,7 @@ class SkillCard extends Component {
                     <button
                         className="applicant-card__save-button"
                         onClick={() => {
-                            this.props.removeSkill()
+                            this.props.remove()
                         }}>
                         {spanishActions[3].label}
                     </button>
@@ -55,17 +55,33 @@ class SkillCard extends Component {
         );
 
         return (
-            <div className="skill-card">
+            <div className="education-card">
                 <span
-                    className="skill-card__remove-button"
+                    className="education-card__remove-button"
                     onClick={() => {
                         this.handleClickOpen();
-                    }}
-                >
+                    }}>
                     <i className="fas fa-trash-alt"></i>
                 </span>
-                <div className="skill-card__description applicant-card__label ">{this.props.skillDescription}</div>
-                <div className="skill-card__level">{this.props.skillLevel}</div>
+                <div className="education-card__job-title applicant-card__label">{this.props.type}</div>
+                <div className="education-card__company" title="Institution">
+                    <i className="fas fa-university"></i><span> {this.props.educationName}</span>
+                </div>
+                <div className="education-card__address" title="Address">
+                    <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
+                </div>
+                <div className="education-card__phone" title="Start Date">
+                    <i className="far fa-calendar-alt"></i><span>{this.props.startDate.substring(0, 10)}</span>
+                </div>
+                <div className="education-card__phone" title="End Date">
+                    <i className="far fa-calendar-check"></i><span>{this.props.endDate.substring(0, 10)}</span>
+                </div>
+                <div className="education-card__phone" title="Graduated">
+                    <i className="fas fa-graduation-cap"></i><span>{this.props.graduated ? 'Yes' : 'No'}</span>
+                </div>
+                <div className="education-card__phone" title="Degree">
+                    <i className="far fa-file-alt"></i><span>{this.props.degree}</span>
+                </div>
 
                 {
                     renderQuestionDialog()
@@ -75,4 +91,4 @@ class SkillCard extends Component {
     }
 }
 
-export default SkillCard;
+export default EducationCard;

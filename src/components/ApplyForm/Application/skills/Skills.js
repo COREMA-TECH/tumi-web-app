@@ -1,16 +1,18 @@
 import React, {Component} from 'react';
 import withApollo from "react-apollo/withApollo";
-import InputRangeDisabled from "../../ui/InputRange/InputRangeDisabled";
-import Button from "@material-ui/core/Button/Button";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import InputRange from "../../ui/InputRange/InputRange";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import {ADD_SKILL, REMOVE_APPLICANT_LANGUAGE, REMOVE_APPLICANT_SKILL} from "../../Mutations";
+import {ADD_SKILL, REMOVE_APPLICANT_SKILL} from "../../Mutations";
 import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 import SkillCard from "../../../ui-components/SkillCard/SkillCard";
+
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
 
 const uuidv4 = require('uuid/v4');
 
@@ -29,7 +31,8 @@ class Skills extends Component {
 
             // skills dialog state
             open: false,
-            loading: false
+            loading: false,
+            percent: 50
         }
     }
 
@@ -71,57 +74,69 @@ class Skills extends Component {
 
     // To insert a list of skills
     insertSkillsApplication = () => {
-        if (this.state.skills.length > 0) {
-            // to remove all the uuid properties in the object
-            this.state.skills.forEach((item) => {
-                delete item.uuid;
-            });
+        this.setState({
+            loading: true
+        }, () => {
+            if (this.state.skills.length > 0) {
+                // to remove all the uuid properties in the object
+                this.state.skills.forEach((item) => {
+                    delete item.uuid;
+                });
 
-            this.state.skills.forEach((item) => {
-                item.ApplicationId = this.state.applicationId;
-            });
+                this.state.skills.forEach((item) => {
+                    item.ApplicationId = this.state.applicationId;
+                });
 
-            this.setState((prevState) => ({
-                newSkills: this.state.skills.filter((_, i) => {
-                    console.log(_.id);
-                    return _.id === undefined;
-                })
-            }), () => {
-                this.props.client
-                    .mutate({
-                        mutation: ADD_SKILL,
-                        variables: {
-                            application: this.state.newSkills
-                        }
+                this.setState((prevState) => ({
+                    newSkills: this.state.skills.filter((_, i) => {
+                        console.log(_.id);
+                        return _.id === undefined;
                     })
-                    .then(() => {
-                        this.setState({
-                            editing: false,
-                            newSkills: []
+                }), () => {
+                    this.props.client
+                        .mutate({
+                            mutation: ADD_SKILL,
+                            variables: {
+                                application: this.state.newSkills
+                            }
+                        })
+                        .then(() => {
+                            this.setState({
+                                editing: false,
+                                newSkills: []
+                            });
+
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                'Successfully created',
+                                'bottom',
+                                'right'
+                            );
+
+                            this.setState({
+                                percent: 50
+                            });
+
+                            this.getSkillsList(this.state.applicationId);
+                        })
+                        .catch((error) => {
+                            // Replace this alert with a Snackbar message error
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to save skill. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
+
+                            this.setState({
+                                loading: false
+                            });
                         });
-
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            'Successfully created',
-                            'bottom',
-                            'right'
-                        );
-
-                        this.getSkillsList(this.state.applicationId);
-                    })
-                    .catch((error) => {
-                        // Replace this alert with a Snackbar message error
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to remove skill. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            });
+                });
 
 
-        }
+            }
+        });
     };
 
     removeSkillById = (id) => {
@@ -257,12 +272,14 @@ class Skills extends Component {
                         <br/>
                     </DialogContent>
                     <DialogActions>
-                        <Button className="cancel-skill-button" onClick={this.handleClose} color="default">
-                            Cancel
-                        </Button>
-                        <Button className="save-skill-button" type="submit" form="skill-form" color="primary">
-                            Add
-                        </Button>
+                        <div className="applicant-card__footer">
+                            <button className="applicant-card__cancel-button" type="reset" onClick={this.handleClose}>
+                                {spanishActions[2].label}
+                            </button>
+                            <button className="applicant-card__save-button" type="submit" form="skill-form">
+                                {spanishActions[0].label}
+                            </button>
+                        </div>
                     </DialogActions>
                 </form>
             </Dialog>
@@ -274,7 +291,7 @@ class Skills extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Skills</span>
+                                <span className="applicant-card__title">{menuSpanish[5].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
@@ -287,7 +304,7 @@ class Skills extends Component {
                                             })
                                         }}>
                                             {
-                                                <span> Add <i className="fas fa-plus"/></span>
+                                                <span> {spanishActions[0].label} <i className="fas fa-plus"/></span>
                                             }
                                         </button>
                                     )
@@ -296,8 +313,13 @@ class Skills extends Component {
                             <div className="row">
                                 {
                                     this.state.loading ? (
-                                        <div className="form-section-1 form-section--center">
-                                            <CircularProgressLoading/>
+                                        <div className="loading-container">
+                                            {
+                                                renderSkillsSection()
+                                            }
+                                            <div className="circular-progress-container">
+                                                <CircularProgressLoading/>
+                                            </div>
                                         </div>
                                     ) : (
                                         renderSkillsSection()
@@ -305,37 +327,37 @@ class Skills extends Component {
                                 }
                             </div>
                             {/*{*/}
-                                {/*this.state.editing ? (*/}
-                                    {/*<div className="applicant-card__footer">*/}
-                                        {/*<button*/}
-                                            {/*className="applicant-card__cancel-button"*/}
-                                            {/*onClick={*/}
-                                                {/*() => {*/}
-                                                    {/*this.setState((prevState) => ({*/}
-                                                        {/*skills: this.state.skills.filter((_, i) => {*/}
-                                                            {/*return _.id !== undefined;*/}
-                                                        {/*})*/}
-                                                    {/*}), () => {*/}
-                                                        {/*this.setState({*/}
-                                                            {/*editing: false*/}
-                                                        {/*});*/}
-                                                    {/*});*/}
-                                                {/*}*/}
-                                            {/*}*/}
-                                        {/*>*/}
-                                            {/*Cancel*/}
-                                        {/*</button>*/}
-                                        {/*<button*/}
-                                            {/*onClick={() => {*/}
-                                                {/*this.insertSkillsApplication()*/}
-                                            {/*}}*/}
-                                            {/*className="applicant-card__save-button">*/}
-                                            {/*Save*/}
-                                        {/*</button>*/}
-                                    {/*</div>*/}
-                                {/*) : (*/}
-                                    {/*''*/}
-                                {/*)*/}
+                            {/*this.state.editing ? (*/}
+                            {/*<div className="applicant-card__footer">*/}
+                            {/*<button*/}
+                            {/*className="applicant-card__cancel-button"*/}
+                            {/*onClick={*/}
+                            {/*() => {*/}
+                            {/*this.setState((prevState) => ({*/}
+                            {/*skills: this.state.skills.filter((_, i) => {*/}
+                            {/*return _.id !== undefined;*/}
+                            {/*})*/}
+                            {/*}), () => {*/}
+                            {/*this.setState({*/}
+                            {/*editing: false*/}
+                            {/*});*/}
+                            {/*});*/}
+                            {/*}*/}
+                            {/*}*/}
+                            {/*>*/}
+                            {/*Cancel*/}
+                            {/*</button>*/}
+                            {/*<button*/}
+                            {/*onClick={() => {*/}
+                            {/*this.insertSkillsApplication()*/}
+                            {/*}}*/}
+                            {/*className="applicant-card__save-button">*/}
+                            {/*Save*/}
+                            {/*</button>*/}
+                            {/*</div>*/}
+                            {/*) : (*/}
+                            {/*''*/}
+                            {/*)*/}
                             {/*}*/}
                         </div>
                     </div>
