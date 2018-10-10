@@ -12,7 +12,7 @@ import Catalogs from '../../Catalogs/';
 import Signature from '../../Contract/Signature';
 import MainContract from '../../Contract/Main/MainContract/MainContract';
 import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
-import ApplicationRecruiter from 'ApplyForm-Recruiter/Stepper/StepperApplyForm';
+import ApplicationRecruiter from 'ApplyForm-Recruiter/ApplicationList/ApplicationList';
 import ApplicationInfo from 'ApplyForm/Application/ApplicationInfo';
 
 class Container extends Component {
