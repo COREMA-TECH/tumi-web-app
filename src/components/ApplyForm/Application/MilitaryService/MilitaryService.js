@@ -321,9 +321,9 @@ class MilitaryService extends Component {
                                         }}>
                                             {
                                                 this.state.militaryServiceLength === 0 ? (
-                                                    <span> Add <i className="fas fa-plus"/></span>
+                                                    <span> {spanishActions[0].label} <i className="fas fa-plus"/></span>
                                                 ) : (
-                                                    <span> Edit <i className="far fa-edit"></i></span>
+                                                    <span> {spanishActions[1].label} <i className="far fa-edit"></i></span>
                                                 )
                                             }
                                         </button>
@@ -352,7 +352,7 @@ class MilitaryService extends Component {
                                                 }
                                             }
                                         >
-                                            Cancel
+                                            {spanishActions[2].label}
                                         </button>
                                         <button
                                             onClick={() => {
@@ -364,7 +364,7 @@ class MilitaryService extends Component {
                                                 }
                                             }}
                                             className="applicant-card__save-button">
-                                            Save
+                                            {spanishActions[4].label}
                                         </button>
                                     </div>
                                 ) : (

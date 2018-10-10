@@ -4,6 +4,8 @@ import {withStyles} from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
 
+const skillsLabels = require(`./../../Application/languagesJSON/${localStorage.getItem('languageForm')}/skills`);
+
 const styles = {
     root: {
         width: '100%',
@@ -52,10 +54,10 @@ class SimpleSlider extends React.Component {
             <div className={classes.root}>
                 <Slider value={value} className={'input-form'} aria-labelledby="label" onChange={this.handleChange}/>
                 <div className={classes.labelSlider}>
-                    <span className={classes.labelLevelSkill}>Newbie</span>
+                    <span className={classes.labelLevelSkill}>{skillsLabels[2].label}</span>
                     <Typography className={classes.labelPercentSkill}
                                 id="label">{Math.floor(this.state.value) + "%"} </Typography>
-                    <span className={classes.labelLevelSkill}>Expert</span>
+                    <span className={classes.labelLevelSkill}>{skillsLabels[3].label}</span>
                 </div>
             </div>
         );

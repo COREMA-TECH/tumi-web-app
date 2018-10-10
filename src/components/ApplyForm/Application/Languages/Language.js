@@ -368,7 +368,7 @@ class Language extends Component {
                                             this.setState({
                                                 editing: true
                                             })
-                                        }}>{spanishActions[0].label}<i className="fas fa-plus"/>
+                                        }}>{spanishActions[0].label} <i className="fas fa-plus"/>
                                         </button>
                                     )
                                 }

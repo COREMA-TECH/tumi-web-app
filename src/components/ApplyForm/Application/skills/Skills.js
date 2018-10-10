@@ -13,6 +13,8 @@ import SkillCard from "../../../ui-components/SkillCard/SkillCard";
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
+const skillsLabels = require(`../languagesJSON/${localStorage.getItem('languageForm')}/skills`);
+
 
 const uuidv4 = require('uuid/v4');
 
@@ -238,7 +240,7 @@ class Skills extends Component {
                     <DialogContent style={{width: '450px'}}>
                         <div className="row">
                             <div className="col-12">
-                                <span className="primary">Skill Name</span>
+                                <span className="primary">{skillsLabels[0].label}</span>
                                 <br/>
                                 <input
                                     id="description"
@@ -256,7 +258,7 @@ class Skills extends Component {
                         <br/>
                         <div className="row">
                             <div className="col-12">
-                                <span className="primary">Skill Level</span>
+                                <span className="primary">{skillsLabels[1].label}</span>
                                 <br/>
                                 <InputRange
                                     getPercentSkill={(percent) => {
