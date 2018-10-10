@@ -5,6 +5,10 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 
+const spanishActions = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const dialogMessages = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
+
+
 class PreviousEmploymentCard extends Component {
     constructor(props) {
         super(props);
@@ -30,21 +34,21 @@ class PreviousEmploymentCard extends Component {
         let renderQuestionDialog = () => (
             <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle>
-                    Are you sure you want to delete the record?
+                    {dialogMessages[0].label}
                 </DialogTitle>
                 <DialogContent>
 
                 </DialogContent>
                 <DialogActions>
                     <button className="applicant-card__cancel-button" onClick={this.handleClose}>
-                        Cancel
+                        {spanishActions[2].label}
                     </button>
                     <button
                         className="applicant-card__save-button"
                         onClick={() => {
                             this.props.remove()
                         }}>
-                        Delete
+                        {spanishActions[3].label}
                     </button>
                 </DialogActions>
             </Dialog>

@@ -5,6 +5,10 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 
+
+const spanishActions = require(`../../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
+
 class SkillCard extends Component {
     constructor(props) {
         super();
@@ -37,14 +41,14 @@ class SkillCard extends Component {
                 </DialogContent>
                 <DialogActions>
                     <button className="applicant-card__cancel-button" onClick={this.handleClose}>
-                        Cancel
+                        {spanishActions[2].label}
                     </button>
                     <button
                         className="applicant-card__save-button"
                         onClick={() => {
                             this.props.removeSkill()
                         }}>
-                        Delete
+                        {spanishActions[3].label}
                     </button>
                 </DialogActions>
             </Dialog>

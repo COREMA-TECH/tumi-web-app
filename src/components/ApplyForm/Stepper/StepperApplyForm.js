@@ -39,6 +39,7 @@ import {
 } from '../Mutations';
 import Route from 'react-router-dom/es/Route';
 import withGlobalContent from "../../Generic/Global";
+import Signature from "../../Contract/Signature/Signature";
 
 const uuidv4 = require('uuid/v4');
 
@@ -991,7 +992,7 @@ class VerticalLinearStepper extends Component {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
-                                if (data.getposition != null && data.getposition.length > 0) {
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return (
                                         <select
                                             name="city"
@@ -1006,8 +1007,8 @@ class VerticalLinearStepper extends Component {
                                         >
                                             <option value="">Select a position</option>
                                             <option value="0">Open Position</option>
-                                            {data.getposition.map((item) => (
-                                                <option value={item.Id}>{item.Position}</option>
+                                            {data.getcatalogitem.map((item) => (
+                                                <option value={item.Id}>{item.Description}</option>
                                             ))}
                                         </select>
                                     );
@@ -2375,6 +2376,11 @@ class VerticalLinearStepper extends Component {
                         </p>
                     </div>
                     <div className="row">
+                        <div className="col-12">
+                            <Signature />
+                        </div>
+                    </div>
+                    <div className="row">
                         <div className="col-1">
                             <input type="checkbox" className="form-control" />
                         </div>
@@ -2406,7 +2412,8 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step, history) => {
             switch (step) {
                 case 0:
-                    return renderApplicantInformationSection();
+                    return renderlanguagesSection();
+                    // return renderApplicantInformationSection();
                 case 1:
                     return renderlanguagesSection();
                 case 2:

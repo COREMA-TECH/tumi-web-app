@@ -8,6 +8,11 @@ import { UPDATE_APPLICATION } from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
+localStorage.setItem('languageForm', 'es');
+
+const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
 
 class Application extends Component {
     constructor(props) {
@@ -251,7 +256,7 @@ class Application extends Component {
                     <div className="">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">General Information</span>
+                                <span className="applicant-card__title">{menuSpanish[0].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
@@ -260,7 +265,7 @@ class Application extends Component {
                                                 this.setState({
                                                     editing: true
                                                 })
-                                            }}>Edit <i className="far fa-edit"></i>
+                                            }}>{spanishActions[1].label} <i className="far fa-edit"></i>
                                             </button>
                                         )
                                 }
@@ -270,7 +275,7 @@ class Application extends Component {
                                 <div className="col-6 form-section-1">
                                     <div className="row">
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">First Name</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[0].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -289,7 +294,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">Middle Name</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[1].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -307,7 +312,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-12 ">
-                                            <span className="primary applicant-card__label skeleton">Last Name</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[2].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -326,7 +331,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-12 ">
-                                            <span className="primary applicant-card__label skeleton">Date</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[3].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -345,7 +350,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12 ">
                                             <span
-                                                className="primary applicant-card__label skeleton">Street Address</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[22].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -364,7 +369,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">Apt Number</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[4].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -382,7 +387,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">Zip Code</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[5].label}</span>
                                             <InputMask
                                                 id="zipCode"
                                                 name="zipCode"
@@ -402,7 +407,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">State</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[6].label}</span>
                                             <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
@@ -433,7 +438,7 @@ class Application extends Component {
                                             </Query>
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">City</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[7].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -452,7 +457,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">Home Phone</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[9].label}</span>
                                             <InputMask
                                                 id="home-number"
                                                 name="homePhone"
@@ -471,7 +476,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">Cell Phone</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[10].label}</span>
                                             <InputMask
                                                 id="cell-number"
                                                 name="cellPhone"
@@ -493,7 +498,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12 ">
                                             <span
-                                                className="primary applicant-card__label skeleton">Social Security Number</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[11].label}</span>
                                             <InputMask
                                                 id="socialSecurityNumber"
                                                 name="socialSecurityNumber"
@@ -518,7 +523,7 @@ class Application extends Component {
                                 <div className="col-6 form-section-2">
                                     <div className="row">
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">Date Of Birth</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[12].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -538,7 +543,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">Do you own transportation?</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[23].label}</span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -561,7 +566,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12">
                                             <span
-                                                className="primary applicant-card__label skeleton">Email Address</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[13].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -581,7 +586,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">Type of ID</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[14].label}</span>
                                             <select name="typeOfID" id="typeOfID" className="form-control"
                                                 disabled={!this.state.editing}
                                                 onChange={(e) => {
@@ -601,7 +606,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">Expire Date ID</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[15].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -620,7 +625,7 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">Position Applying For</span>
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[16].label}</span>
                                             <Query query={GET_POSITIONS_QUERY}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
@@ -653,7 +658,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">Ideal Job</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[17].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -672,7 +677,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-12">
                                             <span
-                                                className="primary applicant-card__label skeleton">Date Available</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[18].label}</span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -691,7 +696,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">Do you have any schedule restrictions?</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[19].label}</span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -711,7 +716,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">If yes, explain</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[21].label}</span>
                                             <textarea
                                                 onChange={(event) => {
                                                     this.setState({
@@ -728,7 +733,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">Have you ever been convicted of a felony?</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[20].label}</span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -748,7 +753,7 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6">
                                             <span
-                                                className="primary applicant-card__label skeleton">If yes, explain</span>
+                                                className="primary applicant-card__label skeleton">{formSpanish[21].label}</span>
                                             <textarea
                                                 onChange={(event) => {
                                                     this.setState({
@@ -777,12 +782,12 @@ class Application extends Component {
                                                 }
                                             }
                                         >
-                                            Cancel
+                                            {spanishActions[2].label}
                                         </button>
                                         <button
                                             type="submit"
                                             className="applicant-card__save-button">
-                                            Save
+                                            {spanishActions[4].label}
                                         </button>
                                     </div>
                                 ) : (

@@ -8,6 +8,11 @@ import {ADD_LANGUAGES, REMOVE_APPLICANT_LANGUAGE} from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const languagesTable = require(`../languagesJSON/${localStorage.getItem('languageForm')}/languagesTable`);
+
+
 const uuidv4 = require('uuid/v4');
 
 class Language extends Component {
@@ -195,14 +200,14 @@ class Language extends Component {
                             }}
                         >
                             <div className="col-4">
-                                <span className="primary"> Languages</span>
+                                <span className="primary"> {languagesTable[0].label}</span>
                                 <select
                                     id="nameLanguage"
                                     name="languageName"
                                     required
                                     className="form-control"
                                     form="form-language">
-                                    <option value="">Select an option</option>
+                                    <option value="">{spanishActions[5].label}</option>
                                     {this.state.languagesLoaded.map((item) => (
                                         <option value={item.Id}>{item.Name}</option>
                                     ))}
@@ -225,7 +230,7 @@ class Language extends Component {
                                 <span className="check-icon"/>
                             </div>
                             <div className="col-3">
-                                <span className="primary"> Conversation</span>
+                                <span className="primary">{languagesTable[1].label}</span>
                                 <select
                                     required
                                     id="conversationLanguage"
@@ -233,13 +238,13 @@ class Language extends Component {
                                     name="conversationLanguage"
                                     className="form-control"
                                 >
-                                    <option value="">Select an option</option>
+                                    <option value="">{spanishActions[5].label}</option>
                                     {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                 </select>
                                 <span className="check-icon"/>
                             </div>
                             <div className="col-3">
-                                <span className="primary"> Writing</span>
+                                <span className="primary">{languagesTable[2].label}</span>
                                 <select
                                     required
                                     id="writingLanguage"
@@ -247,7 +252,7 @@ class Language extends Component {
                                     name="writingLanguage"
                                     className="form-control"
                                 >
-                                    <option value="">Select an option</option>
+                                    <option value="">{spanishActions[5].label}</option>
                                     {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                                 </select>
                                 <span className="check-icon"/>
@@ -255,7 +260,7 @@ class Language extends Component {
                             <div className="col-2">
                                 <br/>
                                 <Button type="submit" form="form-language" className="save-skill-button">
-                                    Add
+                                    {spanishActions[0].label}
                                 </Button>
                             </div>
                         </form>
@@ -266,13 +271,13 @@ class Language extends Component {
                     <div className="skills-container skills-container--header">
                         <div className="row">
                             <div className="col-3">
-                                <span>Language Name</span>
+                                <span>{languagesTable[0].label}</span>
                             </div>
                             <div className="col-4">
-                                <span>Conversation</span>
+                                <span>{languagesTable[1].label}</span>
                             </div>
                             <div className="col-4">
-                                <span>Writing</span>
+                                <span>{languagesTable[2].label}</span>
                             </div>
                         </div>
                     </div>
@@ -354,7 +359,7 @@ class Language extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Languages</span>
+                                <span className="applicant-card__title">{menuSpanish[1].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
@@ -363,7 +368,7 @@ class Language extends Component {
                                             this.setState({
                                                 editing: true
                                             })
-                                        }}>Add <i className="fas fa-plus"/>
+                                        }}>{spanishActions[0].label} <i className="fas fa-plus"/>
                                         </button>
                                     )
                                 }
@@ -398,14 +403,14 @@ class Language extends Component {
                                                 }
                                             }
                                         >
-                                            Cancel
+                                            {spanishActions[2].label}
                                         </button>
                                         <button
                                             onClick={() => {
                                                 this.insertLanguagesApplication()
                                             }}
                                             className="applicant-card__save-button">
-                                            Save
+                                            {spanishActions[4].label}
                                         </button>
                                     </div>
                                 ) : (

@@ -10,6 +10,12 @@ import CircularProgressLoading from "../../../material-ui/CircularProgressLoadin
 import withGlobalContent from "../../../Generic/Global";
 import SkillCard from "../../../ui-components/SkillCard/SkillCard";
 
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
+const skillsLabels = require(`../languagesJSON/${localStorage.getItem('languageForm')}/skills`);
+
+
 const uuidv4 = require('uuid/v4');
 
 class Skills extends Component {
@@ -234,7 +240,7 @@ class Skills extends Component {
                     <DialogContent style={{width: '450px'}}>
                         <div className="row">
                             <div className="col-12">
-                                <span className="primary">Skill Name</span>
+                                <span className="primary">{skillsLabels[0].label}</span>
                                 <br/>
                                 <input
                                     id="description"
@@ -252,7 +258,7 @@ class Skills extends Component {
                         <br/>
                         <div className="row">
                             <div className="col-12">
-                                <span className="primary">Skill Level</span>
+                                <span className="primary">{skillsLabels[1].label}</span>
                                 <br/>
                                 <InputRange
                                     getPercentSkill={(percent) => {
@@ -270,10 +276,10 @@ class Skills extends Component {
                     <DialogActions>
                         <div className="applicant-card__footer">
                             <button className="applicant-card__cancel-button" type="reset" onClick={this.handleClose}>
-                                Cancel
+                                {spanishActions[2].label}
                             </button>
                             <button className="applicant-card__save-button" type="submit" form="skill-form">
-                                Add
+                                {spanishActions[0].label}
                             </button>
                         </div>
                     </DialogActions>
@@ -287,7 +293,7 @@ class Skills extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Skills</span>
+                                <span className="applicant-card__title">{menuSpanish[5].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
@@ -300,7 +306,7 @@ class Skills extends Component {
                                             })
                                         }}>
                                             {
-                                                <span> Add <i className="fas fa-plus"/></span>
+                                                <span> {spanishActions[0].label} <i className="fas fa-plus"/></span>
                                             }
                                         </button>
                                     )

@@ -17,6 +17,10 @@ import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import MilitaryService from "./MilitaryService/MilitaryService";
 import Skills from "./skills/Skills";
 
+
+const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+
+
 const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
@@ -46,7 +50,11 @@ const styles = theme => ({
 });
 
 function getSteps() {
-    return ['General Information', 'Languages', 'Education', 'Previous Employment', 'Military Service', 'Skills'];
+    let steps = menuSpanish.map(item => {
+        return item.label
+    });
+
+    return steps;
 }
 
 class VerticalLinearStepper extends Component {
@@ -85,9 +93,11 @@ class VerticalLinearStepper extends Component {
 
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
-            })
+            });
+
+            localStorage.setItem('languageForm', 'en');
         } catch (error) {
-            window.location.href = "/home/application"
+            window.location.href = "/home/application";
         }
     }
 
@@ -152,6 +162,22 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-10">
                         <div className="StepperForm-wrapper">
+                            {/*<select*/}
+                                {/*value={localStorage.getItem('languageForm')}*/}
+                                {/*onChange={(e) => {*/}
+                                {/*this.setState({*/}
+                                    {/*languageSelected: e.target.value*/}
+                                {/*}, () => {*/}
+                                    {/*localStorage.setItem('languageForm', this.state.language);*/}
+                                    {/*alert(this.state.languageSelected);*/}
+                                    {/*window.location.reload();*/}
+                                {/*});*/}
+
+                                {/*alert("Alert");*/}
+                            {/*}}>*/}
+                                {/*<option value="es">Spanish</option>*/}
+                                {/*<option value="en">English</option>*/}
+                            {/*</select>*/}
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
                             </Typography>

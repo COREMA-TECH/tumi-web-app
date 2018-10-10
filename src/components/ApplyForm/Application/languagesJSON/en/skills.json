@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "label": "Skill Name"
+  },
+  {
+    "id": 1,
+    "label": "Skill Level"
+  },
+  {
+    "id": 1,
+    "label": "Newbie"
+  },
+  {
+    "id": 1,
+    "label": "Expert"
+  }
+]

@@ -10,6 +10,11 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import InputMask from "react-input-mask";
 
+const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const previousEmploymentLabels = require(`../languagesJSON/${localStorage.getItem('languageForm')}/previousEmployment`);
+
+
 const uuidv4 = require('uuid/v4');
 
 class PreviousEmployment extends Component {
@@ -186,7 +191,7 @@ class PreviousEmployment extends Component {
                                         <div className="form-section-1">
                                             <div className="row">
                                                 <div className="col-6">
-                                                    <span className="primary"> Company</span>
+                                                    <span className="primary"> {previousEmploymentLabels[0].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyNameEmployment"
@@ -203,7 +208,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> Phone</span>
+                                                    <span className="primary"> {previousEmploymentLabels[1].label}</span>
                                                     <div className="input-container--validated">
                                                         <InputMask
                                                             id="companyPhoneEmployment"
@@ -237,7 +242,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> Address</span>
+                                                    <span className="primary"> {previousEmploymentLabels[2].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyAddressEmployment"
@@ -254,7 +259,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> Supervisor</span>
+                                                    <span className="primary"> {previousEmploymentLabels[3].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companySupervisor"
@@ -271,7 +276,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> Job Title</span>
+                                                    <span className="primary"> {previousEmploymentLabels[4].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyJobTitle"
@@ -288,7 +293,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> Pay Rate</span>
+                                                    <span className="primary"> {previousEmploymentLabels[5].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyPayRate"
@@ -305,7 +310,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> Dates</span>
+                                                    <span className="primary"> {previousEmploymentLabels[6].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyStartDate"
@@ -322,7 +327,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary">To: </span>
+                                                    <span className="primary">{previousEmploymentLabels[7].label} </span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyEndDate"
@@ -339,7 +344,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-12">
-                                                    <span className="primary"> Reason for leaving</span>
+                                                    <span className="primary"> {previousEmploymentLabels[8].label}</span>
                                                     <textarea
                                                         id="companyReasonForLeaving"
                                                         form="form-previous-employment"
@@ -357,13 +362,13 @@ class PreviousEmployment extends Component {
                     <DialogActions>
                         <div className="applicant-card__footer">
                             <button className="applicant-card__cancel-button" onClick={this.handleClose} >
-                                Cancel
+                                {spanishActions[2].label}
                             </button>
                             <button
                                 className="applicant-card__save-button"
                                 type="submit"
                                 form="form-previous-employment" >
-                                Add
+                                {spanishActions[1].label}
                             </button>
                         </div>
                     </DialogActions>
@@ -453,7 +458,7 @@ class PreviousEmployment extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Previous Employment</span>
+                                <span className="applicant-card__title">{menuSpanish[3].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
@@ -463,7 +468,7 @@ class PreviousEmployment extends Component {
                                                 open: true,
                                                 editing: true
                                             })
-                                        }}>Add <i className="fas fa-plus"/>
+                                        }}>{spanishActions[0].label} <i className="fas fa-plus"/>
                                         </button>
                                     )
                                 }
