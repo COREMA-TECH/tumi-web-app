@@ -93,9 +93,11 @@ class VerticalLinearStepper extends Component {
 
             this.setState({
                 applicationId: this.props.location.state.ApplicationId
-            })
+            });
+
+            localStorage.setItem('languageForm', 'en');
         } catch (error) {
-            window.location.href = "/home/application"
+            window.location.href = "/home/application";
         }
     }
 
@@ -160,6 +162,22 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-10">
                         <div className="StepperForm-wrapper">
+                            {/*<select*/}
+                                {/*value={localStorage.getItem('languageForm')}*/}
+                                {/*onChange={(e) => {*/}
+                                {/*this.setState({*/}
+                                    {/*languageSelected: e.target.value*/}
+                                {/*}, () => {*/}
+                                    {/*localStorage.setItem('languageForm', this.state.language);*/}
+                                    {/*alert(this.state.languageSelected);*/}
+                                    {/*window.location.reload();*/}
+                                {/*});*/}
+
+                                {/*alert("Alert");*/}
+                            {/*}}>*/}
+                                {/*<option value="es">Spanish</option>*/}
+                                {/*<option value="en">English</option>*/}
+                            {/*</select>*/}
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
                             </Typography>
