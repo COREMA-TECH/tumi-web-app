@@ -250,7 +250,8 @@ class Skills extends Component {
                                     required
                                     min="0"
                                     maxLength="20"
-                                    minLength="3"
+                                    minLength="1"
+                                    pattern=".*[^ ].*"
                                     form="skill-form"
                                 />
                             </div>
