@@ -79,7 +79,13 @@ class BackgroundCheck extends Component {
             licenseState: form.item(2).value,
             licenseExpiration: form.item(3).value,
             commercialDriverLicense: form.item(4).checked,
-            signature: this.state.signature
+            signature: this.state.signature,
+
+            // TODO: Fix this static fields
+            content: '',
+            date: new Date().toISOString(),
+            applicantName: '',
+            ApplicationId: 17
         };
 
         // To insert background check
