@@ -38,6 +38,7 @@ import {
 import Route from 'react-router-dom/es/Route';
 import withGlobalContent from "../../Generic/Global";
 import SignatureForm from "../SignatureForm/SignatureForm";
+import BackgroundCheck from "../Application/BackgroundCkeck/BackgroundCheck";
 
 const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -2440,7 +2441,8 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step, history) => {
             switch (step) {
                 case 0:
-                    return renderApplicantInformationSection();
+                    return <BackgroundCheck />;
+                    // return renderApplicantInformationSection();
                 case 1:
                     return renderlanguagesSection();
                 case 2:

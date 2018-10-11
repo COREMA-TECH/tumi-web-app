@@ -98,6 +98,8 @@
     font-size: .95em;
     font-weight: 100 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+
+    margin-bottom: .3em;
 }
 
 .linear-border {

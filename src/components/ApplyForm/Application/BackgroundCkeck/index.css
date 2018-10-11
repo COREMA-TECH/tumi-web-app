@@ -1,0 +1,12 @@
+.applicant-card__footer--background {
+    width: 100%;
+    height: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.switch {
+    margin-top: .5em !important;
+}
