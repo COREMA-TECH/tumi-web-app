@@ -205,7 +205,7 @@ class ApplicationTable extends React.Component {
 											key={uuidv4()}
 											onClick={() => {
 												history.push({
-													pathname: '/home/application/info',
+													pathname: '/home/application/Form',
 													state: { ApplicationId: row.id }
 												});
 											}}

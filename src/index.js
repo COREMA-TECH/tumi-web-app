@@ -15,7 +15,7 @@ firebase.initializeApp({
 });
 
 
-
+console.log(localStorage.getItem("languageForm"));
 if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") === null) {
     localStorage.setItem('languageForm', 'en');
 }
