@@ -169,7 +169,8 @@ class Application extends Component {
                     query: GET_APPLICATION_BY_ID,
                     variables: {
                         id: id
-                    }
+                    },
+                    fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
                     let applicantData = data.applications[0];

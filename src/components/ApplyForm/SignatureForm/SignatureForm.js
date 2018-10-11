@@ -175,46 +175,50 @@ class Signature extends React.Component {
     };
 
     saveSignature = () => {
-        this.setState(
-            {
-                success: false,
-                loading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: ADD_SIGNATURE,
-                        variables: {
-                            id: this.props.applicationId,
-                            signature: this.state.signature
-                        }
-                    })
-                    .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Application Signed!');
-                        this.setState(
-                            {
-                                success: true,
-                                loading: false,
-                                allowSave: false,
-                                saved: true,
-                                view: 2
-                            },
-                            () => {
-                                if (this.sigPad) this.sigPad.off();
+        if(this.props.signatureValue !== null) {
+            this.props.signatureValue(this.state.signature);
+        } else {
+            this.setState(
+                {
+                    success: false,
+                    loading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: ADD_SIGNATURE,
+                            variables: {
+                                id: this.props.applicationId,
+                                signature: this.state.signature
                             }
-                        );
+                        })
+                        .then((data) => {
+                            this.props.handleOpenSnackbar('success', 'Application Signed!');
+                            this.setState(
+                                {
+                                    success: true,
+                                    loading: false,
+                                    allowSave: false,
+                                    saved: true,
+                                    view: 2
+                                },
+                                () => {
+                                    if (this.sigPad) this.sigPad.off();
+                                }
+                            );
 
-                        window.location.href = "/employment-application-message";
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar('error', 'Error: Signing Application: ' + error);
-                        this.setState({
-                            success: false,
-                            loading: false
+                            window.location.href = "/employment-application-message";
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar('error', 'Error: Signing Application: ' + error);
+                            this.setState({
+                                success: false,
+                                loading: false
+                            });
                         });
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
     handleSaveSignature = () => {

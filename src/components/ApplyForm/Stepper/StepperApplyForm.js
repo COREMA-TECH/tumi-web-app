@@ -2412,18 +2412,6 @@ class VerticalLinearStepper extends Component {
                                 <DialogContent>
                                     <SignatureForm applicationId={this.state.applicationId}/>
                                 </DialogContent>
-                                {/*<DialogActions>*/}
-                                {/*<div className="applicant-card__footer">*/}
-                                {/*<button className="applicant-card__cancel-button" type="reset"*/}
-                                {/*onClick={this.handleClose}>*/}
-                                {/*{spanishActions[2].label}*/}
-                                {/*</button>*/}
-                                {/*<button className="applicant-card__save-button" type="submit"*/}
-                                {/*form="education-form">*/}
-                                {/*{spanishActions[0].label}*/}
-                                {/*</button>*/}
-                                {/*</div>*/}
-                                {/*</DialogActions>*/}
                             </Dialog>
                         ) : (
                             ''
