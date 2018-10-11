@@ -23,7 +23,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import withGlobalContent from 'Generic/Global';
-import studyTypes from "../data/studyTypes";
 import {ADD_SIGNATURE} from "./Mutations";
 
 const styles = (theme) => ({

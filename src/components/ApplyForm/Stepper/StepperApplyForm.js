@@ -2441,7 +2441,6 @@ class VerticalLinearStepper extends Component {
             switch (step) {
                 case 0:
                     return renderApplicantInformationSection();
-                    // return renderlanguagesSection();
                 case 1:
                     return renderlanguagesSection();
                 case 2:
