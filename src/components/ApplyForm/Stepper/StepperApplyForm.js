@@ -108,9 +108,9 @@ class VerticalLinearStepper extends Component {
             idealJob: '',
             idealJobs: [],
             dateAvailable: '',
-            scheduleRestrictions: '',
+            scheduleRestrictions: '0',
             scheduleExplain: '',
-            convicted: '',
+            convicted: '0',
             convictedExplain: '',
             socialNetwork: '',
             comment: '',
@@ -929,6 +929,7 @@ class VerticalLinearStepper extends Component {
                                     typeOfId: e.target.value
                                 });
                             }}
+                            value={this.state.typeOfId}
                         >
                             <option value="">Select an option</option>
                             <option value="1">Birth certificate</option>
@@ -1128,6 +1129,7 @@ class VerticalLinearStepper extends Component {
                                 type="radio"
                                 name="scheduleRestrictions"
                                 className=""
+                                checked={this.state.scheduleRestrictions === '0'}
                             />
                             <label className="radio-label"> No</label>
                         </div>
@@ -1192,6 +1194,7 @@ class VerticalLinearStepper extends Component {
                             type="radio"
                             name="convicted"
                             className=""
+                            checked={this.state.convicted === '0'}
                         />
                         <label className="radio-label"> No</label>
                         <span className="check-icon"/>

@@ -8,7 +8,9 @@ import { UPDATE_APPLICATION } from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
-//localStorage.setItem('languageForm', 'en');
+if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
+    localStorage.setItem('languageForm', 'en');
+}
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -250,7 +252,7 @@ class Application extends Component {
                     (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        this.updateApplicationInformation(70)
+                        this.updateApplicationInformation(this.props.applicationId)
                     }
                 }>
                     <div className="">

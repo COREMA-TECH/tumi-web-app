@@ -17,7 +17,6 @@ import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
 import MilitaryService from "./MilitaryService/MilitaryService";
 import Skills from "./skills/Skills";
 
-
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 
 

@@ -27,8 +27,8 @@ class Application extends Component {
             date: '',
             streetAddress: '',
             aptNumber: '',
-            city: '',
-            state: '',
+            city: 0,
+            state: 0,
             zipCode: '',
             homePhone: '',
             cellPhone: '',
@@ -250,7 +250,7 @@ class Application extends Component {
                     (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        this.updateApplicationInformation(70)
+                        this.updateApplicationInformation(this.props.applicationId);
                     }
                 }>
                     <div className="">
@@ -262,6 +262,7 @@ class Application extends Component {
                                         ''
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
+                                                //alert(this.props.applicationId);
                                                 this.setState({
                                                     editing: true
                                                 })

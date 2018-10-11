@@ -159,7 +159,6 @@ class Education extends Component {
                     autoComplete="off"
                     id="education-form"
                     onSubmit={(e) => {
-
                         e.preventDefault();
                         e.stopPropagation();
 
@@ -208,6 +207,7 @@ class Education extends Component {
                                             className="form-control"
                                             required
                                             min="0"
+                                            pattern=".*[^ ].*"
                                             maxLength="50"
                                             minLength="2"
                                         />
@@ -222,6 +222,7 @@ class Education extends Component {
                                             name="institutionName"
                                             id="institutionName"
                                             type="text"
+                                            pattern=".*[^ ].*"
                                             className="form-control"
                                             required
                                             min="0"
@@ -239,6 +240,7 @@ class Education extends Component {
                                             name="addressInstitution"
                                             id="addressInstitution"
                                             type="text"
+                                            pattern=".*[^ ].*"
                                             className="form-control"
                                             required
                                             min="0"
@@ -258,6 +260,7 @@ class Education extends Component {
                                             name="startPeriod"
                                             id="startPeriod"
                                             type="date"
+                                            pattern=".*[^ ].*"
                                             className="form-control"
                                             required
                                             min="0"
@@ -275,6 +278,7 @@ class Education extends Component {
                                             name="endPeriod"
                                             id="endPeriod"
                                             type="date"
+                                            pattern=".*[^ ].*"
                                             className="form-control"
                                             required
                                             min="0"
@@ -297,6 +301,7 @@ class Education extends Component {
                                             type="checkbox"
                                             value="graduated"
                                             name="graduated"
+                                            pattern=".*[^ ].*"
                                             id="graduated"
                                         />
                                         <p className="slider round"/>

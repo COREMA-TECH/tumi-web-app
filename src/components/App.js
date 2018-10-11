@@ -10,6 +10,10 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 
+if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
+    localStorage.setItem('languageForm', 'en');
+}
+
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
