@@ -159,7 +159,6 @@ class Education extends Component {
                     autoComplete="off"
                     id="education-form"
                     onSubmit={(e) => {
-
                         e.preventDefault();
                         e.stopPropagation();
 
