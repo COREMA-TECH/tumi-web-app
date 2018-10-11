@@ -929,6 +929,7 @@ class VerticalLinearStepper extends Component {
                                     typeOfId: e.target.value
                                 });
                             }}
+                            value={this.state.typeOfId}
                         >
                             <option value="">Select an option</option>
                             <option value="1">Birth certificate</option>
