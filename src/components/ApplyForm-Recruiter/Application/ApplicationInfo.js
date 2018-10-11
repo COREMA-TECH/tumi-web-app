@@ -102,7 +102,6 @@ class VerticalLinearStepper extends Component {
     }
 
     render() {
-        alert("Hola edsde aqui!");
         const { classes } = this.props;
         const steps = getSteps();
         const { activeStep } = this.state;
@@ -111,8 +110,6 @@ class VerticalLinearStepper extends Component {
             switch (step) {
                 case 0:
                     return <Application applicationId={this.state.applicationId} />;
-                //return <Language applicationId={this.state.applicationId} />;
-
                 case 1:
                     return <Language applicationId={this.state.applicationId} />;
                 case 2:
@@ -134,8 +131,9 @@ class VerticalLinearStepper extends Component {
                     <div className="col-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header">
-                                <h2 className="applicant-card__title">Stepsssss</h2>
+                                <h2 className="applicant-card__title">Steps</h2>
                             </div>
+
                             <Stepper activeStep={activeStep} orientation="vertical" className="">
                                 {steps.map((label, index) => {
                                     return (

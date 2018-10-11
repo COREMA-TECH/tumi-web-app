@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
-import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
+import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY } from "../Queries";
 import { updateApplicationInformation } from "../utils";
 import { UPDATE_APPLICATION } from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
-localStorage.setItem('languageForm', 'es');
+//localStorage.setItem('languageForm', 'en');
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -27,8 +27,8 @@ class Application extends Component {
             date: '',
             streetAddress: '',
             aptNumber: '',
-            city: '',
-            state: '',
+            city: 0,
+            state: 0,
             zipCode: '',
             homePhone: '',
             cellPhone: '',
@@ -250,7 +250,7 @@ class Application extends Component {
                     (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        this.updateApplicationInformation(70)
+                        this.updateApplicationInformation(this.props.applicationId);
                     }
                 }>
                     <div className="">
@@ -262,6 +262,7 @@ class Application extends Component {
                                         ''
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
+                                                //alert(this.props.applicationId);
                                                 this.setState({
                                                     editing: true
                                                 })
@@ -273,6 +274,43 @@ class Application extends Component {
                             <br />
                             <div className="row">
                                 <div className="col-6 form-section-1">
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <span className="primary applicant-card__label skeleton">{formSpanish[16].label}</span>
+                                            <Query query={GET_POSITIONS_QUERY}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    console.log(data);
+                                                    console.log(data.getposition);
+                                                    console.log("data.getcatalogitem", data.getcatalogitem);
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="positionApply"
+                                                                id="positionApply"
+                                                                onChange={(event) => {
+                                                                    this.setState({
+                                                                        positionApplyingFor: event.target.value
+                                                                    });
+                                                                }}
+                                                                value={this.state.positionApplyingFor}
+                                                                className="form-control"
+                                                            //  disabled={!this.state.editing}
+                                                            >
+                                                                <option value="">Select a position</option>
+                                                                <option value="0">Open Position</option>
+                                                                {data.getcatalogitem.map((item) => (
+                                                                    <option value={item.Id}>{item.Description}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
+                                                }}
+                                            </Query>
+                                        </div>
+                                    </div>
                                     <div className="row">
                                         <div className="col-6">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[0].label}</span>
@@ -330,24 +368,7 @@ class Application extends Component {
                                                 minLength="3"
                                             />
                                         </div>
-                                        <div className="col-12 ">
-                                            <span className="primary applicant-card__label skeleton">{formSpanish[3].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        date: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.date}
-                                                name="date"
-                                                type="date"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                            />
-                                        </div>
+
                                         <div className="col-12 ">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[22].label}</span>
@@ -362,24 +383,6 @@ class Application extends Component {
                                                 type="text"
                                                 className="form-control"
                                                 required
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="5"
-                                            />
-                                        </div>
-                                        <div className="col-6 ">
-                                            <span className="primary applicant-card__label skeleton">{formSpanish[4].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        aptNumber: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.aptNumber}
-                                                name="aptNumber"
-                                                type="number"
-                                                className="form-control"
                                                 disabled={!this.state.editing}
                                                 min="0"
                                                 maxLength="50"
@@ -439,22 +442,34 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[7].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        city: event.target.value
-                                                    });
+                                            <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="city"
+                                                                id="city"
+                                                                required
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        city: e.target.value
+                                                                    })
+                                                                }}
+                                                                value={this.state.city}>
+                                                                <option value="">Select a city</option>
+                                                                {data.getcatalogitem.map((item) => (
+                                                                    <option value={item.Id}>{item.Name}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
                                                 }}
-                                                value={this.state.city}
-                                                name="city"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="30"
-                                                minLength="3"
-                                            />
+                                            </Query>
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[9].label}</span>
@@ -496,51 +511,11 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-12 ">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[11].label}</span>
-                                            <InputMask
-                                                id="socialSecurityNumber"
-                                                name="socialSecurityNumber"
-                                                mask="999-99-9999"
-                                                maskChar=" "
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        socialSecurityNumber: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.socialSecurityNumber}
-                                                placeholder="999-99-9999"
-                                                required
-
-                                                minLength="15"
-                                            />
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="col-6 form-section-2">
                                     <div className="row">
-                                        <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">{formSpanish[12].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        birthDay: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.birthDay}
-                                                name="birthDay"
-                                                type="date"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="10"
-                                            />
-                                        </div>
+
                                         <div className="col-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[23].label}</span>
@@ -586,135 +561,6 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">{formSpanish[14].label}</span>
-                                            <select name="typeOfID" id="typeOfID" className="form-control"
-                                                disabled={!this.state.editing}
-                                                onChange={(e) => {
-                                                    this.setState({
-                                                        typeOfId: e.target.value
-                                                    })
-                                                }}>
-                                                <option value="">Select an option</option>
-                                                <option value="1">Birth certificate</option>
-                                                <option value="2">Social Security card</option>
-                                                <option value="3">State-issued driver's license</option>
-                                                <option value="4">State-issued ID</option>
-                                                <option value="5">Passport</option>
-                                                <option value="6">Department of Defense Identification Card</option>
-                                                <option value="7">Green Card</option>
-                                            </select>
-                                        </div>
-                                        <div className="col-6">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[15].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        expireDateId: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.expireDateId}
-                                                name="expireDateId"
-                                                type="date"
-                                                className="form-control"
-                                                required
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="10"
-                                            />
-                                        </div>
-                                        <div className="col-6">
-                                            <span className="primary applicant-card__label skeleton">{formSpanish[16].label}</span>
-                                            <Query query={GET_POSITIONS_QUERY}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getposition != null && data.getposition.length > 0) {
-                                                        return (
-                                                            <select
-                                                                name="city"
-                                                                id="city"
-                                                                onChange={(event) => {
-                                                                    this.setState({
-                                                                        positionApplyingFor: event.target.value
-                                                                    });
-                                                                }}
-                                                                value={this.state.positionApplyingFor}
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                            >
-                                                                <option value="">Select a position</option>
-                                                                <option value="0">Open Position</option>
-                                                                {data.getposition.map((item) => (
-                                                                    <option value={item.Id}>{item.Position}</option>
-                                                                ))}
-                                                            </select>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
-                                        </div>
-                                        <div className="col-6">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[17].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        idealJob: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.idealJob}
-                                                name="idealJob"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                minLength="3"
-                                                maxLength="50"
-                                            />
-                                        </div>
-                                        <div className="col-12">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[18].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        dateAvailable: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.dateAvailable}
-                                                name="dateAvailable"
-                                                type="date"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                            />
-                                        </div>
-                                        <div className="col-6">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[19].label}</span>
-                                            <label className="switch">
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            scheduleRestrictions: event.target.checked
-                                                        });
-                                                    }}
-                                                    checked={this.state.scheduleRestrictions}
-                                                    value={this.state.scheduleRestrictions}
-                                                    name="scheduleRestrictions"
-                                                    type="checkbox"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                />
-                                                <p className="slider round"></p>
-                                            </label>
-                                        </div>
-                                        <div className="col-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[21].label}</span>
                                             <textarea
@@ -725,46 +571,9 @@ class Application extends Component {
                                                 }}
                                                 value={this.state.scheduleExplain}
                                                 name="form-control"
-                                                cols="30"
+                                                cols="60"
                                                 rows="3"
                                                 disabled={!this.state.editing}
-                                                className="form-control textarea-apply-form"
-                                            />
-                                        </div>
-                                        <div className="col-6">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[20].label}</span>
-                                            <label className="switch">
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            convicted: event.target.checked
-                                                        });
-                                                    }}
-                                                    checked={this.state.convicted}
-                                                    value={this.state.convicted}
-                                                    name="convicted"
-                                                    type="checkbox"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                />
-                                                <p className="slider round"></p>
-                                            </label>
-                                        </div>
-                                        <div className="col-6">
-                                            <span
-                                                className="primary applicant-card__label skeleton">{formSpanish[21].label}</span>
-                                            <textarea
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        convictedExplain: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.convictedExplain}
-                                                name="form-control"
-                                                disabled={!this.state.editing}
-                                                cols="30"
-                                                rows="3"
                                                 className="form-control textarea-apply-form"
                                             />
                                         </div>

@@ -253,7 +253,7 @@ class Application extends Component {
                     (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        this.updateApplicationInformation(70)
+                        this.updateApplicationInformation(this.props.applicationId)
                     }
                 }>
                     <div className="">

@@ -30,7 +30,7 @@ export const GET_CITIES_QUERY = gql`
  * Query to get positions
  */
 export const GET_POSITIONS_QUERY = gql`
-    {
+query getposition {
         getcatalogitem(Id_Catalog: 6, IsActive: 1) {
             Id
             IsActive
