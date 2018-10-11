@@ -281,9 +281,6 @@ class Application extends Component {
                                                 {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
-                                                    console.log(data);
-                                                    console.log(data.getposition);
-                                                    console.log("data.getcatalogitem", data.getcatalogitem);
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         return (
                                                             <select

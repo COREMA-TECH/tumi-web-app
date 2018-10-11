@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from "react-input-mask";
 import withApollo from "react-apollo/withApollo";
-import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
+//import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
+import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY } from "../Queries";
 import { updateApplicationInformation } from "../utils";
 import { UPDATE_APPLICATION } from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
@@ -29,8 +30,8 @@ class Application extends Component {
             date: '',
             streetAddress: '',
             aptNumber: '',
-            city: '',
-            state: '',
+            city: 0,
+            state: 0,
             zipCode: '',
             homePhone: '',
             cellPhone: '',
@@ -442,22 +443,34 @@ class Application extends Component {
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[7].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        city: event.target.value
-                                                    });
+                                            <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="city"
+                                                                id="city"
+                                                                required
+                                                                className="form-control"
+                                                                disabled={!this.state.editing}
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        city: e.target.value
+                                                                    })
+                                                                }}
+                                                                value={this.state.city}>
+                                                                <option value="">Select a city</option>
+                                                                {data.getcatalogitem.map((item) => (
+                                                                    <option value={item.Id}>{item.Name}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
                                                 }}
-                                                value={this.state.city}
-                                                name="city"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="30"
-                                                minLength="3"
-                                            />
+                                            </Query>
                                         </div>
                                         <div className="col-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[9].label}</span>
@@ -633,11 +646,11 @@ class Application extends Component {
                                                 {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
-                                                    if (data.getposition != null && data.getposition.length > 0) {
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                         return (
                                                             <select
-                                                                name="city"
-                                                                id="city"
+                                                                name="positionApply"
+                                                                id="positionApply"
                                                                 onChange={(event) => {
                                                                     this.setState({
                                                                         positionApplyingFor: event.target.value
@@ -645,12 +658,12 @@ class Application extends Component {
                                                                 }}
                                                                 value={this.state.positionApplyingFor}
                                                                 className="form-control"
-                                                                disabled={!this.state.editing}
+                                                            //  disabled={!this.state.editing}
                                                             >
                                                                 <option value="">Select a position</option>
                                                                 <option value="0">Open Position</option>
-                                                                {data.getposition.map((item) => (
-                                                                    <option value={item.Id}>{item.Position}</option>
+                                                                {data.getcatalogitem.map((item) => (
+                                                                    <option value={item.Id}>{item.Description}</option>
                                                                 ))}
                                                             </select>
                                                         );
