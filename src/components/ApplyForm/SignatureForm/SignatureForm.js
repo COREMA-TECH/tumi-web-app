@@ -403,7 +403,7 @@ class Signature extends React.Component {
                                 <div>
                                     <Button
                                         disabled={
-                                            this.state.loading || this.state.disableButtonLetter || this.state.saved
+                                            !this.state.empty
                                         }
                                         letiant="fab"
                                         className={[buttonClassname, classes.buttonSuccess].join(' ')}
