@@ -111,13 +111,13 @@ class VerticalLinearStepper extends Component {
                     return <Application applicationId={this.state.applicationId} />;
                 case 1:
                     return <Language applicationId={this.state.applicationId} />;
+                //case 2:
+                // return <Education applicationId={this.state.applicationId} />;
                 case 2:
-                    return <Education applicationId={this.state.applicationId} />;
-                case 3:
                     return <PreviousEmployment applicationId={this.state.applicationId} />;
-                case 4:
-                    return <MilitaryService applicationId={this.state.applicationId} />;
-                case 5:
+                // case 4:
+                //   return <MilitaryService applicationId={this.state.applicationId} />;
+                case 3:
                     return <Skills applicationId={this.state.applicationId} />;
                 default:
                     return 'Unknown step';
@@ -162,20 +162,20 @@ class VerticalLinearStepper extends Component {
                     <div className="col-10">
                         <div className="StepperForm-wrapper">
                             {/*<select*/}
-                                {/*value={localStorage.getItem('languageForm')}*/}
-                                {/*onChange={(e) => {*/}
-                                {/*this.setState({*/}
-                                    {/*languageSelected: e.target.value*/}
-                                {/*}, () => {*/}
-                                    {/*localStorage.setItem('languageForm', this.state.language);*/}
-                                    {/*alert(this.state.languageSelected);*/}
-                                    {/*window.location.reload();*/}
-                                {/*});*/}
+                            {/*value={localStorage.getItem('languageForm')}*/}
+                            {/*onChange={(e) => {*/}
+                            {/*this.setState({*/}
+                            {/*languageSelected: e.target.value*/}
+                            {/*}, () => {*/}
+                            {/*localStorage.setItem('languageForm', this.state.language);*/}
+                            {/*alert(this.state.languageSelected);*/}
+                            {/*window.location.reload();*/}
+                            {/*});*/}
 
-                                {/*alert("Alert");*/}
+                            {/*alert("Alert");*/}
                             {/*}}>*/}
-                                {/*<option value="es">Spanish</option>*/}
-                                {/*<option value="en">English</option>*/}
+                            {/*<option value="es">Spanish</option>*/}
+                            {/*<option value="en">English</option>*/}
                             {/*</select>*/}
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
