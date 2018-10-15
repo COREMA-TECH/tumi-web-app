@@ -13,8 +13,10 @@
 
 // Bootstrap
 @import "base/simple-grid";
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
 
 //Base
+@import "base/bootstrap_modify.scss";
 @import "base/buttons";
 @import "base/forms";
 @import "base/helpers";
@@ -32,6 +34,7 @@
 @import "default/contract";
 @import "default/main-section";
 @import "default/preferences";
+@import "default/tabs";
 @import "default/footer";
 
 //Apply

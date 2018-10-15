@@ -1,0 +1,41 @@
+.Tabs {
+    &-wrapper {
+        background: $white;
+        border-bottom: solid 1px $tab-border-selected !important;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 100%;
+        &Fluid {
+            background: darken($color: $gray, $amount: 0) !important;
+            border-radius: $border-radius-standar $border-radius-standar 0 0 !important;
+        }
+    }
+}
+
+.Tab {
+    &-item {
+        background-color: $white;
+        &:focus {
+            outline: none;
+        }
+    }
+    &-selected {
+        background-color: $bg-tab-selected !important;
+        border-radius: $border-radius-standar $border-radius-standar 0 0 !important;
+        border: solid 1px $tab-border-selected !important;
+        border-bottom: 0 !important;
+        &Border {
+            background-color: $bg-tab-selected !important;
+            bottom: -2px !important;
+        }
+    }
+}
+
+.TabSelected {
+    &-container {
+        background-color: $bg-tab-selected;
+        width: 100%;
+    }
+}

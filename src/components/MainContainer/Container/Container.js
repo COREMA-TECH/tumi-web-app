@@ -19,7 +19,7 @@ import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo
 class Container extends Component {
 	render() {
 		return (
-			<div className="container">
+			<div className="container-fluid">
 				<Route exact path="/home/application/info" component={ApplicationInfo} />
 				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
 				<Route exact path="/home/contract/add" component={Contract} />
