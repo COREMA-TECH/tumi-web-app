@@ -70,7 +70,7 @@ class NonDisclosure extends Component {
                                     )
                                 }
                             </div>
-                            <div className="row"></div>
+                            <div className="row pdf-container"></div>
                         </div>
                     </div>
                 </div>

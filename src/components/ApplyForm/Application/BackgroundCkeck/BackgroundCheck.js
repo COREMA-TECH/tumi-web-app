@@ -78,7 +78,7 @@ class BackgroundCheck extends Component {
 
     componentWillMount(){
         // FIXME: pass dynamic id
-        this.getBackgroundCheckById(8)
+        //this.getBackgroundCheckById(8)
     }
 
     removeInvalidElementStyles = () => {
