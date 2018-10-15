@@ -56,7 +56,7 @@ class ConductCode extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Non-Disclosure</span>
+                                <span className="applicant-card__title">Conduct Code</span>
                                 {
                                     this.state.editing ? (
                                         ''

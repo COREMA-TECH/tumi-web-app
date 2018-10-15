@@ -120,6 +120,11 @@ class CustomizedTabs extends React.Component {
                         classes={{root: classes.tabRoot, selected: classes.tabSelected}}
                         label="Non-Disclosure"
                     />
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="Conduct Code"
+                    />
                 </Tabs>
                 {getTabContent(value)}
             </div>
