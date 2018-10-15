@@ -28,6 +28,9 @@
     overflow: hidden;
 
     transition: all .500s;
+
+    width: 50%;
+    margin: auto;
 }
 
 .bottom-signature-options {

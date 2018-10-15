@@ -793,7 +793,10 @@ class Application extends Component {
                                         <button
                                             className="applicant-card__cancel-button"
                                             onClick={
-                                                () => {
+                                                (e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+
                                                     this.getApplicationById(this.props.applicationId);
                                                 }
                                             }

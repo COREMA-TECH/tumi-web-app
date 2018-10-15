@@ -3,6 +3,9 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
+import withApollo from "react-apollo/withApollo";
+import {ADD_NON_DISCLOSURE} from "./Mutations";
+import withGlobalContent from "../../../Generic/Global";
 
 class NonDisclosure extends Component {
     constructor(props) {
@@ -19,6 +22,34 @@ class NonDisclosure extends Component {
             signature: value,
             openSignature: false
         });
+    };
+
+    insertNonDisclosure = (item) => {
+        this.props.client
+            .query({
+                query: ADD_NON_DISCLOSURE,
+                variables: {
+                    disclosures: item
+                }
+            })
+            .then(({data}) => {
+                // Show a snackbar with a success message
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully saved!',
+                    'bottom',
+                    'right'
+                );
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to save Non-Disclosure information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
     };
 
 
@@ -82,4 +113,4 @@ class NonDisclosure extends Component {
     }
 }
 
-export default NonDisclosure;
+export default withApollo(withGlobalContent(NonDisclosure));
