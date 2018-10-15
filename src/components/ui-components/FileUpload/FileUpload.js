@@ -3,14 +3,15 @@ import firebase from 'firebase';
 import './index.css';
 import CircularProgress from '../../material-ui/CircularProgress';
 
+import IconButton from '@material-ui/core/IconButton';
+import Visibility from '@material-ui/icons/Visibility';
+
 class FileUpload extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
 			uploadValue: 0,
-			fileURL: '',
-			fileName: '',
 			loading: false
 		};
 
@@ -55,10 +56,10 @@ class FileUpload extends Component {
 						},
 						() => {
 							this.setState({
-								fileName: file.name,
+								//fileName: file.name,
 								loading: false
 							});
-							this.props.updateURL(this.state.fileURL);
+							this.props.updateURL(this.state.fileURL, file.name);
 						}
 					);
 				});
@@ -66,22 +67,24 @@ class FileUpload extends Component {
 		);
 	}
 
-	componentWillMount() {
-		if (this.props.fileNameUploaded) {
-			this.setState({
-				fileName: this.props.fileNameUploaded
-			});
-		}
-	}
-
 	render() {
 		return (
 			<div className="upload-file">
+				<IconButton
+					color="primary"
+					href={!this.props.disabled && this.props.url}
+					disabled={this.props.disabled}
+					target="_blank"
+					component="button"
+				>
+					<Visibility />
+				</IconButton>
+
 				<input
 					className="input-name-file"
 					disabled={this.props.disabled}
 					type="text"
-					value={this.state.fileName}
+					value={this.props.fileName}
 					onChange={(e) => {}}
 				/>
 				{this.state.loading ? (
@@ -93,6 +96,7 @@ class FileUpload extends Component {
 						<button className="btn btn-file" disabled={this.props.disabled}>
 							<span className="icon-attach" />
 						</button>
+
 						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
 					</div>
 				)}

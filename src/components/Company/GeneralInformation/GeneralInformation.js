@@ -133,8 +133,6 @@ class GeneralInformation extends Component {
 				Id_Company
 				BusinessType
 				Name
-				Other_Name
-				Other01_Name
 				Rooms
 				Description
 				Start_Week
@@ -159,11 +157,21 @@ class GeneralInformation extends Component {
 				Primary_Email
 				Phone_Number
 				Suite
+				Contract_URL
+				Contract_File
+				Insurance_URL
+				Insurance_File
+				Other_URL
+				Other_Name
+				Other_File
+				Other01_URL
+				Other01_Name
+				Other01_File
 			}
 		}
 	`;
 
-	loadCompany = (func = () => { }) => {
+	loadCompany = (func = () => {}) => {
 		this.setState(
 			{
 				loading: true
@@ -188,8 +196,21 @@ class GeneralInformation extends Component {
 									endWeek: item.End_Week,
 									address: item.Location.trim(),
 									optionalAddress: item.Location01.trim(),
+
+									contractURL: item.Contract_URL ? item.Contract_URL.trim() : '',
+									contractFile: item.Contract_File ? item.Contract_File.trim() : '',
+
+									insuranceURL: item.Insurance_URL ? item.Insurance_URL.trim() : '',
+									insuranceFile: item.Insurance_File ? item.Insurance_File.trim() : '',
+
+									otherURL: item.Other_URL ? item.Other_URL.trim() : '',
 									otherName: item.Other_Name ? item.Other_Name.trim() : '',
-									otherName1: item.Other01_Name ? item.Other01_Name.trim() : '',
+									otherFile: item.Other_File ? item.Other_File.trim() : '',
+
+									other01URL: item.Other01_URL ? item.Other01_URL.trim() : '',
+									other01Name: item.Other01_Name ? item.Other01_Name.trim() : '',
+									other01File: item.Other01_File ? item.Other01_File.trim() : '',
+
 									rooms: item.Rooms ? item.Rooms.toString().trim() : '',
 									country: item.Country,
 									state: item.State,
@@ -234,7 +255,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => { }) => {
+	loadCompanyProperties = (func = () => {}) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -348,8 +369,7 @@ class GeneralInformation extends Component {
 						variables: {
 							input: {
 								Id: 0,
-								Other_Name: `'${this.state.otherName}'`,
-								Other01_Name: `'${this.state.otherName1}'`,
+
 								Rooms: 0,
 								Code: `'${this.state.Code}'`,
 								Code01: `'${this.state.Code}'`,
@@ -380,10 +400,21 @@ class GeneralInformation extends Component {
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
 								Start_Date: `'2018-08-14'`,
+
 								Contract_URL: `'${this.state.contractURL}'`,
-								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Contract_File: `'${this.state.contractFile}'`,
+
+								Insurance_URL: `'${this.state.insuranceURL}'`,
+								Insurance_File: `'${this.state.insuranceFile}'`,
+
 								Other_URL: `'${this.state.otherURL}'`,
+								Other_Name: `'${this.state.otherName}'`,
+								Other_File: `'${this.state.otherFile}'`,
+
 								Other01_URL: `'${this.state.other01URL}'`,
+								Other01_Name: `'${this.state.other01Name}'`,
+								Other01_File: `'${this.state.other01File}'`,
+
 								Suite: `'${this.state.suite}'`,
 								Contract_Status: "'C'"
 							}
@@ -444,8 +475,6 @@ class GeneralInformation extends Component {
 						variables: {
 							input: {
 								Id: companyId,
-								Other_Name: `'${this.state.otherName}'`,
-								Other01_Name: `'${this.state.otherName1}'`,
 								Rooms: 0,
 								Code: `'${this.state.Code}'`,
 								Code01: `'${this.state.Code}'`,
@@ -477,12 +506,23 @@ class GeneralInformation extends Component {
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
 								Start_Date: `'2018-08-14'`,
-								Contract_URL: `'${this.state.contractURL}'`,
-								Insurace_URL: `'${this.state.insuranceURL}'`,
-								Other_URL: `'${this.state.otherURL}'`,
-								Other01_URL: `'${this.state.other01URL}'`,
+
 								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'"
+								Contract_Status: "'C'",
+
+								Contract_URL: `'${this.state.contractURL}'`,
+								Contract_File: `'${this.state.contractFile}'`,
+
+								Insurance_URL: `'${this.state.insuranceURL}'`,
+								Insurance_File: `'${this.state.insuranceFile}'`,
+
+								Other_URL: `'${this.state.otherURL}'`,
+								Other_Name: `'${this.state.otherName}'`,
+								Other_File: `'${this.state.otherFile}'`,
+
+								Other01_URL: `'${this.state.other01URL}'`,
+								Other01_Name: `'${this.state.other01Name}'`,
+								Other01_File: `'${this.state.other01File}'`
 							}
 						}
 					})
@@ -506,7 +546,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => { }) => {
+	loadCountries = (func = () => {}) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -544,7 +584,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => { }) => {
+	loadStates = (func = () => {}) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -586,7 +626,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => { }) => {
+	loadCities = (func = () => {}) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -700,8 +740,7 @@ class GeneralInformation extends Component {
 			completedInput: false,
 			loading: false,
 			name: '',
-			otherName: '',
-			otherName1: '',
+
 			legalName: '',
 			description: '',
 			location: '',
@@ -749,9 +788,19 @@ class GeneralInformation extends Component {
 			loadingCompanyProperties: false,
 
 			contractURL: '',
+			contractFile: '',
+
 			insuranceURL: '',
+			insuranceFile: '',
+
 			otherURL: '',
+			otherName: '',
+			otherFile: '',
+
 			other01URL: '',
+			other01Name: '',
+			other01File: '',
+
 			loadingUpdate: false,
 			indexView: 0, //Loading
 			errorMessage: ''
@@ -986,7 +1035,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -1100,8 +1149,8 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 				<div className="general-information__content">
 					<div className="card-form-row">
 						<ImageUpload
@@ -1311,23 +1360,29 @@ class GeneralInformation extends Component {
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Contract</span>
 								<FileUpload
-									updateURL={(url) => {
+									updateURL={(url, fileName) => {
 										this.setState({
-											contractURL: url
+											contractURL: url,
+											contractFile: fileName
 										});
 									}}
 									disabled={!this.props.showStepper}
+									url={this.state.contractURL}
+									fileName={this.state.contractFile}
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
 								<span className="primary">Insurance</span>
 								<FileUpload
-									updateURL={(url) => {
+									updateURL={(url, fileName) => {
 										this.setState({
-											insuranceURL: url
+											insuranceURL: url,
+											insuranceFile: fileName
 										});
 									}}
 									disabled={!this.props.showStepper}
+									url={this.state.insuranceURL}
+									fileName={this.state.insuranceFile}
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
@@ -1343,12 +1398,15 @@ class GeneralInformation extends Component {
 									disabled={!this.props.showStepper}
 								/>
 								<FileUpload
-									updateURL={(url) => {
+									updateURL={(url, fileName) => {
 										this.setState({
-											otherURL: url
+											otherURL: url,
+											otherFile: fileName
 										});
 									}}
 									disabled={!this.props.showStepper}
+									url={this.state.otherURL}
+									fileName={this.state.otherFile}
 								/>
 							</div>
 							<div className="card-form-row card-form-row--center">
@@ -1364,12 +1422,15 @@ class GeneralInformation extends Component {
 									disabled={!this.props.showStepper}
 								/>
 								<FileUpload
-									updateURL={(url) => {
+									updateURL={(url, fileName) => {
 										this.setState({
-											other01URL: url
+											other01URL: url,
+											other01File: fileName
 										});
 									}}
 									disabled={!this.props.showStepper}
+									url={this.state.other01URL}
+									fileName={this.state.other01File}
 								/>
 							</div>
 						</div>
@@ -1457,8 +1518,8 @@ class GeneralInformation extends Component {
 						)}
 					</div>
 				) : (
-						''
-					)}
+					''
+				)}
 
 				<Dialog
 					open={this.state.open}
@@ -1489,15 +1550,15 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-								//Si el click no es en esa property : pasar el Id en nulo
-								//para que no cargue niguna información relacionada con ese Id
-								<TabsInDialog
-									idCompany={this.props.idCompany}
-									Markup={this.state.rate}
-									handleClose={this.handleClose}
-									handleOpenSnackbar={this.props.handleOpenSnackbar}
-								/>
-							)}
+							//Si el click no es en esa property : pasar el Id en nulo
+							//para que no cargue niguna información relacionada con ese Id
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								Markup={this.state.rate}
+								handleClose={this.handleClose}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
+						)}
 					</DialogContent>
 				</Dialog>
 			</div>

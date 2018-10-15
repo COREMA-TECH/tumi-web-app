@@ -104,7 +104,7 @@ class SimpleDialog extends Component {
                         ImageURL: `''`,
                         Start_Date: "'2018-08-14'",
                         Contract_URL: "'firebase url'",
-                        Insurace_URL: "'firebase url'",
+                        Insurance_URL: "'firebase url'",
                         Other_URL: "'firebase url'",
                         Other01_URL: "'firebase url'",
                         Suite: parseInt(10),
