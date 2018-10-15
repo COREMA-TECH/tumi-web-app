@@ -10,3 +10,14 @@ export const ADD_BACKGROUND_CHECK = gql`
         }
     }
 `;
+
+/**
+ * Mutation to update background check information
+ */
+export const UPDATE_BACKGROUND_CHECK = gql`
+    mutation updateBackgroundCheck($backgroundCheck: inputUpdateApplicantBackgroundCheck) {
+        updateBackgroundCheck(backgroundCheck: $backgroundCheck) {
+            id
+        }
+    }
+`;

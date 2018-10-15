@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './index.css';
 import withApollo from "react-apollo/withApollo";
-import {ADD_BACKGROUND_CHECK} from "./Mutations";
+import {ADD_BACKGROUND_CHECK, UPDATE_BACKGROUND_CHECK} from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import {GET_STATES_QUERY} from "../../Queries";
 import SelectNothingToDisplay
@@ -21,6 +21,7 @@ class BackgroundCheck extends Component {
         super(props);
 
         this.state = {
+            id: null,
             vehicleReportRequired: false,
             driverLicenseNumber: '',
             commercialDriverLicense: false,
@@ -51,13 +52,15 @@ class BackgroundCheck extends Component {
                     query: GET_APPLICATION_CHECK_ID,
                     variables: {
                         id: id
-                    }
+                    },
+                    fetchPolicy: 'no-cache'
                 })
                 .then(({data}) => {
 
                     if (data.applications[0].backgroundCheck !== null) {
                         this.setState({
                             loading: false,
+                            id: data.applications[0].backgroundCheck.id,
                             vehicleReportRequired: data.applications[0].backgroundCheck.vehicleReportRequired,
                             driverLicenseNumber: data.applications[0].backgroundCheck.driverLicenseNumber,
                             commercialDriverLicense: data.applications[0].backgroundCheck.commercialDriverLicense,
@@ -87,19 +90,8 @@ class BackgroundCheck extends Component {
                         'bottom',
                         'right'
                     );
-
-
                 })
         })
-    };
-
-    removeInvalidElementStyles = () => {
-        let form = document.getElementById("background-check-form").elements;
-
-        form.map(item => {
-            item.classList.remove('invalid-apply-form');
-            console.log("Item")
-        });
     };
 
     insertBackgroundCheck = (item) => {
@@ -116,7 +108,7 @@ class BackgroundCheck extends Component {
                 .then(data => {
                     //Reset the form
                     document.getElementById("background-check-form").reset();
-                    
+
                     this.setState({
                         accept: false,
                         signature: '',
@@ -142,6 +134,58 @@ class BackgroundCheck extends Component {
                     );
 
                     alert(error);
+
+                    this.setState({
+                        loading: false
+                    });
+                })
+        });
+    };
+
+    /**
+     * To UPDATE a background check by id
+     * @param item with background check object
+     */
+    updateBackgroundCheck = (item) => {
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .mutate({
+                    mutation: UPDATE_BACKGROUND_CHECK,
+                    variables: {
+                        backgroundCheck: item
+                    }
+                })
+                .then(data => {
+                    //Reset the form
+                    document.getElementById("background-check-form").reset();
+
+                    this.setState({
+                        accept: false,
+                        signature: '',
+                        loading: false,
+                        editing: false
+                    });
+
+                    this.getBackgroundCheckById(this.props.applicationId);
+
+                    // Show a snackbar with a success message
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Successfully updated!',
+                        'bottom',
+                        'right'
+                    );
+                })
+                .catch(error => {
+                    // If there's an error show a snackbar with a error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to insert background check information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
 
                     this.setState({
                         loading: false
@@ -181,10 +225,11 @@ class BackgroundCheck extends Component {
         };
 
         // To insert background check
-        if(!this.state.loadedBackgroundCheckById) {
+        if(this.state.id === null) {
             this.insertBackgroundCheck(backgroundCheckItem);
         } else {
-            alert("Update");
+            backgroundCheckItem.id = this.state.id;
+            this.updateBackgroundCheck(backgroundCheckItem);
         }
     };
 

@@ -7,6 +7,8 @@ import BackgroundCheck from "./BackgroundCkeck/BackgroundCheck";
 import NonDisclosure from "./NonDisclosure/NonDisclosure";
 import ApplicationInfo from "./ApplicationInfo";
 import ConductCode from "./ConductCode/ConductCode";
+import AntiHarassment from "./AntiHarassment/AntiHarassment";
+import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
 
 const styles = theme => ({
     root: {
@@ -93,6 +95,10 @@ class CustomizedTabs extends React.Component {
                     return <NonDisclosure/>;
                 case 3:
                     return <ConductCode/>;
+                case 4:
+                    return <AntiHarassment/>;
+                case 5:
+                    return <WorkerCompensation/>;
                 default:
                     return 'Unknown step';
             }
@@ -124,6 +130,16 @@ class CustomizedTabs extends React.Component {
                         disableRipple
                         classes={{root: classes.tabRoot, selected: classes.tabSelected}}
                         label="Conduct Code"
+                    />
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="Anti-Harassment"
+                    />
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="Worker's Compensation"
                     />
                 </Tabs>
                 {getTabContent(value)}
