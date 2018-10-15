@@ -12,6 +12,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
+import {GET_BACKGROUND_CHECK_INFO} from "./Queries";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -34,6 +35,61 @@ class BackgroundCheck extends Component {
         }
     }
 
+    /**
+     * To get background check info using id
+     */
+    getBackgroundCheckById = (id) => {
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_BACKGROUND_CHECK_INFO,
+                    variables: {
+                        id: id
+                    }
+                })
+                .then(({data}) => {
+                    this.setState({
+                        loading: false,
+                        vehicleReportRequired: data.applicantBackgroundCheck.vehicleReportRequired,
+                        driverLicenseNumber: data.applicantBackgroundCheck.driverLicenseNumber,
+                        licenseState: data.applicantBackgroundCheck.licenseState,
+                        licenseExpiration: data.applicantBackgroundCheck.licenseExpiration,
+                        signature: data.applicantBackgroundCheck.signature,
+                        date: data.applicantBackgroundCheck.date.substring(0, 10)
+                    });
+                })
+                .catch(error => {
+                    this.setState({
+                        loading: false
+                    });
+
+                    // If there's an error show a snackbar with a error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to show background check information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                })
+        })
+    };
+
+    componentWillMount(){
+        // FIXME: pass dynamic id
+        this.getBackgroundCheckById(8)
+    }
+
+    removeInvalidElementStyles = () => {
+        let form = document.getElementById("background-check-form").elements;
+
+        form.map(item => {
+            item.classList.remove('invalid-apply-form');
+            console.log("Item")
+        });
+    };
+
     insertBackgroundCheck = (item) => {
         this.setState({
             loading: true
@@ -48,6 +104,8 @@ class BackgroundCheck extends Component {
                 .then(data => {
                     //Reset the form
                     document.getElementById("background-check-form").reset();
+                    this.removeInvalidElementStyles();
+
                     this.setState({
                         accept: false,
                         signature: '',
@@ -150,8 +208,7 @@ class BackgroundCheck extends Component {
         return (
             <div className="Apply-container--application">
                 <div className="row">
-                    <div className="col-2"></div>
-                    <div className="col-10">
+                    <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Background Check</span>
