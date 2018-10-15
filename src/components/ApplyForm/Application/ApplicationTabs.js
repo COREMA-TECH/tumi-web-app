@@ -88,7 +88,7 @@ class CustomizedTabs extends React.Component {
                 case 0:
                     return <ApplicationInfo applicationId={this.state.applicationId}/>;
                 case 1:
-                    return <BackgroundCheck/>;
+                    return <BackgroundCheck applicationId={this.state.applicationId}/>;
                 case 2:
                     return <NonDisclosure/>;
                 case 3:

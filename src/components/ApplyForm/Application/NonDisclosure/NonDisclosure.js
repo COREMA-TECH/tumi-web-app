@@ -13,6 +13,11 @@ class NonDisclosure extends Component {
 
         this.state = {
             signature: null,
+            content: '',
+            date: '',
+            applicantName: '',
+            ApplicationId: 0,
+
             openSignature: false
         }
     }
@@ -22,6 +27,16 @@ class NonDisclosure extends Component {
             signature: value,
             openSignature: false
         });
+
+        let nonDisclosureObject = {
+            signature: '',
+            content: '',
+            date: '',
+            applicantName: '',
+            ApplicationId: 0
+        };
+
+        this.insertNonDisclosure(nonDisclosureObject)
     };
 
     insertNonDisclosure = (item) => {

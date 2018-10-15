@@ -4,7 +4,7 @@
 
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
 
     border-top: .5px solid #eeeeee;
 }
@@ -96,4 +96,44 @@
     background: rgba(200, 200, 200, 0.50);
     z-index: 100;
     border-radius: 5px;
+}
+
+.applicant-card__edit-button,
+.applicant-card__save-button,
+.applicant-card__cancel-button {
+    padding: .3em 1.5em;
+    border-radius: 5px;
+    color: #0092BD;
+    border: 1px solid #0092BD;
+    outline: none;
+
+    transition: all .450s;
+    font-size: .9em;
+    font-weight: 100 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+.applicant-card__save-button {
+    background: #0092BD;
+    color: #ffffff;
+    font-size: 1em;
+    margin: 5px;
+}
+
+.applicant-card__cancel-button {
+    background: #eeeeee;
+    color: #707070;
+    border: 1px solid #eeeeee;
+    font-size: 1em;
+    margin: 5px;
+}
+
+.background-check-form input:disabled,
+.background-check-form select:disabled,
+.background-check-form textarea:disabled {
+    border: 1px solid transparent !important;
+    border-bottom: 1px solid #efefef !important;
+    color: #777777;
+
+    background: transparent !important;
 }
