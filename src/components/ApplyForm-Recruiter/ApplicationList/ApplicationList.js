@@ -41,7 +41,8 @@ class ApplicationList extends Component {
      */
 	redirectToCreateApplication = () => {
 		this.props.history.push({
-			pathname: '/employment-application',
+			//pathname: '/employment-application',
+			pathname: '/home/application/Form',
 			state: { ApplicationId: 0 }
 		});
 	};
@@ -85,7 +86,7 @@ class ApplicationList extends Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Application Deleted!');
-						this.setState({ opendialog: false, loadingConfirm: false }, () => {});
+						this.setState({ opendialog: false, loadingConfirm: false }, () => { });
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Position and Rates: ' + error);
@@ -123,7 +124,7 @@ class ApplicationList extends Component {
 		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[ classes.root, 'company-list__header' ].join(' ')}>
+			<div className={[classes.root, 'company-list__header'].join(' ')}>
 				<Grid container spacing={24}>
 					<Grid item xs={12} sm={6}>
 						<div className="search-container">
