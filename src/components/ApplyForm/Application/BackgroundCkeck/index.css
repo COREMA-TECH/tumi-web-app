@@ -19,11 +19,43 @@
     justify-content: center;
     align-items: center;
 
-    border-bottom: 1px solid #999999;
+    border: 1px solid #eeeeee;
+    background: #ffffff;
+    border-radius: 5px;
     padding-bottom: 10px;
+
+    position: relative;
+    overflow: hidden;
+
+    transition: all .500s;
 }
 
-signature-form-canvas {
+.bottom-signature-options {
+    display: flex;
+
+    width: 100%;
+    height: 0%;
+
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    background: rgba(0, 0, 0, 0.35);
+    color: #ffffff;
+    font-weight: 100;
+    cursor: pointer;
+
+    transition: all .150s;
+}
+
+.signature-form-section:hover .bottom-signature-options {
+    height: 30%;
+}
+
+.signature-form-canvas {
     width: 90%;
     height: 50px;
 }
@@ -44,4 +76,21 @@ signature-form-canvas {
 .privacy-policy-section a {
     color: #41afd7;
     text-decoration: underline #41afd7;
+}
+
+.card-loading {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(200, 200, 200, 0.50);
+    z-index: 100;
+    border-radius: 5px;
 }

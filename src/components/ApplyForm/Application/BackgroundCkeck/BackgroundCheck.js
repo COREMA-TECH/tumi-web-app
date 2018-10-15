@@ -11,6 +11,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
+import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -29,33 +30,52 @@ class BackgroundCheck extends Component {
 
             // signature dialog state property
             openSignature: false,
+            loading: false
         }
     }
 
     insertBackgroundCheck = (item) => {
-        this.props.client
-            .mutate({
-                mutation: ADD_BACKGROUND_CHECK,
-                variables: item
-            })
-            .then(data => {
-                // Show a snackbar with a success message
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Successfully created!',
-                    'bottom',
-                    'right'
-                );
-            })
-            .catch(error => {
-                // If there's an error show a snackbar with a error message
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error to insert background check information. Please, try again!',
-                    'bottom',
-                    'right'
-                );
-            })
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .mutate({
+                    mutation: ADD_BACKGROUND_CHECK,
+                    variables: {
+                        backgroundCheck: item
+                    }
+                })
+                .then(data => {
+                    //Reset the form
+                    document.getElementById("background-check-form").reset();
+                    this.setState({
+                        accept: false,
+                        signature: '',
+                        loading: false
+                    });
+
+                    // Show a snackbar with a success message
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Successfully created!',
+                        'bottom',
+                        'right'
+                    );
+                })
+                .catch(error => {
+                    // If there's an error show a snackbar with a error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to insert background check information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+
+                    this.setState({
+                        loading: false
+                    });
+                })
+        });
     };
 
     handleSignature = (value) => {
@@ -75,17 +95,17 @@ class BackgroundCheck extends Component {
         // Build the object with form information
         let backgroundCheckItem = {
             vehicleReportRequired: form.item(0).checked,
-            driverLicenseNumber: form.item(1).value,
-            licenseState: form.item(2).value,
-            licenseExpiration: form.item(3).value,
+            driverLicenseNumber: form.item(1).value.trim(),
             commercialDriverLicense: form.item(4).checked,
+            licenseState: form.item(2).value.trim(),
+            licenseExpiration: form.item(3).value.trim(),
             signature: this.state.signature,
 
             // TODO: Fix this static fields
-            content: '',
+            content: "".trim(),
             date: new Date().toISOString(),
-            applicantName: '',
-            ApplicationId: 17
+            applicantName: "".trim(),
+            ApplicationId: 21
         };
 
         // To insert background check
@@ -102,7 +122,12 @@ class BackgroundCheck extends Component {
                             onClose={() => {
                                 this.setState({
                                     openSignature: false,
-                                    accept: false
+                                }, () => {
+                                    if(this.state.signature === ''){
+                                        this.setState({
+                                            accept: false
+                                        })
+                                    }
                                 })
                             }}
                             aria-labelledby="form-dialog-title">
@@ -110,7 +135,8 @@ class BackgroundCheck extends Component {
                                 <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
                             </DialogTitle>
                             <DialogContent>
-                                <SignatureForm applicationId={this.state.applicationId} signatureValue={this.handleSignature}/>
+                                <SignatureForm applicationId={this.state.applicationId}
+                                               signatureValue={this.handleSignature}/>
                             </DialogContent>
                         </Dialog>
                     ) : (
@@ -133,7 +159,14 @@ class BackgroundCheck extends Component {
                             <div className="row">
                                 <form id="background-check-form" onSubmit={this.handleSubmit}>
                                     <div className="col-3"></div>
-                                    <div className="col-6 form-section-1">
+                                    <div className="col-6 form-section-1 loading-container">
+                                        {
+                                            this.state.loading ? (
+                                                <div className="card-loading">
+                                                    <CircularProgressLoading/>
+                                                </div>
+                                            ) : ''
+                                        }
                                         <div className="row">
                                             <div className="col-12">
                                                 <span className="primary applicant-card__label">
@@ -143,13 +176,6 @@ class BackgroundCheck extends Component {
                                                 <label className="switch">
                                                     <input
                                                         id="vehicleReportRequired"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                vehicleReportRequired: event.target.checked
-                                                            });
-                                                        }}
-                                                        checked={this.state.vehicleReportRequired}
-                                                        value={this.state.vehicleReportRequired}
                                                         type="checkbox"
                                                         className="form-control"
                                                         min="0"
@@ -192,13 +218,7 @@ class BackgroundCheck extends Component {
                                                                     name="licenseState"
                                                                     required
                                                                     className="form-control"
-                                                                    form="background-check-form"
-                                                                    onChange={(e) => {
-                                                                        this.setState({
-                                                                            licenseState: e.target.value
-                                                                        })
-                                                                    }}
-                                                                    value={this.state.licenseState}>
+                                                                    form="background-check-form">
                                                                     <option value="">Select a state</option>
                                                                     {data.getcatalogitem.map((item) => (
                                                                         <option value={item.Id}>{item.Name}</option>
@@ -235,13 +255,6 @@ class BackgroundCheck extends Component {
                                                 <label className="switch">
                                                     <input
                                                         id="commercialDriverLicense"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                commercialDriverLicense: event.target.checked
-                                                            });
-                                                        }}
-                                                        checked={this.state.commercialDriverLicense}
-                                                        value={this.state.commercialDriverLicense}
                                                         type="checkbox"
                                                         className="form-control"
                                                         min="0"
@@ -256,7 +269,14 @@ class BackgroundCheck extends Component {
                                                 this.state.signature !== '' ? (
                                                     <div className="col-12">
                                                         <div className="signature-form-section">
-                                                            <img src={this.state.signature} id="signature-form-canvas"></img>
+                                                            <img src={this.state.signature}
+                                                                 id="signature-form-canvas"></img>
+                                                            <div className="bottom-signature-options" onClick={() => {
+                                                                this.setState({
+                                                                    openSignature: true
+                                                                })
+                                                            }}>Sign Again
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 ) : (
@@ -272,7 +292,7 @@ class BackgroundCheck extends Component {
                                                                 accept: event.target.checked,
                                                                 openSignature: event.target.checked
                                                             }, () => {
-                                                                if(this.state.accept === false) {
+                                                                if (this.state.accept === false) {
                                                                     this.setState({
                                                                         signature: ''
                                                                     })
@@ -298,10 +318,7 @@ class BackgroundCheck extends Component {
                                             <br/>
                                             <button
                                                 className="applicant-card__edit-button"
-                                                type="submit"
-                                                onClick={() => {
-
-                                                }}>
+                                                type="submit">
                                                 {spanishActions[4].label}
                                             </button>
                                         </div>
