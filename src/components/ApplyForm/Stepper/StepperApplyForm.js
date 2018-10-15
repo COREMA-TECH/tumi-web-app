@@ -1010,7 +1010,7 @@ class VerticalLinearStepper extends Component {
                                             className="form-control"
                                         >
                                             <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
+                                            <option>Open Position</option>
                                             {data.getcatalogitem.map((item) => (
                                                 <option value={item.Id}>{item.Description}</option>
                                             ))}
