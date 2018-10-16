@@ -111,12 +111,12 @@ class VerticalLinearStepper extends Component {
                     return <Application applicationId={this.state.applicationId} />;
                 case 1:
                     return <Language applicationId={this.state.applicationId} />;
-                //case 2:
-                // return <Education applicationId={this.state.applicationId} />;
+                case 2:
+                    return <Education applicationId={this.state.applicationId} />;
                 case 2:
                     return <PreviousEmployment applicationId={this.state.applicationId} />;
-                // case 4:
-                //   return <MilitaryService applicationId={this.state.applicationId} />;
+                case 4:
+                    return <MilitaryService applicationId={this.state.applicationId} />;
                 case 3:
                     return <Skills applicationId={this.state.applicationId} />;
                 default:

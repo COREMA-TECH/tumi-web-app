@@ -1,25 +1,18 @@
 [
   {
-    "id": 1,
+    "id": 0,
     "label": "General Information"
   },
   {
-    "id": 2,
+    "id": 1,
     "label": "Languages"
   },
   {
-    "id": 3,
-    "label": "Education"
-  },
-  {
-    "id": 4,
+    "id": 2,
     "label": "Previous Employments"
-  },{
-    "id": 5,
-    "label": "Military Service"
   },
   {
-    "id": 6,
+    "id": 3,
     "label": "Skills"
   }
 ]

@@ -9,17 +9,10 @@
   },
   {
     "id": 3,
-    "label": "Educación"
+    "label": "Empleos Anteriores"
   },
   {
     "id": 4,
-    "label": "Empleos Anteriores"
-  },{
-    "id": 5,
-    "label": "Servicio Militar"
-  },
-  {
-    "id": 6,
     "label": "Habilidades"
   }
 ]

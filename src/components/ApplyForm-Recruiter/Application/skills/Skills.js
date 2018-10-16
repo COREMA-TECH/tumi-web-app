@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import withApollo from "react-apollo/withApollo";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import InputRange from "../../ui/InputRange/InputRange";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import {ADD_SKILL, REMOVE_APPLICANT_SKILL} from "../../Mutations";
-import {GET_APPLICATION_SKILLS_BY_ID} from "../../Queries";
+import { ADD_SKILL, REMOVE_APPLICANT_SKILL } from "../../Mutations";
+import { GET_APPLICATION_SKILLS_BY_ID } from "../../Queries";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 import SkillCard from "../../../ui-components/SkillCard/SkillCard";
@@ -40,7 +40,7 @@ class Skills extends Component {
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     // To close the skill dialog
@@ -64,7 +64,7 @@ class Skills extends Component {
                     },
                     fetchPolicy: 'no-cache'
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setState({
                         skills: data.applications[0].skills,
                         loading: false
@@ -149,7 +149,7 @@ class Skills extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.props.handleOpenSnackbar(
                     'success',
                     'Successfully removed',
@@ -236,12 +236,12 @@ class Skills extends Component {
                     }}
                     className="apply-form"
                 >
-                    <br/>
-                    <DialogContent style={{width: '450px'}}>
+                    <br />
+                    <DialogContent style={{ width: '450px' }}>
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">{skillsLabels[0].label}</span>
-                                <br/>
+                                <br />
                                 <input
                                     id="description"
                                     name="description"
@@ -255,11 +255,11 @@ class Skills extends Component {
                                 />
                             </div>
                         </div>
-                        <br/>
+                        <br />
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">{skillsLabels[1].label}</span>
-                                <br/>
+                                <br />
                                 <InputRange
                                     getPercentSkill={(percent) => {
                                         // update the percent skill
@@ -270,8 +270,8 @@ class Skills extends Component {
                                 />
                             </div>
                         </div>
-                        <br/>
-                        <br/>
+                        <br />
+                        <br />
                     </DialogContent>
                     <DialogActions>
                         <div className="applicant-card__footer">
@@ -299,17 +299,17 @@ class Skills extends Component {
                                         ''
                                     ) : (
 
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                editing: true,
-                                                open: true
-                                            })
-                                        }}>
-                                            {
-                                                <span> {spanishActions[0].label} <i className="fas fa-plus"/></span>
-                                            }
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    editing: true,
+                                                    open: true
+                                                })
+                                            }}>
+                                                {
+                                                    <span> {spanishActions[0].label} <i className="fas fa-plus" /></span>
+                                                }
+                                            </button>
+                                        )
                                 }
                             </div>
                             <div className="row">
@@ -320,12 +320,12 @@ class Skills extends Component {
                                                 renderSkillsSection()
                                             }
                                             <div className="circular-progress-container">
-                                                <CircularProgressLoading/>
+                                                <CircularProgressLoading />
                                             </div>
                                         </div>
                                     ) : (
-                                        renderSkillsSection()
-                                    )
+                                            renderSkillsSection()
+                                        )
                                 }
                             </div>
                             {/*{*/}
