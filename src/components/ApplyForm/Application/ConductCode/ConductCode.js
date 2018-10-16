@@ -3,7 +3,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-//import renderHTML from 'react-render-html';
+import renderHTML from 'react-render-html';
 //import html from '../../../../data/Package hire/CondeConduct';
 
 
@@ -76,7 +76,10 @@ class ConductCode extends Component {
                                 }
                             </div>
                             <div className="row pdf-container">
-
+                                <iframe src="http://localhost:3000/Package/CodeConduct.pdf"
+                                    marginwidth="0" marginheight="0" name="ventana_iframe" scrolling="no" border="0"
+                                    frameborder="0" width="100%" height="680">
+                                </iframe>
                             </div>
                         </div>
                     </div>
