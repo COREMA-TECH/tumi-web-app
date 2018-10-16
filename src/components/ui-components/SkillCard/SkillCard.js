@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
@@ -20,7 +20,7 @@ class SkillCard extends Component {
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     // To close the skill dialog
