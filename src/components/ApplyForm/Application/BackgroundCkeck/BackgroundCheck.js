@@ -170,6 +170,8 @@ class BackgroundCheck extends Component {
 
                     this.getBackgroundCheckById(this.props.applicationId);
 
+                    console.table(this.state);
+
                     // Show a snackbar with a success message
                     this.props.handleOpenSnackbar(
                         'success',
@@ -229,6 +231,7 @@ class BackgroundCheck extends Component {
             this.insertBackgroundCheck(backgroundCheckItem);
         } else {
             backgroundCheckItem.id = this.state.id;
+            console.table(backgroundCheckItem);
             this.updateBackgroundCheck(backgroundCheckItem);
         }
     };
@@ -520,6 +523,7 @@ class BackgroundCheck extends Component {
                                                         {spanishActions[2].label}
                                                     </button>
                                                     <button
+                                                        disabled={this.state.accept}
                                                         className="applicant-card__save-button"
                                                         type="submit">
                                                         {spanishActions[4].label}
