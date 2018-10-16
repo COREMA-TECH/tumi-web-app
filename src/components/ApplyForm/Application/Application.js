@@ -121,6 +121,7 @@ class Application extends Component {
                         homePhone: this.state.homePhone,
                         cellPhone: this.state.cellPhone,
                         socialSecurityNumber: this.state.socialSecurityNumber,
+                        birthDay: this.state.birthDay,
                         car: this.state.car,
                         typeOfId: parseInt(this.state.typeOfId),
                         expireDateId: this.state.expireDateId,

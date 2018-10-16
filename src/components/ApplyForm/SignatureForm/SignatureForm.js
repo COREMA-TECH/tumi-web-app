@@ -31,7 +31,7 @@ const styles = (theme) => ({
         justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
-        width: '85%'
+        width: '100%'
     },
 
     buttonSuccess: {
