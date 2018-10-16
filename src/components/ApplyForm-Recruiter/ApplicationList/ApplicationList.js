@@ -40,6 +40,7 @@ class ApplicationList extends Component {
      * This method redirect to create application component
      */
 	redirectToCreateApplication = () => {
+		localStorage.setItem('idApplication', 0);
 		this.props.history.push({
 			//pathname: '/employment-application',
 			pathname: '/home/application/Form',

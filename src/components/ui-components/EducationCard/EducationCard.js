@@ -63,7 +63,7 @@ class EducationCard extends Component {
                     }}>
                     <i className="fas fa-trash-alt"></i>
                 </span>
-                <div className="education-card__job-title applicant-card__label">{this.props.type}</div>
+                <div className="education-card__job-title">{this.props.type}</div>
                 <div className="education-card__company" title="Institution">
                     <i className="fas fa-university"></i><span> {this.props.educationName}</span>
                 </div>

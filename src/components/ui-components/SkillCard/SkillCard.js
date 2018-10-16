@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
@@ -20,7 +20,7 @@ class SkillCard extends Component {
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     // To close the skill dialog
@@ -56,17 +56,17 @@ class SkillCard extends Component {
 
         return (
             <div className="skill-card">
+
+                <div className="skill-card__description applicant-card__label">{this.props.skillDescription}</div>
+                <div className="skill-card__level">{this.props.skillLevel}%</div>
                 <span
                     className="skill-card__remove-button"
                     onClick={() => {
                         this.handleClickOpen();
                     }}
                 >
-                    <i className="fas fa-trash-alt"></i>
+                    <i className="far fa-times-circle"></i>
                 </span>
-                <div className="skill-card__description applicant-card__label ">{this.props.skillDescription}</div>
-                <div className="skill-card__level">{this.props.skillLevel}</div>
-
                 {
                     renderQuestionDialog()
                 }

@@ -106,18 +106,18 @@ class VerticalLinearStepper extends Component {
         const steps = getSteps();
         const { activeStep } = this.state;
 
+        console.log("render renderc ", this.state.applicationId);
+        if (this.state.applicationId == 0) { this.state.applicationId = localStorage.getItem('idApplication'); }
+
+
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
                     return <Application applicationId={this.state.applicationId} />;
                 case 1:
                     return <Language applicationId={this.state.applicationId} />;
-                //case 2:
-                //  return <Education applicationId={this.state.applicationId} />;
                 case 2:
                     return <PreviousEmployment applicationId={this.state.applicationId} />;
-                //case 4:
-                //  return <MilitaryService applicationId={this.state.applicationId} />;
                 case 3:
                     return <Skills applicationId={this.state.applicationId} />;
                 default:
@@ -140,11 +140,14 @@ class VerticalLinearStepper extends Component {
                                         <div
                                             key={label}
                                             onClick={() => {
+                                                console.log({ label }, "indice", { index })
                                                 this.setState({ activeStep: index })
+
                                             }}
                                             className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
                                         >
                                             <StepLabel className={[classes.stepper, 'stepper-label']}>
+                                                {console.log({ label }, "indice", { index })}
                                                 {label}
                                             </StepLabel>
                                         </div>

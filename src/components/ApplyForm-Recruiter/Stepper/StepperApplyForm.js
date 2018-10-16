@@ -72,11 +72,8 @@ function getSteps() {
     return [
         'Applicant Information',
         'Languages',
-        'Education',
         'Previous Employment',
-        'Military Service',
-        'Skills',
-        'Disclaimer'
+        'Skills'
     ];
 }
 
@@ -2413,7 +2410,7 @@ class VerticalLinearStepper extends Component {
             switch (step) {
                 case 0:
                     return renderlanguagesSection();
-                    // return renderApplicantInformationSection();
+                // return renderApplicantInformationSection();
                 case 1:
                     return renderlanguagesSection();
                 case 2:

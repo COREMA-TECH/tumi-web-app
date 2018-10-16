@@ -1010,7 +1010,7 @@ class VerticalLinearStepper extends Component {
                                             className="form-control"
                                         >
                                             <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
+                                            <option>Open Position</option>
                                             {data.getcatalogitem.map((item) => (
                                                 <option value={item.Id}>{item.Description}</option>
                                             ))}
@@ -2410,7 +2410,7 @@ class VerticalLinearStepper extends Component {
                                     <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
                                 </DialogTitle>
                                 <DialogContent>
-                                    <SignatureForm applicationId={this.state.applicationId}/>
+                                    <SignatureForm applicationId={this.state.applicationId} signatureValue={null}/>
                                 </DialogContent>
                             </Dialog>
                         ) : (
@@ -2429,7 +2429,6 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step, history) => {
             switch (step) {
                 case 0:
-                    // return <BackgroundCheck />;
                     return renderApplicantInformationSection();
                 case 1:
                     return renderlanguagesSection();
