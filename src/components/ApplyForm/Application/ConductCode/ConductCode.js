@@ -1,8 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
+//import renderHTML from 'react-render-html';
+//import html from '../../../../data/Package hire/CondeConduct';
+
 
 class ConductCode extends Component {
     constructor(props) {
@@ -13,6 +16,8 @@ class ConductCode extends Component {
             openSignature: false
         }
     }
+
+
 
     handleSignature = (value) => {
         this.setState({
@@ -44,7 +49,7 @@ class ConductCode extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                                       signatureValue={this.handleSignature}/>
+                            signatureValue={this.handleSignature} />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -61,16 +66,18 @@ class ConductCode extends Component {
                                     this.state.editing ? (
                                         ''
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                openSignature: true
-                                            })
-                                        }}>Sign <i className="far fa-edit"></i>
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    openSignature: true
+                                                })
+                                            }}>Sign <i className="far fa-edit"></i>
+                                            </button>
+                                        )
                                 }
                             </div>
-                            <div className="row pdf-container"></div>
+                            <div className="row pdf-container">
+
+                            </div>
                         </div>
                     </div>
                 </div>
