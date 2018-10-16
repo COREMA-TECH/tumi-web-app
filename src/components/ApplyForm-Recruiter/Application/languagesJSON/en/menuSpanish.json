@@ -1,18 +1,18 @@
 [
   {
-    "id": 0,
+    "id": 1,
     "label": "General Information"
   },
   {
-    "id": 1,
+    "id": 2,
     "label": "Languages"
   },
   {
-    "id": 2,
+    "id": 3,
     "label": "Previous Employments"
   },
   {
-    "id": 3,
+    "id": 4,
     "label": "Skills"
   }
 ]

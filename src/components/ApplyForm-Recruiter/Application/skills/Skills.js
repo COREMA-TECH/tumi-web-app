@@ -250,7 +250,8 @@ class Skills extends Component {
                                     required
                                     min="0"
                                     maxLength="20"
-                                    minLength="3"
+                                    minLength="1"
+                                    pattern=".*[^ ].*"
                                     form="skill-form"
                                 />
                             </div>
@@ -293,7 +294,7 @@ class Skills extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{menuSpanish[5].label}</span>
+                                <span className="applicant-card__title">{menuSpanish[3].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''

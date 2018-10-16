@@ -59,12 +59,21 @@ class GeneralInfoProperty extends Component {
 			validCity: '',
 			validStartWeek: '',
 			validEndWeek: '',
+
 			contractURL: '',
+			contractFile: '',
+
 			insuranceURL: '',
-			Other_Name: '',
-			Other01_Name: '',
+			insuranceFile: '',
+
 			otherURL: '',
+			otherName: '',
+			otherFile: '',
+
 			other01URL: '',
+			other01Name: '',
+			other01File: '',
+
 			phoneNumberValid: true,
 			faxNumberValid: true
 		};
@@ -141,9 +150,15 @@ class GeneralInfoProperty extends Component {
 				Phone_Number
 				Suite
 				Contract_URL
-				Insurace_URL
+				Contract_File
+				Insurance_URL
+				Insurance_File
+				Other_URL
 				Other_Name
+				Other_File
+				Other01_URL
 				Other01_Name
+				Other01_File
 				Rooms
 			}
 		}
@@ -206,12 +221,21 @@ class GeneralInfoProperty extends Component {
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
 								Start_Date: "'2018-08-14'",
+
 								Contract_URL: `'${this.state.contractURL}'`,
-								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Contract_File: `'${this.state.contractFile}'`,
+
+								Insurance_URL: `'${this.state.insuranceURL}'`,
+								Insurance_File: `'${this.state.insuranceFile}'`,
+
 								Other_URL: `'${this.state.otherURL}'`,
+								Other_Name: `'${this.state.otherName}'`,
+								Other_File: `'${this.state.otherFile}'`,
+
 								Other01_URL: `'${this.state.other01URL}'`,
-								Other_Name: `'${this.state.Other_Name}'`,
-								Other01_Name: `'${this.state.Other01_Name}'`,
+								Other01_Name: `'${this.state.other01Name}'`,
+								Other01_File: `'${this.state.other01File}'`,
+
 								Rooms: parseInt(this.state.room),
 								Suite: `'${this.state.suite}'`,
 								Contract_Status: "'C'"
@@ -247,7 +271,7 @@ class GeneralInfoProperty extends Component {
 
 	deleteCompany = (updatedId) => {
 		//Create the mutation using apollo global client
-		console.log('Delete Company ', updatedId);
+
 		this.setState(
 			{
 				linearProgress: true
@@ -336,12 +360,21 @@ class GeneralInfoProperty extends Component {
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
 								Start_Date: "'2018-08-14'",
+
 								Contract_URL: `'${this.state.contractURL}'`,
-								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Contract_File: `'${this.state.contractFile}'`,
+
+								Insurance_URL: `'${this.state.insuranceURL}'`,
+								Insurance_File: `'${this.state.insuranceFile}'`,
+
 								Other_URL: `'${this.state.otherURL}'`,
+								Other_Name: `'${this.state.otherName}'`,
+								Other_File: `'${this.state.otherFile}'`,
+
 								Other01_URL: `'${this.state.other01URL}'`,
-								Other_Name: `'${this.state.Other_Name}'`,
-								Other01_Name: `'${this.state.Other01_Name}'`,
+								Other01_Name: `'${this.state.other01Name}'`,
+								Other01_File: `'${this.state.other01File}'`,
+
 								Rooms: parseInt(this.state.room),
 								Suite: `'${this.state.suite}'`,
 								Contract_Status: "'C'"
@@ -515,12 +548,21 @@ class GeneralInfoProperty extends Component {
 								startDate: item.Start_Date.trim(),
 								active: item.IsActive,
 								suite: item.Suite,
-								contractURL: item.Contract_URL,
-								insuranceURL: item.Insurace_URL,
-								otherURL: item.Other_URL,
-								other01URL: item.Other01_URL,
-								Other_Name: item.Other_Name,
-								Other01_Name: item.Other01_Name,
+
+								contractURL: item.Contract_URL ? item.Contract_URL.trim() : '',
+								contractFile: item.Contract_File ? item.Contract_File.trim() : '',
+
+								insuranceURL: item.Insurance_URL ? item.Insurance_URL.trim() : '',
+								insuranceFile: item.Insurance_File ? item.Insurance_File.trim() : '',
+
+								otherURL: item.Other_URL ? item.Other_URL.trim() : '',
+								otherName: item.Other_Name ? item.Other_Name.trim() : '',
+								otherFile: item.Other_File ? item.Other_File.trim() : '',
+
+								other01URL: item.Other01_URL ? item.Other01_URL.trim() : '',
+								other01Name: item.Other01_Name ? item.Other01_Name.trim() : '',
+								other01File: item.Other01_File ? item.Other01_File.trim() : '',
+
 								room: item.Rooms,
 								avatar: item.ImageURL
 							});
@@ -557,22 +599,25 @@ class GeneralInfoProperty extends Component {
 			<Route
 				render={({ history }) => (
 					<form onSubmit={this.handleFormSubmit} noValidate>
-						<div className="options-company">
-							<button
-								disabled={false}
-								className="edit-company-button"
-								onClick={() => {
-									this.deleteCompany(this.props.idProperty);
+						{this.props.idProperty &&
+						this.props.idProperty > 0 && (
+							<div className="options-company">
+								<button
+									disabled={false}
+									className="edit-company-button"
+									onClick={() => {
+										this.deleteCompany(this.props.idProperty);
 
-									/*	history.push({
+										/*	history.push({
 											pathname: '/company/edit',
 											state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
 										});*/
-								}}
-							>
-								Delete Property
-							</button>
-						</div>
+									}}
+								>
+									Delete Property
+								</button>
+							</div>
+						)}
 						<div className="container container-small">
 							<div className="card-form-row">
 								<ImageUpload
@@ -932,12 +977,14 @@ class GeneralInfoProperty extends Component {
 											</div>
 											<div className="col-6">
 												<FileUpload
-													updateURL={(url) => {
+													updateURL={(url, fileName) => {
 														this.setState({
-															contractURL: url
+															contractURL: url,
+															contractFile: fileName
 														});
 													}}
-													fileNameUploaded={this.state.contractURL}
+													url={this.state.contractURL}
+													fileName={this.state.contractFile}
 												/>
 											</div>
 											<div className="col-6">
@@ -945,12 +992,14 @@ class GeneralInfoProperty extends Component {
 											</div>
 											<div className="col-6">
 												<FileUpload
-													updateURL={(url) => {
+													updateURL={(url, fileName) => {
 														this.setState({
-															insuranceURL: url
+															insuranceURL: url,
+															insuranceFile: fileName
 														});
 													}}
-													fileNameUploaded={this.state.insuranceURL}
+													url={this.state.insuranceURL}
+													fileName={this.state.insuranceFile}
 												/>
 											</div>
 											<div className="col-6">
@@ -968,12 +1017,14 @@ class GeneralInfoProperty extends Component {
 											</div>
 											<div className="col-6">
 												<FileUpload
-													updateURL={(url) => {
+													updateURL={(url, fileName) => {
 														this.setState({
-															otherURL: url
+															otherURL: url,
+															otherFile: fileName
 														});
 													}}
-													fileNameUploaded={this.state.otherURL}
+													url={this.state.otherURL}
+													fileName={this.state.otherFile}
 												/>
 											</div>
 											<div className="col-6">
@@ -991,12 +1042,14 @@ class GeneralInfoProperty extends Component {
 											</div>
 											<div className="col-6">
 												<FileUpload
-													updateURL={(url) => {
+													updateURL={(url, fileName) => {
 														this.setState({
-															other01URL: url
+															other01URL: url,
+															other01File: fileName
 														});
 													}}
-													fileNameUploaded={this.state.other01URL}
+													url={this.state.other01URL}
+													fileName={this.state.other01File}
 												/>
 											</div>
 										</div>

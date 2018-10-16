@@ -87,11 +87,8 @@ class VerticalLinearStepper extends Component {
     componentWillMount() {
         // Get id of the application and pass to the components
         try {
-            if (this.props.location.state.ApplicationId === undefined)
-                window.location.href = "/home/application";
-
             this.setState({
-                applicationId: this.props.location.state.ApplicationId
+                applicationId: this.props.applicationId
             });
 
             localStorage.setItem('languageForm', 'en');
@@ -113,11 +110,11 @@ class VerticalLinearStepper extends Component {
                     return <Language applicationId={this.state.applicationId} />;
                 case 2:
                     return <Education applicationId={this.state.applicationId} />;
-                case 2:
+                case 3:
                     return <PreviousEmployment applicationId={this.state.applicationId} />;
                 case 4:
                     return <MilitaryService applicationId={this.state.applicationId} />;
-                case 3:
+                case 5:
                     return <Skills applicationId={this.state.applicationId} />;
                 default:
                     return 'Unknown step';

@@ -15,12 +15,13 @@ import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationRecruiter from 'ApplyForm-Recruiter/ApplicationList/ApplicationList';
 import ApplicationInfo from 'ApplyForm/Application/ApplicationInfo';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
+import ApplicationTabs from "../../ApplyForm/Application/ApplicationTabs";
 
 class Container extends Component {
 	render() {
 		return (
 			<div className="container">
-				<Route exact path="/home/application/info" component={ApplicationInfo} />
+				<Route exact path="/home/application/info" component={ApplicationTabs} />
 				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
 				<Route exact path="/home/contract/add" component={Contract} />
 				<Route exact path="/home/contracts" component={MainContract} />

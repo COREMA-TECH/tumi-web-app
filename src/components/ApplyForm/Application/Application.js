@@ -658,7 +658,7 @@ class Application extends Component {
                                                                 }}
                                                                 value={this.state.positionApplyingFor}
                                                                 className="form-control"
-                                                            //  disabled={!this.state.editing}
+                                                                disabled={!this.state.editing}
                                                             >
                                                                 <option value="">Select a position</option>
                                                                 <option value="0">Open Position</option>
@@ -793,7 +793,10 @@ class Application extends Component {
                                         <button
                                             className="applicant-card__cancel-button"
                                             onClick={
-                                                () => {
+                                                (e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+
                                                     this.getApplicationById(this.props.applicationId);
                                                 }
                                             }

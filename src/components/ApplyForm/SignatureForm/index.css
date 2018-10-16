@@ -6,6 +6,11 @@
 	overflow: hidden;
 }
 
+#signatureMainContainer {
+	width: 70% !important;
+	margin: auto !important;
+}
+
 .signature-header {
 	margin-top: 15px;
 	width: 100%;
