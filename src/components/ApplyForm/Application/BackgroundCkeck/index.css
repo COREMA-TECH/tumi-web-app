@@ -60,7 +60,7 @@ img {
     margin: auto;
 }
 
-@media (max-width: 920px){
+@media (max-width: 920px) {
     .signature-form-section {
         width: 100%;
     }
@@ -136,12 +136,10 @@ img {
     outline: none;
 
     transition: all .450s;
-    font-size: .9em;
+    font-size: .8em;
     font-weight: 100 !important;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
-
-
 
 .applicant-card__save-button {
     background: #0092BD;

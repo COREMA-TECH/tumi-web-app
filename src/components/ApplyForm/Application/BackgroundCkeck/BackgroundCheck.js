@@ -526,15 +526,19 @@ class BackgroundCheck extends Component {
                                             ) : (
                                                 <div className="applicant-card__footer">
                                                     <br/>
-                                                    <button
-                                                        className="applicant-card__cancel-button"
-                                                        type="reset"
-                                                        onClick={() => {
-                                                            this.getBackgroundCheckById(this.props.applicationId);
-                                                        }}
-                                                    >
-                                                        {spanishActions[2].label}
-                                                    </button>
+                                                    {
+                                                        this.state.id !== null ? (
+                                                            <button
+                                                                className="applicant-card__cancel-button"
+                                                                type="reset"
+                                                                onClick={() => {
+                                                                    this.getBackgroundCheckById(this.props.applicationId);
+                                                                }}
+                                                            >
+                                                                {spanishActions[2].label}
+                                                            </button>
+                                                        ) : ('')
+                                                    }
                                                     <button
                                                         disabled={!this.state.accept}
                                                         className="applicant-card__save-button"

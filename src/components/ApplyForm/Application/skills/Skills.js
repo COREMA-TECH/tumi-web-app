@@ -176,26 +176,24 @@ class Skills extends Component {
         let renderSkillsSection = () => (
             <div className="">
                 <div className="row">
-                    <div className="col-12">
+                    <div className="row-skill">
                         {this.state.skills.map((skillItem) => (
-                            <div className="col-4">
-                                <SkillCard
-                                    skillDescription={skillItem.description}
-                                    skillLevel={skillItem.level}
-                                    removeSkill={() => {
-                                        this.setState((prevState) => ({
-                                            skills: this.state.skills.filter((_, i) => {
-                                                console.log(this.state.skills);
-                                                return _.uuid !== skillItem.uuid;
-                                            })
-                                        }), () => {
-                                            if (skillItem.id !== undefined) {
-                                                this.removeSkillById(skillItem.id)
-                                            }
-                                        });
-                                    }}
-                                />
-                            </div>
+                            <SkillCard
+                                skillDescription={skillItem.description}
+                                skillLevel={skillItem.level}
+                                removeSkill={() => {
+                                    this.setState((prevState) => ({
+                                        skills: this.state.skills.filter((_, i) => {
+                                            console.log(this.state.skills);
+                                            return _.uuid !== skillItem.uuid;
+                                        })
+                                    }), () => {
+                                        if (skillItem.id !== undefined) {
+                                            this.removeSkillById(skillItem.id)
+                                        }
+                                    });
+                                }}
+                            />
                         ))}
                     </div>
                     <div className="col-12">
@@ -237,7 +235,7 @@ class Skills extends Component {
                     className="apply-form"
                 >
                     <br/>
-                    <DialogContent style={{width: '450px'}}>
+                    <DialogContent>
                         <div className="row">
                             <div className="col-12">
                                 <span className="primary">{skillsLabels[0].label}</span>
