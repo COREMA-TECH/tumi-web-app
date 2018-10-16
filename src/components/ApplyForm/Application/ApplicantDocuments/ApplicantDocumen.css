@@ -53,13 +53,13 @@
 	border: 3.5px dashed lightgray;
 	position: relative;
 	height: 140px;
+	border-radius: 10px;
 }
 
 .image-dropping,
 .image-upload-wrap:hover {
-	background-color: lightgray;
+	background-color: rgba(141, 141, 141, 0.3);
 	border: dashed #ffffff;
-	opacity: 0.3;
 }
 
 .image-title-wrap {
@@ -71,6 +71,8 @@
 	display: flex;
 	width: 100%;
 	height: 100%;
+	justify-content: center;
+	align-items: center;
 }
 
 .drag-text div {
@@ -119,4 +121,17 @@
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
+}
+
+.image-show-wrap {
+	border-radius: 10px;
+	margin-top: 0px 0px;
+	border: 2px solid rgb(21, 187, 6);
+	position: relative;
+	height: 140px;
+}
+
+.image-show-wrap:hover {
+	border: 2px solid rgb(19, 182, 4);
+	background-color: rgba(228, 220, 220, 0.5);
 }

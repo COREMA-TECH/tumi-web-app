@@ -97,13 +97,7 @@ class ApplicantDocument extends Component {
 										{this.renderList()}
 										<div key={0} class="group-container">
 											<span class="group-title">Cargado</span>
-											<div class="image-upload-wrap">
-												<input
-													class="file-upload-input"
-													type="file"
-													onchange="readURL(this);"
-													accept="image/*"
-												/>
+											<div class="image-show-wrap">
 												<div class="drag-text">
 													<i class="far fa-file-alt fa-7x" />
 												</div>
