@@ -585,8 +585,8 @@ class Education extends Component {
         return (
             <div>
                 <div className="Apply-container--application">
-                        <div className="row">
-                        <div className="col-12">
+                        <div className="">
+                        <div className="">
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
                                     <span className="applicant-card__title">{menuSpanish[2].label}</span>

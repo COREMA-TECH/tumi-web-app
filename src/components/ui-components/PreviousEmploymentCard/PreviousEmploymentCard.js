@@ -63,7 +63,7 @@ class PreviousEmploymentCard extends Component {
                     }}>
                     <i className="fas fa-trash-alt"></i>
                 </span>
-                <div className="previous-employment-card__job-title applicant-card__label">{this.props.jobTitle}</div>
+                <div className="previous-employment-card__job-title">{this.props.jobTitle}</div>
                 <div className="previous-employment-card__company">
                     <i className="fas fa-building"></i><span> {this.props.company}</span>
                 </div>
