@@ -8,11 +8,13 @@ import SelectNothingToDisplay
     from "../../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import Dialog from "@material-ui/core/Dialog/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import {GET_APPLICATION_CHECK_ID} from "./Queries";
+import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
+import Button from "@material-ui/core/es/Button/Button";
+import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -227,7 +229,7 @@ class BackgroundCheck extends Component {
         };
 
         // To insert background check
-        if(this.state.id === null) {
+        if (this.state.id === null) {
             this.insertBackgroundCheck(backgroundCheckItem);
         } else {
             backgroundCheckItem.id = this.state.id;
@@ -242,12 +244,15 @@ class BackgroundCheck extends Component {
     }
 
     render() {
+        const {fullScreen} = this.props;
+
         let renderSignatureDialog = () => (
             <div>
                 {
                     this.state.accept ? (
                         <Dialog
                             open={this.state.openSignature}
+                            fullScreen={fullScreen}
                             onClose={() => {
                                 this.setState({
                                     openSignature: false,
@@ -260,9 +265,16 @@ class BackgroundCheck extends Component {
                                 })
                             }}
                             aria-labelledby="form-dialog-title">
-                            <DialogTitle>
-                                <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
-                            </DialogTitle>
+                            <Toolbar>
+                                <h1 className="primary apply-form-container__label">Please Sign</h1>
+                                <Button color="primary" onClick={() => {
+                                    this.setState({
+                                        openSignature: false,
+                                    });
+                                }}>
+                                    Close
+                                </Button>
+                            </Toolbar>
                             <DialogContent>
                                 <SignatureForm applicationId={this.state.applicationId}
                                                signatureValue={this.handleSignature}/>
@@ -297,9 +309,10 @@ class BackgroundCheck extends Component {
                                 }
                             </div>
                             <div className="row">
-                                <form id="background-check-form" className="background-check-form" onSubmit={this.handleSubmit}>
-                                    <div className="col-3"></div>
-                                    <div className="col-6 form-section-1 loading-container">
+                                <form id="background-check-form" className="background-check-form"
+                                      onSubmit={this.handleSubmit}>
+                                    <div className="col-2"></div>
+                                    <div className="col-8 form-section-1 loading-container">
                                         {
                                             this.state.loading ? (
                                                 <div className="card-loading">
@@ -546,4 +559,4 @@ class BackgroundCheck extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(BackgroundCheck));
+export default withApollo(withMobileDialog()(withGlobalContent(BackgroundCheck)));
