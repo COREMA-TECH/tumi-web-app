@@ -33,12 +33,6 @@
     margin: auto;
 }
 
-@media (max-width: 920px){
-    .signature-form-section {
-        width: 100%;
-    }
-}
-
 .bottom-signature-options {
     display: flex;
 
@@ -61,6 +55,29 @@
     transition: all .150s;
 }
 
+img {
+    width: 60%;
+    margin: auto;
+}
+
+@media (max-width: 920px){
+    .signature-form-section {
+        width: 100%;
+    }
+
+    img {
+        width: 100%;
+        margin: auto;
+    }
+
+    .bottom-signature-options {
+        height: 30%;
+
+        font-size: .9em;
+        border-top: 1px solid rgba(65, 175, 215, 0.1);
+    }
+}
+
 .signature-form-section:hover .bottom-signature-options {
     height: 30%;
 
@@ -69,7 +86,7 @@
 }
 
 .signature-form-canvas {
-    width: 90%;
+    width: 80%;
     height: 50px;
 }
 
@@ -154,8 +171,4 @@
 .applicant-card__save-button:disabled {
     background: rgba(0, 146, 189, 0.7);
     cursor: not-allowed;
-}
-
-img {
-    width: 100%;
 }

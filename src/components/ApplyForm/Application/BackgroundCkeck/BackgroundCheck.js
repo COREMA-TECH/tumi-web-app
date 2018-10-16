@@ -267,7 +267,7 @@ class BackgroundCheck extends Component {
                             aria-labelledby="form-dialog-title">
                             <Toolbar>
                                 <h1 className="primary apply-form-container__label">Please Sign</h1>
-                                <Button color="primary" onClick={() => {
+                                <Button color="default" onClick={() => {
                                     this.setState({
                                         openSignature: false,
                                     });

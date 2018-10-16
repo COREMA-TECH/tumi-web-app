@@ -7,7 +7,7 @@
 }
 
 #signatureMainContainer {
-	width: 70% !important;
+	width: 50% !important;
 	margin: auto !important;
 }
 
@@ -74,13 +74,15 @@
 .signature-footer {
 	display: flex;
 
-	width: 100%;
+	width: 70%;
 	justify-content: center;
 	padding-top: 10px;
 	padding-bottom: 10px;
 
 	border-top: 1px solid #eeeeee;
 	border-bottom: 1px solid #eeeeee;
+
+	margin:auto;
 }
 .signature-input {
 	margin-top: 15px;
