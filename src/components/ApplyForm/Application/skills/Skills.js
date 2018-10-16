@@ -269,8 +269,6 @@ class Skills extends Component {
                                 />
                             </div>
                         </div>
-                        <br/>
-                        <br/>
                     </DialogContent>
                     <DialogActions>
                         <div className="applicant-card__footer">
@@ -323,7 +321,11 @@ class Skills extends Component {
                                             </div>
                                         </div>
                                     ) : (
-                                        renderSkillsSection()
+                                        <div className="col-12">
+                                            {
+                                                renderSkillsSection()
+                                            }
+                                        </div>
                                     )
                                 }
                             </div>
