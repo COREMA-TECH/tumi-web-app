@@ -368,7 +368,7 @@ class PreviousEmployment extends Component {
                                 className="applicant-card__save-button"
                                 type="submit"
                                 form="form-previous-employment" >
-                                {spanishActions[1].label}
+                                {spanishActions[0].label}
                             </button>
                         </div>
                     </DialogActions>
