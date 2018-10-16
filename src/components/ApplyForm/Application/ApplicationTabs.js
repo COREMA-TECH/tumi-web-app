@@ -67,18 +67,18 @@ class CustomizedTabs extends React.Component {
     };
 
     componentWillMount() {
-        if (this.props.location.state.ApplicationId === undefined)
+        try {
+            if (this.props.location.state.ApplicationId === undefined)
+                window.location.href = "/home/application";
+
+            localStorage.setItem('languageForm', 'en');
+
+            this.setState({
+                applicationId: this.props.location.state.ApplicationId
+            });
+        } catch (error) {
             window.location.href = "/home/application";
-
-        this.setState({
-            applicationId: this.props.applicationId
-        });
-
-        localStorage.setItem('languageForm', 'en');
-
-        this.setState({
-            applicationId: this.props.location.state.ApplicationId
-        });
+        }
     }
 
     render() {
