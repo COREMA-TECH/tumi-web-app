@@ -137,8 +137,6 @@ class BackgroundCheck extends Component {
                         'right'
                     );
 
-                    alert(error);
-
                     this.setState({
                         loading: false
                     });

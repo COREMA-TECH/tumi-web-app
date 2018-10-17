@@ -5,7 +5,9 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
 import renderHTML from 'react-render-html';
-import {GET_APPLICANT_INFO} from "./Queries";
+import {GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO} from "./Queries";
+import {ADD_CONDUCT_CODE} from "./Mutations";
+import withGlobalContent from "../../../Generic/Global";
 
 //import html from '../../../../data/Package hire/CondeConduct';
 
@@ -15,10 +17,13 @@ class ConductCode extends Component {
         super(props);
 
         this.state = {
+            id: null,
             signature: '',
+            content: '',
+            date: '',
+            applicantName: '',
+            ApplicationId: this.props.applicationId,
             openSignature: false,
-            signedDate: '',
-            applicantName: ''
         }
     }
 
@@ -26,7 +31,9 @@ class ConductCode extends Component {
         this.setState({
             signature: value,
             openSignature: false,
-            signedDate: new Date().toISOString().substring(0, 10)
+            date: new Date().toISOString().substring(0, 10)
+        }, () => {
+            this.insertConductCode(this.state);
         });
     };
 
@@ -49,6 +56,77 @@ class ConductCode extends Component {
 
             })
     };
+
+    getConductCodeInformation = (id) => {
+        this.props.client
+            .query({
+                query: GET_CONDUCT_CODE_INFO,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                if (data.applications[0].conductCode !== null) {
+                    this.setState({
+                        id: data.applications[0].conductCode.id,
+                        signature: data.applications[0].conductCode.signature,
+                        content: data.applications[0].conductCode.content,
+                        applicantName: data.applications[0].conductCode.applicantName,
+                        date: data.applications[0].conductCode.date,
+                    });
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to get conduct code information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
+    insertConductCode = (item) => {
+        let conductObject = Object.assign({}, item);
+        delete conductObject.openSignature;
+        delete conductObject.id;
+        delete conductObject.accept;
+
+        this.props.client
+            .mutate({
+                mutation: ADD_CONDUCT_CODE,
+                variables: {
+                    conductCode: conductObject
+                }
+            })
+            .then(({data}) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully signed!',
+                    'bottom',
+                    'right'
+                );
+
+                this.setState({
+                    id: data.addConductCode[0].id
+                })
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to sign Conduct Code information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
+    componentWillMount(){
+        this.getApplicantInformation(this.props.applicationId);
+        this.getConductCodeInformation(this.props.applicationId);
+    }
 
     render() {
         let renderSignatureDialog = () => (
@@ -86,7 +164,7 @@ class ConductCode extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Conduct Code</span>
                                 {
-                                    this.state.editing ? (
+                                    this.state.id !== null ? (
                                         ''
                                     ) : (
                                         <button className="applicant-card__edit-button" onClick={() => {
@@ -129,7 +207,7 @@ class ConductCode extends Component {
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</p>
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</p>
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</p>
-                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u>{Signature}</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>{Date}</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printed Name: <u>{Name}</u></p>
+                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="300" height="300" src="` + this.state.signature + `" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` + this.state.date + `</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printed Name: <u>` + this.state.applicantName + `</u></p>
                                                 </div>
                                                 <p>&nbsp;</p>
                                 `)}
@@ -145,4 +223,4 @@ class ConductCode extends Component {
     }
 }
 
-export default withApollo(ConductCode);
+export default withApollo(withGlobalContent(ConductCode));
