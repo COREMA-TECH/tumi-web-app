@@ -359,7 +359,7 @@ class BackgroundCheck extends Component {
                                                     required
                                                     min="0"
                                                     pattern=".*[^ ].*"
-                                                    maxLength="100"
+                                                    maxLength="50"
                                                     minLength="2"
                                                     form="background-check-form"
                                                     onChange={(e) => {
