@@ -118,6 +118,28 @@ class ApplicantDocument extends Component {
 	componentWillMount() {
 		this.getTemplateDocuments();
 	}
+
+	renderStaticElement = () => {
+		return (
+			<div class="group-container ">
+				<span class="group-title">Other Document</span>
+				<div class="image-upload-wrap">
+					<input
+						class="file-upload-input"
+						type="file"
+						onChange={(e) => {
+							//this.handleUpload(e, item.Id);
+						}}
+						accept="image/*"
+					/>
+					<div class="drag-text">
+						<div>+</div>
+					</div>
+				</div>
+			</div>
+		);
+	};
+
 	renderTemplateList = () => {
 		if (!this.state.templates) return false;
 		return this.state.templates.map((item) => {
@@ -252,6 +274,7 @@ class ApplicantDocument extends Component {
 									</div>
 								) : (
 									<div class="main-group-container">
+										{this.renderStaticElement()}
 										{this.renderTemplateList()}
 										{this.renderDocumentList()}
 									</div>
