@@ -3,7 +3,7 @@ import './index.css';
 
 class SelectNothingToDisplay extends Component {
 	render() {
-		return <input type="text" value="Nothing to display" className={'input-form input-nothing'} disabled="true" />;
+		return <input type="text" value="Nothing to display" className={'form-control input-nothing'} disabled="true" />;
 	}
 }
 

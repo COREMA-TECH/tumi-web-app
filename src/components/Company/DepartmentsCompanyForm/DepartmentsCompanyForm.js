@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import DepartmentsTable from './DepartmentsTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import {withApollo} from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -15,7 +15,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import InputForm from 'ui-components/InputForm/InputForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
-import './index.css';
 
 const styles = (theme) => ({
     container: {
@@ -49,21 +48,12 @@ const styles = (theme) => ({
         display: 'flex'
         //justifyContent: 'space-around'
     },
-    button: {
-        margin: theme.spacing.unit
-    },
     input: {
         display: 'none'
     },
     wrapper: {
         margin: theme.spacing.unit,
         position: 'relative'
-    },
-    buttonSuccess: {
-        backgroundColor: green[500],
-        '&:hover': {
-            backgroundColor: green[700]
-        }
     },
     fabProgress: {
         color: green[500],
@@ -195,15 +185,15 @@ class DepartmentsCompanyForm extends React.Component {
             return;
         }
 
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     onCodeChangeHandler(value) {
-        this.setState({code: value}, this.validateField('code', value));
+        this.setState({ code: value }, this.validateField('code', value));
     }
 
     onDescriptionChangeHandler(value) {
-        this.setState({description: value}, this.validateField('description', value));
+        this.setState({ description: value }, this.validateField('description', value));
     }
 
     onBlurHandler(e) {
@@ -215,7 +205,7 @@ class DepartmentsCompanyForm extends React.Component {
     onSelectChangeHandler(e) {
         const name = e.target.name;
         const value = e.target.value;
-        this.setState({[name]: value}, this.validateField(name, value));
+        this.setState({ [name]: value }, this.validateField(name, value));
     }
 
     enableCancelButton = () => {
@@ -281,12 +271,12 @@ class DepartmentsCompanyForm extends React.Component {
     }
 
     handleCloseAlertDialog = () => {
-        this.setState({opendialog: false});
+        this.setState({ opendialog: false });
     };
     handleConfirmAlertDialog = () => {
         this.deleteDepartment();
     };
-    onEditHandler = ({Id, Code, Description}) => {
+    onEditHandler = ({ Id, Code, Description }) => {
         this.setState(
             {
                 idToEdit: Id,
@@ -310,7 +300,7 @@ class DepartmentsCompanyForm extends React.Component {
     };
 
     onDeleteHandler = (idSearch) => {
-        this.setState({idToDelete: idSearch, opendialog: true, showCircularLoading: false});
+        this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
     };
 
     componentWillMount() {
@@ -319,11 +309,11 @@ class DepartmentsCompanyForm extends React.Component {
 
     loadDepartments = (func = () => {
     }) => {
-        this.setState({loadingData: true}, () => {
+        this.setState({ loadingData: true }, () => {
             this.props.client
                 .query({
                     query: this.GET_DEPARTMENTS_QUERY,
-                    variables: {IdEntity: this.state.idCompany},
+                    variables: { IdEntity: this.state.idCompany },
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
@@ -364,10 +354,10 @@ class DepartmentsCompanyForm extends React.Component {
             query = this.UPDATE_DEPARTMENTS_QUERY;
         }
 
-        return {isEdition: isEdition, query: query, id: this.state.idToEdit};
+        return { isEdition: isEdition, query: query, id: this.state.idToEdit };
     };
     insertDepartment = () => {
-        const {isEdition, query, id} = this.getObjectToInsertAndUpdate();
+        const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
         this.setState(
             {
@@ -404,7 +394,7 @@ class DepartmentsCompanyForm extends React.Component {
                             'success',
                             isEdition ? 'Department Updated!' : 'Department Inserted!'
                         );
-                        this.setState({showCircularLoading: true}, () => {
+                        this.setState({ showCircularLoading: true }, () => {
                             this.loadDepartments();
                         });
                     })
@@ -436,7 +426,7 @@ class DepartmentsCompanyForm extends React.Component {
                     })
                     .then((data) => {
                         this.props.handleOpenSnackbar('success', 'Department Deleted!');
-                        this.setState({showCircularLoading: true}, () => {
+                        this.setState({ showCircularLoading: true }, () => {
                             this.loadDepartments();
                         });
                     })
@@ -477,16 +467,16 @@ class DepartmentsCompanyForm extends React.Component {
     };
 
     render() {
-        const {loading} = this.state;
-        const {classes} = this.props;
+        const { loading } = this.state;
+        const { classes } = this.props;
 
         if (this.state.indexView == 0) {
-            return <React.Fragment>{this.state.loadingData && <LinearProgress/>}</React.Fragment>;
+            return <React.Fragment>{this.state.loadingData && <LinearProgress />}</React.Fragment>;
         }
         if (this.state.indexView == 2) {
             return (
                 <React.Fragment>
-                    {this.state.loadingData && <LinearProgress/>}
+                    {this.state.loadingData && <LinearProgress />}
                     <NothingToDisplay
                         title="Oops!"
                         message={this.state.errorMessage}
@@ -498,7 +488,7 @@ class DepartmentsCompanyForm extends React.Component {
         }
         return (
             <div className="department_tab">
-                {this.state.loadingData && <LinearProgress/>}
+                {this.state.loadingData && <LinearProgress />}
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
                     handleConfirm={this.handleConfirmAlertDialog}
@@ -506,126 +496,64 @@ class DepartmentsCompanyForm extends React.Component {
                     loadingConfirm={this.state.loadingConfirm}
                     content="Do you really want to continue whit this operation?"
                 />
-                <div className="department__header department__header-inputGroup">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-4">
-                                <div className="input-wrapper input-wrapper-gray">
-                                    <div className="row">
-                                        <div className="col-6 input-label-right">
-                                            <span className="">* Department Code</span>
-                                        </div>
-                                        <div className="col-6">
-                                            <InputForm
-                                                id="code"
-                                                name="code"
-                                                maxLength="10"
-                                                error={!this.state.codeValid}
-                                                value={this.state.code}
-                                                change={(value) => this.onCodeChangeHandler(value)}
-                                                className="input-enable"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-4">
-                                <div className="input-wrapper input-wrapper-gray">
-                                    <div className="row">
-                                        <div className="col-6 input-label-right">
-                                            <span className="">* Department Name</span>
-                                        </div>
-                                        <div className="col-6">
-                                            <InputForm
-                                                id="description"
-                                                name="description"
-                                                maxLength="15"
-                                                error={!this.state.descriptionValid}
-                                                value={this.state.description}
-                                                change={(value) => this.onDescriptionChangeHandler(value)}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-2">
-                                <div className="row">
-                                    <div className="col-6">
-                                        <div className={classes.root}>
-                                            <div className={classes.wrapper}>
-                                                <Tooltip
-                                                    title={
-                                                        this.state.idToEdit != null &&
-                                                        this.state.idToEdit != '' &&
-                                                        this.state.idToEdit != 0 ? (
-                                                            'Save Changes'
-                                                        ) : (
-                                                            'Insert Record'
-                                                        )
-                                                    }
-                                                >
-                                                    <div>
-                                                        <Button
-                                                            style={{
-                                                                width: '35px',
-                                                                height: '35px'
-                                                            }}
-                                                            disabled={
-                                                                this.state.loading ||
-                                                                !this.Login.AllowEdit ||
-                                                                !this.Login.AllowInsert
-                                                            }
-                                                            variant="fab"
-                                                            color="primary"
-                                                            onClick={this.addDepartmenttHandler}
-                                                        >
-                                                            {this.state.idToEdit != null &&
-                                                            this.state.idToEdit != '' &&
-                                                            this.state.idToEdit != 0 ? (
-                                                                <SaveIcon/>
-                                                            ) : (
-                                                                <AddIcon/>
-                                                            )}
-                                                        </Button>
-                                                    </div>
-                                                </Tooltip>
-                                                {loading && (
-                                                    <CircularProgress size={45} className={classes.fabProgress}/>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6">
-                                        <div className={classes.root}>
-                                            <div className={classes.wrapper}>
-                                                <Tooltip title={'Cancel Operation'}>
-                                                    <div>
-                                                        <Button
-                                                            disabled={
-                                                                this.state.loading || !this.state.enableCancelButton
-                                                            }
-                                                            variant="fab"
-                                                            color="secondary"
-                                                            onClick={this.cancelDepartmentHandler}
-                                                            style={{
-                                                                width: '35px',
-                                                                height: '35px'
-                                                            }}
-                                                        >
-                                                            <ClearIcon/>
-                                                        </Button>
-                                                    </div>
-                                                </Tooltip>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div className="row">
+                    <div className="col-md-4">
+                        <InputForm
+                            id="code"
+                            name="code"
+                            maxLength="10"
+                            error={!this.state.codeValid}
+                            value={this.state.code}
+                            change={(value) => this.onCodeChangeHandler(value)}
+                            className="input-enable"
+                            placeholder="* Department Code"
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <InputForm
+                            id="description"
+                            name="description"
+                            maxLength="15"
+                            error={!this.state.descriptionValid}
+                            value={this.state.description}
+                            change={(value) => this.onDescriptionChangeHandler(value)}
+                            placeholder="* Department Name"
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <button
+                            disabled={
+                                this.state.loading ||
+                                !this.Login.AllowEdit ||
+                                !this.Login.AllowInsert
+                            }
+                            className="btn btn-success mr-1"
+                            onClick={this.addDepartmenttHandler}
+                        >
+                            {this.state.idToEdit != null &&
+                                this.state.idToEdit != '' &&
+                                this.state.idToEdit != 0 ? (
+                                    'Save'
+                                ) : (
+                                    'Add'
+                                )}
+                        </button>
+                        {loading && (
+                            <CircularProgress size={45} className={classes.fabProgress} />
+                        )}
+                        <button
+                            disabled={
+                                this.state.loading || !this.state.enableCancelButton
+                            }
+                            onClick={this.cancelDepartmentHandler}
+                            className="btn btn-danger"
+                        >
+                            Clear
+                            </button>
                     </div>
                 </div>
-                <div className={classes.container}>
-                    <div className={classes.divStyle}>
+                <div className="row">
+                    <div className="col-md-12">
                         <DepartmentsTable
                             data={this.state.data}
                             loading={this.state.showCircularLoading && this.state.loadingData}
@@ -636,13 +564,13 @@ class DepartmentsCompanyForm extends React.Component {
                 </div>
                 {this.props.showStepper ? (
                     <div className="advanced-tab-options">
-						<span
+                        <span
                             className="options-button options-button--back"
                             onClick={() => {
                                 this.props.back();
                             }}
                         >
-							Back
+                            Back
 						</span>
                         <span
                             className="options-button options-button--next"
@@ -651,12 +579,12 @@ class DepartmentsCompanyForm extends React.Component {
                                 this.props.next();
                             }}
                         >
-							{this.props.valueTab < 3 ? 'Next' : 'Finish'}
-						</span>
+                            {this.props.valueTab < 3 ? 'Next' : 'Finish'}
+                        </span>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
             </div>
         );
     }

@@ -56,7 +56,6 @@ class FileUpload extends Component {
 						},
 						() => {
 							this.setState({
-								//fileName: file.name,
 								loading: false
 							});
 							this.props.updateURL(this.state.fileURL, file.name);
@@ -69,37 +68,35 @@ class FileUpload extends Component {
 
 	render() {
 		return (
-			<div className="upload-file">
-				<IconButton
-					color="primary"
-					href={!this.props.disabled && this.props.url}
-					disabled={this.props.disabled}
-					target="_blank"
-					component="button"
-				>
-					<Visibility />
-				</IconButton>
-
-				<input
-					className="input-name-file"
+			<div className="">
+				{/*<input
+					className="form-control"
 					disabled={this.props.disabled}
 					type="text"
-					value={this.props.fileName}
-					onChange={(e) => {}}
-				/>
+					value={this.state.fileName}
+					onChange={(e) => { }}
+				/>*/}
 				{this.state.loading ? (
 					<div className="upload-btn-wrapper">
 						<CircularProgress />
 					</div>
 				) : (
-					<div className="upload-btn-wrapper">
-						<button className="btn btn-file" disabled={this.props.disabled}>
-							<span className="icon-attach" />
-						</button>
-
-						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
-					</div>
-				)}
+						<div className="">
+							<div class="input-group">
+								<div class="custom-file">
+									<input type="file" onChange={this.handleUpload} class="custom-file-input" id="validatedCustomFile" disabled={this.props.disabled} />
+									<label class="custom-file-label" for="validatedCustomFile">{this.props.fileName == null ? "Choose File.." : this.props.fileName}</label>
+								</div>
+								<div class="input-group-append">
+									<a class="btn btn-outline-secondary" id="inputGroupFileAddon04" href={!this.props.disabled && this.props.url}
+										disabled={this.props.disabled}
+										target="_blank">
+										<i class="far fa-eye"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					)}
 			</div>
 		);
 	}

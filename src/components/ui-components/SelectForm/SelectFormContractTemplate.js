@@ -273,14 +273,14 @@ class ControlledOpenSelect extends React.Component {
 
 		return (
 			<form autoComplete="off">
-				<FormControl className="select-form-customized default">
+				<FormControl className="form-control default">
 					<Select
 						className={
 							this.props.error ? (
-								[ classes.formControl, classes.selectError ].join(' ')
+								[classes.formControl, classes.selectError].join(' ')
 							) : (
-								[ classes.formControl, classes.select ].join(' ')
-							)
+									[classes.formControl, classes.select].join(' ')
+								)
 						}
 						disableUnderline
 						name={this.props.name}

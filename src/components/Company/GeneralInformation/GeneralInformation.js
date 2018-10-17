@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './index.css';
 import InputForm from 'ui-components/InputForm/InputForm';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -26,6 +25,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -33,25 +39,8 @@ const styles = (theme) => ({
 		position: 'relative'
 	},
 	buttonSuccess: {
-		background: ' #3da2c7',
-		borderRadius: '5px',
-		padding: '.5em 1em',
 
-		fontWeight: '300',
-		fontFamily: 'Segoe UI',
-		fontSize: '1.1em',
-		color: '#fff',
-		textTransform: 'none',
-		//cursor: pointer;
-		margin: '2px',
-
-		//	backgroundColor: '#357a38',
-		color: 'white',
-		'&:hover': {
-			background: ' #3da2c7'
-		}
 	},
-
 	buttonProgress: {
 		//color: ,
 		position: 'absolute',
@@ -62,9 +51,20 @@ const styles = (theme) => ({
 	}
 });
 
+const CustomTableCell = withStyles((theme) => ({
+	head: {
+		color: theme.palette.common.white
+	},
+	body: {
+		fontSize: 14
+	}
+}))(TableCell);
+
 function Transition(props) {
 	return <Slide direction="up" {...props} />;
 }
+
+
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
@@ -171,7 +171,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	loadCompany = (func = () => {}) => {
+	loadCompany = (func = () => { }) => {
 		this.setState(
 			{
 				loading: true
@@ -255,7 +255,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => {}) => {
+	loadCompanyProperties = (func = () => { }) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -546,7 +546,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => {}) => {
+	loadCountries = (func = () => { }) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -584,7 +584,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => {}) => {
+	loadStates = (func = () => { }) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -626,7 +626,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => {}) => {
+	loadCities = (func = () => { }) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -1035,7 +1035,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -1086,409 +1086,67 @@ class GeneralInformation extends Component {
 						message={this.state.errorMessage}
 						type="Error-danger"
 						icon="danger"
-					/>)
+					/>
 				</React.Fragment>
 			);
 		}
 		return (
-			<div className="general-information-tab">
+			<div className="TabSelected-container">
 				{isLoading && <LinearProgress />}
 
-				<div className="general-information__header">
-					<div className="input-container">
-						<span className="input-label">* Markup</span>
-						<InputForm
-							type="number"
-							value={this.state.rate}
-							change={(text) => {
-								this.updateInput(text, 'rate');
-							}}
-							error={!this.state.rateValid}
-							maxLength="10"
-							disabled={!this.props.showStepper}
-						/>
-					</div>
-					<div className="input-container">
-						<span className="input-label">* Company Code</span>
-						<InputForm
-							value={this.state.Code}
-							change={(text) => {
-								this.updateInput(text, 'Code');
-							}}
-							error={!this.state.codeValid}
-							maxLength="10"
-							disabled={!this.props.showStepper}
-						/>
-					</div>
-				</div>
-				{this.props.idCompany != 0 ? (
-					<div className="options-company">
-						{!this.props.showStepper && (
-							<button
-								disabled={isLoading}
-								className="edit-company-button"
-								onClick={() => {
-									this.setState({ firstLoad: true }, () => {
-										this.loadCompany(() => {
-											this.loadCountries(() => {
-												this.loadCities(() => {
-													this.loadStates(() => {
-														this.loadCompanyProperties(() => {
-															this.props.toggleStepper();
-															this.setState({ indexView: 1, firstLoad: false });
+				<div className="row">
+					<div className="col-md-12">
+						{this.props.idCompany != 0 ? (
+							<div className="options-company">
+								{!this.props.showStepper && (
+									<button
+										disabled={isLoading}
+										className="btn btn-success float-right"
+										onClick={() => {
+											this.setState({ firstLoad: true }, () => {
+												this.loadCompany(() => {
+													this.loadCountries(() => {
+														this.loadCities(() => {
+															this.loadStates(() => {
+																this.loadCompanyProperties(() => {
+																	this.props.toggleStepper();
+																	this.setState({ indexView: 1, firstLoad: false });
+																});
+															});
 														});
 													});
 												});
 											});
-										});
-									});
-								}}
-							>
-								Edit Company
-							</button>
-						)}
-					</div>
-				) : (
-					''
-				)}
-				<div className="general-information__content">
-					<div className="card-form-row">
-						<ImageUpload
-							updateAvatar={(url) => {
-								this.setState({
-									avatar: url
-								});
-							}}
-							fileURL={this.state.avatar}
-							disabled={!this.props.showStepper}
-						/>
-					</div>
-
-					<div className="card-form-company">
-						<div className="card-form-header grey">General Information</div>
-						<div className="card-form-body">
-							<div className="card-form-row">
-								<span className="input-label primary">* Company Name</span>
-								<InputForm
-									value={this.state.name}
-									change={(text) => {
-										this.updateInput(text, 'name');
-									}}
-									error={!this.state.nameValid}
-									maxLength="35"
-									disabled={!this.props.showStepper}
-								/>
-							</div>
-							{/*<div className="card-form-row">
-								<span className="input-label primary">* Email</span>
-								<InputForm
-
-									value={this.state.email}
-									change={(text) => {
-										this.updateInput(text, 'email');
-									}}
-									error={!this.state.email}
-									maxLength="35"
-									disabled={!this.props.showStepper}
-								/>
-								</div>*/}
-							<div className="card-form-row">
-								<span className="input-label primary">* Address</span>
-								<InputForm
-									value={this.state.address}
-									change={(text) => {
-										this.updateInput(text, 'address');
-									}}
-									error={!this.state.addressValid}
-									maxLength="50"
-									disabled={!this.props.showStepper}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">Address 2</span>
-								<InputForm
-									value={this.state.optionalAddress}
-									change={(text) => {
-										this.updateInput(text, 'optionalAddress');
-									}}
-									maxLength="50"
-									disabled={!this.props.showStepper}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">Suite</span>
-								<input
-									value={this.state.suite}
-									onChange={(e) => {
-										this.updateInput(e.target.value, 'suite');
-									}}
-									error={!this.state.suiteValid}
-									maxLength="10"
-									disabled={!this.props.showStepper}
-									className={'input-form'}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Countries</span>
-
-								<SelectForm
-									name="country"
-									disabled={this.state.loadingCountries}
-									data={this.state.countries}
-									update={this.updateCountry}
-									error={!this.state.countryValid}
-									value={this.state.country}
-									disabled={!this.props.showStepper}
-									showNone={false}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* State</span>
-								<SelectForm
-									name="state"
-									disabled={this.state.loadingStates}
-									data={this.state.states}
-									update={this.updateState}
-									error={!this.state.stateValid}
-									value={this.state.state}
-									disabled={!this.props.showStepper}
-									showNone={false}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* City</span>
-								<SelectForm
-									name="city"
-									disabled={this.state.loadingCities}
-									data={this.state.cities}
-									update={this.updateCity}
-									error={!this.state.cityValid}
-									value={this.state.city}
-									disabled={!this.props.showStepper}
-									showNone={false}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Zip Code</span>
-								<InputForm
-									value={this.state.zipCode}
-									change={(text) => {
-										this.updateInput(text, 'zipCode');
-									}}
-									error={!this.state.zipCodeValid}
-									maxLength="10"
-									min={0}
-									type="number"
-									disabled={!this.props.showStepper}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Phone Number</span>
-								<InputMask
-									id="number"
-									name="number"
-									mask="+(999) 999-9999"
-									maskChar=" "
-									value={this.state.phoneNumber}
-									className={this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'}
-									onChange={(e) => {
-										this.updateInput(e.target.value, 'phoneNumber');
-									}}
-									placeholder="+(999) 999-9999"
-									disabled={!this.props.showStepper}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">Fax</span>
-								<InputMask
-									id="fax"
-									name="fax"
-									mask="+(999) 999-9999"
-									maskChar=" "
-									value={this.state.fax}
-									className={this.state.faxValid ? 'input-form' : 'input-form _invalid'}
-									onChange={(e) => {
-										this.updateInput(e.target.value, 'fax');
-									}}
-									placeholder="+(999) 999-9999"
-									disabled={!this.props.showStepper}
-								/>
-							</div>
-						</div>
-					</div>
-					<div className="card-form-company">
-						<div className="card-form-header yellow">Legal Docs</div>
-						<div className="card-form-body">
-							{/*<div className="card-form-row">
-								<span className="input-label primary">* Contract Start Date</span>
-								<InputDateForm
-									value={this.state.startDate}
-									change={(text) => {
-										this.updateInput(text, 'startDate');
-									}}
-									error={!this.state.startDateValid}
-									disabled={!this.props.showStepper}
-								/>
-							</div>*/}
-							<div className="card-form-row">
-								<span className="input-label primary">* Week Start</span>
-								<SelectForm
-									name="startWeek"
-									data={days}
-									error={!this.state.startWeekValid}
-									update={this.updateStartWeek}
-									value={this.state.startWeek}
-									disabled={!this.props.showStepper}
-									showNone={false}
-								/>
-							</div>
-
-							<div className="card-form-row">
-								<span className="input-label  primary">* Week End</span>
-								<SelectForm
-									name="endWeek"
-									data={days}
-									error={!this.state.endWeekValid}
-									update={this.updateEndWeek}
-									value={this.state.endWeek}
-									disabled={!this.props.showStepper}
-									showNone={false}
-								/>
-							</div>
-
-							<div className="divider-text">Documents</div>
-							<div className="card-form-row card-form-row--center">
-								<span className="primary">Contract</span>
-								<FileUpload
-									updateURL={(url, fileName) => {
-										this.setState({
-											contractURL: url,
-											contractFile: fileName
-										});
-									}}
-									disabled={!this.props.showStepper}
-									url={this.state.contractURL}
-									fileName={this.state.contractFile}
-								/>
-							</div>
-							<div className="card-form-row card-form-row--center">
-								<span className="primary">Insurance</span>
-								<FileUpload
-									updateURL={(url, fileName) => {
-										this.setState({
-											insuranceURL: url,
-											insuranceFile: fileName
-										});
-									}}
-									disabled={!this.props.showStepper}
-									url={this.state.insuranceURL}
-									fileName={this.state.insuranceFile}
-								/>
-							</div>
-							<div className="card-form-row card-form-row--center">
-								<input
-									type="text"
-									className="input-file-name"
-									max="120"
-									placeholder="Name File"
-									value={this.state.otherName}
-									onChange={(e) => {
-										this.updateInput(e.target.value, 'otherName');
-									}}
-									disabled={!this.props.showStepper}
-								/>
-								<FileUpload
-									updateURL={(url, fileName) => {
-										this.setState({
-											otherURL: url,
-											otherFile: fileName
-										});
-									}}
-									disabled={!this.props.showStepper}
-									url={this.state.otherURL}
-									fileName={this.state.otherFile}
-								/>
-							</div>
-							<div className="card-form-row card-form-row--center">
-								<input
-									type="text"
-									className="input-file-name"
-									max="120"
-									placeholder="Name File"
-									value={this.state.otherName1}
-									onChange={(e) => {
-										this.updateInput(e.target.value, 'otherName1');
-									}}
-									disabled={!this.props.showStepper}
-								/>
-								<FileUpload
-									updateURL={(url, fileName) => {
-										this.setState({
-											other01URL: url,
-											other01File: fileName
-										});
-									}}
-									disabled={!this.props.showStepper}
-									url={this.state.other01URL}
-									fileName={this.state.other01File}
-								/>
-							</div>
-						</div>
-					</div>
-					<div className="card-form-company card-form-overflow">
-						<div className="card-form-header orange">Properties</div>
-						<div className="card-form-body">
-							<div className="table-elements">
-								<li className="header-elements">Property Code</li>
-								<li className="header-elements">Property Name</li>
-							</div>
-							{this.state.companyProperties.map((item) => (
-								<div className="table-elements" key={item.Id}>
-									<div
-										title="Watch Property"
-										className="table__item"
-										onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
+										}}
 									>
-										<li>{item.Code}</li>
-										<li>{item.Name}</li>
-									</div>
-								</div>
-							))}
-						</div>
-						<div className="card-form-footer">
-							<button
-								className={this.props.idCompany == 0 ? 'add-property__disabled' : 'add-property'}
-								disabled={this.props.idCompany == 0}
-								onClick={this.handleClickOpen('paper', false, 0, 0)}
-							>
-								+ Add Property
-							</button>
-						</div>
-					</div>
-				</div>
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<div className={classes.wrapper}>
-							<Button
-								className={classes.buttonSuccess}
-								onClick={() => {
-									this.props.idCompany != 0
-										? this.updateCompany(this.props.idCompany)
-										: this.insertCompany();
-									//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
-								}}
-								disabled={isLoading}
-							>
-								Save
-							</Button>
-							{this.state.loadingUpdate && (
-								<CircularProgress size={24} className={classes.buttonProgress} />
+										Edit Company <i class="fas fa-edit"></i>
+									</button>
+								)}
+							</div>
+						) : (
+								''
 							)}
-						</div>
-						{this.props.showStepper && (
-							<div className={classes.wrapper}>
-								<Button
-									className={classes.buttonSuccess}
+						{this.props.showStepper ? (
+							<div className="form-actions float-right">
+								<button
+
+									className="btn btn-success"
+									onClick={() => {
+										this.props.idCompany != 0
+											? this.updateCompany(this.props.idCompany)
+											: this.insertCompany();
+										//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+									}}
+									disabled={isLoading}
+								>
+									Save <i class="fas fa-save"></i>
+								</button>
+								{this.state.loadingUpdate && (
+									<CircularProgress size={24} className={classes.buttonProgress} />
+								)}
+								<button
+
+									className="btn btn-danger"
 									disabled={isLoading}
 									onClick={() => {
 										if (this.props.idCompany == 0) {
@@ -1511,15 +1169,337 @@ class GeneralInformation extends Component {
 										});
 									}}
 								>
-									Cancel
-								</Button>
+									Cancel <i class="fas fa-ban"></i>
+								</button>
 								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+
 							</div>
-						)}
+						) : (
+								''
+							)}
 					</div>
-				) : (
-					''
-				)}
+				</div>
+
+				<div className="row">
+					<div className="col-md-12 col-lg-8">
+						<div class="card">
+							<div class="card-body">
+								<div className="row">
+									<div className="col-md-6 col-lg-2">
+										<ImageUpload
+											updateAvatar={(url) => {
+												this.setState({
+													avatar: url
+												});
+											}}
+											fileURL={this.state.avatar}
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label className="">* Markup</label>
+										<InputForm type="number" value={this.state.rate} change={(text) => { this.updateInput(text, 'rate'); }} error={!this.state.rateValid} maxLength="10" disabled={!this.props.showStepper} />
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label className="">* Company Code</label>
+										<InputForm value={this.state.Code} change={(text) => { this.updateInput(text, 'Code'); }} error={!this.state.codeValid} maxLength="10" disabled={!this.props.showStepper} />
+									</div>
+									<div className="col-md-6 col-lg-4">
+										<label>* Company Name</label>
+										<InputForm value={this.state.name} change={(text) => { this.updateInput(text, 'name'); }} error={!this.state.nameValid} maxLength="35" disabled={!this.props.showStepper} />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<div class="card-header">
+								General Information
+							</div>
+							<div class="card-body">
+								<div className="row">
+									<div className="col-md-5">
+										<label className="">* Address</label>
+										<InputForm
+											value={this.state.address}
+											change={(text) => {
+												this.updateInput(text, 'address');
+											}}
+											error={!this.state.addressValid}
+											maxLength="50"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-5">
+										<label className="">Address 2</label>
+										<InputForm
+											value={this.state.optionalAddress}
+											change={(text) => {
+												this.updateInput(text, 'optionalAddress');
+											}}
+											maxLength="50"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-2">
+										<label>Suite</label>
+										<input
+											value={this.state.suite}
+											onChange={(e) => {
+												this.updateInput(e.target.value, 'suite');
+											}}
+											error={!this.state.suiteValid}
+											maxLength="10"
+											disabled={!this.props.showStepper}
+											className={'form-control'}
+										/>
+									</div>
+									<div className="col-md-4">
+										<label>* Countries</label>
+										<SelectForm
+											name="country"
+											disabled={this.state.loadingCountries}
+											data={this.state.countries}
+											update={this.updateCountry}
+											error={!this.state.countryValid}
+											value={this.state.country}
+											disabled={!this.props.showStepper}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-4">
+										<label>* State</label>
+										<SelectForm
+											name="state"
+											disabled={this.state.loadingStates}
+											data={this.state.states}
+											update={this.updateState}
+											error={!this.state.stateValid}
+											value={this.state.state}
+											disabled={!this.props.showStepper}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-4">
+										<label>* City</label>
+										<SelectForm
+											name="city"
+											disabled={this.state.loadingCities}
+											data={this.state.cities}
+											update={this.updateCity}
+											error={!this.state.cityValid}
+											value={this.state.city}
+											disabled={!this.props.showStepper}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-3 col-lg-2">
+										<label>* Zip Code</label>
+										<InputForm
+											value={this.state.zipCode}
+											change={(text) => {
+												this.updateInput(text, 'zipCode');
+											}}
+											error={!this.state.zipCodeValid}
+											maxLength="10"
+											min={0}
+											type="number"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-5">
+										<label>* Phone Number</label>
+										<InputMask
+											id="number"
+											name="number"
+											mask="+(999) 999-9999"
+											maskChar=" "
+											value={this.state.phoneNumber}
+											className={this.state.phoneNumberValid ? 'form-control' : 'input-form _invalid'}
+											onChange={(e) => {
+												this.updateInput(e.target.value, 'phoneNumber');
+											}}
+											placeholder="+(999) 999-9999"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-4 col-lg-5">
+										<label>Fax</label>
+										<InputMask
+											id="fax"
+											name="fax"
+											mask="+(999) 999-9999"
+											maskChar=" "
+											value={this.state.fax}
+											className={this.state.faxValid ? 'form-control' : 'input-form _invalid'}
+											onChange={(e) => {
+												this.updateInput(e.target.value, 'fax');
+											}}
+											placeholder="+(999) 999-9999"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card-header">
+								Legal Docs
+  							</div>
+							<div class="card-body">
+								<div className="row">
+									<div className="col-md-6">
+										<label>* Week Start</label>
+										<SelectForm
+											name="startWeek"
+											data={days}
+											error={!this.state.startWeekValid}
+											update={this.updateStartWeek}
+											value={this.state.startWeek}
+											disabled={!this.props.showStepper}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-6">
+										<label>* Week End</label>
+										<SelectForm
+											name="endWeek"
+											data={days}
+											error={!this.state.endWeekValid}
+											update={this.updateEndWeek}
+											value={this.state.endWeek}
+											disabled={!this.props.showStepper}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-12">
+										<div className="form-separator">
+											Documents
+										</div>
+									</div>
+									<div className="col-md-6">
+										<label>Contract</label>
+										<FileUpload
+											updateURL={(url, fileName) => {
+												this.setState({
+													contractURL: url,
+													contractFile: fileName
+												});
+											}}
+											disabled={!this.props.showStepper}
+											url={this.state.contractURL}
+											fileName={this.state.contractFile}
+										/>
+									</div>
+									<div className="col-md-6">
+										<label>Insurance</label>
+										<FileUpload
+											updateURL={(url, fileName) => {
+												this.setState({
+													insuranceURL: url,
+													insuranceFile: fileName
+												});
+											}}
+											disabled={!this.props.showStepper}
+											url={this.state.insuranceURL}
+											fileName={this.state.insuranceFile}
+										/>
+									</div>
+									<div className="col-md-6">
+										<input
+											type="text"
+											className="input-file-name"
+											max="120"
+											placeholder="Name File"
+											value={this.state.otherName}
+											onChange={(e) => {
+												this.updateInput(e.target.value, 'otherName');
+											}}
+											disabled={!this.props.showStepper}
+										/>
+										<FileUpload
+											updateURL={(url, fileName) => {
+												this.setState({
+													otherURL: url,
+													otherFile: fileName
+												});
+											}}
+											disabled={!this.props.showStepper}
+											url={this.state.otherURL}
+											fileName={this.state.otherFile}
+										/>
+									</div>
+									<div className="col-md-6">
+										<input
+											type="text"
+											className="input-file-name"
+											max="120"
+											placeholder="Name File"
+											value={this.state.otherName1}
+											onChange={(e) => {
+												this.updateInput(e.target.value, 'otherName1');
+											}}
+											disabled={!this.props.showStepper}
+										/>
+										<FileUpload
+											updateURL={(url, fileName) => {
+												this.setState({
+													other01URL: url,
+													other01File: fileName
+												});
+											}}
+											disabled={!this.props.showStepper}
+											url={this.state.other01URL}
+											fileName={this.state.other01File}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className="col-md-12 col-lg-4">
+						<div class="card">
+							<div class="card-header">
+								Properties
+							</div>
+							<div class="card-body">
+								<Table className="Table">
+									<TableHead>
+										<TableRow>
+											<CustomTableCell className={"Table-head"}>Property Code</CustomTableCell>
+											<CustomTableCell className={"Table-head"}>Property Name</CustomTableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{this.state.companyProperties.map((item) => {
+											return (
+												<TableRow
+													hover
+													className={classes.row}
+													key={item.Id}
+													onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
+												>
+
+													<CustomTableCell>{item.Code}</CustomTableCell>
+													<CustomTableCell>{item.Code}</CustomTableCell>
+												</TableRow>
+											);
+										})}
+									</TableBody>
+								</Table>
+								<div className="card-form-footer">
+									<button
+										className={this.props.idCompany == 0 ? 'add-property__disabled' : 'btn btn-danger'}
+										disabled={this.props.idCompany == 0}
+										onClick={this.handleClickOpen('paper', false, 0, 0)}
+									>
+										Add Property <i class="fas fa-plus"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<Dialog
 					open={this.state.open}
@@ -1550,15 +1530,15 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-							//Si el click no es en esa property : pasar el Id en nulo
-							//para que no cargue niguna información relacionada con ese Id
-							<TabsInDialog
-								idCompany={this.props.idCompany}
-								Markup={this.state.rate}
-								handleClose={this.handleClose}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-							/>
-						)}
+								//Si el click no es en esa property : pasar el Id en nulo
+								//para que no cargue niguna información relacionada con ese Id
+								<TabsInDialog
+									idCompany={this.props.idCompany}
+									Markup={this.state.rate}
+									handleClose={this.handleClose}
+									handleOpenSnackbar={this.props.handleOpenSnackbar}
+								/>
+							)}
 					</DialogContent>
 				</Dialog>
 			</div>

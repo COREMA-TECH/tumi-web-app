@@ -181,30 +181,34 @@ class Preferences extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="">
                 <form onSubmit={this.handleSubmit} className="Preferences-form">
                     <div className="row">
-                        <div className="col-4">
-                            <div className="card-wrapper">
-                                <div className="card-form-header yellow">Lunch Preferences</div>
-                                <div className="row">
-                                    <div className="col-12">
-                                        <div className="col-6">
-                                            <label className="primary card-input-label">
+                        <div className="col-md-12">
+                            <button type="submit" className="btn btn-success edit-company-button float-right">
+                                save <i className="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-12">
+                            <div class="card">
+                                <h5 class="card-header">Lunch Preferences</h5>
+                                <div class="card-body">
+                                    <div className="row">
+                                        <div className="col-md-2">
+                                            <label>
                                                 Charge Lunch Hours?
                                             </label>
-                                        </div>
-                                        <div className="col-6">
-                                            <input type="checkbox" checked={this.state.charge} name="charge" onClick={this.toggleState} onChange={this.handleChange} />
-                                        </div>
-                                    </div>
-                                    <div className="col-12">
-                                        <div className="col-6">
-                                            <label className="primary card-input-label">
-                                                Period
+                                            <label className="switch">
+                                                <input type="checkbox" className="form-check-input" checked={this.state.charge} name="charge" onClick={this.toggleState} onChange={this.handleChange} />
+                                                <span className="slider round"></span>
                                             </label>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-5">
+                                            <label>
+                                                Period
+                                            </label>
                                             {
                                                 (!this.state.disabled) ?
                                                     <CatalogItem
@@ -221,20 +225,11 @@ class Preferences extends React.Component {
                                                     <select className="form-control" disabled></select>
                                             }
                                         </div>
-                                    </div>
-                                    <div className="col-12">
-                                        <div className="col-6">
-                                            <label className="primary card-input-label">
+                                        <div className="col-md-5">
+                                            <label>
                                                 Amount
                                             </label>
-                                        </div>
-                                        <div className="col-6">
                                             <input type="number" min="0" name="amount" step=".01" disabled={(this.state.disabled) ? "disabled" : ""} value={this.state.amount} className="form-control" onChange={this.handleChange} />
-                                        </div>
-                                    </div>
-                                    <div className="col-12">
-                                        <div className="options-company">
-                                            <input className="btn btn-success edit-company-button" type="submit" value="Save" />
                                         </div>
                                     </div>
                                 </div>

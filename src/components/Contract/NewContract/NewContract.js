@@ -1026,457 +1026,11 @@ class NewContract extends Component {
 
 		return (
 			<div className="contract-container">
-				<div className="contract-body">
-					<div className="contract-body__content">
-						<div className="contract-body-row">
-							<div className="contract-body-row__content">
-								<div className="contract-body-row__header">
-									<span className="contract-body__subtitle">Contract Information</span>
-								</div>
-								<div className="contract-body-row__form">
-									<div className="card-form-body">
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Name</span>
-
-											<InputForm
-												value={this.state.Contract_Name}
-												change={(text) => {
-													this.setState(
-														{
-															Contract_Name: text
-														},
-														() => {
-															this.validateField('Contract_Name', text);
-														}
-													);
-												}}
-												error={!this.state.Contract_NameValid}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Owner</span>
-											<InputForm
-												value={this.state.Contrat_Owner}
-												change={(text) => {
-													this.setState(
-														{
-															Contrat_Owner: text
-														},
-														() => {
-															this.validateField('Contrat_Owner', text);
-														}
-													);
-												}}
-												error={!this.state.Contrat_OwnerValid}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Template</span>
-											<Query query={this.GET_CONTRACT}>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (loading) return <LinearProgress />;
-													if (error) return <p>Error </p>;
-													if (
-														data.getcontracttemplate != null &&
-														data.getcontracttemplate.length > 0
-													) {
-														return (
-															<SelectFormContractTemplate
-																name="template"
-																data={data.getcontracttemplate}
-																showNone={false}
-																update={(value) => {
-																	this.setState(
-																		{
-																			Id_Contract_Template: value
-																		},
-																		() => {
-																			this.validateField(
-																				'Id_Contract_Template',
-																				value
-																			);
-																		}
-																	);
-																}}
-																value={this.state.Id_Contract_Template}
-																error={!this.state.Id_Contract_TemplateValid}
-															/>
-														);
-													}
-													return <p>Nothing to display </p>;
-												}}
-											</Query>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Management Company</span>
-
-											<InputForm
-												value={this.state.Management}
-												change={(text) => { }}
-											//error={!this.state.CompanySignedNameValid}
-											/>
-										</div>
-
-										<div className="card-form-row">
-											<span className="input-label primary">* Hotel</span>
-											<AccountDialog
-												valueSelected={this.state.Id_Entity}
-												handleOpenSnackbar={this.props.handleOpenSnackbar}
-												error={!this.state.Id_EntityValid}
-												update={this.updateIdCompany}
-												updateCompanySignedBy={(value) => {
-													this.setState(
-														{
-															Company_Signed: value
-														},
-														() => {
-															this.validateField('Company_Signed', value);
-															this.getCompanies(this.state.Company_Signed);
-															this.getBusinessCompanies(this.state.Id_Entity);
-														}
-													);
-												}}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Customer Signed By</span>
-
-											<ContactDialog
-												defaultValue=""
-												valueSelected={this.state.Id_User_Signed}
-												handleOpenSnackbar={this.props.handleOpenSnackbar}
-												error={!this.state.Id_User_SignedValid}
-												idCompany={this.state.Id_Entity}
-												update={this.updateIdContact}
-												updateEmailContact={(email) => {
-													this.setState(
-														{
-															Electronic_Address: email
-														},
-														() => {
-															this.validateField('Electronic_Address', email);
-														}
-													);
-												}}
-												updateTypeContact={(value) => {
-													this.setState(
-														{
-															User_Signed_Title: value
-														},
-														() => {
-															this.validateField('User_Signed_Title', value);
-														}
-													);
-												}}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Customer Signed Title</span>
-											<InputForm
-												value={this.state.User_Signed_Title}
-												change={(text) => { }}
-												error={!this.state.User_Signed_TitleValid}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Customer Signed Date</span>
-											<InputDateForm
-												value={this.state.Signed_Date}
-												placeholder={this.state.Signed_Date}
-												change={(text) => {
-													this.setState(
-														{
-															Signed_Date: text
-														},
-														() => {
-															this.validateField('Signed_Date', text);
-														}
-													);
-												}}
-												error={!this.state.Signed_DateValid}
-											/>
-										</div>
-									</div>
-								</div>
-
-								<div className="contract-body-row__form">
-									<div className="card-form-body">
-										<div className="card-form-row">
-											<span className="input-label primary">* Status</span>
-
-											<SelectForm
-												data={status}
-												update={this.updateStatus}
-												value={parseInt(this.state.Contract_Status)}
-												//error={!this.state.IsActiveValid}
-												error={!this.state.Contract_StatusValid}
-												showNone={false}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Start Date</span>
-											<InputDateForm
-												placeholder={this.state.Contract_Start_Date}
-												value={this.state.Contract_Start_Date}
-												error={!this.state.Contract_Start_DateValid}
-												change={(text) => {
-													this.setState(
-														{
-															Contract_Start_Date: text
-														},
-														() => {
-															this.validateField('Contract_Start_Date', text);
-														}
-													);
-												}}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Term (months)</span>
-
-											<Query query={this.getContractTermsQuery}>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (loading) return <LinearProgress />;
-													if (error) return <p>Error </p>;
-													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														return (
-															<SelectForm
-																data={data.getcatalogitem}
-																update={(text) => {
-																	this.setState(
-																		{
-																			Contract_Term: text
-																		},
-																		() => {
-																			this.validateField('Contract_Term', text);
-																		}
-																	);
-																}}
-																showNone={false}
-																value={this.state.Contract_Term}
-																error={!this.state.Contract_TermValid}
-															/>
-														);
-													}
-													return <p>Nothing to display </p>;
-												}}
-											</Query>
-										</div>
-
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Expiration Date</span>
-											<InputDateForm
-												placeholder={this.state.contractExpiration}
-												value={this.state.contractExpiration}
-												error={!this.state.contractExpirationValid}
-												change={(text) => {
-													this.setState(
-														{
-															contractExpiration: text
-														},
-														() => {
-															this.validateField('contractExpiration', text);
-														}
-													);
-												}}
-											/>
-										</div>
-
-										<div className="card-form-row">
-											<span className="input-label primary">* Owner Expiration Notice</span>
-											<SelectForm
-												data={intervalDays}
-												update={this.updateOwnerExpirationNotification}
-												value={this.state.Owner_Expiration_Notification}
-												error={!this.state.Owner_Expiration_NotificationValid}
-												showNone={false}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Company Signed By</span>
-
-											<InputForm
-												value={this.state.CompanySignedName}
-												change={(text) => { }}
-												error={!this.state.CompanySignedNameValid}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Company Signed Date</span>
-											<InputDateForm
-												value={this.state.Company_Signed_Date}
-												error={!this.state.Company_Signed_DateValid}
-												change={(text) => {
-													this.setState(
-														{
-															Company_Signed_Date: text
-														},
-														() => {
-															this.validateField('Company_Signed_Date', text);
-														}
-													);
-												}}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div className="contract-body-row__content">
-								<div className="contract-body-row__header">
-									<span className="contract-body__subtitle">Billing Information</span>
-								</div>
-								<div className="contract-body-row__form">
-									<div className="card-form-body">
-										<div className="card-form-row">
-											<span className="input-label primary">* Billing Name</span>
-
-											<ContactDialog
-												defaultValue=""
-												valueSelected={this.state.Id_User_Billing_Contact}
-												error={!this.state.Id_User_Billing_ContactValid}
-												idCompany={this.state.Id_Entity}
-												update={(id) => {
-													this.setState(
-														{
-															Id_User_Billing_Contact: id
-														},
-														() => {
-															this.validateField('Id_User_Billing_Contact', id);
-														}
-													);
-												}}
-												updateEmailContact={(email) => { }}
-												updateTypeContact={(type) => { }}
-												handleOpenSnackbar={this.props.handleOpenSnackbar}
-											/>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">* Billing Street</span>
-											<InputForm
-												value={this.state.Billing_Street}
-												error={!this.state.Billing_StreetValid}
-												change={(text) => {
-													this.setState(
-														{
-															Billing_Street: text
-														},
-														() => {
-															this.validateField('Billing_Street', text);
-														}
-													);
-												}}
-											/>
-										</div>
-
-										<div className="card-form-row">
-											<span className="input-label primary">* Billing State / Providence</span>
-
-											<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (loading) return <LinearProgress />;
-													if (error) return <p>Error </p>;
-													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														return (
-															<SelectForm
-																data={data.getcatalogitem}
-																showNone={false}
-																update={this.updateProvidence}
-																value={this.state.Billing_State}
-																error={!this.state.Billing_StateValid}
-															/>
-														);
-													}
-													return <p>Nothing to display </p>;
-												}}
-											</Query>
-										</div>
-
-										<div className="card-form-row">
-											<span className="input-label primary">* Billing City</span>
-											<Query
-												query={this.getCitiesQuery}
-												variables={{ parent: this.state.Billing_State }}
-											>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (loading) return <LinearProgress />;
-													if (error) return <p>Error </p>;
-													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														return (
-															<SelectForm
-																data={data.getcatalogitem}
-																update={this.updateCity}
-																showNone={false}
-																value={this.state.Billing_City}
-																error={!this.state.Billing_CityValid}
-															/>
-														);
-													}
-													return <SelectNothingToDisplay />;
-												}}
-											</Query>
-										</div>
-										<div className="card-form-row">
-											<span className="input-label primary">
-												* Billing Zip Code / Postal Code
-											</span>
-											<InputForm
-												value={this.state.Billing_Zip_Code}
-												change={(text) => {
-													this.setState(
-														{
-															Billing_Zip_Code: text
-														},
-														() => {
-															this.validateField('Billing_Zip_Code', text);
-														}
-													);
-												}}
-												type="number"
-												error={!this.state.Billing_Zip_CodeValid}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div className="contract-body-row__content hidden">
-								<div className="contract-body-row__header">
-									<span className="contract-body__subtitle">Contract Information</span>
-								</div>
-								<div className="contract-body-row__form">
-									<div className="card-form-body">
-										<div className="card-form-row">
-											<span className="input-label primary">* Contract Terms</span>
-											<TextAreaForm
-												value={this.state.Contract_Terms}
-												change={(text) => {
-													this.setState(
-														{
-															Contract_Terms: text
-														},
-														() => {
-															this.validateField('Contract_Terms', text);
-														}
-													);
-												}}
-											/>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className="contract-buttom">
-					<div className={classes.wrapper}>
-						<Button
+				<div className="row">
+					<div className="col-md-12">
+						<button
 							//className="contract-next-button"
-							className={classes.buttonSuccess}
+							className={"btn btn-success float-right"}
 							onClick={() => {
 								if (this.props.contractId !== 0) {
 									this.updateContract(this.props.contractId);
@@ -1486,8 +1040,8 @@ class NewContract extends Component {
 							}}
 							disabled={this.state.loadingInsert || this.state.loadingUpdate}
 						>
-							Save
-						</Button>
+							Save <i class="fas fa-save"></i>
+						</button>
 
 						{
 							parseInt(this.state.Contract_Status) == 2 ? (<Button
@@ -1503,6 +1057,420 @@ class NewContract extends Component {
 						{(this.state.loadingInsert || this.state.loadingUpdate) && (
 							<CircularProgress size={24} className={classes.buttonProgress} />
 						)}
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-md-6">
+						<div class="card">
+							<h5 class="card-header">Contract Information</h5>
+							<div class="card-body">
+								<div className="row">
+									<div className="col-md-6 col-lg-3">
+										<label>* Contract Name</label>
+										<InputForm
+											value={this.state.Contract_Name}
+											change={(text) => {
+												this.setState(
+													{
+														Contract_Name: text
+													},
+													() => {
+														this.validateField('Contract_Name', text);
+													}
+												);
+											}}
+											error={!this.state.Contract_NameValid}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Contract Owner</label>
+										<InputForm
+											value={this.state.Contrat_Owner}
+											change={(text) => {
+												this.setState(
+													{
+														Contrat_Owner: text
+													},
+													() => {
+														this.validateField('Contrat_Owner', text);
+													}
+												);
+											}}
+											error={!this.state.Contrat_OwnerValid}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Contract Template</label>
+										<Query query={this.GET_CONTRACT}>
+											{({ loading, error, data, refetch, networkStatus }) => {
+												//if (networkStatus === 4) return <LinearProgress />;
+												if (loading) return <LinearProgress />;
+												if (error) return <p>Error </p>;
+												if (
+													data.getcontracttemplate != null &&
+													data.getcontracttemplate.length > 0
+												) {
+													return (
+														<SelectFormContractTemplate
+															name="template"
+															data={data.getcontracttemplate}
+															showNone={false}
+															update={(value) => {
+																this.setState(
+																	{
+																		Id_Contract_Template: value
+																	},
+																	() => {
+																		this.validateField(
+																			'Id_Contract_Template',
+																			value
+																		);
+																	}
+																);
+															}}
+															value={this.state.Id_Contract_Template}
+															error={!this.state.Id_Contract_TemplateValid}
+														/>
+													);
+												}
+												return <p>Nothing to display </p>;
+											}}
+										</Query>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Management Company</label>
+										<InputForm
+											value={this.state.Management}
+											change={(text) => { }}
+										//error={!this.state.CompanySignedNameValid}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Hotel</label>
+										<AccountDialog
+											valueSelected={this.state.Id_Entity}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
+											error={!this.state.Id_EntityValid}
+											update={this.updateIdCompany}
+											updateCompanySignedBy={(value) => {
+												this.setState(
+													{
+														Company_Signed: value
+													},
+													() => {
+														this.validateField('Company_Signed', value);
+														this.getCompanies(this.state.Company_Signed);
+														this.getBusinessCompanies(this.state.Id_Entity);
+													}
+												);
+											}}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Customer Signed By</label>
+
+										<ContactDialog
+											defaultValue=""
+											valueSelected={this.state.Id_User_Signed}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
+											error={!this.state.Id_User_SignedValid}
+											idCompany={this.state.Id_Entity}
+											update={this.updateIdContact}
+											updateEmailContact={(email) => {
+												this.setState(
+													{
+														Electronic_Address: email
+													},
+													() => {
+														this.validateField('Electronic_Address', email);
+													}
+												);
+											}}
+											updateTypeContact={(value) => {
+												this.setState(
+													{
+														User_Signed_Title: value
+													},
+													() => {
+														this.validateField('User_Signed_Title', value);
+													}
+												);
+											}}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Customer Signed Title</label>
+										<InputForm
+											value={this.state.User_Signed_Title}
+											change={(text) => { }}
+											error={!this.state.User_Signed_TitleValid}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Customer Signed Date</label>
+										<InputDateForm
+											value={this.state.Signed_Date}
+											placeholder={this.state.Signed_Date}
+											change={(text) => {
+												this.setState(
+													{
+														Signed_Date: text
+													},
+													() => {
+														this.validateField('Signed_Date', text);
+													}
+												);
+											}}
+											error={!this.state.Signed_DateValid}
+										/>
+									</div>
+									<div class="form-separator"></div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className="col-md-6">
+						<div className="card">
+							<div className="card-header"></div>
+							<div className="card-body">
+								<div className="row">
+									<div className="col-md-6 col-lg-3">
+										<label>* Status</label>
+										<SelectForm
+											data={status}
+											update={this.updateStatus}
+											value={parseInt(this.state.Contract_Status)}
+											//error={!this.state.IsActiveValid}
+											error={!this.state.Contract_StatusValid}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Contract Start Date</label>
+										<InputDateForm
+											placeholder={this.state.Contract_Start_Date}
+											value={this.state.Contract_Start_Date}
+											error={!this.state.Contract_Start_DateValid}
+											change={(text) => {
+												this.setState(
+													{
+														Contract_Start_Date: text
+													},
+													() => {
+														this.validateField('Contract_Start_Date', text);
+													}
+												);
+											}}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Contract Term (months)</label>
+
+										<Query query={this.getContractTermsQuery}>
+											{({ loading, error, data, refetch, networkStatus }) => {
+												//if (networkStatus === 4) return <LinearProgress />;
+												if (loading) return <LinearProgress />;
+												if (error) return <p>Error </p>;
+												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+													return (
+														<SelectForm
+															data={data.getcatalogitem}
+															update={(text) => {
+																this.setState(
+																	{
+																		Contract_Term: text
+																	},
+																	() => {
+																		this.validateField('Contract_Term', text);
+																	}
+																);
+															}}
+															showNone={false}
+															value={this.state.Contract_Term}
+															error={!this.state.Contract_TermValid}
+														/>
+													);
+												}
+												return <p>Nothing to display </p>;
+											}}
+										</Query>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Contract Expiration Date</label>
+										<InputDateForm
+											placeholder={this.state.contractExpiration}
+											value={this.state.contractExpiration}
+											error={!this.state.contractExpirationValid}
+											change={(text) => {
+												this.setState(
+													{
+														contractExpiration: text
+													},
+													() => {
+														this.validateField('contractExpiration', text);
+													}
+												);
+											}}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Owner Expiration Notice</label>
+										<SelectForm
+											data={intervalDays}
+											update={this.updateOwnerExpirationNotification}
+											value={this.state.Owner_Expiration_Notification}
+											error={!this.state.Owner_Expiration_NotificationValid}
+											showNone={false}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Company Signed By</label>
+
+										<InputForm
+											value={this.state.CompanySignedName}
+											change={(text) => { }}
+											error={!this.state.CompanySignedNameValid}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-3">
+										<label>* Company Signed Date</label>
+										<InputDateForm
+											value={this.state.Company_Signed_Date}
+											error={!this.state.Company_Signed_DateValid}
+											change={(text) => {
+												this.setState(
+													{
+														Company_Signed_Date: text
+													},
+													() => {
+														this.validateField('Company_Signed_Date', text);
+													}
+												);
+											}}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div className="col-md-12">
+						<div className="card">
+							<div className="card-header">
+								Billing Information
+							</div>
+							<div className="card-body">
+								<div className="row">
+									<div className="col-md-6 col-lg-4">
+										<label>* Billing Name</label>
+										<ContactDialog
+											defaultValue=""
+											valueSelected={this.state.Id_User_Billing_Contact}
+											error={!this.state.Id_User_Billing_ContactValid}
+											idCompany={this.state.Id_Entity}
+											update={(id) => {
+												this.setState(
+													{
+														Id_User_Billing_Contact: id
+													},
+													() => {
+														this.validateField('Id_User_Billing_Contact', id);
+													}
+												);
+											}}
+											updateEmailContact={(email) => { }}
+											updateTypeContact={(type) => { }}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-4">
+										<label>* Billing Street</label>
+										<InputForm
+											value={this.state.Billing_Street}
+											error={!this.state.Billing_StreetValid}
+											change={(text) => {
+												this.setState(
+													{
+														Billing_Street: text
+													},
+													() => {
+														this.validateField('Billing_Street', text);
+													}
+												);
+											}}
+										/>
+									</div>
+									<div className="col-md-6 col-lg-4">
+										<label>* Billing State / Providence</label>
+
+										<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+											{({ loading, error, data, refetch, networkStatus }) => {
+												//if (networkStatus === 4) return <LinearProgress />;
+												if (loading) return <LinearProgress />;
+												if (error) return <p>Error </p>;
+												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+													return (
+														<SelectForm
+															data={data.getcatalogitem}
+															showNone={false}
+															update={this.updateProvidence}
+															value={this.state.Billing_State}
+															error={!this.state.Billing_StateValid}
+														/>
+													);
+												}
+												return <p>Nothing to display </p>;
+											}}
+										</Query>
+									</div>
+									<div className="col-md-6 col-lg-4">
+										<label>* Billing City</label>
+										<Query
+											query={this.getCitiesQuery}
+											variables={{ parent: this.state.Billing_State }}
+										>
+											{({ loading, error, data, refetch, networkStatus }) => {
+												//if (networkStatus === 4) return <LinearProgress />;
+												if (loading) return <LinearProgress />;
+												if (error) return <p>Error </p>;
+												if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+													return (
+														<SelectForm
+															data={data.getcatalogitem}
+															update={this.updateCity}
+															showNone={false}
+															value={this.state.Billing_City}
+															error={!this.state.Billing_CityValid}
+														/>
+													);
+												}
+												return <SelectNothingToDisplay />;
+											}}
+										</Query>
+									</div>
+									<div className="col-md-6 col-lg-4">
+										<label>
+											* Billing Zip Code / Postal Code
+										</label>
+										<InputForm
+											value={this.state.Billing_Zip_Code}
+											change={(text) => {
+												this.setState(
+													{
+														Billing_Zip_Code: text
+													},
+													() => {
+														this.validateField('Billing_Zip_Code', text);
+													}
+												);
+											}}
+											type="number"
+											error={!this.state.Billing_Zip_CodeValid}
+										/>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

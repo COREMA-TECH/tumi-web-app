@@ -1135,7 +1135,7 @@ class ContactcontactForm extends React.Component {
 		}
 
 		return (
-			<div className="contact-tab">
+			<div className="TabSelected-container">
 				{isLoading && <LinearProgress />}
 
 				<AlertDialogSlide
@@ -1145,11 +1145,13 @@ class ContactcontactForm extends React.Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className="contact__header">
-					<button className="add-contact" onClick={this.handleClickOpenModal}>
-						{' '}
-						Add Contact{' '}
-					</button>
+				<div className="row">
+					<div className="col-md-12">
+						<button className="btn btn-success float-right" onClick={this.handleClickOpenModal}>
+							{' '}
+							Add Contact{' '}
+						</button>
+					</div>
 				</div>
 				<Dialog
 					fullScreen={fullScreen}
@@ -1346,8 +1348,8 @@ class ContactcontactForm extends React.Component {
 						</div>
 					</DialogActions>
 				</Dialog>
-				<div className={classes.container}>
-					<div className={classes.divStyle}>
+				<div className="row">
+					<div className="col-md-12">
 						<ContactsTable
 							data={this.state.data}
 							titles={this.state.titles}
@@ -1360,6 +1362,7 @@ class ContactcontactForm extends React.Component {
 						/>
 					</div>
 				</div>
+
 				{this.props.showStepper ? (
 					<div className="advanced-tab-options">
 						<span

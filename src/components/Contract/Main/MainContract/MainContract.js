@@ -139,35 +139,37 @@ class MainContract extends Component {
 
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[ classes.root, 'company-list__header' ].join(' ')}>
-				<Grid container spacing={24}>
-					<Grid item xs={12} sm={6}>
-						<div className="search-container">
-							<i className="fa fa-search icon" />
-							<input
-								onChange={(text) => {
-									this.setState({
-										filterText: text.target.value
-									});
-								}}
-								value={this.state.filterText}
-								type="text"
-								placeholder="Search contract"
-								className="input-search-contract"
-							/>
+			<div className="row">
+				<div className="col-md-6">
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1">
+								<i className="fa fa-search icon" />
+							</span>
 						</div>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<button
-							className="add-company"
-							onClick={() => {
-								this.redirectToCreateContract();
+						<input
+							onChange={(text) => {
+								this.setState({
+									filterText: text.target.value
+								});
 							}}
-						>
-							Add Contract
+							value={this.state.filterText}
+							type="text"
+							placeholder="Search contract"
+							className="form-control"
+						/>
+					</div>
+				</div>
+				<div className="col-md-6">
+					<button
+						className="btn btn-success float-right"
+						onClick={() => {
+							this.redirectToCreateContract();
+						}}
+					>
+						Add Contract
 						</button>
-					</Grid>
-				</Grid>
+				</div>
 			</div>
 		);
 
@@ -181,7 +183,7 @@ class MainContract extends Component {
 					content="Do you really want to continue whit this operation?"
 				/>
 
-				<div className="main-contract__header main-contract__header-sg-container">{renderHeaderContent()}</div>
+				{renderHeaderContent()}
 				<div className="main-contract__content">
 					<Query query={this.getContractsQuery} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {

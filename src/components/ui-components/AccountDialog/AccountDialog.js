@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,7 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import blue from '@material-ui/core/colors/blue';
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import './index.css';
 import withApollo from 'react-apollo/withApollo';
 import ManagementCompanyDialog from '../../Contract/ManagementCompany/ManagementCompanyDialog';
@@ -173,7 +173,7 @@ class SimpleDialog extends Component {
     }
 
     render() {
-        const {classes, onClose, selectedValue, ...other} = this.props;
+        const { classes, onClose, selectedValue, ...other } = this.props;
 
         return (
             <Dialog
@@ -192,9 +192,9 @@ class SimpleDialog extends Component {
                 <DialogContent>
                     <List component="nav">
                         <Query query={this.getCompaniesQuery} pollInterval={500}>
-                            {({loading, error, data, refetch, networkStatus}) => {
+                            {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress/>;
+                                if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
                                 if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
                                     return data.getbusinesscompanies.map((item) => {
@@ -210,13 +210,13 @@ class SimpleDialog extends Component {
                                             >
                                                 <ListItemAvatar>
                                                     <Avatar className={classes.avatar}>
-                                                        <img className="avatar-uploaded" src={item.ImageURL}/>
+                                                        <img className="avatar-uploaded" src={item.ImageURL} />
                                                     </Avatar>
                                                 </ListItemAvatar>
-                                                <ListItemText primary={item.Name}/>
+                                                <ListItemText primary={item.Name} />
                                                 <Mutation mutation={this.deleteCompanyMutation}>
-                                                    {(delbusinesscompanies, {loading, error}) => {
-                                                        if (loading) return <CircularProgress/>;
+                                                    {(delbusinesscompanies, { loading, error }) => {
+                                                        if (loading) return <CircularProgress />;
 
                                                         return (
                                                             <IconButton
@@ -233,7 +233,7 @@ class SimpleDialog extends Component {
                                                                         event.stopPropagation();
                                                                     }}
                                                             >
-                                                                <DeleteIcon color="primary"/>
+                                                                <DeleteIcon color="primary" />
                                                             </IconButton>
                                                         );
                                                     }}
@@ -248,7 +248,7 @@ class SimpleDialog extends Component {
                     </List>
                 </DialogContent>
                 <DialogActions>
-                    <ManagementCompanyDialog handleOpenSnackbar={this.props.handleOpenSnackbar}/>
+                    <ManagementCompanyDialog handleOpenSnackbar={this.props.handleOpenSnackbar} />
                 </DialogActions>
             </Dialog>
         );
@@ -287,7 +287,7 @@ class SimpleDialogDemo extends Component {
                     Id: parseInt(id)
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     selectedValue: data.getbusinesscompanies[0].Name
                 });
@@ -304,7 +304,7 @@ class SimpleDialogDemo extends Component {
     };
 
     handleClose = (value) => {
-        this.setState({selectedValue: value, open: false});
+        this.setState({ selectedValue: value, open: false });
     };
 
     idCompanySelected = (value) => {
@@ -325,18 +325,18 @@ class SimpleDialogDemo extends Component {
     render() {
         return (
             <div>
-                <div className="input-file-container">
+                <div className="form-control">
                     <input
                         defaultValue={this.state.selectedValue}
                         type="text"
                         className={
-                            this.props.error ? 'input-form input-form--file _invalid' : 'input-form input-form--file'
+                            this.props.error ? 'form-control-nonBorder _invalid' : 'form-control-nonBorder form-control-dialogSelect'
                         }
                         readOnly
                     />
-                    <span className="input-form--file-button primary-button" onClick={this.handleClickOpen}>
-						<span className="icon-drop"/>
-					</span>
+                    <span className="input-form--file-button primary-button arrow-combo" onClick={this.handleClickOpen}>
+                        <span className="icon-drop" />
+                    </span>
                 </div>
                 <SimpleDialogWrapped
                     setDefaultText={this.setValue}
