@@ -17,8 +17,6 @@ class ConductCode extends Component {
         }
     }
 
-
-
     handleSignature = (value) => {
         this.setState({
             signature: value,
