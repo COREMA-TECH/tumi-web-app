@@ -68,7 +68,7 @@ class ConfirmDialog extends React.Component {
 							this.props.confirmAction();
 						}}
 					>
-						{this.props.loading && <i class="fa fa-spinner fa-spin" />}
+						{this.props.loading && <i class="fac fa fa-spinner fa-spin" />}
 						{spanishActions[3].label}
 					</button>
 				</DialogActions>
