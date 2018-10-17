@@ -46,7 +46,7 @@ class ConductCode extends Component {
                 }
             })
             .then(({data}) => {
-                if (data.applications[0].backgroundCheck !== null) {
+                if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
                     });
@@ -63,7 +63,8 @@ class ConductCode extends Component {
                 query: GET_CONDUCT_CODE_INFO,
                 variables: {
                     id: id
-                }
+                },
+                fetchPolicy: 'no-cache'
             })
             .then(({data}) => {
                 if (data.applications[0].conductCode !== null) {
@@ -124,8 +125,8 @@ class ConductCode extends Component {
     };
 
     componentWillMount(){
-        this.getApplicantInformation(this.props.applicationId);
         this.getConductCodeInformation(this.props.applicationId);
+        this.getApplicantInformation(this.props.applicationId);
     }
 
     render() {
