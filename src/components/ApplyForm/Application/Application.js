@@ -180,7 +180,7 @@ class Application extends Component {
                         firstName: applicantData.firstName,
                         middleName: applicantData.middleName,
                         lastName: applicantData.lastName,
-                        date: applicantData.date.substring(0, 10),
+                        date: applicantData.date !== null ? applicantData.date.substring(0, 10) : applicantData.date,
                         streetAddress: applicantData.streetAddress,
                         emailAddress: applicantData.emailAddress,
                         aptNumber: applicantData.aptNumber,
@@ -193,8 +193,8 @@ class Application extends Component {
                         positionApplyingFor: applicantData.positionApplyingFor,
                         car: applicantData.car,
                         typeOfId: applicantData.typeOfId,
-                        expireDateId: applicantData.expireDateId.substring(0, 10),
-                        dateAvailable: applicantData.dateAvailable.substring(0, 10),
+                        expireDateId: applicantData.expireDateId !== null ? applicantData.expireDateId.substring(0, 10) : applicantData.expireDateId,
+                        dateAvailable: applicantData.dateAvailable !== null ? applicantData.dateAvailable.substring(0, 10) : applicantData.dateAvailable,
                         scheduleRestrictions: applicantData.scheduleRestrictions,
                         scheduleExplain: applicantData.scheduleExplain,
                         convicted: applicantData.convicted,
@@ -217,7 +217,7 @@ class Application extends Component {
                         'right'
                     );
 
-                    console.error(error);
+                    console.log(error);
                 });
         });
     };
