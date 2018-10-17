@@ -73,8 +73,9 @@ class ConductCode extends Component {
                                         )
                                 }
                             </div>
-                            <div className="row pdf-container">
-                                {renderHTML(`<div class="WordSection1">
+                            <div className="signature-content">
+                                <div className="signature-information">
+                                    {renderHTML(`<div class="WordSection1">
 <p style="margin: 0.65pt 0in 0.0001pt 1pt; text-align: center; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;" align="center"><strong><span style="font-size: 15.5pt; font-family: 'Times New Roman', serif;">Tumi Staffing Code of Conduct</span></strong></p>
 <p style="margin: 4.9pt 42.8pt 0.0001pt 0in; line-height: 110%; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.5pt; line-height: 110%;">&nbsp;</span></p>
 <ol style="margin-top: 4.9pt; margin-bottom: .0001pt;">
@@ -124,13 +125,13 @@ class ConductCode extends Component {
 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0.45pt 0in 0.0001pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 9.5pt;">&nbsp;</span></p>
-<p style="margin: 5.4pt 0in 0.0001pt 5.2pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">Signed: <u>{Signature}</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: <u>{DateSigned}</u> </p>
+<p style="margin: 5.4pt 0in 0.0001pt 5.2pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">Signed: <u> { Signature } </u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date: <u>{DateSigned}</u> </p>
 <p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</p>
 <p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</p>
 <p style="margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</p>
 <p style="margin: 1.4pt 0in 0.0001pt 1pt; font-size: 10.5pt; font-family: 'Trebuchet MS', sans-serif;">Printed Name: <u> {Name} </u> 
 </div>`)}
-
+                                </div>
                             </div>
                         </div>
                     </div>
