@@ -200,17 +200,17 @@ class ContactsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th} width="60px">Contact Type</CustomTableCell>
-							<CustomTableCell className={classes.th}>First Name</CustomTableCell>
-							<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
-							<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
-							<CustomTableCell className={classes.th}>Department</CustomTableCell>
+							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
+							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
+							<CustomTableCell className={classes.th + " Table-head"} width="60px">Contact Type</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>First Name</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>Middle Name</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>Last Name</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>Department</CustomTableCell>
 							{/*<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>*/}
-							<CustomTableCell className={classes.th}>Email</CustomTableCell>
-							<CustomTableCell className={classes.th + " contact-th"}>Phone Number</CustomTableCell>
-							<CustomTableCell className={classes.th}>Contact Title</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>Email</CustomTableCell>
+							<CustomTableCell className={classes.th + " contact-th Table-head"}>Phone Number</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>Contact Title</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -225,7 +225,6 @@ class ContactsTable extends React.Component {
 									}}
 								>
 									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-										{' '}
 										<Tooltip title="Edit">
 											<div>
 												<IconButton
@@ -292,26 +291,6 @@ class ContactsTable extends React.Component {
 											))}
 										</Select>
 									</CustomTableCell>
-									{/*<CustomTableCell>
-										<Select
-											id="supervisor"
-											name="supervisor"
-											value={row.idSupervisor}
-											disabled
-											IconComponent="div"
-											disableUnderline={true}
-										>
-											<MenuItem key={0} value={0} name="None">
-												None
-											</MenuItem>
-											{this.props.supervisors.map(({ Id, Name }) => (
-												<MenuItem key={Id} value={Id} name={Name}>
-													{Name}
-												</MenuItem>
-											))}
-										</Select>
-										</CustomTableCell>*/}
-
 									<CustomTableCell>{row.email}</CustomTableCell>
 									<CustomTableCell>{row.number}</CustomTableCell>
 									<CustomTableCell>
@@ -334,11 +313,11 @@ class ContactsTable extends React.Component {
 							);
 						})}
 
-						{emptyRows > 0 && (
+						{/*emptyRows > 0 && (
 							<TableRow style={{ height: 48 * emptyRows }}>
 								<TableCell colSpan={11} />
 							</TableRow>
-						)}
+						)*/}
 					</TableBody>
 					<TableFooter>
 						<TableRow>

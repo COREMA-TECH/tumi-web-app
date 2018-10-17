@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -7,6 +8,19 @@ import NewContract from './NewContract/NewContract';
 import ExhibitContract from './ExhibitContract/ExhibitContract';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withGlobalContent from '../Generic/Global';
+
+const theme = createMuiTheme({
+	overrides: {
+		MuiTabs: { // Name of the component ⚛️ / style sheet
+			root: { // Name of the rule
+				overflow: 'unset', // Some CSS
+			},
+			fixed: { // Name of the rule
+				overflowX: 'unset', // Some CSS
+			},
+		},
+	},
+});
 
 const styles = (theme) => ({
 	root: {
@@ -154,46 +168,48 @@ class Contract extends React.Component {
 		}
 
 		return (
-			<div className={classes.root}>
-				<Tabs
-					value={value}
-					onChange={this.handleChange}
-					classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-				>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label={this.state.contractId == 0 ? 'New Contract' : 'Edit Contract'}
-					/>
-					<Tab
-						disabled={contractValue}
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Exhibit"
-					/>
-				</Tabs>
-				{value === 0 && (
-					<NewContract
-						contractId={this.state.contractId}
-						Id_Entity={this.state.Id_Entity}
-						update={this.updateContractId}
-						updateCompanyId={this.updateCompanyId}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						getContractName={this.getContractName}
-					/>
-				)}
-				{value === 1 && (
-					<ExhibitContract
-						contractId={this.state.contractId}
-						companyId={
-							this.state.companyId == 0 ? this.props.location.state.Id_Entity : this.state.companyId
-						}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						baseUrl={this.props.baseUrl}
-						contractname={this.state.ContractName}
-						showStepper={false}
-					/>
-				)}
+			<div>
+				<MuiThemeProvider theme={theme}>
+					<Tabs
+						value={value}
+						onChange={this.handleChange}
+						classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid" }}
+					>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label={this.state.contractId == 0 ? 'New Contract' : 'Edit Contract'}
+						/>
+						<Tab
+							disabled={contractValue}
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Exhibit"
+						/>
+					</Tabs>
+					{value === 0 && (
+						<NewContract
+							contractId={this.state.contractId}
+							Id_Entity={this.state.Id_Entity}
+							update={this.updateContractId}
+							updateCompanyId={this.updateCompanyId}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+							getContractName={this.getContractName}
+						/>
+					)}
+					{value === 1 && (
+						<ExhibitContract
+							contractId={this.state.contractId}
+							companyId={
+								this.state.companyId == 0 ? this.props.location.state.Id_Entity : this.state.companyId
+							}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+							baseUrl={this.props.baseUrl}
+							contractname={this.state.ContractName}
+							showStepper={false}
+						/>
+					)}
+				</MuiThemeProvider>
 			</div>
 		);
 	}

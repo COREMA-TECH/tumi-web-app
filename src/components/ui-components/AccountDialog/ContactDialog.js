@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,7 +11,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import blue from '@material-ui/core/colors/blue';
 import Query from 'react-apollo/Query';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import './index.css';
 import withApollo from 'react-apollo/withApollo';
 import ContactFormContract from '../../Contract/ContactFormContract/ContactFormDialog';
@@ -121,11 +121,11 @@ class SimpleDialog extends React.Component {
 	`;
 
     render() {
-        const {classes, onClose, selectedValue, ...other} = this.props;
+        const { classes, onClose, selectedValue, ...other } = this.props;
         return (
             <Dialog
                 fullScreen={true}
-                style={{width: '1024px !important'}}
+                style={{ width: '1024px !important' }}
                 onClose={this.handleClose}
                 aria-labelledby="simple-dialog-title"
                 {...other}
@@ -145,20 +145,20 @@ class SimpleDialog extends React.Component {
                         <div className="list-item-container-scroll">
                             <ListItem className="header-table-contacts">
                                 <ListItemAvatar className="row-10">
-                                    <Avatar className={classes.avatar}/>
+                                    <Avatar className={classes.avatar} />
                                 </ListItemAvatar>
-                                <ListItemText className="row-33" primary="Name"/>
-                                <ListItemText className="row-33" primary="Phone Number"/>
-                                <ListItemText className="row-33" primary="Department"/>
+                                <ListItemText className="row-33" primary="Name" />
+                                <ListItemText className="row-33" primary="Phone Number" />
+                                <ListItemText className="row-33" primary="Department" />
                             </ListItem>
                             <Query
                                 query={this.getContactsQuery}
                                 pollInterval={500}
-                                variables={{Id_Entity: parseInt(this.props.idCompany)}}
+                                variables={{ Id_Entity: parseInt(this.props.idCompany) }}
                             >
-                                {({loading, error, data, refetch, networkStatus}) => {
+                                {({ loading, error, data, refetch, networkStatus }) => {
                                     //if (networkStatus === 4) return <LinearProgress />;
-                                    if (loading) return <LinearProgress/>;
+                                    if (loading) return <LinearProgress />;
                                     if (error) return <p>Error </p>;
                                     if (data.getcontacts != null && data.getcontacts.length > 0) {
                                         //return <SelectFormCompany data={data.getcompanies} addCompany={this.handleClickOpen} update={this.updateCompany} />
@@ -179,7 +179,7 @@ class SimpleDialog extends React.Component {
                                             >
                                                 <ListItemAvatar className="row-10">
                                                     <Avatar className={classes.avatar}>
-                                                        <PersonIcon/>
+                                                        <PersonIcon />
                                                     </Avatar>
                                                 </ListItemAvatar>
                                                 <ListItemText
@@ -241,7 +241,7 @@ class SimpleDialogDemo extends React.Component {
     };
 
     handleClose = (value) => {
-        this.setState({selectedValue: value, open: false});
+        this.setState({ selectedValue: value, open: false });
     };
 
     GET_CONTACT_BY_ID = gql`
@@ -264,7 +264,7 @@ class SimpleDialogDemo extends React.Component {
                         Id_Entity: parseInt(idEntity)
                     }
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setState({
                         selectedValue:
                             data.getcontacts[0].First_Name.trim() + ' ' + data.getcontacts[0].Last_Name.trim()
@@ -295,18 +295,18 @@ class SimpleDialogDemo extends React.Component {
     render() {
         return (
             <div>
-                <div className="input-file-container">
+                <div className="form-control">
                     <input
                         defaultValue={this.state.selectedValue}
                         type="text"
                         className={
-                            this.props.error ? 'input-form input-form--file _invalid' : 'input-form input-form--file'
+                            this.props.error ? 'form-control-nonBorder form-control-dialogSelect _invalid' : 'form-control-nonBorder form-control-dialogSelect'
                         }
                         readOnly
                     />
-                    <span className="input-form--file-button primary-button" onClick={this.handleClickOpen}>
-						<span className="icon-drop"/>
-					</span>
+                    <span className="input-form--file-button primary-button arrow-combo" onClick={this.handleClickOpen}>
+                        <span className="icon-drop" />
+                    </span>
                 </div>
 
                 <SimpleDialogWrapped
