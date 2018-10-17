@@ -92,13 +92,13 @@ class CustomizedTabs extends React.Component {
                 case 1:
                     return <BackgroundCheck applicationId={this.state.applicationId}/>;
                 case 2:
-                    return <NonDisclosure/>;
+                    return <NonDisclosure applicationId={this.state.applicationId}/>;
                 case 3:
-                    return <ConductCode/>;
+                    return <ConductCode applicationId={this.state.applicationId}/>;
                 case 4:
-                    return <AntiHarassment/>;
+                    return <AntiHarassment applicationId={this.state.applicationId}/>;
                 case 5:
-                    return <WorkerCompensation/>;
+                    return <WorkerCompensation applicationId={this.state.applicationId}/>;
                 default:
                     return 'Unknown step';
             }

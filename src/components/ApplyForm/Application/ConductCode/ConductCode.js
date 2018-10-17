@@ -3,7 +3,8 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
-import renderHTML from 'react-render-html';
+import withApollo from "react-apollo/withApollo";
+import {GET_APPLICANT_INFO} from "./Queries";
 
 //import html from '../../../../data/Package hire/CondeConduct';
 
@@ -15,7 +16,8 @@ class ConductCode extends Component {
         this.state = {
             signature: '',
             openSignature: false,
-            signedDate: ''
+            signedDate: '',
+            applicantName: ''
         }
     }
 
@@ -27,6 +29,25 @@ class ConductCode extends Component {
         });
     };
 
+    getApplicantInformation = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_INFO,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                if (data.applications[0].backgroundCheck !== null) {
+                    this.setState({
+                        applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
+                    });
+                }
+            })
+            .catch(error => {
+
+            })
+    };
 
     render() {
         let renderSignatureDialog = () => (
@@ -89,4 +110,4 @@ class ConductCode extends Component {
     }
 }
 
-export default ConductCode;
+export default withApollo(ConductCode);
