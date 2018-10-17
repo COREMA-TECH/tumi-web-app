@@ -106,9 +106,7 @@ class VerticalLinearStepper extends Component {
         const steps = getSteps();
         const { activeStep } = this.state;
 
-        console.log("render renderc ", this.state.applicationId);
         if (this.state.applicationId == 0) { this.state.applicationId = localStorage.getItem('idApplication'); }
-
 
         let getStepContent = (step) => {
             switch (step) {
@@ -133,21 +131,20 @@ class VerticalLinearStepper extends Component {
                             <div className="applicant-card__header">
                                 <h2 className="applicant-card__title">Steps</h2>
                             </div>
-
-                            <Stepper activeStep={activeStep} orientation="vertical" className="">
+                            <Stepper activeStep={activeStep} orientation="vertical" className="" >
                                 {steps.map((label, index) => {
+                                    if (this.state.applicationId == 0) { index = 0; }
                                     return (
                                         <div
                                             key={label}
                                             onClick={() => {
-                                                console.log({ label }, "indice", { index })
+                                                //  alert(this.state.applicationId)
                                                 this.setState({ activeStep: index })
-
                                             }}
                                             className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
+                                        // className={this.state.applicationId === 0 ? "display:none" : ""}
                                         >
                                             <StepLabel className={[classes.stepper, 'stepper-label']}>
-                                                {console.log({ label }, "indice", { index })}
                                                 {label}
                                             </StepLabel>
                                         </div>
@@ -159,7 +156,7 @@ class VerticalLinearStepper extends Component {
                                     <Typography>All steps completed - you&quot;re finished</Typography>
                                     <Button onClick={this.handleReset} className={classes.button}>
                                         Reset
-                                    </Button>
+                              </Button>
                                 </Paper>
                             )}
                         </div>
