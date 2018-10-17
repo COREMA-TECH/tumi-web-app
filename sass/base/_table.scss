@@ -1,0 +1,8 @@
+.Table {
+    border-radius: $border-radius-standar;
+    overflow: hidden;
+    &-head {
+        background-color: $brand-primary;
+        font-size: 1rem !important;
+    }
+}

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import './index.css';
 import CircularProgress from '../../material-ui/CircularProgress';
 import PropTypes from 'prop-types';
 const uuidv4 = require('uuid/v4');
@@ -18,6 +17,9 @@ class ImageUpload extends Component {
 	}
 	componentWillMount() {
 		this.setState({ fileURL: this.context.avatarURL });
+	}
+	triggerFileClick = (event) => {
+		document.getElementById("avatarFile").click();
 	}
 	handleUpload(event) {
 		// Loading state
@@ -84,8 +86,8 @@ class ImageUpload extends Component {
 						<img className="avatar-uploaded" src={this.props.fileURL || this.state.fileURL} alt="Company Avatar" />
 					</div>
 					<div className="upload-btn-wrapper">
-						<button className="btn"><i class="fas fa-cloud-upload-alt"></i></button>
-						<input type="file" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
+						<button onClick={this.triggerFileClick} className="btn-up"><i class="fas fa-cloud-upload-alt"></i></button>
+						<input type="file" id="avatarFile" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
 					</div>
 				</div>
 			</div>

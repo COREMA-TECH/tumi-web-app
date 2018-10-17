@@ -8,7 +8,7 @@ class InputValid extends Component {
                 type={this.props.type}
                 id={this.props.id}
                 value={this.props.value}
-                className={'input-form'}
+                className={'form-control'}
                 required
                 min="0"
                 placeholder={this.props.placeholder}

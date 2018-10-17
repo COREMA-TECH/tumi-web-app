@@ -11,7 +11,7 @@ class InputDateForm extends Component {
 						value={this.props.value}
 						disabled={this.props.disabled}
 						className={
-							this.props.error ? 'input-form input-form-date _invalid' : 'input-form input-form-date'
+							this.props.error ? 'form-control _invalid' : 'form-control'
 						}
 						placeholder={this.props.placeholder}
 						onChange={(event) => {
@@ -26,7 +26,7 @@ class InputDateForm extends Component {
 						value={this.props.value}
 						disabled={this.props.disabled}
 						className={
-							this.props.error ? 'input-form input-form-date _invalid' : 'input-form input-form-date'
+							this.props.error ? 'form-control _invalid' : 'form-control'
 						}
 						onChange={(event) => {
 							this.props.change(event.target.value);

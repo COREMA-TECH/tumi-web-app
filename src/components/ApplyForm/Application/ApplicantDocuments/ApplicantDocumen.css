@@ -96,6 +96,11 @@
 }
 .input-middle {
 	width: 60px;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(221, 221, 221);
 }
 .group-container {
 	height: 220px;
@@ -110,6 +115,9 @@
 	color: gray;
 	text-align: center;
 	height: 40px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .main-group-container {
@@ -134,4 +142,9 @@
 .image-show-wrap:hover {
 	border: 2px solid rgb(19, 182, 4);
 	background-color: rgba(228, 220, 220, 0.5);
+}
+
+.fa {
+	margin-left: -12px;
+	margin-right: 8px;
 }

@@ -25,6 +25,15 @@ $second-light-gray: #999;
 $red: #f50057;
 $success: #3ca2c8;
 
+//Brackgrounds 
+$bg-body: $light-gray;
+$bg-tab-selected: $bg-body;
+$bg-card-header: rgba($brand-primary, 0.06);
+
+//Borders 
+$border-standard: $gray;
+$tab-border-selected: $border-standard;
+
 // Typography
 $font-family-sans-serif: "Noto Sans", sans-serif;
 $font-family-stand-out: "Michroma", sans-serif;

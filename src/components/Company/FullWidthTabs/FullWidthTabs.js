@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import GeneralInformation from '../GeneralInformation/GeneralInformation';
@@ -11,57 +12,17 @@ import Preferences from '../Preferences';
 
 import withGlobalContent from 'Generic/Global';
 
-import './index.css';
-
-const styles = (theme) => ({
-	root: {
-		flexGrow: 1,
-		backgroundColor: theme.palette.background.paper
-	},
-	tabsRoot: {
-		borderBottom: '2px solid #3DA2C7'
-	},
-	tabsIndicator: {
-		backgroundColor: '#3DA2C7',
-		borderRadius: '25px 25px 0px 0px',
-		marginLeft: '5px',
-		marginRight: '5px',
-		height: '3px'
-	},
-	tabRoot: {
-		fontSize: '32px',
-		textTransform: 'initial',
-		minWidth: 72,
-		fontWeight: theme.typography.fontWeightRegular,
-		marginRight: theme.spacing.unit * 4,
-		fontFamily: [
-			'-apple-system',
-			'BlinkMacSystemFont',
-			'"Segoe UI"',
-			'Roboto',
-			'"Helvetica Neue"',
-			'Arial',
-			'sans-serif',
-			'"Apple Color Emoji"',
-			'"Segoe UI Emoji"',
-			'"Segoe UI Symbol"'
-		].join(','),
-		'&:hover': {
-			color: '#3DA2C7',
-			opacity: 1
+const theme = createMuiTheme({
+	overrides: {
+		MuiTabs: { // Name of the component ⚛️ / style sheet
+			root: { // Name of the rule
+				overflow: 'unset', // Some CSS
+			},
+			fixed: { // Name of the rule
+				overflowX: 'unset', // Some CSS
+			},
 		},
-		'&$tabSelected': {
-			color: '#3DA2C7',
-			fontWeight: theme.typography.fontWeightMedium
-		},
-		'&:focus': {
-			color: '#3DA2C7'
-		}
 	},
-	tabSelected: {},
-	typography: {
-		padding: theme.spacing.unit * 3
-	}
 });
 
 class CustomizedTabs extends React.Component {
@@ -184,44 +145,46 @@ class CustomizedTabs extends React.Component {
 		const { value } = this.state;
 
 		return (
-			<div className={classes.root}>
-				<Tabs
-					value={value}
-					onChange={this.handleChange}
-					classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-				>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="General Information"
-					/>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Contacts"
-						disabled={!this.state.activateTabs}
-					/>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Departments"
-						disabled={!this.state.activateTabs}
-					/>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Positions and Rates"
-						disabled={!this.state.activateTabs}
-					/>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Preferences"
-						disabled={!this.state.activateTabs}
-					/>
-				</Tabs>
-				{this.showSelectedTab(value)}
-			</div>
+			<div>
+				<MuiThemeProvider theme={theme}>
+					<Tabs
+						value={value}
+						onChange={this.handleChange}
+						classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid" }}
+					>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="General Information"
+						/>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Contacts"
+							disabled={!this.state.activateTabs}
+						/>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Departments"
+							disabled={!this.state.activateTabs}
+						/>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Positions and Rates"
+							disabled={!this.state.activateTabs}
+						/>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Preferences"
+							disabled={!this.state.activateTabs}
+						/>
+					</Tabs>
+					{this.showSelectedTab(value)}
+				</MuiThemeProvider>
+			</div >
 		);
 	}
 }
@@ -230,4 +193,4 @@ CustomizedTabs.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withGlobalContent(CustomizedTabs));
+export default withGlobalContent(CustomizedTabs);
