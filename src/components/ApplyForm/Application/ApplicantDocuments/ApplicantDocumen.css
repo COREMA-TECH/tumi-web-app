@@ -103,15 +103,11 @@
 	background-color: rgb(221, 221, 221);
 }
 .group-container {
-	height: 220px;
+	height: 240px;
 	width: 180px;
 	display: flex;
 	flex-direction: column;
 	margin: 20px;
-}
-.group-container-separator {
-	border-right: lightgray 1px solid;
-	padding-right: 30px;
 }
 
 .group-title {

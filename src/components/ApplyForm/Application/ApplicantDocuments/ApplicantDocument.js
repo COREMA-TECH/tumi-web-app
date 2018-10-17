@@ -121,7 +121,7 @@ class ApplicantDocument extends Component {
 
 	renderStaticElement = () => {
 		return (
-			<div class="group-container group-container-separator">
+			<div class="group-container ">
 				<span class="group-title">Other Document</span>
 				<div class="image-upload-wrap">
 					<input
