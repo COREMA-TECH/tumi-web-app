@@ -120,25 +120,24 @@ class ApplicantDocument extends Component {
 	}
 
 	renderStaticElement = () => {
-		<div class="group-container">
-			<span class="group-title">Other Document</span>
-			<div class="image-upload-wrap">
-				<input
-					class="file-upload-input"
-					type="file"
-					onChange={(e) => {
-						//this.handleUpload(e, item.Id);
-					}}
-					accept="image/*"
-				/>
-				<div class="drag-text">
-					<div>+</div>
+		return (
+			<div class="group-container group-container-separator">
+				<span class="group-title">Other Document</span>
+				<div class="image-upload-wrap">
+					<input
+						class="file-upload-input"
+						type="file"
+						onChange={(e) => {
+							//this.handleUpload(e, item.Id);
+						}}
+						accept="image/*"
+					/>
+					<div class="drag-text">
+						<div>+</div>
+					</div>
 				</div>
 			</div>
-			<div class="button-container">
-				<button class="file-input">Download Template</button>
-			</div>
-		</div>;
+		);
 	};
 
 	renderTemplateList = () => {
@@ -275,6 +274,7 @@ class ApplicantDocument extends Component {
 									</div>
 								) : (
 									<div class="main-group-container">
+										{this.renderStaticElement()}
 										{this.renderTemplateList()}
 										{this.renderDocumentList()}
 									</div>

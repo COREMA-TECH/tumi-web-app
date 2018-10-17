@@ -107,8 +107,11 @@
 	width: 180px;
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 	margin: 20px;
+}
+.group-container-separator {
+	border-right: lightgray 1px solid;
+	padding-right: 30px;
 }
 
 .group-title {
