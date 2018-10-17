@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
+import renderHTML from 'react-render-html';
 
 class WorkerCompensation extends Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class WorkerCompensation extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                                       signatureValue={this.handleSignature}/>
+                            signatureValue={this.handleSignature} />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -61,16 +62,67 @@ class WorkerCompensation extends Component {
                                     this.state.editing ? (
                                         ''
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                openSignature: true
-                                            })
-                                        }}>Sign <i className="far fa-edit"></i>
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    openSignature: true
+                                                })
+                                            }}>Sign <i className="far fa-edit"></i>
+                                            </button>
+                                        )
                                 }
                             </div>
-                            <div className="row pdf-container"></div>
+                            <div className="row pdf-container">
+                                <div className="signature-information">
+                                    {renderHTML(`<h1 style="margin: 1.2pt 0in 0.0001pt 57.3pt; text-align: justify; font-size: 14pt; font-family: 'Trebuchet MS', sans-serif;">Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&rsquo; Compensation Network</h1>
+<p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><strong><span style="font-size: 12.0pt; font-family: 'Trebuchet MS', sans-serif;">&nbsp;</span></strong></p>
+<p style="margin: 0in 54.3pt 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&rsquo;s workers&rsquo; compensation insurance.</p>
+<p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;</span></p>
+<p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">If I am hurt on the job and live in a service area described in this information, I understand that:</p>
+<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
+<ol style="margin-top: 0in; margin-bottom: .0001pt;">
+<li style="margin: 0in 16.3pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I must choose a treating doctor from the list of doctors in the network. Or, I may ask my HMO primary care physician to agree to serve as my treating doctor. If I select my HMO primary care physician as my treating doctor, I will call Texas Mutual at (800) 859-5995 to notify them of my choice.</li>
+<li style="margin: 0.05pt 48.25pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I must go to my treating doctor for all health care for my injury. If I need a specialist, my treating doctor will refer me. If I need emergency care, I may go anywhere.</li>
+<li style="margin: 0.05pt 0in 0.0001pt 14.6667px; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">The insurance carrier will pay the treating doctor and other network providers.</li>
+<li style="margin: 0.8pt 42.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I might have to pay the bill if I get health care from someone other than a network doctor without network approval.</li>
+<li style="margin: 0.05pt 14.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">Knowingly making a false workers&rsquo; compensation claim may lead to a criminal investigation that could result in criminal penalties such as fines and imprisonment.</li>
+</ol>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;&nbsp;&nbsp; </span>{Signature}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {Date}</p>
+<p style="margin: 0in 0in 0.0001pt 11pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {Name}</p>
+<p style="margin: 0in 0in 0.0001pt 11pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">Printed Name</p>
+<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
+<p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I live at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {Address}</p>
+<p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Street Address</p>
+<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Arial, sans-serif;">{City}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {State}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; {ZipCode}</p>
+<p style="margin: 0in 0in 0.0001pt 83pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Code</p>
+<p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">Name of Employer: {Name}</p>
+<p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</p>
+<p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">Name of Network: <em>Texas Star Network</em>&reg;</p>
+<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
+<p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;"><strong><span style="font-family: 'Trebuchet MS', sans-serif;">Network service areas are subject to change. Call (800) 381-8067 if you need a network treating </span></strong><strong><span style="font-family: 'Trebuchet MS', sans-serif;">provider.</span></strong></p>
+<p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</p>
+<table style="border-collapse: collapse; width: 100%;" border="1">
+<tbody>
+<tr>
+<td style="width: 100%;">
+<p style="margin: 1.1pt 0in 0.0001pt 5.4pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Please indicate whether this is the:</span></p>
+<ul style="margin-top: 1.0pt; margin-bottom: .0001pt;">
+<li style="margin: 1pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Initial Employee Notification</span></li>
+<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification (Date of Injury:<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>/<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>/<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>)</span></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</p>
+<p style="margin: 2.7pt 0in 0.0001pt 14.6pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><strong><span style="font-size: 12.0pt; font-family: 'Trebuchet MS', sans-serif;">DO NOT RETURN THIS FORM TO TEXAS MUTUAL INSURANCE COMPANY UNLESS REQUESTED</span></strong></p>`)}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
