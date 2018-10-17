@@ -13,7 +13,7 @@ class InputForm extends Component {
 					className={this.props.error ? 'input-form _invalid' : 'form-control'}
 					maxLength={this.props.maxLength}
 					min={this.props.type == 'number' ? 0 : null}
-					placeholder={this.props.placeholder && ''}
+					placeholder={this.props.placeholder}
 					disabled={this.props.disabled}
 					onChange={(event) => {
 						if (event.target.value.toString().length > this.props.maxLength) return false;

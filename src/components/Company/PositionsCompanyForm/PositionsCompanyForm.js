@@ -877,11 +877,43 @@ class PositionsCompanyForm extends React.Component {
                     loadingConfirm={this.state.loadingConfirm}
                     content="Do you really want to continue whit this operation?"
                 />
-                <div className="position__header">
-                    <button className="add-position" onClick={this.handleClickOpenModal}>
-                        {' '}
-                        Add Rates{' '}
-                    </button>
+                <div className="row">
+                    <div className="col-md-12">
+                        <button className="btn btn-success float-right" onClick={this.handleClickOpenModal}>
+                            Add Rates
+                        </button>
+                        {
+                            this.props.showStepper ? (
+                                <div className="advanced-tab-options">
+                                    { /*<span
+                                className="options-button options-button--back"
+                                onClick={() => {
+                                    this.props.back();
+                                }}
+                            >
+                                Back
+                            </span>*/}
+                                    <Route render={({ history }) => (
+                                        <button
+                                            className="btn btn-success float-right mr-1"
+                                            onClick={() => {
+
+                                                // When the user click Next button, open second tab
+                                                history.push({
+                                                    pathname: '/home/contract/add',
+                                                    state: { contract: 0, Id_Entity: this.state.idCompany }
+                                                });
+
+                                            }}
+                                        >
+                                            {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
+                                        </button>
+                                    )} />
+
+                                </div>
+                            ) : ('')
+                        }
+                    </div>
                 </div>
                 <Dialog
                     fullScreen={fullScreen}
@@ -1042,37 +1074,7 @@ class PositionsCompanyForm extends React.Component {
                         />
                     </div>
                 </div>
-                {
-                    this.props.showStepper ? (
-                        <div className="advanced-tab-options">
-                            { /*<span
-                                className="options-button options-button--back"
-                                onClick={() => {
-                                    this.props.back();
-                                }}
-                            >
-                                Back
-                            </span>*/}
-                            <Route render={({ history }) => (
-                                <span
-                                    className="options-button options-button--next"
-                                    onClick={() => {
 
-                                        // When the user click Next button, open second tab
-                                        history.push({
-                                            pathname: '/home/contract/add',
-                                            state: { contract: 0, Id_Entity: this.state.idCompany }
-                                        });
-
-                                    }}
-                                >
-                                    {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
-                                </span>
-                            )} />
-
-                        </div>
-                    ) : ('')
-                }
             </div>
         );
     }

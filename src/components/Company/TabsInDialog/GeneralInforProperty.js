@@ -141,7 +141,7 @@ class GeneralInfoProperty extends Component {
 				Phone_Number
 				Suite
 				Contract_URL
-				Insurace_URL
+				Insurance_URL
 				Other_Name
 				Other01_Name
 				Rooms
@@ -207,7 +207,7 @@ class GeneralInfoProperty extends Component {
 								ImageURL: `'${this.state.avatar}'`,
 								Start_Date: "'2018-08-14'",
 								Contract_URL: `'${this.state.contractURL}'`,
-								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Insurance_URL: `'${this.state.insuranceURL}'`,
 								Other_URL: `'${this.state.otherURL}'`,
 								Other01_URL: `'${this.state.other01URL}'`,
 								Other_Name: `'${this.state.Other_Name}'`,
@@ -337,7 +337,7 @@ class GeneralInfoProperty extends Component {
 								ImageURL: `'${this.state.avatar}'`,
 								Start_Date: "'2018-08-14'",
 								Contract_URL: `'${this.state.contractURL}'`,
-								Insurace_URL: `'${this.state.insuranceURL}'`,
+								Insurance_URL: `'${this.state.insuranceURL}'`,
 								Other_URL: `'${this.state.otherURL}'`,
 								Other01_URL: `'${this.state.other01URL}'`,
 								Other_Name: `'${this.state.Other_Name}'`,
@@ -516,7 +516,7 @@ class GeneralInfoProperty extends Component {
 								active: item.IsActive,
 								suite: item.Suite,
 								contractURL: item.Contract_URL,
-								insuranceURL: item.Insurace_URL,
+								insuranceURL: item.Insurance_URL,
 								otherURL: item.Other_URL,
 								other01URL: item.Other01_URL,
 								Other_Name: item.Other_Name,
@@ -557,43 +557,47 @@ class GeneralInfoProperty extends Component {
 			<Route
 				render={({ history }) => (
 					<form onSubmit={this.handleFormSubmit} noValidate>
-						<div className="options-company">
-							<button
-								disabled={false}
-								className="edit-company-button"
-								onClick={() => {
-									this.deleteCompany(this.props.idProperty);
+						<div className="row">
+							<div className="col-md-12">
+								<div className="form-actions float-right">
+									<button
+										disabled={false}
+										className="btn btn-danger"
+										onClick={() => {
+											this.deleteCompany(this.props.idProperty);
 
-									/*	history.push({
-											pathname: '/company/edit',
-											state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
-										});*/
-								}}
-							>
-								Delete Property
-							</button>
-						</div>
-						<div className="container container-small">
-							<div className="card-form-row">
-								<ImageUpload
-									updateAvatar={(url) => {
-										this.setState({
-											avatar: url
-										});
-									}}
-									fileURL={this.state.avatar}
-								/>
+											/*	history.push({
+													pathname: '/company/edit',
+													state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
+												});*/
+										}}
+									>
+										Delete Property
+								</button>
+									<input type="submit" value="Next" className="btn btn-success" />
+								</div>
 							</div>
-							<div className="row">
-								<div className="col-6">
-									<div className="card-wrapper">
-										<div class="card-form-header grey">General Information</div>
+						</div>
+						<div className="row">
+							<div className="col-md-12">
+								<div class="card">
+									<div class="card-header">
+										General Information
+  									</div>
+									<div class="card-body">
 										<div className="row">
-											<div className="col-6">
-												<span className="primary card-input-label">* Markup</span>
+											<div className="col-md-6 col-lg-1">
+												<ImageUpload
+													updateAvatar={(url) => {
+														this.setState({
+															avatar: url
+														});
+													}}
+													fileURL={this.state.avatar}
+												/>
 											</div>
-
-											<div className="col-6">
+											<div className="col-md-6 col-lg-1">
+												<label>* Markup</label>
 												<InputValid
 													type="number"
 													value={this.state.rate}
@@ -604,14 +608,11 @@ class GeneralInfoProperty extends Component {
 													}}
 													error={!this.state.rateValid}
 													maxLength="10"
-													//disabled={!this.props.showStepper}
+												//disabled={!this.props.showStepper}
 												/>
 											</div>
-
-											<div className="col-6">
-												<span className="primary card-input-label">* Hotel Name</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-3">
+												<label>* Hotel Name</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
@@ -624,10 +625,8 @@ class GeneralInfoProperty extends Component {
 													required
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* Address</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-3">
+												<label>* Address</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
@@ -640,12 +639,10 @@ class GeneralInfoProperty extends Component {
 													required
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">Address 2</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-3">
+												<label>Address 2</label>
 												<input
-													className={'input-form'}
+													className={'form-control'}
 													onChange={(e) => {
 														this.setState({
 															optionalAddress: e.target.value
@@ -656,10 +653,8 @@ class GeneralInfoProperty extends Component {
 													maxLength="50"
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">Suite</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-1">
+												<label>Suite</label>
 												<input
 													onChange={(e) => {
 														this.setState({
@@ -669,13 +664,11 @@ class GeneralInfoProperty extends Component {
 													value={this.state.suite}
 													type="text"
 													maxLength="10"
-													className={'input-form'}
+													className={'form-control'}
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* States</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-3">
+												<label>* States</label>
 												<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 													{({ loading, error, data, refetch, networkStatus }) => {
 														//if (networkStatus === 4) return <LinearProgress />;
@@ -704,10 +697,8 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* City</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-3">
+												<label>City</label>
 												<Query
 													query={this.getCitiesQuery}
 													variables={{ parent: this.state.state }}
@@ -739,10 +730,8 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* Zip Code</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-2">
+												<label>* Zip Code</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
@@ -755,10 +744,8 @@ class GeneralInfoProperty extends Component {
 													required
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* Phone Number</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-2">
+												<label>* Phone Number</label>
 												<InputMask
 													id="prop-number"
 													name="number"
@@ -767,10 +754,10 @@ class GeneralInfoProperty extends Component {
 													value={this.state.phoneNumber}
 													className={
 														this.state.phoneNumberValid ? (
-															'input-form'
+															'form-control'
 														) : (
-															'input-form _invalid'
-														)
+																'input-form _invalid'
+															)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -783,10 +770,8 @@ class GeneralInfoProperty extends Component {
 													minLength="15"
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">Fax Number</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-2">
+												<label>Fax</label>
 												<InputMask
 													id="prop-fax"
 													name="number"
@@ -794,7 +779,7 @@ class GeneralInfoProperty extends Component {
 													maskChar=" "
 													value={this.state.fax}
 													className={
-														this.state.faxNumberValid ? 'input-form' : 'input-form _invalid'
+														this.state.faxNumberValid ? 'form-control' : 'input-form _invalid'
 													}
 													onChange={(e) => {
 														this.setState({
@@ -809,14 +794,14 @@ class GeneralInfoProperty extends Component {
 										</div>
 									</div>
 								</div>
-								<div className="col-6">
-									<div className="card-wrapper">
-										<div class="card-form-header yellow">Legal Docs</div>
+								<div class="card">
+									<div class="card-header">
+										Legal Docs
+  									</div>
+									<div class="card-body">
 										<div className="row">
-											<div className="col-6">
-												<span className="primary card-input-label">* Hotel Code</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-3">
+												<label>* Hotel Code</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
@@ -829,10 +814,8 @@ class GeneralInfoProperty extends Component {
 													required
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">Cost Center</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-4">
+												<label>Cost Center</label>
 												<input
 													type="text"
 													value={this.state.Code01}
@@ -842,13 +825,11 @@ class GeneralInfoProperty extends Component {
 														});
 													}}
 													maxLength="10"
-													className={'input-form'}
+													className={'form-control'}
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* Contract Start Date</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-4">
+												<label>Contract Start Date</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
@@ -860,10 +841,8 @@ class GeneralInfoProperty extends Component {
 													required
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* Room</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-4">
+												<label>* Room</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
@@ -875,62 +854,52 @@ class GeneralInfoProperty extends Component {
 													required
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">* Week Start</span>
+											<div className="col-md-6 col-lg-4">
+												<label>* Week Start</label>
+												<SelectForm
+													data={days}
+													update={(value) => {
+														if (value === 0) {
+															this.setState({
+																startWeek: value,
+																validStartWeek: 'valid'
+															});
+														} else {
+															this.setState({
+																startWeek: value,
+																validStartWeek: ''
+															});
+														}
+													}}
+													value={this.state.startWeek}
+													error={this.state.validStartWeek === '' ? false : true}
+													showNone={false}
+												/>
 											</div>
-											<div className="col-6">
-												<div className="row">
-													<div className="col-5">
-														<SelectForm
-															data={days}
-															update={(value) => {
-																if (value === 0) {
-																	this.setState({
-																		startWeek: value,
-																		validStartWeek: 'valid'
-																	});
-																} else {
-																	this.setState({
-																		startWeek: value,
-																		validStartWeek: ''
-																	});
-																}
-															}}
-															value={this.state.startWeek}
-															error={this.state.validStartWeek === '' ? false : true}
-															showNone={false}
-														/>
-													</div>
-													<div className="col-2">
-														<span>To</span>
-													</div>
-													<div className="col-5">
-														<SelectForm
-															data={days}
-															update={(value) => {
-																if (value === 0) {
-																	this.setState({
-																		endWeek: value,
-																		validEndWeek: 'valid'
-																	});
-																} else {
-																	this.setState({
-																		endWeek: value,
-																		validEndWeek: ''
-																	});
-																}
-															}}
-															value={this.state.endWeek}
-															error={this.state.validEndWeek === '' ? false : true}
-															showNone={false}
-														/>
-													</div>
-												</div>
+											<div className="col-md-6 col-lg-4">
+												<label>To</label>
+												<SelectForm
+													data={days}
+													update={(value) => {
+														if (value === 0) {
+															this.setState({
+																endWeek: value,
+																validEndWeek: 'valid'
+															});
+														} else {
+															this.setState({
+																endWeek: value,
+																validEndWeek: ''
+															});
+														}
+													}}
+													value={this.state.endWeek}
+													error={this.state.validEndWeek === '' ? false : true}
+													showNone={false}
+												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">Contract</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-6">
+												<label>Contract</label>
 												<FileUpload
 													updateURL={(url) => {
 														this.setState({
@@ -940,10 +909,8 @@ class GeneralInfoProperty extends Component {
 													fileNameUploaded={this.state.contractURL}
 												/>
 											</div>
-											<div className="col-6">
-												<span className="primary card-input-label">Insurance</span>
-											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-6">
+												<label>Insurance</label>
 												<FileUpload
 													updateURL={(url) => {
 														this.setState({
@@ -953,7 +920,7 @@ class GeneralInfoProperty extends Component {
 													fileNameUploaded={this.state.insuranceURL}
 												/>
 											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-6">
 												<input
 													className={'input-form input-file-modal'}
 													onChange={(e) => {
@@ -965,8 +932,6 @@ class GeneralInfoProperty extends Component {
 													type="text"
 													placeholder="Name File"
 												/>
-											</div>
-											<div className="col-6">
 												<FileUpload
 													updateURL={(url) => {
 														this.setState({
@@ -976,7 +941,7 @@ class GeneralInfoProperty extends Component {
 													fileNameUploaded={this.state.otherURL}
 												/>
 											</div>
-											<div className="col-6">
+											<div className="col-md-6 col-lg-6">
 												<input
 													className={'input-form input-file-modal'}
 													onChange={(e) => {
@@ -988,8 +953,6 @@ class GeneralInfoProperty extends Component {
 													type="text"
 													placeholder="Name File"
 												/>
-											</div>
-											<div className="col-6">
 												<FileUpload
 													updateURL={(url) => {
 														this.setState({
@@ -1004,9 +967,7 @@ class GeneralInfoProperty extends Component {
 								</div>
 							</div>
 						</div>
-						<div className="contract-footer--bottom">
-							<input type="submit" value="Next" className="contract-next-button" />
-						</div>
+
 					</form>
 				)}
 			/>

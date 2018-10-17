@@ -5,9 +5,23 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import GeneralInforProperty from './GeneralInforProperty';
 import ContactCompanyForm from '../ContactCompanyForm/ContactCompanyForm';
-
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import DepartmentsCompanyForm from '../DepartmentsCompanyForm/DepartmentsCompanyForm';
 import PositionsCompanyForm from '../PositionsCompanyForm/PositionsCompanyForm';
+
+
+const theme = createMuiTheme({
+	overrides: {
+		MuiTabs: { // Name of the component ⚛️ / style sheet
+			root: { // Name of the rule
+				overflow: 'unset', // Some CSS
+			},
+			fixed: { // Name of the rule
+				overflowX: 'unset', // Some CSS
+			},
+		},
+	},
+});
 
 const styles = (theme) => ({
 	root: {
@@ -92,89 +106,91 @@ class CustomizedTabs extends Component {
 		const { value } = this.state;
 
 		return (
-			<div className={classes.root}>
-				<Tabs
-					value={value}
-					onChange={this.handleChange}
-					classes={{ root: classes.tabsRoot, indicator: classes.tabsIndicator }}
-				>
-					<Tab
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="General Information"
-					/>
-					<Tab
-						disabled={this.state.idProperty === null}
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Contacts"
-					/>
-					<Tab
-						disabled={this.state.idProperty === null}
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Departments"
-					/>
-					<Tab
-						disabled={this.state.idProperty === null}
-						disableRipple
-						classes={{ root: classes.tabRoot, selected: classes.tabSelected }}
-						label="Positions and Rates"
-					/>
-				</Tabs>
-				{value === 0 && (
-					<GeneralInforProperty
-						idCompany={this.props.idCompany}
-						idProperty={this.state.idProperty}
-						Markup={this.props.Markup}
-						updateIdProperty={(id) => {
-							this.setState({
-								idProperty: id
-							});
-						}}
-						handleClose={this.props.handleClose}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						next={this.updateValue}
-					/>
-				)}
-				{value === 1 && (
-					<ContactCompanyForm
-						idCompany={this.state.idProperty}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
-						toggleStepper={this.toggleStepper}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-					/>
-				)}
-				{value === 2 && (
-					<DepartmentsCompanyForm
-						idCompany={this.state.idProperty}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
-						toggleStepper={this.toggleStepper}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-					/>
-				)}
-				{value === 3 && (
-					<PositionsCompanyForm
-						idCompany={this.state.idProperty}
-						idContract={1}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={true}
-						toggleStepper={this.toggleStepper}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						showPayRate={true}
-					/>
-				)}
+			<div>
+				<MuiThemeProvider theme={theme}>
+					<Tabs
+						value={value}
+						onChange={this.handleChange}
+						classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid" }}
+					>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="General Information"
+						/>
+						<Tab
+							disabled={this.state.idProperty === null}
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Contacts"
+						/>
+						<Tab
+							disabled={this.state.idProperty === null}
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Departments"
+						/>
+						<Tab
+							disabled={this.state.idProperty === null}
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Positions and Rates"
+						/>
+					</Tabs>
+					{value === 0 && (
+						<GeneralInforProperty
+							idCompany={this.props.idCompany}
+							idProperty={this.state.idProperty}
+							Markup={this.props.Markup}
+							updateIdProperty={(id) => {
+								this.setState({
+									idProperty: id
+								});
+							}}
+							handleClose={this.props.handleClose}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+							next={this.updateValue}
+						/>
+					)}
+					{value === 1 && (
+						<ContactCompanyForm
+							idCompany={this.state.idProperty}
+							item={this.state.item}
+							next={this.nextHandleChange}
+							back={this.backHandleChange}
+							valueTab={this.state.value}
+							showStepper={this.state.showStepper}
+							toggleStepper={this.toggleStepper}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+						/>
+					)}
+					{value === 2 && (
+						<DepartmentsCompanyForm
+							idCompany={this.state.idProperty}
+							item={this.state.item}
+							next={this.nextHandleChange}
+							back={this.backHandleChange}
+							valueTab={this.state.value}
+							showStepper={this.state.showStepper}
+							toggleStepper={this.toggleStepper}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+						/>
+					)}
+					{value === 3 && (
+						<PositionsCompanyForm
+							idCompany={this.state.idProperty}
+							idContract={1}
+							item={this.state.item}
+							next={this.nextHandleChange}
+							back={this.backHandleChange}
+							valueTab={this.state.value}
+							showStepper={true}
+							toggleStepper={this.toggleStepper}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+							showPayRate={true}
+						/>
+					)}
+				</MuiThemeProvider>
 			</div>
 		);
 	}

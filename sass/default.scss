@@ -15,6 +15,9 @@
 @import "base/simple-grid";
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
+//Reset
+@import "base/reset";
+
 //Base
 @import "base/bootstrap_modify.scss";
 @import "base/buttons";
@@ -24,6 +27,7 @@
 @import "base/modal";
 @import "base/error";
 @import "base/image-upload";
+@import "base/table";
 
 
 //Sections 

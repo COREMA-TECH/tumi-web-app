@@ -1,4 +1,4 @@
-label:not(.custom-file-label) {
+label:not(.custom-file-label):not(.form-check-label) {
     margin-bottom: 0 !important;
     margin-top: 0.5rem;
 }

@@ -9,8 +9,6 @@ class FileUpload extends Component {
 
 		this.state = {
 			uploadValue: 0,
-			fileURL: '',
-			fileName: '',
 			loading: false
 		};
 
@@ -55,10 +53,9 @@ class FileUpload extends Component {
 						},
 						() => {
 							this.setState({
-								fileName: file.name,
 								loading: false
 							});
-							this.props.updateURL(this.state.fileURL);
+							this.props.updateURL(this.state.fileURL, file.name);
 						}
 					);
 				});
@@ -93,12 +90,14 @@ class FileUpload extends Component {
 							<div class="input-group">
 								<div class="custom-file">
 									<input type="file" onChange={this.handleUpload} class="custom-file-input" id="validatedCustomFile" disabled={this.props.disabled} />
-									<label class="custom-file-label" for="validatedCustomFile">{this.state.fileName == "" ? "Choose File.." : this.state.fileName}</label>
+									<label class="custom-file-label" for="validatedCustomFile">{this.props.fileName == null ? "Choose File.." : this.props.fileName}</label>
 								</div>
 								<div class="input-group-append">
-									<button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">
+									<a class="btn btn-outline-secondary" id="inputGroupFileAddon04" href={!this.props.disabled && this.props.url}
+										disabled={this.props.disabled}
+										target="_blank">
 										<i class="far fa-eye"></i>
-									</button>
+									</a>
 								</div>
 							</div>
 						</div>
