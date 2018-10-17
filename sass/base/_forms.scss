@@ -36,6 +36,11 @@
         margin-bottom: 1rem;
         padding-bottom: 1rem;
     } 
+    &-section-1 {
+        div[col*="col-"] {
+            margin-bottom: 1rem;
+        }
+    }
 }
 
 .input {

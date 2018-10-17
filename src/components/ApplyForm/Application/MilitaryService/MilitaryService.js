@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {GET_APPLICATION_MILITARY_SERVICES_BY_ID} from "../../Queries";
+import React, { Component } from 'react';
+import { GET_APPLICATION_MILITARY_SERVICES_BY_ID } from "../../Queries";
 import withApollo from "react-apollo/withApollo";
-import {ADD_MILITARY_SERVICES, UPDATE_MILITARY_SERVICES} from "../../Mutations";
+import { ADD_MILITARY_SERVICES, UPDATE_MILITARY_SERVICES } from "../../Mutations";
 import CircularProgressLoading from "../../../material-ui/CircularProgressLoading";
 import withGlobalContent from "../../../Generic/Global";
 
@@ -147,7 +147,7 @@ class MilitaryService extends Component {
                     },
                     fetchPolicy: 'no-cache'
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     if (data.applications[0].militaryServices.length > 0) {
                         this.setState({
                             id: data.applications[0].militaryServices[0].id,
@@ -214,7 +214,7 @@ class MilitaryService extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                         <div className="col-6">
                             <span className="primary"> {militaryServiceLabels[1].label}</span>
@@ -233,7 +233,7 @@ class MilitaryService extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="row">
@@ -295,7 +295,7 @@ class MilitaryService extends Component {
                                 <option value="5">Dishonorable discharge</option>
                                 <option value="6">Entry-level separation.</option>
                             </select>
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                     </div>
                 </div>
@@ -314,31 +314,31 @@ class MilitaryService extends Component {
                                         ''
                                     ) : (
 
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                editing: true
-                                            })
-                                        }}>
-                                            {
-                                                this.state.militaryServiceLength === 0 ? (
-                                                    <span> {spanishActions[0].label} <i className="fas fa-plus"/></span>
-                                                ) : (
-                                                    <span> {spanishActions[1].label} <i className="far fa-edit"></i></span>
-                                                )
-                                            }
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    editing: true
+                                                })
+                                            }}>
+                                                {
+                                                    this.state.militaryServiceLength === 0 ? (
+                                                        <span> {spanishActions[0].label} <i className="fas fa-plus" /></span>
+                                                    ) : (
+                                                            <span> {spanishActions[1].label} <i className="far fa-edit"></i></span>
+                                                        )
+                                                }
+                                            </button>
+                                        )
                                 }
                             </div>
-                            <div className="row">
+                            <div className="">
                                 {
                                     this.state.loading ? (
                                         <div className="form-section-1 form-section--center">
-                                            <CircularProgressLoading/>
+                                            <CircularProgressLoading />
                                         </div>
                                     ) : (
-                                        renderMilitaryServiceSection()
-                                    )
+                                            renderMilitaryServiceSection()
+                                        )
                                 }
                             </div>
                             {
@@ -368,8 +368,8 @@ class MilitaryService extends Component {
                                         </button>
                                     </div>
                                 ) : (
-                                    ''
-                                )
+                                        ''
+                                    )
                             }
                         </div>
                     </div>
