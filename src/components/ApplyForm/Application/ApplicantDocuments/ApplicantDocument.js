@@ -275,6 +275,7 @@ class ApplicantDocument extends Component {
 								) : (
 									<div class="main-group-container">
 										{this.renderStaticElement()}
+										<div class="separator" />
 										{this.renderTemplateList()}
 										{this.renderDocumentList()}
 									</div>
