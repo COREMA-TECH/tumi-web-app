@@ -22,7 +22,7 @@ class Container extends Component {
 	render() {
 		return (
 			<div className="container-fluid">
-				<Route exact path="/home/application/info" component={ApplicationInfo} />
+				<Route exact path="/home/application/info" component={ApplicationTabs} />
 				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
 				<Route exact path="/home/contract/add" component={Contract} />
 				<Route exact path="/home/contracts" component={MainContract} />
