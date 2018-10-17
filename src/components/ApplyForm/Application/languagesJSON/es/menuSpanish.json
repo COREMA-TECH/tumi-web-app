@@ -1,25 +1,30 @@
 [
-  {
-    "id": 1,
-    "label": "Información General"
-  },
-  {
-    "id": 2,
-    "label": "Lenguajes"
-  },
-  {
-    "id": 3,
-    "label": "Educación"
-  },
-  {
-    "id": 4,
-    "label": "Empleos Anteriores"
-  },{
-    "id": 5,
-    "label": "Servicio Militar"
-  },
-  {
-    "id": 6,
-    "label": "Habilidades"
-  }
+	{
+		"id": 1,
+		"label": "Información General"
+	},
+	{
+		"id": 2,
+		"label": "Lenguajes"
+	},
+	{
+		"id": 3,
+		"label": "Educación"
+	},
+	{
+		"id": 4,
+		"label": "Empleos Anteriores"
+	},
+	{
+		"id": 5,
+		"label": "Servicio Militar"
+	},
+	{
+		"id": 6,
+		"label": "Habilidades"
+	},
+	{
+		"id": 7,
+		"label": "Documentos"
+	}
 ]

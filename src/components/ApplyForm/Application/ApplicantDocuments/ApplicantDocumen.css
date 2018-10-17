@@ -1,0 +1,137 @@
+.file-upload {
+	background-color: #ffffff;
+	width: 600px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+.file-upload-btn {
+	width: 100%;
+	margin: 0;
+	color: #fff;
+	background: #1fb264;
+	border: none;
+	padding: 10px;
+	border-radius: 4px;
+	border-bottom: 4px solid #15824b;
+	transition: all .2s ease;
+	outline: none;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+.file-upload-btn:hover {
+	background: #1aa059;
+	color: #ffffff;
+	transition: all .2s ease;
+	cursor: pointer;
+}
+
+.file-upload-btn:active {
+	border: 0;
+	transition: all .2s ease;
+}
+
+.file-upload-content {
+	display: none;
+	text-align: center;
+}
+
+.file-upload-input {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	outline: none;
+	opacity: 0;
+	cursor: pointer;
+}
+
+.image-upload-wrap {
+	margin-top: 0px 0px;
+	border: 3.5px dashed lightgray;
+	position: relative;
+	height: 140px;
+	border-radius: 10px;
+}
+
+.image-dropping,
+.image-upload-wrap:hover {
+	background-color: rgba(141, 141, 141, 0.3);
+	border: dashed #ffffff;
+}
+
+.image-title-wrap {
+	padding: 0 15px 15px 15px;
+	color: #222;
+}
+
+.drag-text {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+.drag-text div {
+	font-weight: 100;
+	text-transform: uppercase;
+	color: black;
+	margin: auto;
+	font-size: 50px;
+}
+
+.file-upload-image {
+	margin: auto;
+	padding: 20px;
+}
+.file-input {
+	height: 35px;
+	margin: 10px 0px 10px 0px;
+	border-radius: 2px;
+	border: 0;
+	width: 100%;
+}
+.input-middle {
+	width: 60px;
+}
+.group-container {
+	height: 220px;
+	width: 180px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: 20px;
+}
+
+.group-title {
+	color: gray;
+	text-align: center;
+	height: 40px;
+}
+
+.main-group-container {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.button-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+
+.image-show-wrap {
+	border-radius: 10px;
+	margin-top: 0px 0px;
+	border: 2px solid rgb(21, 187, 6);
+	position: relative;
+	height: 140px;
+}
+
+.image-show-wrap:hover {
+	border: 2px solid rgb(19, 182, 4);
+	background-color: rgba(228, 220, 220, 0.5);
+}

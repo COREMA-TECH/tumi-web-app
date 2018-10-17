@@ -15,7 +15,8 @@ import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationRecruiter from 'ApplyForm-Recruiter/ApplicationList/ApplicationList';
 import ApplicationInfo from 'ApplyForm/Application/ApplicationInfo';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
-import ApplicationTabs from "../../ApplyForm/Application/ApplicationTabs";
+import ApplicantDocument from 'ApplyForm/Application/ApplicantDocuments/ApplicantDocument.js';
+import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 
 class Container extends Component {
 	render() {
@@ -30,6 +31,7 @@ class Container extends Component {
 				<Route exact path="/home/company/add" component={CreateCompany} />
 				<Route exact path="/home/application" component={ApplicationList} />
 				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
+				<Route exact path="/home/documents" component={ApplicantDocument} />
 
 				<Route exact path="/home/Roles" component={CreateRole} />
 				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
