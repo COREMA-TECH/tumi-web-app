@@ -250,5 +250,6 @@
     width: 100%;
     height: calc(100vh - 180px - 8vh);
 
-    overflow-y: auto;
+    overflow-y: hidden;
+    padding: 0 !important;
 }

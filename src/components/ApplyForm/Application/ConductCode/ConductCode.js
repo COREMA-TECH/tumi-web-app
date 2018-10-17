@@ -17,8 +17,6 @@ class ConductCode extends Component {
         }
     }
 
-
-
     handleSignature = (value) => {
         this.setState({
             signature: value,
@@ -78,7 +76,7 @@ class ConductCode extends Component {
                             <div className="row pdf-container">
                                 <iframe src="http://localhost:3000/Package/CodeConduct.pdf"
                                     marginwidth="0" marginheight="0" name="ventana_iframe" scrolling="no" border="0"
-                                    frameborder="0" width="100%" height="680">
+                                    frameborder="0" width="100%" height="100%">
                                 </iframe>
                             </div>
                         </div>
