@@ -244,6 +244,8 @@ class Application extends Component {
 
     componentWillMount() {
         this.getApplicationById(this.props.applicationId);
+
+        alert(this.props.applicationId);
     }
 
     render() {
