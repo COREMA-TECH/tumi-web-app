@@ -7581,6 +7581,9 @@ label:not(.custom-file-label):not(.form-check-label) {
   margin-bottom: 1rem;
   padding-bottom: 1rem; }
 
+.form-section-1 div[col*="col-"] {
+  margin-bottom: 1rem; }
+
 .input-autocomplete + div {
   padding: 10px !important;
   z-index: 9999; }
