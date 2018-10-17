@@ -9,6 +9,7 @@ import ApplicationInfo from "./ApplicationInfo";
 import ConductCode from "./ConductCode/ConductCode";
 import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
+import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 
 const styles = theme => ({
     root: {
@@ -99,6 +100,8 @@ class CustomizedTabs extends React.Component {
                     return <AntiHarassment applicationId={this.state.applicationId}/>;
                 case 5:
                     return <WorkerCompensation applicationId={this.state.applicationId}/>;
+                case 6:
+                    return <ApplicantDocument applicationId={this.state.applicationId}/>;
                 default:
                     return 'Unknown step';
             }
@@ -140,6 +143,11 @@ class CustomizedTabs extends React.Component {
                         disableRipple
                         classes={{root: classes.tabRoot, selected: classes.tabSelected}}
                         label="Worker's Compensation"
+                    />
+                    <Tab
+                        disableRipple
+                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
+                        label="Documents"
                     />
                 </Tabs>
                 {getTabContent(value)}

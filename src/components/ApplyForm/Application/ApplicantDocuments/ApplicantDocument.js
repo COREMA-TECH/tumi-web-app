@@ -265,7 +265,7 @@ class ApplicantDocument extends Component {
 					<div className="col-12">
 						<div className="applicant-card">
 							<div className="applicant-card__header">
-								<span className="applicant-card__title">{menuSpanish[6].label}</span>
+								<span className="applicant-card__title">Documents</span>
 							</div>
 							<div className="row">
 								{this.state.loading ? (
