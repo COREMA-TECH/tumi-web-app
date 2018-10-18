@@ -147,3 +147,10 @@
 	margin-left: -12px;
 	margin-right: 8px;
 }
+
+.separator {
+	height: 100%;
+	border-style: solid;
+	border-top: 1px solid #8c8b8b;
+	border-bottom: 1px solid #fff;
+}

@@ -280,6 +280,7 @@ class ApplicantDocument extends Component {
 							) : (
 									<ul className="UploadDocument-wrapper">
 										{this.renderStaticElement()}
+										<div class="separator" />
 										{this.renderTemplateList()}
 										{this.renderDocumentList()}
 									</ul>

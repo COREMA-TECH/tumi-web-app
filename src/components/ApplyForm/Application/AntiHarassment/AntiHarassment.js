@@ -61,16 +61,18 @@ class AntiHarassment extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Anti-Harassment</span>
                                 {
-                                    this.state.editing ? (
-                                        ''
+                                    this.state.id !== null ? (
+                                        <button className="applicant-card__edit-button">
+                                            Download <i className="fas fa-download"></i>
+                                        </button>
                                     ) : (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                this.setState({
-                                                    openSignature: true
-                                                })
-                                            }}>Sign <i className="far fa-edit"></i>
-                                            </button>
-                                        )
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.setState({
+                                                openSignature: true
+                                            })
+                                        }}>Sign <i className="far fa-edit"></i>
+                                        </button>
+                                    )
                                 }
                             </div>
                             <div className="row pdf-container">
