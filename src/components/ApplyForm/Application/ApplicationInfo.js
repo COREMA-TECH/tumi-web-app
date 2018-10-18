@@ -124,7 +124,7 @@ class VerticalLinearStepper extends Component {
         return (
             <div className="main-stepper-container">
                 <div className="row">
-                    <div className="col-2">
+                    <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header">
                                 <h2 className="applicant-card__title">Steps </h2>
@@ -156,7 +156,7 @@ class VerticalLinearStepper extends Component {
                             )}
                         </div>
                     </div>
-                    <div className="col-10">
+                    <div className="col-md-8 col-lg-10">
                         <div className="StepperForm-wrapper">
                             {/*<select*/}
                             {/*value={localStorage.getItem('languageForm')}*/}

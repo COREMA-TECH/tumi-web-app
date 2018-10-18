@@ -277,9 +277,9 @@ class Application extends Component {
                             </div>
                             <br />
                             <div className="row">
-                                <div className="col-6 form-section-1">
+                                <div className="col-md-12 col-lg-6 form-section-1">
                                     <div className="row">
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[0].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -298,7 +298,7 @@ class Application extends Component {
                                                 minLength="3"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[1].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -316,7 +316,7 @@ class Application extends Component {
                                                 minLength="1"
                                             />
                                         </div>
-                                        <div className="col-12 ">
+                                        <div className="col-md-12 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[2].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -335,7 +335,7 @@ class Application extends Component {
                                                 minLength="3"
                                             />
                                         </div>
-                                        <div className="col-12 ">
+                                        <div className="col-md-12 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[3].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -353,7 +353,7 @@ class Application extends Component {
                                                 maxLength="50"
                                             />
                                         </div>
-                                        <div className="col-12 ">
+                                        <div className="col-md-12 ">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[22].label}</span>
                                             <input
@@ -373,7 +373,7 @@ class Application extends Component {
                                                 minLength="5"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[4].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -391,7 +391,7 @@ class Application extends Component {
                                                 minLength="5"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[5].label}</span>
                                             <InputMask
                                                 id="zipCode"
@@ -411,7 +411,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[6].label}</span>
                                             <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -442,7 +442,7 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[7].label}</span>
                                             <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -473,7 +473,7 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[9].label}</span>
                                             <InputMask
                                                 id="home-number"
@@ -492,7 +492,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[10].label}</span>
                                             <InputMask
                                                 id="cell-number"
@@ -513,7 +513,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-12 ">
+                                        <div className="col-md-12 ">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[11].label}</span>
                                             <InputMask
@@ -537,9 +537,9 @@ class Application extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-6 form-section-2">
+                                <div className="col-md-12 col-lg-6 form-section-2">
                                     <div className="row">
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[12].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -558,7 +558,7 @@ class Application extends Component {
                                                 minLength="10"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[23].label}</span>
                                             <label className="switch">
@@ -581,7 +581,7 @@ class Application extends Component {
                                                 <p className="slider round"></p>
                                             </label>
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-md-12">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[13].label}</span>
                                             <input
@@ -602,7 +602,7 @@ class Application extends Component {
                                                 minLength="8"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[14].label}</span>
                                             <select name="typeOfID" id="typeOfID" className="form-control"
                                                 disabled={!this.state.editing}
@@ -621,7 +621,7 @@ class Application extends Component {
                                                 <option value="7">Green Card</option>
                                             </select>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[15].label}</span>
                                             <input
@@ -641,7 +641,7 @@ class Application extends Component {
                                                 minLength="10"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[16].label}</span>
                                             <Query query={GET_POSITIONS_QUERY}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -673,7 +673,7 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[17].label}</span>
                                             <input
@@ -692,7 +692,7 @@ class Application extends Component {
                                                 maxLength="50"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-md-12">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[18].label}</span>
                                             <input
@@ -711,7 +711,7 @@ class Application extends Component {
                                                 maxLength="50"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[19].label}</span>
                                             <label className="switch">
@@ -731,7 +731,7 @@ class Application extends Component {
                                                 <p className="slider round"></p>
                                             </label>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[21].label}</span>
                                             <textarea
@@ -748,7 +748,7 @@ class Application extends Component {
                                                 className="form-control textarea-apply-form"
                                             />
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[20].label}</span>
                                             <label className="switch">
@@ -768,7 +768,7 @@ class Application extends Component {
                                                 <p className="slider round"></p>
                                             </label>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[21].label}</span>
                                             <textarea
