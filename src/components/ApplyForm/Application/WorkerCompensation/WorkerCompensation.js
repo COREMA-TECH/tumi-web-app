@@ -122,6 +122,9 @@ class WorkerCompensation extends Component {
                         content: data.applications[0].workerCompensation.content,
                         applicantName: data.applications[0].workerCompensation.applicantName,
                         date: data.applications[0].workerCompensation.date,
+                        initialNotification:  data.applications[0].workerCompensation.initialNotification,
+                        injuryNotification:  data.applications[0].workerCompensation.injuryNotification,
+                        injuryDate:  data.applications[0].workerCompensation.injuryDate.substring(0,10)
                     });
                 } else {
                     this.setState({
@@ -387,7 +390,7 @@ class WorkerCompensation extends Component {
 <p style="margin: 1.1pt 0in 0.0001pt 5.4pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Please indicate whether this is the:</span></p>
 <ul style="margin-top: 1.0pt; margin-bottom: .0001pt;">
 <li style="margin: 1pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Initial Employee Notification</span></li>
-<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification (Date of Injury:<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>/<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>/<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>)</span></li>
+<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification: <u>`+ this.state.injuryDate +`</u></span></li>
 </ul>
 </td>
 </tr>
