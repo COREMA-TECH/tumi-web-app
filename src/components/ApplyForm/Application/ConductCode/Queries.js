@@ -11,6 +11,10 @@ export const GET_APPLICANT_INFO = gql`
             firstName
             middleName
             lastName
+            streetAddress
+            city
+            state
+            zipCode
         }
     }
 `;

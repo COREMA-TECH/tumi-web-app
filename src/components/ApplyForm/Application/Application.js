@@ -113,7 +113,7 @@ class Application extends Component {
                         middleName: this.state.middleName,
                         lastName: this.state.lastName,
                         date: this.state.date,
-                        streetAddress: this.state.streetAddress,
+                        applicantAddress: this.state.applicantAddress,
                         aptNumber: this.state.aptNumber,
                         city: this.state.city,
                         state: this.state.state,
@@ -181,7 +181,7 @@ class Application extends Component {
                         middleName: applicantData.middleName,
                         lastName: applicantData.lastName,
                         date: applicantData.date !== null ? applicantData.date.substring(0, 10) : applicantData.date,
-                        streetAddress: applicantData.streetAddress,
+                        applicantAddress: applicantData.applicantAddress,
                         emailAddress: applicantData.emailAddress,
                         aptNumber: applicantData.aptNumber,
                         city: applicantData.city,
@@ -359,10 +359,10 @@ class Application extends Component {
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
-                                                        streetAddress: event.target.value
+                                                        applicantAddress: event.target.value
                                                     });
                                                 }}
-                                                value={this.state.streetAddress}
+                                                value={this.state.applicantAddress}
                                                 name="streetAddress"
                                                 type="text"
                                                 className="form-control"

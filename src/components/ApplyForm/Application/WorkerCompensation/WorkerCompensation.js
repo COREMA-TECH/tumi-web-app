@@ -1,27 +1,144 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
+import {GET_WORKER_COMPENSATION_INFO} from "./Queries";
+import {GET_APPLICANT_INFO} from "../ConductCode/Queries";
+import {ADD_NON_DISCLOSURE} from "../NonDisclosure/Mutations";
+import {ADD_WORKER_COMPENSATION} from "./Mutations";
+import withApollo from "react-apollo/withApollo";
+import withGlobalContent from "../../../Generic/Global";
 
 class WorkerCompensation extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            signature: null,
-            openSignature: false
+            id: null,
+            signature: '',
+            content: '',
+            date: '',
+            applicantName: '',
+            ApplicationId: this.props.applicationId,
+            openSignature: false,
+
+            applicantAddress: '',
+            applicantCity: '',
+            applicantState: '',
+            applicantZipCode: '',
         }
     }
 
     handleSignature = (value) => {
         this.setState({
             signature: value,
+            date: new Date().toISOString().substring(0,10),
             openSignature: false
+        }, () => {
+            this.insertWorkerCompensation(this.state)
         });
     };
 
+    insertWorkerCompensation = (item) => {
+        let workerCompensationObject = Object.assign({}, item);
+        delete workerCompensationObject.openSignature;
+        delete workerCompensationObject.id;
+        delete workerCompensationObject.accept;
+
+        this.props.client
+            .mutate({
+                mutation: ADD_WORKER_COMPENSATION,
+                variables: {
+                    workerCompensation: workerCompensationObject
+                }
+            })
+            .then(({data}) => {
+                // Show a snackbar with a success message
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully signed!',
+                    'bottom',
+                    'right'
+                );
+
+                this.getWorkerCompensationInformation(this.props.applicationId);
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to sign Worker Compensation document. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
+    getApplicantInformation = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_INFO,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({data}) => {
+                if (data.applications[0] !== null) {
+                    this.setState({
+                        applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
+                        applicantAddress: data.applications[0].streetAddress,
+                        applicantCity: data.applications[0].city,
+                        applicantState: data.applications[0].state,
+                        applicantZipCode: data.applications[0].zipCode,
+                    });
+                }
+            })
+            .catch(error => {
+
+            })
+    };
+
+    getWorkerCompensationInformation = (id) => {
+        this.props.client
+            .query({
+                query: GET_WORKER_COMPENSATION_INFO,
+                variables: {
+                    id: id
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                if (data.applications[0].workerCompensation !== null) {
+                    this.setState({
+                        id: data.applications[0].workerCompensation.id,
+                        signature: data.applications[0].workerCompensation.signature,
+                        content: data.applications[0].workerCompensation.content,
+                        applicantName: data.applications[0].workerCompensation.applicantName,
+                        date: data.applications[0].workerCompensation.date.substring(0,10),
+                    });
+                } else {
+                    this.setState({
+                        id: null
+                    })
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to get worker compensation information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
+    componentWillMount(){
+        this.getWorkerCompensationInformation(this.props.applicationId);
+        this.getApplicantInformation(this.props.applicationId);
+    }
 
     render() {
         let renderSignatureDialog = () => (
@@ -45,7 +162,7 @@ class WorkerCompensation extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                            signatureValue={this.handleSignature} />
+                                       signatureValue={this.handleSignature}/>
                     </DialogContent>
                 </Dialog>
             </div>
@@ -90,19 +207,19 @@ class WorkerCompensation extends Component {
 </ol>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;&nbsp;&nbsp; </span>{Signature}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {Date}</p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;&nbsp;&nbsp; </span><u><img width="300" height="300" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date + `</u></p>
 <p style="margin: 0in 0in 0.0001pt 11pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {Name}</p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantName + `</u></p>
 <p style="margin: 0in 0in 0.0001pt 11pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">Printed Name</p>
 <p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I live at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {Address}</p>
+<p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I live at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantAddress + `</u></p>
 <p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Street Address</p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Arial, sans-serif;">{City}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {State}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; {ZipCode}</p>
+<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Arial, sans-serif;"><u>` + this.state.applicantCity + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantState + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <u>` + this.state.applicantZipCode + `</u></p>
 <p style="margin: 0in 0in 0.0001pt 83pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Code</p>
 <p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">Name of Employer: {Name}</p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">Name of Employer: <u>`+ this.state.applicantName + `</u></p>
 <p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;</p>
 <p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">Name of Network: <em>Texas Star Network</em>&reg;</p>
 <p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
@@ -136,4 +253,4 @@ class WorkerCompensation extends Component {
     }
 }
 
-export default WorkerCompensation;
+export default withApollo(withGlobalContent(WorkerCompensation));
