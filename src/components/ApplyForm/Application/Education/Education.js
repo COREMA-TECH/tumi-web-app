@@ -154,7 +154,7 @@ class Education extends Component {
 
         // To render the Skills Dialog
         let renderEducationDialog = () => (
-            <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+            <Dialog fullWidth open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <form
                     autoComplete="off"
                     id="education-form"
