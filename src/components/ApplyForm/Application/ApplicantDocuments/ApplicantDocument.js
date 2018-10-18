@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import CircularProgressLoading from 'material-ui/CircularProgressLoading';
 import firebase from 'firebase';
 import './ApplicantDocumen.css';
+import './Circular.css';
 import { GET_DOCUMENTS_AND_TEMPLATES } from '../../Queries';
 import { REMOVE_APPLICANT_DOCUMENT, ADD_APPLICANT_DOCUMENT } from '../../Mutations';
-
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
-const languagesTable = require(`../languagesJSON/${localStorage.getItem('languageForm')}/languagesTable`);
+const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
 class ApplicantDocument extends Component {
 	constructor(props) {
@@ -27,14 +28,16 @@ class ApplicantDocument extends Component {
 			uploading: false,
 			fileURL: null,
 			fileName: null,
-			openConfirm: false
+			openConfirm: false,
+			errorMessage: null
 		};
 	}
 
 	getTemplateDocuments = () => {
 		this.setState(
 			{
-				loading: true
+				loading: true,
+				errorMessage: null
 			},
 			() => {
 				this.props.client
@@ -51,7 +54,8 @@ class ApplicantDocument extends Component {
 					})
 					.catch((error) => {
 						this.setState({
-							loading: false
+							loading: false,
+							errorMessage: error
 						});
 						this.props.handleOpenSnackbar(
 							'error',
@@ -102,7 +106,6 @@ class ApplicantDocument extends Component {
 				}
 			})
 			.then(() => {
-				this.setState({ loading: false });
 				this.props.handleOpenSnackbar('success', 'Successfully created', 'bottom', 'right');
 				this.getTemplateDocuments();
 			})
@@ -127,6 +130,7 @@ class ApplicantDocument extends Component {
 					<span class="group-title title-blue">{spanishActions[6].label}</span>
 					<div class="image-upload-wrap-static">
 						<input
+							disabled={this.state.uploading}
 							class="file-upload-input"
 							type="file"
 							onChange={(e) => {
@@ -135,7 +139,16 @@ class ApplicantDocument extends Component {
 							accept="application/pdf"
 						/>
 						<div class="drag-text">
-							<div>+</div>
+							{!this.state.uploading && <span>+</span>}
+							{this.state.uploading && (
+								<div class={`c100 p${this.state.progress} small`}>
+									<span>{`${this.state.progress}%`}</span>
+									<div class="slice">
+										<div class="bar" />
+										<div class="fill" />
+									</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -167,7 +180,7 @@ class ApplicantDocument extends Component {
 								accept="application/pdf"
 							/>
 							<div class="drag-text">
-								<div>+</div>
+								<span>+</span>
 							</div>
 						</div>
 						<div class="button-container">
@@ -233,7 +246,7 @@ class ApplicantDocument extends Component {
 		task.on(
 			'state_changed',
 			(snapshot) => {
-				let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+				let percentage = parseInt(snapshot.bytesTransferred / snapshot.totalBytes * 100);
 
 				// Update the progress
 				this.setState({
@@ -271,7 +284,7 @@ class ApplicantDocument extends Component {
 					confirmAction={() => {
 						this.removeDocument();
 					}}
-					title={'Are you sure you want to delete this record?'}
+					title={dialogMessages[0].label}
 					loading={this.state.removing}
 				/>
 				<div className="row">
@@ -284,6 +297,15 @@ class ApplicantDocument extends Component {
 								<div className="form-section-1 form-section--center">
 									<CircularProgressLoading />
 								</div>
+							) : this.state.errorMessage ? (
+								<React.Fragment>
+									<NothingToDisplay
+										title="Oops!"
+										message="Error loading data"
+										type="Error-danger"
+										icon="danger"
+									/>
+								</React.Fragment>
 							) : (
 								<ul className="UploadDocument-wrapper">
 									{this.renderStaticElement()}
