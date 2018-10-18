@@ -152,7 +152,7 @@ class PreviousEmployment extends Component {
     render() {
         // To render the Skills Dialog
         let renderPreviousEmploymentDialogForm = () => (
-            <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+            <Dialog fullWidth open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <form
                     autoComplete="off"
                     id="form-previous-employment"

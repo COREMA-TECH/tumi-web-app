@@ -30,13 +30,18 @@ class InputFileCard extends Component {
 	}
 
 	handleUpload = (event, id, docName, typeId) => {
+		// Get the file selected
+		const file = event.target.files[0];
+
+		if (file.size > 10485760) {
+			alert('File is too big!');
+			this.value = '';
+			return true;
+		}
 		this.setState({
 			uploading: true,
 			catalogItemId: id
 		});
-
-		// Get the file selected
-		const file = event.target.files[0];
 
 		// Build the reference based in the filename
 		const storageRef = firebase.storage().ref(`/files/${file.name}`);
@@ -139,7 +144,7 @@ class InputFileCard extends Component {
 					<div class="button-container">
 						<a class="file-input" href={this.props.url} target="_blank">
 							{' '}
-							{spanishActions[7].label} <i class="fas fa-file-download fa-lg" />
+							{spanishActions[7].label} <i class="fas fa-download fa-lg" />
 						</a>
 					</div>
 				</div>
@@ -159,7 +164,7 @@ class InputFileCard extends Component {
 					</div>
 					<div class="button-container">
 						<a class="file-input input-middle" href={this.props.url} target="_blank">
-							<i class="fas fa-file-download fa-lg" />
+							<i class="fas fa-download fa-lg" />
 						</a>
 						<a
 							href=""

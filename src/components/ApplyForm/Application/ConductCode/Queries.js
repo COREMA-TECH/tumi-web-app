@@ -11,6 +11,10 @@ export const GET_APPLICANT_INFO = gql`
             firstName
             middleName
             lastName
+            streetAddress
+            city
+            state
+            zipCode
         }
     }
 `;
@@ -31,5 +35,10 @@ export const GET_CONDUCT_CODE_INFO = gql`
     }
 `;
 
+export const CREATE_DOCUMENTS_PDF_QUERY = gql`
+query createdocumentspdf($contentHTML:String,$Name:String) {
+    createdocumentspdf(contentHTML: $contentHTML, Name: $Name) 
+}
+`;
 
 
