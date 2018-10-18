@@ -127,7 +127,9 @@ class ApplicantDocument extends Component {
 		return (
 			<li className="UploadDocument-item">
 				<div class="group-container ">
-					<span class="group-title title-blue">{spanishActions[6].label}</span>
+					<span class="group-title title-blue">
+						{spanishActions[6].label}
+					</span>
 					<div class="image-upload-wrap-static">
 						<input
 							disabled={this.state.uploading}
@@ -186,7 +188,7 @@ class ApplicantDocument extends Component {
 						<div class="button-container">
 							<a class="file-input" href={item.Value} target="_blank">
 								{' '}
-								{spanishActions[7].label} <i class="fas fa-file-download fa-lg" />
+								{spanishActions[7].label} <i className="fas fa-download"></i>
 							</a>
 						</div>
 					</div>
