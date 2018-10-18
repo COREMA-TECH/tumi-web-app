@@ -3,10 +3,6 @@ import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions/DialogActions';
-import CircularProgress from './CircularProgress';
-
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 
 const spanishActions = require(`ApplyForm/Application/languagesJSON/${localStorage.getItem(
 	'languageForm'
@@ -41,8 +37,6 @@ class ConfirmDialog extends React.Component {
 	}
 
 	render() {
-		const { classes } = this.props;
-
 		return (
 			<Dialog open={this.state.open} onClose={this.props.closeAction} aria-labelledby="form-dialog-title">
 				<DialogTitle>{this.props.title}</DialogTitle>
@@ -66,4 +60,4 @@ class ConfirmDialog extends React.Component {
 	}
 }
 
-export default withStyles(styles)(ConfirmDialog);
+export default ConfirmDialog;

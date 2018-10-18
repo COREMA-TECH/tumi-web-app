@@ -176,7 +176,6 @@
     text-overflow: ellipsis;
 
     font-weight: 100;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
 .title-blue {
@@ -210,7 +209,6 @@
     border: 2px dashed rgba(65, 175, 215, 0.4);
     border-bottom: none;
     background-color: rgba(65, 175, 215, 0.06);
-    cursor: pointer;
 }
 
 .fac {
