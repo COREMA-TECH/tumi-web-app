@@ -91,7 +91,7 @@
 	align-items: center;
 }
 
-.drag-text div {
+.drag-text span {
 	font-weight: 100;
 	text-transform: uppercase;
 	color: black;
