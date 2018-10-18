@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
 import renderHTML from 'react-render-html';
-import {GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO} from "./Queries";
-import {ADD_CONDUCT_CODE} from "./Mutations";
+import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO } from "./Queries";
+import { ADD_CONDUCT_CODE } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 
 //import html from '../../../../data/Package hire/CondeConduct';
@@ -45,7 +45,7 @@ class ConductCode extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
@@ -66,7 +66,8 @@ class ConductCode extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
+                console.log("esta es la data ",data);
                 if (data.applications[0].conductCode !== null) {
                     this.setState({
                         id: data.applications[0].conductCode.id,
@@ -101,7 +102,7 @@ class ConductCode extends Component {
                     conductCode: conductObject
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.props.handleOpenSnackbar(
                     'success',
                     'Successfully signed!',
@@ -124,7 +125,7 @@ class ConductCode extends Component {
             });
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.getConductCodeInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
     }
@@ -151,7 +152,7 @@ class ConductCode extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                                       signatureValue={this.handleSignature}/>
+                            signatureValue={this.handleSignature} />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -170,13 +171,13 @@ class ConductCode extends Component {
                                             Download <i className="fas fa-download"></i>
                                         </button>
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                openSignature: true
-                                            })
-                                        }}>Sign <i className="far fa-edit"></i>
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    openSignature: true
+                                                })
+                                            }}>Sign <i className="far fa-edit"></i>
+                                            </button>
+                                        )
                                 }
                             </div>
                             <div className="row pdf-container">
