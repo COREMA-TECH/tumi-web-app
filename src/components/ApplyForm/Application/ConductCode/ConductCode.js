@@ -166,7 +166,9 @@ class ConductCode extends Component {
                                 <span className="applicant-card__title">Conduct Code</span>
                                 {
                                     this.state.id !== null ? (
-                                        ''
+                                        <button className="applicant-card__edit-button">
+                                            Download <i className="fas fa-download"></i>
+                                        </button>
                                     ) : (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.setState({

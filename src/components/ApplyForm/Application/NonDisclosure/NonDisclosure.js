@@ -28,7 +28,8 @@ class NonDisclosure extends Component {
     handleSignature = (value) => {
         this.setState({
             signature: value,
-            openSignature: false
+            openSignature: false,
+            date: new Date().toISOString()
         }, () => {
             this.insertNonDisclosure(this.state)
         });
@@ -55,6 +56,8 @@ class NonDisclosure extends Component {
                     'bottom',
                     'right'
                 );
+
+                this.getDisclosureInformation(this.props.applicationId);
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message
@@ -162,7 +165,9 @@ class NonDisclosure extends Component {
                                 <span className="applicant-card__title">Non-Disclosure</span>
                                 {
                                     this.state.id !== null ? (
-                                        ''
+                                        <button className="applicant-card__edit-button">
+                                            Download <i className="fas fa-download"></i>
+                                        </button>
                                     ) : (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.setState({
@@ -316,16 +321,15 @@ class NonDisclosure extends Component {
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-                                    <p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>{Signature}</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>{Date}</u></span></p>
+                                    <p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 9.5pt;"><u><img width="300" height="300" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.date + `</u></span></p>
                                     <p style="margin: 0in 0in 0.0001pt 5pt; text-align: justify; line-height: 13.7pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date Signed</p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-                                    <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>{Name}</u></span></p>
-                                    <p style="margin: 0in 0in 0.0001pt 5pt; text-align: justify; line-height: 13.7pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;">Name of Employee (please print)</p>
+                                    <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.0pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantName + `</u></span></p>
+                                    <p style="margin: 0in 0in 0.0001pt 5pt; text-align: justify; line-height: 13.7pt; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;">Name of Employee</p>
                                     <p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 8.5pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>`)}
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

@@ -122,22 +122,24 @@ class ApplicantDocument extends Component {
 
 	renderStaticElement = () => {
 		return (
-			<div class="group-container ">
-				<span class="group-title title-blue ">{spanishActions[6].label}</span>
-				<div class="image-upload-wrap-static">
-					<input
-						class="file-upload-input"
-						type="file"
-						onChange={(e) => {
-							this.handleUpload(e, null);
-						}}
-						accept="application/pdf"
-					/>
-					<div class="drag-text">
-						<div>+</div>
+			<li className="UploadDocument-item">
+				<div class="group-container ">
+					<span class="group-title title-blue">{spanishActions[6].label}</span>
+					<div class="image-upload-wrap-static">
+						<input
+							class="file-upload-input"
+							type="file"
+							onChange={(e) => {
+								this.handleUpload(e);
+							}}
+							accept="application/pdf"
+						/>
+						<div class="drag-text">
+							<div>+</div>
+						</div>
 					</div>
 				</div>
-			</div>
+			</li>
 		);
 	};
 
@@ -152,28 +154,30 @@ class ApplicantDocument extends Component {
 			//If document found then , don't show template into template list
 			if (found) return false;
 			return (
-				<div key={item.Id} class="group-container">
-					<span class="group-title">{item.Name}</span>
-					<div class="image-upload-wrap">
-						<input
-							class="file-upload-input"
-							type="file"
-							onChange={(e) => {
-								this.handleUpload(e, item.Id, item.Name);
-							}}
-							accept="application/pdf"
-						/>
-						<div class="drag-text">
-							<div>+</div>
+				<li className="UploadDocument-item">
+					<div key={item.Id} class="group-container">
+						<span class="group-title">{item.Name}</span>
+						<div class="image-upload-wrap">
+							<input
+								class="file-upload-input"
+								type="file"
+								onChange={(e) => {
+									this.handleUpload(e, item.Id, item.Name);
+								}}
+								accept="application/pdf"
+							/>
+							<div class="drag-text">
+								<div>+</div>
+							</div>
+						</div>
+						<div class="button-container">
+							<a class="file-input" href={item.Value} target="_blank">
+								{' '}
+								{spanishActions[7].label} <i class="fas fa-file-download fa-lg" />
+							</a>
 						</div>
 					</div>
-					<div class="button-container">
-						<a class="file-input" href={item.Value} target="_blank">
-							{spanishActions[7].label}
-							<i class="fac fas fa-file-download fa-lg" />
-						</a>
-					</div>
-				</div>
+				</li>
 			);
 		});
 	};
@@ -182,29 +186,31 @@ class ApplicantDocument extends Component {
 		if (!this.state.documents) return false;
 		return this.state.documents.map((item) => {
 			return (
-				<div key={0} class="group-container">
-					<span class="group-title">{item.fileName}</span>
-					<div class="image-show-wrap">
-						<div class="drag-text">
-							<i class="far fa-file-alt fa-7x" />
+				<li className="UploadDocument-item">
+					<div key={0} class="group-container">
+						<span class="group-title">{item.fileName}</span>
+						<div class="image-show-wrap">
+							<div class="drag-text">
+								<i class="far fa-file-alt fa-7x" />
+							</div>
+						</div>
+						<div class="button-container">
+							<a class="file-input input-middle" href={item.url} target="_blank">
+								<i class="fas fa-file-download fa-lg" />
+							</a>
+							<a
+								href=""
+								class="file-input input-middle"
+								onClick={(e) => {
+									e.preventDefault();
+									this.setState({ openConfirm: true, idToDelete: item.id });
+								}}
+							>
+								<i class="fas fa-trash-alt fa-lg" />
+							</a>
 						</div>
 					</div>
-					<div class="button-container">
-						<a class="input-middle" href={item.url} target="_blank">
-							<i class="fas fa-file-download fa-lg" />
-						</a>
-						<a
-							href=""
-							class="input-middle"
-							onClick={(e) => {
-								e.preventDefault();
-								this.setState({ openConfirm: true, idToDelete: item.id });
-							}}
-						>
-							<i class="fas fa-trash-alt fa-lg" />
-						</a>
-					</div>
-				</div>
+				</li>
 			);
 		});
 	};
@@ -274,21 +280,17 @@ class ApplicantDocument extends Component {
 							<div className="applicant-card__header">
 								<span className="applicant-card__title">{menuSpanish[6].label}</span>
 							</div>
-							<div className="row">
-								<div className="col-md-8 col-lg-12">
-									{this.state.loading ? (
-										<div className="form-section-1 form-section--center">
-											<CircularProgressLoading />
-										</div>
-									) : (
-										<div class="main-group-container">
-											{this.renderStaticElement()}
-											{this.renderTemplateList()}
-											{this.renderDocumentList()}
-										</div>
-									)}
+							{this.state.loading ? (
+								<div className="form-section-1 form-section--center">
+									<CircularProgressLoading />
 								</div>
-							</div>
+							) : (
+								<ul className="UploadDocument-wrapper">
+									{this.renderStaticElement()}
+									{this.renderTemplateList()}
+									{this.renderDocumentList()}
+								</ul>
+							)}
 						</div>
 					</div>
 				</div>

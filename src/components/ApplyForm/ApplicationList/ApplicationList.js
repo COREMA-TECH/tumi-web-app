@@ -85,7 +85,7 @@ class ApplicationList extends Component {
 					})
 					.then((data) => {
 						this.props.handleOpenSnackbar('success', 'Application Deleted!');
-						this.setState({ opendialog: false, loadingConfirm: false }, () => {});
+						this.setState({ opendialog: false, loadingConfirm: false }, () => { });
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting Position and Rates: ' + error);
@@ -123,35 +123,37 @@ class ApplicationList extends Component {
 		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
-			<div className={[ classes.root, 'company-list__header' ].join(' ')}>
-				<Grid container spacing={24}>
-					<Grid item xs={12} sm={6}>
-						<div className="search-container">
-							<i className="fa fa-search icon" />
-							<input
-								onChange={(text) => {
-									this.setState({
-										filterText: text.target.value
-									});
-								}}
-								value={this.state.filterText}
-								type="text"
-								placeholder="Search application form"
-								className="input-search-contract"
-							/>
+			<div className="row">
+				<div className="col-md-6">
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text" id="basic-addon1">
+								<i className="fa fa-search icon" />
+							</span>
 						</div>
-					</Grid>
-					<Grid item xs={12} sm={6}>
-						<button
-							className="add-company"
-							onClick={() => {
-								this.redirectToCreateApplication();
+						<input
+							onChange={(text) => {
+								this.setState({
+									filterText: text.target.value
+								});
 							}}
-						>
-							Add Application
+							value={this.state.filterText}
+							type="text"
+							placeholder="Search application form"
+							className="form-control"
+						/>
+					</div>
+				</div>
+				<div className="col-md-6">
+					<button
+						className="btn btn-success float-right"
+						onClick={() => {
+							this.redirectToCreateApplication();
+						}}
+					>
+						Add Application
 						</button>
-					</Grid>
-				</Grid>
+				</div>
 			</div>
 		);
 
@@ -164,7 +166,7 @@ class ApplicationList extends Component {
 					loadingConfirm={this.state.loadingConfirm}
 					content="Do you really want to continue whit this operation?"
 				/>
-				<div className="main-contract__header main-contract__header-sg-container">{renderHeaderContent()}</div>
+				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
 					<Query query={this.GET_APPLICATION_QUERY} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
@@ -201,17 +203,13 @@ class ApplicationList extends Component {
 								});
 
 								return (
-									<div className="main-application-table">
-										<div className="container">
-											<div className="row">
-												<div className="col-12">
-													<div className="contract_table_wrapper">
-														<ApplicationTable
-															data={dataApplication}
-															onDeleteHandler={this.onDeleteHandler}
-														/>
-													</div>
-												</div>
+									<div className="row">
+										<div className="col-md-12">
+											<div className="contract_table_wrapper">
+												<ApplicationTable
+													data={dataApplication}
+													onDeleteHandler={this.onDeleteHandler}
+												/>
 											</div>
 										</div>
 									</div>

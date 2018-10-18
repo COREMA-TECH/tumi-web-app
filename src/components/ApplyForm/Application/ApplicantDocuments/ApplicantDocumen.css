@@ -46,6 +46,8 @@
 	outline: none;
 	opacity: 0;
 	cursor: pointer;
+	left: 0;
+	top: 0;
 }
 
 .image-upload-wrap {
@@ -108,10 +110,9 @@
 	border: 0;
 	width: 100%;
 	background-color: rgb(221, 221, 221);
-	justify-content: space-between;
+	justify-content: space-evenly;
 	display: flex;
 	align-items: center;
-	padding-left: 10px;
 }
 .input-middle {
 	width: 60px;
@@ -126,7 +127,6 @@
 	background-color: rgb(221, 221, 221);
 }
 .group-container {
-	height: 240px;
 	width: 180px;
 	display: flex;
 	flex-direction: column;
