@@ -251,6 +251,7 @@ class BackgroundCheck extends Component {
                         <Dialog
                             open={this.state.openSignature}
                             fullScreen={fullScreen}
+                            fullWidth
                             onClose={() => {
                                 this.setState({
                                     openSignature: false,

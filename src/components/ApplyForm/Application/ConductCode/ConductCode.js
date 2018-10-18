@@ -137,6 +137,7 @@ class ConductCode extends Component {
         let renderSignatureDialog = () => (
             <div>
                 <Dialog
+                    fullWidth
                     open={this.state.openSignature}
                     onClose={() => {
                         this.setState({
