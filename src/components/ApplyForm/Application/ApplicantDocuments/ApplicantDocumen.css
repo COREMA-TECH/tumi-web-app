@@ -46,6 +46,8 @@
 	outline: none;
 	opacity: 0;
 	cursor: pointer;
+	left: 0;
+	top: 0;
 }
 
 .image-upload-wrap {
@@ -59,6 +61,20 @@
 .image-dropping,
 .image-upload-wrap:hover {
 	background-color: rgba(141, 141, 141, 0.3);
+	border: dashed #ffffff;
+}
+
+.image-upload-wrap-static {
+	margin-top: 0px 0px;
+	border: 3.5px dashed rgba(11, 56, 182, 0.3);
+	position: relative;
+	height: 140px;
+	border-radius: 10px;
+}
+
+.image-dropping-static,
+.image-upload-wrap-static:hover {
+	background-color: rgba(27, 72, 196, 0.2);
 	border: dashed #ffffff;
 }
 
@@ -93,17 +109,24 @@
 	border-radius: 2px;
 	border: 0;
 	width: 100%;
+	background-color: rgb(221, 221, 221);
+	justify-content: space-evenly;
+	display: flex;
+	align-items: center;
 }
 .input-middle {
 	width: 60px;
+	height: 35px;
 	display: flex;
+	margin: 10px 0px 10px 0px;
+	border-radius: 2px;
+	border: 0;
 	align-content: center;
 	justify-content: center;
 	align-items: center;
 	background-color: rgb(221, 221, 221);
 }
 .group-container {
-	height: 240px;
 	width: 180px;
 	display: flex;
 	flex-direction: column;
@@ -117,6 +140,9 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+.title-blue {
+	color: rgb(27, 72, 196, 0.8);
 }
 
 .main-group-container {
@@ -146,11 +172,4 @@
 .fac {
 	margin-left: -12px;
 	margin-right: 8px;
-}
-
-.separator {
-	height: 100%;
-	border-style: solid;
-	border-top: 1px solid #8c8b8b;
-	border-bottom: 1px solid #fff;
 }

@@ -8013,7 +8013,7 @@ input:checked + .slider:before {
     .department__header div[class*="withApollo-DepartmentsCompanyForm--root-"] {
       display: inline-block !important; } }
 
-@media only screen and (max-width: 480px) {
+@media (max-width: 991.98px) {
   div[class*="MuiTabs-fixed-"] {
     overflow-x: scroll !important; } }
 
@@ -8088,24 +8088,6 @@ input:checked + .slider:before {
 .TabSelected-container {
   background-color: #f5f7f9;
   width: 100%; }
-
-.Header {
-  background-color: #3ca2c8;
-  color: #FFF;
-  font-weight: 700;
-  line-height: 50px;
-  height: 50px;
-  padding-left: 1rem;
-  width: 100%; }
-  .Header:before {
-    background-color: #78bed9;
-    content: " ";
-    -webkit-clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
-    clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
-    display: block;
-    float: right;
-    height: 50px;
-    width: 50%; }
 
 .Apply-container {
   margin: 0 auto;
@@ -8183,6 +8165,34 @@ input:checked + .slider:before {
 .ApplyForm {
   background-color: #f5f7f9;
   padding: 2rem 0; }
+
+.Header {
+  background-color: #3ca2c8;
+  color: #FFF;
+  font-weight: 700;
+  line-height: 50px;
+  height: 50px;
+  padding-left: 1rem;
+  width: 100%; }
+  .Header:before {
+    background-color: #78bed9;
+    content: " ";
+    -webkit-clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
+    clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
+    display: block;
+    float: right;
+    height: 50px;
+    width: 50%; }
+
+.UploadDocument-item {
+  display: inline-block; }
+
+.UploadDocument-wrapper {
+  text-align: left;
+  width: 100%; }
+  @media (max-width: 991.98px) {
+    .UploadDocument-wrapper {
+      text-align: center; } }
 
 .Stepper-wrapper {
   background: #FFF;

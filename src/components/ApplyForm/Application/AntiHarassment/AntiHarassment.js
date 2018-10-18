@@ -4,23 +4,132 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
+import { GET_APPLICANT_INFO, GET_ANTI_HARRASMENT_INFO } from "./Queries";
+import { ADD_ANTI_HARASSMENT } from "./Mutations";
+import withGlobalContent from "../../../Generic/Global";
+import withApollo from "react-apollo/withApollo";
 
 class AntiHarassment extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            signature: null,
-            openSignature: false
+            signature: '',
+            openSignature: false,
+            id: null,
+            content: '',
+            date: '',
+            applicantName: '',
+            companyPhoneNumber: '',
+            ApplicationId: this.props.applicationId,
+
         }
     }
+
 
     handleSignature = (value) => {
         this.setState({
             signature: value,
-            openSignature: false
+            openSignature: false,
+            date: new Date().toISOString().substring(0, 10)
+        }, () => {
+            this.insertAntiHarrasment(this.state);
         });
     };
+
+    getApplicantInformation = (id) => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_INFO,
+                variables: {
+                    id: id
+                }
+            })
+            .then(({ data }) => {
+                if (data.applications[0] !== null) {
+                    this.setState({
+                        applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
+                    });
+                }
+            })
+            .catch(error => {
+
+            })
+    };
+
+    getHarrasmentInformation = (id) => {
+        this.props.client
+            .query({
+                query: GET_ANTI_HARRASMENT_INFO,
+                variables: {
+                    id: id
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                console.log("esta es la data ", data);
+                if (data.applications[0].harassmentPolicy !== null) {
+                    this.setState({
+                        id: data.applications[0].harassmentPolicy.id,
+                        signature: data.applications[0].harassmentPolicy.signature,
+                        content: data.applications[0].harassmentPolicy.content,
+                        applicantName: data.applications[0].harassmentPolicy.applicantName,
+                        date: data.applications[0].harassmentPolicy.date,
+                    });
+                }
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to get conduct code information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
+    insertAntiHarrasment = (item) => {
+        let harassmentObject = Object.assign({}, item);
+        delete harassmentObject.openSignature;
+        delete harassmentObject.id;
+        delete harassmentObject.accept;
+
+        this.props.client
+            .mutate({
+                mutation: ADD_ANTI_HARASSMENT,
+                variables: {
+                    harassmentPolicy: harassmentObject
+                }
+            })
+            .then(({ data }) => {
+                console.log("entro al data ", data);
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully signed!',
+                    'bottom',
+                    'right'
+                );
+
+                this.setState({
+                    id: data.addHarassmentPolicy[0].id
+                })
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to sign Anti Harrasment information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
+    componentWillMount() {
+        this.getHarrasmentInformation(this.props.applicationId);
+        this.getApplicantInformation(this.props.applicationId);
+    }
 
 
     render() {
@@ -66,13 +175,13 @@ class AntiHarassment extends Component {
                                             Download <i className="fas fa-download"></i>
                                         </button>
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                openSignature: true
-                                            })
-                                        }}>Sign <i className="far fa-edit"></i>
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    openSignature: true
+                                                })
+                                            }}>Sign <i className="far fa-edit"></i>
+                                            </button>
+                                        )
                                 }
                             </div>
                             <div className="row pdf-container">
@@ -273,11 +382,11 @@ class AntiHarassment extends Component {
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 14.0pt;">&nbsp;</span></p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 14.0pt;">&nbsp;</span></p>
 <p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 11.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;">Employee Name (printed)&nbsp;&nbsp;&nbsp; <u>{Name}</u></p>
+<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;">Employee Name (printed)&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantName + `</u></p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 10.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
-<p style="margin: 5.3pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;">Employee Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>{Signature}</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date <u><span style="font-family: 'Times New Roman', serif;">{Date}</span></u></p>`)}</div>
+<p style="margin: 5.3pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'DejaVu Sans', sans-serif;">Employee Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u><img width="300" height="300" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date <u><span style="font-family: 'Times New Roman', serif;">` + this.state.date + `</span></u></p>`)}</div>
                             </div>
                         </div>
                     </div>
@@ -290,4 +399,4 @@ class AntiHarassment extends Component {
     }
 }
 
-export default AntiHarassment;
+export default withApollo(withGlobalContent(AntiHarassment));
