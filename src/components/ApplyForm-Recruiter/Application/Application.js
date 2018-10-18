@@ -387,9 +387,9 @@ class Application extends Component {
                             </div>
                             <br />
                             <div className="row">
-                                <div className="col-6 form-section-1">
+                                <div className="col-md-12 col-lg-6 form-section-1">
                                     <div className="row">
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label">{formSpanish[16].label}</span>
                                             <Query query={GET_POSITIONS_QUERY}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -423,7 +423,7 @@ class Application extends Component {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label ">{formSpanish[0].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -442,7 +442,7 @@ class Application extends Component {
                                                 minLength="3"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label ">{formSpanish[1].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -460,7 +460,7 @@ class Application extends Component {
                                                 minLength="1"
                                             />
                                         </div>
-                                        <div className="col-12 ">
+                                        <div className="col-md-12 ">
                                             <span className="primary applicant-card__label ">{formSpanish[2].label}</span>
                                             <input
                                                 onChange={(event) => {
@@ -480,7 +480,7 @@ class Application extends Component {
                                             />
                                         </div>
 
-                                        <div className="col-12 ">
+                                        <div className="col-md-12 ">
                                             <span
                                                 className="primary applicant-card__label ">{formSpanish[22].label}</span>
                                             <input
@@ -500,7 +500,7 @@ class Application extends Component {
                                                 minLength="5"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label ">{formSpanish[5].label}</span>
                                             <InputMask
                                                 id="zipCode"
@@ -520,7 +520,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label ">{formSpanish[6].label}</span>
                                             <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -551,7 +551,7 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-md-12">
                                             <span className="primary applicant-card__label ">{formSpanish[7].label}</span>
                                             <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -582,7 +582,7 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-6">
+                                        <div className="col-md-6">
                                             <span
                                                 className="primary applicant-card__label ">{formSpanish[23].label}</span>
                                             <label className="switch">
@@ -608,9 +608,9 @@ class Application extends Component {
 
                                     </div>
                                 </div>
-                                <div className="col-6 form-section-2">
+                                <div className="col-md-12 col-lg-6 form-section-2">
                                     <div className="row">
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label ">{formSpanish[9].label}</span>
                                             <InputMask
                                                 id="home-number"
@@ -629,7 +629,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-6 ">
+                                        <div className="col-md-6 ">
                                             <span className="primary applicant-card__label ">{formSpanish[10].label}</span>
                                             <InputMask
                                                 id="cell-number"
@@ -650,7 +650,7 @@ class Application extends Component {
                                                 minLength="15"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-md-12">
                                             <span
                                                 className="primary applicant-card__label ">{formSpanish[13].label}</span>
                                             <input
@@ -671,7 +671,7 @@ class Application extends Component {
                                                 minLength="8"
                                             />
                                         </div>
-                                        <div className="col-12">
+                                        <div className="col-md-12">
                                             <span
                                                 className="primary applicant-card__label ">{formSpanish[21].label}</span>
                                             <textarea
