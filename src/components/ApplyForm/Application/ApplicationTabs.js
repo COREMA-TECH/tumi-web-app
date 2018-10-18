@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import BackgroundCheck from "./BackgroundCkeck/BackgroundCheck";
@@ -10,6 +11,19 @@ import ConductCode from "./ConductCode/ConductCode";
 import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
+
+const theme = createMuiTheme({
+    overrides: {
+        MuiTabs: { // Name of the component ⚛️ / style sheet
+            root: { // Name of the rule
+                overflow: 'unset', // Some CSS
+            },
+            fixed: { // Name of the rule
+                overflowX: 'unset', // Some CSS
+            },
+        },
+    },
+});
 
 const styles = theme => ({
     root: {
@@ -64,7 +78,7 @@ class CustomizedTabs extends React.Component {
     };
 
     handleChange = (event, value) => {
-        this.setState({value});
+        this.setState({ value });
     };
 
     componentWillMount() {
@@ -83,74 +97,76 @@ class CustomizedTabs extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {value} = this.state;
+        const { classes } = this.props;
+        const { value } = this.state;
 
-        let getTabContent = (step,) => {
+        let getTabContent = (step, ) => {
             switch (step) {
                 case 0:
-                    return <ApplicationInfo applicationId={this.state.applicationId}/>;
+                    return <ApplicationInfo applicationId={this.state.applicationId} />;
                 case 1:
-                    return <BackgroundCheck applicationId={this.state.applicationId}/>;
+                    return <BackgroundCheck applicationId={this.state.applicationId} />;
                 case 2:
-                    return <NonDisclosure applicationId={this.state.applicationId}/>;
+                    return <NonDisclosure applicationId={this.state.applicationId} />;
                 case 3:
-                    return <ConductCode applicationId={this.state.applicationId}/>;
+                    return <ConductCode applicationId={this.state.applicationId} />;
                 case 4:
-                    return <AntiHarassment applicationId={this.state.applicationId}/>;
+                    return <AntiHarassment applicationId={this.state.applicationId} />;
                 case 5:
-                    return <WorkerCompensation applicationId={this.state.applicationId}/>;
+                    return <WorkerCompensation applicationId={this.state.applicationId} />;
                 case 6:
-                    return <ApplicantDocument applicationId={this.state.applicationId}/>;
+                    return <ApplicantDocument applicationId={this.state.applicationId} />;
                 default:
                     return 'Unknown step';
             }
         };
 
         return (
-            <div className={classes.root}>
-                <Tabs
-                    value={value}
-                    onChange={this.handleChange}
-                    classes={{root: classes.tabsRoot, indicator: classes.tabsIndicator}}
-                >
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Applicant Information"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Background Check"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Non-Disclosure"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Conduct Code"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Anti-Harassment"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Worker's Compensation"
-                    />
-                    <Tab
-                        disableRipple
-                        classes={{root: classes.tabRoot, selected: classes.tabSelected}}
-                        label="Documents"
-                    />
-                </Tabs>
-                {getTabContent(value)}
+            <div>
+                <MuiThemeProvider theme={theme}>
+                    <Tabs
+                        value={value}
+                        onChange={this.handleChange}
+                        classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid" }}
+                    >
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Applicant Information"
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Background Check"
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Non-Disclosure"
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Conduct Code"
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Anti-Harassment"
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Worker's Compensation"
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label="Documents"
+                        />
+                    </Tabs>
+                    {getTabContent(value)}
+                </MuiThemeProvider>
             </div>
         );
     }

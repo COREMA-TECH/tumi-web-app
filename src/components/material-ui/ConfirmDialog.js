@@ -35,17 +35,6 @@ class ConfirmDialog extends React.Component {
 			open: false
 		};
 	}
-	// To open the skill dialog
-	handleClickOpen = () => {
-		this.setState({ open: true });
-	};
-
-	// To close the skill dialog
-	handleClose = () => {
-		this.setState({
-			open: false
-		});
-	};
 
 	componentWillReceiveProps(nextProps) {
 		this.setState({ open: nextProps.open });
@@ -55,11 +44,11 @@ class ConfirmDialog extends React.Component {
 		const { classes } = this.props;
 
 		return (
-			<Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+			<Dialog open={this.state.open} onClose={this.props.closeAction} aria-labelledby="form-dialog-title">
 				<DialogTitle>{this.props.title}</DialogTitle>
 				<DialogContent />
 				<DialogActions>
-					<button className="applicant-card__cancel-button" onClick={this.handleClose}>
+					<button className="applicant-card__cancel-button" onClick={this.props.closeAction}>
 						{spanishActions[2].label}
 					</button>
 					<button
