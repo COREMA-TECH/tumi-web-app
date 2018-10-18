@@ -76,6 +76,10 @@ class ConductCode extends Component {
                         applicantName: data.applications[0].conductCode.applicantName,
                         date: data.applications[0].conductCode.date,
                     });
+                } else {
+                    this.setState({
+                        id: null
+                    })
                 }
             })
             .catch(error => {
@@ -118,7 +122,7 @@ class ConductCode extends Component {
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error to sign Conduct Code information. Please, try again!',
+                    'Error to sign Conduct Code document. Please, try again!',
                     'bottom',
                     'right'
                 );
@@ -172,6 +176,7 @@ class ConductCode extends Component {
         let renderSignatureDialog = () => (
             <div>
                 <Dialog
+                    fullWidth
                     open={this.state.openSignature}
                     onClose={() => {
                         this.setState({

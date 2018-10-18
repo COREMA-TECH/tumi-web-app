@@ -9,9 +9,17 @@
 }
 
 #signatureMainContainer {
-	width: 50% !important;
+	width: 100% !important;
 	margin: auto !important;
 }
+
+@media (max-width: 720px) {
+	#signatureMainContainer {
+		width: 50% !important;
+		margin: auto !important;
+	}
+}
+
 
 .signature-header {
 	margin-top: 15px;
@@ -48,12 +56,12 @@
 	min-height: 100px;
 	max-height: 100px;
 }
-@media (max-width: 700px) {
+@media (min-width: 700px) {
 	.signaturePad-container {
-		width: 95%;
+		width: 100%;
 	}
 }
-@media (min-width: 701px) {
+@media (max-width: 700px) {
 	.signaturePad-container {
 		width: 75%;
 	}

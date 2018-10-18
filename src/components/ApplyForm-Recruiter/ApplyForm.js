@@ -136,7 +136,7 @@ class ApplyForm extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 date: this.state.date,
-                                streetAddress: this.state.streetAddress,
+                                applicantAddress: this.state.applicantAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -380,10 +380,10 @@ class ApplyForm extends Component {
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        streetAddress: event.target.value
+                                        applicantAddress: event.target.value
                                     });
                                 }}
-                                value={this.state.streetAddress}
+                                value={this.state.applicantAddress}
                                 name="streetAddress"
                                 type="text"
                                 className="form-control"

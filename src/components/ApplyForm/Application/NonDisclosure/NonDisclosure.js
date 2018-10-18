@@ -30,7 +30,7 @@ class NonDisclosure extends Component {
         this.setState({
             signature: value,
             openSignature: false,
-            date: new Date().toISOString()
+            date: new Date().toISOString().substring(0,10)
         }, () => {
             this.insertNonDisclosure(this.state)
         });
@@ -64,12 +64,10 @@ class NonDisclosure extends Component {
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error to sign Non-Disclosure information. Please, try again!',
+                    'Error to sign Non-Disclosure document. Please, try again!',
                     'bottom',
                     'right'
                 );
-
-                alert(error);
             });
     };
 
@@ -109,15 +107,19 @@ class NonDisclosure extends Component {
                         signature: data.applications[0].disclosure.signature,
                         content: data.applications[0].disclosure.content,
                         applicantName: data.applications[0].disclosure.applicantName,
-                        date: data.applications[0].disclosure.date,
+                        date: data.applications[0].disclosure.date.substring(0,10),
                     });
+                } else {
+                    this.setState({
+                        id: null
+                    })
                 }
             })
             .catch(error => {
                 // If there's an error show a snackbar with a error message
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error to get conduct code information. Please, try again!',
+                    'Error to get disclosure information. Please, try again!',
                     'bottom',
                     'right'
                 );
@@ -171,6 +173,7 @@ class NonDisclosure extends Component {
         let renderSignatureDialog = () => (
             <div>
                 <Dialog
+                    fullWidth
                     open={this.state.openSignature}
                     onClose={() => {
                         this.setState({
