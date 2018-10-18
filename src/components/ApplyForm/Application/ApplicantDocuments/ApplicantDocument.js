@@ -26,7 +26,8 @@ class ApplicantDocument extends Component {
 			progress: 0,
 			uploading: false,
 			fileURL: null,
-			fileName: null
+			fileName: null,
+			openConfirm: false
 		};
 	}
 
@@ -122,15 +123,15 @@ class ApplicantDocument extends Component {
 	renderStaticElement = () => {
 		return (
 			<div class="group-container ">
-				<span class="group-title">Other Document</span>
-				<div class="image-upload-wrap">
+				<span class="group-title title-blue ">{spanishActions[6].label}</span>
+				<div class="image-upload-wrap-static">
 					<input
 						class="file-upload-input"
 						type="file"
 						onChange={(e) => {
-							//this.handleUpload(e, item.Id);
+							this.handleUpload(e, null);
 						}}
-						accept="image/*"
+						accept="application/pdf"
 					/>
 					<div class="drag-text">
 						<div>+</div>
@@ -158,16 +159,19 @@ class ApplicantDocument extends Component {
 							class="file-upload-input"
 							type="file"
 							onChange={(e) => {
-								this.handleUpload(e, item.Id);
+								this.handleUpload(e, item.Id, item.Name);
 							}}
-							accept="image/*"
+							accept="application/pdf"
 						/>
 						<div class="drag-text">
 							<div>+</div>
 						</div>
 					</div>
 					<div class="button-container">
-						<button class="file-input">Download Template</button>
+						<a class="file-input" href={item.Value} target="_blank">
+							{spanishActions[7].label}
+							<i class="fac fas fa-file-download fa-lg" />
+						</a>
 					</div>
 				</div>
 			);
@@ -186,12 +190,12 @@ class ApplicantDocument extends Component {
 						</div>
 					</div>
 					<div class="button-container">
-						<a class="file-input input-middle" href={item.url} target="_blank">
+						<a class="input-middle" href={item.url} target="_blank">
 							<i class="fas fa-file-download fa-lg" />
 						</a>
 						<a
 							href=""
-							class="file-input input-middle"
+							class="input-middle"
 							onClick={(e) => {
 								e.preventDefault();
 								this.setState({ openConfirm: true, idToDelete: item.id });
@@ -205,7 +209,7 @@ class ApplicantDocument extends Component {
 		});
 	};
 
-	handleUpload = (event, id) => {
+	handleUpload = (event, id, docName) => {
 		this.setState({
 			uploading: true,
 			catalogItemId: id
@@ -242,7 +246,7 @@ class ApplicantDocument extends Component {
 							progress: 100,
 							uploading: false,
 							fileURL: url,
-							fileName: file.name
+							fileName: docName || file.name
 						},
 						this.addDocument
 					);
@@ -255,6 +259,9 @@ class ApplicantDocument extends Component {
 			<div className="Apply-container--application">
 				<ConfirmDialog
 					open={this.state.openConfirm}
+					closeAction={() => {
+						this.setState({ openConfirm: false });
+					}}
 					confirmAction={() => {
 						this.removeDocument();
 					}}
@@ -262,24 +269,25 @@ class ApplicantDocument extends Component {
 					loading={this.state.removing}
 				/>
 				<div className="row">
-					<div className="col-12">
+					<div className="col-md-12">
 						<div className="applicant-card">
 							<div className="applicant-card__header">
-								<span className="applicant-card__title">Documents</span>
+								<span className="applicant-card__title">{menuSpanish[6].label}</span>
 							</div>
 							<div className="row">
-								{this.state.loading ? (
-									<div className="form-section-1 form-section--center">
-										<CircularProgressLoading />
-									</div>
-								) : (
-									<div class="main-group-container">
-										{this.renderStaticElement()}
-										<div class="separator" />
-										{this.renderTemplateList()}
-										{this.renderDocumentList()}
-									</div>
-								)}
+								<div className="col-md-8 col-lg-12">
+									{this.state.loading ? (
+										<div className="form-section-1 form-section--center">
+											<CircularProgressLoading />
+										</div>
+									) : (
+										<div class="main-group-container">
+											{this.renderStaticElement()}
+											{this.renderTemplateList()}
+											{this.renderDocumentList()}
+										</div>
+									)}
+								</div>
 							</div>
 						</div>
 					</div>
