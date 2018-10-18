@@ -85,7 +85,7 @@ class InputFileCard extends Component {
 		return (
 			<li className="UploadDocument-item">
 				<div class="group-container ">
-					<span class="group-title title-blue">{spanishActions[6].label}</span>
+					<span class="group-title">{spanishActions[6].label}</span>
 					<div class="image-upload-wrap-static">
 						<input
 							disabled={this.state.uploading}
