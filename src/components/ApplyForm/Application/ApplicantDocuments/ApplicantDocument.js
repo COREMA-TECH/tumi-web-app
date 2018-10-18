@@ -22,7 +22,6 @@ class ApplicantDocument extends Component {
 		this.state = {
 			// Editing state properties - To edit general info
 			editing: false,
-			applicationId: 24,
 			loading: false,
 			idToDelete: 0,
 			progress: 0,
@@ -44,6 +43,9 @@ class ApplicantDocument extends Component {
 				this.props.client
 					.query({
 						query: GET_DOCUMENTS_AND_TEMPLATES,
+						variables: {
+							applicationId: this.props.applicationId
+						},
 						fetchPolicy: 'no-cache'
 					})
 					.then(({ data }) => {
@@ -102,7 +104,7 @@ class ApplicantDocument extends Component {
 						url: url,
 						fileName: fileName,
 						CatalogItemId: typeId,
-						ApplicationId: this.state.applicationId
+						ApplicationId: this.props.applicationId
 					}
 				}
 			})
