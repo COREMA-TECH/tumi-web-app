@@ -14,3 +14,25 @@ export const GET_WORKER_COMPENSATION_INFO = gql`
         }
     }
 `;
+
+/**
+ * Query to get states
+ */
+export const GET_STATE_NAME = gql`
+    query States($id: Int!, $parent: Int!) {
+        getcatalogitem(Id: $id, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+            Name
+        }
+    }
+`;
+
+/**
+ * Query to get cities
+ */
+export const GET_CITY_NAME = gql`
+    query Cities($id: Int!, $parent: Int!) {
+        getcatalogitem(Id: $id, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+            Name
+        }
+    }
+`;
