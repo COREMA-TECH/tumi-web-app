@@ -97,7 +97,7 @@ class WorkerCompensation extends Component {
                         applicantZipCode: data.applications[0].zipCode,
                     });
 
-                    this.getStateAndCity(this.state.applicantState, this.state.applicantCity);
+                    this.getStateAndCity(parseInt(this.state.applicantState), parseInt(this.state.applicantCity));
                 }
             })
             .catch(error => {
@@ -122,6 +122,10 @@ class WorkerCompensation extends Component {
                         content: data.applications[0].workerCompensation.content,
                         applicantName: data.applications[0].workerCompensation.applicantName,
                         date: data.applications[0].workerCompensation.date,
+                        applicantAddress: data.applications[0].workerCompensation.applicantAddress,
+                        applicantCity: data.applications[0].workerCompensation.applicantCity,
+                        applicantState: data.applications[0].workerCompensation.applicantState,
+                        applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
                         initialNotification:  data.applications[0].workerCompensation.initialNotification,
                         injuryNotification:  data.applications[0].workerCompensation.injuryNotification,
                         injuryDate:  data.applications[0].workerCompensation.injuryDate.substring(0,10)
@@ -166,7 +170,7 @@ class WorkerCompensation extends Component {
                         })
                         .then(({data}) => {
                             this.setState({
-                                applicantCity: data.getcatalogitem[0].Name.trim()
+                                applicantCity: data.getcatalogitem[0].Name
                             });
                         })
                         .catch(error => {
@@ -232,7 +236,7 @@ class WorkerCompensation extends Component {
                     <DialogContent className="no-margin">
                         <div className="col-12 form-section-1">
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-12">
                                     <label className="primary">Is this a initial notification?</label>
                                     <label className="switch">
                                         <input
@@ -255,7 +259,7 @@ class WorkerCompensation extends Component {
                                         <p className="slider round"></p>
                                     </label>
                                 </div>
-                                <div className="col-6">
+                                <div className="col-12">
                                     <label className="primary">Is this a injury notification?</label>
                                     <label className="switch">
                                         <input
@@ -374,7 +378,7 @@ class WorkerCompensation extends Component {
 <p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">I live at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantAddress + `</u></p>
 <p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Arial, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Street Address</p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Arial, sans-serif;"><u>` + this.state.applicantCity + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantState + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <u>` + this.state.applicantZipCode + `</u></p>
+<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Arial, sans-serif;"><u>` + this.state.applicantCity + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantState + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <u>` + this.state.applicantZipCode + `</u></p>
 <p style="margin: 0in 0in 0.0001pt 83pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Arial, sans-serif;">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Code</p>
 <p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
 <p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Arial, sans-serif;">Name of Employer: <u>` + this.state.applicantName + `</u></p>

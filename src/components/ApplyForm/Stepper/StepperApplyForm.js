@@ -23,7 +23,7 @@ import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
 import {GET_LANGUAGES_QUERY} from '../Queries.js';
 import withApollo from 'react-apollo/withApollo';
 import Query from 'react-apollo/Query';
-import {GET_POSITIONS_QUERY, GET_STATES_QUERY} from '../Queries';
+import {GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from '../Queries';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import {
@@ -759,24 +759,33 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-4">
                         <span className="primary"> City</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        city: event.target.value
-                                    });
-                                }}
-                                value={this.state.city}
-                                name="city"
-                                type="text"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="30"
-                                minLength="3"
-                            />
-                            <span className="check-icon"/>
-                        </div>
+                        <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (error) return <p>Error </p>;
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    return (
+                                        <select
+                                            name="city"
+                                            id="city"
+                                            required
+                                            className="form-control"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    city: e.target.value
+                                                })
+                                            }}
+                                            value={this.state.city}>
+                                            <option value="">Select a city</option>
+                                            {data.getcatalogitem.map((item) => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))}
+                                        </select>
+                                    );
+                                }
+                                return <SelectNothingToDisplay />;
+                            }}
+                        </Query>
                     </div>
                     <div className="col-4">
                         <span className="primary"> Zip Code</span>

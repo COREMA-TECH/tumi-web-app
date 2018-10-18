@@ -10,6 +10,13 @@ export const GET_WORKER_COMPENSATION_INFO = gql`
                 content
                 date
                 applicantName
+                applicantCity
+                applicantState
+                applicantAddress
+                applicantZipCode
+                injuryNotification
+                initialNotification
+                injuryDate
             }
         }
     }
