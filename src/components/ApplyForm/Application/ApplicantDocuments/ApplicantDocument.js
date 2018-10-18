@@ -206,7 +206,7 @@ class ApplicantDocument extends Component {
 						<span class="group-title">{item.fileName}</span>
 						<div class="image-show-wrap">
 							<div class="drag-text">
-								<i class="far fa-file-alt fa-7x" />
+                                <i className="fas fa-file-alt"></i>
 							</div>
 						</div>
 						<div class="button-container">

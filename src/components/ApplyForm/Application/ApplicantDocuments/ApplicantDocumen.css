@@ -105,6 +105,13 @@
     font-size: 3.5em;
 }
 
+.drag-text i {
+    font-weight: 100;
+    color: #41afd7;
+    margin: auto;
+    font-size: 3.8em;
+}
+
 .file-upload-image {
     margin: auto;
     padding: 20px;
