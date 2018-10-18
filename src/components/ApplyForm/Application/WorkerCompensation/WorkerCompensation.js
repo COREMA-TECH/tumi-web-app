@@ -31,8 +31,8 @@ class WorkerCompensation extends Component {
             applicantState: '',
             applicantZipCode: '',
 
-            initialNotification: '',
-            injuryNotification: '',
+            initialNotification: false,
+            injuryNotification: false,
             injuryDate: ''
         }
     }
@@ -40,12 +40,8 @@ class WorkerCompensation extends Component {
     handleSignature = (value) => {
         this.setState({
             signature: value,
-            date: new Date().toISOString().substring(0, 10),
+            date: new Date().toISOString(),
         });
-
-        // , () => {
-        //     this.insertWorkerCompensation(this.state)
-        // });
     };
 
     insertWorkerCompensation = (item) => {
@@ -125,12 +121,12 @@ class WorkerCompensation extends Component {
                         signature: data.applications[0].workerCompensation.signature,
                         content: data.applications[0].workerCompensation.content,
                         applicantName: data.applications[0].workerCompensation.applicantName,
-                        date: data.applications[0].workerCompensation.date.substring(0, 10),
+                        date: data.applications[0].workerCompensation.date,
                     });
                 } else {
                     this.setState({
                         id: null
-                    })
+                    });
                 }
             })
             .catch(error => {
@@ -155,7 +151,7 @@ class WorkerCompensation extends Component {
             })
             .then(({data}) => {
                 this.setState({
-                    applicantState: data.getcatalogitem[0].Name
+                    applicantState: data.getcatalogitem[0].Name.trim()
                 }, () => {
                     this.props.client
                         .query({
@@ -197,7 +193,20 @@ class WorkerCompensation extends Component {
 
     render() {
         let renderSignatureDialog = () => (
-            <div>
+            <form
+                autoComplete="off"
+                id="worker-compensation-form"
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    this.insertWorkerCompensation(this.state);
+                    this.setState({
+                        openSignature: false
+                    })
+                }}
+                className="apply-form"
+            >
                 <Dialog
                     fullWidth
                     open={this.state.openSignature}
@@ -213,117 +222,105 @@ class WorkerCompensation extends Component {
                         })
                     }}
                     aria-labelledby="form-dialog-title">
-                    <form
-                        autoComplete="off"
-                        id="worker-compensation-form"
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            alert("");
-                        }}
-                        className="apply-form"
-                    >
-                        <DialogTitle className="worker-compensation-form ">
-                            <h1 className="primary apply-form-container__label text-center">Please Complete and
-                                Sign</h1>
-                        </DialogTitle>
-                        <DialogContent className="no-margin">
-                            <div className="col-12 form-section-1">
-                                <div className="row">
-                                    <div className="col-6">
-                                        <label className="primary">Is this a initial notification?</label>
-                                        <label className="switch">
-                                            <input
-                                                id="initialNotification"
-                                                form="worker-compensation-form"
-                                                name="worker-compensation-form"
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        initialNotification: event.target.checked
-                                                    });
-                                                }}
-                                                checked={this.state.initialNotification}
-                                                value={this.state.initialNotification}
-                                                type="checkbox"
-                                                className="form-control"
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="10"
-                                            />
-                                            <p className="slider round"></p>
-                                        </label>
-                                    </div>
-                                    <div className="col-6">
-                                        <label className="primary">Is this a injury notification?</label>
-                                        <label className="switch">
-                                            <input
-                                                id="injuryNotification"
-                                                form="worker-compensation-form"
-                                                name="injuryNotification"
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        injuryNotification: event.target.checked
-                                                    });
-                                                }}
-                                                checked={this.state.injuryNotification}
-                                                value={this.state.injuryNotification}
-                                                type="checkbox"
-                                                className="form-control"
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="10"
-                                            />
-                                            <p className="slider round"></p>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-12">
-                                        <label className="primary">Injury Date</label>
+                    <DialogTitle className="worker-compensation-form ">
+                        <h1 className="primary apply-form-container__label text-center">Please Complete and
+                            Sign</h1>
+                    </DialogTitle>
+                    <DialogContent className="no-margin">
+                        <div className="col-12 form-section-1">
+                            <div className="row">
+                                <div className="col-6">
+                                    <label className="primary">Is this a initial notification?</label>
+                                    <label className="switch">
                                         <input
-                                            id="injuryDate"
+                                            id="initialNotification"
                                             form="worker-compensation-form"
-                                            name="injuryDate"
+                                            name="worker-compensation-form"
                                             onChange={(event) => {
                                                 this.setState({
-                                                    injuryDate: event.target.checked
+                                                    initialNotification: event.target.checked
                                                 });
                                             }}
-                                            value={this.state.injuryDate}
-                                            type="date"
+                                            checked={this.state.initialNotification}
+                                            value={this.state.initialNotification}
+                                            type="checkbox"
                                             className="form-control"
-                                            required
                                             min="0"
-                                            pattern=".*[^ ].*"
                                             maxLength="50"
-                                            minLength="2"
-
+                                            minLength="10"
                                         />
-                                    </div>
+                                        <p className="slider round"></p>
+                                    </label>
                                 </div>
-                                <div className="row">
-                                    <div className="col-12">
-                                        <SignatureForm applicationId={this.state.applicationId}
-                                                       signatureValue={this.handleSignature}/>
-                                    </div>
+                                <div className="col-6">
+                                    <label className="primary">Is this a injury notification?</label>
+                                    <label className="switch">
+                                        <input
+                                            id="injuryNotification"
+                                            form="worker-compensation-form"
+                                            name="injuryNotification"
+                                            onChange={(event) => {
+                                                this.setState({
+                                                    injuryNotification: event.target.checked
+                                                });
+                                            }}
+                                            checked={this.state.injuryNotification}
+                                            value={this.state.injuryNotification}
+                                            type="checkbox"
+                                            className="form-control"
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="10"
+                                        />
+                                        <p className="slider round"></p>
+                                    </label>
                                 </div>
                             </div>
-                        </DialogContent>
-                        <div className="applicant-card__footer worker-compensation-footer">
-                            <button className="applicant-card__cancel-button" type="reset"
-                                    onClick={() => {
-                                        this.setState({openSignature: false})
-                                    }}>
-                                {spanishActions[2].label}
-                            </button>
-                            <button className="applicant-card__save-button" type="submit" form="education-form">
-                                {spanishActions[0].label}
-                            </button>
+                            <div className="row">
+                                <div className="col-12">
+                                    <label className="primary">Injury Date</label>
+                                    <input
+                                        id="injuryDate"
+                                        form="worker-compensation-form"
+                                        name="injuryDate"
+                                        onChange={(event) => {
+                                            this.setState({
+                                                injuryDate: event.target.value
+                                            });
+                                        }}
+                                        value={this.state.injuryDate}
+                                        type="date"
+                                        className="form-control"
+                                        required
+                                        min="0"
+                                        pattern=".*[^ ].*"
+                                        maxLength="50"
+                                        minLength="2"
+
+                                    />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-12">
+                                    <SignatureForm applicationId={this.state.applicationId}
+                                                   signatureValue={this.handleSignature}/>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </DialogContent>
+                    <div className="applicant-card__footer worker-compensation-footer">
+                        <button className="applicant-card__cancel-button" type="reset"
+                                onClick={() => {
+                                    this.setState({openSignature: false})
+                                }}>
+                            {spanishActions[2].label}
+                        </button>
+                        <button className="applicant-card__save-button" type="submit" form="worker-compensation-form">
+                            {spanishActions[0].label}
+                        </button>
+                    </div>
                 </Dialog>
-            </div>
+            </form>
         );
 
         return (
