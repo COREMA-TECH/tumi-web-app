@@ -936,7 +936,7 @@ class Catalogs extends React.Component {
 								<InputForm
 									id="value"
 									name="value"
-									maxLength="15"
+									maxLength="500"
 									value={this.state.value}
 									change={(value) => this.onChangeHandler(value, 'value')}
 								/>
@@ -1030,7 +1030,6 @@ class Catalogs extends React.Component {
 			</div>
 		);
 	}
-
 }
 
 Catalogs.propTypes = {
