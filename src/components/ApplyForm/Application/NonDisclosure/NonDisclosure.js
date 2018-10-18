@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
-import {ADD_NON_DISCLOSURE} from "./Mutations";
+import { ADD_NON_DISCLOSURE } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import renderHTML from 'react-render-html';
-import {GET_APPLICANT_INFO} from "../ConductCode/Queries";
-import {GET_DISCLOSURE_INFO} from "./Queries";
+import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
+import { GET_DISCLOSURE_INFO, CREATE_DOCUMENTS_PDF_QUERY } from "./Queries";
+import PropTypes from 'prop-types';
 
 class NonDisclosure extends Component {
     constructor(props) {
@@ -48,7 +49,7 @@ class NonDisclosure extends Component {
                     disclosures: disclosureObject
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 // Show a snackbar with a success message
                 this.props.handleOpenSnackbar(
                     'success',
@@ -78,7 +79,7 @@ class NonDisclosure extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
@@ -99,7 +100,7 @@ class NonDisclosure extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0].disclosure !== null) {
                     this.setState({
                         id: data.applications[0].disclosure.id,
@@ -123,6 +124,44 @@ class NonDisclosure extends Component {
                     'right'
                 );
             })
+    };
+
+    createDocumentsPDF = () => {
+        this.props.client
+            .query({
+                query: CREATE_DOCUMENTS_PDF_QUERY,
+                variables: {
+                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    Name: "NonDisclosure-" + this.state.applicantName
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.createdocumentspdf != null) {
+                    console.log("Ya estoy creando y estoy aqui con data ", data);
+
+                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+
+                    console.log(this.state.urlPDF);
+
+                } else {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error: Loading agreement: createdocumentspdf not exists in query data'
+                    );
+                    this.setState({ loadingData: false });
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
+                this.setState({ loadingData: false });
+            });
+    };
+
+
+    downloadDocumentsHandler = () => {
+        var url = this.context.baseUrl + '/public/Documents/' + "NonDisclosure-" + this.state.applicantName + '.pdf';
+        window.open(url, '_blank');
     };
 
     componentWillMount() {
@@ -153,7 +192,7 @@ class NonDisclosure extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                                       signatureValue={this.handleSignature}/>
+                            signatureValue={this.handleSignature} />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -168,22 +207,25 @@ class NonDisclosure extends Component {
                                 <span className="applicant-card__title">Non-Disclosure</span>
                                 {
                                     this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button">
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.createDocumentsPDF();
+                                            this.downloadDocumentsHandler();
+                                        }}>
                                             Download <i className="fas fa-download"></i>
                                         </button>
                                     ) : (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.setState({
-                                                openSignature: true
-                                            })
-                                        }}>Sign <i className="far fa-edit"></i>
-                                        </button>
-                                    )
+                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                this.setState({
+                                                    openSignature: true
+                                                })
+                                            }}>Sign <i className="far fa-edit"></i>
+                                            </button>
+                                        )
                                 }
                             </div>
 
                             <div className="row pdf-container">
-                                <div className="signature-information">
+                                <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<div class="WordSection1">
                                     <p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 9.5pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
                                     <p style="margin: 5.25pt 0in 0.0001pt 5pt; text-align: justify; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 18.0pt;">NO</span><span style="font-size: 18.0pt;">N</span><span style="font-size: 18.0pt;">-&shy;‐</span><span style="font-size: 18.0pt;">DISCLOSUR</span><span style="font-size: 18.0pt;">E</span> <span style="font-size: 18.0pt;">AN</span><span style="font-size: 18.0pt;">D NON-&shy;‐SOLICITATION AGREEMENT</span></p>
@@ -342,6 +384,10 @@ class NonDisclosure extends Component {
             </div>
         );
     }
+
+    static contextTypes = {
+        baseUrl: PropTypes.string
+    };
 }
 
 export default withApollo(withGlobalContent(NonDisclosure));

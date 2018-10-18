@@ -1,6 +1,10 @@
 .card {
     margin-bottom: 1rem;
     margin-top: 1rem;
+    .SubCard & {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
     &-header {
         background-color: $bg-card-header !important;
     }
@@ -56,6 +60,10 @@
             width: 100% !important;
         }
     }
+}
+
+.SubCard {
+    padding: 0 !important;
 }
 
 @media only screen and (max-width: 480px) {

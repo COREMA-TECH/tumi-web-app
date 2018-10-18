@@ -4,10 +4,11 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import renderHTML from 'react-render-html';
-import { GET_APPLICANT_INFO, GET_ANTI_HARRASMENT_INFO } from "./Queries";
+import { GET_APPLICANT_INFO, GET_ANTI_HARRASMENT_INFO, CREATE_DOCUMENTS_PDF_QUERY } from "./Queries";
 import { ADD_ANTI_HARASSMENT } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
+import PropTypes from 'prop-types';
 
 class AntiHarassment extends Component {
     constructor(props) {
@@ -22,6 +23,7 @@ class AntiHarassment extends Component {
             applicantName: '',
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId,
+            urlPDF: '',
 
         }
     }
@@ -126,6 +128,47 @@ class AntiHarassment extends Component {
             });
     };
 
+    createDocumentsPDF = () => {
+        this.props.client
+            .query({
+                query: CREATE_DOCUMENTS_PDF_QUERY,
+                variables: {
+                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    Name: "Anti-Harrasment-" + this.state.applicantName
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.createdocumentspdf != null) {
+                    console.log("Ya estoy creando y estoy aqui con data ", data);
+
+                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+
+                    console.log(this.state.urlPDF);
+
+                } else {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error: Loading agreement: createdocumentspdf not exists in query data'
+                    );
+                    this.setState({ loadingData: false });
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
+                this.setState({ loadingData: false });
+            });
+    };
+
+
+    downloadDocumentsHandler = () => {
+        //var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
+        var url = this.context.baseUrl + '/public/Documents/' + "Anti-Harrasment-" + this.state.applicantName + '.pdf';
+        //pri.download();
+        window.open(url, '_blank');
+    };
+
+
     componentWillMount() {
         this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
@@ -171,7 +214,10 @@ class AntiHarassment extends Component {
                                 <span className="applicant-card__title">Anti-Harassment</span>
                                 {
                                     this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button">
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.createDocumentsPDF();
+                                            this.downloadDocumentsHandler();
+                                        }}>
                                             Download <i className="fas fa-download"></i>
                                         </button>
                                     ) : (
@@ -185,7 +231,7 @@ class AntiHarassment extends Component {
                                 }
                             </div>
                             <div className="row pdf-container">
-                                <div className="signature-information">
+                                <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<div class="WordSection1">
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: 'DejaVu Sans', sans-serif;"><span style="font-size: 18.0pt; font-family: Calibri, sans-serif;">Anti--‐Harassment Policy</span></p>
 <h1 style="margin: 15.7pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS', sans-serif;"><u>Policy statement</u></h1>
@@ -397,6 +443,10 @@ class AntiHarassment extends Component {
             </div>
         );
     }
+
+    static contextTypes = {
+        baseUrl: PropTypes.string
+    };
 }
 
 export default withApollo(withGlobalContent(AntiHarassment));

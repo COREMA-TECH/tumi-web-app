@@ -286,7 +286,7 @@ class ApplyForm extends Component {
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Applicant Information</h4>
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary">First Name</span>
                         <div className="input-container--validated">
                             <input
@@ -308,7 +308,7 @@ class ApplyForm extends Component {
                         </div>
                     </div>
 
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <div className="row">
                             <span className="primary">Middle Name</span>
                             <input
@@ -330,7 +330,7 @@ class ApplyForm extends Component {
                         </div>
                     </div>
 
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary">Last Name</span>
                         <div className="input-container--validated">
                             <input
@@ -352,7 +352,7 @@ class ApplyForm extends Component {
                         </div>
                     </div>
 
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary"> Date</span>
                         <div className="input-container--validated">
                             <input
@@ -374,7 +374,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-8">
+                    <div className="col-md-8">
                         <span className="primary"> Street Address</span>
                         <div className="input-container--validated">
                             <input
@@ -395,7 +395,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary">Apt Number</span>
                         <input
                             onChange={(event) => {
@@ -416,7 +416,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> State</span>
                         <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                             {({ loading, error, data, refetch, networkStatus }) => {
@@ -437,7 +437,7 @@ class ApplyForm extends Component {
                             }}
                         </Query>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> City</span>
                         <div className="input-container--validated">
                             <input
@@ -458,7 +458,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Zip Code</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -500,7 +500,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Home Phone</span>
                         <InputMask
                             id="home-number"
@@ -520,7 +520,7 @@ class ApplyForm extends Component {
                         <i className="optional" />
                     </div>
 
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Cell Phone</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -559,7 +559,7 @@ class ApplyForm extends Component {
                         {/*/>*/}
                     </div>
 
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Social Security Number</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -583,7 +583,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Birth Day</span>
                         <div className="input-container--validated">
                             <input
@@ -604,7 +604,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Do you own transportation?</span>
                         <input
                             onChange={(event) => {
@@ -624,7 +624,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Type Of ID</span>
                         <select
                             name="typeOfID"
@@ -646,7 +646,7 @@ class ApplyForm extends Component {
                             <option value="7">Green Card</option>
                         </select>
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Expire Date ID</span>
                         <div className="input-container--validated">
                             <input
@@ -669,7 +669,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-md-12">
                         <span className="primary"> Email Address</span>
                         <div className="input-container--validated">
                             <input
@@ -693,7 +693,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Position Applying for</span>
                         <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {
@@ -725,7 +725,7 @@ class ApplyForm extends Component {
                         </Query>
                         <i className="optional" />
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Ideal Job</span>
                         <div className="input-container--validated">
                             <input
@@ -746,7 +746,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Date Available</span>
                         <div className="input-container--validated">
                             <input
@@ -768,9 +768,9 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Do you have any schedule restrictions? </span>
-                        <div className="col-12">
+                        <div className="col-md-12">
                             <input
                                 onChange={(event) => {
                                     this.setState({
@@ -799,7 +799,7 @@ class ApplyForm extends Component {
                         </div>
                         <span className="check-icon" />
                     </div>
-                    <div className="col-8">
+                    <div className="col-md-8">
                         <span className="primary"> If yes, please explain </span>
                         {this.state.scheduleRestrictions === '0' ? (
                             <textarea
@@ -816,24 +816,24 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         ) : (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        scheduleExplain: event.target.value
-                                    });
-                                }}
-                                value={this.state.scheduleExplain}
-                                name="form-control"
-                                cols="30"
-                                rows="3"
-                                required
-                                className="form-control textarea-apply-form"
-                            />
-                        )}
+                                <textarea
+                                    onChange={(event) => {
+                                        this.setState({
+                                            scheduleExplain: event.target.value
+                                        });
+                                    }}
+                                    value={this.state.scheduleExplain}
+                                    name="form-control"
+                                    cols="30"
+                                    rows="3"
+                                    required
+                                    className="form-control textarea-apply-form"
+                                />
+                            )}
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Have you ever been convicted of a felony? </span>
                         <input
                             onChange={(event) => {
@@ -862,7 +862,7 @@ class ApplyForm extends Component {
                         <label className="radio-label"> No</label>
                         <span className="check-icon" />
                     </div>
-                    <div className="col-8">
+                    <div className="col-md-8">
                         <span className="primary"> If yes, please explain </span>
                         {this.state.convicted === '0' ? (
                             <textarea
@@ -879,27 +879,27 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         ) : (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        convictedExplain: event.target.value
-                                    });
-                                }}
-                                value={this.state.convictedExplain}
-                                name="form-control"
-                                cols="30"
-                                required
-                                rows="3"
-                                className="form-control textarea-apply-form"
-                            />
-                        )}
+                                <textarea
+                                    onChange={(event) => {
+                                        this.setState({
+                                            convictedExplain: event.target.value
+                                        });
+                                    }}
+                                    value={this.state.convictedExplain}
+                                    name="form-control"
+                                    cols="30"
+                                    required
+                                    rows="3"
+                                    className="form-control textarea-apply-form"
+                                />
+                            )}
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-md-12">
                         <span className="primary"> How did you hear about Tumi Staffing </span>
                     </div>
-                    <div className="col-12">
+                    <div className="col-md-12">
                         <select
                             name="networks"
                             id="networks"
@@ -920,7 +920,7 @@ class ApplyForm extends Component {
                             <option value="others">Other</option>
                         </select>
                         <div className="row">
-                            <div className="col-12">
+                            <div className="col-md-12">
                                 {this.state.socialNetwork === 'others' ? (
                                     <textarea
                                         onChange={(event) => {
@@ -937,8 +937,8 @@ class ApplyForm extends Component {
                                         className="form-control textarea-apply-form"
                                     />
                                 ) : (
-                                    ''
-                                )}
+                                        ''
+                                    )}
                             </div>
                         </div>
                     </div>
@@ -976,7 +976,7 @@ class ApplyForm extends Component {
                         this.setState(
                             (prevState) => ({
                                 open: false,
-                                skills: [ ...prevState.skills, item ]
+                                skills: [...prevState.skills, item]
                             }),
                             () => {
                                 this.setState({
@@ -993,7 +993,7 @@ class ApplyForm extends Component {
                     <br />
                     <DialogContent style={{ width: '450px' }}>
                         <div className="row">
-                            <div className="col-12">
+                            <div className="col-md-12">
                                 <span className="primary">Skill Name</span>
                                 <br />
                                 <input
@@ -1011,7 +1011,7 @@ class ApplyForm extends Component {
                         </div>
                         <br />
                         <div className="row">
-                            <div className="col-12">
+                            <div className="col-md-12">
                                 <span className="primary">Skill Level</span>
                                 <br />
                                 <InputRange
@@ -1061,7 +1061,7 @@ class ApplyForm extends Component {
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            schools: [ ...prevState.schools, item ]
+                            schools: [...prevState.schools, item]
                         }),
                         () => {
                             document.getElementById('education-form').reset();
@@ -1084,63 +1084,63 @@ class ApplyForm extends Component {
                 {this.state.schools.length > 0 ? (
                     <div key={uuidv4()} className="skills-container skills-container--header">
                         <div className="row">
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>Field of Study</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>Institution</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>Address</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>Start Date</span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <span>End Date</span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <span>Graduated</span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <span>Degree</span>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
                 {this.state.schools.map((schoolItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>{schoolItem.schoolType}</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>{schoolItem.educationName}</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>{schoolItem.educationAddress}</span>
                             </div>
-                            <div className="col-2">
+                            <div className="col-md-2">
                                 <span>{schoolItem.startDate}</span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <span>{schoolItem.endDate}</span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
                             </div>
-                            <div className="col-1">
-								<span>
-									{studyTypes.map((item) => {
+                            <div className="col-md-1">
+                                <span>
+                                    {studyTypes.map((item) => {
                                         if (item.Id == schoolItem.degree) {
                                             return item.Name + '';
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <Button
                                     className="deleteSkillSection"
                                     onClick={() => {
@@ -1159,7 +1159,7 @@ class ApplyForm extends Component {
                 ))}
                 <hr className="separator" />
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <label className="primary">Field of Study</label>
                         <div className="input-container--validated">
                             <input
@@ -1176,7 +1176,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <label className="primary">Name (Institution)</label>
                         <div className="input-container--validated">
                             <input
@@ -1193,7 +1193,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <label className="primary">Address</label>
                         <div className="input-container--validated">
                             <input
@@ -1212,7 +1212,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary"> Time Period</span>
                         <div className="input-container--validated">
                             <input
@@ -1229,7 +1229,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary">To</span>
                         <div className="input-container--validated">
                             <input
@@ -1246,7 +1246,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-2">
+                    <div className="col-md-2">
                         <label className="primary">Graduated</label> <br />
                         <input
                             onChange={(e) => {
@@ -1261,7 +1261,7 @@ class ApplyForm extends Component {
                             id="graduated"
                         />
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <label className="primary">Degree</label>
                         {this.state.graduated ? (
                             <div className="input-container--validated">
@@ -1271,23 +1271,23 @@ class ApplyForm extends Component {
                                 </select>
                             </div>
                         ) : (
-                            <div className="input-container--validated">
-                                <select
-                                    form="education-form"
-                                    name="degree"
-                                    id="degree"
-                                    disabled
-                                    className="form-control"
-                                >
-                                    <option value="">Select an option</option>
-                                    {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                                </select>
-                            </div>
-                        )}
+                                <div className="input-container--validated">
+                                    <select
+                                        form="education-form"
+                                        name="degree"
+                                        id="degree"
+                                        disabled
+                                        className="form-control"
+                                    >
+                                        <option value="">Select an option</option>
+                                        {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                    </select>
+                                </div>
+                            )}
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-md-12">
                         <Button type="submit" form="education-form" className="save-skill-button">
                             Add
                         </Button>
@@ -1300,7 +1300,7 @@ class ApplyForm extends Component {
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Military Service</h4>
                 <div className="row">
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Branch</span>
                         <input
                             name="militaryBranch"
@@ -1312,7 +1312,7 @@ class ApplyForm extends Component {
                         />
                         <span className="check-icon" />
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Rank at Discharge</span>
                         <input
                             name="militaryRankDischarge"
@@ -1326,7 +1326,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary"> Dates</span>
                         <input
                             name="militaryStartDate"
@@ -1337,7 +1337,7 @@ class ApplyForm extends Component {
                             minLength="3"
                         />
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary">To: </span>
                         <input
                             name="militaryEndDate"
@@ -1348,7 +1348,7 @@ class ApplyForm extends Component {
                             minLength="3"
                         />
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Type of Discharge</span>
                         <select name="dischargeType" id="dischargeType" className="form-control">
                             <option value="">Select an option</option>
@@ -1387,7 +1387,7 @@ class ApplyForm extends Component {
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            previousEmployment: [ ...prevState.previousEmployment, item ]
+                            previousEmployment: [...prevState.previousEmployment, item]
                         }),
                         () => {
                             document.getElementById('form-previous-employment').reset();
@@ -1412,63 +1412,63 @@ class ApplyForm extends Component {
                     {this.state.previousEmployment.length > 0 ? (
                         <div key={uuidv4()} className="skills-container skills-container--header">
                             <div className="row">
-                                <div className="col-2">
+                                <div className="col-md-2">
                                     <span>Company</span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-md-2">
                                     <span>Address</span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-md-2">
                                     <span>Job Title</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>Phone</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>Supervisor</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>Pay Rate</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>Start Date</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>End Date</span>
                                 </div>
                             </div>
                         </div>
                     ) : (
-                        ''
-                    )}
+                            ''
+                        )}
                     {this.state.previousEmployment.map((employmentItem) => (
                         <div key={uuidv4()} className="skills-container">
                             <div className="row">
-                                <div className="col-2">
+                                <div className="col-md-2">
                                     <span>{employmentItem.companyName}</span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-md-2">
                                     <span>{employmentItem.address}</span>
                                 </div>
-                                <div className="col-2">
+                                <div className="col-md-2">
                                     <span>{employmentItem.jobTitle}</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>{employmentItem.phone}</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>{employmentItem.supervisor}</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>{employmentItem.payRate}</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>{employmentItem.startDate}</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <span>{employmentItem.endDate}</span>
                                 </div>
-                                <div className="col-1">
+                                <div className="col-md-1">
                                     <Button
                                         className="deleteSkillSection"
                                         onClick={() => {
@@ -1488,7 +1488,7 @@ class ApplyForm extends Component {
                     <hr className="separator" />
                 </div>
                 <div className="row">
-                    <div className="col-8">
+                    <div className="col-md-8">
                         <span className="primary"> Company</span>
                         <div className="input-container--validated">
                             <input
@@ -1505,7 +1505,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Phone</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -1539,7 +1539,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-8">
+                    <div className="col-md-8">
                         <span className="primary"> Address</span>
                         <div className="input-container--validated">
                             <input
@@ -1556,7 +1556,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Supervisor</span>
                         <div className="input-container--validated">
                             <input
@@ -1573,7 +1573,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-8">
+                    <div className="col-md-8">
                         <span className="primary"> Job Title</span>
                         <div className="input-container--validated">
                             <input
@@ -1590,7 +1590,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Pay Rate</span>
                         <div className="input-container--validated">
                             <input
@@ -1607,7 +1607,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary"> Dates</span>
                         <div className="input-container--validated">
                             <input
@@ -1624,7 +1624,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary">To: </span>
                         <div className="input-container--validated">
                             <input
@@ -1641,7 +1641,7 @@ class ApplyForm extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-6">
+                    <div className="col-md-6">
                         <span className="primary"> Reason for leaving</span>
                         <textarea
                             id="companyReasonForLeaving"
@@ -1652,7 +1652,7 @@ class ApplyForm extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-12">
+                    <div className="col-md-12">
                         <Button type="submit" form="form-previous-employment" className="save-skill-button">
                             Add
                         </Button>
@@ -1666,51 +1666,51 @@ class ApplyForm extends Component {
                 {this.state.languages.length > 0 ? (
                     <div className="skills-container skills-container--header">
                         <div className="row">
-                            <div className="col-3">
+                            <div className="col-md-3">
                                 <span>Language Name</span>
                             </div>
-                            <div className="col-4">
+                            <div className="col-md-4">
                                 <span>Conversation</span>
                             </div>
-                            <div className="col-4">
+                            <div className="col-md-4">
                                 <span>Writing</span>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
                 {this.state.languages.map((languageItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
-                            <div className="col-3">
-								<span>
-									{this.state.languagesLoaded.map((item) => {
+                            <div className="col-md-3">
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
                                         if (item.Id == languageItem.language) {
                                             return item.Name.trim();
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
-                            <div className="col-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
+                            <div className="col-md-4">
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.conversation) {
                                             return item.Name;
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
-                            <div className="col-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
+                            <div className="col-md-4">
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.writing) {
                                             return item.Name;
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
-                            <div className="col-1">
+                            <div className="col-md-1">
                                 <Button
                                     className="deleteSkillSection"
                                     onClick={() => {
@@ -1748,7 +1748,7 @@ class ApplyForm extends Component {
                         this.setState(
                             (prevState) => ({
                                 open: false,
-                                languages: [ ...prevState.languages, item ]
+                                languages: [...prevState.languages, item]
                             }),
                             () => {
                                 document.getElementById('form-language').reset();
@@ -1759,7 +1759,7 @@ class ApplyForm extends Component {
                         );
                     }}
                 >
-                    <div className="col-4">
+                    <div className="col-md-4">
                         <span className="primary"> Languages</span>
                         <select
                             id="nameLanguage"
@@ -1787,7 +1787,7 @@ class ApplyForm extends Component {
                         {/*<input*/}
                         <span className="check-icon" />
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary"> Conversation</span>
                         <select
                             required
@@ -1801,7 +1801,7 @@ class ApplyForm extends Component {
                         </select>
                         <span className="check-icon" />
                     </div>
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <span className="primary"> Writing</span>
                         <select
                             required
@@ -1815,7 +1815,7 @@ class ApplyForm extends Component {
                         </select>
                         <span className="check-icon" />
                     </div>
-                    <div className="col-2">
+                    <div className="col-md-2">
                         <br />
                         <Button type="submit" form="form-language" className="save-skill-button">
                             Add
@@ -1828,38 +1828,38 @@ class ApplyForm extends Component {
             <div className="ApplyBlock">
                 <h4 className="ApplyBlock-title">Skills</h4>
                 <div className="row">
-                    <div className="col-9" />
-                    <div className="col-3">
+                    <div className="col-md-9" />
+                    <div className="col-md-3">
                         <Button onClick={this.handleClickOpen} className="save-skill-button">
                             New Skill
                         </Button>
                         {renderSkillsDialog()}
                     </div>
-                    <div className="col-12">
+                    <div className="col-md-12">
                         {this.state.skills.length > 0 ? (
                             <div className="skills-container skills-container--header">
                                 <div className="row">
-                                    <div className="col-6">
+                                    <div className="col-md-6">
                                         <span>Skill Name</span>
                                     </div>
-                                    <div className="col-6">
+                                    <div className="col-md-6">
                                         <span>Skill Level</span>
                                     </div>
                                 </div>
                             </div>
                         ) : (
-                            ''
-                        )}
+                                ''
+                            )}
                         {this.state.skills.map((skillItem) => (
                             <div key={uuidv4()} className="skills-container">
                                 <div className="row">
-                                    <div className="col-6">
+                                    <div className="col-md-6">
                                         <span>{skillItem.description}</span>
                                     </div>
-                                    <div className="col-5">
+                                    <div className="col-md-5">
                                         <InputRangeDisabled percent={skillItem.level} />
                                     </div>
-                                    <div className="col-1">
+                                    <div className="col-md-1">
                                         <Button
                                             className="deleteSkillSection"
                                             onClick={() => {
@@ -1904,7 +1904,7 @@ class ApplyForm extends Component {
                             {/*{renderInsertDialogLoading()}*/}
                             <div className="Apply-container">
                                 <div className="row">
-                                    <div className="col-12 buttons-group-right">
+                                    <div className="col-md-12 buttons-group-right">
                                         <button type="reset" className="btn-circle btn-lg red">
                                             <i className="fas fa-eraser" />
                                         </button>

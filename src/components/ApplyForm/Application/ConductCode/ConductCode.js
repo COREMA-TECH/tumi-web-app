@@ -5,10 +5,10 @@ import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import withApollo from "react-apollo/withApollo";
 import renderHTML from 'react-render-html';
-import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO } from "./Queries";
+import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY } from "./Queries";
 import { ADD_CONDUCT_CODE } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
-
+import PropTypes from 'prop-types';
 //import html from '../../../../data/Package hire/CondeConduct';
 
 
@@ -67,7 +67,7 @@ class ConductCode extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("esta es la data ",data);
+                console.log("esta es la data ", data);
                 if (data.applications[0].conductCode !== null) {
                     this.setState({
                         id: data.applications[0].conductCode.id,
@@ -129,6 +129,44 @@ class ConductCode extends Component {
             });
     };
 
+    createDocumentsPDF = () => {
+        this.props.client
+            .query({
+                query: CREATE_DOCUMENTS_PDF_QUERY,
+                variables: {
+                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    Name: "ConductCode-" + this.state.applicantName
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.createdocumentspdf != null) {
+                    console.log("Ya estoy creando y estoy aqui con data ", data);
+
+                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+
+                    console.log(this.state.urlPDF);
+
+                } else {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error: Loading agreement: createdocumentspdf not exists in query data'
+                    );
+                    this.setState({ loadingData: false });
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
+                this.setState({ loadingData: false });
+            });
+    };
+
+
+    downloadDocumentsHandler = () => {
+        var url = this.context.baseUrl + '/public/Documents/' + "ConductCode-" + this.state.applicantName + '.pdf';
+        window.open(url, '_blank');
+    };
+
     componentWillMount() {
         this.getConductCodeInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
@@ -172,7 +210,10 @@ class ConductCode extends Component {
                                 <span className="applicant-card__title">Conduct Code</span>
                                 {
                                     this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button">
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.createDocumentsPDF();
+                                            this.downloadDocumentsHandler();
+                                        }}>
                                             Download <i className="fas fa-download"></i>
                                         </button>
                                     ) : (
@@ -186,7 +227,8 @@ class ConductCode extends Component {
                                 }
                             </div>
                             <div className="row pdf-container">
-                                {renderHTML(`<div class="WordSection1">
+                                <div id="DocumentPDF" className="signature-information">
+                                    {renderHTML(`<div class="WordSection1">
                                                 <p style="margin: 0.65pt 0in 0.0001pt 1pt; text-align: center; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;" align="center"><strong><span style="font-size: 15.5pt; font-family: 'Times New Roman', serif;">Tumi Staffing Code of Conduct</span></strong></p>
                                                 <p style="margin: 4.9pt 42.8pt 0.0001pt 0in; line-height: 110%; font-size: 11pt; font-family: 'Trebuchet MS', sans-serif;"><span style="font-size: 10.5pt; line-height: 110%;">&nbsp;</span></p>
                                                 <ol>
@@ -220,7 +262,7 @@ class ConductCode extends Component {
                                                 </div>
                                                 <p>&nbsp;</p>
                                 `)}
-                            </div>
+                                </div> </div>
                         </div>
                     </div>
                 </div>
@@ -230,6 +272,12 @@ class ConductCode extends Component {
             </div>
         );
     }
+
+    static contextTypes = {
+        baseUrl: PropTypes.string
+    };
+
 }
+
 
 export default withApollo(withGlobalContent(ConductCode));

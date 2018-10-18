@@ -1,8 +1,5 @@
 .toolbar__main {
-	background-color: #3DA2C7;
-	clip-path: polygon(35% 0, 100% 0%, 100% 100%, 40% 100%);
 	border-color: #293a4a;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 	display: flex;
 	height: 100%;
 	justify-content: flex-end;
@@ -15,7 +12,6 @@
 	font-size: 1.3em;
 	font-weight: 300;
 	font-family: "Segoe UI";
-
+	padding-left: 1rem;
 	width: 20%;
-	padding-left: 1.5em;
 }
