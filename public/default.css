@@ -1,5 +1,5 @@
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
-@import "https://fonts.googleapis.com/css?family=Noto+Sans";
+@import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic);
 html,
 body {
@@ -12,7 +12,7 @@ body {
   font-size: 100%; }
 
 * {
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   line-height: 1.5; }
 
 h1 {
@@ -188,7 +188,7 @@ p {
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: "Noto Sans", sans-serif;
+  --font-family-sans-serif: "Nunito Sans", sans-serif;
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
 *,
@@ -213,7 +213,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 body {
   margin: 0;
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -4707,7 +4707,7 @@ button.close {
   z-index: 1070;
   display: block;
   margin: 0;
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -4792,7 +4792,7 @@ button.close {
   z-index: 1060;
   display: block;
   max-width: 276px;
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-style: normal;
   font-weight: 400;
   line-height: 1.5;
@@ -7494,11 +7494,13 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6; } }
 
 * {
-  font-family: "Noto Sans", sans-serif; }
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 300; }
 
 body {
   background: #f5f7f9 !important;
-  font-family: "Noto Sans", sans-serif; }
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 300; }
 
 label:not(.custom-file-label):not(.form-check-label) {
   margin-bottom: 0 !important;
@@ -7803,7 +7805,8 @@ input:checked + .slider:before {
   overflow: hidden; }
   .Table-head {
     background-color: #3ca2c8;
-    font-size: 1rem !important; }
+    font-size: 1rem !important;
+    font-weight: 300 !important; }
 
 .Header-mobileMenu {
   color: #FFF;
@@ -7890,7 +7893,7 @@ input:checked + .slider:before {
     -webkit-box-pack: start;
     -ms-flex-pack: start;
     justify-content: flex-start;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     padding: 1rem;
     text-decoration: none;
     width: 100%; }
@@ -7906,7 +7909,7 @@ input:checked + .slider:before {
     text-align: center; }
 
 .menu__item {
-  font-family: "Noto Sans", sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   padding: 1rem;
   text-decoration: none !important; }
   .menu__item .fa, .menu__item .fas, .menu__item .far {
