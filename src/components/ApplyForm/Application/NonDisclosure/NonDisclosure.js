@@ -243,8 +243,8 @@ class NonDisclosure extends Component {
                             <div className="row pdf-container">
                                 <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<div class="WordSection1">
-<p style="margin: 5.25pt 0in 0.0001pt 5pt; font-size: 11pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 18.0pt;">NON-DISCLOSURE AND NON-SOLICITATION AGREEMENT</span></p>
-<h1 style="margin: 15.95pt 0in 0.0001pt 5pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><u>PART I: Confidential Information</u></h1>
+<p style="margin: 5.25pt 0in 0.0001pt 5pt; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 18.0pt;">NON-DISCLOSURE AND NON-SOLICITATION AGREEMENT</span></p>
+<h1 style="font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><u>PART I: Confidential Information</u></h1>
 <p style="margin: 0.25pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><strong><span style="font-size: 13.0pt;">&nbsp;</span></strong></p>
 <ol style="margin-bottom: 0in; margin-top: 0px; text-align: justify;">
 <li style="margin: 0in 9.3pt 0.0001pt 0px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman'; text-indent: 24px;"><span style="font-size: 12.0pt; line-height: 105%;">I &nbsp;acknowledge &nbsp;that Tumi Staffing, Inc. is the exclusive owner of its Confidential Information, which includes all information regardless of its form of recording, not in the public domain, relating to:</span></li>
@@ -318,8 +318,8 @@ class NonDisclosure extends Component {
 <li style="margin: 0in 6.4pt 0.0001pt 0px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman'; text-indent: 24px;"><span style="font-size: 12.0pt; line-height: 105%;">I agree that if my employment with Tumi Staffing, Inc. is terminated for any reason, unless Tumi Staffing, Inc. waives this requirement, I will, within one week of my leaving Tumi Staffing, Inc. , review with the person designated for this purpose by Tumi Staffing, Inc. , the nature and type of Confidential Information to which I have had access and I will sign an acknowledgement describing </span><span style="font-size: 12.0pt; line-height: 105%;">the nature and type of Confidential Information which I am duty bound not to use or disclose.</span></li>
 </ol>
 <p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 12.5pt;">&nbsp;</span></p>
-<h1 style="margin: 0in 395.05pt 0.0001pt 5pt; text-align: justify; line-height: 210%; font-size: 12pt; font-family: 'Time New Roman';"><u>PART II: Non-solicitation</u></h1>
-<h1 style="margin: 0in 395.05pt 0.0001pt 5pt; text-align: justify; line-height: 210%; font-size: 12pt; font-family: 'Time New Roman';"><u>Non-solicitation of clients</u></h1>
+<h1 style="text-align: justify; line-height: 210%; font-size: 12pt; font-family: 'Time New Roman';"><u>PART II: Non-solicitation</u></h1>
+<h1 style="text-align: justify; line-height: 210%; font-size: 12pt; font-family: 'Time New Roman';"><u>Non-solicitation of clients</u></h1>
 <ol style="margin-top: .05pt; margin-bottom: .0001pt;" start="10">
 <li style="list-style: outside none none; margin: 0.05pt 12.25pt 0.0001pt 0px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';">
 <ol style="margin-top: .05pt; margin-bottom: .0001pt;">
@@ -340,8 +340,8 @@ class NonDisclosure extends Component {
 </ol>
 <p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 14.0pt;">&nbsp;</span></p>
 <p style="margin: 0.3pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 11.0pt;">&nbsp;</span></p>
-<h1 style="margin: 0in 328.05pt 0.0001pt 5pt; line-height: 210%; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><u>PART III: General Provisions</u></h1>
-<h1 style="margin: 0in 328.05pt 0.0001pt 5pt; line-height: 210%; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><u>Necessary protections</u></h1>
+<h1 style="line-height: 210%; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><u>PART III: General Provisions</u></h1>
+<h1 style="line-height: 210%; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><u>Necessary protections</u></h1>
 <ol style="margin-bottom: 0in; margin-top: 0px; text-align: justify;" start="12">
 <li style="list-style: outside none none; margin: 0in 5.5pt 0.0001pt 0px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';">
 <ol style="margin-bottom: 0in; margin-top: 0px;" start="3">
@@ -378,7 +378,9 @@ class NonDisclosure extends Component {
 </li>
 </ol>
 <p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="120" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;"><u><img src="` + this.state.signature + `" alt="" width="200" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
 <p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 <p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
