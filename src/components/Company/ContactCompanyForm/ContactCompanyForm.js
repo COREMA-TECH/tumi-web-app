@@ -872,11 +872,11 @@ class ContactcontactForm extends React.Component {
 					IdTitle = 0;
 
 				var department = this.state.departments.find((obj) => {
-					return obj.Name.trim() === this.state.departmentName.trim();
+					return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
 				});
 
 				var title = this.state.titles.find((obj) => {
-					return obj.Name.trim() === this.state.titleName.trim();
+					return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
 				});
 
 				let insdepartmentAsync = async () => {
