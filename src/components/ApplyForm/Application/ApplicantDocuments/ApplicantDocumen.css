@@ -111,7 +111,6 @@
 }
 
 .drag-text i {
-    font-weight: 100;
     color: #41afd7;
     margin: auto;
     font-size: 3.8em;
@@ -175,18 +174,19 @@
 .file-name-container {
     width: 100%;
     position: relative;
+    overflow: hidden;
 }
 
 .file-name-container i {
     position: absolute;
-    top:25%;
+    top: 0;
     right: 0;
     color: #FFFFFF;
 }
 
 .file-name-container:hover i {
     position: absolute;
-    top:25%;
+    top: 0;
     right: 0;
     color: #41afd7;
 }
@@ -248,3 +248,15 @@
     margin-left: -12px;
     margin-right: 8px;
 }
+
+/**
+ * Icons styles
+ */
+.fa-save {
+    padding: .2em;
+    background: #41afd7;
+    color: #FFFFFF !important;
+
+    height: 100%;
+}
+

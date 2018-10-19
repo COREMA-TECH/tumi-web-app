@@ -114,7 +114,6 @@ class InputFileCard extends Component {
             </li>
         );
     };
-
     renderTemplateList = () => {
         return (
             <li className="UploadDocument-item">
@@ -130,7 +129,7 @@ class InputFileCard extends Component {
                             accept="application/pdf"
                         />
                         <div className="drag-text">
-                            {!this.state.uploading && <span>+</span>}
+                            {!this.state.uploading && <i className="fas fa-cloud-upload-alt"></i>}
                             {this.state.uploading && (
                                 <div class={`c100 p${this.state.progress} small`}>
                                     <span>{`${this.state.progress}%`}</span>
@@ -153,6 +152,10 @@ class InputFileCard extends Component {
         );
     };
 
+    renderDialogEditFileName = () => {
+
+    };
+
     renderDocumentList = () => {
         return (
             <li className="UploadDocument-item">
@@ -162,10 +165,10 @@ class InputFileCard extends Component {
                         <input
                             disabled={this.state.editName}
                             type="text"
-                            value={this.props.title}
-                            onChange={() => {
+                            value={this.state.title}
+                            onChange={(e) => {
                                 this.setState({
-
+                                    title: e.target.value
                                 })
                             }}
                             className={this.state.editName ? "group-title" : "group-title input-file-name-edit"}/>
@@ -210,6 +213,12 @@ class InputFileCard extends Component {
             </li>
         );
     };
+
+    componentWillMount(){
+        this.setState({
+            title: this.props.title
+        })
+    }
 
     render() {
         return (
