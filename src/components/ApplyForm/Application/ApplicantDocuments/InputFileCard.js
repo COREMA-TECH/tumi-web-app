@@ -155,10 +155,6 @@ class InputFileCard extends Component {
         );
     };
 
-    renderDialogEditFileName = () => {
-
-    };
-
     renderDocumentList = () => {
         return (
             <li className="UploadDocument-item">

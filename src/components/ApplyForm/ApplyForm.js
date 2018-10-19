@@ -136,7 +136,7 @@ class ApplyForm extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 date: this.state.date,
-                                applicantAddress: this.state.applicantAddress,
+                                streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -380,10 +380,10 @@ class ApplyForm extends Component {
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        applicantAddress: event.target.value
+                                        streetAddress: event.target.value
                                     });
                                 }}
-                                value={this.state.applicantAddress}
+                                value={this.state.streetAddress}
                                 name="streetAddress"
                                 type="text"
                                 className="form-control"
@@ -713,7 +713,7 @@ class ApplyForm extends Component {
                                             className="form-control"
                                         >
                                             <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
+
                                             {data.getposition.map((item) => (
                                                 <option value={item.Id}>{item.Position}</option>
                                             ))}
@@ -816,20 +816,20 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         ) : (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        scheduleExplain: event.target.value
-                                    });
-                                }}
-                                value={this.state.scheduleExplain}
-                                name="form-control"
-                                cols="30"
-                                rows="3"
-                                required
-                                className="form-control textarea-apply-form"
-                            />
-                        )}
+                                <textarea
+                                    onChange={(event) => {
+                                        this.setState({
+                                            scheduleExplain: event.target.value
+                                        });
+                                    }}
+                                    value={this.state.scheduleExplain}
+                                    name="form-control"
+                                    cols="30"
+                                    rows="3"
+                                    required
+                                    className="form-control textarea-apply-form"
+                                />
+                            )}
                     </div>
                 </div>
                 <div className="row">
@@ -879,20 +879,20 @@ class ApplyForm extends Component {
                                 className="form-control textarea-apply-form"
                             />
                         ) : (
-                            <textarea
-                                onChange={(event) => {
-                                    this.setState({
-                                        convictedExplain: event.target.value
-                                    });
-                                }}
-                                value={this.state.convictedExplain}
-                                name="form-control"
-                                cols="30"
-                                required
-                                rows="3"
-                                className="form-control textarea-apply-form"
-                            />
-                        )}
+                                <textarea
+                                    onChange={(event) => {
+                                        this.setState({
+                                            convictedExplain: event.target.value
+                                        });
+                                    }}
+                                    value={this.state.convictedExplain}
+                                    name="form-control"
+                                    cols="30"
+                                    required
+                                    rows="3"
+                                    className="form-control textarea-apply-form"
+                                />
+                            )}
                     </div>
                 </div>
                 <div className="row">
@@ -937,8 +937,8 @@ class ApplyForm extends Component {
                                         className="form-control textarea-apply-form"
                                     />
                                 ) : (
-                                    ''
-                                )}
+                                        ''
+                                    )}
                             </div>
                         </div>
                     </div>
@@ -976,7 +976,7 @@ class ApplyForm extends Component {
                         this.setState(
                             (prevState) => ({
                                 open: false,
-                                skills: [ ...prevState.skills, item ]
+                                skills: [...prevState.skills, item]
                             }),
                             () => {
                                 this.setState({
@@ -1061,7 +1061,7 @@ class ApplyForm extends Component {
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            schools: [ ...prevState.schools, item ]
+                            schools: [...prevState.schools, item]
                         }),
                         () => {
                             document.getElementById('education-form').reset();
@@ -1108,8 +1108,8 @@ class ApplyForm extends Component {
                         </div>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
                 {this.state.schools.map((schoolItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
@@ -1132,13 +1132,13 @@ class ApplyForm extends Component {
                                 <span>{schoolItem.graduated ? 'Yes' : 'No'}</span>
                             </div>
                             <div className="col-1">
-								<span>
-									{studyTypes.map((item) => {
+                                <span>
+                                    {studyTypes.map((item) => {
                                         if (item.Id == schoolItem.degree) {
                                             return item.Name + '';
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-1">
                                 <Button
@@ -1271,19 +1271,19 @@ class ApplyForm extends Component {
                                 </select>
                             </div>
                         ) : (
-                            <div className="input-container--validated">
-                                <select
-                                    form="education-form"
-                                    name="degree"
-                                    id="degree"
-                                    disabled
-                                    className="form-control"
-                                >
-                                    <option value="">Select an option</option>
-                                    {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
-                                </select>
-                            </div>
-                        )}
+                                <div className="input-container--validated">
+                                    <select
+                                        form="education-form"
+                                        name="degree"
+                                        id="degree"
+                                        disabled
+                                        className="form-control"
+                                    >
+                                        <option value="">Select an option</option>
+                                        {studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}
+                                    </select>
+                                </div>
+                            )}
                     </div>
                 </div>
                 <div className="row">
@@ -1387,7 +1387,7 @@ class ApplyForm extends Component {
                     this.setState(
                         (prevState) => ({
                             open: false,
-                            previousEmployment: [ ...prevState.previousEmployment, item ]
+                            previousEmployment: [...prevState.previousEmployment, item]
                         }),
                         () => {
                             document.getElementById('form-previous-employment').reset();
@@ -1439,8 +1439,8 @@ class ApplyForm extends Component {
                             </div>
                         </div>
                     ) : (
-                        ''
-                    )}
+                            ''
+                        )}
                     {this.state.previousEmployment.map((employmentItem) => (
                         <div key={uuidv4()} className="skills-container">
                             <div className="row">
@@ -1678,37 +1678,37 @@ class ApplyForm extends Component {
                         </div>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
                 {this.state.languages.map((languageItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-								<span>
-									{this.state.languagesLoaded.map((item) => {
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
                                         if (item.Id == languageItem.language) {
                                             return item.Name.trim();
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.conversation) {
                                             return item.Name;
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.writing) {
                                             return item.Name;
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-1">
                                 <Button
@@ -1748,7 +1748,7 @@ class ApplyForm extends Component {
                         this.setState(
                             (prevState) => ({
                                 open: false,
-                                languages: [ ...prevState.languages, item ]
+                                languages: [...prevState.languages, item]
                             }),
                             () => {
                                 document.getElementById('form-language').reset();
@@ -1848,8 +1848,8 @@ class ApplyForm extends Component {
                                 </div>
                             </div>
                         ) : (
-                            ''
-                        )}
+                                ''
+                            )}
                         {this.state.skills.map((skillItem) => (
                             <div key={uuidv4()} className="skills-container">
                                 <div className="row">
