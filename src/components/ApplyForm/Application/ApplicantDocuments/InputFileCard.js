@@ -86,7 +86,7 @@ class InputFileCard extends Component {
         return (
             <li className="UploadDocument-item">
                 <div className="group-container ">
-                    <span className="group-title">{spanishActions[6].label}</span>
+                    <div className="group-title"></div>
                     <div className="image-upload-wrap-static">
                         <input
                             disabled={this.state.uploading}
@@ -114,12 +114,18 @@ class InputFileCard extends Component {
             </li>
         );
     };
-
     renderTemplateList = () => {
         return (
             <li className="UploadDocument-item">
                 <div key={this.props.typeId} className="group-container">
-                    <span className="group-title">{this.props.title}</span>
+                    {/*<span className="group-title"></span>*/}
+                    <div className="group-title"></div>
+                    <div className="button-container button-container-top">
+                        <a className="file-input" href={this.props.url} target="_blank">
+                            {' '}
+                            {this.props.title} <div className="fa-container fa-container-download"><i className="fas fa-download fa-lg"/></div>
+                        </a>
+                    </div>
                     <div className="image-upload-wrap">
                         <input
                             className="file-upload-input"
@@ -130,7 +136,7 @@ class InputFileCard extends Component {
                             accept="application/pdf"
                         />
                         <div className="drag-text">
-                            {!this.state.uploading && <span>+</span>}
+                            {!this.state.uploading && <i className="fas fa-cloud-upload-alt"></i>}
                             {this.state.uploading && (
                                 <div class={`c100 p${this.state.progress} small`}>
                                     <span>{`${this.state.progress}%`}</span>
@@ -142,15 +148,13 @@ class InputFileCard extends Component {
                             )}
                         </div>
                     </div>
-                    <div className="button-container">
-                        <a className="file-input" href={this.props.url} target="_blank">
-                            {' '}
-                            {spanishActions[7].label} <i className="fas fa-download fa-lg"/>
-                        </a>
-                    </div>
                 </div>
             </li>
         );
+    };
+
+    renderDialogEditFileName = () => {
+
     };
 
     renderDocumentList = () => {
@@ -162,28 +166,32 @@ class InputFileCard extends Component {
                         <input
                             disabled={this.state.editName}
                             type="text"
-                            value={this.props.title}
-                            onChange={() => {
+                            value={this.state.title}
+                            onChange={(e) => {
                                 this.setState({
-
+                                    title: e.target.value
                                 })
                             }}
                             className={this.state.editName ? "group-title" : "group-title input-file-name-edit"}/>
                         {
                             this.state.editName ? (
-                                    <i className="far fa-edit"
-                                       onClick={() => {
-                                           this.setState({
-                                               editName: false
-                                           })
-                                       }}></i>
+                                    <div className="fa-container fa-container-edit">
+                                        <i className="far fa-edit"
+                                           onClick={() => {
+                                               this.setState({
+                                                   editName: false
+                                               })
+                                           }}></i>
+                                    </div>
                             ) : (
+                                <div className="fa-container">
                                     <i className="far fa-save"
                                        onClick={() => {
                                            this.setState({
                                                editName: true
                                            })
                                        }}></i>
+                                </div>
                             )
                         }
                     </div>
@@ -210,6 +218,12 @@ class InputFileCard extends Component {
             </li>
         );
     };
+
+    componentWillMount(){
+        this.setState({
+            title: this.props.title
+        })
+    }
 
     render() {
         return (

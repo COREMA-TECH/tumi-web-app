@@ -204,7 +204,7 @@ class VerticalLinearStepper extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 date: this.state.date,
-                                applicantAddress: this.state.applicantAddress,
+                                streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -276,7 +276,7 @@ class VerticalLinearStepper extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 date: this.state.date,
-                                applicantAddress: this.state.applicantAddress,
+                                streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -689,10 +689,10 @@ class VerticalLinearStepper extends Component {
                             <input
                                 onChange={(event) => {
                                     this.setState({
-                                        applicantAddress: event.target.value
+                                        streetAddress: event.target.value
                                     });
                                 }}
-                                value={this.state.applicantAddress}
+                                value={this.state.streetAddress}
                                 name="streetAddress"
                                 type="text"
                                 className="form-control"
