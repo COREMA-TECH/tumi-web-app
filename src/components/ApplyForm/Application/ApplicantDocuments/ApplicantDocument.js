@@ -11,7 +11,7 @@ import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import InputFileCard from './InputFileCard';
 
-const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -120,7 +120,7 @@ class ApplicantDocument extends Component {
 	};
 
 	updateDocument = (document) => {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			this.props.client
 				.mutate({
 					mutation: UPDATE_APPLICANT_DOCUMENT,
@@ -141,7 +141,7 @@ class ApplicantDocument extends Component {
 						'bottom',
 						'right'
 					);
-					resolve('Error!');
+					reject(error);
 				});
 		});
 	};
@@ -213,7 +213,7 @@ class ApplicantDocument extends Component {
 					<div className="col-md-12">
 						<div className="applicant-card">
 							<div className="applicant-card__header">
-								<span className="applicant-card__title">{menuSpanish[6].label}</span>
+								<span className="applicant-card__title">{applyTabs[0].label}</span>
 							</div>
 							{this.state.loading ? (
 								<div className="form-section-1 form-section--center">

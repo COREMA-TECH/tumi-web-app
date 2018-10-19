@@ -145,25 +145,20 @@ class CompanyList extends Component {
 
 	// To render the content of the header
 	renderHeaderContent = ({ history }) => (
-		<div className={[this.props.root, 'company-list__header'].join(' ')}>
-			<Grid container spacing={24}>
-				<Grid item xs={12} sm={6}>
-					<div className="search-container" />
-				</Grid>
-				<Grid item xs={12} sm={6}>
-					<button
-						className="add-company"
-						onClick={() => {
-							history.push({
-								pathname: '/home/company/add',
-								state: { idCompany: 0, idContract: 0 }
-							});
-						}}
-					>
-						Add Management
+		<div className="row">
+			<div className="col-md-12">
+				<button
+					className="btn btn-success float-right"
+					onClick={() => {
+						history.push({
+							pathname: '/home/company/add',
+							state: { idCompany: 0, idContract: 0 }
+						});
+					}}
+				>
+					Add Management
 					</button>
-				</Grid>
-			</Grid>
+			</div>
 		</div>
 	);
 
@@ -201,7 +196,7 @@ class CompanyList extends Component {
 											content="Do you really want to continue whit this operation?"
 										/>
 
-										<div className="main-contract__header main-contract__header-sg-container">
+										<div className="">
 											{this.renderHeaderContent({ history })}
 										</div>
 										<div className="company-list">
