@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import CircularProgressLoading from 'material-ui/CircularProgressLoading';
-import firebase from 'firebase';
-import './ApplicantDocumen.css';
+
+import './ApplicantDocument.css';
 import './Circular.css';
+
 import { GET_DOCUMENTS_AND_TEMPLATES } from '../../Queries';
 import { REMOVE_APPLICANT_DOCUMENT, ADD_APPLICANT_DOCUMENT, UPDATE_APPLICANT_DOCUMENT } from '../../Mutations';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import InputFileCard from './InputFileCard';
+import DocumentInputFileCard from './DocumentInputFileCard';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -151,7 +152,14 @@ class ApplicantDocument extends Component {
 	}
 
 	renderStaticElement = () => {
-		return <InputFileCard cardType={'S'} title={spanishActions[6].label} addDocument={this.addDocument} />;
+		return (
+			<DocumentInputFileCard
+				cardType={'S'}
+				title={spanishActions[6].label}
+				addDocument={this.addDocument}
+				handleOpenSnackbar={this.props.handleOpenSnackbar}
+			/>
+		);
 	};
 
 	renderTemplateList = () => {
@@ -165,12 +173,13 @@ class ApplicantDocument extends Component {
 			//If document found then , don't show template into template list
 			if (found) return false;
 			return (
-				<InputFileCard
+				<DocumentInputFileCard
 					cardType={'T'}
 					typeId={item.Id}
 					title={item.Name.trim()}
 					url={item.Value}
 					addDocument={this.addDocument}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
 				/>
 			);
 		});
@@ -180,7 +189,7 @@ class ApplicantDocument extends Component {
 		if (!this.state.documents) return false;
 		return this.state.documents.map((item) => {
 			return (
-				<InputFileCard
+				<DocumentInputFileCard
 					ID={item.id}
 					cardType={'D'}
 					typeId={item.CatalogItemId}
@@ -189,6 +198,7 @@ class ApplicantDocument extends Component {
 					removeDocument={this.removeDocument}
 					removing={this.state.removing}
 					updateDocument={this.updateDocument}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					item={item}
 				/>
 			);

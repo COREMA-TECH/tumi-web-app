@@ -7771,8 +7771,12 @@ input:checked + .slider:before {
   max-width: 450px;
   width: 100%; }
 
+.avatar-wrapper:not(.disabled):hover .btn-up {
+  cursor: pointer; }
+
 .avatar-wrapper:not(.disabled):hover .upload-btn-wrapper {
-  opacity: 1; }
+  opacity: 1;
+  cursor: pointer; }
 
 .upload-image {
   overflow: hidden; }
@@ -7789,6 +7793,7 @@ input:checked + .slider:before {
     -o-transition: all 150ms ease;
     transition: all 150ms ease; }
   .upload-image .btn-up {
+    cursor: unset;
     border: 0 !important;
     background: rgba(60, 162, 200, 0.9) !important;
     border-radius: 91px;
