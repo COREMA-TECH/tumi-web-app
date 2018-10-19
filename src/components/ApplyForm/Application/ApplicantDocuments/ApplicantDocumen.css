@@ -178,6 +178,7 @@
     position: relative;
     overflow: hidden;
     margin-bottom: .3em;
+    background: #FFFFFF;
 }
 
 .group-title {
@@ -199,6 +200,8 @@
     margin: auto;
     padding: .1em;
     font-size: .85em;
+    text-align: left;
+    padding-left: .3em;
 }
 
 .title-blue {
@@ -223,6 +226,8 @@
 .button-container-top {
     border-radius: 5px 5px 0 0;
     position: relative;
+    background: #FFFFFF;
+    color: #41afd7;
 }
 
 .image-show-wrap {
@@ -264,9 +269,7 @@
     border-radius: 0 5px 5px 0;
 }
 
-.fa-container {
-    padding: .2em .8em;
-    background: #41afd7;
+.fa-container-option {
     color: #FFFFFF !important;
 
     height: 100%;
@@ -281,17 +284,48 @@
     font-size: .9em;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
+
+    overflow: hidden;
+}
+
+.fa-container {
+}
+
+.fa-container-cancel, .fa-container-save  {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .2em 1em;
+}
+
+.fa-container-cancel:hover {
+    background: #cd0045;
 }
 
 .fa-container-edit {
     background: #FFFFFF;
     color: #FFFFFF !important;
+    cursor: pointer;
 }
 
 .fa-container-edit {
     background: #FFFFFF;
     color: #41afd7 !important;
 }
+
+.fa-container-save {
+    height: 100%;
+    background: #41afd7;
+    color: #FFFFFF !important;
+}
+
+.fa-container-save:hover {
+    height: 100%;
+    background: #4097be;
+    color: #FFFFFF !important;
+}
+
 
 .file-name-container:hover .fa-container-edit {
     background: #FFFFFF;
@@ -302,6 +336,12 @@
     color: #FFFFFF !important;
     border-left: 1px solid rgba(255, 255, 255, 0.5);
     background: #41afd7;
+}
+
+.fa-container-download:hover {
+    color: #FFFFFF !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(65, 175, 215, 0.7) !important;
 }
 
 .UploadDocument-wrapper {
