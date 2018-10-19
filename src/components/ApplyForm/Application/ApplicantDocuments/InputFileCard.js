@@ -28,6 +28,7 @@ class InputFileCard extends Component {
 			errorMessage: null,
 			editName: true,
 			title: props.title,
+			startTitle: props.title,
 			updating: false
 		};
 	}
@@ -162,19 +163,6 @@ class InputFileCard extends Component {
 	};
 
 	renderEditButtons = () => {
-		if (this.state.updating)
-			return (
-				<div className="fa-container">
-					<i
-						className="fa fa-spinner fa-spin"
-						onClick={() => {
-							this.setState({
-								editName: false
-							});
-						}}
-					/>
-				</div>
-			);
 		return this.state.editName ? (
 			<div className="fa-container fa-container-edit">
 				<i
@@ -191,19 +179,9 @@ class InputFileCard extends Component {
 				<div
 					className="fa-container-save bg-success"
 					onClick={(e) => {
-						this.setState({
-							editName: true
-						});
-					}}
-				>
-					<i className="far fa-save" />
-				</div>
-				<div
-					className="fa-container-cancel bg-danger"
-					onClick={(e) => {
+						if (this.state.updating) return true;
 						this.setState(
 							{
-								editName: true,
 								updating: true
 							},
 							() => {
@@ -217,11 +195,27 @@ class InputFileCard extends Component {
 									url: doc.url,
 									ApplicationId: doc.ApplicationId
 								});
-								callUpdate.then((result) => {
-									this.setState({ updating: false });
-								});
+								callUpdate
+									.then((result) => {
+										this.setState({ updating: false, editName: true });
+									})
+									.catch((error) => {
+										this.setState({ updating: false });
+									});
 							}
 						);
+					}}
+				>
+					{!this.state.updating && <i className="far fa-save" />}
+					{this.state.updating && <i className="fa fa-spinner fa-spin" />}
+				</div>
+				<div
+					className="fa-container-cancel bg-danger"
+					onClick={() => {
+						this.setState({
+							editName: true,
+							title: this.state.startTitle
+						});
 					}}
 				>
 					<i className="fas fa-ban" />
@@ -264,7 +258,9 @@ class InputFileCard extends Component {
 								e.preventDefault();
 								this.setState({ openConfirm: true, idToDelete: this.props.ID });
 							}}
-						/>
+						>
+							<i className="fas fa-trash fa-lg" />
+						</a>
 					</div>
 				</div>
 			</li>

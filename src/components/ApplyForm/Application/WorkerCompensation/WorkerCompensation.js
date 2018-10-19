@@ -46,6 +46,11 @@ class WorkerCompensation extends Component {
     };
 
     createDocumentsPDF = () => {
+        this.setState(
+            {
+                downloading: true
+            }
+        )
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -68,12 +73,12 @@ class WorkerCompensation extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false });
+                    this.setState({ loadingData: false, downloading: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({ loadingData: false });
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
@@ -81,6 +86,8 @@ class WorkerCompensation extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
+        this.setState({ downloading: false });
+
     };
 
     insertWorkerCompensation = (item) => {
@@ -237,6 +244,11 @@ class WorkerCompensation extends Component {
         this.getApplicantInformation(this.props.applicationId);
     }
 
+    sleep() {
+        return new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+
+
     render() {
         let renderSignatureDialog = () => (
             <form
@@ -380,9 +392,14 @@ class WorkerCompensation extends Component {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.createDocumentsPDF();
-                                            this.downloadDocumentsHandler();
-                                        }}>
-                                            Download <i className="fas fa-download"></i>
+                                            this.sleep().then(() => {
+                                                this.downloadDocumentsHandler();
+                                            }).catch(error => {
+                                                this.setState({ downloading: false })
+                                            })
+                                        }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                            {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+
                                         </button>
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
@@ -395,7 +412,7 @@ class WorkerCompensation extends Component {
                                 }
                             </div>
                             <div className="row pdf-container">
-                                <div className="signature-information">
+                                <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<h1 style="margin: 1.2pt 0in 0.0001pt 57.3pt; text-align: justify; font-size: 14pt; font-family: 'Time New Roman', sans-serif;">Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</h1>
 <p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><strong><span style="font-size: 12.0pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</span></strong></p>
 <p style="margin: 0in 54.3pt 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&apos;s workers&apos; compensation insurance.</p>
@@ -411,7 +428,7 @@ class WorkerCompensation extends Component {
 </ol>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;&nbsp;&nbsp; </span><u><img width="300" height="300" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date + `</u></p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;&nbsp;</span><u><img width="120" height="auto" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.date.substring(0, 10) + `</u></p>
 <p style="margin: 0in 0in 0.0001pt 11pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Time New Roman, sans-serif;">Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantName + `</u></p>
@@ -436,7 +453,7 @@ class WorkerCompensation extends Component {
 <p style="margin: 1.1pt 0in 0.0001pt 5.4pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Please indicate whether this is the:</span></p>
 <ul style="margin-top: 1.0pt; margin-bottom: .0001pt;">
 <li style="margin: 1pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Initial Employee Notification</span></li>
-<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification: <u>`+ this.state.injuryDate + `</u></span></li>
+<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification: <u>`+ this.state.injuryDate.substring(0, 10) + `</u></span></li>
 </ul>
 </td>
 </tr>

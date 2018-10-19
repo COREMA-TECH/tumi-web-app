@@ -120,7 +120,7 @@ class ApplicantDocument extends Component {
 	};
 
 	updateDocument = (document) => {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			this.props.client
 				.mutate({
 					mutation: UPDATE_APPLICANT_DOCUMENT,
@@ -141,7 +141,7 @@ class ApplicantDocument extends Component {
 						'bottom',
 						'right'
 					);
-					resolve('Error!');
+					reject(error);
 				});
 		});
 	};

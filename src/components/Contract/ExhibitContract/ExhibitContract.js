@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './index.css';
 import TextAreaForm from 'ui-components/InputForm/TextAreaForm';
 import withApollo from 'react-apollo/withApollo';
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import PositionsCompanyForm from '../../Company/PositionsCompanyForm/';
 
 import Button from '@material-ui/core/Button';
@@ -17,7 +17,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 import renderHTML from 'react-render-html';
 
@@ -181,7 +181,7 @@ class ExhibitContract extends Component {
     `;
 
     sleep() {
-        return new Promise((resolve) => setTimeout(resolve, 3000));
+        return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
     writePDF = () => {
@@ -201,11 +201,11 @@ class ExhibitContract extends Component {
     };
 
     sendContract = () => {
-        this.setState({loadingData: true});
+        this.setState({ loadingData: true });
         this.props.client
             .query({
                 query: this.SEND_CONTRACT_QUERY,
-                variables: {Id: this.props.contractId},
+                variables: { Id: this.props.contractId },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -217,21 +217,21 @@ class ExhibitContract extends Component {
                         'error',
                         'Error: Loading agreement: sendcontracts not exists in query data'
                     );
-                    this.setState({loadingData: false});
+                    this.setState({ loadingData: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
-                this.setState({loadingData: false});
+                this.setState({ loadingData: false });
             });
     };
 
     createContract = () => {
-        this.setState({loadingData: true, loadingContract: true});
+        this.setState({ loadingData: true, loadingContract: true });
         this.props.client
             .query({
                 query: this.CREATE_CONTRACT_QUERY,
-                variables: {Id: this.props.contractId},
+                variables: { Id: this.props.contractId },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -269,11 +269,11 @@ class ExhibitContract extends Component {
     };
 
     loadAgreement = () => {
-        this.setState({loadingData: true});
+        this.setState({ loadingData: true });
         this.props.client
             .query({
                 query: this.GET_AGREEMENT_QUERY,
-                variables: {Id: this.props.contractId},
+                variables: { Id: this.props.contractId },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -287,12 +287,12 @@ class ExhibitContract extends Component {
                         'error',
                         'Error: Loading agreement: getcontracts not exists in query data'
                     );
-                    this.setState({loadingData: false});
+                    this.setState({ loadingData: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading agreement: ' + error);
-                this.setState({loadingData: false});
+                this.setState({ loadingData: false });
             });
     };
 
@@ -386,9 +386,9 @@ class ExhibitContract extends Component {
     };
 
     render() {
-        const {loading, success} = this.state;
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        const { loading, success } = this.state;
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
         const buttonClassname = classNames({
             [classes.buttonSuccess]: success
         });
@@ -400,26 +400,26 @@ class ExhibitContract extends Component {
                     open={this.state.openModal}
                     onClose={this.cancelContractHandler}
                     aria-labelledby="responsive-dialog-title"
-                    style={{width: '90%', padding: '0px', margin: '0 auto'}}
+                    style={{ width: '90%', padding: '0px', margin: '0 auto' }}
                 >
-                    <DialogTitle style={{padding: '0px'}}>
+                    <DialogTitle style={{ padding: '0px' }}>
                         <div className="card-form-header orange">
                             {' '}
                             {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
                                 'Edit  Position/Rate'
                             ) : (
-                                'New Contract Preview'
-                            )}
+                                    'New Contract Preview'
+                                )}
                         </div>
                     </DialogTitle>
-                    <DialogContent style={{minWidth: 750, padding: '0px'}}>
+                    <DialogContent style={{ minWidth: 750, padding: '0px' }}>
                         <div id="agreement" className="exhibit-content">
                             {this.state.openModal && renderHTML(this.state.PdfUrl)}
                         </div>
                     </DialogContent>
                     <DialogActions>
                         <div className="exhibit-button-right">
-                            {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
+                            {loading && <CircularProgress size={68} className={classes.fabProgress} />}
                         </div>
                         <div className="exhibit-button-left">
                             {/*<Tooltip title={'Print Contract'}>
@@ -458,7 +458,7 @@ class ExhibitContract extends Component {
                                         className={buttonClassname}
                                         onClick={this.sendContract}
                                     >
-                                        <SendIcon/>
+                                        <SendIcon />
                                     </Button>
                                 </div>
                             </Tooltip>
@@ -471,7 +471,7 @@ class ExhibitContract extends Component {
                                         className={buttonClassname}
                                         onClick={this.cancelContractHandler}
                                     >
-                                        <ClearIcon/>
+                                        <ClearIcon />
                                     </Button>
                                 </div>
                             </Tooltip>
@@ -623,13 +623,13 @@ class ExhibitContract extends Component {
                                 </Button>
 
                                 {this.state.loadingContract && (
-                                    <CircularProgress size={24} className={classes.buttonProgress}/>
+                                    <CircularProgress size={24} className={classes.buttonProgress} />
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
-                <iframe id="ifmcontentstoprint" allowtransparency="true"/>
+                <iframe id="ifmcontentstoprint" allowtransparency="true" />
             </div>
         );
     }
