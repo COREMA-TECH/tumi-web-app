@@ -200,97 +200,78 @@ class Login extends Component {
 
 		return (
 			<div className="login-container">
-				<div className="limiter">
-					<div className="container-login100">
-						<div className="login-form">
-							<div className="login-form__header" />
-							<div className="txt1">
-								<img
-									width="150"
-									height="150"
-									src=" data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOAAAADhCAMAAADmr0l2AAAAMFBMVEX////BwcG9vb37+/vDw8Pi4uL4+Pjz8/PW1tbZ2dnd3d3CwsLNzc3u7u7R0dHm5ubS8z9uAAAEaElEQVR4nO2d2barKhBFY49d/P+/PTZJru5hjEJ1eNd8yqNzAEXRFHk8AAAAAAAAAAAAAAAAAADwfyWr+qFoRoqhL7U/hppycHmSpmkykU4/OjfcxrJq8pfahjTNmzs4DvmO3EeyG7S/L5AmOdCbFZNG+xsD+Km3KBba3+lJf9Q5N4p5r/2tPjxP6s2KTvtrL1Odt1saMbKAWlxovpdiVN20vuw3GkYUTp2HX0wD8Up42RjW2l9+Dr/2mw2j6KWNt99oGEHm1gf4xRBLsxC9iUzb4AddqGCnbXDMENRBJ2wPw+AOOqEtcYSjEDQ8G5bBHXQitZt3kzSg4SbMSBpwbEJtkW+E5DAbQat7GDmNX5Lk2ib7VEQNODZhpe2yS0PlZ7WPBmdp/2EzXyProUbjaNg66Y+gxUF4fSPtQNBixk2UxixY3LsgjDFJ8tS22YFsmp+wGEYp/UzmMhCEIAR1uX0Uvf08SJrJWNyWoVsOGs1Fb7+aoNpTmwW1ZXYhDKMWg+jjUZP5Gd2ToRuEJofggzCXsdlD6fqo0R5KdbhkNYZOEGVrdi8E0YQZw+eDNE1oMQ99Q3L+Yvoiic81wy0m8+wVwfma1TnwTXAnNd1BJ8KOKOzfVfO/LTr7Wc1hNnT+90UtzxArfA1Ti1tNu9z9zrbfjZlY+ufC9WuV1if4v1ysfElao4v4Ay7VLkUTXtacrz5rI5jedzkXa+KoltgnO1EBWpvPPo8pDmt48yhysx9U9bcqbBdf6PxCVTyX8vmX2iR3nzr6N1VfNLVzdVP0t2k5AAAAANyTqm9cl//cyW/z7lkXkT3ylPWuS/fy66+LijE3fRaR5G9l0V1xW1u2zv7KfvC0e0smpldQpQuyezl2VpuxCjl12SjmFrdISyo9o4r+L5B8UzQ1Fntau0XR0FEMZe9cYaUROZpvwcaOMFVt+a5hp78pzNQ9Pyh304y0GmQP3WsX/H66B6Mlv56qIcnrOIYNs1ZIUGscCoy/j6FGLCUtNvuJ/JZG+MXQS4gXTFJWYp1COPWWmSDWCIdS2QG4IJmWUr7LcRrBu86UlYLnEeykTw2/RO5NQPEI+kJs/asRYRZDmTij1YCJ1GSo1oBCZVuKDShTt6XYgIlEIKWq8vRDYC6kfNDBA/50RmwZvw/70lc1xExwT/akb6r4wL3y1fbj7qN0b6R6C/Je8laOoRO8cVR3ll9gFdSWS5gHoW4a8xLkHITqs+AEZx2XymbTXzhnQrpHjUJgFNTabdrAuXFhQ5BxWW9DkLEF1VPtGT4/C5kabxQN/08eAjiTUQuZDO+SV/Bc/hu8C0ILMz2nn4EFL/fer/qCkHv3Xn09wX7+otyE/CdoOsfXHz+BdwVUJ3uRiwjCd5zWCN13oq6ROI/UjTUlQ8G/y9bYm0lFHz2szj72Q+cn/S5L0Uoqpk6hgCKwFvK8XNo2SiW+2eC6dn4dhosxsujX9macKLsBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjmH73ePwmPinNzAAAAAElFTkSuQmCC"
-								/>
-							</div>
-							<form className="login-form__content">
-								<div
-									className="wrap-input100 validate-input m-b-23"
-									data-validate="Username is reauired"
-								>
-									<span className="label-input100">Username</span>
-									<input
-										className="input100"
-										type="text"
-										id="username"
-										name="username"
-										placeholder="Type your username"
-										required="required"
-										onChange={(text) => {
-											this.setState({ username: text });
-										}}
-										onKeyPress={this.handleKeyPress}
-									/>
-									<span className="focus-input100" data-symbol="&#xf206;" />
-								</div>
-								<div className="wrap-input100 validate-input" data-validate="Password is required">
-									<span className="label-input100">Password</span>
-									<input
-										className="input100"
-										type="password"
-										id="pass"
-										name="pass"
-										placeholder="Type your password"
-										required="required"
-										onChange={(text) => {
-											this.setState({ pass: text });
-										}}
-										onKeyPress={this.handleKeyPress}
-									/>
-									<span className="focus-input100" data-symbol="&#xf190;" />
-								</div>
-
-								<div className="text-right">
-									<a href="#" />
-								</div>
-
-								<div className="text-right">
-									<a href="#">Forgot password?</a>
-								</div>
-								<div className={classes.wrapper}>
-									<Button
-										//className="contract-next-button"
-										className={classes.buttonSuccess}
-										disabled={this.state.loadingLogin}
-										value="Login"
-										onClick={this.handleSubmit}
-									>
-										Login
-									</Button>
-									{this.state.loadingLogin && (
-										<CircularProgress size={24} className={classes.buttonProgress} />
-									)}
-								</div>
-
-								<div className="txt1">
-									<span>Or Sign Up Using</span>
-								</div>
-
-								<div className="flex-c-m">
-									<a href="#" className="login100-social-item_bg1 social-link">
-										<i className="fa fa-facebook" />
-									</a>
-
-									<a href="#" className="login100-social-item_bg2 social-link">
-										<i className="fa fa-twitter" />
-									</a>
-
-									<a href="#" className="login100-social-item_bg3 social-link">
-										<i className="fa fa-google" />
-									</a>
-								</div>
-							</form>
+				<div class="login-form">
+					<form action="/examples/actions/confirmation.php" method="post">
+						<div class="avatar">
+							<img src="/avatar.png" alt="Avatar" />
 						</div>
-					</div>
+						<h2 class="text-center">Member Login</h2>
+						<div class="form-group">
+							<input
+								className="form-control"
+								type="text"
+								id="username"
+								name="username"
+								placeholder="Type your username"
+								required="required"
+								onChange={(text) => {
+									this.setState({ username: text });
+								}}
+								onKeyPress={this.handleKeyPress}
+							/>
+						</div>
+						<div class="form-group">
+							<input
+								className="form-control"
+								type="password"
+								id="pass"
+								name="pass"
+								placeholder="Type your password"
+								required="required"
+								onChange={(text) => {
+									this.setState({ pass: text });
+								}}
+								onKeyPress={this.handleKeyPress}
+							/>
+						</div>
+						<div class="form-group">
+							<button
+								//className="contract-next-button"
+								className="btn btn-success btn-lg btn-block"
+								disabled={this.state.loadingLogin}
+								onClick={this.handleSubmit}
+								type="submit"
+							>
+								Sign in
+							</button>
+							{this.state.loadingLogin && (
+								<CircularProgress size={24} className={classes.buttonProgress} />
+							)}
+						</div>
+						<div class="clearfix">
+							<label class="pull-left Remember-label checkbox-inline"><input type="checkbox" /> Remember me</label>
+							<a href="#" class="pull-right forgot">Forgot Password?</a>
+						</div>
+						<div className="txt1">
+							<span>Or Sign Up Using</span>
+						</div>
+
+						<div className="flex-c-m Social">
+							<a href="#" className="login100-social-item_bg1 social-link">
+								<i className="fa fa-facebook" />
+							</a>
+
+							<a href="#" className="login100-social-item_bg2 social-link">
+								<i className="fa fa-twitter" />
+							</a>
+
+							<a href="#" className="login100-social-item_bg3 social-link">
+								<i className="fa fa-google" />
+							</a>
+						</div>
+					</form>
 				</div>
+
 			</div>
 		);
 	}
