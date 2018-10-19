@@ -156,7 +156,7 @@ class ApplicantDocument extends Component {
 				<InputFileCard
 					ID={item.id}
 					cardType={'D'}
-					typeId={item.Id}
+					typeId={item.CatalogItemId}
 					title={item.fileName}
 					url={item.url}
 					removeDocument={this.removeDocument}
