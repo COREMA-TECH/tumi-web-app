@@ -15,12 +15,7 @@ import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 const theme = createMuiTheme({
     overrides: {
         MuiTabs: { // Name of the component ⚛️ / style sheet
-            root: { // Name of the rule
-                overflow: 'unset', // Some CSS
-            },
-            fixed: { // Name of the rule
-                overflowX: 'unset', // Some CSS
-            },
+
         },
     },
 });
@@ -127,6 +122,8 @@ class CustomizedTabs extends React.Component {
                     <Tabs
                         value={value}
                         onChange={this.handleChange}
+                        scrollable
+                        scrollButtons="on"
                         classes={{ root: "Tabs-wrapper", indicator: "Tab-selectedBorder", flexContainer: "Tabs-wrapperFluid" }}
                     >
                         <Tab

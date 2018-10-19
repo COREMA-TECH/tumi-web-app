@@ -238,11 +238,7 @@ class ApplicationTable extends React.Component {
 									);
 								})}
 
-								{emptyRows > 0 && (
-									<TableRow style={{ height: 48 * emptyRows }}>
-										<TableCell colSpan={6} />
-									</TableRow>
-								)}
+
 							</TableBody>
 							<TableFooter>
 								<TableRow>

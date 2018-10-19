@@ -1170,135 +1170,108 @@ class ContactcontactForm extends React.Component {
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
-						<div className="">
-							<div className="card-form-body">
-								<div className="card-form-row">
-									<span className="input-label primary">* Contact Type</span>
-
-									<SelectForm
-										id="type"
-										name="type"
-										data={this.state.contactTypes}
-										update={this.updateType}
-										showNone={false}
-										//noneName="Employee"
-										error={!this.state.typeValid}
-										value={this.state.type}
-									/>
-								</div>
-								<div className="card-form-row">
-									<span className="input-label primary">* First Name</span>
-									<InputForm
-										id="firstname"
-										name="firstname"
-										maxLength="15"
-										value={this.state.firstname}
-										error={!this.state.firstnameValid}
-										change={(value) => this.onFirstNameChangeHandler(value)}
-									/>
-								</div>
-								<div className="card-form-row">
-									<span className="input-label primary">Middle Name</span>
-									<InputForm
-										id="middlename"
-										name="middlename"
-										maxLength="15"
-										//error={!this.state.middlenameValid}
-										value={this.state.middlename}
-										change={(value) => this.onMiddleNameChangeHandler(value)}
-									/>
-								</div>
-
-								<div className="card-form-row">
-									<span className="input-label primary">* Last Name</span>
-									<InputForm
-										id="lastname"
-										name="lastname"
-										maxLength="20"
-										error={!this.state.lastnameValid}
-										value={this.state.lastname}
-										change={(value) => this.onLastNameChangeHandler(value)}
-									/>
-								</div>
-								<div className="card-form-row">
-									<span className="input-label primary">* Department</span>
-									{/*	<SelectForm
-										name="department"
-										data={this.state.departments}
-										error={!this.state.idDepartmentValid}
-										update={this.updateDepartment}
-										showNone={false}
-										value={this.state.idDepartment}
-									/>*/}
-									<AutosuggestInput
-										id="department"
-										name="department"
-										data={this.state.departments}
-										error={!this.state.departmentNameValid}
-										value={this.state.departmentName}
-										onChange={this.updateDepartmentName}
-										onSelect={this.updateDepartmentName}
-									/>
-								</div>
-								{/*
-								<div className="card-form-row">
-									<span className="input-label primary">Supervisor</span>
-									<SelectForm
-										name="supervisor"
-										data={this.state.supervisors}
-										update={this.updateSupervisor}
-										value={this.state.idSupervisor}
-										error={!this.state.idSupervisorValid}
-									/>
-</div>*/}
-								<div className="card-form-row">
-									<span className="input-label primary">* Email</span>
-									<InputForm
-										id="email"
-										name="email"
-										maxLength="50"
-										error={!this.state.emailValid}
-										value={this.state.email}
-										change={(value) => this.onEmailChangeHandler(value)}
-									/>
-								</div>
-								<div className="card-form-row">
-									<span className="input-label primary">* Phone Number</span>
-									<InputMask
-										id="number"
-										name="number"
-										mask="+(999) 999-9999"
-										maskChar=" "
-										value={this.state.number}
-										className={this.state.numberValid ? 'input-form' : 'input-form _invalid'}
-										onChange={(e) => {
-											this.onNumberChangeHandler(e.target.value);
-										}}
-										placeholder="+(999) 999-9999"
-									/>
+						<div className="container">
+							<div className="">
+								<div className="row">
+									<div className="col-md-12 col-lg-6">
+										<label>* Contact Type</label>
+										<SelectForm
+											id="type"
+											name="type"
+											data={this.state.contactTypes}
+											update={this.updateType}
+											showNone={false}
+											//noneName="Employee"
+											error={!this.state.typeValid}
+											value={this.state.type}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* First Name</label>
+										<InputForm
+											id="firstname"
+											name="firstname"
+											maxLength="15"
+											value={this.state.firstname}
+											error={!this.state.firstnameValid}
+											change={(value) => this.onFirstNameChangeHandler(value)}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>Middle Name</label>
+										<InputForm
+											id="middlename"
+											name="middlename"
+											maxLength="15"
+											//error={!this.state.middlenameValid}
+											value={this.state.middlename}
+											change={(value) => this.onMiddleNameChangeHandler(value)}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* Last Name</label>
+										<InputForm
+											id="lastname"
+											name="lastname"
+											maxLength="20"
+											error={!this.state.lastnameValid}
+											value={this.state.lastname}
+											change={(value) => this.onLastNameChangeHandler(value)}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* Department</label>
+										<AutosuggestInput
+											id="department"
+											name="department"
+											data={this.state.departments}
+											error={!this.state.departmentNameValid}
+											value={this.state.departmentName}
+											onChange={this.updateDepartmentName}
+											onSelect={this.updateDepartmentName}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* Email</label>
+										<InputForm
+											id="email"
+											name="email"
+											maxLength="50"
+											error={!this.state.emailValid}
+											value={this.state.email}
+											change={(value) => this.onEmailChangeHandler(value)}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* Phone Number</label>
+										<InputMask
+											id="number"
+											name="number"
+											mask="+(999) 999-9999"
+											maskChar=" "
+											value={this.state.number}
+											className={this.state.numberValid ? 'form-control' : 'form-control _invalid'}
+											onChange={(e) => {
+												this.onNumberChangeHandler(e.target.value);
+											}}
+											placeholder="+(999) 999-9999"
+										/>
+									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* Contact Title</label>
+										<AutosuggestInput
+											id="title"
+											name="title"
+											data={this.state.titles}
+											error={!this.state.titleNameValid}
+											value={this.state.titleName}
+											onChange={this.updateTitleName}
+											onSelect={this.updateTitleName}
+										/>
+									</div>
 								</div>
 
-								<div className="card-form-row">
-									<span className="input-label primary">* Contact Title</span>
-									<AutosuggestInput
-										id="title"
-										name="title"
-										data={this.state.titles}
-										error={!this.state.titleNameValid}
-										value={this.state.titleName}
-										onChange={this.updateTitleName}
-										onSelect={this.updateTitleName}
-									/>
-									{/*
-									<SelectForm
-										name="title"
-										data={this.state.titles}
-										update={this.updateTitle}
-										showNone={false}
-										value={this.state.title}
-										error={!this.state.titleValid}
-									/>*/}
-								</div>
+
 							</div>
 						</div>
 					</DialogContent>
@@ -1317,14 +1290,14 @@ class ContactcontactForm extends React.Component {
 									}
 								>
 									<div>
-										<Button
+										<button
 											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
 											variant="fab"
-											color="primary"
+											className="btn btn-success"
 											onClick={this.addContactHandler}
 										>
-											<SaveIcon />
-										</Button>
+											Save <i class="fas fa-save"></i>
+										</button>
 									</div>
 								</Tooltip>
 								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
@@ -1334,14 +1307,14 @@ class ContactcontactForm extends React.Component {
 							<div className={classes.wrapper}>
 								<Tooltip title={'Cancel Operation'}>
 									<div>
-										<Button
+										<button
 											//disabled={this.state.loading || !this.state.enableCancelButton}
 											variant="fab"
-											color="secondary"
+											className="btn btn-danger"
 											onClick={this.cancelContactHandler}
 										>
-											<ClearIcon />
-										</Button>
+											Cancel <i class="fas fa-ban"></i>
+										</button>
 									</div>
 								</Tooltip>
 							</div>
