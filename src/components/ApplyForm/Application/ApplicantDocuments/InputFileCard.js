@@ -158,6 +158,17 @@ class InputFileCard extends Component {
 		);
 	};
 	renderEditButtons = () => {
+		if (this.props.updating)
+			return (
+				<i
+					className="fa fa-spinner fa-spin"
+					onClick={() => {
+						this.setState({
+							editName: false
+						});
+					}}
+				/>
+			);
 		return this.state.editName ? (
 			<i
 				className="far fa-edit"
@@ -171,9 +182,22 @@ class InputFileCard extends Component {
 			<i
 				className="far fa-save"
 				onClick={() => {
-					this.setState({
-						editName: true
-					});
+					this.setState(
+						{
+							editName: true
+						},
+						() => {
+							const doc = this.props.item;
+							this.props.updateDocument({
+								applicationId: doc.applicationId,
+								catalogItemId: doc.catalogItemId,
+								fileName: this.state.title,
+								id: doc.id,
+								url: doc.url,
+								ApplicationId: doc.ApplicationId
+							});
+						}
+					);
 				}}
 			/>
 		);
