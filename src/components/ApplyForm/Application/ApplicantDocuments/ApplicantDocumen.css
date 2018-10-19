@@ -223,6 +223,8 @@
 .button-container-top {
     border-radius: 5px 5px 0 0;
     position: relative;
+    background: #FFFFFF;
+    color: #41afd7;
 }
 
 .image-show-wrap {
@@ -302,6 +304,12 @@
     color: #FFFFFF !important;
     border-left: 1px solid rgba(255, 255, 255, 0.5);
     background: #41afd7;
+}
+
+.fa-container-download:hover {
+    color: #FFFFFF !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(65, 175, 215, 0.7) !important;
 }
 
 .UploadDocument-wrapper {
