@@ -22,8 +22,7 @@ class AntiHarassment extends Component {
             date: '',
             applicantName: '',
             companyPhoneNumber: '',
-            ApplicationId: this.props.applicationId,
-            urlPDF: '',
+            ApplicationId: this.props.applicationId
 
         }
     }
@@ -129,6 +128,11 @@ class AntiHarassment extends Component {
     };
 
     createDocumentsPDF = () => {
+        this.setState(
+            {
+                downloading: true
+            }
+        )
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -142,36 +146,35 @@ class AntiHarassment extends Component {
                 if (data.data.createdocumentspdf != null) {
                     console.log("Ya estoy creando y estoy aqui con data ", data);
 
-                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
-
-                    console.log(this.state.urlPDF);
-
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false });
+                    this.setState({ loadingData: false, downloading: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({ loadingData: false });
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
 
     downloadDocumentsHandler = () => {
-        //var url = 'https://corema-new-api.herokuapp.com/public/Contract_' + this.props.contractname + '.pdf';
         var url = this.context.baseUrl + '/public/Documents/' + "Anti-Harrasment-" + this.state.applicantName + '.pdf';
-        //pri.download();
         window.open(url, '_blank');
+        this.setState({ downloading: false });
     };
 
 
     componentWillMount() {
         this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
+    }
+
+    sleep() {
+        return new Promise((resolve) => setTimeout(resolve, 5000));
     }
 
 
@@ -216,9 +219,14 @@ class AntiHarassment extends Component {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.createDocumentsPDF();
-                                            this.downloadDocumentsHandler();
-                                        }}>
-                                            Download <i className="fas fa-download"></i>
+                                            this.sleep().then(() => {
+                                                this.downloadDocumentsHandler();
+                                            }).catch(error => {
+                                                this.setState({ downloading: false })
+                                            })
+                                        }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                            {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+
                                         </button>
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
@@ -432,7 +440,12 @@ class AntiHarassment extends Component {
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
 <p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
-<p style="margin: 5.3pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">Employee Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u><img width="70" height="auto" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date <u><span style="font-family: 'Times New Roman', serif;">` + this.state.date.substring(0, 10) + `</span></u></p>`)}</div>
+
+<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="120" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
+<p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
+<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
+<p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"> Date Signed</p>`)}</div>
                             </div>
                         </div>
                     </div>

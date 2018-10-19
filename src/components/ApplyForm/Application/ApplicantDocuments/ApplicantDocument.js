@@ -11,7 +11,7 @@ import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import InputFileCard from './InputFileCard';
 
-const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -26,8 +26,7 @@ class ApplicantDocument extends Component {
 			fileURL: null,
 			fileName: null,
 			openConfirm: false,
-			errorMessage: null,
-			updating: false
+			errorMessage: null
 		};
 	}
 
@@ -50,15 +49,13 @@ class ApplicantDocument extends Component {
 						this.setState({
 							templates: data.getcatalogitem,
 							documents: data.applicantDocument,
-							loading: false,
-							updating: false
+							loading: false
 						});
 					})
 					.catch((error) => {
 						this.setState({
 							loading: false,
-							errorMessage: error,
-							updating: false
+							errorMessage: error
 						});
 						this.props.handleOpenSnackbar(
 							'error',
@@ -123,7 +120,7 @@ class ApplicantDocument extends Component {
 	};
 
 	updateDocument = (document) => {
-		this.setState({ updating: true }, () => {
+		return new Promise((resolve, reject) => {
 			this.props.client
 				.mutate({
 					mutation: UPDATE_APPLICANT_DOCUMENT,
@@ -134,6 +131,7 @@ class ApplicantDocument extends Component {
 				.then(() => {
 					this.props.handleOpenSnackbar('success', 'Successfully update', 'bottom', 'right');
 					this.getTemplateDocuments();
+					resolve('¡Éxito!');
 				})
 				.catch((error) => {
 					// Replace this alert with a Snackbar message error
@@ -143,10 +141,7 @@ class ApplicantDocument extends Component {
 						'bottom',
 						'right'
 					);
-
-					this.setState({
-						updating: false
-					});
+					reject(error);
 				});
 		});
 	};
@@ -195,7 +190,6 @@ class ApplicantDocument extends Component {
 					removing={this.state.removing}
 					updateDocument={this.updateDocument}
 					item={item}
-					updating={this.state.updating}
 				/>
 			);
 		});
@@ -219,7 +213,7 @@ class ApplicantDocument extends Component {
 					<div className="col-md-12">
 						<div className="applicant-card">
 							<div className="applicant-card__header">
-								<span className="applicant-card__title">{menuSpanish[6].label}</span>
+								<span className="applicant-card__title">{applyTabs[0].label}</span>
 							</div>
 							{this.state.loading ? (
 								<div className="form-section-1 form-section--center">
