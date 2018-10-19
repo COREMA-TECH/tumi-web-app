@@ -165,14 +165,14 @@ export const GET_APPLICATION_SKILLS_BY_ID = gql`
 `;
 
 export const GET_DOCUMENTS_AND_TEMPLATES = gql`
-	query {
+	query getDocuments($applicationId: Int) {
 		getcatalogitem(Id_Catalog: 12, IsActive: 1) {
 			Id
 			Name
 			Value
 			Description
 		}
-		applicantDocument {
+		applicantDocument(ApplicationId: $applicationId) {
 			id
 			url
 			fileName

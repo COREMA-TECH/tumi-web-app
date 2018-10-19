@@ -9,6 +9,7 @@ import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import InputFileCard from './InputFileCard';
 
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -21,7 +22,6 @@ class ApplicantDocument extends Component {
 		this.state = {
 			// Editing state properties - To edit general info
 			editing: false,
-			applicationId: 24,
 			loading: false,
 			idToDelete: 0,
 			progress: 0,
@@ -43,6 +43,9 @@ class ApplicantDocument extends Component {
 				this.props.client
 					.query({
 						query: GET_DOCUMENTS_AND_TEMPLATES,
+						variables: {
+							applicationId: this.props.applicationId
+						},
 						fetchPolicy: 'no-cache'
 					})
 					.then(({ data }) => {
@@ -67,13 +70,13 @@ class ApplicantDocument extends Component {
 			}
 		);
 	};
-	removeDocument = () => {
+	removeDocument = (id) => {
 		this.setState({ removing: true });
 		this.props.client
 			.mutate({
 				mutation: REMOVE_APPLICANT_DOCUMENT,
 				variables: {
-					id: this.state.idToDelete
+					id: id
 				}
 			})
 			.then(({ data }) => {
@@ -91,17 +94,17 @@ class ApplicantDocument extends Component {
 				);
 			});
 	};
-	addDocument = () => {
+	addDocument = (url, fileName, typeId) => {
 		this.setState({ loading: true });
 		this.props.client
 			.mutate({
 				mutation: ADD_APPLICANT_DOCUMENT,
 				variables: {
 					documents: {
-						url: this.state.fileURL,
-						fileName: this.state.fileName,
-						CatalogItemId: this.state.catalogItemId,
-						ApplicationId: this.state.applicationId
+						url: url,
+						fileName: fileName,
+						CatalogItemId: typeId,
+						ApplicationId: this.props.applicationId
 					}
 				}
 			})
@@ -124,38 +127,7 @@ class ApplicantDocument extends Component {
 	}
 
 	renderStaticElement = () => {
-		return (
-			<li className="UploadDocument-item">
-				<div class="group-container ">
-					<span class="group-title title-blue">
-						{spanishActions[6].label}
-					</span>
-					<div class="image-upload-wrap-static">
-						<input
-							disabled={this.state.uploading}
-							class="file-upload-input"
-							type="file"
-							onChange={(e) => {
-								this.handleUpload(e);
-							}}
-							accept="application/pdf"
-						/>
-						<div class="drag-text">
-							{!this.state.uploading && <span>+</span>}
-							{this.state.uploading && (
-								<div class={`c100 p${this.state.progress} small`}>
-									<span>{`${this.state.progress}%`}</span>
-									<div class="slice">
-										<div class="bar" />
-										<div class="fill" />
-									</div>
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
-			</li>
-		);
+		return <InputFileCard cardType={'S'} title={spanishActions[6].label} addDocument={this.addDocument} />;
 	};
 
 	renderTemplateList = () => {
@@ -169,30 +141,13 @@ class ApplicantDocument extends Component {
 			//If document found then , don't show template into template list
 			if (found) return false;
 			return (
-				<li className="UploadDocument-item">
-					<div key={item.Id} class="group-container">
-						<span class="group-title">{item.Name}</span>
-						<div class="image-upload-wrap">
-							<input
-								class="file-upload-input"
-								type="file"
-								onChange={(e) => {
-									this.handleUpload(e, item.Id, item.Name);
-								}}
-								accept="application/pdf"
-							/>
-							<div class="drag-text">
-								<span>+</span>
-							</div>
-						</div>
-						<div class="button-container">
-							<a class="file-input" href={item.Value} target="_blank">
-								{' '}
-								{spanishActions[7].label} <i className="fas fa-download"></i>
-							</a>
-						</div>
-					</div>
-				</li>
+				<InputFileCard
+					cardType={'T'}
+					typeId={item.Id}
+					title={item.Name}
+					url={item.Value}
+					addDocument={this.addDocument}
+				/>
 			);
 		});
 	};
@@ -201,80 +156,19 @@ class ApplicantDocument extends Component {
 		if (!this.state.documents) return false;
 		return this.state.documents.map((item) => {
 			return (
-				<li className="UploadDocument-item">
-					<div key={0} class="group-container">
-						<span class="group-title">{item.fileName}</span>
-						<div class="image-show-wrap">
-							<div class="drag-text">
-								<i class="far fa-file-alt fa-7x" />
-							</div>
-						</div>
-						<div class="button-container">
-							<a class="file-input input-middle" href={item.url} target="_blank">
-								<i class="fas fa-file-download fa-lg" />
-							</a>
-							<a
-								href=""
-								class="file-input input-middle"
-								onClick={(e) => {
-									e.preventDefault();
-									this.setState({ openConfirm: true, idToDelete: item.id });
-								}}
-							>
-								<i class="fas fa-trash-alt fa-lg" />
-							</a>
-						</div>
-					</div>
-				</li>
+				<InputFileCard
+					ID={item.id}
+					cardType={'D'}
+					typeId={item.Id}
+					title={item.fileName}
+					url={item.url}
+					removeDocument={this.removeDocument}
+					removing={this.state.removing}
+				/>
 			);
 		});
 	};
 
-	handleUpload = (event, id, docName) => {
-		this.setState({
-			uploading: true,
-			catalogItemId: id
-		});
-
-		// Get the file selected
-		const file = event.target.files[0];
-
-		// Build the reference based in the filename
-		const storageRef = firebase.storage().ref(`/files/${file.name}`);
-
-		// Send the reference and save the file in Firebase Storage
-		const task = storageRef.put(file);
-
-		task.on(
-			'state_changed',
-			(snapshot) => {
-				let percentage = parseInt(snapshot.bytesTransferred / snapshot.totalBytes * 100);
-
-				// Update the progress
-				this.setState({
-					progress: percentage
-				});
-			},
-			(error) => {
-				this.setState({
-					uploading: false
-				});
-			},
-			() => {
-				storageRef.getDownloadURL().then((url) => {
-					this.setState(
-						{
-							progress: 100,
-							uploading: false,
-							fileURL: url,
-							fileName: docName || file.name
-						},
-						this.addDocument
-					);
-				});
-			}
-		);
-	};
 	render() {
 		return (
 			<div className="Apply-container--application">
