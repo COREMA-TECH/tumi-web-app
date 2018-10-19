@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import './ApplicantDocumen.css';
 import './Circular.css';
 import { GET_DOCUMENTS_AND_TEMPLATES } from '../../Queries';
-import { REMOVE_APPLICANT_DOCUMENT, ADD_APPLICANT_DOCUMENT } from '../../Mutations';
+import { REMOVE_APPLICANT_DOCUMENT, ADD_APPLICANT_DOCUMENT, UPDATE_APPLICANT_DOCUMENT } from '../../Mutations';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
@@ -20,16 +20,14 @@ class ApplicantDocument extends Component {
 		super(props);
 
 		this.state = {
-			// Editing state properties - To edit general info
-			editing: false,
 			loading: false,
-			idToDelete: 0,
 			progress: 0,
 			uploading: false,
 			fileURL: null,
 			fileName: null,
 			openConfirm: false,
-			errorMessage: null
+			errorMessage: null,
+			updating: false
 		};
 	}
 
@@ -52,13 +50,15 @@ class ApplicantDocument extends Component {
 						this.setState({
 							templates: data.getcatalogitem,
 							documents: data.applicantDocument,
-							loading: false
+							loading: false,
+							updating: false
 						});
 					})
 					.catch((error) => {
 						this.setState({
 							loading: false,
-							errorMessage: error
+							errorMessage: error,
+							updating: false
 						});
 						this.props.handleOpenSnackbar(
 							'error',
@@ -122,6 +122,35 @@ class ApplicantDocument extends Component {
 			});
 	};
 
+	updateDocument = (document) => {
+		this.setState({ updating: true }, () => {
+			this.props.client
+				.mutate({
+					mutation: UPDATE_APPLICANT_DOCUMENT,
+					variables: {
+						document: document
+					}
+				})
+				.then(() => {
+					this.props.handleOpenSnackbar('success', 'Successfully update', 'bottom', 'right');
+					this.getTemplateDocuments();
+				})
+				.catch((error) => {
+					// Replace this alert with a Snackbar message error
+					this.props.handleOpenSnackbar(
+						'error',
+						'Error to update title. Please, try again!',
+						'bottom',
+						'right'
+					);
+
+					this.setState({
+						updating: false
+					});
+				});
+		});
+	};
+
 	componentWillMount() {
 		this.getTemplateDocuments();
 	}
@@ -144,7 +173,7 @@ class ApplicantDocument extends Component {
 				<InputFileCard
 					cardType={'T'}
 					typeId={item.Id}
-					title={item.Name}
+					title={item.Name.trim()}
 					url={item.Value}
 					addDocument={this.addDocument}
 				/>
@@ -159,11 +188,14 @@ class ApplicantDocument extends Component {
 				<InputFileCard
 					ID={item.id}
 					cardType={'D'}
-					typeId={item.Id}
-					title={item.fileName}
+					typeId={item.CatalogItemId}
+					title={item.fileName.trim()}
 					url={item.url}
 					removeDocument={this.removeDocument}
 					removing={this.state.removing}
+					updateDocument={this.updateDocument}
+					item={item}
+					updating={this.state.updating}
 				/>
 			);
 		});

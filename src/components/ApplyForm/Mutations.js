@@ -107,3 +107,11 @@ export const ADD_APPLICANT_DOCUMENT = gql`
 		}
 	}
 `;
+
+export const UPDATE_APPLICANT_DOCUMENT = gql`
+	mutation updateApplicantDocument($document: inputUpdateApplicantDocument) {
+		updateApplicantDocument(document: $document) {
+			id
+		}
+	}
+`;

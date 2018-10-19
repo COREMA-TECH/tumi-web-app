@@ -81,7 +81,7 @@ class ImageUpload extends Component {
 
 		return (
 			<div className="upload-image">
-				<div className="avatar-wrapper">
+				<div className={`avatar-wrapper ${this.props.disabled == true ? 'disabled' : ''}`}>
 					<div className="avatarImage-wrapper">
 						<img className="avatar-uploaded" src={this.props.fileURL || this.state.fileURL} alt="Company Avatar" />
 					</div>
