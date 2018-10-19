@@ -167,10 +167,8 @@ class InputFileCard extends Component {
                     <div className="file-name-container">
                         <input
                             id="input-edit-file-name"
-                            autoFocus
                             disabled={this.state.editName}
                             type="text"
-                            onBlur={this.handleFocus}
                             value={this.state.title}
                             onChange={(e) => {
                                 this.setState({
@@ -237,20 +235,6 @@ class InputFileCard extends Component {
             title: this.props.title
         })
     }
-
-    handleFocus = () => {
-        this.setState({
-            editName: true
-        })
-    };
-
-    removeFocus = () => {
-        document.addEventListener('click', () => {
-            this.setState({
-                editName: true
-            })
-        })
-    };
 
     render() {
         // this.removeFocus();
