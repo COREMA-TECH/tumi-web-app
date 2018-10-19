@@ -876,7 +876,7 @@ class ContactcontactForm extends React.Component {
 				});
 
 				var title = this.state.titles.find((obj) => {
-					return obj.Name.trim() === this.state.titleName.trim();
+					return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
 				});
 
 				let insdepartmentAsync = async () => {
