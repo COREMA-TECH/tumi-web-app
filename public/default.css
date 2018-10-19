@@ -7771,7 +7771,7 @@ input:checked + .slider:before {
   max-width: 450px;
   width: 100%; }
 
-.avatar-wrapper:hover .upload-btn-wrapper {
+.avatar-wrapper:not(.disabled):hover .upload-btn-wrapper {
   opacity: 1; }
 
 .upload-image {

@@ -1,4 +1,4 @@
-.avatar-wrapper {
+.avatar-wrapper:not(.disabled) {
     &:hover .upload-btn-wrapper { 
         opacity: 1;
     }
