@@ -697,7 +697,7 @@ class PositionsCompanyForm extends React.Component {
             },
             () => {
                 var department = this.state.departments.find((obj) => {
-                    return obj.Name.trim() === this.state.departmentName.trim();
+                    return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
                 });
 
                 if (department) {
