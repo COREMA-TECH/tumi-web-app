@@ -26,8 +26,7 @@ class ApplicantDocument extends Component {
 			fileURL: null,
 			fileName: null,
 			openConfirm: false,
-			errorMessage: null,
-			updating: false
+			errorMessage: null
 		};
 	}
 
@@ -50,15 +49,13 @@ class ApplicantDocument extends Component {
 						this.setState({
 							templates: data.getcatalogitem,
 							documents: data.applicantDocument,
-							loading: false,
-							updating: false
+							loading: false
 						});
 					})
 					.catch((error) => {
 						this.setState({
 							loading: false,
-							errorMessage: error,
-							updating: false
+							errorMessage: error
 						});
 						this.props.handleOpenSnackbar(
 							'error',
@@ -123,7 +120,7 @@ class ApplicantDocument extends Component {
 	};
 
 	updateDocument = (document) => {
-		this.setState({ updating: true }, () => {
+		return new Promise((resolve) => {
 			this.props.client
 				.mutate({
 					mutation: UPDATE_APPLICANT_DOCUMENT,
@@ -134,6 +131,7 @@ class ApplicantDocument extends Component {
 				.then(() => {
 					this.props.handleOpenSnackbar('success', 'Successfully update', 'bottom', 'right');
 					this.getTemplateDocuments();
+					resolve('¡Éxito!');
 				})
 				.catch((error) => {
 					// Replace this alert with a Snackbar message error
@@ -143,10 +141,7 @@ class ApplicantDocument extends Component {
 						'bottom',
 						'right'
 					);
-
-					this.setState({
-						updating: false
-					});
+					resolve('Error!');
 				});
 		});
 	};
@@ -195,7 +190,6 @@ class ApplicantDocument extends Component {
 					removing={this.state.removing}
 					updateDocument={this.updateDocument}
 					item={item}
-					updating={this.state.updating}
 				/>
 			);
 		});
