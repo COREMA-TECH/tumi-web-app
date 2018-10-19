@@ -152,7 +152,7 @@ class PreviousEmployment extends Component {
     render() {
         // To render the Skills Dialog
         let renderPreviousEmploymentDialogForm = () => (
-            <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+            <Dialog fullWidth open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                 <form
                     autoComplete="off"
                     id="form-previous-employment"
@@ -276,7 +276,7 @@ class PreviousEmployment extends Component {
                                                     </div>
                                                 </div>
                                                 <div className="col-6">
-                                                    <span className="primary"> {previousEmploymentLabels[2].label}</span>
+                                                    <span className="primary"> {previousEmploymentLabels[4].label}</span>
                                                     <div className="input-container--validated">
                                                         <input
                                                             id="companyJobTitle"
@@ -368,7 +368,7 @@ class PreviousEmployment extends Component {
                                 className="applicant-card__save-button"
                                 type="submit"
                                 form="form-previous-employment" >
-                                {spanishActions[1].label}
+                                {spanishActions[0].label}
                             </button>
                         </div>
                     </DialogActions>
@@ -454,11 +454,11 @@ class PreviousEmployment extends Component {
 
         return (
             <div className="Apply-container--application">
-                <div className="row">
-                    <div className="col-12">
+                <div className="">
+                    <div className="">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{menuSpanish[2].label}</span>
+                                <span className="applicant-card__title">{menuSpanish[3].label}</span>
                                 {
                                     this.state.editing ? (
                                         ''
@@ -473,7 +473,7 @@ class PreviousEmployment extends Component {
                                         )
                                 }
                             </div>
-                            <div className="row">
+                            <div className="">
                                 {
                                     this.state.loading ? (
                                         <div className="form-section-1 form-section--center">

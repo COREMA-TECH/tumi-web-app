@@ -136,7 +136,7 @@ class ApplyForm extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 date: this.state.date,
-                                applicantAddress: this.state.applicantAddress,
+                                streetAddress: this.state.applicantAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -713,7 +713,7 @@ class ApplyForm extends Component {
                                             className="form-control"
                                         >
                                             <option value="">Select a position</option>
-                                            <option value="0">Open Position</option>
+
                                             {data.getposition.map((item) => (
                                                 <option value={item.Id}>{item.Position}</option>
                                             ))}

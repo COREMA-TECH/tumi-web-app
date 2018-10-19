@@ -127,6 +127,11 @@ class NonDisclosure extends Component {
     };
 
     createDocumentsPDF = () => {
+        this.setState(
+            {
+                downloading: true
+            }
+        )
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -149,12 +154,12 @@ class NonDisclosure extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false });
+                    this.setState({ loadingData: false, downloading: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({ loadingData: false });
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
@@ -162,12 +167,18 @@ class NonDisclosure extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "NonDisclosure-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
+        this.setState({ downloading: false });
     };
 
     componentWillMount() {
         this.getDisclosureInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
     }
+
+    sleep() {
+        return new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+
 
     render() {
         let renderSignatureDialog = () => (
@@ -209,9 +220,14 @@ class NonDisclosure extends Component {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.createDocumentsPDF();
-                                            this.downloadDocumentsHandler();
-                                        }}>
-                                            Download <i className="fas fa-download"></i>
+                                            this.sleep().then(() => {
+                                                this.downloadDocumentsHandler();
+                                            }).catch(error => {
+                                                this.setState({ downloading: false })
+                                            })
+                                        }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                            {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+
                                         </button>
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
@@ -366,7 +382,7 @@ class NonDisclosure extends Component {
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt;">&nbsp;</span></p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt;">&nbsp;</span></p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-                                    <p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 9.5pt;"><u><img width="70" height="auto" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.date + `</u></span></p>
+                                    <p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 9.5pt;"><u><img width="120" height="auto" src="` + this.state.signature + `" alt=""></u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.date + `</u></span></p>
                                     <p style="margin: 0in 0in 0.0001pt 5pt; text-align: justify; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman';">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date Signed</p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt;">&nbsp;</span></p>
                                     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt;">&nbsp;</span></p>

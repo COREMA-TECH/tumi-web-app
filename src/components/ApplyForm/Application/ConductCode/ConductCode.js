@@ -130,6 +130,11 @@ class ConductCode extends Component {
     };
 
     createDocumentsPDF = () => {
+        this.setState(
+            {
+                downloading: true
+            }
+        )
         this.props.client
             .query({
                 query: CREATE_DOCUMENTS_PDF_QUERY,
@@ -152,12 +157,13 @@ class ConductCode extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false });
+                    this.setState({ loadingData: false, downloading: false });
+
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({ loadingData: false });
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
@@ -165,12 +171,18 @@ class ConductCode extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "ConductCode-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
+        this.setState({ downloading: false });
     };
 
     componentWillMount() {
         this.getConductCodeInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
     }
+
+    sleep() {
+        return new Promise((resolve) => setTimeout(resolve, 5000));
+    }
+
 
     render() {
         let renderSignatureDialog = () => (
@@ -212,9 +224,14 @@ class ConductCode extends Component {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
                                             this.createDocumentsPDF();
-                                            this.downloadDocumentsHandler();
-                                        }}>
-                                            Download <i className="fas fa-download"></i>
+                                            this.sleep().then(() => {
+                                                this.downloadDocumentsHandler();
+                                            }).catch(error => {
+                                                this.setState({ downloading: false })
+                                            })
+                                        }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                            {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+
                                         </button>
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
@@ -256,7 +273,7 @@ class ConductCode extends Component {
                                                 </ol>
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif; text-align: justify;">&nbsp;</p>
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
-                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="70" height="auto" src="` + this.state.signature + `" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` + this.state.date.substring(0, 10) + `</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printed Name: <u>` + this.state.applicantName + `</u></p>
+                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Signed: <u><img width="140" height="auto" src="` + this.state.signature + `" alt=""></u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` + this.state.date.substring(0, 10) + `</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printed Name: <u>` + this.state.applicantName + `</u></p>
                                                 </div>
                                                 <p>&nbsp;</p>
                                 `)}

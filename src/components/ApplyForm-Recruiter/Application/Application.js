@@ -134,7 +134,7 @@ class Application extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 //  date: this.state.date,
-                                applicantAddress: this.state.applicantAddress,
+                                streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -200,7 +200,7 @@ class Application extends Component {
                         middleName: this.state.middleName,
                         lastName: this.state.lastName,
                         //  date: this.state.date,
-                        applicantAddress: this.state.applicantAddress,
+                        streetAddress: this.state.streetAddress,
                         aptNumber: this.state.aptNumber,
                         city: this.state.city,
                         state: this.state.state,
@@ -272,7 +272,7 @@ class Application extends Component {
                             middleName: applicantData.middleName,
                             lastName: applicantData.lastName,
                             //date: applicantData.date.substring(0, 10),
-                            applicantAddress: applicantData.applicantAddress,
+                            streetAddress: applicantData.streetAddress,
                             emailAddress: applicantData.emailAddress,
                             //aptNumber: applicantData.aptNumber,
                             city: applicantData.city,
@@ -410,7 +410,6 @@ class Application extends Component {
                                                             //  disabled={!this.state.editing}
                                                             >
                                                                 <option value="">Select a position</option>
-                                                                <option value="0">Open Position</option>
                                                                 {data.getcatalogitem.map((item) => (
                                                                     <option value={item.Id}>{item.Description}</option>
                                                                 ))}
@@ -486,10 +485,10 @@ class Application extends Component {
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
-                                                        applicantAddress: event.target.value
+                                                        streetAddress: event.target.value
                                                     });
                                                 }}
-                                                value={this.state.applicantAddress}
+                                                value={this.state.streetAddress}
                                                 name="streetAddress"
                                                 type="text"
                                                 className="form-control"
