@@ -30,7 +30,6 @@ class InputFileCard extends Component {
 			title: props.title
 		};
 	}
-
 	componentWillReceiveProps(nextProps) {
 		this.setState({ title: nextProps.title });
 	}
@@ -91,7 +90,7 @@ class InputFileCard extends Component {
 		return (
 			<li className="UploadDocument-item">
 				<div className="group-container ">
-					<span className="group-title">{spanishActions[6].label}</span>
+					<div className="group-title" />
 					<div className="image-upload-wrap-static">
 						<input
 							disabled={this.state.uploading}
@@ -119,23 +118,32 @@ class InputFileCard extends Component {
 			</li>
 		);
 	};
-
 	renderTemplateList = () => {
 		return (
 			<li className="UploadDocument-item">
 				<div key={this.props.typeId} className="group-container">
-					<span className="group-title">{this.state.title}</span>
+					{/*<span className="group-title"></span>*/}
+					<div className="group-title" />
+					<div className="button-container button-container-top">
+						<a className="file-input" href={this.props.url} target="_blank">
+							{' '}
+							{this.props.title}{' '}
+							<div className="fa-container fa-container-download">
+								<i className="fas fa-download fa-lg" />
+							</div>
+						</a>
+					</div>
 					<div className="image-upload-wrap">
 						<input
 							className="file-upload-input"
 							type="file"
 							onChange={(e) => {
-								this.handleUpload(e, this.props.typeId, this.state.title, this.props.typeId);
+								this.handleUpload(e, this.props.typeId, this.props.title, this.props.typeId);
 							}}
 							accept="application/pdf"
 						/>
 						<div className="drag-text">
-							{!this.state.uploading && <span>+</span>}
+							{!this.state.uploading && <i className="fas fa-cloud-upload-alt" />}
 							{this.state.uploading && (
 								<div class={`c100 p${this.state.progress} small`}>
 									<span>{`${this.state.progress}%`}</span>
@@ -147,74 +155,79 @@ class InputFileCard extends Component {
 							)}
 						</div>
 					</div>
-					<div className="button-container">
-						<a className="file-input" href={this.props.url} target="_blank">
-							{' '}
-							{spanishActions[7].label} <i className="fas fa-download fa-lg" />
-						</a>
-					</div>
 				</div>
 			</li>
 		);
 	};
+
 	renderEditButtons = () => {
 		if (this.props.updating)
 			return (
+				<div className="fa-container">
+					<i
+						className="fa fa-spinner fa-spin"
+						onClick={() => {
+							this.setState({
+								editName: false
+							});
+						}}
+					/>
+				</div>
+			);
+		return this.state.editName ? (
+			<div className="fa-container fa-container-edit">
 				<i
-					className="fa fa-spinner fa-spin"
+					className="far fa-edit"
 					onClick={() => {
 						this.setState({
 							editName: false
 						});
 					}}
 				/>
-			);
-		return this.state.editName ? (
-			<i
-				className="far fa-edit"
-				onClick={() => {
-					this.setState({
-						editName: false
-					});
-				}}
-			/>
+			</div>
 		) : (
-			<i
-				className="far fa-save"
-				onClick={() => {
-					this.setState(
-						{
-							editName: true
-						},
-						() => {
-							const doc = this.props.item;
-							this.props.updateDocument({
-								applicationId: doc.applicationId,
-								catalogItemId: doc.catalogItemId,
-								fileName: this.state.title,
-								id: doc.id,
-								url: doc.url,
-								ApplicationId: doc.ApplicationId
-							});
-						}
-					);
-				}}
-			/>
+			<div className="fa-container">
+				<i
+					className="far fa-save"
+					onClick={() => {
+						this.setState(
+							{
+								editName: true
+							},
+							() => {
+								const doc = this.props.item;
+								this.props.updateDocument({
+									applicationId: doc.applicationId,
+									catalogItemId: doc.catalogItemId,
+									fileName: this.state.title,
+									id: doc.id,
+									url: doc.url,
+									ApplicationId: doc.ApplicationId
+								});
+							}
+						);
+					}}
+				/>{' '}
+			</div>
 		);
 	};
+
+	renderDialogEditFileName = () => {};
+
 	renderDocumentList = () => {
 		return (
 			<li className="UploadDocument-item">
 				<div key={this.props.ID} className="group-container">
-					{/*<span className="group-title">{this.state.title}</span>*/}
+					{/*<span className="group-title">{this.props.title}</span>*/}
 					<div className="file-name-container">
 						<input
 							disabled={this.state.editName}
 							type="text"
 							value={this.state.title}
-							maxLength={20}
 							onChange={(e) => {
-								this.setState({ title: e.currentTarget.value });
+								this.setState({
+									title: e.target.value
+								});
 							}}
 							className={this.state.editName ? 'group-title' : 'group-title input-file-name-edit'}
 						/>
