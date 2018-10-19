@@ -187,10 +187,20 @@ class InputFileCard extends Component {
 				/>
 			</div>
 		) : (
-			<div className="fa-container">
-				<i
-					className="far fa-save"
-					onClick={() => {
+			<div className="fa-container-option">
+				<div
+					className="fa-container-save bg-success"
+					onClick={(e) => {
+						this.setState({
+							editName: true
+						});
+					}}
+				>
+					<i className="far fa-save" />
+				</div>
+				<div
+					className="fa-container-cancel bg-danger"
+					onClick={(e) => {
 						this.setState(
 							{
 								editName: true,
@@ -213,13 +223,12 @@ class InputFileCard extends Component {
 							}
 						);
 					}}
-				/>{' '}
+				>
+					<i className="fas fa-ban" />
+				</div>
 			</div>
 		);
 	};
-
-	renderDialogEditFileName = () => {};
-
 	renderDocumentList = () => {
 		return (
 			<li className="UploadDocument-item">
