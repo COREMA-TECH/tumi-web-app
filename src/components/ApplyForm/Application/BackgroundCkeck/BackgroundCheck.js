@@ -66,8 +66,8 @@ class BackgroundCheck extends Component {
                             vehicleReportRequired: data.applications[0].backgroundCheck.vehicleReportRequired,
                             driverLicenseNumber: data.applications[0].backgroundCheck.driverLicenseNumber,
                             commercialDriverLicense: data.applications[0].backgroundCheck.commercialDriverLicense,
-                            licenseState: data.applications[0].backgroundCheck.licenseState,
-                            licenseExpiration: data.applications[0].backgroundCheck.licenseExpiration.substring(0, 10),
+                            licenseState: data.applications[0].backgroundCheck.licenseState === null ? "" : data.applications[0].backgroundCheck.licenseState,
+                            licenseExpiration: data.applications[0].backgroundCheck.licenseExpiration === null ? "" : data.applications[0].backgroundCheck.licenseExpiration.substring(0, 10),
                             signature: data.applications[0].backgroundCheck.signature,
                             date: data.applications[0].backgroundCheck.date.substring(0, 10),
                             loadedBackgroundCheckById: true,
@@ -209,22 +209,41 @@ class BackgroundCheck extends Component {
 
         // Get elements from background check
         let form = document.getElementById("background-check-form").elements;
+        let backgroundCheckItem;
 
         // Build the object with form information
-        let backgroundCheckItem = {
-            vehicleReportRequired: form.item(0).checked,
-            driverLicenseNumber: form.item(1).value.trim(),
-            commercialDriverLicense: form.item(4).checked,
-            licenseState: form.item(2).value.trim(),
-            licenseExpiration: form.item(3).value.trim(),
-            signature: this.state.signature,
+        if(form.item(0).checked) {
+            backgroundCheckItem = {
+                vehicleReportRequired: form.item(0).checked,
+                driverLicenseNumber: form.item(1).value.trim(),
+                commercialDriverLicense: form.item(4).checked,
+                licenseState: form.item(2).value.trim(),
+                licenseExpiration: form.item(3).value.trim(),
+                signature: this.state.signature,
 
-            // TODO: Fix this static fields
-            content: "".trim(),
-            date: new Date().toISOString(),
-            applicantName: "".trim(),
-            ApplicationId: this.props.applicationId
-        };
+                // TODO: Fix this static fields
+                content: "".trim(),
+                date: new Date().toISOString(),
+                applicantName: "".trim(),
+                ApplicationId: this.props.applicationId
+            };
+        } else {
+            backgroundCheckItem = {
+                vehicleReportRequired: form.item(0).checked,
+                driverLicenseNumber: "",
+                commercialDriverLicense: false,
+                licenseState: null,
+                licenseExpiration: null,
+                signature: this.state.signature,
+
+                // TODO: Fix this static fields
+                content: "".trim(),
+                date: new Date().toISOString(),
+                applicantName: "".trim(),
+                ApplicationId: this.props.applicationId
+            };
+        }
+
 
         // To insert background check
         if (this.state.id === null) {
@@ -268,7 +287,13 @@ class BackgroundCheck extends Component {
                                 <Button color="default" onClick={() => {
                                     this.setState({
                                         openSignature: false,
-                                    });
+                                    }, () => {
+                                        if (this.state.signature === '') {
+                                            this.setState({
+                                                accept: false
+                                            })
+                                        }
+                                    })
                                 }}>
                                     Close
                                 </Button>
@@ -335,6 +360,16 @@ class BackgroundCheck extends Component {
                                                         onChange={(e) => {
                                                             this.setState({
                                                                 vehicleReportRequired: e.target.checked
+                                                            }, () => {
+                                                                if(this.state.vehicleReportRequired === false){
+                                                                    this.setState({
+                                                                        vehicleReportRequired: false,
+                                                                        driverLicenseNumber: '',
+                                                                        commercialDriverLicense: false,
+                                                                        licenseState: "",
+                                                                        licenseExpiration: "",
+                                                                    })
+                                                                }
                                                             })
                                                         }}
                                                         value={this.state.vehicleReportRequired}
@@ -365,7 +400,7 @@ class BackgroundCheck extends Component {
                                                         })
                                                     }}
                                                     value={this.state.driverLicenseNumber}
-                                                    disabled={this.state.editing}
+                                                    disabled={this.state.editing || !this.state.vehicleReportRequired}
                                                 />
                                             </div>
                                             <div className="col-md-6">
@@ -390,7 +425,7 @@ class BackgroundCheck extends Component {
                                                                         })
                                                                     }}
                                                                     value={this.state.licenseState}
-                                                                    disabled={this.state.editing}
+                                                                    disabled={this.state.editing || !this.state.vehicleReportRequired}
                                                                 >
                                                                     <option value="">Select a state</option>
                                                                     {data.getcatalogitem.map((item) => (
@@ -423,7 +458,7 @@ class BackgroundCheck extends Component {
                                                         })
                                                     }}
                                                     value={this.state.licenseExpiration}
-                                                    disabled={this.state.editing}
+                                                    disabled={this.state.editing || !this.state.vehicleReportRequired}
                                                 />
                                             </div>
                                             <div className="col-md-12">
@@ -441,13 +476,14 @@ class BackgroundCheck extends Component {
                                                         minLength="10"
                                                         form="background-check-form"
                                                         onChange={(e) => {
+
                                                             this.setState({
                                                                 commercialDriverLicense: e.target.checked
                                                             })
                                                         }}
                                                         value={this.state.commercialDriverLicense}
                                                         checked={this.state.commercialDriverLicense}
-                                                        disabled={this.state.editing}
+                                                        disabled={this.state.editing || !this.state.vehicleReportRequired}
                                                     />
                                                     <p className="slider round"></p>
                                                 </label>
