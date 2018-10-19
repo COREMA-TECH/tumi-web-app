@@ -3,13 +3,14 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import renderHTML from 'react-render-html';
-import { GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO } from "./Queries";
+import { GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO, CREATE_DOCUMENTS_PDF_QUERY } from "./Queries";
 import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
 import { ADD_WORKER_COMPENSATION } from "./Mutations";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
 import './index.css';
+import PropTypes from 'prop-types';
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -42,6 +43,44 @@ class WorkerCompensation extends Component {
             signature: value,
             date: new Date().toISOString(),
         });
+    };
+
+    createDocumentsPDF = () => {
+        this.props.client
+            .query({
+                query: CREATE_DOCUMENTS_PDF_QUERY,
+                variables: {
+                    contentHTML: document.getElementById('DocumentPDF').innerHTML,
+                    Name: "WorkerCompensation-" + this.state.applicantName
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.createdocumentspdf != null) {
+                    console.log("Ya estoy creando y estoy aqui con data ", data);
+
+                    this.state.urlPDF = data.data.createdocumentspdf[0].Strfilename
+
+                    console.log(this.state.urlPDF);
+
+                } else {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error: Loading agreement: createdocumentspdf not exists in query data'
+                    );
+                    this.setState({ loadingData: false });
+                }
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
+                this.setState({ loadingData: false });
+            });
+    };
+
+
+    downloadDocumentsHandler = () => {
+        var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + this.state.applicantName + '.pdf';
+        window.open(url, '_blank');
     };
 
     insertWorkerCompensation = (item) => {
@@ -339,7 +378,10 @@ class WorkerCompensation extends Component {
                                 <span className="applicant-card__title">Worker's Compensation</span>
                                 {
                                     this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button">
+                                        <button className="applicant-card__edit-button" onClick={() => {
+                                            this.createDocumentsPDF();
+                                            this.downloadDocumentsHandler();
+                                        }}>
                                             Download <i className="fas fa-download"></i>
                                         </button>
                                     ) : (
@@ -354,9 +396,9 @@ class WorkerCompensation extends Component {
                             </div>
                             <div className="row pdf-container">
                                 <div className="signature-information">
-                                    {renderHTML(`<h1 style="margin: 1.2pt 0in 0.0001pt 57.3pt; text-align: justify; font-size: 14pt; font-family: 'Time New Roman', sans-serif;">Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&rsquo; Compensation Network</h1>
+                                    {renderHTML(`<h1 style="margin: 1.2pt 0in 0.0001pt 57.3pt; text-align: justify; font-size: 14pt; font-family: 'Time New Roman', sans-serif;">Employee &nbsp;Acknowledgment &nbsp;of &nbsp;&nbsp;Workers&apos; Compensation Network</h1>
 <p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><strong><span style="font-size: 12.0pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</span></strong></p>
-<p style="margin: 0in 54.3pt 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&rsquo;s workers&rsquo; compensation insurance.</p>
+<p style="margin: 0in 54.3pt 0.0001pt 11pt; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I &nbsp;have &nbsp;received information that tells me how to get health care under my employer&apos;s workers&apos; compensation insurance.</p>
 <p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 11.5pt;">&nbsp;</span></p>
 <p style="margin: 0.05pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">If I am hurt on the job and live in a service area described in this information, I understand that:</p>
 <p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
@@ -365,7 +407,7 @@ class WorkerCompensation extends Component {
 <li style="margin: 0.05pt 48.25pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I must go to my treating doctor for all health care for my injury. If I need a specialist, my treating doctor will refer me. If I need emergency care, I may go anywhere.</li>
 <li style="margin: 0.05pt 0in 0.0001pt 14.6667px; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">The insurance carrier will pay the treating doctor and other network providers.</li>
 <li style="margin: 0.8pt 42.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I might have to pay the bill if I get health care from someone other than a network doctor without network approval.</li>
-<li style="margin: 0.05pt 14.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">Knowingly making a false workers&rsquo; compensation claim may lead to a criminal investigation that could result in criminal penalties such as fines and imprisonment.</li>
+<li style="margin: 0.05pt 14.75pt 0.0001pt 14.6667px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">Knowingly making a false workers&apos; compensation claim may lead to a criminal investigation that could result in criminal penalties such as fines and imprisonment.</li>
 </ol>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
@@ -413,6 +455,10 @@ class WorkerCompensation extends Component {
             </div>
         );
     }
+    static contextTypes = {
+        baseUrl: PropTypes.string
+    };
+
 }
 
 export default withApollo(withGlobalContent(WorkerCompensation));
