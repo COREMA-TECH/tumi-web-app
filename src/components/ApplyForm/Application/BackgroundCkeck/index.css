@@ -155,6 +155,10 @@ img {
     margin: 5px;
 }
 
+.background-check-form {
+    width: 100%;
+}
+
 .background-check-form input:disabled,
 .background-check-form select:disabled,
 .background-check-form textarea:disabled {

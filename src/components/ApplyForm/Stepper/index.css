@@ -7,9 +7,7 @@ body {
 }
 
 .main-stepper-nav {
-    width: 20%;
     background: #ffffff !important;
-    height: 5vh !important;
 
     color: #3AC5F8;
 }
@@ -37,7 +35,7 @@ body {
 }
 
 .bottom-container-stepper {
-    width: 80%;
+    width: 100%;
     height: 70px;
     background: #ffffff;
     box-shadow: 3px -5px 8px #eeeeee;
