@@ -6,6 +6,10 @@
         padding-left: 15px;
         padding-right: 15px;
         width: 100%;
+        &::before {
+           // content: "<";
+           // width: 50px;
+        }
         &Fluid {
             background: darken($color: $gray, $amount: 0) !important;
             border-radius: $border-radius-standar $border-radius-standar 0 0 !important;
@@ -27,7 +31,7 @@
         border-bottom: 0 !important;
         &Border {
             background-color: $bg-tab-selected !important;
-            bottom: -2px !important;
+            bottom: 0px !important;
         }
     }
 }
@@ -36,5 +40,6 @@
     &-container {
         background-color: $bg-tab-selected;
         width: 100%;
+        margin-top: -1px;
     }
 }

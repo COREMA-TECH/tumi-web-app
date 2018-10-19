@@ -50,7 +50,9 @@ const styles = theme => ({
 
 function getSteps() {
     let steps = menuSpanish.map(item => {
-        return item.label
+        if(item.id !== 7) {
+            return item.label
+        }
     });
 
     return steps;
@@ -116,8 +118,6 @@ class VerticalLinearStepper extends Component {
                     return <MilitaryService applicationId={this.state.applicationId} />;
                 case 5:
                     return <Skills applicationId={this.state.applicationId} />;
-                default:
-                    return 'Unknown step';
             }
         };
 
