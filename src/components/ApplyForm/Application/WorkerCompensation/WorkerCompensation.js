@@ -19,7 +19,7 @@ class WorkerCompensation extends Component {
         super(props);
 
         this.state = {
-            id: null,
+            id: '',
             signature: '',
             content: '',
             date: '',
@@ -389,26 +389,34 @@ class WorkerCompensation extends Component {
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">Worker's Compensation</span>
                                 {
-                                    this.state.id !== null ? (
-                                        <button className="applicant-card__edit-button" onClick={() => {
-                                            this.createDocumentsPDF();
-                                            this.sleep().then(() => {
-                                                this.downloadDocumentsHandler();
-                                            }).catch(error => {
-                                                this.setState({ downloading: false })
-                                            })
-                                        }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                            {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
-
-                                        </button>
+                                    this.state.id === '' ? (
+                                        ''
                                     ) : (
-                                            <button className="applicant-card__edit-button" onClick={() => {
-                                                this.setState({
-                                                    openSignature: true
-                                                })
-                                            }}>Sign <i className="far fa-edit"></i>
-                                            </button>
-                                        )
+                                        <div>
+                                            {
+                                                this.state.id !== null ? (
+                                                    <button className="applicant-card__edit-button" onClick={() => {
+                                                        this.createDocumentsPDF();
+                                                        this.sleep().then(() => {
+                                                            this.downloadDocumentsHandler();
+                                                        }).catch(error => {
+                                                            this.setState({ downloading: false })
+                                                        })
+                                                    }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                        {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+
+                                                    </button>
+                                                ) : (
+                                                    <button className="applicant-card__edit-button" onClick={() => {
+                                                        this.setState({
+                                                            openSignature: true
+                                                        })
+                                                    }}>Sign <i className="far fa-edit"></i>
+                                                    </button>
+                                                )
+                                            }
+                                        </div>
+                                    )
                                 }
                             </div>
                             <div className="row pdf-container">

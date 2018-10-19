@@ -11,7 +11,9 @@ import {
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
-//localStorage.setItem('languageForm', 'es');
+if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
+    localStorage.setItem('languageForm', 'en');
+}
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
