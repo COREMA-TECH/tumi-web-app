@@ -27,7 +27,8 @@ class InputFileCard extends Component {
 			openConfirm: false,
 			errorMessage: null,
 			editName: true,
-			title: props.title
+			title: props.title,
+			updating: false
 		};
 	}
 	componentWillReceiveProps(nextProps) {
@@ -161,7 +162,7 @@ class InputFileCard extends Component {
 	};
 
 	renderEditButtons = () => {
-		if (this.props.updating)
+		if (this.state.updating)
 			return (
 				<div className="fa-container">
 					<i
@@ -192,17 +193,22 @@ class InputFileCard extends Component {
 					onClick={() => {
 						this.setState(
 							{
-								editName: true
+								editName: true,
+								updating: true
 							},
 							() => {
 								const doc = this.props.item;
-								this.props.updateDocument({
+
+								const callUpdate = this.props.updateDocument({
 									applicationId: doc.applicationId,
 									catalogItemId: doc.catalogItemId,
 									fileName: this.state.title,
 									id: doc.id,
 									url: doc.url,
 									ApplicationId: doc.ApplicationId
+								});
+								callUpdate.then((result) => {
+									this.setState({ updating: false });
 								});
 							}
 						);
