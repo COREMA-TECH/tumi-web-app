@@ -202,6 +202,7 @@ class AntiHarassment extends Component {
                         <SignatureForm
                             applicationId={this.state.applicationId}
                             signatureValue={this.handleSignature}
+                            showSaveIcon={null}
                         />
                     </DialogContent>
                 </Dialog>
