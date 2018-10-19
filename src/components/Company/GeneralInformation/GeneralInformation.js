@@ -48,7 +48,15 @@ const styles = (theme) => ({
 		left: '50%',
 		marginTop: -12,
 		marginLeft: -12
-	}
+	},
+	row: {
+		'&:nth-of-type(odd)': {
+			backgroundColor: theme.palette.background.default
+		},
+		'&:hover': {
+			cursor: 'pointer'
+		}
+	},
 });
 
 const CustomTableCell = withStyles((theme) => ({

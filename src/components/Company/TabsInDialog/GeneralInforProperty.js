@@ -582,20 +582,22 @@ class GeneralInfoProperty extends Component {
 						<div className="row">
 							<div className="col-md-12">
 								<div className="form-actions float-right">
-									<button
-										disabled={false}
-										className="btn btn-danger"
-										onClick={() => {
-											this.deleteCompany(this.props.idProperty);
+									{this.props.idProperty != null ?
+										<button
+											disabled={false}
+											className="btn btn-danger"
+											onClick={() => {
+												this.deleteCompany(this.props.idProperty);
 
-											/*	history.push({
-													pathname: '/company/edit',
-													state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
-												});*/
-										}}
-									>
-										Delete Property
+												/*	history.push({
+														pathname: '/company/edit',
+														state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
+													});*/
+											}}
+										>
+											Delete Property
 								</button>
+										: ''}
 									<input type="submit" value="Next" className="btn btn-success" />
 								</div>
 							</div>

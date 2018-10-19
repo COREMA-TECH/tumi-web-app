@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import './ApplicantDocumen.css';
+import './ApplicantDocument.css';
 import './Circular.css';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import PropTypes from 'prop-types';
-
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const dialogMessages = require(`../languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
@@ -39,54 +38,58 @@ class InputFileCard extends Component {
 	handleUpload = (event, id, docName, typeId) => {
 		// Get the file selected
 		const file = event.target.files[0];
+		if (!file.name.toLowerCase().endsWith('.pdf')) {
+			this.props.handleOpenSnackbar('warning', 'Only .pdf files can be uploaded!', 'bottom', 'right');
+			event.target.value = '';
+			event.preventDefault();
+		} else if (file.size > 5242880) {
+			this.props.handleOpenSnackbar('warning', 'File is too big. Max 5 MB', 'bottom', 'right');
+			event.target.value = '';
+			event.preventDefault();
+		} else {
+			this.setState({
+				uploading: true,
+				catalogItemId: id
+			});
 
-		if (file.size > 10485760) {
-			alert('File is too big!');
-			this.value = '';
-			return true;
+			// Build the reference based in the filename
+			const storageRef = firebase.storage().ref(`/files/${file.name}`);
+
+			// Send the reference and save the file in Firebase Storage
+			const task = storageRef.put(file);
+
+			task.on(
+				'state_changed',
+				(snapshot) => {
+					let percentage = parseInt(snapshot.bytesTransferred / snapshot.totalBytes * 100);
+
+					// Update the progress
+					this.setState({
+						progress: percentage
+					});
+				},
+				(error) => {
+					this.setState({
+						uploading: false
+					});
+				},
+				() => {
+					storageRef.getDownloadURL().then((url) => {
+						this.setState(
+							{
+								progress: 100,
+								uploading: false,
+								fileURL: url,
+								fileName: docName || file.name
+							},
+							() => {
+								this.props.addDocument(url, this.state.fileName, typeId);
+							}
+						);
+					});
+				}
+			);
 		}
-		this.setState({
-			uploading: true,
-			catalogItemId: id
-		});
-
-		// Build the reference based in the filename
-		const storageRef = firebase.storage().ref(`/files/${file.name}`);
-
-		// Send the reference and save the file in Firebase Storage
-		const task = storageRef.put(file);
-
-		task.on(
-			'state_changed',
-			(snapshot) => {
-				let percentage = parseInt(snapshot.bytesTransferred / snapshot.totalBytes * 100);
-
-				// Update the progress
-				this.setState({
-					progress: percentage
-				});
-			},
-			(error) => {
-				this.setState({
-					uploading: false
-				});
-			},
-			() => {
-				storageRef.getDownloadURL().then((url) => {
-					this.setState(
-						{
-							progress: 100,
-							uploading: false,
-							fileURL: url,
-							fileName: docName || file.name
-						},
-						() => {
-							this.props.addDocument(url, this.state.fileName, typeId);
-						}
-					);
-				});
-			}
-		);
 	};
 	renderStaticElement = () => {
 		return (
@@ -295,4 +298,4 @@ InputFileCard.propTypes = {
 	title: PropTypes.string.isRequired
 };
 
-export default withApollo(withGlobalContent(InputFileCard));
+export default withApollo(withGlobalContent(withGlobalContent(InputFileCard)));
