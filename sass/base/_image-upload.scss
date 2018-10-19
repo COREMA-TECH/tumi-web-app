@@ -1,7 +1,13 @@
 .avatar-wrapper:not(.disabled) {
-    &:hover .upload-btn-wrapper { 
-        opacity: 1;
-    }
+    &:hover{
+        .btn-up {
+            cursor: pointer;
+        }
+        .upload-btn-wrapper { 
+            opacity: 1;
+            cursor: pointer;
+        }
+    } 
 }
 
 .upload-image {
@@ -15,6 +21,7 @@
         transition: all 150ms ease;
     }
     .btn-up {
+        cursor: unset;
         border: 0 !important;
         background: rgba($brand-primary,0.9) !important;
         border-radius: 91px;
