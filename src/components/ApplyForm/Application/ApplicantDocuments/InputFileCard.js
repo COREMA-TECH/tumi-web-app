@@ -86,7 +86,7 @@ class InputFileCard extends Component {
         return (
             <li className="UploadDocument-item">
                 <div className="group-container ">
-                    <span className="group-title">{spanishActions[6].label}</span>
+                    <div className="group-title"></div>
                     <div className="image-upload-wrap-static">
                         <input
                             disabled={this.state.uploading}
@@ -118,7 +118,14 @@ class InputFileCard extends Component {
         return (
             <li className="UploadDocument-item">
                 <div key={this.props.typeId} className="group-container">
-                    <span className="group-title">{this.props.title}</span>
+                    {/*<span className="group-title"></span>*/}
+                    <div className="group-title"></div>
+                    <div className="button-container button-container-top">
+                        <a className="file-input" href={this.props.url} target="_blank">
+                            {' '}
+                            {this.props.title} <div className="fa-container fa-container-download"><i className="fas fa-download fa-lg"/></div>
+                        </a>
+                    </div>
                     <div className="image-upload-wrap">
                         <input
                             className="file-upload-input"
@@ -140,12 +147,6 @@ class InputFileCard extends Component {
                                 </div>
                             )}
                         </div>
-                    </div>
-                    <div className="button-container">
-                        <a className="file-input" href={this.props.url} target="_blank">
-                            {' '}
-                            {spanishActions[7].label} <i className="fas fa-download fa-lg"/>
-                        </a>
                     </div>
                 </div>
             </li>
