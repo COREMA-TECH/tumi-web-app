@@ -1489,7 +1489,7 @@ class GeneralInformation extends Component {
 								</Table>
 								<div className="card-form-footer">
 									<button
-										className={this.props.idCompany == 0 ? 'add-property__disabled' : 'btn btn-danger'}
+										className={this.props.idCompany == 0 ? 'add-property__disabled btn btn-info' : 'btn btn-info'}
 										disabled={this.props.idCompany == 0}
 										onClick={this.handleClickOpen('paper', false, 0, 0)}
 									>
