@@ -181,3 +181,7 @@ textarea:disabled {
     border: 1px solid #ced4da !important;
     cursor: not-allowed;
 }
+
+.disabled {
+    cursor: not-allowed;
+}
