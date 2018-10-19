@@ -20,10 +20,7 @@ class ApplicantDocument extends Component {
 		super(props);
 
 		this.state = {
-			// Editing state properties - To edit general info
-			editing: false,
 			loading: false,
-			idToDelete: 0,
 			progress: 0,
 			uploading: false,
 			fileURL: null,

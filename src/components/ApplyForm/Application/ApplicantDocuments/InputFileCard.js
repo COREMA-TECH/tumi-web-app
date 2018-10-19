@@ -33,11 +33,6 @@ class InputFileCard extends Component {
 		// Get the file selected
 		const file = event.target.files[0];
 
-		if (file.size > 10485760) {
-			alert('File is too big!');
-			this.value = '';
-			return true;
-		}
 		this.setState({
 			uploading: true,
 			catalogItemId: id
