@@ -123,7 +123,9 @@ class InputFileCard extends Component {
                     <div className="button-container button-container-top">
                         <a className="file-input" href={this.props.url} target="_blank">
                             {' '}
-                            {this.props.title} <div className="fa-container fa-container-download"><i className="fas fa-download fa-lg"/></div>
+                            {this.props.title}
+                            <div className="fa-container fa-container-download"><i className="fas fa-download fa-lg"/>
+                            </div>
                         </a>
                     </div>
                     <div className="image-upload-wrap">
@@ -164,8 +166,11 @@ class InputFileCard extends Component {
                     {/*<span className="group-title">{this.props.title}</span>*/}
                     <div className="file-name-container">
                         <input
+                            id="input-edit-file-name"
+                            autoFocus
                             disabled={this.state.editName}
                             type="text"
+                            onBlur={this.handleFocus}
                             value={this.state.title}
                             onChange={(e) => {
                                 this.setState({
@@ -175,22 +180,30 @@ class InputFileCard extends Component {
                             className={this.state.editName ? "group-title" : "group-title input-file-name-edit"}/>
                         {
                             this.state.editName ? (
-                                    <div className="fa-container fa-container-edit">
-                                        <i className="far fa-edit"
-                                           onClick={() => {
-                                               this.setState({
-                                                   editName: false
-                                               })
-                                           }}></i>
-                                    </div>
+                                <div className="fa-container fa-container-edit"
+                                     onClick={(e) => {
+                                         this.setState({
+                                             editName: false
+                                         });
+                                     }}>
+                                    <i className="far fa-edit"></i>
+                                </div>
                             ) : (
-                                <div className="fa-container">
-                                    <i className="far fa-save"
-                                       onClick={() => {
-                                           this.setState({
-                                               editName: true
-                                           })
-                                       }}></i>
+                                <div className="fa-container-option">
+                                    <div className="fa-container-save bg-success" onClick={(e) => {
+                                        this.setState({
+                                            editName: true
+                                        });
+                                    }}>
+                                        <i className="far fa-save"></i>
+                                    </div>
+                                    <div className="fa-container-cancel bg-danger" onClick={(e) => {
+                                        this.setState({
+                                            editName: true,
+                                        })
+                                    }}>
+                                        <i className="fas fa-ban"></i>
+                                    </div>
                                 </div>
                             )
                         }
@@ -219,13 +232,29 @@ class InputFileCard extends Component {
         );
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
             title: this.props.title
         })
     }
 
+    handleFocus = () => {
+        this.setState({
+            editName: true
+        })
+    };
+
+    removeFocus = () => {
+        document.addEventListener('click', () => {
+            this.setState({
+                editName: true
+            })
+        })
+    };
+
     render() {
+        // this.removeFocus();
+
         return (
             <React.Fragment>
                 <ConfirmDialog

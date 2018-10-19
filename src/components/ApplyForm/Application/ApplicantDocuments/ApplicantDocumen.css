@@ -178,6 +178,7 @@
     position: relative;
     overflow: hidden;
     margin-bottom: .3em;
+    background: #FFFFFF;
 }
 
 .group-title {
@@ -199,6 +200,8 @@
     margin: auto;
     padding: .1em;
     font-size: .85em;
+    text-align: left;
+    padding-left: .3em;
 }
 
 .title-blue {
@@ -266,9 +269,7 @@
     border-radius: 0 5px 5px 0;
 }
 
-.fa-container {
-    padding: .2em .8em;
-    background: #41afd7;
+.fa-container-option {
     color: #FFFFFF !important;
 
     height: 100%;
@@ -283,17 +284,48 @@
     font-size: .9em;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
+
+    overflow: hidden;
+}
+
+.fa-container {
+}
+
+.fa-container-cancel, .fa-container-save  {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .2em .8em;
+}
+
+.fa-container-cancel:hover {
+    background: #cd0045;
 }
 
 .fa-container-edit {
     background: #FFFFFF;
     color: #FFFFFF !important;
+    cursor: pointer;
 }
 
 .fa-container-edit {
     background: #FFFFFF;
     color: #41afd7 !important;
 }
+
+.fa-container-save {
+    height: 100%;
+    background: #41afd7;
+    color: #FFFFFF !important;
+}
+
+.fa-container-save:hover {
+    height: 100%;
+    background: #4097be;
+    color: #FFFFFF !important;
+}
+
 
 .file-name-container:hover .fa-container-edit {
     background: #FFFFFF;
