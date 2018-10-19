@@ -95,6 +95,9 @@ class WorkerCompensation extends Component {
         delete workerCompensationObject.openSignature;
         delete workerCompensationObject.id;
         delete workerCompensationObject.accept;
+        if(workerCompensationObject.injuryDate === '') {
+            workerCompensationObject.injuryDate = null;
+        }
 
         this.props.client
             .mutate({
@@ -174,7 +177,7 @@ class WorkerCompensation extends Component {
                         applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
                         initialNotification: data.applications[0].workerCompensation.initialNotification,
                         injuryNotification: data.applications[0].workerCompensation.injuryNotification,
-                        injuryDate: data.applications[0].workerCompensation.injuryDate.substring(0, 10)
+                        injuryDate: data.applications[0].workerCompensation.injuryDate === null ? "" : data.applications[0].workerCompensation.injuryDate.substring(0, 10)
                     });
                 } else {
                     this.setState({
@@ -334,30 +337,34 @@ class WorkerCompensation extends Component {
                                     </label>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="col-12">
-                                    <label className="primary">Injury Date</label>
-                                    <input
-                                        id="injuryDate"
-                                        form="worker-compensation-form"
-                                        name="injuryDate"
-                                        onChange={(event) => {
-                                            this.setState({
-                                                injuryDate: event.target.value
-                                            });
-                                        }}
-                                        value={this.state.injuryDate}
-                                        type="date"
-                                        className="form-control"
-                                        required
-                                        min="0"
-                                        pattern=".*[^ ].*"
-                                        maxLength="50"
-                                        minLength="2"
+                            {
+                                !this.state.injuryNotification ? '' : (
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <label className="primary">Injury Date</label>
+                                            <input
+                                                id="injuryDate"
+                                                form="worker-compensation-form"
+                                                name="injuryDate"
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        injuryDate: event.target.value
+                                                    });
+                                                }}
+                                                value={this.state.injuryDate}
+                                                type="date"
+                                                className="form-control"
+                                                required
+                                                min="0"
+                                                pattern=".*[^ ].*"
+                                                maxLength="50"
+                                                minLength="2"
 
-                                    />
-                                </div>
-                            </div>
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                            }
                             <div className="row">
                                 <div className="col-12">
                                     <SignatureForm applicationId={this.state.applicationId}
