@@ -174,19 +174,23 @@ class InputFileCard extends Component {
                             className={this.state.editName ? "group-title" : "group-title input-file-name-edit"}/>
                         {
                             this.state.editName ? (
-                                    <i className="far fa-edit"
-                                       onClick={() => {
-                                           this.setState({
-                                               editName: false
-                                           })
-                                       }}></i>
+                                    <div className="fa-container fa-container-edit">
+                                        <i className="far fa-edit"
+                                           onClick={() => {
+                                               this.setState({
+                                                   editName: false
+                                               })
+                                           }}></i>
+                                    </div>
                             ) : (
+                                <div className="fa-container">
                                     <i className="far fa-save"
                                        onClick={() => {
                                            this.setState({
                                                editName: true
                                            })
                                        }}></i>
+                                </div>
                             )
                         }
                     </div>
