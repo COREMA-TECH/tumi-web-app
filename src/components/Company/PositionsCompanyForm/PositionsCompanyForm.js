@@ -1061,8 +1061,8 @@ class PositionsCompanyForm extends React.Component {
                         </div>
                     </DialogActions>
                 </Dialog>
-                <div className={classes.container}>
-                    <div className={classes.divStyle}>
+                <div className="row">
+                    <div className="col-md-12">
                         <PositionsTable
                             data={this.state.data}
                             departments={this.state.departments}
