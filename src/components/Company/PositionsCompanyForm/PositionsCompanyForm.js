@@ -931,10 +931,10 @@ class PositionsCompanyForm extends React.Component {
                                 )}
                         </div>
                     </DialogTitle>
-                    <DialogContent style={{ minWidth: 550, padding: '0px' }}>
-                        <div className="card-form-body">
-                            <div className="card-form-row">
-                                <span className="input-label primary">* Department</span>
+                    <DialogContent style={{ minWidth: 550, padding: '0px', overflowY: 'unset' }}>
+                        <div className="row">
+                            <div className="col-md-12 col-lg-6">
+                                <label>* Department</label>
                                 <AutosuggestInput
                                     id="idDepartment"
                                     name="idDepartment"
@@ -957,8 +957,8 @@ class PositionsCompanyForm extends React.Component {
 									value={this.state.idDepartment}
 								/>*/}
                             </div>
-                            <div className="card-form-row">
-                                <span className="input-label primary">* Title</span>
+                            <div className="col-md-12 col-lg-6">
+                                <label>* Title</label>
                                 <InputForm
                                     id="position"
                                     name="position"
@@ -969,8 +969,8 @@ class PositionsCompanyForm extends React.Component {
                                 />
                             </div>
                             {this.props.showPayRate && (
-                                <div className="card-form-row">
-                                    <span className="input-label primary">* Pay Rate</span>
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Pay Rate</label>
 
                                     <InputForm
                                         id="payrate"
@@ -984,8 +984,8 @@ class PositionsCompanyForm extends React.Component {
                                     />
                                 </div>
                             )}
-                            <div className="card-form-row">
-                                <span className="input-label primary">* Bill Rate</span>
+                            <div className="col-md-12 col-lg-6">
+                                <label>* Bill Rate</label>
                                 <InputForm
                                     id="billrate"
                                     name="billrate"
@@ -998,8 +998,8 @@ class PositionsCompanyForm extends React.Component {
                                 />
                             </div>
 
-                            <div className="card-form-row">
-                                <span className="input-label primary">* Shift</span>
+                            <div className="col-md-12 col-lg-6">
+                                <label>* Shift</label>
                                 <SelectForm
                                     id="shift"
                                     name="shift"
@@ -1029,14 +1029,14 @@ class PositionsCompanyForm extends React.Component {
                                     }
                                 >
                                     <div>
-                                        <Button
+                                        <button
                                             disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
                                             variant="fab"
-                                            color="primary"
                                             onClick={this.addPositionHandler}
+                                            className="btn btn-success"
                                         >
-                                            <SaveIcon />
-                                        </Button>
+                                            Save <i class="fas fa-save"></i>
+                                        </button>
                                     </div>
                                 </Tooltip>
                                 {loading && <CircularProgress size={68} className={classes.fabProgress} />}
@@ -1047,14 +1047,14 @@ class PositionsCompanyForm extends React.Component {
                             <div className={classes.wrapper}>
                                 <Tooltip title={'Cancel Operation'}>
                                     <div>
-                                        <Button
+                                        <button
                                             //	disabled={this.state.loading || !this.state.enableCancelButton}
                                             variant="fab"
-                                            color="secondary"
                                             onClick={this.cancelDepartmentHandler}
+                                            className="btn btn-danger"
                                         >
-                                            <ClearIcon />
-                                        </Button>
+                                            Cancel <i class="fas fa-ban"></i>
+                                        </button>
                                     </div>
                                 </Tooltip>
                             </div>

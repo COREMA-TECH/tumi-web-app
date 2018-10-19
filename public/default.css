@@ -7977,6 +7977,8 @@ input:checked + .slider:before {
     @media only screen and (min-width: 60em) {
       .card-input-label {
         text-align: right; } }
+  .card-form-header {
+    height: 35px !important; }
   @media only screen and (max-width: 480px) {
     .card-form-row {
       display: block !important; }
@@ -8100,11 +8102,12 @@ input:checked + .slider:before {
   border-bottom: 0 !important; }
   .Tab-selectedBorder {
     background-color: #f5f7f9 !important;
-    bottom: -2px !important; }
+    bottom: 0px !important; }
 
 .TabSelected-container {
   background-color: #f5f7f9;
-  width: 100%; }
+  width: 100%;
+  margin-top: -1px; }
 
 .Apply-container {
   margin: 0 auto;
@@ -8214,8 +8217,7 @@ input:checked + .slider:before {
   background: #FFF;
   border-radius: 5px;
   -webkit-box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1);
-  box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1);
-  padding: 1rem; }
+  box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1); }
   .Stepper-wrapper::after {
     clear: both; }
 
