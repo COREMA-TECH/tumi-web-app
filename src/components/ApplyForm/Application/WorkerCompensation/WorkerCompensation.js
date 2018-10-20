@@ -34,7 +34,8 @@ class WorkerCompensation extends Component {
 
             initialNotification: false,
             injuryNotification: false,
-            injuryDate: ''
+            injuryDate: '',
+            saved: false
         }
     }
 
@@ -269,6 +270,10 @@ class WorkerCompensation extends Component {
                             'right'
                         );
                     } else {
+                        this.setState({
+                            saved: true
+                        });
+
                         this.insertWorkerCompensation(this.state);
                         this.setState({
                             openSignature: false
@@ -283,6 +288,7 @@ class WorkerCompensation extends Component {
                     onClose={() => {
                         this.setState({
                             openSignature: false,
+                            signature: ''
                         }, () => {
                             if (this.state.signature === '') {
                                 this.setState({
