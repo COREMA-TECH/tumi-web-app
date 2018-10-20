@@ -207,7 +207,9 @@ class ConductCode extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
-                            signatureValue={this.handleSignature} />
+                            signatureValue={this.handleSignature}
+                                       showSaveIcon={null}
+                        />
                     </DialogContent>
                 </Dialog>
             </div>
