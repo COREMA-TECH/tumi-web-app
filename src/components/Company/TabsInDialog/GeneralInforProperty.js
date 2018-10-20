@@ -150,7 +150,10 @@ class GeneralInfoProperty extends Component {
 				Phone_Number
 				Suite
 				Contract_URL
+				Contract_File
 				Insurance_URL
+				Insurance_File
+				Other_URL
 				Other_Name
 				Other_File
 				Other01_URL
@@ -220,7 +223,11 @@ class GeneralInfoProperty extends Component {
 								Start_Date: "'2018-08-14'",
 
 								Contract_URL: `'${this.state.contractURL}'`,
+								Contract_File: `'${this.state.contractFile}'`,
+
 								Insurance_URL: `'${this.state.insuranceURL}'`,
+								Insurance_File: `'${this.state.insuranceFile}'`,
+
 								Other_URL: `'${this.state.otherURL}'`,
 								Other_Name: `'${this.state.otherName}'`,
 								Other_File: `'${this.state.otherFile}'`,
@@ -355,7 +362,11 @@ class GeneralInfoProperty extends Component {
 								Start_Date: "'2018-08-14'",
 
 								Contract_URL: `'${this.state.contractURL}'`,
+								Contract_File: `'${this.state.contractFile}'`,
+
 								Insurance_URL: `'${this.state.insuranceURL}'`,
+								Insurance_File: `'${this.state.insuranceFile}'`,
+
 								Other_URL: `'${this.state.otherURL}'`,
 								Other_Name: `'${this.state.otherName}'`,
 								Other_File: `'${this.state.otherFile}'`,
@@ -537,12 +548,19 @@ class GeneralInfoProperty extends Component {
 								startDate: item.Start_Date.trim(),
 								active: item.IsActive,
 								suite: item.Suite,
-								contractURL: item.Contract_URL,
-								insuranceURL: item.Insurance_URL,
-								otherURL: item.Other_URL,
-								other01URL: item.Other01_URL,
-								Other_Name: item.Other_Name,
-								Other01_Name: item.Other01_Name,
+								contractURL: item.Contract_URL ? item.Contract_URL.trim() : '',
+								contractFile: item.Contract_File ? item.Contract_File.trim() : '',
+
+								insuranceURL: item.Insurance_URL ? item.Insurance_URL.trim() : '',
+								insuranceFile: item.Insurance_File ? item.Insurance_File.trim() : '',
+
+								otherURL: item.Other_URL ? item.Other_URL.trim() : '',
+								otherName: item.Other_Name ? item.Other_Name.trim() : '',
+								otherFile: item.Other_File ? item.Other_File.trim() : '',
+
+								other01URL: item.Other01_URL ? item.Other01_URL.trim() : '',
+								other01Name: item.Other01_Name ? item.Other01_Name.trim() : '',
+								other01File: item.Other01_File ? item.Other01_File.trim() : '',
 								room: item.Rooms,
 								avatar: item.ImageURL
 							});

@@ -483,7 +483,7 @@ class GeneralInfoProperty extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -617,7 +617,7 @@ class GeneralInfoProperty extends Component {
 								mask="+(999) 999-9999"
 								maskChar=" "
 								value={this.state.phoneNumber}
-								className={this.state.phoneNumberValid ? 'input-form' : 'input-form _invalid'}
+								className={this.state.phoneNumberValid ? 'form-control' : 'form-control _invalid'}
 								onChange={(e) => {
 									this.updateInput(e.target.value, 'phoneNumber');
 								}}
