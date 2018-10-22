@@ -80,7 +80,7 @@ class InputFileCard extends Component {
 			this.props.handleOpenSnackbar('warning', 'File is empty', 'bottom', 'right');
 			event.target.value = '';
 			event.preventDefault();
-		} else if (file.size > 5242880) {
+		} else if (file.size > this.context.maxFileSize) {
 			this.props.handleOpenSnackbar('warning', 'File is too big. Max 5 MB', 'bottom', 'right');
 			event.target.value = '';
 			event.preventDefault();
@@ -332,6 +332,9 @@ class InputFileCard extends Component {
 			</React.Fragment>
 		);
 	}
+	static contextTypes = {
+		maxFileSize: PropTypes.number
+	};
 }
 
 InputFileCard.propTypes = {

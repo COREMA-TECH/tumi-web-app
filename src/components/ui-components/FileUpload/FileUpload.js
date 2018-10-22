@@ -12,19 +12,23 @@ class FileUpload extends Component {
 
 		this.state = {
 			uploadValue: 0,
-			loading: false
+			loading: false,
+			accept: 'application/pdf, image/*, application/msword',
+			extWord: [ '.doc', '.docx' ],
+			extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
+			extPdf: [ '.pdf' ]
 		};
 
 		this.handleUpload = this.handleUpload.bind(this);
 	}
 
 	handleUpload(event) {
+		// Get the file selected
+		const file = event.target.files[0];
+
 		this.setState({
 			loading: true
 		});
-
-		// Get the file selected
-		const file = event.target.files[0];
 
 		// Build the reference based in the filename
 		const storageRef = firebase.storage().ref(`/files/${file.name}`);
@@ -69,34 +73,41 @@ class FileUpload extends Component {
 	render() {
 		return (
 			<div className="">
-				{/*<input
-					className="form-control"
-					disabled={this.props.disabled}
-					type="text"
-					value={this.state.fileName}
-					onChange={(e) => { }}
-				/>*/}
-				{this.state.loading ? (
-					<div className="upload-btn-wrapper">
-						<CircularProgress />
-					</div>
-				) : (
-						<div className="">
-							<div class="input-group">
-								<div class="custom-file">
-									<input type="file" onChange={this.handleUpload} class="custom-file-input" id="validatedCustomFile" disabled={this.props.disabled} />
-									<label class="custom-file-label" for="validatedCustomFile">{this.props.fileName == null ? "Choose File.." : this.props.fileName}</label>
-								</div>
-								<div class="input-group-append">
-									<a class="btn btn-outline-secondary" id="inputGroupFileAddon04" href={!this.props.disabled && this.props.url}
-										disabled={this.props.disabled}
-										target="_blank">
-										<i class="far fa-eye"></i>
-									</a>
-								</div>
-							</div>
+				<div className="">
+					<div class="input-group">
+						<div class="custom-file">
+							<input
+								type="file"
+								onChange={this.handleUpload}
+								class="custom-file-input"
+								id="validatedCustomFile"
+								disabled={this.props.disabled}
+								accept={this.state.accept}
+							/>
+							<label class="custom-file-label" for="validatedCustomFile">
+								{this.props.fileName == null ? 'Choose File..' : this.props.fileName}
+							</label>
 						</div>
-					)}
+						<div class="input-group-append">
+							<a
+								class="btn btn-outline-secondary"
+								id="inputGroupFileAddon04"
+								href={!this.props.disabled && this.props.url}
+								onClick={(e) => {
+									if (this.state.loading) {
+										e.preventDefault();
+										return true;
+									}
+								}}
+								disabled={this.props.disabled}
+								target="_blank"
+							>
+								{this.state.loading && <i className="fa fa-spinner fa-spin" />}
+								{!this.state.loading && <i class="far fa-eye" />}
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}
