@@ -10,7 +10,6 @@ import SelectForm from 'ui-components/SelectForm/SelectForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
-import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import FileUpload from 'ui-components/FileUpload/FileUpload';
 import InputMask from 'react-input-mask';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,7 +21,6 @@ import 'ui-components/InputForm/index.css';
 import Slide from '@material-ui/core/Slide/Slide';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
 import Table from '@material-ui/core/Table';
@@ -30,17 +28,13 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
 
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
 		position: 'relative'
 	},
-	buttonSuccess: {
-
-	},
+	buttonSuccess: {},
 	buttonProgress: {
 		//color: ,
 		position: 'absolute',
@@ -56,7 +50,7 @@ const styles = (theme) => ({
 		'&:hover': {
 			cursor: 'pointer'
 		}
-	},
+	}
 });
 
 const CustomTableCell = withStyles((theme) => ({
@@ -71,8 +65,6 @@ const CustomTableCell = withStyles((theme) => ({
 function Transition(props) {
 	return <Slide direction="up" {...props} />;
 }
-
-
 
 class GeneralInformation extends Component {
 	DEFAULT_STATUS = {
@@ -393,13 +385,13 @@ class GeneralInformation extends Component {
 								Legal_Name: `'${this.state.legalName}'`,
 								Country: parseInt(this.state.country),
 								State: parseInt(this.state.state),
+								City: parseInt(this.state.city),
 								Rate: parseFloat(this.state.rate),
 								Zipcode: parseInt(this.state.zipCode),
 								Fax: `'${this.state.fax}'`,
 								Primary_Email: `'correo@gmail.com'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-								City: 0,
 								Id_Parent: this.state.idCompany == 0 ? 0 : this.state.Id_Parent,
 								IsActive: 1,
 								User_Created: 1,
@@ -498,6 +490,7 @@ class GeneralInformation extends Component {
 								Legal_Name: `'${this.state.legalName}'`,
 								Country: parseInt(this.state.country),
 								State: parseInt(this.state.state),
+								City: parseInt(this.state.city),
 								Rate: parseFloat(this.state.rate),
 								Zipcode: parseInt(this.state.zipCode),
 								Fax: `'${this.state.fax}'`,
@@ -505,7 +498,6 @@ class GeneralInformation extends Component {
 								Primary_Email: `'coreo@gmail.com'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-								City: 0,
 								Id_Parent: parseInt(this.state.Id_Parent),
 								IsActive: parseInt(this.state.active),
 								User_Created: 1,
@@ -1178,389 +1170,486 @@ class GeneralInformation extends Component {
 											});
 										}}
 									>
-										Cancel <i class="fas fa-ban"></i>
+										Edit Company <i class="fas fa-edit" />
+									</button>
+									)}
+							</div>
+							) : (
+									''
+								)}
+							{this.props.showStepper ? (
+								<div className="form-actions float-right">
+									<button
+										className="btn btn-success"
+										onClick={() => {
+											this.props.idCompany != 0
+												? this.updateCompany(this.props.idCompany)
+												: this.insertCompany();
+											//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+										}}
+										disabled={isLoading}
+									>
+										Save <i class="fas fa-save" />
+									</button>
+									{this.state.loadingUpdate && (
+										<CircularProgress size={24} className={classes.buttonProgress} />
+									)}
+									<button
+										className="btn btn-danger"
+										disabled={isLoading}
+										onClick={() => {
+											if (this.props.idCompany == 0) {
+												window.location.href = '/home/company';
+												return true;
+											}
+											this.setState({ firstLoad: true }, () => {
+												this.loadCompany(() => {
+													this.loadCountries(() => {
+														this.loadCities(() => {
+															this.loadStates(() => {
+																this.loadCompanyProperties(() => {
+																	this.props.toggleStepper();
+																	this.setState({ indexView: 1, firstLoad: false });
+																});
+															});
+														});
+													});
+												});
+											});
+										}}
+									>
+										Cancel <i class="fas fa-ban" />
 									</button>
 									{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-
 								</div>
 							) : (
 									''
 								)}
 						</div>
 					</div>
-				</div>
 
-				<div className="row">
-					<div className="col-md-12 col-lg-8">
-						<div class="card">
-							<div class="card-body">
-								<div className="row">
-									<div className="col-md-6 col-lg-2">
-										<ImageUpload
-											updateAvatar={(url) => {
-												this.setState({
-													avatar: url
-												});
-											}}
-											fileURL={this.state.avatar}
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-									<div className="col-md-6 col-lg-3">
-										<label className="">* Markup</label>
-										<InputForm type="number" value={this.state.rate} change={(text) => { this.updateInput(text, 'rate'); }} error={!this.state.rateValid} maxLength="10" disabled={!this.props.showStepper} />
-									</div>
-									<div className="col-md-6 col-lg-3">
-										<label className="">* Company Code</label>
-										<InputForm value={this.state.Code} change={(text) => { this.updateInput(text, 'Code'); }} error={!this.state.codeValid} maxLength="10" disabled={!this.props.showStepper} />
-									</div>
-									<div className="col-md-6 col-lg-4">
-										<label>* Company Name</label>
-										<InputForm value={this.state.name} change={(text) => { this.updateInput(text, 'name'); }} error={!this.state.nameValid} maxLength="35" disabled={!this.props.showStepper} />
-									</div>
-								</div>
-							</div>
-						</div>
-
-						<div class="card">
-							<div class="card-header info">
-								General Information
-							</div>
-							<div class="card-body">
-								<div className="row">
-									<div className="col-md-5">
-										<label className="">* Address</label>
-										<InputForm
-											value={this.state.address}
-											change={(text) => {
-												this.updateInput(text, 'address');
-											}}
-											error={!this.state.addressValid}
-											maxLength="50"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-									<div className="col-md-5">
-										<label className="">Address 2</label>
-										<InputForm
-											value={this.state.optionalAddress}
-											change={(text) => {
-												this.updateInput(text, 'optionalAddress');
-											}}
-											maxLength="50"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-									<div className="col-md-2">
-										<label>Suite</label>
-										<input
-											value={this.state.suite}
-											onChange={(e) => {
-												this.updateInput(e.target.value, 'suite');
-											}}
-											error={!this.state.suiteValid}
-											maxLength="10"
-											disabled={!this.props.showStepper}
-											className={'form-control'}
-										/>
-									</div>
-									<div className="col-md-4">
-										<label>* Countries</label>
-										<SelectForm
-											name="country"
-											disabled={this.state.loadingCountries}
-											data={this.state.countries}
-											update={this.updateCountry}
-											error={!this.state.countryValid}
-											value={this.state.country}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										/>
-									</div>
-									<div className="col-md-4">
-										<label>* State</label>
-										<SelectForm
-											name="state"
-											disabled={this.state.loadingStates}
-											data={this.state.states}
-											update={this.updateState}
-											error={!this.state.stateValid}
-											value={this.state.state}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										/>
-									</div>
-									<div className="col-md-4">
-										<label>* City</label>
-										<SelectForm
-											name="city"
-											disabled={this.state.loadingCities}
-											data={this.state.cities}
-											update={this.updateCity}
-											error={!this.state.cityValid}
-											value={this.state.city}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										/>
-									</div>
-									<div className="col-md-3 col-lg-2">
-										<label>* Zip Code</label>
-										<InputForm
-											value={this.state.zipCode}
-											change={(text) => {
-												this.updateInput(text, 'zipCode');
-											}}
-											error={!this.state.zipCodeValid}
-											maxLength="10"
-											min={0}
-											type="number"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-									<div className="col-md-5">
-										<label>* Phone Number</label>
-										<InputMask
-											id="number"
-											name="number"
-											mask="+(999) 999-9999"
-											maskChar=" "
-											value={this.state.phoneNumber}
-											className={this.state.phoneNumberValid ? 'form-control' : 'form-control _invalid'}
-											onChange={(e) => {
-												this.updateInput(e.target.value, 'phoneNumber');
-											}}
-											placeholder="+(999) 999-9999"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-									<div className="col-md-4 col-lg-5">
-										<label>Fax</label>
-										<InputMask
-											id="fax"
-											name="fax"
-											mask="+(999) 999-9999"
-											maskChar=" "
-											value={this.state.fax}
-											className={this.state.faxValid ? 'form-control' : 'form-control _invalid'}
-											onChange={(e) => {
-												this.updateInput(e.target.value, 'fax');
-											}}
-											placeholder="+(999) 999-9999"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card">
-							<div class="card-header warning">
-								Legal Docs
-  							</div>
-							<div class="card-body">
-								<div className="row">
-									<div className="col-md-6">
-										<label>* Week Start</label>
-										<SelectForm
-											name="startWeek"
-											data={days}
-											error={!this.state.startWeekValid}
-											update={this.updateStartWeek}
-											value={this.state.startWeek}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										/>
-									</div>
-									<div className="col-md-6">
-										<label>* Week End</label>
-										<SelectForm
-											name="endWeek"
-											data={days}
-											error={!this.state.endWeekValid}
-											update={this.updateEndWeek}
-											value={this.state.endWeek}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										/>
-									</div>
-									<div className="col-md-12">
-										<div className="form-separator">
-											Documents
+					<div className="row">
+						<div className="col-md-12 col-lg-8">
+							<div class="card">
+								<div class="card-body">
+									<div className="row">
+										<div className="col-md-6 col-lg-2">
+											<ImageUpload
+												updateAvatar={(url) => {
+													this.setState({
+														avatar: url
+													});
+												}}
+												fileURL={this.state.avatar}
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-6 col-lg-3">
+											<label className="">* Markup</label>
+											<InputForm
+												type="number"
+												value={this.state.rate}
+												change={(text) => {
+													this.updateInput(text, 'rate');
+												}}
+												error={!this.state.rateValid}
+												maxLength="10"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-6 col-lg-3">
+											<label className="">* Company Code</label>
+											<InputForm
+												value={this.state.Code}
+												change={(text) => {
+													this.updateInput(text, 'Code');
+												}}
+												error={!this.state.codeValid}
+												maxLength="10"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-6 col-lg-4">
+											<label>* Company Name</label>
+											<InputForm
+												value={this.state.name}
+												change={(text) => {
+													this.updateInput(text, 'name');
+												}}
+												error={!this.state.nameValid}
+												maxLength="35"
+												disabled={!this.props.showStepper}
+											/>
 										</div>
 									</div>
-									<div className="col-md-6">
-										<label>Contract</label>
-										<FileUpload
-											updateURL={(url, fileName) => {
-												this.setState({
-													contractURL: url,
-													contractFile: fileName
-												});
-											}}
-											disabled={!this.props.showStepper}
-											url={this.state.contractURL}
-											fileName={this.state.contractFile}
-										/>
+								</div>
+							</div>
+
+							<div class="card">
+								<div class="card-header info">
+									General Information
+							</div>
+								<div class="card-body">
+									<div className="row">
+										<div className="col-md-5">
+											<label className="">* Address</label>
+											<InputForm
+												value={this.state.address}
+												change={(text) => {
+													this.updateInput(text, 'address');
+												}}
+												error={!this.state.addressValid}
+												maxLength="50"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-5">
+											<label className="">Address 2</label>
+											<InputForm
+												value={this.state.optionalAddress}
+												change={(text) => {
+													this.updateInput(text, 'optionalAddress');
+												}}
+												maxLength="50"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-2">
+											<label>Suite</label>
+											<input
+												value={this.state.suite}
+												onChange={(e) => {
+													this.updateInput(e.target.value, 'suite');
+												}}
+												error={!this.state.suiteValid}
+												maxLength="10"
+												disabled={!this.props.showStepper}
+												className={'form-control'}
+											/>
+										</div>
+										<div className="col-md-4">
+											<label>* Countries</label>
+											<select
+												name="country"
+												className={'form-control'}
+												disabled={this.state.loadingCountries}
+												onChange={(event) => {
+													this.updateCountry(event.target.value);
+												}}
+												error={!this.state.countryValid}
+												value={this.state.country}
+												disabled={!this.props.showStepper}
+											>
+												<option value="">Select a country</option>
+												{this.state.countries.map((item) => (
+													<option value={item.Id}>{item.Name}</option>
+												))}
+											</select>
+										</div>
+										<div className="col-md-4">
+											<label>* State</label>
+											<select
+												name="state"
+												className={'form-control'}
+												disabled={this.state.loadingStates}
+												onChange={(event) => {
+													this.updateState(event.target.value);
+												}}
+												error={!this.state.stateValid}
+												value={this.state.state}
+												disabled={!this.props.showStepper}
+												showNone={false}
+											>
+												<option value="">Select a state</option>
+												{this.state.states.map((item) => (
+													<option value={item.Id}>{item.Name}</option>
+												))}
+											</select>
+										</div>
+										<div className="col-md-4">
+											<label>* City</label>
+											<select
+												name="city"
+												className={'form-control'}
+												disabled={this.state.loadingCities}
+												onChange={(event) => {
+													this.updateCity(event.target.value);
+												}}
+												error={!this.state.cityValid}
+												value={this.state.city}
+												disabled={!this.props.showStepper}
+												showNone={false}
+											>
+												<option value="">Select a city</option>
+												{this.state.cities.map((item) => (
+													<option value={item.Id}>{item.Name}</option>
+												))}
+											</select>
+										</div>
+										<div className="col-md-3 col-lg-2">
+											<label>* Zip Code</label>
+											<InputForm
+												value={this.state.zipCode}
+												change={(text) => {
+													this.updateInput(text, 'zipCode');
+												}}
+												error={!this.state.zipCodeValid}
+												maxLength="10"
+												min={0}
+												type="number"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-5">
+											<label>* Phone Number</label>
+											<InputMask
+												id="number"
+												name="number"
+												mask="+(999) 999-9999"
+												maskChar=" "
+												value={this.state.phoneNumber}
+												className={
+													this.state.phoneNumberValid ? 'form-control' : 'form-control _invalid'
+												}
+												onChange={(e) => {
+													this.updateInput(e.target.value, 'phoneNumber');
+												}}
+												placeholder="+(999) 999-9999"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
+										<div className="col-md-4 col-lg-5">
+											<label>Fax</label>
+											<InputMask
+												id="fax"
+												name="fax"
+												mask="+(999) 999-9999"
+												maskChar=" "
+												value={this.state.fax}
+												className={this.state.faxValid ? 'form-control' : 'form-control _invalid'}
+												onChange={(e) => {
+													this.updateInput(e.target.value, 'fax');
+												}}
+												placeholder="+(999) 999-9999"
+												disabled={!this.props.showStepper}
+											/>
+										</div>
 									</div>
-									<div className="col-md-6">
-										<label>Insurance</label>
-										<FileUpload
-											updateURL={(url, fileName) => {
-												this.setState({
-													insuranceURL: url,
-													insuranceFile: fileName
-												});
-											}}
-											disabled={!this.props.showStepper}
-											url={this.state.insuranceURL}
-											fileName={this.state.insuranceFile}
-										/>
+								</div>
+							</div>
+							<div class="card">
+								<div class="card-header warning">
+									Legal Docs
+  							</div>
+								<div class="card-body">
+									<div className="row">
+										<div className="col-md-6">
+											<label>* Week Start</label>
+											<SelectForm
+												name="startWeek"
+												data={days}
+												error={!this.state.startWeekValid}
+												update={this.updateStartWeek}
+												value={this.state.startWeek}
+												disabled={!this.props.showStepper}
+												showNone={false}
+											/>
+										</div>
+										<div className="col-md-6">
+											<label>* Week End</label>
+											<SelectForm
+												name="endWeek"
+												data={days}
+												error={!this.state.endWeekValid}
+												update={this.updateEndWeek}
+												value={this.state.endWeek}
+												disabled={!this.props.showStepper}
+												showNone={false}
+											/>
+										</div>
+										<div className="col-md-12">
+											<div className="form-separator">Documents</div>
+										</div>
+										<div className="col-md-6">
+											<label>Contract</label>
+											<FileUpload
+												updateURL={(url, fileName) => {
+													this.setState({
+														contractURL: url,
+														contractFile: fileName
+													});
+												}}
+												disabled={!this.props.showStepper}
+												url={this.state.contractURL}
+												fileName={this.state.contractFile}
+											/>
+										</div>
+										<div className="col-md-6">
+											<label>Insurance</label>
+											<FileUpload
+												updateURL={(url, fileName) => {
+													this.setState({
+														insuranceURL: url,
+														insuranceFile: fileName
+													});
+												}}
+												disabled={!this.props.showStepper}
+												url={this.state.insuranceURL}
+												fileName={this.state.insuranceFile}
+											/>
+										</div>
+										<div className="col-md-6">
+											<input
+												type="text"
+												className="input-file-name"
+												max="120"
+												placeholder="Name File"
+												value={this.state.otherName}
+												onChange={(e) => {
+													this.updateInput(e.target.value, 'otherName');
+												}}
+												disabled={!this.props.showStepper}
+											/>
+											<FileUpload
+												updateURL={(url, fileName) => {
+													this.setState({
+														otherURL: url,
+														otherFile: fileName
+													});
+												}}
+												disabled={!this.props.showStepper}
+												url={this.state.otherURL}
+												fileName={this.state.otherFile}
+											/>
+										</div>
+										<div className="col-md-6">
+											<input
+												type="text"
+												className="input-file-name"
+												max="120"
+												placeholder="Name File"
+												value={this.state.otherName1}
+												onChange={(e) => {
+													this.updateInput(e.target.value, 'otherName1');
+												}}
+												disabled={!this.props.showStepper}
+											/>
+											<FileUpload
+												updateURL={(url, fileName) => {
+													this.setState({
+														other01URL: url,
+														other01File: fileName
+													});
+												}}
+												disabled={!this.props.showStepper}
+												url={this.state.other01URL}
+												fileName={this.state.other01File}
+											/>
+										</div>
 									</div>
-									<div className="col-md-6">
-										<input
-											type="text"
-											className="input-file-name"
-											max="120"
-											placeholder="Name File"
-											value={this.state.otherName}
-											onChange={(e) => {
-												this.updateInput(e.target.value, 'otherName');
-											}}
-											disabled={!this.props.showStepper}
-										/>
-										<FileUpload
-											updateURL={(url, fileName) => {
-												this.setState({
-													otherURL: url,
-													otherFile: fileName
-												});
-											}}
-											disabled={!this.props.showStepper}
-											url={this.state.otherURL}
-											fileName={this.state.otherFile}
-										/>
-									</div>
-									<div className="col-md-6">
-										<input
-											type="text"
-											className="input-file-name"
-											max="120"
-											placeholder="Name File"
-											value={this.state.otherName1}
-											onChange={(e) => {
-												this.updateInput(e.target.value, 'otherName1');
-											}}
-											disabled={!this.props.showStepper}
-										/>
-										<FileUpload
-											updateURL={(url, fileName) => {
-												this.setState({
-													other01URL: url,
-													other01File: fileName
-												});
-											}}
-											disabled={!this.props.showStepper}
-											url={this.state.other01URL}
-											fileName={this.state.other01File}
-										/>
+								</div>
+							</div>
+						</div>
+						<div className="col-md-12 col-lg-4">
+							<div class="card">
+								<div class="card-header danger">
+									Properties
+							</div>
+								<div class="card-body">
+									<Table className="Table">
+										<TableHead>
+											<TableRow>
+												<CustomTableCell className={'Table-head'}>Property Code</CustomTableCell>
+												<CustomTableCell className={'Table-head'}>Property Name</CustomTableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{this.state.companyProperties.map((item) => {
+												return (
+													<TableRow
+														hover
+														className={classes.row}
+														key={item.Id}
+														onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
+													>
+														<CustomTableCell>{item.Code}</CustomTableCell>
+														<CustomTableCell>{item.Code}</CustomTableCell>
+													</TableRow>
+												);
+											})}
+										</TableBody>
+									</Table>
+									<div className="card-form-footer">
+										<button
+											className={
+												this.props.idCompany == 0 ? (
+													'add-property__disabled btn btn-info'
+												) : (
+														'btn btn-info'
+													)
+											}
+											disabled={this.props.idCompany == 0}
+											onClick={this.handleClickOpen('paper', false, 0, 0)}
+										>
+											Add Property <i class="fas fa-plus" />
+										</button>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className="col-md-12 col-lg-4">
-						<div class="card">
-							<div class="card-header danger">
-								Properties
-							</div>
-							<div class="card-body">
-								<Table className="Table">
-									<TableHead>
-										<TableRow>
-											<CustomTableCell className={"Table-head"}>Property Code</CustomTableCell>
-											<CustomTableCell className={"Table-head"}>Property Name</CustomTableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										{this.state.companyProperties.map((item) => {
-											return (
-												<TableRow
-													hover
-													className={classes.row}
-													key={item.Id}
-													onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
-												>
 
-													<CustomTableCell>{item.Code}</CustomTableCell>
-													<CustomTableCell>{item.Code}</CustomTableCell>
-												</TableRow>
-											);
-										})}
-									</TableBody>
-								</Table>
-								<div className="card-form-footer">
-									<button
-										className={this.props.idCompany == 0 ? 'add-property__disabled btn btn-info' : 'btn btn-info'}
-										disabled={this.props.idCompany == 0}
-										onClick={this.handleClickOpen('paper', false, 0, 0)}
-									>
-										Add Property <i class="fas fa-plus"></i>
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<Dialog
-					open={this.state.open}
-					onClose={this.handleClose}
-					scroll={this.state.scroll}
-					aria-labelledby="scroll-dialog-title"
-					fullScreen
-				>
-					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-					<AppBar style={{ background: '#0092BD' }}>
-						<Toolbar>
-							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-								<CloseIcon />
-							</IconButton>
-							<Typography variant="title" color="inherit">
-								Management Company
+					<Dialog
+						open={this.state.open}
+						onClose={this.handleClose}
+						scroll={this.state.scroll}
+						aria-labelledby="scroll-dialog-title"
+						fullScreen
+					>
+						<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
+						<AppBar style={{ background: '#0092BD' }}>
+							<Toolbar>
+								<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+									<CloseIcon />
+								</IconButton>
+								<Typography variant="title" color="inherit">
+									Management Company
 							</Typography>
-						</Toolbar>
-					</AppBar>
-					<DialogContent>
-						{this.state.propertyClick ? (
-							//Si el click es en una property : pasar el id de esa property
-							<TabsInDialog
-								idCompany={this.props.idCompany}
-								idProperty={this.state.idProperty}
-								Markup={this.props.Markup}
-								handleClose={this.handleClose}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-							/>
-						) : (
-								//Si el click no es en esa property : pasar el Id en nulo
-								//para que no cargue niguna información relacionada con ese Id
+							</Toolbar>
+						</AppBar>
+						<DialogContent>
+							{this.state.propertyClick ? (
+								//Si el click es en una property : pasar el id de esa property
 								<TabsInDialog
 									idCompany={this.props.idCompany}
-									Markup={this.state.rate}
+									idProperty={this.state.idProperty}
+									Markup={this.props.Markup}
 									handleClose={this.handleClose}
 									handleOpenSnackbar={this.props.handleOpenSnackbar}
 								/>
-							)}
-					</DialogContent>
-				</Dialog>
-			</div>
-		);
-	}
+							) : (
+									//Si el click no es en esa property : pasar el Id en nulo
+									//para que no cargue niguna información relacionada con ese Id
+									<TabsInDialog
+										idCompany={this.props.idCompany}
+										Markup={this.state.rate}
+										handleClose={this.handleClose}
+										handleOpenSnackbar={this.props.handleOpenSnackbar}
+									/>
+								)}
+						</DialogContent>
+					</Dialog>
+				</div>
+				);
+			}
+		
 	static contextTypes = {
-		avatarURL: PropTypes.string
-	};
-}
-
+					avatarURL: PropTypes.string
+			};
+		}
+		
 GeneralInformation.propTypes = {
-	classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(withApollo(GeneralInformation));
+					classes: PropTypes.object.isRequired
+			};
+			
+			export default withStyles(styles)(withApollo(GeneralInformation));

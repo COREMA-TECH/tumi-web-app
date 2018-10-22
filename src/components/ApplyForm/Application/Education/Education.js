@@ -194,101 +194,97 @@ class Education extends Component {
                 >
                     <br/>
                     <DialogContent>
-                        <div className="col-12 form-section-1">
+                        <div className="col-md-12 form-section-1">
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[0].label}</label>
-                                    <div className="input-container--validated">
-                                        <input
-                                            id="studyType"
-                                            form="education-form"
-                                            name="studyType"
-                                            type="text"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            pattern=".*[^ ].*"
-                                            maxLength="50"
-                                            minLength="2"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
+                                    <input
+                                        id="studyType"
+                                        form="education-form"
+                                        name="studyType"
+                                        type="text"
+                                        className="form-control"
+                                        required
+                                        min="0"
+                                        pattern=".*[^ ].*"
+                                        maxLength="50"
+                                        minLength="2"
+                                    />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[1].label}</label>
-                                    <div className="input-container--validated">
-                                        <input
-                                            form="education-form"
-                                            name="institutionName"
-                                            id="institutionName"
-                                            type="text"
-                                            pattern=".*[^ ].*"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
+                                    <input
+                                        form="education-form"
+                                        name="institutionName"
+                                        id="institutionName"
+                                        type="text"
+                                        pattern=".*[^ ].*"
+                                        className="form-control"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
                                 </div>
-                                <div className="col-12">
+                                <div className="col-md-12">
                                     <label className="primary">{educationFormLanguage[2].label}</label>
-                                    <div className="input-container--validated">
-                                        <input
-                                            form="education-form"
-                                            name="addressInstitution"
-                                            id="addressInstitution"
-                                            type="text"
-                                            pattern=".*[^ ].*"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
+                                    <input
+                                        form="education-form"
+                                        name="addressInstitution"
+                                        id="addressInstitution"
+                                        type="text"
+                                        pattern=".*[^ ].*"
+                                        className="form-control"
+                                        required
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <span className="primary">{educationFormLanguage[3].label}</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            form="education-form"
-                                            name="startPeriod"
-                                            id="startPeriod"
-                                            type="date"
-                                            pattern=".*[^ ].*"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
+                                    <input
+                                        form="education-form"
+                                        name="startPeriod"
+                                        id="startPeriod"
+                                        onChange={event => {
+                                            this.setState({
+                                                startPeriod: event.target.value
+                                            })
+                                        }}
+                                        type="date"
+                                        pattern=".*[^ ].*"
+                                        className="form-control"
+                                        required
+                                        max={this.state.endPeriod}
+                                        min="0"
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <span className="primary">{educationFormLanguage[4].label}</span>
-                                    <div className="input-container--validated">
-                                        <input
-                                            form="education-form"
-                                            name="endPeriod"
-                                            id="endPeriod"
-                                            type="date"
-                                            pattern=".*[^ ].*"
-                                            className="form-control"
-                                            required
-                                            min="0"
-                                            maxLength="50"
-                                            minLength="3"
-                                        />
-                                        <span className="check-icon"/>
-                                    </div>
+                                    <input
+                                        form="education-form"
+                                        onChange={event => {
+                                            this.setState({
+                                                endPeriod: event.target.value
+                                            })
+                                        }}
+                                        name="endPeriod"
+                                        id="endPeriod"
+                                        type="date"
+                                        pattern=".*[^ ].*"
+                                        className="form-control"
+                                        required
+                                        min={this.state.startPeriod}
+                                        maxLength="50"
+                                        minLength="3"
+                                    />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[5].label}</label> <br/>
                                     <label className="switch">
                                         <input
@@ -307,7 +303,7 @@ class Education extends Component {
                                         <p className="slider round"/>
                                     </label>
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[6].label}</label>
                                     {this.state.graduated ? (
                                         <div className="input-container--validated">
@@ -351,9 +347,9 @@ class Education extends Component {
 
         // To render the Education Service Section
         let renderEducationSection = () => (
-            <div>
+            <div className="row">
                 {this.state.schools.map((schoolItem) => (
-                    <div className="col-3">
+                    <div className="col-xs-12 col-md-3">
                         <EducationCard
                             type={schoolItem.schoolType}
                             educationName={schoolItem.educationName}
@@ -380,212 +376,13 @@ class Education extends Component {
                             }}/>
                     </div>
                 ))}
-                {/*<div key={uuidv4()} className="skills-container">*/}
-                {/*<div className="row">*/}
-                {/*<div className="col-1">*/}
-                {/*<span>{schoolItem.schoolType}</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-2">*/}
-                {/*<span>{schoolItem.educationName}</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-2">*/}
-                {/*<span>{schoolItem.educationAddress}</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-2">*/}
-                {/*<span>{schoolItem.startDate.substring(0, 10)}</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-2">*/}
-                {/*<span>{schoolItem.endDate.substring(0, 10)}</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-1">*/}
-                {/*<span>{schoolItem.graduated ? 'Yes' : 'No'}</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-1">*/}
-                {/*<span>*/}
-                {/*{studyTypes.map((item) => {*/}
-                {/*if (item.Id == schoolItem.degree) {*/}
-                {/*return item.Name + '';*/}
-                {/*}*/}
-                {/*})}*/}
-                {/*</span>*/}
-                {/*</div>*/}
-                {/*<div className="col-1">*/}
-                {/*<span*/}
-                {/*className="delete-school-button"*/}
-                {/*onClick={() => {*/}
-                {/*this.setState((prevState) => ({*/}
-                {/*schools: this.state.schools.filter((_, i) => {*/}
-                {/*return _.uuid !== schoolItem.uuid;*/}
-                {/*})*/}
-                {/*}), () => {*/}
-                {/*if (schoolItem.id !== undefined) {*/}
-                {/*this.removeEducationById(schoolItem.id)*/}
-                {/*}*/}
-                {/*});*/}
-                {/*}}*/}
-                {/*>*/}
-                {/*<i className="fas fa-trash-alt"></i>*/}
-                {/*</span>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*))}*/}
-                <br/><br/>
-                <div className="col-2"></div>
-                {/*{*/}
-                {/*this.state.editing ? (*/}
-                {/*<div className="col-8 form-section-1">*/}
-                {/*<div className="row">*/}
-                {/*<div className="col-3">*/}
-                {/*<label className="primary">Field of Study</label>*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<input*/}
-                {/*id="studyType"*/}
-                {/*form="education-form"*/}
-                {/*name="studyType"*/}
-                {/*type="text"*/}
-                {/*className="form-control"*/}
-                {/*required*/}
-                {/*min="0"*/}
-                {/*maxLength="50"*/}
-                {/*minLength="2"*/}
-                {/*/>*/}
-                {/*<span className="check-icon"/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*<div className="col-3">*/}
-                {/*<label className="primary">Name (Institution)</label>*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<input*/}
-                {/*form="education-form"*/}
-                {/*name="institutionName"*/}
-                {/*id="institutionName"*/}
-                {/*type="text"*/}
-                {/*className="form-control"*/}
-                {/*required*/}
-                {/*min="0"*/}
-                {/*maxLength="50"*/}
-                {/*minLength="3"*/}
-                {/*/>*/}
-                {/*<span className="check-icon"/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*<div className="col-6">*/}
-                {/*<label className="primary">Address</label>*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<input*/}
-                {/*form="education-form"*/}
-                {/*name="addressInstitution"*/}
-                {/*id="addressInstitution"*/}
-                {/*type="text"*/}
-                {/*className="form-control"*/}
-                {/*required*/}
-                {/*min="0"*/}
-                {/*maxLength="50"*/}
-                {/*minLength="3"*/}
-                {/*/>*/}
-                {/*<span className="check-icon"/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*<div className="row">*/}
-                {/*<div className="col-3">*/}
-                {/*<span className="primary"> Time Period</span>*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<input*/}
-                {/*form="education-form"*/}
-                {/*name="startPeriod"*/}
-                {/*id="startPeriod"*/}
-                {/*type="date"*/}
-                {/*className="form-control"*/}
-                {/*required*/}
-                {/*min="0"*/}
-                {/*maxLength="50"*/}
-                {/*minLength="3"*/}
-                {/*/>*/}
-                {/*<span className="check-icon"/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*<div className="col-3">*/}
-                {/*<span className="primary">To</span>*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<input*/}
-                {/*form="education-form"*/}
-                {/*name="endPeriod"*/}
-                {/*id="endPeriod"*/}
-                {/*type="date"*/}
-                {/*className="form-control"*/}
-                {/*required*/}
-                {/*min="0"*/}
-                {/*maxLength="50"*/}
-                {/*minLength="3"*/}
-                {/*/>*/}
-                {/*<span className="check-icon"/>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*<div className="col-2">*/}
-                {/*<label className="primary">Graduated</label> <br/>*/}
-                {/*<label className="switch">*/}
-                {/*<input*/}
-                {/*onChange={(e) => {*/}
-                {/*this.setState({*/}
-                {/*graduated: document.getElementById('graduated').checked*/}
-                {/*});*/}
-                {/*}}*/}
-                {/*form="education-form"*/}
-                {/*type="checkbox"*/}
-                {/*value="graduated"*/}
-                {/*name="graduated"*/}
-                {/*id="graduated"*/}
-                {/*/>*/}
-                {/*<p className="slider round"/>*/}
-                {/*</label>*/}
-                {/*</div>*/}
-                {/*<div className="col-4">*/}
-                {/*<label className="primary">Degree</label>*/}
-                {/*{this.state.graduated ? (*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<select form="education-form" name="degree" id="degree"*/}
-                {/*className="form-control">*/}
-                {/*<option value="">Select an option</option>*/}
-                {/*{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}*/}
-                {/*</select>*/}
-                {/*</div>*/}
-                {/*) : (*/}
-                {/*<div className="input-container--validated">*/}
-                {/*<select*/}
-                {/*form="education-form"*/}
-                {/*name="degree"*/}
-                {/*id="degree"*/}
-                {/*disabled*/}
-                {/*className="form-control"*/}
-                {/*>*/}
-                {/*<option value="">Select an option</option>*/}
-                {/*{studyTypes.map((item) => <option value={item.Id}>{item.Name}</option>)}*/}
-                {/*</select>*/}
-                {/*</div>*/}
-                {/*)}*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*<div className="row">*/}
-                {/*<div className="col-12">*/}
-                {/*<Button type="submit" form="education-form" className="save-skill-button">*/}
-                {/*Add*/}
-                {/*</Button>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*) : (*/}
-                {/*''*/}
-                {/*)*/}
-                {/*}*/}
             </div>
         );
 
         return (
             <div>
                 <div className="Apply-container--application">
-                        <div className="">
+                    <div className="">
                         <div className="">
                             <div className="applicant-card">
                                 <div className="applicant-card__header">
@@ -604,7 +401,7 @@ class Education extends Component {
                                         )
                                     }
                                 </div>
-                                <div className="row">
+                                <div>
                                     {
                                         this.state.loading ? (
                                             <div className="form-section-1 form-section--center">
@@ -615,39 +412,6 @@ class Education extends Component {
                                         )
                                     }
                                 </div>
-                                {/*{*/}
-                                {/*this.state.editing ? (*/}
-                                {/*<div className="applicant-card__footer">*/}
-                                {/*<button*/}
-                                {/*className="applicant-card__cancel-button"*/}
-                                {/*onClick={*/}
-                                {/*() => {*/}
-                                {/*this.setState((prevState) => ({*/}
-                                {/*schools: this.state.schools.filter((_, i) => {*/}
-                                {/*return _.id !== undefined;*/}
-                                {/*})*/}
-                                {/*}), () => {*/}
-                                {/*this.setState({*/}
-                                {/*editing: false*/}
-                                {/*});*/}
-                                {/*});*/}
-                                {/*}*/}
-                                {/*}*/}
-                                {/*>*/}
-                                {/*Cancel*/}
-                                {/*</button>*/}
-                                {/*<button*/}
-                                {/*onClick={() => {*/}
-                                {/*this.insertEducationApplication();*/}
-                                {/*}}*/}
-                                {/*className="applicant-card__save-button">*/}
-                                {/*Save*/}
-                                {/*</button>*/}
-                                {/*</div>*/}
-                                {/*) : (*/}
-                                {/*''*/}
-                                {/*)*/}
-                                {/*}*/}
                             </div>
                         </div>
                     </div>

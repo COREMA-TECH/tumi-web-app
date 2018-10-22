@@ -11,7 +11,6 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Tooltip from '@material-ui/core/Tooltip';
-import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import TablePagination from '@material-ui/core/TablePagination';
 import LastPageIcon from '@material-ui/icons/LastPage';
@@ -157,6 +156,7 @@ class ContactsTable extends React.Component {
 	handleChangeRowsPerPage = (event) => {
 		this.setState({ rowsPerPage: event.target.value });
 	};
+
 	shouldComponentUpdate(nextProps, nextState) {
 		if (
 			this.props.data !== nextProps.data ||
@@ -177,6 +177,7 @@ class ContactsTable extends React.Component {
 		}
 		return false;
 	}
+
 	render() {
 		const { classes } = this.props;
 		let items = this.props.data;
@@ -202,14 +203,14 @@ class ContactsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
 							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
-							<CustomTableCell className={classes.th + " Table-head"} width="60px">Contact Type</CustomTableCell>
-							<CustomTableCell className={classes.th + " Table-head"}>First Name</CustomTableCell>
-							<CustomTableCell className={classes.th + " Table-head"}>Middle Name</CustomTableCell>
-							<CustomTableCell className={classes.th + " Table-head"}>Last Name</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"} width="60px">Contact
+                                Type</CustomTableCell>
+							<CustomTableCell className={classes.th + " Table-head"}>Full Name</CustomTableCell>
 							<CustomTableCell className={classes.th + " Table-head"}>Department</CustomTableCell>
 							{/*<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>*/}
 							<CustomTableCell className={classes.th + " Table-head"}>Email</CustomTableCell>
-							<CustomTableCell className={classes.th + " contact-th Table-head"}>Phone Number</CustomTableCell>
+							<CustomTableCell className={classes.th + " contact-th Table-head"}>Phone
+                                Number</CustomTableCell>
 							<CustomTableCell className={classes.th + " Table-head"}>Contact Title</CustomTableCell>
 						</TableRow>
 					</TableHead>
@@ -224,7 +225,7 @@ class ContactsTable extends React.Component {
 										return this.props.onEditHandler({ ...row });
 									}}
 								>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px', paddingLeft: '5px' }}>
+									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										<Tooltip title="Edit">
 											<div>
 												<button
@@ -244,7 +245,7 @@ class ContactsTable extends React.Component {
 										<Tooltip title="Delete">
 											<div>
 												<button
-													className="btn btn-danger"
+													className="btn btn-success"
 													disabled={this.props.loading}
 													onClick={(e) => {
 														e.stopPropagation();
@@ -274,9 +275,7 @@ class ContactsTable extends React.Component {
 											))}
 										</Select>
 									</CustomTableCell>
-									<CustomTableCell>{row.firstname}</CustomTableCell>
-									<CustomTableCell>{row.middlename}</CustomTableCell>
-									<CustomTableCell>{row.lastname}</CustomTableCell>
+									<CustomTableCell>{row.firstname + ' ' + row.lastname}</CustomTableCell>
 									<CustomTableCell>
 										<Select
 											id="department"
