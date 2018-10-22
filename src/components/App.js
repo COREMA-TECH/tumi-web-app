@@ -75,7 +75,11 @@ class App extends Component {
 		loginClient: PropTypes.object,
 		token: PropTypes.string,
 		avatarURL: PropTypes.string,
-		maxFileSize: PropTypes.number
+		maxFileSize: PropTypes.number,
+		extWord: PropTypes.object,
+		extImage: PropTypes.object,
+		extPdf: PropTypes.object,
+		acceptAttachFile: PropTypes.string
 	};
 
 	getChildContext = () => ({
@@ -84,7 +88,11 @@ class App extends Component {
 		loginClient: loginClient,
 		token: token,
 		avatarURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png',
-		maxFileSize: 5242880
+		maxFileSize: 25 * 1024 * 1024, //This is 25 MB
+		extWord: [ '.doc', '.docx' ],
+		extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
+		extPdf: [ '.pdf' ],
+		acceptAttachFile: 'application/pdf, image/*, application/msword'
 	});
 }
 

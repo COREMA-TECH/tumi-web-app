@@ -29,10 +29,6 @@ class InputFileCard extends Component {
 			title: props.title,
 			startTitle: props.title,
 			updating: false,
-			accept: 'application/pdf, image/*, application/msword',
-			extWord: [ '.doc', '.docx' ],
-			extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
-			extPdf: [ '.pdf' ],
 			fileExtension: props.fileExtension || ''
 		};
 	}
@@ -43,21 +39,21 @@ class InputFileCard extends Component {
 	getIconFile = () => {
 		//Verify if the extension is from a word file
 		if (
-			this.state.extWord.find((value) => {
+			this.context.extWord.find((value) => {
 				return this.state.fileExtension.toLowerCase().endsWith(value);
 			})
 		)
 			return 'far fa-file-word fa-7x';
 		//Verify if the extension is from a pdf file
 		if (
-			this.state.extPdf.find((value) => {
+			this.context.extPdf.find((value) => {
 				return this.state.fileExtension.toLowerCase().endsWith(value);
 			})
 		)
 			return 'far fa-file-pdf fa-7x';
 		//Verify if the extension is from a image file
 		if (
-			this.state.extImage.find((value) => {
+			this.context.extImage.find((value) => {
 				return this.state.fileExtension.toLowerCase().endsWith(value);
 			})
 		)
@@ -67,7 +63,7 @@ class InputFileCard extends Component {
 	handleUpload = (event, id, docName, typeId) => {
 		// Get the file selected
 		const file = event.target.files[0];
-		var _validFileExtensions = [ ...this.state.extImage, ...this.state.extWord, ...this.state.extPdf ];
+		var _validFileExtensions = [ ...this.context.extImage, ...this.context.extWord, ...this.context.extPdf ];
 		if (
 			!_validFileExtensions.find((value) => {
 				return file.name.toLowerCase().endsWith(value);
@@ -81,7 +77,12 @@ class InputFileCard extends Component {
 			event.target.value = '';
 			event.preventDefault();
 		} else if (file.size > this.context.maxFileSize) {
-			this.props.handleOpenSnackbar('warning', 'File is too big. Max 5 MB', 'bottom', 'right');
+			this.props.handleOpenSnackbar(
+				'warning',
+				`File is too big. Max ${this.context.maxFileSize / 1024 / 1024} MB`,
+				'bottom',
+				'right'
+			);
 			event.target.value = '';
 			event.preventDefault();
 		} else {
@@ -145,7 +146,7 @@ class InputFileCard extends Component {
 							onChange={(e) => {
 								this.handleUpload(e);
 							}}
-							accept={this.state.accept}
+							accept={this.context.acceptAttachFile}
 						/>
 						<div className="drag-text">
 							{!this.state.uploading && <span>+</span>}
@@ -186,7 +187,7 @@ class InputFileCard extends Component {
 							onChange={(e) => {
 								this.handleUpload(e, this.props.typeId, this.props.title, this.props.typeId);
 							}}
-							accept={this.state.accept}
+							accept={this.context.acceptAttachFile}
 						/>
 						<div className="drag-text">
 							{!this.state.uploading && <i className="fas fa-cloud-upload-alt" />}
@@ -333,7 +334,11 @@ class InputFileCard extends Component {
 		);
 	}
 	static contextTypes = {
-		maxFileSize: PropTypes.number
+		maxFileSize: PropTypes.number,
+		extImage: PropTypes.object,
+		extPdf: PropTypes.object,
+		extWord: PropTypes.object,
+		acceptAttachFile: PropTypes.string
 	};
 }
 
