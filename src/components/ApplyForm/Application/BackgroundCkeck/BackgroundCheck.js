@@ -17,6 +17,7 @@ import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
 
 class BackgroundCheck extends Component {
     constructor(props) {
@@ -283,7 +284,7 @@ class BackgroundCheck extends Component {
                             }}
                             aria-labelledby="form-dialog-title">
                             <Toolbar>
-                                <h1 className="primary apply-form-container__label">Please Sign</h1>
+                                <h1 className="primary apply-form-container__label">{backgroundCheckJson[6].label}</h1>
                                 <Button color="default" onClick={() => {
                                     this.setState({
                                         openSignature: false,
@@ -347,7 +348,7 @@ class BackgroundCheck extends Component {
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label">
-                                                    Will a Motor Vehicle Report be Required?
+                                                    {backgroundCheckJson[0].label}
                                                 </span>
                                                 <br/>
                                                 <label className="switch">
@@ -383,7 +384,7 @@ class BackgroundCheck extends Component {
                                             </div>
                                             <div className="col-md-12">
                                                 <label className="primary applicant-card__label">
-                                                    Drivers License Number
+                                                    {backgroundCheckJson[1].label}
                                                 </label>
                                                 <input
                                                     id="driverLicenseNumber"
@@ -407,7 +408,7 @@ class BackgroundCheck extends Component {
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="primary applicant-card__label">
-                                                    State
+                                                    {backgroundCheckJson[2].label}
                                                 </label>
                                                 <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
                                                     {({loading, error, data, refetch, networkStatus}) => {
@@ -442,7 +443,7 @@ class BackgroundCheck extends Component {
                                             </div>
                                             <div className="col-md-6">
                                                 <label className="primary applicant-card__label">
-                                                    Expiration Date
+                                                    {backgroundCheckJson[3].label}
                                                 </label>
                                                 <input
                                                     id="licenseExpiration"
@@ -465,7 +466,7 @@ class BackgroundCheck extends Component {
                                             </div>
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label">
-                                                    Is This a Commercial Drivers License?
+                                                    {backgroundCheckJson[4].label}
                                                 </span>
                                                 <br/>
                                                 <label className="switch">
@@ -547,7 +548,7 @@ class BackgroundCheck extends Component {
                                                                 form="background-check-form"
                                                             />
                                                             <span className="primary applicant-card__label">
-                                                                    <a href="#">Accept</a> and Sign
+                                                                    <a href="#">{backgroundCheckJson[5].label}</a>
                                                     </span>
                                                         </div>
                                                     </div>
