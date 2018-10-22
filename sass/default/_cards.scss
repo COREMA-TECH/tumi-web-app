@@ -7,6 +7,23 @@
     }
     &-header {
         background-color: $bg-card-header !important;
+        position: relative;
+        &::after {
+            bottom: -5px;
+            content: "◣";
+            color: $brand-primary;
+            left: 0;
+            position: absolute;
+        }
+        &.info::after {
+            color: $brand-info;
+        }
+        &.warning::after {
+            color: $brand-warning;
+        }
+        &.danger::after {
+            color: $brand-danger;
+        }
     }
     &-input-label {
         display: block;

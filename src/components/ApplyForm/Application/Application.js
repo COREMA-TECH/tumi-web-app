@@ -190,6 +190,7 @@ class Application extends Component {
                         zipCode: applicantData.zipCode,
                         homePhone: applicantData.homePhone,
                         cellPhone: applicantData.cellPhone,
+                        birthDay: applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0,10),
                         socialSecurityNumber: applicantData.socialSecurityNumber,
                         positionApplyingFor: applicantData.positionApplyingFor,
                         car: applicantData.car,
@@ -745,7 +746,8 @@ class Application extends Component {
                                                 name="form-control"
                                                 cols="30"
                                                 rows="3"
-                                                disabled={!this.state.editing}
+                                                disabled={!this.state.editing || !this.state.scheduleRestrictions}
+                                                required
                                                 className="form-control textarea-apply-form"
                                             />
                                         </div>
@@ -780,7 +782,8 @@ class Application extends Component {
                                                 }}
                                                 value={this.state.convictedExplain}
                                                 name="form-control"
-                                                disabled={!this.state.editing}
+                                                disabled={!this.state.editing || !this.state.convicted}
+                                                required
                                                 cols="30"
                                                 rows="3"
                                                 className="form-control textarea-apply-form"

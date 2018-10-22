@@ -180,6 +180,11 @@
 	background: #ffffff;
 }
 
+.file-name-container input:disabled {
+	background: #ffffff !important;
+	border: none !important;
+}
+
 .group-title {
 	color: gray;
 	text-align: center;
@@ -191,6 +196,9 @@
 	font-weight: 100;
 	width: 100%;
 	background: #ffffff;
+
+	background: white !important;
+	border-color: white !important;
 }
 
 .input-file-name-edit {

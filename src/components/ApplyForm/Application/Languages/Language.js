@@ -198,7 +198,7 @@ class Language extends Component {
 							);
 						}}
 					>
-						<div className="col-4">
+						<div className="col-md-4">
 							<span className="primary"> {languagesTable[0].label}</span>
 							<select
 								id="nameLanguage"
@@ -227,7 +227,7 @@ class Language extends Component {
 							{/*<input*/}
 							<span className="check-icon" />
 						</div>
-						<div className="col-3">
+						<div className="col-md-3">
 							<span className="primary">{languagesTable[1].label}</span>
 							<select
 								required
@@ -241,7 +241,7 @@ class Language extends Component {
 							</select>
 							<span className="check-icon" />
 						</div>
-						<div className="col-3">
+						<div className="col-md-3">
 							<span className="primary">{languagesTable[2].label}</span>
 							<select
 								required
@@ -255,7 +255,7 @@ class Language extends Component {
 							</select>
 							<span className="check-icon" />
 						</div>
-						<div className="col-2">
+						<div className="col-md-2">
 							<br />
 							<Button type="submit" form="form-language" className="save-skill-button">
 								{spanishActions[0].label}
@@ -269,13 +269,13 @@ class Language extends Component {
 				{this.state.languages.length > 0 ? (
 					<div className="skills-container skills-container--header">
 						<div className="row">
-							<div className="col-3">
+							<div className="col-md-3">
 								<span>{languagesTable[0].label}</span>
 							</div>
-							<div className="col-4">
+							<div className="col-md-4">
 								<span>{languagesTable[1].label}</span>
 							</div>
-							<div className="col-4">
+							<div className="col-md-4">
 								<span>{languagesTable[2].label}</span>
 							</div>
 						</div>
@@ -287,7 +287,7 @@ class Language extends Component {
 				{this.state.languages.map((languageItem) => (
 					<div key={uuidv4()} className="skills-container">
 						<div className="row">
-							<div className="col-3">
+							<div className="col-md-3">
 								<span>
 									{this.state.languagesLoaded.map((item) => {
 										if (item.Id == languageItem.language) {
@@ -296,7 +296,7 @@ class Language extends Component {
 									})}
 								</span>
 							</div>
-							<div className="col-4">
+							<div className="col-md-4">
 								<span>
 									{languageLevelsJSON.map((item) => {
 										if (item.Id == languageItem.conversation) {
@@ -305,7 +305,7 @@ class Language extends Component {
 									})}
 								</span>
 							</div>
-							<div className="col-4">
+							<div className="col-md-4">
 								<span>
 									{languageLevelsJSON.map((item) => {
 										if (item.Id == languageItem.writing) {
@@ -314,7 +314,7 @@ class Language extends Component {
 									})}
 								</span>
 							</div>
-							<div className="col-1">
+							<div className="col-md-1">
 								<span
 									className="delete-school-button"
 									onClick={() => {
