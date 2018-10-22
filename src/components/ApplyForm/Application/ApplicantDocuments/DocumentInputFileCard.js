@@ -28,18 +28,56 @@ class InputFileCard extends Component {
 			editName: true,
 			title: props.title,
 			startTitle: props.title,
-			updating: false
+			updating: false,
+			accept: 'application/pdf, image/*, application/msword',
+			extWord: [ '.doc', '.docx' ],
+			extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
+			extPdf: [ '.pdf' ],
+			fileExtension: props.fileExtension || ''
 		};
 	}
 	componentWillReceiveProps(nextProps) {
 		this.setState({ title: nextProps.title });
 	}
 
+	getIconFile = () => {
+		//Verify if the extension is from a word file
+		if (
+			this.state.extWord.find((value) => {
+				return this.state.fileExtension.toLowerCase().endsWith(value);
+			})
+		)
+			return 'far fa-file-word fa-7x';
+		//Verify if the extension is from a pdf file
+		if (
+			this.state.extPdf.find((value) => {
+				return this.state.fileExtension.toLowerCase().endsWith(value);
+			})
+		)
+			return 'far fa-file-pdf fa-7x';
+		//Verify if the extension is from a image file
+		if (
+			this.state.extImage.find((value) => {
+				return this.state.fileExtension.toLowerCase().endsWith(value);
+			})
+		)
+			return 'far fa-file-image fa-7x';
+		return 'far fa-file-alt fa-7x';
+	};
 	handleUpload = (event, id, docName, typeId) => {
 		// Get the file selected
 		const file = event.target.files[0];
-		if (!file.name.toLowerCase().endsWith('.pdf')) {
-			this.props.handleOpenSnackbar('warning', 'Only .pdf files can be uploaded!', 'bottom', 'right');
+		var _validFileExtensions = [ ...this.state.extImage, ...this.state.extWord, ...this.state.extPdf ];
+		if (
+			!_validFileExtensions.find((value) => {
+				return file.name.toLowerCase().endsWith(value);
+			})
+		) {
+			this.props.handleOpenSnackbar('warning', 'This format is not supported!', 'bottom', 'right');
+			event.target.value = '';
+			event.preventDefault();
+		} else if (file.size <= 0) {
+			this.props.handleOpenSnackbar('warning', 'File is empty', 'bottom', 'right');
 			event.target.value = '';
 			event.preventDefault();
 		} else if (file.size > 5242880) {
@@ -49,7 +87,10 @@ class InputFileCard extends Component {
 		} else {
 			this.setState({
 				uploading: true,
-				catalogItemId: id
+				catalogItemId: id,
+				fileExtension: _validFileExtensions.find((value) => {
+					return file.name.toLowerCase().endsWith(value);
+				})
 			});
 
 			// Build the reference based in the filename
@@ -83,7 +124,7 @@ class InputFileCard extends Component {
 								fileName: docName || file.name
 							},
 							() => {
-								this.props.addDocument(url, this.state.fileName, typeId);
+								this.props.addDocument(url, this.state.fileName, typeId, this.state.fileExtension);
 							}
 						);
 					});
@@ -104,7 +145,7 @@ class InputFileCard extends Component {
 							onChange={(e) => {
 								this.handleUpload(e);
 							}}
-							accept="application/pdf"
+							accept={this.state.accept}
 						/>
 						<div className="drag-text">
 							{!this.state.uploading && <span>+</span>}
@@ -145,7 +186,7 @@ class InputFileCard extends Component {
 							onChange={(e) => {
 								this.handleUpload(e, this.props.typeId, this.props.title, this.props.typeId);
 							}}
-							accept="application/pdf"
+							accept={this.state.accept}
 						/>
 						<div className="drag-text">
 							{!this.state.uploading && <i className="fas fa-cloud-upload-alt" />}
@@ -167,15 +208,15 @@ class InputFileCard extends Component {
 
 	renderEditButtons = () => {
 		return this.state.editName ? (
-			<div className="fa-container fa-container-edit">
-				<i
-					className="far fa-edit"
-					onClick={() => {
-						this.setState({
-							editName: false
-						});
-					}}
-				/>
+			<div
+				className="fa-container fa-container-edit"
+				onClick={() => {
+					this.setState({
+						editName: false
+					});
+				}}
+			>
+				<i className="far fa-edit" />
 			</div>
 		) : (
 			<div className="fa-container-option">
@@ -247,7 +288,7 @@ class InputFileCard extends Component {
 					</div>
 					<div className="image-show-wrap">
 						<div className="drag-text">
-							<i className="far fa-file-alt fa-7x" />
+							<i className={this.getIconFile()} />
 						</div>
 					</div>
 					<div className="button-container">

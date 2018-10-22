@@ -176,6 +176,7 @@ export const GET_DOCUMENTS_AND_TEMPLATES = gql`
 			id
 			url
 			fileName
+			fileExtension
 			CatalogItemId
 			ApplicationId
 		}
