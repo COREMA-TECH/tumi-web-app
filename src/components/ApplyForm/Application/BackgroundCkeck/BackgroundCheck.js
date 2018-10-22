@@ -494,6 +494,7 @@ class BackgroundCheck extends Component {
                                             {
                                                 this.state.signature !== '' ? (
                                                     <div className="col-md-12">
+                                                        <br/>
                                                         <div className="signature-form-section">
                                                             <img
                                                                 src={this.state.signature}
