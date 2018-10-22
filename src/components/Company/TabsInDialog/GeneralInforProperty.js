@@ -600,7 +600,7 @@ class GeneralInfoProperty extends Component {
 						<div className="row">
 							<div className="col-md-12">
 								<div className="form-actions float-right">
-									{this.props.idProperty != null ?
+									{this.props.idProperty != null ? (
 										<button
 											disabled={false}
 											className="btn btn-danger"
@@ -614,8 +614,10 @@ class GeneralInfoProperty extends Component {
 											}}
 										>
 											Delete Property
-								</button>
-										: ''}
+										</button>
+									) : (
+										''
+									)}
 									<input type="submit" value="Next" className="btn btn-success" />
 								</div>
 							</div>
@@ -623,19 +625,19 @@ class GeneralInfoProperty extends Component {
 						<div className="row">
 							<div className="col-md-12">
 								<div class="card">
-									<div class="card-header">
-										General Information
-  									</div>
+									<div class="card-header">General Information</div>
 									<div class="card-body">
 										<div className="row">
 											<div className="col-md-6 col-lg-2">
 												<ImageUpload
+													id="avatarFilePI"
 													updateAvatar={(url) => {
 														this.setState({
 															avatar: url
 														});
 													}}
 													fileURL={this.state.avatar}
+													disabled={false}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-1">
@@ -650,7 +652,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													error={!this.state.rateValid}
 													maxLength="10"
-												//disabled={!this.props.showStepper}
+													//disabled={!this.props.showStepper}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-2">
@@ -798,8 +800,8 @@ class GeneralInfoProperty extends Component {
 														this.state.phoneNumberValid ? (
 															'form-control'
 														) : (
-																'input-form _invalid'
-															)
+															'input-form _invalid'
+														)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -821,7 +823,11 @@ class GeneralInfoProperty extends Component {
 													maskChar=" "
 													value={this.state.fax}
 													className={
-														this.state.faxNumberValid ? 'form-control' : 'input-form _invalid'
+														this.state.faxNumberValid ? (
+															'form-control'
+														) : (
+															'input-form _invalid'
+														)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -837,9 +843,7 @@ class GeneralInfoProperty extends Component {
 									</div>
 								</div>
 								<div class="card">
-									<div class="card-header">
-										Legal Docs
-  									</div>
+									<div class="card-header">Legal Docs</div>
 									<div class="card-body">
 										<div className="row">
 											<div className="col-md-6 col-lg-3">
@@ -1017,7 +1021,6 @@ class GeneralInfoProperty extends Component {
 								</div>
 							</div>
 						</div>
-
 					</form>
 				)}
 			/>
