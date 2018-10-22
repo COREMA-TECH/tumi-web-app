@@ -18,11 +18,8 @@ class InputForm extends Component {
 					onChange={(event) => {
 						if (event.target.value.toString().length > this.props.maxLength) return false;
 						if (this.props.type == 'number') {
-							if (event.target.value == '') event.target.value = 0;
-							else {
-								if (this.props.allowZero != null && this.props.allowZero == false)
-									event.target.value = parseFloat(event.target.value);
-							}
+							if (this.props.allowZero != null && this.props.allowZero == false)
+								event.target.value = parseFloat(event.target.value);
 						}
 						this.props.change(event.target.value);
 					}}
