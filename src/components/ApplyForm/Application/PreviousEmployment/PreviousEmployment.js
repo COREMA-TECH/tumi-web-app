@@ -335,49 +335,10 @@ class PreviousEmployment extends Component {
         let renderPreviousEmploymentSection = () => (
             <div
                 className=""
-                // onSubmit={(e) => {
-                //     e.preventDefault();
-                //     e.stopPropagation();
-                //     let item = {
-                //         uuid: uuidv4(),
-                //         companyName: document.getElementById('companyNameEmployment').value,
-                //         phone: document.getElementById('companyPhoneEmployment').value,
-                //         address: document.getElementById('companyAddressEmployment').value,
-                //         supervisor: document.getElementById('companySupervisor').value,
-                //         jobTitle: document.getElementById('companyJobTitle').value,
-                //         payRate: parseFloat(document.getElementById('companyPayRate').value),
-                //         startDate: document.getElementById('companyStartDate').value,
-                //         endDate: document.getElementById('companyEndDate').value,
-                //         reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
-                //         ApplicationId: 1 // Static application id
-                //     };
-                //     this.setState(
-                //         (prevState) => ({
-                //             open: false,
-                //             previousEmployment: [...prevState.previousEmployment, item]
-                //         }),
-                //         () => {
-                //             document.getElementById('form-previous-employment').reset();
-                //             document.getElementById('companyNameEmployment').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyPhoneEmployment').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyAddressEmployment').classList.remove('invalid-apply-form');
-                //             document.getElementById('companySupervisor').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyJobTitle').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyPayRate').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyStartDate').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyEndDate').classList.remove('invalid-apply-form');
-                //             document.getElementById('companyReasonForLeaving').classList.remove('invalid-apply-form');
-                //
-                //             this.setState({
-                //                 previousEmploymentPhone: ''
-                //             });
-                //         }
-                //     );
-                // }}
             >
                 <div className="row">
                     {this.state.previousEmployment.map((employmentItem) => (
-                        <div className="col-3">
+                        <div className="col-xs-12 col-md-3">
                             <PreviousEmploymentCard
                                 company={employmentItem.companyName}
                                 address={employmentItem.address}
