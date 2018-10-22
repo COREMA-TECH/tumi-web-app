@@ -629,7 +629,6 @@ class GeneralInfoProperty extends Component {
 									<div class="card-body">
 										<div className="row">
 											<div className="col-md-6 col-lg-2">
-												{console.log('Image URL', this.state.avatar)}
 												<ImageUpload
 													id="avatarFilePI"
 													updateAvatar={(url) => {
@@ -639,6 +638,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													fileURL={this.state.avatar}
 													disabled={false}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-1">
