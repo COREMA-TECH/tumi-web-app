@@ -106,7 +106,9 @@ class VerticalLinearStepper extends Component {
         const steps = getSteps();
         const { activeStep } = this.state;
 
-        if (this.state.applicationId == 0) { this.state.applicationId = localStorage.getItem('idApplication'); }
+        if (this.state.applicationId == 0) {
+            this.state.applicationId = localStorage.getItem('idApplication');
+        }
 
         let getStepContent = (step) => {
             switch (step) {
@@ -133,16 +135,14 @@ class VerticalLinearStepper extends Component {
                             </div>
                             <Stepper activeStep={activeStep} orientation="vertical" className="" >
                                 {steps.map((label, index) => {
-                                    if (this.state.applicationId == 0) { index = 0; }
+                                    if (this.state.applicationId == 0) { this.state.activeStep = 0; }
                                     return (
                                         <div
                                             key={label}
                                             onClick={() => {
-                                                //  alert(this.state.applicationId)
                                                 this.setState({ activeStep: index })
                                             }}
-                                            className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
-                                        // className={this.state.applicationId === 0 ? "display:none" : ""}
+                                            className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item '}
                                         >
                                             <StepLabel className={[classes.stepper, 'stepper-label']}>
                                                 {label}

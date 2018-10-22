@@ -33,7 +33,7 @@ class Application extends Component {
             streetAddress: '',
             aptNumber: '',
             city: 0,
-            state: 0,
+            state: 419,
             zipCode: '',
             homePhone: '',
             cellPhone: '',
@@ -136,7 +136,7 @@ class Application extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 //  date: this.state.date,
-                                streetAddress: this.state.streetAddress,
+                                // streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
                                 state: this.state.state,
@@ -202,7 +202,7 @@ class Application extends Component {
                         middleName: this.state.middleName,
                         lastName: this.state.lastName,
                         //  date: this.state.date,
-                        streetAddress: this.state.streetAddress,
+                        //streetAddress: this.state.streetAddress,
                         aptNumber: this.state.aptNumber,
                         city: this.state.city,
                         state: this.state.state,
@@ -252,7 +252,7 @@ class Application extends Component {
      */
     getApplicationById = (id) => {
 
-        console.log("esta aqui el ID ", id);
+
 
         this.setState({
             loading: true
@@ -274,7 +274,7 @@ class Application extends Component {
                             middleName: applicantData.middleName,
                             lastName: applicantData.lastName,
                             //date: applicantData.date.substring(0, 10),
-                            streetAddress: applicantData.streetAddress,
+                            // streetAddress: applicantData.streetAddress,
                             emailAddress: applicantData.emailAddress,
                             //aptNumber: applicantData.aptNumber,
                             city: applicantData.city,
@@ -480,47 +480,27 @@ class Application extends Component {
                                                 minLength="3"
                                             />
                                         </div>
-
-                                        <div className="col-md-12 ">
-                                            <span
-                                                className="primary applicant-card__label ">{formSpanish[22].label}</span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        streetAddress: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.streetAddress}
-                                                name="streetAddress"
-                                                type="text"
-                                                className="form-control"
-                                                required
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="5"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">{formSpanish[5].label}</span>
-                                            <InputMask
-                                                id="zipCode"
-                                                name="zipCode"
-                                                mask="99999-99999"
-                                                maskChar=" "
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        zipCode: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.zipCode}
-                                                placeholder="99999-99999"
-                                                required
-                                                minLength="15"
-                                            />
-                                        </div>
+                                        {/*
+                                            <div className="col-md-12 ">
+                                                <span
+                                                    className="primary applicant-card__label ">{formSpanish[22].label}</span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            streetAddress: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.streetAddress}
+                                                    name="streetAddress"
+                                                    type="text"
+                                                    className="form-control"
+                                                    required
+                                                    disabled={!this.state.editing}
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="5"
+                                                />
+                                                </div>*/}
                                         <div className="col-md-6 ">
                                             <span className="primary applicant-card__label ">{formSpanish[6].label}</span>
                                             <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
@@ -552,7 +532,7 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-md-12">
+                                        <div className="col-md-6">
                                             <span className="primary applicant-card__label ">{formSpanish[7].label}</span>
                                             <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -582,6 +562,26 @@ class Application extends Component {
                                                     return <SelectNothingToDisplay />;
                                                 }}
                                             </Query>
+                                        </div>
+                                        <div className="col-md-6 ">
+                                            <span className="primary applicant-card__label ">{formSpanish[5].label}</span>
+                                            <InputMask
+                                                id="zipCode"
+                                                name="zipCode"
+                                                mask="99999-99999"
+                                                maskChar=" "
+                                                className="form-control"
+                                                disabled={!this.state.editing}
+                                                onChange={(event) => {
+                                                    this.setState({
+                                                        zipCode: event.target.value
+                                                    });
+                                                }}
+                                                value={this.state.zipCode}
+                                                placeholder="99999-99999"
+                                                required
+                                                minLength="15"
+                                            />
                                         </div>
                                         <div className="col-md-6">
                                             <span

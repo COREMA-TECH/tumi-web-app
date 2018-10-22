@@ -153,7 +153,7 @@ class ApplicationList extends Component {
 							this.redirectToCreateApplication();
 						}}
 					>
-						Add Application
+						Add Applicant
 						</button>
 				</div>
 			</div>
