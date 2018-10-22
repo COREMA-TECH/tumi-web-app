@@ -9,15 +9,12 @@ class ImageUpload extends Component {
 
 		this.state = {
 			loading: false,
-			uploadValue: 0,
-			fileURL: props.fileURL
+			uploadValue: 0
 		};
 
 		this.handleUpload = this.handleUpload.bind(this);
 	}
-	componentWillReceiveProps(nextProps) {
-		this.setState({ fileURL: nextProps.fileURL });
-	}
+
 	componentWillMount() {
 		this.setState({ fileURL: this.context.avatarURL });
 	}
@@ -31,6 +28,7 @@ class ImageUpload extends Component {
 		var _validFileExtensions = [ ...this.context.extImage ];
 		if (
 			!_validFileExtensions.find((value) => {
+				if (!file) return null;
 				return (file.name || '').toLowerCase().endsWith(value);
 			})
 		) {
@@ -53,8 +51,7 @@ class ImageUpload extends Component {
 		} else {
 			// Loading state
 			this.setState({
-				loading: true,
-				fileURL: 'https://loading.io/spinners/balls/lg.circle-slack-loading-icon.gif'
+				loading: true
 			});
 
 			// Build the reference based in the filename
@@ -79,15 +76,10 @@ class ImageUpload extends Component {
 				},
 				() => {
 					storageRef.getDownloadURL().then((url) => {
-						this.setState(
-							{
-								fileURL: url,
-								loading: false
-							},
-							() => {
-								this.props.updateAvatar(this.state.fileURL);
-							}
-						);
+						this.props.updateAvatar(url);
+						this.setState({
+							loading: false
+						});
 					});
 				}
 			);
@@ -98,22 +90,34 @@ class ImageUpload extends Component {
 		return (
 			<div className="upload-image">
 				<div className={`avatar-wrapper ${this.props.disabled == true ? 'disabled' : ''}`}>
-					<div className="avatarImage-wrapper">
-						<img className="avatar-uploaded" src={this.state.fileURL} alt="Company Avatar" />
-					</div>
-					<div className="upload-btn-wrapper">
-						<button onClick={this.triggerFileClick} className="btn-up">
-							<i class="fas fa-cloud-upload-alt" />
-						</button>
-						<input
-							type="file"
-							id={this.props.id}
-							name="myfile"
-							accept=" image/*"
-							onChange={this.handleUpload}
-							disabled={this.props.disabled}
-						/>
-					</div>
+					{this.state.loading ? (
+						<div className="avatarImage-wrapper">
+							<img
+								className="avatar-uploaded"
+								src={'https://loading.io/spinners/balls/lg.circle-slack-loading-icon.gif'}
+								alt="Company Avatar"
+							/>
+						</div>
+					) : (
+						<React.Fragment>
+							<div className="avatarImage-wrapper">
+								<img className="avatar-uploaded" src={this.props.fileURL} alt="Company Avatar" />
+							</div>
+							<div className="upload-btn-wrapper">
+								<button onClick={this.triggerFileClick} className="btn-up">
+									<i class="fas fa-cloud-upload-alt" />
+								</button>
+								<input
+									type="file"
+									id={this.props.id}
+									name="myfile"
+									accept=" image/*"
+									onChange={this.handleUpload}
+									disabled={this.props.disabled}
+								/>
+							</div>
+						</React.Fragment>
+					)}
 				</div>
 			</div>
 		);

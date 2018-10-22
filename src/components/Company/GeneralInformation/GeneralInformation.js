@@ -30,98 +30,98 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 const styles = (theme) => ({
-	wrapper: {
-		margin: theme.spacing.unit,
-		position: 'relative'
-	},
-	buttonSuccess: {},
-	buttonProgress: {
-		//color: ,
-		position: 'absolute',
-		top: '50%',
-		left: '50%',
-		marginTop: -12,
-		marginLeft: -12
-	},
-	row: {
-		'&:nth-of-type(odd)': {
-			backgroundColor: theme.palette.background.default
-		},
-		'&:hover': {
-			cursor: 'pointer'
-		}
-	}
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative'
+    },
+    buttonSuccess: {},
+    buttonProgress: {
+        //color: ,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default
+        },
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    }
 });
 
 const CustomTableCell = withStyles((theme) => ({
-	head: {
-		color: theme.palette.common.white
-	},
-	body: {
-		fontSize: 14
-	}
+    head: {
+        color: theme.palette.common.white
+    },
+    body: {
+        fontSize: 14
+    }
 }))(TableCell);
 
 function Transition(props) {
-	return <Slide direction="up" {...props} />;
+    return <Slide direction="up" {...props} />;
 }
 
 class GeneralInformation extends Component {
-	DEFAULT_STATUS = {
-		codeValid: true,
-		addressValid: true,
-		nameValid: true,
-		descriptionValid: true,
-		startWeekValid: true,
-		endWeekValid: true,
-		countryValid: true,
-		stateValid: true,
-		rateValid: true,
-		zipCodeValid: true,
-		cityValid: true,
-		suiteValid: true,
-		phoneNumberValid: true,
-		faxValid: true,
-		startDateValid: true,
-		formValid: true
-	};
-	/**
+    DEFAULT_STATUS = {
+        codeValid: true,
+        addressValid: true,
+        nameValid: true,
+        descriptionValid: true,
+        startWeekValid: true,
+        endWeekValid: true,
+        countryValid: true,
+        stateValid: true,
+        rateValid: true,
+        zipCodeValid: true,
+        cityValid: true,
+        suiteValid: true,
+        phoneNumberValid: true,
+        faxValid: true,
+        startDateValid: true,
+        formValid: true
+    };
+    /**
      *  QUERIES to get the countries, cities and states
      */
-	GET_COUNTRIES_QUERY = gql`
-		{
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
-				Id
-				Name
-				IsActive
-			}
-		}
-	`;
+    GET_COUNTRIES_QUERY = gql`
+        {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
 
-	GET_STATES_QUERY = gql`
-		query States($parent: Int!) {
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
-				Id
-				Name
-				IsActive
-			}
-		}
-	`;
+    GET_STATES_QUERY = gql`
+        query States($parent: Int!) {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
 
-	GET_CITIES_QUERY = gql`
-		query Cities($parent: Int!) {
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
-				Id
-				Name
-				IsActive
-			}
-		}
-	`;
-	/**
+    GET_CITIES_QUERY = gql`
+        query Cities($parent: Int!) {
+            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+                Id
+                Name
+                IsActive
+            }
+        }
+    `;
+    /**
      *  End of the countries, cities and states queries
      */
 
-	/*****************************************************************
+    /*****************************************************************
      *             QUERY to get the company information              *
      ****************************************************************/
 	GET_COMPANY_QUERY = gql`
@@ -171,7 +171,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	loadCompany = (func = () => { }) => {
+	loadCompany = (func = () => {}) => {
 		this.setState(
 			{
 				loading: true
@@ -255,7 +255,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => { }) => {
+	loadCompanyProperties = (func = () => {}) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -304,249 +304,249 @@ class GeneralInformation extends Component {
 	/**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
      **********************************************************/
-	ADD_COMPANY_QUERY = gql`
-		mutation insertCompanies($input: iParamBC!) {
-			insbusinesscompanies(input: $input) {
-				Id
-				Name
-				Description
-			}
-		}
-	`;
+    ADD_COMPANY_QUERY = gql`
+        mutation insertCompanies($input: iParamBC!) {
+            insbusinesscompanies(input: $input) {
+                Id
+                Name
+                Description
+            }
+        }
+    `;
 
-	GET_COMPANY_PROPERTY_QUERY = gql`
-		query getCompany($Id_Parent: Int!) {
-			getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'", Id_Parent: $Id_Parent) {
-				Id
-				Code
-				Code01
-				Id_Company
-				BusinessType
-				Name
-				Description
-				Start_Week
-				End_Week
-				Start_Date
-				Legal_Name
-				Country
-				State
-				Zipcode
-				Fax
-				City
-				Id_Parent
-				IsActive
-				User_Created
-				User_Updated
-				Date_Created
-				Date_Updated
-				ImageURL
-				Rate
-				Location
-				Location01
-				Primary_Email
-				Phone_Number
-				Suite
-			}
-		}
-	`;
+    GET_COMPANY_PROPERTY_QUERY = gql`
+        query getCompany($Id_Parent: Int!) {
+            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'", Id_Parent: $Id_Parent) {
+                Id
+                Code
+                Code01
+                Id_Company
+                BusinessType
+                Name
+                Description
+                Start_Week
+                End_Week
+                Start_Date
+                Legal_Name
+                Country
+                State
+                Zipcode
+                Fax
+                City
+                Id_Parent
+                IsActive
+                User_Created
+                User_Updated
+                Date_Created
+                Date_Updated
+                ImageURL
+                Rate
+                Location
+                Location01
+                Primary_Email
+                Phone_Number
+                Suite
+            }
+        }
+    `;
 
-	insertCompany = () => {
-		this.setState({ loadingUpdate: true }, () => {
-			this.validateAllFields(() => {
-				if (!this.state.formValid) {
-					this.props.handleOpenSnackbar(
-						'warning',
-						'Error: Saving Information: You must fill all the required fields'
-					);
-					this.setState({ loadingUpdate: false });
-					return true;
-				}
-				//Create the mutation using apollo global client
-				this.props.client
-					.mutate({
-						// Pass the mutation structure
-						mutation: this.ADD_COMPANY_QUERY,
-						variables: {
-							input: {
-								Id: 0,
+    insertCompany = () => {
+        this.setState({ loadingUpdate: true }, () => {
+            this.validateAllFields(() => {
+                if (!this.state.formValid) {
+                    this.props.handleOpenSnackbar(
+                        'warning',
+                        'Error: Saving Information: You must fill all the required fields'
+                    );
+                    this.setState({ loadingUpdate: false });
+                    return true;
+                }
+                //Create the mutation using apollo global client
+                this.props.client
+                    .mutate({
+                        // Pass the mutation structure
+                        mutation: this.ADD_COMPANY_QUERY,
+                        variables: {
+                            input: {
+                                Id: 0,
 
-								Rooms: 0,
-								Code: `'${this.state.Code}'`,
-								Code01: `'${this.state.Code}'`,
-								Id_Contract: 1,
-								Id_Company: 1,
-								BusinessType: 1,
-								Location: `'${this.state.address}'`,
-								Location01: `'${this.state.optionalAddress}'`,
-								Name: `'${this.state.name}'`,
-								Description: `'${this.state.description}'`,
-								Start_Week: this.state.startWeek,
-								End_Week: this.state.endWeek,
-								Legal_Name: `'${this.state.legalName}'`,
-								Country: parseInt(this.state.country),
-								State: parseInt(this.state.state),
-								City: parseInt(this.state.city),
-								Rate: parseFloat(this.state.rate),
-								Zipcode: parseInt(this.state.zipCode),
-								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'correo@gmail.com'`,
-								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-								Id_Parent: this.state.idCompany == 0 ? 0 : this.state.Id_Parent,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14'",
-								Date_Updated: "'2018-08-14'",
-								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'2018-08-14'`,
+                                Rooms: 0,
+                                Code: `'${this.state.Code}'`,
+                                Code01: `'${this.state.Code}'`,
+                                Id_Contract: 1,
+                                Id_Company: 1,
+                                BusinessType: 1,
+                                Location: `'${this.state.address}'`,
+                                Location01: `'${this.state.optionalAddress}'`,
+                                Name: `'${this.state.name}'`,
+                                Description: `'${this.state.description}'`,
+                                Start_Week: this.state.startWeek,
+                                End_Week: this.state.endWeek,
+                                Legal_Name: `'${this.state.legalName}'`,
+                                Country: parseInt(this.state.country),
+                                State: parseInt(this.state.state),
+                                City: parseInt(this.state.city),
+                                Rate: parseFloat(this.state.rate),
+                                Zipcode: parseInt(this.state.zipCode),
+                                Fax: `'${this.state.fax}'`,
+                                Primary_Email: `'correo@gmail.com'`,
+                                Phone_Number: `'${this.state.phoneNumber}'`,
+                                Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+                                Id_Parent: this.state.idCompany == 0 ? 0 : this.state.Id_Parent,
+                                IsActive: 1,
+                                User_Created: 1,
+                                User_Updated: 1,
+                                Date_Created: "'2018-08-14'",
+                                Date_Updated: "'2018-08-14'",
+                                ImageURL: `'${this.state.avatar}'`,
+                                Start_Date: `'2018-08-14'`,
 
-								Contract_URL: `'${this.state.contractURL}'`,
-								Contract_File: `'${this.state.contractFile}'`,
+                                Contract_URL: `'${this.state.contractURL}'`,
+                                Contract_File: `'${this.state.contractFile}'`,
 
-								Insurance_URL: `'${this.state.insuranceURL}'`,
-								Insurance_File: `'${this.state.insuranceFile}'`,
+                                Insurance_URL: `'${this.state.insuranceURL}'`,
+                                Insurance_File: `'${this.state.insuranceFile}'`,
 
-								Other_URL: `'${this.state.otherURL}'`,
-								Other_Name: `'${this.state.otherName}'`,
-								Other_File: `'${this.state.otherFile}'`,
+                                Other_URL: `'${this.state.otherURL}'`,
+                                Other_Name: `'${this.state.otherName}'`,
+                                Other_File: `'${this.state.otherFile}'`,
 
-								Other01_URL: `'${this.state.other01URL}'`,
-								Other01_Name: `'${this.state.other01Name}'`,
-								Other01_File: `'${this.state.other01File}'`,
+                                Other01_URL: `'${this.state.other01URL}'`,
+                                Other01_Name: `'${this.state.other01Name}'`,
+                                Other01_File: `'${this.state.other01File}'`,
 
-								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'"
-							}
-						}
-					})
-					.then((data) => {
-						var id = data.data.insbusinesscompanies.Id;
-						this.props.updateCompany(id);
-						this.setState({ loadingUpdate: false });
-						this.props.handleOpenSnackbar('success', 'General Information Inserted!');
-						// When the user click Next button, open second tab
-						this.props.toggleStepper();
-						this.props.next();
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
-						this.setState({
-							loadingUpdate: false
-						});
-					});
-			});
-		});
-	};
-	/**********************************************************
+                                Suite: `'${this.state.suite}'`,
+                                Contract_Status: "'C'"
+                            }
+                        }
+                    })
+                    .then((data) => {
+                        var id = data.data.insbusinesscompanies.Id;
+                        this.props.updateCompany(id);
+                        this.setState({ loadingUpdate: false });
+                        this.props.handleOpenSnackbar('success', 'General Information Inserted!');
+                        // When the user click Next button, open second tab
+                        this.props.toggleStepper();
+                        this.props.next();
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
+                        this.setState({
+                            loadingUpdate: false
+                        });
+                    });
+            });
+        });
+    };
+    /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	/**********************************************************
+    /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION *
      **********************************************************/
-	UPDATE_COMPANY = gql`
-		mutation updateCompanies($input: iParamBC!) {
-			updbusinesscompanies(input: $input) {
-				Id
-				Name
-				Description
-			}
-		}
-	`;
+    UPDATE_COMPANY = gql`
+        mutation updateCompanies($input: iParamBC!) {
+            updbusinesscompanies(input: $input) {
+                Id
+                Name
+                Description
+            }
+        }
+    `;
 
-	updateCompany = (companyId) => {
-		this.setState({ loadingUpdate: true }, () => {
-			this.validateAllFields(() => {
-				if (!this.state.formValid) {
-					this.props.handleOpenSnackbar(
-						'warning',
-						'Error: Saving Information: You must fill all the required fields'
-					);
-					this.setState({ loadingUpdate: false });
-					return true;
-				}
+    updateCompany = (companyId) => {
+        this.setState({ loadingUpdate: true }, () => {
+            this.validateAllFields(() => {
+                if (!this.state.formValid) {
+                    this.props.handleOpenSnackbar(
+                        'warning',
+                        'Error: Saving Information: You must fill all the required fields'
+                    );
+                    this.setState({ loadingUpdate: false });
+                    return true;
+                }
 
-				//Create the mutation using apollo global client
-				this.props.client
-					.mutate({
-						// Pass the mutation structure
-						mutation: this.UPDATE_COMPANY,
-						variables: {
-							input: {
-								Id: companyId,
-								Rooms: 0,
-								Code: `'${this.state.Code}'`,
-								Code01: `'${this.state.Code}'`,
-								Id_Contract: 1,
-								Id_Company: 1,
-								BusinessType: 1,
-								Location: `'${this.state.address}'`,
-								Location01: `'${this.state.optionalAddress}'`,
-								Name: `'${this.state.name}'`,
-								Description: `'${this.state.description}'`,
-								Start_Week: this.state.startWeek,
-								End_Week: this.state.endWeek,
-								Legal_Name: `'${this.state.legalName}'`,
-								Country: parseInt(this.state.country),
-								State: parseInt(this.state.state),
-								City: parseInt(this.state.city),
-								Rate: parseFloat(this.state.rate),
-								Zipcode: parseInt(this.state.zipCode),
-								Fax: `'${this.state.fax}'`,
-								//Primary_Email: `'${this.state.email}'`,
-								Primary_Email: `'coreo@gmail.com'`,
-								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
-								Id_Parent: parseInt(this.state.Id_Parent),
-								IsActive: parseInt(this.state.active),
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14'",
-								Date_Updated: "'2018-08-14'",
-								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'2018-08-14'`,
+                //Create the mutation using apollo global client
+                this.props.client
+                    .mutate({
+                        // Pass the mutation structure
+                        mutation: this.UPDATE_COMPANY,
+                        variables: {
+                            input: {
+                                Id: companyId,
+                                Rooms: 0,
+                                Code: `'${this.state.Code}'`,
+                                Code01: `'${this.state.Code}'`,
+                                Id_Contract: 1,
+                                Id_Company: 1,
+                                BusinessType: 1,
+                                Location: `'${this.state.address}'`,
+                                Location01: `'${this.state.optionalAddress}'`,
+                                Name: `'${this.state.name}'`,
+                                Description: `'${this.state.description}'`,
+                                Start_Week: this.state.startWeek,
+                                End_Week: this.state.endWeek,
+                                Legal_Name: `'${this.state.legalName}'`,
+                                Country: parseInt(this.state.country),
+                                State: parseInt(this.state.state),
+                                City: parseInt(this.state.city),
+                                Rate: parseFloat(this.state.rate),
+                                Zipcode: parseInt(this.state.zipCode),
+                                Fax: `'${this.state.fax}'`,
+                                //Primary_Email: `'${this.state.email}'`,
+                                Primary_Email: `'coreo@gmail.com'`,
+                                Phone_Number: `'${this.state.phoneNumber}'`,
+                                Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+                                Id_Parent: parseInt(this.state.Id_Parent),
+                                IsActive: parseInt(this.state.active),
+                                User_Created: 1,
+                                User_Updated: 1,
+                                Date_Created: "'2018-08-14'",
+                                Date_Updated: "'2018-08-14'",
+                                ImageURL: `'${this.state.avatar}'`,
+                                Start_Date: `'2018-08-14'`,
 
-								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'",
+                                Suite: `'${this.state.suite}'`,
+                                Contract_Status: "'C'",
 
-								Contract_URL: `'${this.state.contractURL}'`,
-								Contract_File: `'${this.state.contractFile}'`,
+                                Contract_URL: `'${this.state.contractURL}'`,
+                                Contract_File: `'${this.state.contractFile}'`,
 
-								Insurance_URL: `'${this.state.insuranceURL}'`,
-								Insurance_File: `'${this.state.insuranceFile}'`,
+                                Insurance_URL: `'${this.state.insuranceURL}'`,
+                                Insurance_File: `'${this.state.insuranceFile}'`,
 
-								Other_URL: `'${this.state.otherURL}'`,
-								Other_Name: `'${this.state.otherName}'`,
-								Other_File: `'${this.state.otherFile}'`,
+                                Other_URL: `'${this.state.otherURL}'`,
+                                Other_Name: `'${this.state.otherName}'`,
+                                Other_File: `'${this.state.otherFile}'`,
 
-								Other01_URL: `'${this.state.other01URL}'`,
-								Other01_Name: `'${this.state.other01Name}'`,
-								Other01_File: `'${this.state.other01File}'`
-							}
-						}
-					})
-					.then((data) => {
-						this.setState({ loadingUpdate: false });
-						this.props.handleOpenSnackbar('success', 'General Information Updated!');
-						// When the user click Next button, open second tab
-						this.props.toggleStepper();
-						this.props.next();
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
-						this.setState({
-							loadingUpdate: false
-						});
-					});
-			});
-		});
-	};
-	/**********************************************************
+                                Other01_URL: `'${this.state.other01URL}'`,
+                                Other01_Name: `'${this.state.other01Name}'`,
+                                Other01_File: `'${this.state.other01File}'`
+                            }
+                        }
+                    })
+                    .then((data) => {
+                        this.setState({ loadingUpdate: false });
+                        this.props.handleOpenSnackbar('success', 'General Information Updated!');
+                        // When the user click Next button, open second tab
+                        this.props.toggleStepper();
+                        this.props.next();
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar('error', 'Error: Updating General Information: ' + error);
+                        this.setState({
+                            loadingUpdate: false
+                        });
+                    });
+            });
+        });
+    };
+    /**********************************************************
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => { }) => {
+	loadCountries = (func = () => {}) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -584,7 +584,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => { }) => {
+	loadStates = (func = () => {}) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -626,7 +626,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => { }) => {
+	loadCities = (func = () => {}) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -667,29 +667,29 @@ class GeneralInformation extends Component {
 	/**
      * Events of the component
      */
-	handleClickOpen = (scroll, boolValue, id, rate) => () => {
-		//if (!this.props.showStepper) return false;
-		this.setState(
-			{
-				propertyClick: boolValue,
-				idProperty: id,
-				Markup: rate
-			},
-			() => {
-				this.setState({ open: true, scroll });
-			}
-		);
-	};
+    handleClickOpen = (scroll, boolValue, id, rate) => () => {
+        //if (!this.props.showStepper) return false;
+        this.setState(
+            {
+                propertyClick: boolValue,
+                idProperty: id,
+                Markup: rate
+            },
+            () => {
+                this.setState({ open: true, scroll });
+            }
+        );
+    };
 
-	handleClose = () => {
-		this.setState({ open: false });
+    handleClose = () => {
+        this.setState({ open: false });
 
-		this.loadCompanyProperties(() => {
-			this.setState({ indexView: 1, firstLoad: false });
-		});
-	};
+        this.loadCompanyProperties(() => {
+            this.setState({ indexView: 1, firstLoad: false });
+        });
+    };
 
-	/**
+    /**
      * End of the events
      */
 	componentWillMount() {
@@ -1035,7 +1035,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -1064,18 +1064,18 @@ class GeneralInformation extends Component {
      *
      * @returns {XML} component
      */
-	render() {
-		const { classes } = this.props;
+    render() {
+        const { classes } = this.props;
 
-		let isLoading =
-			this.state.loading ||
-			this.state.loadingCities ||
-			this.state.loadingCountries ||
-			this.state.loadingStates ||
-			this.state.loadingCompanyProperties ||
-			this.state.firstLoad;
+        let isLoading =
+            this.state.loading ||
+            this.state.loadingCities ||
+            this.state.loadingCountries ||
+            this.state.loadingStates ||
+            this.state.loadingCompanyProperties ||
+            this.state.firstLoad;
 
-		/**
+        /**
          * If the data is ready render the component
          */
 		if (this.state.indexView == 2) {
@@ -1124,8 +1124,8 @@ class GeneralInformation extends Component {
 								)}
 							</div>
 						) : (
-								''
-							)}
+							''
+						)}
 						{this.props.showStepper ? (
 							<div className="form-actions float-right">
 								<button
@@ -1172,8 +1172,8 @@ class GeneralInformation extends Component {
 								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
 							</div>
 						) : (
-								''
-							)}
+							''
+						)}
 					</div>
 				</div>
 
@@ -1190,6 +1190,7 @@ class GeneralInformation extends Component {
 													avatar: url
 												});
 											}}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
 											fileURL={this.state.avatar}
 											disabled={!this.props.showStepper}
 										/>
@@ -1529,8 +1530,8 @@ class GeneralInformation extends Component {
 											this.props.idCompany == 0 ? (
 												'add-property__disabled btn btn-info'
 											) : (
-													'btn btn-info'
-												)
+												'btn btn-info'
+											)
 										}
 										disabled={this.props.idCompany == 0}
 										onClick={this.handleClickOpen('paper', false, 0, 0)}
@@ -1572,15 +1573,15 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-								//Si el click no es en esa property : pasar el Id en nulo
-								//para que no cargue niguna información relacionada con ese Id
-								<TabsInDialog
-									idCompany={this.props.idCompany}
-									Markup={this.state.rate}
-									handleClose={this.handleClose}
-									handleOpenSnackbar={this.props.handleOpenSnackbar}
-								/>
-							)}
+							//Si el click no es en esa property : pasar el Id en nulo
+							//para que no cargue niguna información relacionada con ese Id
+							<TabsInDialog
+								idCompany={this.props.idCompany}
+								Markup={this.state.rate}
+								handleClose={this.handleClose}
+								handleOpenSnackbar={this.props.handleOpenSnackbar}
+							/>
+						)}
 					</DialogContent>
 				</Dialog>
 			</div>
@@ -1593,7 +1594,7 @@ class GeneralInformation extends Component {
 }
 
 GeneralInformation.propTypes = {
-	classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(withApollo(GeneralInformation));

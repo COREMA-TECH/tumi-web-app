@@ -11,6 +11,7 @@ import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Query from 'react-apollo/Query';
 import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
+import AccountDialogManagement from 'ui-components/AccountDialog/AccountDialogManagement';
 import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
 
@@ -116,6 +117,7 @@ class NewContract extends Component {
 			Exhibit_E: '',
 			Exhibit_F: '',
 			IsActive: 1,
+			idManagement: '',
 			Management: '',
 			User_Created: '',
 			User_Updated: '',
@@ -623,9 +625,22 @@ class NewContract extends Component {
 	`;
 
 	getbusinesscompaniesQuery = gql`
-		query getbusinesscompanies($Id: Int!) {
+		query getbusinesscompanies($Id: Int!){
 			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
 				Id
+				Name
+				Id_Parent
+				Parent
+			}
+		}
+	`;
+
+	getmanagementcompaniesQuery = gql`
+		query getbusinesscompanies($Id: Int!){
+			getbusinesscompanies(Id: $Id,Id_Parent:0, IsActive: 1, Contract_Status: "'C'") {
+				Id
+				Name
+				Id_Parent
 				Parent
 			}
 		}
@@ -732,9 +747,35 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
+				console.log("esto es data de business ", data);
 				this.setState({
+					idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
 					Management: this.getString(data.getbusinesscompanies[0].Parent)
 				});
+				console.log("este es el set ", this.setState.idManagement);
+				console.log("este es el set ", this.setState.Management);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	getManagementCompanies = (id) => {
+		this.props.client
+			.query({
+				query: this.getmanagementcompaniesQuery,
+				variables: {
+					Id: id
+				}
+			})
+			.then(({ data }) => {
+
+				this.setState({
+					idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
+					Management: this.getString(data.getbusinesscompanies[0].Parent)
+				});
+
+
 			})
 			.catch((error) => {
 				console.log(error);
@@ -1147,6 +1188,38 @@ class NewContract extends Component {
 												//error={!this.state.CompanySignedNameValid}
 												/>
 											</div>
+											<div className="col-md-6">
+												<label>* Management Company</label>
+												<Query query={this.getmanagementcompaniesQuery} variables={{ Id: this.state.idManagement }} >
+													{({ loading, error, data, refetch, networkStatus }) => {
+														//if (networkStatus === 4) return <LinearProgress />;
+														if (error) return <p>Error </p>;
+														if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+															console.log("Id Management ", this.state.idManagement);
+															return (
+																<select
+																	name="management"
+																	id="management"
+																	required
+																	className="form-control"
+																	//disabled={!this.state.editing}
+																	onChange={(e) => {
+																		this.setState({
+																			idManagement: e.target.value
+																		})
+																	}}
+																	value={this.state.idManagement}>
+																	<option value="">Select a Management</option>
+																	{data.getbusinesscompanies.map((item) => (
+																		<option value={item.Id}>{item.Name}</option>
+																	))}
+																</select>
+															);
+														}
+														return <SelectNothingToDisplay />;
+													}}
+												</Query>
+											</div>
 											<div className="col-md-6 col-lg-6">
 												<label>* Hotel</label>
 												<AccountDialog
@@ -1163,6 +1236,8 @@ class NewContract extends Component {
 																this.validateField('Company_Signed', value);
 																this.getCompanies(this.state.Company_Signed);
 																this.getBusinessCompanies(this.state.Id_Entity);
+
+
 															}
 														);
 													}}

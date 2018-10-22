@@ -638,6 +638,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													fileURL={this.state.avatar}
 													disabled={false}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-1">
