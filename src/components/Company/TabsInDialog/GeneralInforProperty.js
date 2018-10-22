@@ -629,6 +629,7 @@ class GeneralInfoProperty extends Component {
 									<div class="card-body">
 										<div className="row">
 											<div className="col-md-6 col-lg-2">
+												{console.log('Image URL', this.state.avatar)}
 												<ImageUpload
 													id="avatarFilePI"
 													updateAvatar={(url) => {

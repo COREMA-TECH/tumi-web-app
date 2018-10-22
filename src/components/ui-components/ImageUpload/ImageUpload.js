@@ -31,6 +31,7 @@ class ImageUpload extends Component {
 		var _validFileExtensions = [ ...this.context.extImage ];
 		if (
 			!_validFileExtensions.find((value) => {
+				if (!file) return null;
 				return (file.name || '').toLowerCase().endsWith(value);
 			})
 		) {
