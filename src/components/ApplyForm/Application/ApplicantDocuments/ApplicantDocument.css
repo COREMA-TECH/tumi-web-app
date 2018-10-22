@@ -203,7 +203,7 @@
 
 .input-file-name-edit {
 	width: 100%;
-	border: 1px solid rgba(65, 175, 215, 0.5);
+	border: 1px solid rgba(65, 175, 215, 0.5) !important;
 	border-radius: 5px;
 	margin: auto;
 	padding: .1em;
