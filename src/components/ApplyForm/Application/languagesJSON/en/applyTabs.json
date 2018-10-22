@@ -1,6 +1,30 @@
 [
   {
+    "id": 0,
+    "label": "Applicant Information"
+  },
+  {
     "id": 1,
+    "label": "Background Check"
+  },
+  {
+    "id": 2,
+    "label": "Non-Disclosure"
+  },
+  {
+    "id": 3,
+    "label": "Conduct Code"
+  },
+  {
+    "id": 4,
+    "label": "Anti-Harassment"
+  },
+  {
+    "id": 5,
+    "label": "Worker's Compensation"
+  },
+  {
+    "id": 6,
     "label": "Documents"
   }
 ]
