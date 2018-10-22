@@ -1,6 +1,30 @@
 [
   {
+    "id": 0,
+    "label": "Información del Aplicante"
+  },
+  {
     "id": 1,
+    "label": "Verificación de Antecedentes"
+  },
+  {
+    "id": 2,
+    "label": "No Divulgación"
+  },
+  {
+    "id": 3,
+    "label": "Código de Conducta"
+  },
+  {
+    "id": 4,
+    "label": "Anti-Acoso"
+  },
+  {
+    "id": 5,
+    "label": "Compensación del Trabajador"
+  },
+  {
+    "id": 6,
     "label": "Documentos"
   }
 ]

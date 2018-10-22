@@ -10,6 +10,9 @@ import withGlobalContent from "../../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
 class AntiHarassment extends Component {
     constructor(props) {
         super(props);
@@ -215,7 +218,7 @@ class AntiHarassment extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Anti-Harassment</span>
+                                <span className="applicant-card__title">{applyTabs[4].label}</span>
                                 {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
@@ -226,7 +229,7 @@ class AntiHarassment extends Component {
                                                 this.setState({ downloading: false })
                                             })
                                         }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                            {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
 
                                         </button>
                                     ) : (
@@ -234,7 +237,7 @@ class AntiHarassment extends Component {
                                                 this.setState({
                                                     openSignature: true
                                                 })
-                                            }}>Sign <i className="far fa-edit"></i>
+                                            }}>{actions[8].label} <i className="far fa-edit"></i>
                                             </button>
                                         )
                                 }
