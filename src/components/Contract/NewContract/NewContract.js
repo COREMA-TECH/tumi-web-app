@@ -11,6 +11,7 @@ import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Query from 'react-apollo/Query';
 import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
+import AccountDialogManagement from 'ui-components/AccountDialog/AccountDialogManagement';
 import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
 
@@ -623,7 +624,7 @@ class NewContract extends Component {
 	`;
 
 	getbusinesscompaniesQuery = gql`
-		query getbusinesscompanies($Id: Int!) {
+		query getbusinesscompanies($Id: Int!){
 			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
 				Id
 				Parent

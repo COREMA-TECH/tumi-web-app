@@ -122,14 +122,14 @@ class SimpleDialog extends Component {
      * QUERY to get companies
      */
     getCompaniesQuery = gql`
-   
-            {		getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
+		{
+			getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'",Id_Parent :0) {
 				Id
 				Name
 				Id_Company
 				ImageURL
-            }
-        }
+			}
+		}
 	`;
 
     /**

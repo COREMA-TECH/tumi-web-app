@@ -9,18 +9,10 @@
 	},
 	{
 		"id": 3,
-		"label": "Education"
-	},
-	{
-		"id": 4,
 		"label": "Previous Employments"
 	},
 	{
-		"id": 5,
-		"label": "Military Service"
-	},
-	{
-		"id": 6,
+		"id": 4,
 		"label": "Skills"
 	}
 ]
