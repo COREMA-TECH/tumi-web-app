@@ -1,26 +1,34 @@
 [
-  {
-    "id": 1,
-    "label": "Add"
-  },
-  {
-    "id": 2,
-    "label": "Edit"
-  },
-  {
-    "id": 3,
-    "label": "Cancel"
-  },
-  {
-    "id": 4,
-    "label": "Delete"
-  },
-  {
-    "id": 5,
-    "label": "Save"
-  },
-  {
-    "id": 6,
-    "label": "Select an Option"
-  }
+	{
+		"id": 0,
+		"label": "Add"
+	},
+	{
+		"id": 1,
+		"label": "Edit"
+	},
+	{
+		"id": 2,
+		"label": "Cancel"
+	},
+	{
+		"id": 3,
+		"label": "Delete"
+	},
+	{
+		"id": 4,
+		"label": "Save"
+	},
+	{
+		"id": 5,
+		"label": "Select an Option"
+	},
+	{
+		"id": 6,
+		"label": "Add Document"
+	},
+	{
+		"id": 7,
+		"label": "Template"
+	}
 ]

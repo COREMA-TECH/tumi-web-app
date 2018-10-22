@@ -1323,7 +1323,7 @@ class GeneralInformation extends Component {
 											mask="+(999) 999-9999"
 											maskChar=" "
 											value={this.state.phoneNumber}
-											className={this.state.phoneNumberValid ? 'form-control' : 'input-form _invalid'}
+											className={this.state.phoneNumberValid ? 'form-control' : 'form-control _invalid'}
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'phoneNumber');
 											}}
@@ -1339,7 +1339,7 @@ class GeneralInformation extends Component {
 											mask="+(999) 999-9999"
 											maskChar=" "
 											value={this.state.fax}
-											className={this.state.faxValid ? 'form-control' : 'input-form _invalid'}
+											className={this.state.faxValid ? 'form-control' : 'form-control _invalid'}
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'fax');
 											}}

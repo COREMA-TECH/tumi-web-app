@@ -245,6 +245,10 @@ class Signature extends React.Component {
                 this.sigPad.clear();
             }
         );
+
+        if(this.props.showSaveIcon !== null){
+            this.props.signatureValue('');
+        }
     };
 
     componentDidMount() {
@@ -376,6 +380,10 @@ class Signature extends React.Component {
                                     allowSave: true,
                                     empty: false,
                                     signature: this.sigPad.toDataURL()
+                                }, () => {
+                                    if(this.props.showSaveIcon !== null){
+                                        this.props.signatureValue(this.state.signature);
+                                    }
                                 });
                             }}
                         />
@@ -418,28 +426,33 @@ class Signature extends React.Component {
                         </div>
                         {' '}
                     </div>
-
-                    <div className="signature-button-root">
-                        <div className="signature-button-wrapper">
-                            <div className="signature-button">
-                                <Tooltip title="Sign Contract">
-                                    <div>
-                                        <Button
-                                            disabled={this.state.loading || !this.state.allowSave || this.state.saved}
-                                            //	disabled={!this.state.formValid}
-                                            letiant="fab"
-                                            color="primary"
-                                            className={buttonClassname}
-                                            onClick={this.handleSaveSignature}
-                                        >
-                                            <SaveIcon/>
-                                        </Button>
+                    {
+                        this.props.showSaveIcon !== null ? (
+                            ''
+                        ) : (
+                            <div className="signature-button-root">
+                                <div className="signature-button-wrapper">
+                                    <div className="signature-button">
+                                        <Tooltip title="Sign Contract">
+                                            <div>
+                                                <Button
+                                                    disabled={this.state.loading || !this.state.allowSave || this.state.saved}
+                                                    //	disabled={!this.state.formValid}
+                                                    letiant="fab"
+                                                    color="primary"
+                                                    className={buttonClassname}
+                                                    onClick={this.handleSaveSignature}
+                                                >
+                                                    <SaveIcon/>
+                                                </Button>
+                                            </div>
+                                        </Tooltip>
+                                        {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
                                     </div>
-                                </Tooltip>
-                                {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        )
+                    }
                 </div>
                 <Dialog
                     fullScreen={fullScreen}

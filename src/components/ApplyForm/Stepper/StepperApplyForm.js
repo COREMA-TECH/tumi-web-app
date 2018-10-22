@@ -2419,7 +2419,8 @@ class VerticalLinearStepper extends Component {
                                     <h1 className="primary apply-form-container__label text-center">Please Sign</h1>
                                 </DialogTitle>
                                 <DialogContent>
-                                    <SignatureForm applicationId={this.state.applicationId} signatureValue={null} />
+                                    <SignatureForm applicationId={this.state.applicationId} signatureValue={null}
+                                                   showSaveIcon={null}/>
                                 </DialogContent>
                             </Dialog>
                         ) : (

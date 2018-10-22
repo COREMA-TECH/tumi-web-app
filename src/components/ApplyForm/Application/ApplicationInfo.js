@@ -35,7 +35,6 @@ const styles = theme => ({
         '&:hover': {
             backgroundColor: '#3d93b9'
         }
-
     },
     actionsContainer: {
         marginBottom: 0,

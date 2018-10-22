@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import renderHTML from 'react-render-html';
-import { GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO, CREATE_DOCUMENTS_PDF_QUERY } from "./Queries";
-import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
-import { ADD_WORKER_COMPENSATION } from "./Mutations";
+import {CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO} from "./Queries";
+import {GET_APPLICANT_INFO} from "../ConductCode/Queries";
+import {ADD_WORKER_COMPENSATION} from "./Mutations";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
@@ -34,7 +34,8 @@ class WorkerCompensation extends Component {
 
             initialNotification: false,
             injuryNotification: false,
-            injuryDate: ''
+            injuryDate: '',
+            saved: false
         }
     }
 
@@ -73,12 +74,12 @@ class WorkerCompensation extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({ loadingData: false, downloading: false });
+                    this.setState({loadingData: false, downloading: false});
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({ loadingData: false, downloading: false });
+                this.setState({loadingData: false, downloading: false});
             });
     };
 
@@ -86,7 +87,7 @@ class WorkerCompensation extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
-        this.setState({ downloading: false });
+        this.setState({downloading: false});
 
     };
 
@@ -95,6 +96,9 @@ class WorkerCompensation extends Component {
         delete workerCompensationObject.openSignature;
         delete workerCompensationObject.id;
         delete workerCompensationObject.accept;
+        if (workerCompensationObject.injuryDate === '') {
+            workerCompensationObject.injuryDate = null;
+        }
 
         this.props.client
             .mutate({
@@ -103,7 +107,7 @@ class WorkerCompensation extends Component {
                     workerCompensation: workerCompensationObject
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 // Show a snackbar with a success message
                 this.props.handleOpenSnackbar(
                     'success',
@@ -133,7 +137,7 @@ class WorkerCompensation extends Component {
                     id: id
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
@@ -160,7 +164,7 @@ class WorkerCompensation extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 if (data.applications[0].workerCompensation !== null) {
                     this.setState({
                         id: data.applications[0].workerCompensation.id,
@@ -174,7 +178,7 @@ class WorkerCompensation extends Component {
                         applicantZipCode: data.applications[0].workerCompensation.applicantZipCode,
                         initialNotification: data.applications[0].workerCompensation.initialNotification,
                         injuryNotification: data.applications[0].workerCompensation.injuryNotification,
-                        injuryDate: data.applications[0].workerCompensation.injuryDate.substring(0, 10)
+                        injuryDate: data.applications[0].workerCompensation.injuryDate === null ? "" : data.applications[0].workerCompensation.injuryDate.substring(0, 10)
                     });
                 } else {
                     this.setState({
@@ -202,7 +206,7 @@ class WorkerCompensation extends Component {
                     parent: 6
                 }
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     applicantState: data.getcatalogitem[0].Name.trim()
                 }, () => {
@@ -214,7 +218,7 @@ class WorkerCompensation extends Component {
                                 parent: stateId
                             }
                         })
-                        .then(({ data }) => {
+                        .then(({data}) => {
                             this.setState({
                                 applicantCity: data.getcatalogitem[0].Name
                             });
@@ -258,10 +262,23 @@ class WorkerCompensation extends Component {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    this.insertWorkerCompensation(this.state);
-                    this.setState({
-                        openSignature: false
-                    })
+                    if(this.state.signature === '') {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'Please sign!',
+                            'bottom',
+                            'right'
+                        );
+                    } else {
+                        this.setState({
+                            saved: true
+                        });
+
+                        this.insertWorkerCompensation(this.state);
+                        this.setState({
+                            openSignature: false
+                        })
+                    }
                 }}
                 className="apply-form"
             >
@@ -271,6 +288,7 @@ class WorkerCompensation extends Component {
                     onClose={() => {
                         this.setState({
                             openSignature: false,
+                            signature: ''
                         }, () => {
                             if (this.state.signature === '') {
                                 this.setState({
@@ -354,6 +372,7 @@ class WorkerCompensation extends Component {
                                         pattern=".*[^ ].*"
                                         maxLength="50"
                                         minLength="2"
+                                        disabled={!this.state.injuryNotification}
 
                                     />
                                 </div>
@@ -361,16 +380,18 @@ class WorkerCompensation extends Component {
                             <div className="row">
                                 <div className="col-12">
                                     <SignatureForm applicationId={this.state.applicationId}
-                                        signatureValue={this.handleSignature} />
+                                                   signatureValue={this.handleSignature}
+                                                   showSaveIcon={true}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </DialogContent>
                     <div className="applicant-card__footer worker-compensation-footer">
                         <button className="applicant-card__cancel-button" type="reset"
-                            onClick={() => {
-                                this.setState({ openSignature: false })
-                            }}>
+                                onClick={() => {
+                                    this.setState({openSignature: false})
+                                }}>
                             {spanishActions[2].label}
                         </button>
                         <button className="applicant-card__save-button" type="submit" form="worker-compensation-form">
@@ -400,10 +421,12 @@ class WorkerCompensation extends Component {
                                                         this.sleep().then(() => {
                                                             this.downloadDocumentsHandler();
                                                         }).catch(error => {
-                                                            this.setState({ downloading: false })
+                                                            this.setState({downloading: false})
                                                         })
-                                                    }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+                                                    }}>{this.state.downloading && (
+                                                        <React.Fragment>Downloading <i class="fas fa-spinner fa-spin"/></React.Fragment>)}
+                                                        {!this.state.downloading && (<React.Fragment>Download <i
+                                                            className="fas fa-download"/></React.Fragment>)}
 
                                                     </button>
                                                 ) : (
@@ -465,7 +488,7 @@ class WorkerCompensation extends Component {
 <p style="margin: 1.1pt 0in 0.0001pt 5.4pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Please indicate whether this is the:</span></p>
 <ul style="margin-top: 1.0pt; margin-bottom: .0001pt;">
 <li style="margin: 1pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Initial Employee Notification</span></li>
-<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification: <u>`+ this.state.injuryDate.substring(0, 10) + `</u></span></li>
+<li style="margin: 0.95pt 0in 0.0001pt 31.2px; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">Injury Notification: <u>` + this.state.injuryDate.substring(0, 10) + `</u></span></li>
 </ul>
 </td>
 </tr>
@@ -484,6 +507,7 @@ class WorkerCompensation extends Component {
             </div>
         );
     }
+
     static contextTypes = {
         baseUrl: PropTypes.string
     };
