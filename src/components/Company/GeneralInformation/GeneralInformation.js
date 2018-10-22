@@ -171,7 +171,7 @@ class GeneralInformation extends Component {
         }
     `;
 
-    loadCompany = (func = () => {}) => {
+    loadCompany = (func = () => { }) => {
         this.setState(
             {
                 loading: true
@@ -255,7 +255,7 @@ class GeneralInformation extends Component {
         );
     };
 
-    loadCompanyProperties = (func = () => {}) => {
+    loadCompanyProperties = (func = () => { }) => {
         this.setState(
             {
                 loadingCompanyProperties: true
@@ -546,7 +546,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-    loadCountries = (func = () => {}) => {
+    loadCountries = (func = () => { }) => {
         this.setState({
             loadingCountries: true
         });
@@ -584,7 +584,7 @@ class GeneralInformation extends Component {
             });
     };
 
-    loadStates = (func = () => {}) => {
+    loadStates = (func = () => { }) => {
         this.setState({
             loadingStates: true
         });
@@ -626,7 +626,7 @@ class GeneralInformation extends Component {
             });
     };
 
-    loadCities = (func = () => {}) => {
+    loadCities = (func = () => { }) => {
         this.setState({
             loadingCities: true
         });
@@ -1035,7 +1035,7 @@ class GeneralInformation extends Component {
         );
     }
 
-    validateForm(func = () => {}) {
+    validateForm(func = () => { }) {
         this.setState(
             {
                 formValid:
@@ -1236,7 +1236,7 @@ class GeneralInformation extends Component {
                         </div>
 
                         <div class="card">
-                            <div class="card-header">General Information</div>
+                            <div class="card-header info">General Information</div>
                             <div class="card-body">
                                 <div className="row">
                                     <div className="col-md-5">
@@ -1386,7 +1386,7 @@ class GeneralInformation extends Component {
                             </div>
                         </div>
                         <div class="card">
-                            <div class="card-header">Legal Docs</div>
+                            <div class="card-header warning">Legal Docs</div>
                             <div class="card-body">
                                 <div className="row">
                                     <div className="col-md-6">
@@ -1498,7 +1498,7 @@ class GeneralInformation extends Component {
                     </div>
                     <div className="col-md-12 col-lg-4">
                         <div class="card">
-                            <div class="card-header">Properties</div>
+                            <div class="card-header danger">Properties</div>
                             <div class="card-body">
                                 <Table className="Table">
                                     <TableHead>
