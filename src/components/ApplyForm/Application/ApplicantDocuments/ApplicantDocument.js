@@ -92,7 +92,7 @@ class ApplicantDocument extends Component {
 				);
 			});
 	};
-	addDocument = (url, fileName, typeId) => {
+	addDocument = (url, fileName, typeId, fileExtension) => {
 		this.setState({ loading: true });
 		this.props.client
 			.mutate({
@@ -101,6 +101,7 @@ class ApplicantDocument extends Component {
 					documents: {
 						url: url,
 						fileName: fileName,
+						fileExtension: fileExtension,
 						CatalogItemId: typeId,
 						ApplicationId: this.props.applicationId
 					}
@@ -200,6 +201,7 @@ class ApplicantDocument extends Component {
 					updateDocument={this.updateDocument}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					item={item}
+					fileExtension={item.fileExtension}
 				/>
 			);
 		});

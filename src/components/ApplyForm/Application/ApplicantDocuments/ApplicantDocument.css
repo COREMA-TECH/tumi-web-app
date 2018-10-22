@@ -191,6 +191,9 @@
 	font-weight: 100;
 	width: 100%;
 	background: #ffffff;
+
+	background: white !important;
+	border-color: white !important;
 }
 
 .input-file-name-edit {
