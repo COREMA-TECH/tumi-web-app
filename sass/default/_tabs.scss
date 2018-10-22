@@ -1,4 +1,11 @@
 .Tabs {
+    &-options {
+       /* background: $white;
+        //position: fixed;
+        margin-bottom: 63px;
+        z-index: 99;
+        width: calc(100% - 87px);*/
+    }
     &-wrapper {
         background: $white;
         border-bottom: solid 1px $tab-border-selected !important;

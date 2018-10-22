@@ -9,14 +9,16 @@ $brand-accent: #cc9933;
 $brand-primary: #3ca2c8;
 $brand-primary-dark: #669900;
 $brand-secondary: #254151;
-$brand-info: #8eb4cb;
-$brand-success: #2ab27b;
-$brand-warning: #cbb956;
-$brand-danger:  #bf5329;
+$brand-info: var(--info);
+$brand-success: var(--success);
+$brand-warning: var(--warning);
+$brand-danger:  var(--danger);
 $brand-apply-primary: #009ce0;
 $brand-apply-secondary: $brand-primary;
 
+
 //Colors
+$info: #28a745;
 $black: #000;
 $white: #FFF;
 $gray: #dddddd;
@@ -39,6 +41,7 @@ $font-family-sans-serif: 'Nunito Sans', sans-serif;
 $font-family-stand-out: "Michroma", sans-serif;
 $text-color: #7e7e7e;
 $font-main-title: 36px;
+$font-size-base: 0.9rem;
 
 // Navbar
 $navbar-default-bg: #fff;
