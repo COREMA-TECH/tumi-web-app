@@ -249,6 +249,11 @@ class Education extends Component {
                                         form="education-form"
                                         name="startPeriod"
                                         id="startPeriod"
+                                        onChange={event => {
+                                            this.setState({
+                                                startPeriod: event.target.value
+                                            })
+                                        }}
                                         type="date"
                                         pattern=".*[^ ].*"
                                         className="form-control"
@@ -268,7 +273,7 @@ class Education extends Component {
                                         pattern=".*[^ ].*"
                                         className="form-control"
                                         required
-                                        min="0"
+                                        min={this.state.startPeriod}
                                         maxLength="50"
                                         minLength="3"
                                     />
