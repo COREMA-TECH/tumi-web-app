@@ -63,6 +63,7 @@ class FileUpload extends Component {
 					});
 				},
 				(error) => {
+					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
 					this.setState({
 						loading: false
 					});

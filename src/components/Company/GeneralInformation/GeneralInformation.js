@@ -1184,6 +1184,7 @@ class GeneralInformation extends Component {
 								<div className="row">
 									<div className="col-md-6 col-lg-2">
 										<ImageUpload
+											id="avatarFileGI"
 											updateAvatar={(url) => {
 												this.setState({
 													avatar: url
