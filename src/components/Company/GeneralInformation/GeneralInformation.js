@@ -1102,15 +1102,66 @@ class GeneralInformation extends Component {
 			<div className="TabSelected-container">
 				{isLoading && <LinearProgress />}
 
-				<div className="row">
-					<div className="col-md-12">
-						{this.props.idCompany != 0 ? (
-							<div className="options-company">
-								{!this.props.showStepper && (
+				<div className="Tabs-options">
+					<div className="row">
+						<div className="col-md-12">
+							{this.props.idCompany != 0 ? (
+								<div className="options-company">
+									{!this.props.showStepper && (
+										<button
+											disabled={isLoading}
+											className="btn btn-success float-right"
+											onClick={() => {
+												this.setState({ firstLoad: true }, () => {
+													this.loadCompany(() => {
+														this.loadCountries(() => {
+															this.loadCities(() => {
+																this.loadStates(() => {
+																	this.loadCompanyProperties(() => {
+																		this.props.toggleStepper();
+																		this.setState({ indexView: 1, firstLoad: false });
+																	});
+																});
+															});
+														});
+													});
+												});
+											}}
+										>
+											Edit Company <i class="fas fa-edit"></i>
+										</button>
+									)}
+								</div>
+							) : (
+									''
+								)}
+							{this.props.showStepper ? (
+								<div className="form-actions float-right">
 									<button
-										disabled={isLoading}
-										className="btn btn-success float-right"
+
+										className="btn btn-success"
 										onClick={() => {
+											this.props.idCompany != 0
+												? this.updateCompany(this.props.idCompany)
+												: this.insertCompany();
+											//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
+										}}
+										disabled={isLoading}
+									>
+										Save <i class="fas fa-save"></i>
+									</button>
+									{this.state.loadingUpdate && (
+										<CircularProgress size={24} className={classes.buttonProgress} />
+									)}
+									<button
+
+										className="btn btn-danger"
+										disabled={isLoading}
+										onClick={() => {
+											if (this.props.idCompany == 0) {
+												window.location.href = '/home/company';
+												return true;
+											}
 											this.setState({ firstLoad: true }, () => {
 												this.loadCompany(() => {
 													this.loadCountries(() => {
@@ -1127,64 +1178,15 @@ class GeneralInformation extends Component {
 											});
 										}}
 									>
-										Edit Company <i class="fas fa-edit"></i>
+										Cancel <i class="fas fa-ban"></i>
 									</button>
+									{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+
+								</div>
+							) : (
+									''
 								)}
-							</div>
-						) : (
-								''
-							)}
-						{this.props.showStepper ? (
-							<div className="form-actions float-right">
-								<button
-
-									className="btn btn-success"
-									onClick={() => {
-										this.props.idCompany != 0
-											? this.updateCompany(this.props.idCompany)
-											: this.insertCompany();
-										//	window.location.pathname === '/home/company/edit' ? this.updateCompany(this.props.idCompany) : this.insertCompany();
-									}}
-									disabled={isLoading}
-								>
-									Save <i class="fas fa-save"></i>
-								</button>
-								{this.state.loadingUpdate && (
-									<CircularProgress size={24} className={classes.buttonProgress} />
-								)}
-								<button
-
-									className="btn btn-danger"
-									disabled={isLoading}
-									onClick={() => {
-										if (this.props.idCompany == 0) {
-											window.location.href = '/home/company';
-											return true;
-										}
-										this.setState({ firstLoad: true }, () => {
-											this.loadCompany(() => {
-												this.loadCountries(() => {
-													this.loadCities(() => {
-														this.loadStates(() => {
-															this.loadCompanyProperties(() => {
-																this.props.toggleStepper();
-																this.setState({ indexView: 1, firstLoad: false });
-															});
-														});
-													});
-												});
-											});
-										});
-									}}
-								>
-									Cancel <i class="fas fa-ban"></i>
-								</button>
-								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
-
-							</div>
-						) : (
-								''
-							)}
+						</div>
 					</div>
 				</div>
 
@@ -1221,7 +1223,7 @@ class GeneralInformation extends Component {
 						</div>
 
 						<div class="card">
-							<div class="card-header">
+							<div class="card-header info">
 								General Information
 							</div>
 							<div class="card-body">
@@ -1351,7 +1353,7 @@ class GeneralInformation extends Component {
 							</div>
 						</div>
 						<div class="card">
-							<div class="card-header">
+							<div class="card-header warning">
 								Legal Docs
   							</div>
 							<div class="card-body">
@@ -1467,7 +1469,7 @@ class GeneralInformation extends Component {
 					</div>
 					<div className="col-md-12 col-lg-4">
 						<div class="card">
-							<div class="card-header">
+							<div class="card-header danger">
 								Properties
 							</div>
 							<div class="card-body">

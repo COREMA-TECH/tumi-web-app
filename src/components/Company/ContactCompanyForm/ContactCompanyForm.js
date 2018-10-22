@@ -1165,6 +1165,7 @@ class ContactcontactForm extends React.Component {
                     open={this.state.openModal}
                     onClose={this.cancelContactHandler}
                     aria-labelledby="responsive-dialog-title"
+                    maxWidth='lg'
                 >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
@@ -1196,39 +1197,6 @@ class ContactcontactForm extends React.Component {
                                         />
                                     </div>
                                     <div className="col-md-12 col-lg-6">
-                                        <label>* First Name</label>
-                                        <InputForm
-                                            id="firstname"
-                                            name="firstname"
-                                            maxLength="15"
-                                            value={this.state.firstname}
-                                            error={!this.state.firstnameValid}
-                                            change={(value) => this.onFirstNameChangeHandler(value)}
-                                        />
-                                    </div>
-                                    <div className="col-md-12 col-lg-6">
-                                        <label>Middle Name</label>
-                                        <InputForm
-                                            id="middlename"
-                                            name="middlename"
-                                            maxLength="15"
-                                            //error={!this.state.middlenameValid}
-                                            value={this.state.middlename}
-                                            change={(value) => this.onMiddleNameChangeHandler(value)}
-                                        />
-                                    </div>
-                                    <div className="col-md-12 col-lg-6">
-                                        <label>* Last Name</label>
-                                        <InputForm
-                                            id="lastname"
-                                            name="lastname"
-                                            maxLength="20"
-                                            error={!this.state.lastnameValid}
-                                            value={this.state.lastname}
-                                            change={(value) => this.onLastNameChangeHandler(value)}
-                                        />
-                                    </div>
-                                    <div className="col-md-12 col-lg-6">
                                         <label>* Department</label>
                                         <AutosuggestInput
                                             id="department"
@@ -1240,7 +1208,41 @@ class ContactcontactForm extends React.Component {
                                             onSelect={this.updateDepartmentName}
                                         />
                                     </div>
-                                    <div className="col-md-12 col-lg-6">
+                                    <div className="col-md-12 col-lg-4">
+                                        <label>* First Name</label>
+                                        <InputForm
+                                            id="firstname"
+                                            name="firstname"
+                                            maxLength="15"
+                                            value={this.state.firstname}
+                                            error={!this.state.firstnameValid}
+                                            change={(value) => this.onFirstNameChangeHandler(value)}
+                                        />
+                                    </div>
+                                    <div className="col-md-12 col-lg-4">
+                                        <label>Middle Name</label>
+                                        <InputForm
+                                            id="middlename"
+                                            name="middlename"
+                                            maxLength="15"
+                                            //error={!this.state.middlenameValid}
+                                            value={this.state.middlename}
+                                            change={(value) => this.onMiddleNameChangeHandler(value)}
+                                        />
+                                    </div>
+                                    <div className="col-md-12 col-lg-4">
+                                        <label>* Last Name</label>
+                                        <InputForm
+                                            id="lastname"
+                                            name="lastname"
+                                            maxLength="20"
+                                            error={!this.state.lastnameValid}
+                                            value={this.state.lastname}
+                                            change={(value) => this.onLastNameChangeHandler(value)}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-12 col-lg-4">
                                         <label>* Email</label>
                                         <InputForm
                                             id="email"
@@ -1251,7 +1253,7 @@ class ContactcontactForm extends React.Component {
                                             change={(value) => this.onEmailChangeHandler(value)}
                                         />
                                     </div>
-                                    <div className="col-md-12 col-lg-6">
+                                    <div className="col-md-12 col-lg-4">
                                         <label>* Phone Number</label>
                                         <InputMask
                                             id="number"
@@ -1266,7 +1268,7 @@ class ContactcontactForm extends React.Component {
                                             placeholder="+(999) 999-9999"
                                         />
                                     </div>
-                                    <div className="col-md-12 col-lg-6">
+                                    <div className="col-md-12 col-lg-4">
                                         <label>* Contact Title</label>
                                         <AutosuggestInput
                                             id="title"
@@ -1345,30 +1347,32 @@ class ContactcontactForm extends React.Component {
                     </div>
                 </div>
 
-                {this.props.showStepper ? (
-                    <div className="advanced-tab-options">
-                        <span
-                            className="options-button options-button--back"
-                            onClick={() => {
-                                this.props.back();
-                            }}
-                        >
-                            Back
+                {
+                    this.props.showStepper ? (
+                        <div className="advanced-tab-options">
+                            <span
+                                className="options-button options-button--back"
+                                onClick={() => {
+                                    this.props.back();
+                                }}
+                            >
+                                Back
 						</span>
-                        <span
-                            className="options-button options-button--next"
-                            onClick={() => {
-                                // When the user click Next button, open second tab
-                                this.props.next();
-                            }}
-                        >
-                            {this.props.valueTab < 2 ? 'Next' : 'Finish'}
-                        </span>
-                    </div>
-                ) : (
-                        ''
-                    )}
-            </div>
+                            <span
+                                className="options-button options-button--next"
+                                onClick={() => {
+                                    // When the user click Next button, open second tab
+                                    this.props.next();
+                                }}
+                            >
+                                {this.props.valueTab < 2 ? 'Next' : 'Finish'}
+                            </span>
+                        </div>
+                    ) : (
+                            ''
+                        )
+                }
+            </div >
         );
     }
 }

@@ -193,17 +193,21 @@ class Preferences extends React.Component {
                     <div className="row">
                         <div className="col-md-12">
                             <div class="card">
-                                <h5 class="card-header">Lunch Preferences</h5>
+                                <div class="card-header">Lunch Preferences</div>
                                 <div class="card-body">
                                     <div className="row">
                                         <div className="col-md-2">
                                             <label>
                                                 Charge Lunch Hours?
                                             </label>
-                                            <label className="switch">
-                                                <input type="checkbox" className="form-check-input" checked={this.state.charge} name="charge" onClick={this.toggleState} onChange={this.handleChange} />
-                                                <span className="slider round"></span>
-                                            </label>
+
+                                            <div class="onoffswitch">
+                                                <input type="checkbox" checked={this.state.charge} name="charge" onClick={this.toggleState} onChange={this.handleChange} className="onoffswitch-checkbox" id="myonoffswitch" />
+                                                <label class="onoffswitch-label" for="myonoffswitch">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
                                         </div>
                                         <div className="col-md-5">
                                             <label>
