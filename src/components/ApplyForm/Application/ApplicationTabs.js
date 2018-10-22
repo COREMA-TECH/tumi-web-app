@@ -12,6 +12,8 @@ import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
 
+const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+
 const theme = createMuiTheme({
     overrides: {
         MuiTabs: { // Name of the component ⚛️ / style sheet
@@ -129,37 +131,37 @@ class CustomizedTabs extends React.Component {
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Applicant Information"
+                            label={applyTabs[0].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Background Check"
+                            label={applyTabs[1].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Non-Disclosure"
+                            label={applyTabs[2].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Conduct Code"
+                            label={applyTabs[3].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Anti-Harassment"
+                            label={applyTabs[4].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Worker's Compensation"
+                            label={applyTabs[5].label}
                         />
                         <Tab
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
-                            label="Documents"
+                            label={applyTabs[6].label}
                         />
                     </Tabs>
                     {getTabContent(value)}

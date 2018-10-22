@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import CircularProgress from '../../material-ui/CircularProgress';
 import PropTypes from 'prop-types';
 const uuidv4 = require('uuid/v4');
 
@@ -10,91 +9,118 @@ class ImageUpload extends Component {
 
 		this.state = {
 			loading: false,
-			uploadValue: 0
+			uploadValue: 0,
+			fileURL: props.fileURL
 		};
 
 		this.handleUpload = this.handleUpload.bind(this);
+	}
+	componentWillReceiveProps(nextProps) {
+		this.setState({ fileURL: nextProps.fileURL });
 	}
 	componentWillMount() {
 		this.setState({ fileURL: this.context.avatarURL });
 	}
 	triggerFileClick = (event) => {
-		document.getElementById("avatarFile").click();
-	}
+		event.preventDefault();
+		document.getElementById(this.props.id).click();
+	};
 	handleUpload(event) {
-		// Loading state
-		this.setState({
-			loading: true
-		});
-
 		// Get the file selected
 		const file = event.target.files[0];
+		var _validFileExtensions = [ ...this.context.extImage ];
+		if (
+			!_validFileExtensions.find((value) => {
+				return (file.name || '').toLowerCase().endsWith(value);
+			})
+		) {
+			this.props.handleOpenSnackbar('warning', 'This format is not supported!', 'bottom', 'right');
+			event.target.value = '';
+			event.preventDefault();
+		} else if (file.size <= 0) {
+			this.props.handleOpenSnackbar('warning', 'File is empty', 'bottom', 'right');
+			event.target.value = '';
+			event.preventDefault();
+		} else if (file.size > this.context.maxFileSize) {
+			this.props.handleOpenSnackbar(
+				'warning',
+				`File is too big. Max ${this.context.maxFileSize / 1024 / 1024} MB`,
+				'bottom',
+				'right'
+			);
+			event.target.value = '';
+			event.preventDefault();
+		} else {
+			// Loading state
+			this.setState({
+				loading: true,
+				fileURL: 'https://loading.io/spinners/balls/lg.circle-slack-loading-icon.gif'
+			});
 
-		// Build the reference based in the filename
-		const storageRef = firebase.storage().ref(`/images/${uuidv4()}`);
+			// Build the reference based in the filename
+			const storageRef = firebase.storage().ref(`/images/${uuidv4()}`);
 
-		// Send the reference and save the file in Firebase Storage
-		const task = storageRef.put(file);
+			// Send the reference and save the file in Firebase Storage
+			const task = storageRef.put(file);
 
-		task.on(
-			'state_changed',
-			(snapshot) => {
-				let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+			task.on(
+				'state_changed',
+				(snapshot) => {
+					let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
 
-				// Update the progress
-				this.setState({
-					uploadValue: percentage
-				});
-			},
-			(error) => {
-				console.log('The error is: ' + error);
-			},
-			() => {
-				storageRef.getDownloadURL().then((url) => {
-					this.setState(
-						{
-							fileURL: url,
-							loading: false
-						},
-						() => {
-							this.props.updateAvatar(this.state.fileURL);
-						}
-					);
-				});
-			}
-		);
+					// Update the progress
+					this.setState({
+						uploadValue: percentage
+					});
+				},
+				(error) => {
+					this.setState({ loading: false });
+					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+				},
+				() => {
+					storageRef.getDownloadURL().then((url) => {
+						this.setState(
+							{
+								fileURL: url,
+								loading: false
+							},
+							() => {
+								this.props.updateAvatar(this.state.fileURL);
+							}
+						);
+					});
+				}
+			);
+		}
 	}
 
 	render() {
-		if (this.state.loading) {
-			return (
-				<div className="upload-image">
-					<div className="avatar-wrapper">
-						<div className="avatarImage-wrapper">
-							<img className="avatar-uploaded" src="https://loading.io/spinners/balls/lg.circle-slack-loading-icon.gif" />
-						</div>
-					</div>
-				</div>
-
-			);
-		}
-
 		return (
 			<div className="upload-image">
 				<div className={`avatar-wrapper ${this.props.disabled == true ? 'disabled' : ''}`}>
 					<div className="avatarImage-wrapper">
-						<img className="avatar-uploaded" src={this.props.fileURL || this.state.fileURL} alt="Company Avatar" />
+						<img className="avatar-uploaded" src={this.state.fileURL} alt="Company Avatar" />
 					</div>
 					<div className="upload-btn-wrapper">
-						<button onClick={this.triggerFileClick} className="btn-up"><i class="fas fa-cloud-upload-alt"></i></button>
-						<input type="file" id="avatarFile" name="myfile" onChange={this.handleUpload} disabled={this.props.disabled} />
+						<button onClick={this.triggerFileClick} className="btn-up">
+							<i class="fas fa-cloud-upload-alt" />
+						</button>
+						<input
+							type="file"
+							id={this.props.id}
+							name="myfile"
+							accept=" image/*"
+							onChange={this.handleUpload}
+							disabled={this.props.disabled}
+						/>
 					</div>
 				</div>
 			</div>
 		);
 	}
 	static contextTypes = {
-		avatarURL: PropTypes.string
+		avatarURL: PropTypes.string,
+		extImage: PropTypes.object
 	};
 }
 

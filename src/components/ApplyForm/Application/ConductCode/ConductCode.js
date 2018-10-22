@@ -11,6 +11,9 @@ import withGlobalContent from "../../../Generic/Global";
 import PropTypes from 'prop-types';
 //import html from '../../../../data/Package hire/CondeConduct';
 
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
 
 class ConductCode extends Component {
     constructor(props) {
@@ -221,7 +224,7 @@ class ConductCode extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Conduct Code</span>
+                                <span className="applicant-card__title">{applyTabs[3].label}</span>
                                 {
                                     this.state.id === '' ? (
                                         ''
@@ -237,7 +240,7 @@ class ConductCode extends Component {
                                                             this.setState({ downloading: false })
                                                         })
                                                     }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>Download <i className="fas fa-download" /></React.Fragment>)}
+                                                        {!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
 
                                                     </button>
                                                 ) : (
@@ -245,7 +248,7 @@ class ConductCode extends Component {
                                                         this.setState({
                                                             openSignature: true
                                                         })
-                                                    }}>Sign <i className="far fa-edit"></i>
+                                                    }}>{actions[8].label} <i className="far fa-edit"></i>
                                                     </button>
                                                 )
                                             }

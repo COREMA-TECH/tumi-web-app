@@ -111,6 +111,7 @@ class InputFileCard extends Component {
 					});
 				},
 				(error) => {
+					this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
 					this.setState({
 						uploading: false
 					});

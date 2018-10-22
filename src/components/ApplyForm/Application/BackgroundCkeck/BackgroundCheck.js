@@ -18,6 +18,7 @@ import Toolbar from "@material-ui/core/Toolbar/Toolbar";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 
 class BackgroundCheck extends Component {
     constructor(props) {
@@ -320,7 +321,7 @@ class BackgroundCheck extends Component {
                     <div className="col-md-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Background Check</span>
+                                <span className="applicant-card__title">{applyTabs[1].label}</span>
                                 {
                                     this.state.editing ? (
                                         <button className="applicant-card__edit-button" onClick={() => {

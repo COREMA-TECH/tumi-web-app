@@ -30,5 +30,13 @@
 	{
 		"id": 7,
 		"label": "Template"
+	},
+	{
+		"id": 8,
+		"label": "Sign"
+	},
+	{
+		"id": 9,
+		"label": "Download"
 	}
 ]
