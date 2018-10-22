@@ -180,6 +180,11 @@
 	background: #ffffff;
 }
 
+.file-name-container input:disabled {
+	background: #ffffff !important;
+	border: none !important;
+}
+
 .group-title {
 	color: gray;
 	text-align: center;

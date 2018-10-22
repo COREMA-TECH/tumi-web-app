@@ -30,5 +30,13 @@
 	{
 		"id": 7,
 		"label": "Plantilla"
+	},
+	{
+		"id": 8,
+		"label": "Firmar"
+	},
+	{
+		"id": 9,
+		"label": "Descargar"
 	}
 ]

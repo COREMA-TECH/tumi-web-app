@@ -194,9 +194,9 @@ class Education extends Component {
                 >
                     <br/>
                     <DialogContent>
-                        <div className="col-12 form-section-1">
+                        <div className="col-md-12 form-section-1">
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[0].label}</label>
                                     <input
                                         id="studyType"
@@ -211,7 +211,7 @@ class Education extends Component {
                                         minLength="2"
                                     />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[1].label}</label>
                                     <input
                                         form="education-form"
@@ -226,7 +226,7 @@ class Education extends Component {
                                         minLength="3"
                                     />
                                 </div>
-                                <div className="col-12">
+                                <div className="col-md-12">
                                     <label className="primary">{educationFormLanguage[2].label}</label>
                                     <input
                                         form="education-form"
@@ -243,37 +243,48 @@ class Education extends Component {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <span className="primary">{educationFormLanguage[3].label}</span>
                                     <input
                                         form="education-form"
                                         name="startPeriod"
                                         id="startPeriod"
+                                        onChange={event => {
+                                            this.setState({
+                                                startPeriod: event.target.value
+                                            })
+                                        }}
                                         type="date"
                                         pattern=".*[^ ].*"
                                         className="form-control"
                                         required
+                                        max={this.state.endPeriod}
                                         min="0"
                                         maxLength="50"
                                         minLength="3"
                                     />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <span className="primary">{educationFormLanguage[4].label}</span>
                                     <input
                                         form="education-form"
+                                        onChange={event => {
+                                            this.setState({
+                                                endPeriod: event.target.value
+                                            })
+                                        }}
                                         name="endPeriod"
                                         id="endPeriod"
                                         type="date"
                                         pattern=".*[^ ].*"
                                         className="form-control"
                                         required
-                                        min="0"
+                                        min={this.state.startPeriod}
                                         maxLength="50"
                                         minLength="3"
                                     />
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[5].label}</label> <br/>
                                     <label className="switch">
                                         <input
@@ -292,7 +303,7 @@ class Education extends Component {
                                         <p className="slider round"/>
                                     </label>
                                 </div>
-                                <div className="col-6">
+                                <div className="col-md-6">
                                     <label className="primary">{educationFormLanguage[6].label}</label>
                                     {this.state.graduated ? (
                                         <div className="input-container--validated">

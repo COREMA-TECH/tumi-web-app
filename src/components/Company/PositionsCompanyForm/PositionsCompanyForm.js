@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 import PositionsTable from './PositionsTable';
 
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import {withApollo} from 'react-apollo';
+import { withApollo } from 'react-apollo';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -27,7 +27,7 @@ import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
 
 import './index.css';
-import {Route} from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 
 const styles = (theme) => ({
@@ -206,7 +206,7 @@ class PositionsCompanyForm extends React.Component {
 
         this.state = {
             data: [],
-            departments: [{Id: 0, Code: 'Nothing', Description: 'Nothing'}],
+            departments: [{ Id: 0, Code: 'Nothing', Description: 'Nothing' }],
             shifts: ShiftsData,
 
             idCompany: this.props.idCompany,
@@ -258,7 +258,7 @@ class PositionsCompanyForm extends React.Component {
             return;
         }
 
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     onNumberChangeHandler(value, name) {
@@ -317,7 +317,7 @@ class PositionsCompanyForm extends React.Component {
     }
 
     onChangeHandler(value, name) {
-        this.setState({[name]: value}, this.validateField(name, value));
+        this.setState({ [name]: value }, this.validateField(name, value));
     }
 
     onBlurHandler(e) {
@@ -329,7 +329,7 @@ class PositionsCompanyForm extends React.Component {
     onSelectChangeHandler(e) {
         const name = e.target.name;
         const value = e.target.value;
-        this.setState({[name]: value}, this.validateField(name, value));
+        this.setState({ [name]: value }, this.validateField(name, value));
     }
 
     updateSelect = (id, name) => {
@@ -474,13 +474,13 @@ class PositionsCompanyForm extends React.Component {
     }
 
     handleCloseAlertDialog = () => {
-        this.setState({opendialog: false});
+        this.setState({ opendialog: false });
     };
     handleConfirmAlertDialog = () => {
         this.deletePostion();
     };
-    onEditHandler = ({Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift}) => {
-        this.setState({showCircularLoading: false}, () => {
+    onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift }) => {
+        this.setState({ showCircularLoading: false }, () => {
             var department = this.state.departments.find(function (obj) {
                 return obj.Id === Id_Department;
             });
@@ -521,22 +521,22 @@ class PositionsCompanyForm extends React.Component {
     };
 
     onDeleteHandler = (idSearch) => {
-        this.setState({idToDelete: idSearch, opendialog: true, showCircularLoading: false});
+        this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
     };
 
 
     redirectToCreateContract = () => {
         this.props.history.push({
             pathname: '/home/contract/add',
-            state: {contract: 0}
+            state: { contract: 0 }
         });
     };
 
     componentWillMount() {
-        this.setState({firstLoad: true}, () => {
+        this.setState({ firstLoad: true }, () => {
             this.loadPositions(() => {
                 this.loadDepartments(() => {
-                    this.setState({indexView: 1, firstLoad: false});
+                    this.setState({ indexView: 1, firstLoad: false });
                 });
             });
         });
@@ -544,11 +544,11 @@ class PositionsCompanyForm extends React.Component {
 
     loadDepartments = (func = () => {
     }) => {
-        this.setState({loadingDepartments: true}, () => {
+        this.setState({ loadingDepartments: true }, () => {
             this.props.client
                 .query({
                     query: this.GET_DEPARTMENTS_QUERY,
-                    variables: {IdEntity: this.state.idCompany},
+                    variables: { IdEntity: this.state.idCompany },
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
@@ -583,11 +583,11 @@ class PositionsCompanyForm extends React.Component {
 
     loadPositions = (func = () => {
     }) => {
-        this.setState({loadingData: true}, () => {
+        this.setState({ loadingData: true }, () => {
             this.props.client
                 .query({
                     query: this.GET_POSTIONS_QUERY,
-                    variables: {Id_Entity: this.state.idCompany},
+                    variables: { Id_Entity: this.state.idCompany },
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
@@ -631,10 +631,10 @@ class PositionsCompanyForm extends React.Component {
             query = this.UPDATE_POSITION_QUERY;
         }
 
-        return {isEdition: isEdition, query: query, id: this.state.idToEdit};
+        return { isEdition: isEdition, query: query, id: this.state.idToEdit };
     };
     insertPosition = (idDepartment) => {
-        const {isEdition, query, id} = this.getObjectToInsertAndUpdate();
+        const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
         this.props.client
             .mutate({
@@ -663,11 +663,11 @@ class PositionsCompanyForm extends React.Component {
                     isEdition ? 'Positions and Rates Updated!' : 'Positions and Rates Inserted!'
                 );
 
-                this.setState({showCircularLoading: true, openModal: false}, () => {
+                this.setState({ showCircularLoading: true, openModal: false }, () => {
                     this.loadPositions(() => {
                         this.loadDepartments(() => {
                             this.resetState(() => {
-                                this.setState({indexView: 1, showCircularLoading: false, loading: false});
+                                this.setState({ indexView: 1, showCircularLoading: false, loading: false });
                             });
                         });
                     });
@@ -751,7 +751,7 @@ class PositionsCompanyForm extends React.Component {
                     })
                     .then((data) => {
                         this.props.handleOpenSnackbar('success', 'Position and Rate Deleted!');
-                        this.setState({opendialog: false, showCircularLoading: true, loadingConfirm: false}, () => {
+                        this.setState({ opendialog: false, showCircularLoading: true, loadingConfirm: false }, () => {
                             this.loadPositions(() => {
                                 this.loadDepartments(() => {
                                     this.setState({
@@ -799,7 +799,7 @@ class PositionsCompanyForm extends React.Component {
         this.props.client
             .query({
                 query: this.GET_RATE_QUERY,
-                variables: {Id: this.state.idCompany},
+                variables: { Id: this.state.idCompany },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -820,11 +820,11 @@ class PositionsCompanyForm extends React.Component {
             });
     };
     cancelDepartmentHandler = () => {
-        this.setState({firstLoad: true}, () => {
+        this.setState({ firstLoad: true }, () => {
             this.resetState(() => {
                 this.loadPositions(() => {
                     this.loadDepartments(() => {
-                        this.setState({indexView: 1, firstLoad: false});
+                        this.setState({ indexView: 1, firstLoad: false });
                     });
                 });
             });
@@ -832,27 +832,27 @@ class PositionsCompanyForm extends React.Component {
     };
 
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
     handleCloseModal = () => {
-        this.setState({openModal: false});
+        this.setState({ openModal: false });
     };
 
     render() {
-        const {loading} = this.state;
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        const { loading } = this.state;
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
 
         var isLoading =
             this.state.loadingData || this.state.loadingDepartments || this.state.firstLoad || this.state.loading;
 
         if (this.state.indexView == 0) {
-            return <React.Fragment>{isLoading && <LinearProgress/>}</React.Fragment>;
+            return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
         }
         if (this.state.indexView == 2) {
             return (
                 <React.Fragment>
-                    {isLoading && <LinearProgress/>}
+                    {isLoading && <LinearProgress />}
                     <NothingToDisplay
                         title="Oops!"
                         message={this.state.errorMessage}
@@ -864,7 +864,7 @@ class PositionsCompanyForm extends React.Component {
         }
         return (
             <div className="position_tab">
-                {isLoading && <LinearProgress/>}
+                {isLoading && <LinearProgress />}
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
                     handleConfirm={this.handleConfirmAlertDialog}
@@ -874,40 +874,35 @@ class PositionsCompanyForm extends React.Component {
                 />
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-success float-right" onClick={this.handleClickOpenModal}>
-                            Add Rates
-                        </button>
                         {
                             this.props.showStepper ? (
                                 <div className="advanced-tab-options">
-                                    {/*<span
-                                className="options-button options-button--back"
-                                onClick={() => {
-                                    this.props.back();
-                                }}
-                            >
-                                Back
-                            </span>*/}
-                                    <Route render={({history}) => (
-                                        <button
-                                            className="btn btn-success float-right mr-1"
-                                            onClick={() => {
+                                    {this.state.data.length > 0 ?
+                                        < Route render={({ history }) => (
+                                            < button
+                                                className="btn btn-info float-right"
+                                                onClick={() => {
 
-                                                // When the user click Next button, open second tab
-                                                history.push({
-                                                    pathname: '/home/contract/add',
-                                                    state: {contract: 0, Id_Entity: this.state.idCompany}
-                                                });
+                                                    // When the user click Next button, open second tab
+                                                    history.push({
+                                                        pathname: '/home/contract/add',
+                                                        state: { contract: 0, Id_Entity: this.state.idCompany }
+                                                    });
 
-                                            }}
-                                        >
-                                            {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
-                                        </button>
-                                    )}/>
+                                                }}
+                                            >
+                                                {this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
+                                            </button>
+                                        )} />
+                                        : ''
+                                    }
 
                                 </div>
                             ) : ('')
                         }
+                        <button className="btn btn-success float-right mr-1" onClick={this.handleClickOpenModal}>
+                            Add Rates
+                        </button>
                     </div>
                 </div>
                 <Dialog
@@ -916,17 +911,17 @@ class PositionsCompanyForm extends React.Component {
                     onClose={this.cancelDepartmentHandler}
                     aria-labelledby="responsive-dialog-title"
                 >
-                    <DialogTitle style={{padding: '0px'}}>
+                    <DialogTitle style={{ padding: '0px' }}>
                         <div className="card-form-header orange">
                             {' '}
                             {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
                                 'Edit  Position/Rate'
                             ) : (
-                                'Create Position/Rate'
-                            )}
+                                    'Create Position/Rate'
+                                )}
                         </div>
                     </DialogTitle>
-                    <DialogContent style={{minWidth: 550, padding: '0px', overflowY: 'unset'}}>
+                    <DialogContent style={{ minWidth: 550, padding: '0px', overflowY: 'unset' }}>
                         <div className="row">
                             <div className="col-md-12 col-lg-6">
                                 <label>* Department</label>
@@ -1009,18 +1004,18 @@ class PositionsCompanyForm extends React.Component {
                             </div>
                         </div>
                     </DialogContent>
-                    <DialogActions style={{margin: '20px 20px'}}>
+                    <DialogActions style={{ margin: '20px 20px' }}>
                         <div className={classes.root}>
                             <div className={classes.wrapper}>
                                 <Tooltip
                                     title={
                                         this.state.idToEdit != null &&
-                                        this.state.idToEdit != '' &&
-                                        this.state.idToEdit != 0 ? (
-                                            'Save Changes'
-                                        ) : (
-                                            'Insert Record'
-                                        )
+                                            this.state.idToEdit != '' &&
+                                            this.state.idToEdit != 0 ? (
+                                                'Save Changes'
+                                            ) : (
+                                                'Insert Record'
+                                            )
                                     }
                                 >
                                     <div>
@@ -1034,7 +1029,7 @@ class PositionsCompanyForm extends React.Component {
                                         </button>
                                     </div>
                                 </Tooltip>
-                                {loading && <CircularProgress size={68} className={classes.fabProgress}/>}
+                                {loading && <CircularProgress size={68} className={classes.fabProgress} />}
                             </div>
                         </div>
 

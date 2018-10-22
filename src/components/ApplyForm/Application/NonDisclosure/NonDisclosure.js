@@ -11,6 +11,9 @@ import {GET_APPLICANT_INFO} from "../ConductCode/Queries";
 import {CREATE_DOCUMENTS_PDF_QUERY, GET_DISCLOSURE_INFO} from "./Queries";
 import PropTypes from 'prop-types';
 
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
 class NonDisclosure extends Component {
     constructor(props) {
         super(props);
@@ -217,7 +220,7 @@ class NonDisclosure extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Non-Disclosure</span>
+                                <span className="applicant-card__title">{applyTabs[2].label}</span>
                                 {
                                     this.state.id === '' ? (
                                         ''
@@ -234,7 +237,7 @@ class NonDisclosure extends Component {
                                                         })
                                                     }}>{this.state.downloading && (
                                                         <React.Fragment>Downloading <i class="fas fa-spinner fa-spin"/></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>Download <i
+                                                        {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
                                                             className="fas fa-download"/></React.Fragment>)}
 
                                                     </button>
@@ -243,7 +246,7 @@ class NonDisclosure extends Component {
                                                         this.setState({
                                                             openSignature: true
                                                         })
-                                                    }}>Sign <i className="far fa-edit"></i>
+                                                    }}>{actions[8].label} <i className="far fa-edit"></i>
                                                     </button>
                                                 )
                                             }

@@ -189,17 +189,17 @@ class PreviousEmployment extends Component {
                                 <div className="form-section-1 row">
                                     <div className="col-md-6">
                                         <span className="primary"> {previousEmploymentLabels[0].label}</span>
-                                            <input
-                                                id="companyNameEmployment"
-                                                form="form-previous-employment"
-                                                name="companyNameEmployment"
-                                                type="text"
-                                                className="form-control"
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
+                                        <input
+                                            id="companyNameEmployment"
+                                            form="form-previous-employment"
+                                            name="companyNameEmployment"
+                                            type="text"
+                                            className="form-control"
+                                            required
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary"> {previousEmploymentLabels[1].label}</span>
@@ -248,17 +248,17 @@ class PreviousEmployment extends Component {
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary"> {previousEmploymentLabels[4].label}</span>
-                                            <input
-                                                id="companyJobTitle"
-                                                form="form-previous-employment"
-                                                name="jobTitleEmployment"
-                                                type="text"
-                                                className="form-control"
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
+                                        <input
+                                            id="companyJobTitle"
+                                            form="form-previous-employment"
+                                            name="jobTitleEmployment"
+                                            type="text"
+                                            className="form-control"
+                                            required
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary"> {previousEmploymentLabels[5].label}</span>
@@ -275,31 +275,41 @@ class PreviousEmployment extends Component {
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary"> {previousEmploymentLabels[6].label}</span>
-                                            <input
-                                                id="companyStartDate"
-                                                form="form-previous-employment"
-                                                name="startPreviousEmployment"
-                                                type="date"
-                                                className="form-control"
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
+                                        <input
+                                            id="companyStartDate"
+                                            onChange={event => {
+                                                this.setState({
+                                                    startPreviousEmployment: event.target.value
+                                                })
+                                            }}
+                                            form="form-previous-employment"
+                                            name="startPreviousEmployment"
+                                            type="date"
+                                            className="form-control"
+                                            required
+                                            max={this.state.endPreviousEmployment}
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
                                     </div>
                                     <div className="col-md-6">
                                         <span className="primary">{previousEmploymentLabels[7].label} </span>
-                                            <input
-                                                id="companyEndDate"
-                                                form="form-previous-employment"
-                                                name="endPreviousEmployment"
-                                                type="date"
-                                                className="form-control"
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
+                                        <input
+                                            id="companyEndDate"
+                                            onChange={event => {
+                                                this.setState({
+                                                    endPreviousEmployment: event.target.value
+                                                })
+                                            }}
+                                            form="form-previous-employment"
+                                            name="endPreviousEmployment"
+                                            type="date"
+                                            className="form-control"
+                                            required
+                                            min={this.state.startPreviousEmployment}
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
                                     </div>
                                     <div className="col-12">
                                         <span className="primary"> {previousEmploymentLabels[8].label}</span>
@@ -400,41 +410,6 @@ class PreviousEmployment extends Component {
                                     )
                                 }
                             </div>
-
-
-                            {/*{*/}
-                            {/*this.state.editing ? (*/}
-                            {/*<div className="applicant-card__footer">*/}
-                            {/*<button*/}
-                            {/*className="applicant-card__cancel-button"*/}
-                            {/*onClick={*/}
-                            {/*() => {*/}
-                            {/*this.setState((prevState) => ({*/}
-                            {/*previousEmployment: this.state.previousEmployment.filter((_, i) => {*/}
-                            {/*return _.id !== undefined;*/}
-                            {/*})*/}
-                            {/*}), () => {*/}
-                            {/*this.setState({*/}
-                            {/*editing: false*/}
-                            {/*});*/}
-                            {/*});*/}
-                            {/*}*/}
-                            {/*}*/}
-                            {/*>*/}
-                            {/*Cancel*/}
-                            {/*</button>*/}
-                            {/*<button*/}
-                            {/*onClick={() => {*/}
-                            {/*this.insertPreviousEmploymentApplication()*/}
-                            {/*}}*/}
-                            {/*className="applicant-card__save-button">*/}
-                            {/*Save*/}
-                            {/*</button>*/}
-                            {/*</div>*/}
-                            {/*) : (*/}
-                            {/*''*/}
-                            {/*)*/}
-                            {/*}*/}
                         </div>
                     </div>
                 </div>

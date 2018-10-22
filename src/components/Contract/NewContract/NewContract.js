@@ -1062,7 +1062,7 @@ class NewContract extends Component {
 				<div className="row">
 					<div className="col-md-12">
 						<div className="card">
-							<h5 className="card-header">Contract Information</h5>
+							<div className="card-header">Contract Information</div>
 							<div className="">
 								<div className="row">
 									<div className="col-md-12 col-lg-6">

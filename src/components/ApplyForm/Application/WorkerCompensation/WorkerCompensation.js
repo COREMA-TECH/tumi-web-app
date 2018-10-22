@@ -14,6 +14,10 @@ import PropTypes from 'prop-types';
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
+
+const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
+const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
+
 class WorkerCompensation extends Component {
     constructor(props) {
         super(props);
@@ -35,7 +39,6 @@ class WorkerCompensation extends Component {
             initialNotification: false,
             injuryNotification: false,
             injuryDate: '',
-            saved: false
         }
     }
 
@@ -270,9 +273,6 @@ class WorkerCompensation extends Component {
                             'right'
                         );
                     } else {
-                        this.setState({
-                            saved: true
-                        });
 
                         this.insertWorkerCompensation(this.state);
                         this.setState({
@@ -408,7 +408,7 @@ class WorkerCompensation extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">Worker's Compensation</span>
+                                <span className="applicant-card__title">{applyTabs[5].label}</span>
                                 {
                                     this.state.id === '' ? (
                                         ''
@@ -425,7 +425,7 @@ class WorkerCompensation extends Component {
                                                         })
                                                     }}>{this.state.downloading && (
                                                         <React.Fragment>Downloading <i class="fas fa-spinner fa-spin"/></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>Download <i
+                                                        {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
                                                             className="fas fa-download"/></React.Fragment>)}
 
                                                     </button>
@@ -434,7 +434,7 @@ class WorkerCompensation extends Component {
                                                         this.setState({
                                                             openSignature: true
                                                         })
-                                                    }}>Sign <i className="far fa-edit"></i>
+                                                    }}>{actions[8].label} <i className="far fa-edit"></i>
                                                     </button>
                                                 )
                                             }

@@ -628,7 +628,7 @@ class GeneralInfoProperty extends Component {
 									<div class="card-header">General Information</div>
 									<div class="card-body">
 										<div className="row">
-											<div className="col-md-6 col-lg-1">
+											<div className="col-md-6 col-lg-2">
 												<ImageUpload
 													id="avatarFilePI"
 													updateAvatar={(url) => {
@@ -655,7 +655,7 @@ class GeneralInfoProperty extends Component {
 													//disabled={!this.props.showStepper}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-3">
+											<div className="col-md-6 col-lg-2">
 												<label>* Hotel Name</label>
 												<InputValid
 													change={(text) => {
