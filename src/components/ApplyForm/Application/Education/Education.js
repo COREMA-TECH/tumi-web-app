@@ -258,6 +258,7 @@ class Education extends Component {
                                         pattern=".*[^ ].*"
                                         className="form-control"
                                         required
+                                        max={this.state.endPeriod}
                                         min="0"
                                         maxLength="50"
                                         minLength="3"
@@ -267,6 +268,11 @@ class Education extends Component {
                                     <span className="primary">{educationFormLanguage[4].label}</span>
                                     <input
                                         form="education-form"
+                                        onChange={event => {
+                                            this.setState({
+                                                endPeriod: event.target.value
+                                            })
+                                        }}
                                         name="endPeriod"
                                         id="endPeriod"
                                         type="date"

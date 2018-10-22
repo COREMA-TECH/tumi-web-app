@@ -400,41 +400,6 @@ class PreviousEmployment extends Component {
                                     )
                                 }
                             </div>
-
-
-                            {/*{*/}
-                            {/*this.state.editing ? (*/}
-                            {/*<div className="applicant-card__footer">*/}
-                            {/*<button*/}
-                            {/*className="applicant-card__cancel-button"*/}
-                            {/*onClick={*/}
-                            {/*() => {*/}
-                            {/*this.setState((prevState) => ({*/}
-                            {/*previousEmployment: this.state.previousEmployment.filter((_, i) => {*/}
-                            {/*return _.id !== undefined;*/}
-                            {/*})*/}
-                            {/*}), () => {*/}
-                            {/*this.setState({*/}
-                            {/*editing: false*/}
-                            {/*});*/}
-                            {/*});*/}
-                            {/*}*/}
-                            {/*}*/}
-                            {/*>*/}
-                            {/*Cancel*/}
-                            {/*</button>*/}
-                            {/*<button*/}
-                            {/*onClick={() => {*/}
-                            {/*this.insertPreviousEmploymentApplication()*/}
-                            {/*}}*/}
-                            {/*className="applicant-card__save-button">*/}
-                            {/*Save*/}
-                            {/*</button>*/}
-                            {/*</div>*/}
-                            {/*) : (*/}
-                            {/*''*/}
-                            {/*)*/}
-                            {/*}*/}
                         </div>
                     </div>
                 </div>
