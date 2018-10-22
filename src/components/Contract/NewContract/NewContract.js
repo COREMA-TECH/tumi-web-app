@@ -1067,7 +1067,7 @@ class NewContract extends Component {
 								<div className="row">
 									<div className="col-md-12 col-lg-6">
 										<div className="row">
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Contract Name</label>
 												<InputForm
 													value={this.state.Contract_Name}
@@ -1084,7 +1084,7 @@ class NewContract extends Component {
 													error={!this.state.Contract_NameValid}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Contract Owner</label>
 												<InputForm
 													value={this.state.Contrat_Owner}
@@ -1101,7 +1101,7 @@ class NewContract extends Component {
 													error={!this.state.Contrat_OwnerValid}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Contract Template</label>
 												<Query query={this.GET_CONTRACT}>
 													{({ loading, error, data, refetch, networkStatus }) => {
@@ -1139,7 +1139,7 @@ class NewContract extends Component {
 													}}
 												</Query>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Management Company</label>
 												<InputForm
 													value={this.state.Management}
@@ -1147,7 +1147,7 @@ class NewContract extends Component {
 												//error={!this.state.CompanySignedNameValid}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Hotel</label>
 												<AccountDialog
 													valueSelected={this.state.Id_Entity}
@@ -1168,7 +1168,7 @@ class NewContract extends Component {
 													}}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Customer Signed By</label>
 
 												<ContactDialog
@@ -1200,7 +1200,7 @@ class NewContract extends Component {
 													}}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Customer Signed Title</label>
 												<InputForm
 													value={this.state.User_Signed_Title}
@@ -1208,7 +1208,7 @@ class NewContract extends Component {
 													error={!this.state.User_Signed_TitleValid}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-4">
+											<div className="col-md-6 col-lg-6">
 												<label>* Customer Signed Date</label>
 												<InputDateForm
 													value={this.state.Signed_Date}
@@ -1232,7 +1232,7 @@ class NewContract extends Component {
 										<div className="row SubCard">
 											<div className="card bg-light">
 												<div className="row">
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Status</label>
 														<SelectForm
 															data={status}
@@ -1243,7 +1243,7 @@ class NewContract extends Component {
 															showNone={false}
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Contract Start Date</label>
 														<InputDateForm
 															placeholder={this.state.Contract_Start_Date}
@@ -1261,7 +1261,7 @@ class NewContract extends Component {
 															}}
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Contract Term (months)</label>
 
 														<Query query={this.getContractTermsQuery}>
@@ -1293,7 +1293,7 @@ class NewContract extends Component {
 															}}
 														</Query>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Contract Expiration Date</label>
 														<InputDateForm
 															placeholder={this.state.contractExpiration}
@@ -1311,7 +1311,7 @@ class NewContract extends Component {
 															}}
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Owner Expiration Notice</label>
 														<SelectForm
 															data={intervalDays}
@@ -1321,7 +1321,7 @@ class NewContract extends Component {
 															showNone={false}
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Company Signed By</label>
 
 														<InputForm
@@ -1330,7 +1330,7 @@ class NewContract extends Component {
 															error={!this.state.CompanySignedNameValid}
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-6">
 														<label>* Company Signed Date</label>
 														<InputDateForm
 															value={this.state.Company_Signed_Date}
