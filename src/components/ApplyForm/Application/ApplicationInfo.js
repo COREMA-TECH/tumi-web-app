@@ -168,7 +168,7 @@ class VerticalLinearStepper extends Component {
                             {/*window.location.reload();*/}
                             {/*});*/}
 
-                            {/*alert("Alert");*/}
+                           
                             {/*}}>*/}
                             {/*<option value="es">Spanish</option>*/}
                             {/*<option value="en">English</option>*/}
