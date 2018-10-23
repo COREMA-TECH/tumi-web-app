@@ -54,6 +54,8 @@ class PreviousEmploymentCard extends Component {
             </Dialog>
         );
 
+        console.log("Address: " + this.props.address);
+
         return (
             <div className="previous-employment-card">
                 <span
@@ -67,17 +69,26 @@ class PreviousEmploymentCard extends Component {
                 <div className="previous-employment-card__company">
                     <i className="fas fa-building"></i><span> {this.props.company}</span>
                 </div>
-                <div className="previous-employment-card__address">
-                    <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
-                </div>
+                {
+                    this.props.address.length > 0 ? (
+                        <div className="previous-employment-card__address">
+                            <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
+                {
+                    this.props.phone.length > 0 ? (
+                        <div className="previous-employment-card__phone">
+                            <i className="fas fa-phone"></i><span> {this.props.phone}</span>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
                 <div className="previous-employment-card__phone">
-                    <i className="fas fa-phone"></i><span> {this.props.phone}</span>
-                </div>
-                <div className="previous-employment-card__phone">
-                    <i className="far fa-calendar-alt"></i><span>{this.props.startDate.substring(0, 10)}</span>
-                </div>
-                <div className="previous-employment-card__phone">
-                    <i className="far fa-calendar-check"></i><span>{this.props.endDate.substring(0, 10)}</span>
+                    <i className="far fa-calendar-alt"></i><span>{dialogMessages[1].label} <b>{this.props.startDate.substring(0, 10)}</b> {dialogMessages[2].label} <b>{this.props.endDate.substring(0, 10)}</b></span>
                 </div>
 
                 {

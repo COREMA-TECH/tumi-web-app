@@ -48,6 +48,10 @@ class PreviousEmployment extends Component {
 		//Remove uuid property in the item
 		delete item.uuid;
 
+		if(isNaN(item.payRate)) {
+			item.payRate = 0;
+		}
+
 		this.props.client
 			.mutate({
 				mutation: ADD_APLICANT_PREVIOUS_EMPLOYMENT,
@@ -169,6 +173,8 @@ class PreviousEmployment extends Component {
 								reasonForLeaving: document.getElementById('companyReasonForLeaving').value,
 								ApplicationId: this.state.applicationId
 							};
+
+							console.table(item);
 
 							this.insertPreviousEmploymentApplication(item);
 						} catch (e) {}
@@ -340,7 +346,7 @@ class PreviousEmployment extends Component {
 			<div className="">
 				<div className="row">
 					{this.state.previousEmployment.map((employmentItem) => (
-						<div className="col-xs-12 col-md-3">
+						<div className="col-xs-12 col-md-4">
 							<PreviousEmploymentCard
 								company={employmentItem.companyName}
 								address={employmentItem.address}
