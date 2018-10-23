@@ -173,7 +173,7 @@ class GeneralInformation extends Component {
 		}
 	`;
 
-	loadCompany = (func = () => {}) => {
+	loadCompany = (func = () => { }) => {
 		this.setState(
 			{
 				loading: true
@@ -259,7 +259,7 @@ class GeneralInformation extends Component {
 		);
 	};
 
-	loadCompanyProperties = (func = () => {}) => {
+	loadCompanyProperties = (func = () => { }) => {
 		this.setState(
 			{
 				loadingCompanyProperties: true
@@ -550,7 +550,7 @@ class GeneralInformation extends Component {
      *  MUTATION TO CREATE COMPANIES WITH GENERAL INFORMATION  *
      **********************************************************/
 
-	loadCountries = (func = () => {}) => {
+	loadCountries = (func = () => { }) => {
 		this.setState({
 			loadingCountries: true
 		});
@@ -588,7 +588,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => {}) => {
+	loadStates = (func = () => { }) => {
 		this.setState({
 			loadingStates: true
 		});
@@ -630,7 +630,7 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => {}) => {
+	loadCities = (func = () => { }) => {
 		this.setState({
 			loadingCities: true
 		});
@@ -1039,7 +1039,7 @@ class GeneralInformation extends Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -1066,7 +1066,7 @@ class GeneralInformation extends Component {
 		return (
 			<input
 				type="text"
-				className="input-file-name"
+				className="form-control input-file-name"
 				max="120"
 				placeholder="Name File"
 				value={this.state[property]}
@@ -1079,7 +1079,7 @@ class GeneralInformation extends Component {
 	};
 	renderEditControl = (property, enableEdit) => {
 		return (
-			<div className="file-name-container">
+			<div className="input-group input-group-file">
 				{this.renderFileNameControls(property, enableEdit)}
 				{this.props.showStepper && this.renderEditButtons(property, enableEdit)}
 			</div>
@@ -1088,44 +1088,29 @@ class GeneralInformation extends Component {
 	renderEditButtons = (property, enableEdit) => {
 		if (!this.state[enableEdit]) {
 			return (
-				<div
-					id={`${property}_edit`}
-					className="fa-container fa-container-edit"
-					onClick={() => {
-						this.setState({
-							[enableEdit]: true
-						});
-					}}
-				>
-					<i className="far fa-edit" />
+				<div className="input-group-append">
+					<button
+						id={`${property}_edit`}
+						className="btn btn-default"
+						onClick={() => {
+							this.setState({
+								[enableEdit]: true
+							});
+						}}
+					>
+						<i className="far fa-edit" />
+					</button>
 				</div>
 			);
 		} else {
 			return (
-				<div className="fa-container-option">
-					<div
-						id={`${property}_save`}
-						className="fa-container-save bg-success"
-						onClick={(e) => {
-							this.setState({
-								[enableEdit]: false
-							});
-						}}
-					>
+				<div className="input-group-append">
+					<button class="btn btn-success" type="button" onClick={(e) => { this.setState({ [enableEdit]: false }); }}>
 						<i className="far fa-save" />
-					</div>
-					<div
-						id={`${property}_cancel`}
-						className="fa-container-cancel bg-danger"
-						onClick={() => {
-							this.setState({
-								[enableEdit]: false,
-								[`${property}`]: this.state[`${property}Original`]
-							});
-						}}
-					>
+					</button>
+					<button class="btn btn-danger" type="button" onClick={() => { this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] }); }}>
 						<i className="fas fa-ban" />
-					</div>
+					</button>
 				</div>
 			);
 		}
@@ -1195,8 +1180,8 @@ class GeneralInformation extends Component {
 								)}
 							</div>
 						) : (
-							''
-						)}
+								''
+							)}
 						{this.props.showStepper ? (
 							<div className="form-actions float-right">
 								<button
@@ -1243,8 +1228,8 @@ class GeneralInformation extends Component {
 								{isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
 							</div>
 						) : (
-							''
-						)}
+								''
+							)}
 					</div>
 				</div>
 
@@ -1582,8 +1567,8 @@ class GeneralInformation extends Component {
 											this.props.idCompany == 0 ? (
 												'add-property__disabled btn btn-info'
 											) : (
-												'btn btn-info'
-											)
+													'btn btn-info'
+												)
 										}
 										disabled={this.props.idCompany == 0}
 										onClick={this.handleClickOpen('paper', false, 0, 0)}
@@ -1625,15 +1610,15 @@ class GeneralInformation extends Component {
 								handleOpenSnackbar={this.props.handleOpenSnackbar}
 							/>
 						) : (
-							//Si el click no es en esa property : pasar el Id en nulo
-							//para que no cargue niguna información relacionada con ese Id
-							<TabsInDialog
-								idCompany={this.props.idCompany}
-								Markup={this.state.rate}
-								handleClose={this.handleClose}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-							/>
-						)}
+								//Si el click no es en esa property : pasar el Id en nulo
+								//para que no cargue niguna información relacionada con ese Id
+								<TabsInDialog
+									idCompany={this.props.idCompany}
+									Markup={this.state.rate}
+									handleClose={this.handleClose}
+									handleOpenSnackbar={this.props.handleOpenSnackbar}
+								/>
+							)}
 					</DialogContent>
 				</Dialog>
 			</div>

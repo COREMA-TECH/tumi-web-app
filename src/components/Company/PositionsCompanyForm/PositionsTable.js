@@ -281,30 +281,32 @@ class PositionsTable extends React.Component {
 										{' '}
 										<Tooltip title="Edit">
 											<div>
-												<IconButton
+												<button
+													className="btn btn-success ml-1"
 													disabled={this.props.loading}
 													onClick={(e) => {
 														e.stopPropagation();
 														return this.props.onEditHandler({ ...row });
 													}}
 												>
-													<EditIcon color="primary" />
-												</IconButton>
+													<i class="fas fa-pen"></i>
+												</button>
 											</div>
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										<Tooltip title="Delete">
 											<div>
-												<IconButton
+												<button
+													className="btn btn-danger"
 													disabled={this.props.loading}
 													onClick={(e) => {
 														e.stopPropagation();
 														return this.props.onDeleteHandler(row.Id);
 													}}
 												>
-													<DeleteIcon color="primary" />
-												</IconButton>
+													<i class="fas fa-trash"></i>
+												</button>
 											</div>
 										</Tooltip>
 									</CustomTableCell>
