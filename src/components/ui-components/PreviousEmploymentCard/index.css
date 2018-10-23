@@ -16,6 +16,7 @@
     overflow: hidden;
 
     position: relative;
+    margin-bottom: .5em;
 }
 
 .previous-employment-card__job-title {

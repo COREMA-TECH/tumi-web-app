@@ -605,7 +605,7 @@ class GeneralInfoProperty extends Component {
 	};
 	renderEditControl = (property, enableEdit) => {
 		return (
-			<div className="file-name-container">
+			<div className="file-name-container file-name-container--property">
 				{this.renderFileNameControls(property, enableEdit)}
 				{this.renderEditButtons(property, enableEdit)}
 			</div>
