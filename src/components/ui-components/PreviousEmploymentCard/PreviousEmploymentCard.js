@@ -69,12 +69,25 @@ class PreviousEmploymentCard extends Component {
                 <div className="previous-employment-card__company">
                     <i className="fas fa-building"></i><span> {this.props.company}</span>
                 </div>
-                <div className="previous-employment-card__address">
-                    <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
-                </div>
-                <div className="previous-employment-card__phone">
-                    <i className="fas fa-phone"></i><span> {this.props.phone}</span>
-                </div>
+                {
+                    this.props.address.length > 0 ? (
+                        <div className="previous-employment-card__address">
+                            <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
+                {
+                    this.props.phone.length > 0 ? (
+                        <div className="previous-employment-card__phone">
+                            <i className="fas fa-phone"></i><span> {this.props.phone}</span>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
+
                 <div className="previous-employment-card__phone">
                     <i className="far fa-calendar-alt"></i><span>From <b>{this.props.startDate.substring(0, 10)}</b> To <b>{this.props.endDate.substring(0, 10)}</b></span>
                 </div>

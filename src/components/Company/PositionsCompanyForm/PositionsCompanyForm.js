@@ -912,12 +912,12 @@ class PositionsCompanyForm extends React.Component {
                     aria-labelledby="responsive-dialog-title"
                 >
                     <DialogTitle style={{ padding: '0px' }}>
-                        <div className="card-form-header orange">
+                        <div className="modal-header">
                             {' '}
                             {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
                                 'Edit  Position/Rate'
                             ) : (
-                                    'Create Position/Rate'
+                                    <h5 className="modal-title">Create Position/Rate</h5>
                                 )}
                         </div>
                     </DialogTitle>

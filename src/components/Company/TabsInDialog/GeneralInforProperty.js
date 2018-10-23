@@ -591,7 +591,7 @@ class GeneralInfoProperty extends Component {
 		return (
 			<input
 				type="text"
-				className={'input-form input-file-modal'}
+				className={'form-control input-file-name'}
 				max="120"
 				placeholder="Name File"
 				value={this.state[property]}
@@ -605,7 +605,7 @@ class GeneralInfoProperty extends Component {
 	};
 	renderEditControl = (property, enableEdit) => {
 		return (
-			<div className="file-name-container file-name-container--property">
+			<div className="input-group input-group-file">
 				{this.renderFileNameControls(property, enableEdit)}
 				{this.renderEditButtons(property, enableEdit)}
 			</div>
@@ -614,44 +614,29 @@ class GeneralInfoProperty extends Component {
 	renderEditButtons = (property, enableEdit) => {
 		if (!this.state[enableEdit]) {
 			return (
-				<div
-					id={`${property}_edit`}
-					className="fa-container fa-container-edit"
-					onClick={() => {
-						this.setState({
-							[enableEdit]: true
-						});
-					}}
-				>
-					<i className="far fa-edit" />
+				<div className="input-group-append">
+					<button
+						id={`${property}_edit`}
+						className="btn btn-default"
+						onClick={() => {
+							this.setState({
+								[enableEdit]: true
+							});
+						}}
+					>
+						<i className="far fa-edit" />
+					</button>
 				</div>
 			);
 		} else {
 			return (
-				<div className="fa-container-option">
-					<div
-						id={`${property}_save`}
-						className="fa-container-save bg-success"
-						onClick={(e) => {
-							this.setState({
-								[enableEdit]: false
-							});
-						}}
-					>
+				<div className="input-group-append">
+					<button class="btn btn-success" id={`${property}_edit`} type="button" onClick={(e) => { this.setState({ [enableEdit]: false }); }}>
 						<i className="far fa-save" />
-					</div>
-					<div
-						id={`${property}_cancel`}
-						className="fa-container-cancel bg-danger"
-						onClick={() => {
-							this.setState({
-								[enableEdit]: false,
-								[`${property}`]: this.state[`${property}Original`]
-							});
-						}}
-					>
+					</button>
+					<button class="btn btn-danger" id={`${property}_edit`} type="button" onClick={() => { this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] }); }}>
 						<i className="fas fa-ban" />
-					</div>
+					</button>
 				</div>
 			);
 		}
@@ -686,8 +671,8 @@ class GeneralInfoProperty extends Component {
 											Delete Property
 										</button>
 									) : (
-										''
-									)}
+											''
+										)}
 									<input type="submit" value="Next" className="btn btn-success" />
 								</div>
 							</div>
@@ -723,7 +708,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													error={!this.state.rateValid}
 													maxLength="10"
-													//disabled={!this.props.showStepper}
+												//disabled={!this.props.showStepper}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-2">
@@ -794,24 +779,24 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem.length > 0
 														) {
 															return (
-                                                                <select
-                                                                    name="state"
-                                                                    className={'form-control'}
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            state: event.target.value,
-                                                                            validState: ''
-                                                                        });
-                                                                    }}
-                                                                    error={this.state.validState === '' ? false : true}
-                                                                    value={this.state.state}
-                                                                    showNone={false}
-                                                                >
-                                                                    <option value="">Select a state</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
+																<select
+																	name="state"
+																	className={'form-control'}
+																	onChange={(event) => {
+																		this.setState({
+																			state: event.target.value,
+																			validState: ''
+																		});
+																	}}
+																	error={this.state.validState === '' ? false : true}
+																	value={this.state.state}
+																	showNone={false}
+																>
+																	<option value="">Select a state</option>
+																	{data.getcatalogitem.map((item) => (
+																		<option value={item.Id}>{item.Name}</option>
+																	))}
+																</select>
 																// <SelectForm
 																// 	name="state"
 																// 	value={this.state.state}
@@ -845,24 +830,24 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem.length > 0
 														) {
 															return (
-                                                                <select
-                                                                    name="city"
-                                                                    className={'form-control'}
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            city: event.target.value,
-                                                                            validCity: ''
-                                                                        })
-                                                                    }}
-                                                                    error={this.state.validCity === '' ? false : true}
-                                                                    value={this.state.city}
-                                                                    showNone={false}
-                                                                >
-                                                                    <option value="">Select a city</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
+																<select
+																	name="city"
+																	className={'form-control'}
+																	onChange={(event) => {
+																		this.setState({
+																			city: event.target.value,
+																			validCity: ''
+																		})
+																	}}
+																	error={this.state.validCity === '' ? false : true}
+																	value={this.state.city}
+																	showNone={false}
+																>
+																	<option value="">Select a city</option>
+																	{data.getcatalogitem.map((item) => (
+																		<option value={item.Id}>{item.Name}</option>
+																	))}
+																</select>
 																// <SelectForm
 																// 	name="city"
 																// 	value={this.state.city}
@@ -907,8 +892,8 @@ class GeneralInfoProperty extends Component {
 														this.state.phoneNumberValid ? (
 															'form-control'
 														) : (
-															'input-form _invalid'
-														)
+																'input-form _invalid'
+															)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -933,8 +918,8 @@ class GeneralInfoProperty extends Component {
 														this.state.faxNumberValid ? (
 															'form-control'
 														) : (
-															'input-form _invalid'
-														)
+																'input-form _invalid'
+															)
 													}
 													onChange={(e) => {
 														this.setState({

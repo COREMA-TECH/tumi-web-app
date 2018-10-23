@@ -3,7 +3,6 @@
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: flex-start;
 
     padding-bottom: 2em;
@@ -16,7 +15,8 @@
     overflow: hidden;
 
     position: relative;
-    margin-bottom: .5em;
+    margin-bottom: 1em;
+    min-height: 190px;
 }
 
 .previous-employment-card__job-title {

@@ -403,16 +403,40 @@ class ExhibitContract extends Component {
                     style={{ width: '90%', padding: '0px', margin: '0 auto' }}
                 >
                     <DialogTitle style={{ padding: '0px' }}>
-                        <div className="card-form-header orange">
+                        <div className="modal-header">
                             {' '}
                             {this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
                                 'Edit  Position/Rate'
                             ) : (
-                                    'New Contract Preview'
+                                    <h5 className="modal-title">New Contract Preview</h5>
                                 )}
                         </div>
                     </DialogTitle>
                     <DialogContent style={{ minWidth: 750, padding: '0px' }}>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <button
+                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
+                                    variant="fab"
+                                    color="secondary"
+                                    className={'btn btn-danger pull-right'}
+                                    onClick={this.cancelContractHandler}
+                                >
+                                    Clear <i class="fas fa-times"></i>
+                                </button>
+                                <button
+                                    //	disabled={this.state.loading || !this.state.enableCancelButton}
+                                    variant="fab"
+                                    color="primary"
+                                    className={'btn btn-info mr-1 pull-right'}
+                                    onClick={this.sendContract}
+                                >
+                                    Send <i class="fas fa-envelope"></i>
+                                </button>
+
+
+                            </div>
+                        </div>
                         <div id="agreement" className="exhibit-content">
                             {this.state.openModal && renderHTML(this.state.PdfUrl)}
                         </div>
@@ -421,78 +445,28 @@ class ExhibitContract extends Component {
                         <div className="exhibit-button-right">
                             {loading && <CircularProgress size={68} className={classes.fabProgress} />}
                         </div>
-                        <div className="exhibit-button-left">
-                            {/*<Tooltip title={'Print Contract'}>
-								<div>
-									<Button
-										//	disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.downloadContractHandler}
-									>
-										<PrintIcon />
-									</Button>
-								</div>
-							</Tooltip>
-							<Tooltip title={'Download Contract'}>
-								<div >
-									<Button
-										//	disabled={this.state.loading || !this.state.enableCancelButton}
-										variant="fab"
-										color="primary"
-										className={buttonClassname}
-										onClick={this.downloadContractHandler}
-									>
-										<DownloadIcon />
-									</Button>
-								</div>
-
-							</Tooltip>*/}
-                            <Tooltip title={'Send Contract by email'}>
-                                <div>
-                                    <Button
-                                        //	disabled={this.state.loading || !this.state.enableCancelButton}
-                                        variant="fab"
-                                        color="primary"
-                                        className={buttonClassname}
-                                        onClick={this.sendContract}
-                                    >
-                                        <SendIcon />
-                                    </Button>
-                                </div>
-                            </Tooltip>
-                            <Tooltip title={'Cancel Operation'}>
-                                <div>
-                                    <Button
-                                        //	disabled={this.state.loading || !this.state.enableCancelButton}
-                                        variant="fab"
-                                        color="secondary"
-                                        className={buttonClassname}
-                                        onClick={this.cancelContractHandler}
-                                    >
-                                        <ClearIcon />
-                                    </Button>
-                                </div>
-                            </Tooltip>
-                        </div>
                     </DialogActions>
                 </Dialog>
 
-                <div className="contract-body">
-                    <div className="contract-body__content">
-                        <div className="contract-body-row">
+                <div className="roiw">
+                    <div className="col-md-12">
+                        <h5>Exhibit A (Rates & Positions)</h5>
+                    </div>
+                </div>
+                <PositionsCompanyForm
+                    idCompany={this.props.companyId}
+                    idContract={this.props.contractId}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    showStepper={false}
+                />
+                <div className="">
+                    <div className="">
+                        {/*<div className="contract-body-row">
                             <div className="contract-body-row__content">
                                 <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Exhibit A (Rates & Positions)</span>
+                                    <span className="contract-body__subtitle"></span>
                                 </div>
                                 <div className="contract-body-row__form contract-body-row__form--lg">
-                                    <PositionsCompanyForm
-                                        idCompany={this.props.companyId}
-                                        idContract={this.props.contractId}
-                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                        showStepper={false}
-                                    />
                                 </div>
                             </div>
 
@@ -600,9 +574,9 @@ class ExhibitContract extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*/}
 
-                        <div className="contract-footer">
+                        <div className="row">
                             {/*<div
 								className="contract-next-button"
 								onClick={() => {
@@ -612,7 +586,7 @@ class ExhibitContract extends Component {
 							>
 								Save
 							</div>*/}
-                            <div className={classes.wrapper}>
+                            <div className="col-md-12">
                                 <Button
                                     //className="contract-next-button"
                                     className={classes.buttonCreateContract}

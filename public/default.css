@@ -7603,12 +7603,9 @@ label:not(.custom-file-label):not(.form-check-label) {
   .input-label-right {
     text-align: right; } }
 
-.input-file-name {
-  border-radius: 5px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: .45em;
-  width: 200px; }
+.input-group-file {
+  padding-top: 10px;
+  padding-bottom: 10px; }
 
 .input-enable {
   background-color: #FFF; }
@@ -7775,7 +7772,7 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .onoffswitch {
   position: relative;
-  width: 80px;
+  width: 78px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none; }
@@ -7787,8 +7784,8 @@ label:not(.custom-file-label):not(.form-check-label) {
   display: block;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid TRANSPARENT;
-  border-radius: 5px; }
+  border: 1px solid #FFF;
+  border-radius: 20px; }
 
 .onoffswitch-inner {
   display: block;
@@ -7805,7 +7802,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   height: 30px;
   padding: 0;
   line-height: 30px;
-  font-size: 18px;
+  font-size: 11px;
   color: white;
   font-family: Trebuchet, Arial, sans-serif;
   font-weight: bold;
@@ -7815,8 +7812,8 @@ label:not(.custom-file-label):not(.form-check-label) {
 .onoffswitch-inner:before {
   content: "ON";
   padding-left: 10px;
-  background-color: #34A7C1;
-  color: #FFFFFF; }
+  background-color: #3ca2c8;
+  color: #FFF; }
 
 .onoffswitch-inner:after {
   content: "OFF";
@@ -7827,15 +7824,15 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .onoffswitch-switch {
   display: block;
-  width: 18px;
-  margin: 6px;
-  background: #FFFFFF;
+  width: 24px;
+  margin: 3px;
+  background: #FFF;
   position: absolute;
   top: 0;
   bottom: 0;
-  right: 46px;
-  border: 2px solid TRANSPARENT;
-  border-radius: 5px;
+  right: 44px;
+  border: 2px solid #FFF;
+  border-radius: 20px;
   -webkit-transition: all 0.3s ease-in 0s;
   -o-transition: all 0.3s ease-in 0s;
   transition: all 0.3s ease-in 0s; }
