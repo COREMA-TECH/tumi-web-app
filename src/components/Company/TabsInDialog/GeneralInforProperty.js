@@ -976,15 +976,21 @@ class GeneralInfoProperty extends Component {
 												<SelectForm
 													data={days}
 													update={(value) => {
+														//Calculate End Week
+														var idEndWeek = value - 1;
+														if (idEndWeek <= 0) idEndWeek = 7;
+
 														if (value === 0) {
 															this.setState({
 																startWeek: value,
-																validStartWeek: 'valid'
+																validStartWeek: 'valid',
+																endWeek: idEndWeek
 															});
 														} else {
 															this.setState({
 																startWeek: value,
-																validStartWeek: ''
+																validStartWeek: '',
+																endWeek: idEndWeek
 															});
 														}
 													}}
@@ -998,15 +1004,20 @@ class GeneralInfoProperty extends Component {
 												<SelectForm
 													data={days}
 													update={(value) => {
+														//Calculate Start Week
+														var idStartWeek = value + 1;
+														if (idStartWeek >= 8) idStartWeek = 1;
 														if (value === 0) {
 															this.setState({
 																endWeek: value,
-																validEndWeek: 'valid'
+																validEndWeek: 'valid',
+																startWeek: idStartWeek
 															});
 														} else {
 															this.setState({
 																endWeek: value,
-																validEndWeek: ''
+																validEndWeek: '',
+																startWeek: idStartWeek
 															});
 														}
 													}}

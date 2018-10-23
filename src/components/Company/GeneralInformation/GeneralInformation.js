@@ -850,9 +850,14 @@ class GeneralInformation extends Component {
 	};
 
 	updateStartWeek = (id) => {
+		//Calculate End Week
+		var idEndWeek = id - 1;
+		if (idEndWeek <= 0) idEndWeek = 7;
+
 		this.setState(
 			{
-				startWeek: id
+				startWeek: id,
+				endWeek: idEndWeek
 			},
 			() => {
 				this.validateField('startWeek', id);
@@ -861,9 +866,14 @@ class GeneralInformation extends Component {
 	};
 
 	updateEndWeek = (id) => {
+		//Calculate Start Week
+		var idStartWeek = id + 1;
+		if (idStartWeek >= 8) idStartWeek = 1;
+
 		this.setState(
 			{
-				endWeek: id
+				endWeek: id,
+				startWeek: idStartWeek
 			},
 			() => {
 				this.validateField('endWeek', id);
