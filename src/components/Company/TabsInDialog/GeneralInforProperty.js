@@ -794,18 +794,36 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem.length > 0
 														) {
 															return (
-																<SelectForm
-																	name="state"
-																	value={this.state.state}
-																	data={data.getcatalogitem}
-																	error={this.state.validState === '' ? false : true}
-																	update={(value) => {
-																		this.setState({
-																			state: value,
-																			validState: ''
-																		});
-																	}}
-																/>
+                                                                <select
+                                                                    name="state"
+                                                                    className={'form-control'}
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            state: event.target.value,
+                                                                            validState: ''
+                                                                        });
+                                                                    }}
+                                                                    error={this.state.validState === '' ? false : true}
+                                                                    value={this.state.state}
+                                                                    showNone={false}
+                                                                >
+                                                                    <option value="">Select a state</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+																// <SelectForm
+																// 	name="state"
+																// 	value={this.state.state}
+																// 	data={data.getcatalogitem}
+																// 	error={this.state.validState === '' ? false : true}
+																// 	update={(value) => {
+																// 		this.setState({
+																// 			state: value,
+																// 			validState: ''
+																// 		});
+																// 	}}
+																// />
 															);
 														}
 														return <SelectNothingToDisplay />;
@@ -827,18 +845,36 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem.length > 0
 														) {
 															return (
-																<SelectForm
-																	name="city"
-																	value={this.state.city}
-																	data={data.getcatalogitem}
-																	error={this.state.validCity === '' ? false : true}
-																	update={(value) => {
-																		this.setState({
-																			city: value,
-																			validCity: ''
-																		});
-																	}}
-																/>
+                                                                <select
+                                                                    name="city"
+                                                                    className={'form-control'}
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            city: event.target.value,
+                                                                            validCity: ''
+                                                                        })
+                                                                    }}
+                                                                    error={this.state.validCity === '' ? false : true}
+                                                                    value={this.state.city}
+                                                                    showNone={false}
+                                                                >
+                                                                    <option value="">Select a city</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+																// <SelectForm
+																// 	name="city"
+																// 	value={this.state.city}
+																// 	data={data.getcatalogitem}
+																// 	error={this.state.validCity === '' ? false : true}
+																// 	update={(value) => {
+																// 		this.setState({
+																// 			city: value,
+																// 			validCity: ''
+																// 		});
+																// 	}}
+																// />
 															);
 														}
 														return <SelectNothingToDisplay />;

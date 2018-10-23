@@ -1089,7 +1089,7 @@ class GeneralInformation extends Component {
 	};
 	renderEditControl = (property, enableEdit) => {
 		return (
-			<div className="file-name-container">
+			<div className="file-name-container group-title">
 				{this.renderFileNameControls(property, enableEdit)}
 				{this.props.showStepper && this.renderEditButtons(property, enableEdit)}
 			</div>

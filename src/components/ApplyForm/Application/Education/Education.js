@@ -349,7 +349,7 @@ class Education extends Component {
         let renderEducationSection = () => (
             <div className="row">
                 {this.state.schools.map((schoolItem) => (
-                    <div className="col-xs-12 col-md-3">
+                    <div className="col-xs-12 col-md-4">
                         <EducationCard
                             type={schoolItem.schoolType}
                             educationName={schoolItem.educationName}

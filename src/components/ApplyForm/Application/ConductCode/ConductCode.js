@@ -9,6 +9,7 @@ import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY }
 import { ADD_CONDUCT_CODE } from "./Mutations";
 import withGlobalContent from "../../../Generic/Global";
 import PropTypes from 'prop-types';
+import AntiHarassmentPDF from "../../../../templates/en/AntiHarassmentPDF";
 //import html from '../../../../data/Package hire/CondeConduct';
 
 if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
@@ -300,7 +301,6 @@ class ConductCode extends Component {
                                                 <p>&nbsp;</p>
                                 `) : ''
                                     }
-
                                 </div> </div>
                         </div>
                     </div>

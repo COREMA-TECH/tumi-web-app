@@ -38,5 +38,9 @@
 	{
 		"id": 9,
 		"label": "Download"
+	},
+	{
+		"id": 10,
+		"label": "Clear"
 	}
 ]
