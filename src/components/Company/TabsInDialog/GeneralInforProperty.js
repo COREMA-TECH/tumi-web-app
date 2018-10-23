@@ -1012,15 +1012,21 @@ class GeneralInfoProperty extends Component {
 												<SelectForm
 													data={days}
 													update={(value) => {
+														//Calculate End Week
+														var idEndWeek = value - 1;
+														if (idEndWeek <= 0) idEndWeek = 7;
+
 														if (value === 0) {
 															this.setState({
 																startWeek: value,
-																validStartWeek: 'valid'
+																validStartWeek: 'valid',
+																endWeek: idEndWeek
 															});
 														} else {
 															this.setState({
 																startWeek: value,
-																validStartWeek: ''
+																validStartWeek: '',
+																endWeek: idEndWeek
 															});
 														}
 													}}
@@ -1034,15 +1040,20 @@ class GeneralInfoProperty extends Component {
 												<SelectForm
 													data={days}
 													update={(value) => {
+														//Calculate Start Week
+														var idStartWeek = value + 1;
+														if (idStartWeek >= 8) idStartWeek = 1;
 														if (value === 0) {
 															this.setState({
 																endWeek: value,
-																validEndWeek: 'valid'
+																validEndWeek: 'valid',
+																startWeek: idStartWeek
 															});
 														} else {
 															this.setState({
 																endWeek: value,
-																validEndWeek: ''
+																validEndWeek: '',
+																startWeek: idStartWeek
 															});
 														}
 													}}
@@ -1062,6 +1073,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.contractURL}
 													fileName={this.state.contractFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1075,6 +1087,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.insuranceURL}
 													fileName={this.state.insuranceFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1088,6 +1101,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.otherURL}
 													fileName={this.state.otherFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1101,6 +1115,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.other01URL}
 													fileName={this.state.other01File}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 										</div>

@@ -137,5 +137,7 @@ class FileUpload extends Component {
 		acceptAttachFile: PropTypes.string
 	};
 }
-
+FileUpload.propTypes = {
+	handleOpenSnackbar: PropTypes.func.isRequired
+};
 export default FileUpload;

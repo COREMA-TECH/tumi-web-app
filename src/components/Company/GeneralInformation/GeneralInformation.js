@@ -850,9 +850,14 @@ class GeneralInformation extends Component {
 	};
 
 	updateStartWeek = (id) => {
+		//Calculate End Week
+		var idEndWeek = id - 1;
+		if (idEndWeek <= 0) idEndWeek = 7;
+
 		this.setState(
 			{
-				startWeek: id
+				startWeek: id,
+				endWeek: idEndWeek
 			},
 			() => {
 				this.validateField('startWeek', id);
@@ -861,9 +866,14 @@ class GeneralInformation extends Component {
 	};
 
 	updateEndWeek = (id) => {
+		//Calculate Start Week
+		var idStartWeek = id + 1;
+		if (idStartWeek >= 8) idStartWeek = 1;
+
 		this.setState(
 			{
-				endWeek: id
+				endWeek: id,
+				startWeek: idStartWeek
 			},
 			() => {
 				this.validateField('endWeek', id);
@@ -1500,6 +1510,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 											url={this.state.contractURL}
 											fileName={this.state.contractFile}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
 										/>
 									</div>
 									<div className="col-md-6">
@@ -1514,6 +1525,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 											url={this.state.insuranceURL}
 											fileName={this.state.insuranceFile}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
 										/>
 									</div>
 									<div className="col-md-6">
@@ -1529,6 +1541,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 											url={this.state.otherURL}
 											fileName={this.state.otherFile}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
 										/>
 									</div>
 									<div className="col-md-6">
@@ -1543,6 +1556,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 											url={this.state.other01URL}
 											fileName={this.state.other01File}
+											handleOpenSnackbar={this.props.handleOpenSnackbar}
 										/>
 									</div>
 								</div>

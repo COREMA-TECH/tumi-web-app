@@ -13,7 +13,7 @@ import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
 
 if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
-    localStorage.setItem('languageForm', 'en');
+    localStorage.setItem('languageForm', 'es');
 }
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
