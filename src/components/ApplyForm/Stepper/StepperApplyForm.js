@@ -2420,8 +2420,7 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step, history) => {
             switch (step) {
                 case 0:
-                    return renderSkillsSection();
-                // return renderApplicantInformationSection();
+                    return renderApplicantInformationSection();
                 case 1:
                     return renderlanguagesSection();
                 case 2:
