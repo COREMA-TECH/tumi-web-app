@@ -154,12 +154,14 @@
  */
 .skills-container {
     width: 100%;
-    padding: .75em;
+    padding: .15em;
     background: rgba(0, 0, 0, 0.01);
     border: 1px solid #efefef;
 
     border-radius: 5px;
     margin-bottom: 5px;
+    margin-left: 1.8em;
+    margin-right: 1.8em;
     color: #3ca2c8;
     font-weight: 100;
 

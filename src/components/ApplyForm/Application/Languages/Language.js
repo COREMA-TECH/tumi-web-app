@@ -199,7 +199,7 @@ class Language extends Component {
 						}}
 					>
 						<div className="col-md-4">
-							<span className="primary"> {languagesTable[0].label}</span>
+							<span className="primary"> * {languagesTable[0].label}</span>
 							<select
 								id="nameLanguage"
 								name="languageName"
@@ -210,25 +210,10 @@ class Language extends Component {
 								<option value="">{spanishActions[5].label}</option>
 								{this.state.languagesLoaded.map((item) => <option value={item.Id}>{item.Name}</option>)}
 							</select>
-
-							{/*<Query query={GET_LANGUAGES_QUERY}>*/}
-							{/*{({loading, error, data, refetch, networkStatus}) => {*/}
-							{/*//if (networkStatus === 4) return <LinearProgress />;*/}
-							{/*if (loading) return <LinearProgress/>;*/}
-							{/*if (error) return <p>Error </p>;*/}
-							{/*if (this.state.languagesLoaded != null && this.state.languagesLoaded.length > 0) {*/}
-							{/*return (*/}
-							{/**/}
-							{/*);*/}
-							{/*}*/}
-							{/*return <SelectNothingToDisplay/>;*/}
-							{/*}}*/}
-							{/*</Query>*/}
-							{/*<input*/}
 							<span className="check-icon" />
 						</div>
 						<div className="col-md-3">
-							<span className="primary">{languagesTable[1].label}</span>
+							<span className="primary">* {languagesTable[1].label}</span>
 							<select
 								required
 								id="conversationLanguage"
@@ -242,7 +227,7 @@ class Language extends Component {
 							<span className="check-icon" />
 						</div>
 						<div className="col-md-3">
-							<span className="primary">{languagesTable[2].label}</span>
+							<span className="primary">* {languagesTable[2].label}</span>
 							<select
 								required
 								id="writingLanguage"
@@ -266,91 +251,85 @@ class Language extends Component {
 					''
 				)}
 				<br />
-				{this.state.languages.length > 0 ? (
-					<div className="skills-container skills-container--header">
+				<div className="row">
+					<div className="row">
 						<div className="row">
-							<div className="col-md-3">
-								<span>{languagesTable[0].label}</span>
-							</div>
-							<div className="col-md-4">
-								<span>{languagesTable[1].label}</span>
-							</div>
-							<div className="col-md-4">
-								<span>{languagesTable[2].label}</span>
-							</div>
-						</div>
-					</div>
-				) : (
-					''
-				)}
+							{this.state.languages.length > 0 ? (
+								<div className="skills-container skills-container--header">
+									<div className="row">
+										<div className="col-md-1" />
+										<div className="col-md-3">
+											<span>{languagesTable[0].label}</span>
+										</div>
+										<div className="col-md-4">
+											<span>{languagesTable[1].label}</span>
+										</div>
+										<div className="col-md-4">
+											<span>{languagesTable[2].label}</span>
+										</div>
+									</div>
+								</div>
+							) : (
+								''
+							)}
 
-				{this.state.languages.map((languageItem) => (
-					<div key={uuidv4()} className="skills-container">
-						<div className="row">
-							<div className="col-md-3">
-								<span>
-									{this.state.languagesLoaded.map((item) => {
-										if (item.Id == languageItem.language) {
-											return item.Name.trim();
-										}
-									})}
-								</span>
-							</div>
-							<div className="col-md-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
-										if (item.Id == languageItem.conversation) {
-											return item.Name;
-										}
-									})}
-								</span>
-							</div>
-							<div className="col-md-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
-										if (item.Id == languageItem.writing) {
-											return item.Name;
-										}
-									})}
-								</span>
-							</div>
-							<div className="col-md-1">
-								<span
-									className="delete-school-button"
-									onClick={() => {
-										this.setState(
-											(prevState) => ({
-												languages: this.state.languages.filter((_, i) => {
-													return _.uuid !== languageItem.uuid;
-												})
-											}),
-											() => {
-												if (languageItem.id !== undefined) {
-													this.removeLanguageById(languageItem.id);
-												}
-											}
-										);
-									}}
-								>
-									<i className="fas fa-trash-alt" />
-								</span>
-								{/*<Button*/}
-								{/*className="deleteSkillSection"*/}
-								{/*onClick={() => {*/}
-								{/*this.setState((prevState) => ({*/}
-								{/*languages: this.state.languages.filter((_, i) => {*/}
-								{/*console.log(this.state.languages);*/}
-								{/*return _.uuid !== languageItem.uuid;*/}
-								{/*})*/}
-								{/*}));*/}
-								{/*}}*/}
-								{/*>*/}
-								{/*x*/}
-								{/*</Button>*/}
-							</div>
+							{this.state.languages.map((languageItem) => (
+								<div key={uuidv4()} className="skills-container">
+									<div className="row">
+										<div className="col-md-1">
+											<span
+												className="delete-school-button"
+												onClick={() => {
+													this.setState(
+														(prevState) => ({
+															languages: this.state.languages.filter((_, i) => {
+																return _.uuid !== languageItem.uuid;
+															})
+														}),
+														() => {
+															if (languageItem.id !== undefined) {
+																this.removeLanguageById(languageItem.id);
+															}
+														}
+													);
+												}}
+											>
+												<i className="fas fa-trash-alt" />
+											</span>
+										</div>
+										<div className="col-md-3">
+											<span>
+												{this.state.languagesLoaded.map((item) => {
+													if (item.Id == languageItem.language) {
+														return item.Name.trim();
+													}
+												})}
+											</span>
+										</div>
+										<div className="col-md-4">
+											<span>
+												{languageLevelsJSON.map((item) => {
+													if (item.Id == languageItem.conversation) {
+														return item.Name;
+													}
+												})}
+											</span>
+										</div>
+										<div className="col-md-4">
+											<span>
+												{languageLevelsJSON.map((item) => {
+													if (item.Id == languageItem.writing) {
+														return item.Name;
+													}
+												})}
+											</span>
+										</div>
+									</div>
+								</div>
+							))}
 						</div>
 					</div>
-				))}
+				</div>
 			</div>
 		);
 

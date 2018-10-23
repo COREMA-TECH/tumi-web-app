@@ -794,18 +794,36 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem.length > 0
 														) {
 															return (
-																<SelectForm
-																	name="state"
-																	value={this.state.state}
-																	data={data.getcatalogitem}
-																	error={this.state.validState === '' ? false : true}
-																	update={(value) => {
-																		this.setState({
-																			state: value,
-																			validState: ''
-																		});
-																	}}
-																/>
+                                                                <select
+                                                                    name="state"
+                                                                    className={'form-control'}
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            state: event.target.value,
+                                                                            validState: ''
+                                                                        });
+                                                                    }}
+                                                                    error={this.state.validState === '' ? false : true}
+                                                                    value={this.state.state}
+                                                                    showNone={false}
+                                                                >
+                                                                    <option value="">Select a state</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+																// <SelectForm
+																// 	name="state"
+																// 	value={this.state.state}
+																// 	data={data.getcatalogitem}
+																// 	error={this.state.validState === '' ? false : true}
+																// 	update={(value) => {
+																// 		this.setState({
+																// 			state: value,
+																// 			validState: ''
+																// 		});
+																// 	}}
+																// />
 															);
 														}
 														return <SelectNothingToDisplay />;
@@ -827,18 +845,36 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem.length > 0
 														) {
 															return (
-																<SelectForm
-																	name="city"
-																	value={this.state.city}
-																	data={data.getcatalogitem}
-																	error={this.state.validCity === '' ? false : true}
-																	update={(value) => {
-																		this.setState({
-																			city: value,
-																			validCity: ''
-																		});
-																	}}
-																/>
+                                                                <select
+                                                                    name="city"
+                                                                    className={'form-control'}
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            city: event.target.value,
+                                                                            validCity: ''
+                                                                        })
+                                                                    }}
+                                                                    error={this.state.validCity === '' ? false : true}
+                                                                    value={this.state.city}
+                                                                    showNone={false}
+                                                                >
+                                                                    <option value="">Select a city</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+																// <SelectForm
+																// 	name="city"
+																// 	value={this.state.city}
+																// 	data={data.getcatalogitem}
+																// 	error={this.state.validCity === '' ? false : true}
+																// 	update={(value) => {
+																// 		this.setState({
+																// 			city: value,
+																// 			validCity: ''
+																// 		});
+																// 	}}
+																// />
 															);
 														}
 														return <SelectNothingToDisplay />;
@@ -976,15 +1012,21 @@ class GeneralInfoProperty extends Component {
 												<SelectForm
 													data={days}
 													update={(value) => {
+														//Calculate End Week
+														var idEndWeek = value - 1;
+														if (idEndWeek <= 0) idEndWeek = 7;
+
 														if (value === 0) {
 															this.setState({
 																startWeek: value,
-																validStartWeek: 'valid'
+																validStartWeek: 'valid',
+																endWeek: idEndWeek
 															});
 														} else {
 															this.setState({
 																startWeek: value,
-																validStartWeek: ''
+																validStartWeek: '',
+																endWeek: idEndWeek
 															});
 														}
 													}}
@@ -998,15 +1040,20 @@ class GeneralInfoProperty extends Component {
 												<SelectForm
 													data={days}
 													update={(value) => {
+														//Calculate Start Week
+														var idStartWeek = value + 1;
+														if (idStartWeek >= 8) idStartWeek = 1;
 														if (value === 0) {
 															this.setState({
 																endWeek: value,
-																validEndWeek: 'valid'
+																validEndWeek: 'valid',
+																startWeek: idStartWeek
 															});
 														} else {
 															this.setState({
 																endWeek: value,
-																validEndWeek: ''
+																validEndWeek: '',
+																startWeek: idStartWeek
 															});
 														}
 													}}
@@ -1026,6 +1073,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.contractURL}
 													fileName={this.state.contractFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1039,6 +1087,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.insuranceURL}
 													fileName={this.state.insuranceFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1052,6 +1101,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.otherURL}
 													fileName={this.state.otherFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1065,6 +1115,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.other01URL}
 													fileName={this.state.other01File}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 										</div>

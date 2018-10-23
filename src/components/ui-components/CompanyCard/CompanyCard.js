@@ -38,7 +38,8 @@ class CompanyCard extends React.Component {
 		return (
 			<Route
 				render={({ history }) => (
-					<div className="company-card"
+					<div
+						className="company-card"
 						onClick={() => {
 							history.push({
 								pathname: '/home/company/edit',
@@ -57,12 +58,12 @@ class CompanyCard extends React.Component {
 												//disable={!true}
 												disabled={
 													this.state.idToEdit != null &&
-														this.state.idToEdit != '' &&
-														this.state.idToEdit != 0 ? (
-															!this.Login.AllowEdit
-														) : (
-															!this.Login.AllowInsert
-														)
+													this.state.idToEdit != '' &&
+													this.state.idToEdit != 0 ? (
+														!this.Login.AllowEdit
+													) : (
+														!this.Login.AllowInsert
+													)
 												}
 												className="delete-company-icon"
 												onClick={(event) => {
@@ -76,8 +77,7 @@ class CompanyCard extends React.Component {
 													this.setState({
 														deleted: true
 													});*/
-													//	alert("en el primer");
-													//console.log(this.props);
+
 													event.stopPropagation();
 													return this.props.delete(this.props.idCompany);
 												}}

@@ -599,7 +599,7 @@ class VerticalLinearStepper extends Component {
                 <h4 className="ApplyBlock-title">Applicant Information</h4>
                 <div className="row">
                     <div className="col-md-3">
-                        <span className="primary"> First Name</span>
+                        <span className="primary">* First Name</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -641,7 +641,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <span className="primary"> Last Name</span>
+                        <span className="primary">* Last Name</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -662,7 +662,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <span className="primary"> Date</span>
+                        <span className="primary">* Date</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -684,7 +684,7 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row form-section">
                     <div className="col-md-8">
-                        <span className="primary"> Street Address</span>
+                        <span className="primary">* Street Address</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -726,7 +726,7 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-4">
-                        <span className="primary"> State</span>
+                        <span className="primary">* State</span>
                         <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
@@ -758,7 +758,7 @@ class VerticalLinearStepper extends Component {
                         </Query>
                     </div>
                     <div className="col-md-4">
-                        <span className="primary"> City</span>
+                        <span className="primary">* City</span>
                         <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
@@ -788,7 +788,7 @@ class VerticalLinearStepper extends Component {
                         </Query>
                     </div>
                     <div className="col-md-4">
-                        <span className="primary"> Zip Code</span>
+                        <span className="primary">* Zip Code</span>
                         <div className="input-container--validated">
                             <InputMask
                                 id="zipCode"
@@ -833,7 +833,7 @@ class VerticalLinearStepper extends Component {
                     </div>
 
                     <div className="col-md-4">
-                        <span className="primary"> Cell Phone</span>
+                        <span className="primary">* Cell Phone</span>
                         <div className="input-container--validated">
                             <InputMask
                                 id="cell-number"
@@ -856,7 +856,7 @@ class VerticalLinearStepper extends Component {
                     </div>
 
                     <div className="col-md-4">
-                        <span className="primary"> Social Security Number</span>
+                        <span className="primary">* Social Security Number</span>
                         <div className="input-container--validated">
                             <InputMask
                                 id="socialSecurityNumber"
@@ -928,7 +928,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <span className="primary"> Type Of ID</span>
+                        <span className="primary">* Type Of ID</span>
                         <select
                             name="typeOfID"
                             id="typeOfID"
@@ -954,7 +954,7 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-6">
-                        <span className="primary"> Expire Date ID</span>
+                        <span className="primary">* Expire Date ID</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -975,7 +975,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <span className="primary"> Email Address</span>
+                        <span className="primary">* Email Address</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -1032,7 +1032,7 @@ class VerticalLinearStepper extends Component {
                         <i className="optional" />
                     </div>
                     <div className="col-md-6">
-                        <span className="primary"> Date Available</span>
+                        <span className="primary">* Date Available</span>
                         <div className="input-container--validated">
                             <input
                                 onChange={(event) => {
@@ -1356,7 +1356,7 @@ class VerticalLinearStepper extends Component {
                     <DialogContent style={{ width: '450px' }}>
                         <div className="row">
                             <div className="col-md-12">
-                                <span className="primary">Skill Name</span>
+                                <span className="primary">* Skill Name</span>
                                 <br />
                                 <input
                                     id="description"
@@ -1524,7 +1524,7 @@ class VerticalLinearStepper extends Component {
                 <hr className="separator" />
                 <div className="row">
                     <div className="col-md-3">
-                        <label className="primary">Field of Study</label>
+                        <label className="primary">* Field of Study</label>
                         <div className="input-container--validated">
                             <input
                                 id="studyType"
@@ -1541,7 +1541,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <label className="primary">Name (Institution)</label>
+                        <label className="primary">* Name (Institution)</label>
                         <div className="input-container--validated">
                             <input
                                 form="education-form"
@@ -1558,7 +1558,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <label className="primary">Address</label>
+                        <label className="primary">* Address</label>
                         <div className="input-container--validated">
                             <input
                                 form="education-form"
@@ -1577,7 +1577,7 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-3">
-                        <span className="primary"> Time Period</span>
+                        <span className="primary">* Time Period</span>
                         <div className="input-container--validated">
                             <input
                                 form="education-form"
@@ -1594,7 +1594,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <span className="primary">To</span>
+                        <span className="primary">* To</span>
                         <div className="input-container--validated">
                             <input
                                 form="education-form"
@@ -1924,7 +1924,7 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-8">
-                        <span className="primary"> Company</span>
+                        <span className="primary">* Company</span>
                         <div className="input-container--validated">
                             <input
                                 id="companyNameEmployment"
@@ -1941,7 +1941,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <span className="primary"> Phone</span>
+                        <span className="primary">* Phone</span>
                         <div className="input-container--validated">
                             <InputMask
                                 id="companyPhoneEmployment"
@@ -1975,7 +1975,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-8">
-                        <span className="primary"> Address</span>
+                        <span className="primary">* Address</span>
                         <div className="input-container--validated">
                             <input
                                 id="companyAddressEmployment"
@@ -1992,7 +1992,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <span className="primary"> Supervisor</span>
+                        <span className="primary">* Supervisor</span>
                         <div className="input-container--validated">
                             <input
                                 id="companySupervisor"
@@ -2009,7 +2009,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-8">
-                        <span className="primary"> Job Title</span>
+                        <span className="primary">* Job Title</span>
                         <div className="input-container--validated">
                             <input
                                 id="companyJobTitle"
@@ -2026,7 +2026,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-4">
-                        <span className="primary"> Pay Rate</span>
+                        <span className="primary">* Pay Rate</span>
                         <div className="input-container--validated">
                             <input
                                 id="companyPayRate"
@@ -2043,7 +2043,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <span className="primary"> Dates</span>
+                        <span className="primary">* Dates</span>
                         <div className="input-container--validated">
                             <input
                                 id="companyStartDate"
@@ -2060,7 +2060,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <span className="primary">To: </span>
+                        <span className="primary">* To: </span>
                         <div className="input-container--validated">
                             <input
                                 id="companyEndDate"
@@ -2212,7 +2212,7 @@ class VerticalLinearStepper extends Component {
                     }}
                 >
                     <div className="col-md-4">
-                        <span className="primary"> Languages</span>
+                        <span className="primary">* Languages</span>
                         <select
                             id="nameLanguage"
                             name="languageName"
@@ -2241,7 +2241,7 @@ class VerticalLinearStepper extends Component {
                         <span className="check-icon" />
                     </div>
                     <div className="col-md-3">
-                        <span className="primary"> Conversation</span>
+                        <span className="primary">* Conversation</span>
                         <select
                             required
                             id="conversationLanguage"
@@ -2255,7 +2255,7 @@ class VerticalLinearStepper extends Component {
                         <span className="check-icon" />
                     </div>
                     <div className="col-md-3">
-                        <span className="primary"> Writing</span>
+                        <span className="primary">* Writing</span>
                         <select
                             required
                             id="writingLanguage"
