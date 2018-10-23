@@ -10,7 +10,7 @@ import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectN
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
 if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
-    localStorage.setItem('languageForm', 'en');
+    localStorage.setItem('languageForm', 'es');
 }
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
@@ -190,7 +190,7 @@ class Application extends Component {
                         zipCode: applicantData.zipCode,
                         homePhone: applicantData.homePhone,
                         cellPhone: applicantData.cellPhone,
-                        birthDay: applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0,10),
+                        birthDay: applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
                         socialSecurityNumber: applicantData.socialSecurityNumber,
                         positionApplyingFor: applicantData.positionApplyingFor,
                         car: applicantData.car,
