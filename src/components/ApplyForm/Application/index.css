@@ -20,6 +20,12 @@
     transition: all .450s;
 }
 
+@media (max-width: 720px){
+    .applicant-card {
+        margin-top: .5em;
+    }
+}
+
 .applicant-card__header {
     width: 100%;
     height: 80px;
