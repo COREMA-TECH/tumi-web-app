@@ -1,4 +1,25 @@
-{renderHTML(`<div class="WordSection1">
+import renderHTML from 'react-render-html';
+
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+
+class AntiHarassmentPdf extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            signature: '',
+            content: '',
+            date: '',
+            applicantName: '',
+            companyPhoneNumber: '',
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                {renderHTML(`<div class="WordSection1">
     <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 18.0pt; font-family: Time New Roman;">Anti-Harassment Policy</span></p>
     <h1 style="margin: 15.7pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';"><u>Policy statement</u></h1>
     <p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
@@ -201,3 +222,11 @@
 <p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
 <p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
 <p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"> Date Signed</p>`)}
+            </div>
+        );
+    }
+}
+
+AntiHarassmentPdf.propTypes = {};
+
+export default AntiHarassmentPdf;

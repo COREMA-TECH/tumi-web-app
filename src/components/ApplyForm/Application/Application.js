@@ -734,6 +734,12 @@ class Application extends Component {
                                                     onChange={(event) => {
                                                         this.setState({
                                                             scheduleRestrictions: event.target.checked
+                                                        }, () => {
+                                                            if(!this.state.scheduleRestrictions) {
+                                                                this.setState({
+                                                                    scheduleExplain: ''
+                                                                });
+                                                            }
                                                         });
                                                     }}
                                                     checked={this.state.scheduleRestrictions}
@@ -772,6 +778,12 @@ class Application extends Component {
                                                     onChange={(event) => {
                                                         this.setState({
                                                             convicted: event.target.checked
+                                                        }, () => {
+                                                            if(!this.state.convicted) {
+                                                                this.setState({
+                                                                    convictedExplain: ''
+                                                                });
+                                                            }
                                                         });
                                                     }}
                                                     checked={this.state.convicted}
