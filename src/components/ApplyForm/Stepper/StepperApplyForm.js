@@ -2433,8 +2433,6 @@ class VerticalLinearStepper extends Component {
                     return renderSkillsSection();
                 case 6:
                     return renderDisclaimerSection(history);
-                default:
-                    return 'Unknown step';
             }
         };
 
