@@ -16,6 +16,7 @@
     overflow: hidden;
 
     position: relative;
+    margin-bottom: 1em;
 }
 
 .education-card__job-title {

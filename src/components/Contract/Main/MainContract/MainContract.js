@@ -216,18 +216,16 @@ class MainContract extends Component {
 								});
 
 								return (
-									<div className="main-contract-table">
-										<div className="container">
-											<div className="row">
-												<div className="col-12">
-													<div className="contract_table_wrapper">
-														<TablesContracts
-															data={dataContract}
-															delete={(id) => {
-																this.deleteContractById(id);
-															}}
-														/>
-													</div>
+									<div className="">
+										<div className="row">
+											<div className="col-md-12">
+												<div className="">
+													<TablesContracts
+														data={dataContract}
+														delete={(id) => {
+															this.deleteContractById(id);
+														}}
+													/>
 												</div>
 											</div>
 										</div>
