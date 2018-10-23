@@ -90,20 +90,24 @@ class NewContract extends Component {
 			Contract_Name: '',
 			Contrat_Owner: localStorage.getItem('FullName'),
 			contractTemplateId: 1,
-			contractExpiration: this.getNewDate(),
+
 			Id_Contract_Template: 1,
 			Id_Entity: props.Id_Entity,
 			Id_User_Signed: '',
 			User_Signed_Title: '',
 			Signed_Date: this.getNewDate(),
 			Contract_Status: 0,
+
 			Contract_Start_Date: this.getNewDate(),
+			contractExpiration: this.getNewDate(),
+
 			Contract_Term: '',
 			NewContract_Term: '',
 			Display_Contract_Term: '',
 			Owner_Expiration_Notification: '',
 			Company_Signed: 0,
 			Company_Signed_Date: this.getNewDate(),
+
 			Id_User_Billing_Contact: '',
 			Billing_Street: '',
 			Billing_City: 0,
@@ -625,7 +629,7 @@ class NewContract extends Component {
 	`;
 
 	getbusinesscompaniesQuery = gql`
-		query getbusinesscompanies($Id: Int!){
+		query getbusinesscompanies($Id: Int!) {
 			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
 				Id
 				Name
@@ -636,8 +640,8 @@ class NewContract extends Component {
 	`;
 
 	getmanagementcompaniesQuery = gql`
-		query getbusinesscompanies($Id: Int!){
-			getbusinesscompanies(Id: $Id,Id_Parent:0, IsActive: 1, Contract_Status: "'C'") {
+		query getbusinesscompanies($Id: Int!) {
+			getbusinesscompanies(Id: $Id, Id_Parent: 0, IsActive: 1, Contract_Status: "'C'") {
 				Id
 				Name
 				Id_Parent
@@ -690,7 +694,9 @@ class NewContract extends Component {
 				var today = yyyy + '-' + mm + '-' + dd;
 
 				var todayExpiration = new Date();
-				todayExpiration.setMonth(todayExpiration.getMonth() + (parseInt(this.state.Display_Contract_Term) * 2) + 1);
+				todayExpiration.setMonth(
+					todayExpiration.getMonth() + parseInt(this.state.Display_Contract_Term) * 2 + 1
+				);
 
 				var dd = todayExpiration.getDate();
 				var mm = todayExpiration.getMonth(); //January is 0!
@@ -704,12 +710,11 @@ class NewContract extends Component {
 				}
 				var todayExpiration = yyyy + '-' + mm + '-' + dd;
 
-
 				this.state.Contract_Start_Date = today;
 				this.state.contractExpiration = todayExpiration;
 
-				console.log("aqui estoy en getcatalogitem", this.state.Contract_Start_Date);
-				console.log("aqui estoy en getcatalogitem", this.state.Contract_Expiration_Date);
+				console.log('aqui estoy en getcatalogitem', this.state.Contract_Start_Date);
+				console.log('aqui estoy en getcatalogitem', this.state.Contract_Expiration_Date);
 
 				this.renewalContract();
 			})
@@ -747,13 +752,13 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-				console.log("esto es data de business ", data);
+				console.log('esto es data de business ', data);
 				this.setState({
 					idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
 					Management: this.getString(data.getbusinesscompanies[0].Parent)
 				});
-				console.log("este es el set ", this.setState.idManagement);
-				console.log("este es el set ", this.setState.Management);
+				console.log('este es el set ', this.setState.idManagement);
+				console.log('este es el set ', this.setState.Management);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -769,13 +774,10 @@ class NewContract extends Component {
 				}
 			})
 			.then(({ data }) => {
-
 				this.setState({
 					idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
 					Management: this.getString(data.getbusinesscompanies[0].Parent)
 				});
-
-
 			})
 			.catch((error) => {
 				console.log(error);
@@ -1024,7 +1026,7 @@ class NewContract extends Component {
 		);
 	}
 
-	validateForm(func = () => { }) {
+	validateForm(func = () => {}) {
 		this.setState(
 			{
 				formValid:
@@ -1071,7 +1073,7 @@ class NewContract extends Component {
 					<div className="col-md-12">
 						<button
 							//className="contract-next-button"
-							className={"btn btn-success float-right"}
+							className={'btn btn-success float-right'}
 							onClick={() => {
 								if (this.props.contractId !== 0) {
 									this.updateContract(this.props.contractId);
@@ -1081,11 +1083,11 @@ class NewContract extends Component {
 							}}
 							disabled={this.state.loadingInsert || this.state.loadingUpdate}
 						>
-							Save <i className="fas fa-save"></i>
+							Save <i className="fas fa-save" />
 						</button>
 
-						{
-							parseInt(this.state.Contract_Status) == 2 ? (<Button
+						{parseInt(this.state.Contract_Status) == 2 ? (
+							<Button
 								className={classes.buttonSuccess}
 								onClick={() => {
 									this.getcatalogitem(this.state.Contract_Term);
@@ -1093,8 +1095,10 @@ class NewContract extends Component {
 								disabled={parseInt(this.state.Contract_Status) == 2 ? false : true}
 							>
 								Renewal Contract
-							</Button>) : ""
-						}
+							</Button>
+						) : (
+							''
+						)}
 						{(this.state.loadingInsert || this.state.loadingUpdate) && (
 							<CircularProgress size={24} className={classes.buttonProgress} />
 						)}
@@ -1184,18 +1188,24 @@ class NewContract extends Component {
 												<label>* Management Company</label>
 												<InputForm
 													value={this.state.Management}
-													change={(text) => { }}
-												//error={!this.state.CompanySignedNameValid}
+													change={(text) => {}}
+													//error={!this.state.CompanySignedNameValid}
 												/>
 											</div>
 											<div className="col-md-6">
 												<label>* Management Company</label>
-												<Query query={this.getmanagementcompaniesQuery} variables={{ Id: this.state.idManagement }} >
+												<Query
+													query={this.getmanagementcompaniesQuery}
+													variables={{ Id: this.state.idManagement }}
+												>
 													{({ loading, error, data, refetch, networkStatus }) => {
 														//if (networkStatus === 4) return <LinearProgress />;
 														if (error) return <p>Error </p>;
-														if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-															console.log("Id Management ", this.state.idManagement);
+														if (
+															data.getbusinesscompanies != null &&
+															data.getbusinesscompanies.length > 0
+														) {
+															console.log('Id Management ', this.state.idManagement);
 															return (
 																<select
 																	name="management"
@@ -1206,9 +1216,10 @@ class NewContract extends Component {
 																	onChange={(e) => {
 																		this.setState({
 																			idManagement: e.target.value
-																		})
+																		});
 																	}}
-																	value={this.state.idManagement}>
+																	value={this.state.idManagement}
+																>
 																	<option value="">Select a Management</option>
 																	{data.getbusinesscompanies.map((item) => (
 																		<option value={item.Id}>{item.Name}</option>
@@ -1236,8 +1247,6 @@ class NewContract extends Component {
 																this.validateField('Company_Signed', value);
 																this.getCompanies(this.state.Company_Signed);
 																this.getBusinessCompanies(this.state.Id_Entity);
-
-
 															}
 														);
 													}}
@@ -1279,7 +1288,7 @@ class NewContract extends Component {
 												<label>* Customer Signed Title</label>
 												<InputForm
 													value={this.state.User_Signed_Title}
-													change={(text) => { }}
+													change={(text) => {}}
 													error={!this.state.User_Signed_TitleValid}
 												/>
 											</div>
@@ -1344,7 +1353,10 @@ class NewContract extends Component {
 																//if (networkStatus === 4) return <LinearProgress />;
 																if (loading) return <LinearProgress />;
 																if (error) return <p>Error </p>;
-																if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+																if (
+																	data.getcatalogitem != null &&
+																	data.getcatalogitem.length > 0
+																) {
 																	return (
 																		<SelectForm
 																			data={data.getcatalogitem}
@@ -1354,7 +1366,11 @@ class NewContract extends Component {
 																						Contract_Term: text
 																					},
 																					() => {
-																						this.validateField('Contract_Term', text);
+																						
+																						this.validateField(
+																							'Contract_Term',
+																							text
+																						);
 																					}
 																				);
 																			}}
@@ -1371,6 +1387,7 @@ class NewContract extends Component {
 													<div className="col-md-6 col-lg-6">
 														<label>* Contract Expiration Date</label>
 														<InputDateForm
+															disabled={true}
 															placeholder={this.state.contractExpiration}
 															value={this.state.contractExpiration}
 															error={!this.state.contractExpirationValid}
@@ -1401,7 +1418,7 @@ class NewContract extends Component {
 
 														<InputForm
 															value={this.state.CompanySignedName}
-															change={(text) => { }}
+															change={(text) => {}}
 															error={!this.state.CompanySignedNameValid}
 														/>
 													</div>
@@ -1424,20 +1441,16 @@ class NewContract extends Component {
 													</div>
 												</div>
 											</div>
-
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div className="col-md-6">
-					</div>
+					<div className="col-md-6" />
 					<div className="col-md-12">
 						<div className="card">
-							<div className="card-header">
-								Billing Information
-							</div>
+							<div className="card-header">Billing Information</div>
 							<div className="card-body">
 								<div className="row">
 									<div className="col-md-6 col-lg-4">
@@ -1457,8 +1470,8 @@ class NewContract extends Component {
 													}
 												);
 											}}
-											updateEmailContact={(email) => { }}
-											updateTypeContact={(type) => { }}
+											updateEmailContact={(email) => {}}
+											updateTypeContact={(type) => {}}
 											handleOpenSnackbar={this.props.handleOpenSnackbar}
 										/>
 									</div>
@@ -1528,9 +1541,7 @@ class NewContract extends Component {
 										</Query>
 									</div>
 									<div className="col-md-6 col-lg-4">
-										<label>
-											* Billing Zip Code / Postal Code
-										</label>
+										<label>* Billing Zip Code / Postal Code</label>
 										<InputForm
 											value={this.state.Billing_Zip_Code}
 											change={(text) => {
@@ -1552,7 +1563,7 @@ class NewContract extends Component {
 						</div>
 					</div>
 				</div>
-			</div >
+			</div>
 		);
 	}
 }
