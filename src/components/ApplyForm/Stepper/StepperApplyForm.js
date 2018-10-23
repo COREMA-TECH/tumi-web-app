@@ -222,7 +222,8 @@ class VerticalLinearStepper extends Component {
                                 scheduleExplain: this.state.scheduleExplain,
                                 convicted: this.state.convicted,
                                 convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment
+                                comment: this.state.comment,
+                                isLead: true
                             }
                         }
                     })
@@ -294,7 +295,8 @@ class VerticalLinearStepper extends Component {
                                 scheduleExplain: this.state.scheduleExplain,
                                 convicted: this.state.convicted,
                                 convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment
+                                comment: this.state.comment,
+                                isLead: true
                             }
                         }
                     })
@@ -2420,7 +2422,7 @@ class VerticalLinearStepper extends Component {
                                 </DialogTitle>
                                 <DialogContent>
                                     <SignatureForm applicationId={this.state.applicationId} signatureValue={null}
-                                                   showSaveIcon={null}/>
+                                        showSaveIcon={null} />
                                 </DialogContent>
                             </Dialog>
                         ) : (
