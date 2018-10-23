@@ -1115,10 +1115,10 @@ class GeneralInformation extends Component {
 		} else {
 			return (
 				<div className="input-group-append">
-					<button class="btn btn-success" type="button" onClick={(e) => { this.setState({ [enableEdit]: false }); }}>
+					<button class="btn btn-success" id={`${property}_edit`} type="button" onClick={(e) => { this.setState({ [enableEdit]: false }); }}>
 						<i className="far fa-save" />
 					</button>
-					<button class="btn btn-danger" type="button" onClick={() => { this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] }); }}>
+					<button class="btn btn-danger" id={`${property}_edit`} type="button" onClick={() => { this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] }); }}>
 						<i className="fas fa-ban" />
 					</button>
 				</div>
