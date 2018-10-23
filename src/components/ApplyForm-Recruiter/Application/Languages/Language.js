@@ -199,7 +199,7 @@ class Language extends Component {
 						}}
 					>
 						<div className="col-4">
-							<span className="primary"> {languagesTable[0].label}</span>
+							<span className="primary"> * {languagesTable[0].label}</span>
 							<select
 								id="nameLanguage"
 								name="languageName"
@@ -228,7 +228,7 @@ class Language extends Component {
 							<span className="check-icon" />
 						</div>
 						<div className="col-3">
-							<span className="primary">{languagesTable[1].label}</span>
+							<span className="primary">* {languagesTable[1].label}</span>
 							<select
 								required
 								id="conversationLanguage"
@@ -242,7 +242,7 @@ class Language extends Component {
 							<span className="check-icon" />
 						</div>
 						<div className="col-3">
-							<span className="primary">{languagesTable[2].label}</span>
+							<span className="primary">* {languagesTable[2].label}</span>
 							<select
 								required
 								id="writingLanguage"

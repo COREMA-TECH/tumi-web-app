@@ -187,13 +187,10 @@ class ApplicationTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell padding="none" className={classes.th} />
-									<CustomTableCell className={classes.th}>Application Position</CustomTableCell>
-									<CustomTableCell className={classes.th}>First Name</CustomTableCell>
-									<CustomTableCell className={classes.th}>Middle Name</CustomTableCell>
-									<CustomTableCell className={classes.th}>Last Name</CustomTableCell>
-
-									<CustomTableCell className={classes.th}>Email Address</CustomTableCell>
+                                    <CustomTableCell padding="none" className={classes.th} />
+                                    <CustomTableCell className={classes.th}>Position Applying For</CustomTableCell>
+                                    <CustomTableCell className={classes.th}>Full Name</CustomTableCell>
+                                    <CustomTableCell className={classes.th}>Email Address</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -229,10 +226,7 @@ class ApplicationTable extends React.Component {
 											<CustomTableCell>
 												{row.position ? row.position.Description : 'Open Position'}
 											</CustomTableCell>
-											<CustomTableCell>{row.firstName}</CustomTableCell>
-											<CustomTableCell>{row.middleName}</CustomTableCell>
-											<CustomTableCell>{row.lastName}</CustomTableCell>
-
+                                            <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
 									);

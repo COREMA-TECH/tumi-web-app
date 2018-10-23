@@ -55,12 +55,9 @@
             }
         }
     }
-    &-file-name {
-        border-radius: 5px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        padding: .45em;
-        width: 200px;
+    &-group-file {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
     &-enable {
         background-color: $white;
