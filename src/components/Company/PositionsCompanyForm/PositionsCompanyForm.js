@@ -876,7 +876,13 @@ class PositionsCompanyForm extends React.Component {
 													});
 												}}
 											>
-												{this.props.valueTab < 3 ? 'Next' : 'Create Contract'}
+												{this.props.valueTab < 3 ? (
+													'Next'
+												) : (
+													<React.Fragment>
+														Create Contract <i class="fas fa-file-contract ml-1" />
+													</React.Fragment>
+												)}
 											</button>
 										)}
 									/>
@@ -888,7 +894,7 @@ class PositionsCompanyForm extends React.Component {
 							''
 						)}
 						<button className="btn btn-success float-right mr-1" onClick={this.handleClickOpenModal}>
-							Add Rates
+							Add Rates<i class="fas fa-plus ml-1" />
 						</button>
 					</div>
 				</div>
