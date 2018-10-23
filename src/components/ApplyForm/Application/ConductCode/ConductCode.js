@@ -11,9 +11,14 @@ import withGlobalContent from "../../../Generic/Global";
 import PropTypes from 'prop-types';
 //import html from '../../../../data/Package hire/CondeConduct';
 
+if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
+    localStorage.setItem('languageForm', 'en');
+}
+
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
+//const lenguageform =
 
 class ConductCode extends Component {
     constructor(props) {
@@ -180,6 +185,7 @@ class ConductCode extends Component {
     componentWillMount() {
         this.getConductCodeInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
+        alert(localStorage.getItem("languageForm"));
     }
 
     sleep() {
@@ -211,7 +217,7 @@ class ConductCode extends Component {
                     <DialogContent>
                         <SignatureForm applicationId={this.state.applicationId}
                             signatureValue={this.handleSignature}
-                                       showSaveIcon={null}
+                            showSaveIcon={null}
                         />
                     </DialogContent>
                 </Dialog>
@@ -229,36 +235,38 @@ class ConductCode extends Component {
                                     this.state.id === '' ? (
                                         ''
                                     ) : (
-                                        <div>
-                                            {
-                                                this.state.id !== null ? (
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.createDocumentsPDF();
-                                                        this.sleep().then(() => {
-                                                            this.downloadDocumentsHandler();
-                                                        }).catch(error => {
-                                                            this.setState({ downloading: false })
-                                                        })
-                                                    }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
+                                            <div>
+                                                {
+                                                    this.state.id !== null ? (
+                                                        <button className="applicant-card__edit-button" onClick={() => {
+                                                            this.createDocumentsPDF();
+                                                            this.sleep().then(() => {
+                                                                this.downloadDocumentsHandler();
+                                                            }).catch(error => {
+                                                                this.setState({ downloading: false })
+                                                            })
+                                                        }}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
 
-                                                    </button>
-                                                ) : (
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.setState({
-                                                            openSignature: true
-                                                        })
-                                                    }}>{actions[8].label} <i className="far fa-edit"></i>
-                                                    </button>
-                                                )
-                                            }
-                                        </div>
-                                    )
+                                                        </button>
+                                                    ) : (
+                                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                                this.setState({
+                                                                    openSignature: true
+                                                                })
+                                                            }}>{actions[8].label} <i className="far fa-edit"></i>
+                                                            </button>
+                                                        )
+                                                }
+                                            </div>
+                                        )
                                 }
                             </div>
                             <div className="row pdf-container">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(`<div class="WordSection1">
+                                    {
+                                        localStorage.getItem("languageForm") == 'en' ?
+                                            renderHTML(`<div class="WordSection1">
                                                 <p style="margin: 0.65pt 0in 0.0001pt 1pt; text-align: center; font-size: 11pt; font-family: 'Time New Roman', sans-serif;" align="center"><strong><span style="font-size: 15.5pt; font-family: 'Times New Roman', serif;">Tumi Staffing Code of Conduct</span></strong></p>
                                                 <p style="margin: 4.9pt 42.8pt 0.0001pt 0in; line-height: 110%; font-size: 11pt; font-family: 'Time New Roman', sans-serif;"><span style="font-size: 10.5pt; line-height: 110%;">&nbsp;</span></p>
                                                 <ol>
@@ -290,7 +298,9 @@ class ConductCode extends Component {
                                                 <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Printed Name: <u>` + this.state.applicantName + `</u></p>
                                                 </div>
                                                 <p>&nbsp;</p>
-                                `)}
+                                `) : ''
+                                    }
+
                                 </div> </div>
                         </div>
                     </div>
