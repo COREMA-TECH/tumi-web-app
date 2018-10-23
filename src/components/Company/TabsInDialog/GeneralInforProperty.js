@@ -556,10 +556,12 @@ class GeneralInfoProperty extends Component {
 
 								otherURL: item.Other_URL ? item.Other_URL.trim() : '',
 								otherName: item.Other_Name ? item.Other_Name.trim() : '',
+								otherNameOriginal: item.Other_Name ? item.Other_Name.trim() : '',
 								otherFile: item.Other_File ? item.Other_File.trim() : '',
 
 								other01URL: item.Other01_URL ? item.Other01_URL.trim() : '',
 								other01Name: item.Other01_Name ? item.Other01_Name.trim() : '',
+								other01NameOriginal: item.Other01_Name ? item.Other01_Name.trim() : '',
 								other01File: item.Other01_File ? item.Other01_File.trim() : '',
 								room: item.Rooms,
 								avatar: item.ImageURL
@@ -585,7 +587,75 @@ class GeneralInfoProperty extends Component {
 			// Show Snackbar
 		}
 	}
-
+	renderFileNameControls = (property, enableEdit) => {
+		return (
+			<input
+				type="text"
+				className={'input-form input-file-modal'}
+				max="120"
+				placeholder="Name File"
+				value={this.state[property]}
+				onChange={(e) => {
+					this.setState({
+						[property]: e.target.value
+					});
+				}}
+			/>
+		);
+	};
+	renderEditControl = (property, enableEdit) => {
+		return (
+			<div className="file-name-container">
+				{this.renderFileNameControls(property, enableEdit)}
+				{this.renderEditButtons(property, enableEdit)}
+			</div>
+		);
+	};
+	renderEditButtons = (property, enableEdit) => {
+		if (!this.state[enableEdit]) {
+			return (
+				<div
+					id={`${property}_edit`}
+					className="fa-container fa-container-edit"
+					onClick={() => {
+						this.setState({
+							[enableEdit]: true
+						});
+					}}
+				>
+					<i className="far fa-edit" />
+				</div>
+			);
+		} else {
+			return (
+				<div className="fa-container-option">
+					<div
+						id={`${property}_save`}
+						className="fa-container-save bg-success"
+						onClick={(e) => {
+							this.setState({
+								[enableEdit]: false
+							});
+						}}
+					>
+						<i className="far fa-save" />
+					</div>
+					<div
+						id={`${property}_cancel`}
+						className="fa-container-cancel bg-danger"
+						onClick={() => {
+							this.setState({
+								[enableEdit]: false,
+								[`${property}`]: this.state[`${property}Original`]
+							});
+						}}
+					>
+						<i className="fas fa-ban" />
+					</div>
+				</div>
+			);
+		}
+	};
 	render() {
 		this.changeStylesInCompletedInputs();
 
@@ -972,17 +1042,7 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
-												<input
-													className={'input-form input-file-modal'}
-													onChange={(e) => {
-														this.setState({
-															Other_Name: e.target.value
-														});
-													}}
-													value={this.state.Other_Name}
-													type="text"
-													placeholder="Name File"
-												/>
+												{this.renderEditControl('otherName', 'otherNameEdit')}
 												<FileUpload
 													updateURL={(url, fileName) => {
 														this.setState({
@@ -995,17 +1055,7 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
-												<input
-													className={'input-form input-file-modal'}
-													onChange={(e) => {
-														this.setState({
-															Other01_Name: e.target.value
-														});
-													}}
-													value={this.state.Other01_Name}
-													type="text"
-													placeholder="Name File"
-												/>
+												{this.renderEditControl('other01Name', 'other01NameEdit')}
 												<FileUpload
 													updateURL={(url, fileName) => {
 														this.setState({
