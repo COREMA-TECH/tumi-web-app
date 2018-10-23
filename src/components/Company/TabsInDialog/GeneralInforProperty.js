@@ -1026,6 +1026,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.contractURL}
 													fileName={this.state.contractFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1039,6 +1040,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.insuranceURL}
 													fileName={this.state.insuranceFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1052,6 +1054,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.otherURL}
 													fileName={this.state.otherFile}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-6">
@@ -1065,6 +1068,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													url={this.state.other01URL}
 													fileName={this.state.other01File}
+													handleOpenSnackbar={this.props.handleOpenSnackbar}
 												/>
 											</div>
 										</div>
