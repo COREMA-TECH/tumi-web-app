@@ -466,7 +466,7 @@ class DepartmentsCompanyForm extends React.Component {
 	render() {
 		const { loading } = this.state;
 		const { classes } = this.props;
-
+		const isEdititing = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 		if (this.state.indexView == 0) {
 			return <React.Fragment>{this.state.loadingData && <LinearProgress />}</React.Fragment>;
 		}
@@ -523,19 +523,18 @@ class DepartmentsCompanyForm extends React.Component {
 							className="btn btn-success mr-1"
 							onClick={this.addDepartmenttHandler}
 						>
-							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
-								'Save'
-							) : (
-								'Add'
-							)}
+							{isEdititing ? 'Save' : 'Add'}
+							{isEdititing && !loading && <i class="fas fa-save ml-1" />}
+							{!isEdititing && !loading && <i class="fas fa-plus ml-1" />}
+							{loading && <i class="fas fa-spinner fa-spin ml-1" />}
 						</button>
-						{loading && <CircularProgress size={45} className={classes.fabProgress} />}
+
 						<button
 							disabled={this.state.loading}
 							onClick={this.cancelDepartmentHandler}
 							className="btn btn-danger"
 						>
-							Clear
+							Clear<i class="fas fa-ban ml-1" />
 						</button>
 					</div>
 				</div>
