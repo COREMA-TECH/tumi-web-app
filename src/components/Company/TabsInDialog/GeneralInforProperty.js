@@ -631,10 +631,24 @@ class GeneralInfoProperty extends Component {
 		} else {
 			return (
 				<div className="input-group-append">
-					<button class="btn btn-success" id={`${property}_edit`} type="button" onClick={(e) => { this.setState({ [enableEdit]: false }); }}>
+					<button
+						class="btn btn-success"
+						id={`${property}_edit`}
+						type="button"
+						onClick={(e) => {
+							this.setState({ [enableEdit]: false });
+						}}
+					>
 						<i className="far fa-save" />
 					</button>
-					<button class="btn btn-danger" id={`${property}_edit`} type="button" onClick={() => { this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] }); }}>
+					<button
+						class="btn btn-danger"
+						id={`${property}_edit`}
+						type="button"
+						onClick={() => {
+							this.setState({ [enableEdit]: false, [`${property}`]: this.state[`${property}Original`] });
+						}}
+					>
 						<i className="fas fa-ban" />
 					</button>
 				</div>
@@ -661,19 +675,16 @@ class GeneralInfoProperty extends Component {
 											className="btn btn-danger"
 											onClick={() => {
 												this.deleteCompany(this.props.idProperty);
-
-												/*	history.push({
-														pathname: '/company/edit',
-														state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
-													});*/
 											}}
 										>
-											Delete Property
+											Delete Property<i class="fas fa-ban ml-1" />
 										</button>
 									) : (
-											''
-										)}
-									<input type="submit" value="Next" className="btn btn-success" />
+										''
+									)}
+									<button type="submit" className="btn btn-success">
+										Next<i class="fas fa-save ml-2" />
+									</button>
 								</div>
 							</div>
 						</div>
@@ -708,7 +719,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													error={!this.state.rateValid}
 													maxLength="10"
-												//disabled={!this.props.showStepper}
+													//disabled={!this.props.showStepper}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-2">
@@ -837,7 +848,7 @@ class GeneralInfoProperty extends Component {
 																		this.setState({
 																			city: event.target.value,
 																			validCity: ''
-																		})
+																		});
 																	}}
 																	error={this.state.validCity === '' ? false : true}
 																	value={this.state.city}
@@ -892,8 +903,8 @@ class GeneralInfoProperty extends Component {
 														this.state.phoneNumberValid ? (
 															'form-control'
 														) : (
-																'input-form _invalid'
-															)
+															'input-form _invalid'
+														)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -918,8 +929,8 @@ class GeneralInfoProperty extends Component {
 														this.state.faxNumberValid ? (
 															'form-control'
 														) : (
-																'input-form _invalid'
-															)
+															'input-form _invalid'
+														)
 													}
 													onChange={(e) => {
 														this.setState({

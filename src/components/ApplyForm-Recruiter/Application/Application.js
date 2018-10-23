@@ -153,7 +153,8 @@ class Application extends Component {
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
 								comment: this.state.comment,
-								generalComment: this.state.generalComment
+								generalComment: this.state.generalComment,
+								isLead: true
 							}
 						}
 					})
@@ -216,7 +217,8 @@ class Application extends Component {
 								scheduleExplain: this.state.scheduleExplain,
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
-								generalComment: this.state.generalComment
+								generalComment: this.state.generalComment,
+								isLead: true
 							}
 						}
 					})
@@ -373,18 +375,18 @@ class Application extends Component {
 								{this.state.editing ? (
 									''
 								) : (
-									<button
-										className="applicant-card__edit-button"
-										onClick={() => {
-											//alert(this.props.applicationId);
-											this.setState({
-												editing: true
-											});
-										}}
-									>
-										{spanishActions[1].label} <i className="far fa-edit" />
-									</button>
-								)}
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												//alert(this.props.applicationId);
+												this.setState({
+													editing: true
+												});
+											}}
+										>
+											{spanishActions[1].label} <i className="far fa-edit" />
+										</button>
+									)}
 							</div>
 							<br />
 							<div className="row">
@@ -397,7 +399,7 @@ class Application extends Component {
 											<Query query={GET_POSITIONS_QUERY}>
 												{({ loading, error, data, refetch, networkStatus }) => {
 													//if (networkStatus === 4) return <LinearProgress />;
-													if (error) return <p>Error </p>;
+													if (error) return <p>Nothing To Display </p>;
 													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
 														return (
 															<select
@@ -410,7 +412,7 @@ class Application extends Component {
 																}}
 																value={this.state.positionApplyingFor}
 																className="form-control"
-																//  disabled={!this.state.editing}
+																disabled={!this.state.editing}
 															>
 																<option value="">Select a position</option>
 																{data.getcatalogitem.map((item) => (
@@ -731,8 +733,8 @@ class Application extends Component {
 									</button>
 								</div>
 							) : (
-								''
-							)}
+									''
+								)}
 						</div>
 					</div>
 				</form>

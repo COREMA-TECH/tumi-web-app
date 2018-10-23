@@ -75,19 +75,21 @@ class Preferences extends React.Component {
     }
 
     handleSubmit(event) {
-
-        if (this.state.disabled && (this.props.idCompany == "" || this.state.period == undefined || this.state.amount == undefined || this.state.amount < 0)) {
-            this.props.handleOpenSnackbar(
-                'error',
-                'Error all fields are required'
-            );
-        } else {
-            if (this.state.Id == null)
-                this.add();
-            else
-                this.update();
-        }
         event.preventDefault();
+        this.setState({saving:true},()=>{
+            if (this.state.disabled && (this.props.idCompany == "" || this.state.period == undefined || this.state.amount == undefined || this.state.amount < 0)) {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error all fields are required'
+                );
+            } else {
+                if (this.state.Id == null)
+                    this.add();
+                else
+                    this.update();
+            }          
+        })
+       
     }
 
     add() {
@@ -107,8 +109,10 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Inserted!'
                 );
+                this.setState({saving:false})
             })
             .catch((error) => {
+                this.setState({saving:false})
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
@@ -134,12 +138,14 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Updated!'
                 );
+                this.setState({saving:false})
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
                 );
+                this.setState({saving:false})
             });
     }
 
@@ -186,7 +192,8 @@ class Preferences extends React.Component {
                     <div className="row">
                         <div className="col-md-12">
                             <button type="submit" className="btn btn-success edit-company-button float-right">
-                                save <i className="fas fa-save"></i>
+                            Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+											{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
                             </button>
                         </div>
                     </div>
