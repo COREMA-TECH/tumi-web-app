@@ -229,7 +229,7 @@ class ContactsTable extends React.Component {
 										<Tooltip title="Edit">
 											<div>
 												<button
-													className="btn btn-success"
+													className="btn btn-success ml-1"
 													disabled={this.props.loading}
 													onClick={(e) => {
 														e.stopPropagation();
@@ -245,7 +245,7 @@ class ContactsTable extends React.Component {
 										<Tooltip title="Delete">
 											<div>
 												<button
-													className="btn btn-success"
+													className="btn btn-danger"
 													disabled={this.props.loading}
 													onClick={(e) => {
 														e.stopPropagation();

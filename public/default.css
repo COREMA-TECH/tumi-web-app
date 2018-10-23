@@ -7644,6 +7644,22 @@ label:not(.custom-file-label):not(.form-check-label) {
 .radio-label {
   margin-right: 10px; }
 
+.react-tagsinput {
+  height: auto !important; }
+  .react-tagsinput.disabled {
+    border: 1px solid transparent !important;
+    border-bottom: 1px solid #efefef !important;
+    color: #777777;
+    background: transparent !important; }
+  .react-tagsinput--focused {
+    border-color: #3ca2c8 !important; }
+  .react-tagsinput-input:disabled {
+    border: 0 !important; }
+  .react-tagsinput-tag {
+    background-color: #3ca2c8 !important;
+    border-color: #3ca2c8 !important;
+    color: #FFF !important; }
+
 .search-container {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -9,6 +9,9 @@ import { UPDATE_APPLICATION } from "../Mutations";
 import SelectNothingToDisplay from "../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay";
 import Query from "react-apollo/Query";
 import withGlobalContent from "../../Generic/Global";
+import TagsInput from 'react-tagsinput';
+import 'react-tagsinput/react-tagsinput.css' // If using WebPack and style-loader.
+
 if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
     localStorage.setItem('languageForm', 'es');
 }
@@ -93,9 +96,17 @@ class Application extends Component {
             // Editing state properties - To edit general info
             editing: false,
 
-            loading: false
+            loading: false,
+            tags: []
         };
     }
+
+    handleChange = (tags) => {
+        this.setState({ tags })
+
+    }
+
+
 
     /**
      * To update a application by id
@@ -132,7 +143,8 @@ class Application extends Component {
                         scheduleExplain: this.state.scheduleExplain,
                         convicted: this.state.convicted,
                         convictedExplain: this.state.convictedExplain,
-                        comment: this.state.comment
+                        comment: this.state.comment,
+                        idealJob: this.state.tags.toString()
                     }
                 }
             })
@@ -176,7 +188,6 @@ class Application extends Component {
                 })
                 .then(({ data }) => {
                     let applicantData = data.applications[0];
-                    console.log("aqui esta la data application", applicantData);
                     this.setState({
                         firstName: applicantData.firstName,
                         middleName: applicantData.middleName,
@@ -202,7 +213,8 @@ class Application extends Component {
                         convicted: applicantData.convicted,
                         convictedExplain: applicantData.convictedExplain,
                         comment: applicantData.comment,
-                        editing: false
+                        editing: false,
+                        tags: applicantData.idealJob ? applicantData.idealJob.split(',').map(d => d.trim()) : []
                     }, () => {
                         this.removeSkeletonAnimation();
                         this.setState({
@@ -643,7 +655,7 @@ class Application extends Component {
                                                 minLength="10"
                                             />
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-12">
                                             <span className="primary applicant-card__label skeleton">{formSpanish[16].label}</span>
                                             <Query query={GET_POSITIONS_QUERY}>
                                                 {({ loading, error, data, refetch, networkStatus }) => {
@@ -675,10 +687,11 @@ class Application extends Component {
                                                 }}
                                             </Query>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-12">
                                             <span
                                                 className="primary applicant-card__label skeleton">{formSpanish[17].label}</span>
-                                            <input
+                                            <TagsInput inputProps={{ placeholder: 'Ideal Jobs' }} className={`form-control react-tagsinput ${!this.state.editing ? 'disabled' : ''}`} value={this.state.tags} onChange={this.handleChange} disabled={!this.state.editing} />
+                                            {/* <input
                                                 onChange={(event) => {
                                                     this.setState({
                                                         idealJob: event.target.value
@@ -692,7 +705,7 @@ class Application extends Component {
                                                 min="0"
                                                 minLength="3"
                                                 maxLength="50"
-                                            />
+                                            /> */}
                                         </div>
                                         <div className="col-md-12">
                                             <span
