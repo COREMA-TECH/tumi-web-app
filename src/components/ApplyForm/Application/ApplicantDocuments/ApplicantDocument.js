@@ -69,6 +69,7 @@ class ApplicantDocument extends Component {
 		);
 	};
 	removeDocument = (id) => {
+		//const storageRef = firebase.storage().ref(`/files/${file.name}`);
 		this.setState({ removing: true });
 		this.props.client
 			.mutate({

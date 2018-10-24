@@ -95,10 +95,11 @@ class InputFileCard extends Component {
 			});
 
 			// Build the reference based in the filename
-			const storageRef = firebase.storage().ref(`/files/${file.name}`);
+			const storageRef = firebase.storage().ref(`/files/${this.context.UID()}${file.name}`);
 
 			// Send the reference and save the file in Firebase Storage
 			const task = storageRef.put(file);
+
 			task.on(
 				'state_changed',
 				(snapshot) => {
@@ -338,7 +339,8 @@ class InputFileCard extends Component {
 		extImage: PropTypes.array,
 		extPdf: PropTypes.array,
 		extWord: PropTypes.array,
-		acceptAttachFile: PropTypes.string
+		acceptAttachFile: PropTypes.string,
+		UID: PropTypes.func
 	};
 }
 

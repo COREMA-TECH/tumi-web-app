@@ -9,7 +9,7 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
-import ReactDOM from "react-dom";
+import ReactDOM from 'react-dom';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
@@ -58,17 +58,13 @@ const loginClient = new ApolloClient({
 });
 
 class App extends Component {
-
 	handleScroll = (event) => {
 		const node = ReactDOM.findDOMNode(this);
 		let scroll = node.querySelector('.buttonsGroup');
 		//console.log(window.scrollY);
-		if (!scroll)
-			return false;
-		if (scroll.scrollHeight <= window.scrollY)
-			scroll.classList.add('buttonsGroup-fixed');
-		else
-			scroll.classList.remove('buttonsGroup-fixed');
+		if (!scroll) return false;
+		if (scroll.scrollHeight <= window.scrollY) scroll.classList.add('buttonsGroup-fixed');
+		else scroll.classList.remove('buttonsGroup-fixed');
 	};
 
 	componentDidMount = () => {
@@ -101,7 +97,8 @@ class App extends Component {
 		extWord: PropTypes.object,
 		extImage: PropTypes.object,
 		extPdf: PropTypes.object,
-		acceptAttachFile: PropTypes.string
+		acceptAttachFile: PropTypes.string,
+		UID: PropTypes.func
 	};
 
 	getChildContext = () => ({
@@ -111,13 +108,14 @@ class App extends Component {
 		token: token,
 		avatarURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png',
 		maxFileSize: 25 * 1024 * 1024, //This is 25 MB
-		extWord: ['.doc', '.docx'],
-		extImage: ['.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff'],
-		extPdf: ['.pdf'],
-		acceptAttachFile: 'application/pdf, image/*, application/msword'
+		extWord: [ '.doc', '.docx' ],
+		extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
+		extPdf: [ '.pdf' ],
+		acceptAttachFile: 'application/pdf, image/*, application/msword',
+		UID: () => {
+			return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
+		}
 	});
 }
-
-
 
 export default App;
