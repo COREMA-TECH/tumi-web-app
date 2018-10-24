@@ -126,7 +126,7 @@ class NewContract extends Component {
             User_Updated: '',
             Date_Created: '',
             Date_Updated: '',
-            CompanySignedName: '',
+            CompanySignedName: 'Stephen A. Robbins',
             open: false,
             scroll: 'paper',
             managementDialog: false,
