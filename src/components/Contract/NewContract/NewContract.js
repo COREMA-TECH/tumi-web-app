@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputForm from 'ui-components/InputForm/InputForm';
 import status from '../../../data/statusContract.json';
 import intervalDays from '../../../data/ownerExpirationNotice.json';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
-import {gql} from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -15,7 +15,7 @@ import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContr
 
 import PropTypes from 'prop-types';
 import 'ui-components/InputForm/index.css';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
@@ -82,7 +82,7 @@ class NewContract extends Component {
 
     constructor(props) {
         super(props);
-
+        console.log("esta son las props ", props);
         this.state = {
             Id: '',
             Id_Company: '',
@@ -120,7 +120,7 @@ class NewContract extends Component {
             Exhibit_E: '',
             Exhibit_F: '',
             IsActive: 1,
-            idManagement: '',
+            idManagement: props.Id_Parent,
             Management: '',
             User_Created: '',
             User_Updated: '',
@@ -227,7 +227,7 @@ class NewContract extends Component {
     };
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     /**
@@ -323,7 +323,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState(
                     {
                         Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
@@ -431,7 +431,7 @@ class NewContract extends Component {
                                 }
                             }
                         })
-                        .then(({data}) => {
+                        .then(({ data }) => {
                             this.props.getContractName(this.state.Contract_Name);
                             this.props.handleOpenSnackbar('success', 'Contract Inserted!');
                             this.setState({
@@ -512,7 +512,7 @@ class NewContract extends Component {
                                 }
                             }
                         })
-                        .then(({data}) => {
+                        .then(({ data }) => {
                             this.props.getContractName(this.state.Contract_Name);
                             this.props.handleOpenSnackbar('success', 'Contract Updated!');
                             this.setState({
@@ -594,7 +594,7 @@ class NewContract extends Component {
                                 }
                             }
                         })
-                        .then(({data}) => {
+                        .then(({ data }) => {
                             this.props.getContractName(this.state.Contract_Name);
                             this.props.handleOpenSnackbar('success', 'Contract Inserted!');
                             this.setState({
@@ -628,8 +628,8 @@ class NewContract extends Component {
     `;
 
     getbusinesscompaniesQuery = gql`
-        query getbusinesscompanies($Id: Int!) {
-            getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
+        query getbusinesscompanies($Id_Parent: Int!) {
+            getbusinesscompanies(Id_Parent: $Id_Parent, IsActive: 1, Contract_Status: "'C'") {
                 Id
                 Name
                 Id_Parent
@@ -639,8 +639,8 @@ class NewContract extends Component {
     `;
 
     getmanagementcompaniesQuery = gql`
-        query getbusinesscompanies($Id: Int!) {
-            getbusinesscompanies(Id: $Id, Id_Parent: 0, IsActive: 1, Contract_Status: "'C'") {
+        query getbusinesscompanies{
+            getbusinesscompanies( Id_Parent: 0, IsActive: 1, Contract_Status: "'C'") {
                 Id
                 Name
                 Id_Parent
@@ -674,7 +674,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.state.Display_Contract_Term = this.getString(data.getcatalogitem[0].Name);
 
                 var today = new Date();
@@ -730,7 +730,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     CompanySignedName: this.getString(data.getcompanies[0].LegalName),
                     CompanySignedNameValid: true,
@@ -750,7 +750,7 @@ class NewContract extends Component {
                     Id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log('esto es data de business ', data);
                 this.setState({
                     idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
@@ -764,15 +764,15 @@ class NewContract extends Component {
             });
     };
 
-    getManagementCompanies = (id) => {
+    getManagementCompanies = () => {
         this.props.client
             .query({
                 query: this.getmanagementcompaniesQuery,
                 variables: {
-                    Id: id
+
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
@@ -835,12 +835,22 @@ class NewContract extends Component {
      */
 
     handleClose = () => {
-        this.setState({open: false});
+        this.setState({ open: false });
     };
 
     componentWillMount() {
         if (this.props.contractId !== 0) {
             this.getContractData(this.props.contractId);
+        }
+        console.log("WillMount", this.props.Id_Parent);
+
+        if (this.props.Id_Parent !== undefined) {
+            console.log("WillMount entro aqui");
+            this.state.editing = false;
+        }
+        else {
+            console.log("WillMount entro aqui al else");
+            this.state.editing = true;
         }
     }
 
@@ -1059,14 +1069,14 @@ class NewContract extends Component {
     /*End of Validations*/
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
 
         if (this.state.loadingCompanies) {
-            return <LinearProgress/>;
+            return <LinearProgress />;
         }
 
         if (this.state.loading) {
-            return <LinearProgress/>;
+            return <LinearProgress />;
         }
 
         return (
@@ -1085,7 +1095,7 @@ class NewContract extends Component {
                             }}
                             disabled={this.state.loadingInsert || this.state.loadingUpdate}
                         >
-                            Save <i className="fas fa-save"/>
+                            Save <i className="fas fa-save" />
                         </button>
 
                         {parseInt(this.state.Contract_Status) == 2 ? (
@@ -1099,10 +1109,10 @@ class NewContract extends Component {
                                 Renewal Contract
                             </Button>
                         ) : (
-                            ''
-                        )}
+                                ''
+                            )}
                         {(this.state.loadingInsert || this.state.loadingUpdate) && (
-                            <CircularProgress size={24} className={classes.buttonProgress}/>
+                            <CircularProgress size={24} className={classes.buttonProgress} />
                         )}
                     </div>
                 </div>
@@ -1151,9 +1161,9 @@ class NewContract extends Component {
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Contract Template</label>
                                                 <Query query={this.GET_CONTRACT}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (loading) return <LinearProgress/>;
+                                                        if (loading) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (
                                                             data.getcontracttemplate != null &&
@@ -1186,24 +1196,26 @@ class NewContract extends Component {
                                                     }}
                                                 </Query>
                                             </div>
+                                            {/* 
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Management Company</label>
                                                 <InputForm
                                                     value={this.state.Management}
                                                     change={(text) => {
                                                     }}
-                                                    //error={!this.state.CompanySignedNameValid}
+                                                //error={!this.state.CompanySignedNameValid}
                                                 />
                                             </div>
+                                            */}
                                             <div className="col-md-6">
                                                 <label>* Management Company</label>
                                                 <Query
                                                     query={this.getmanagementcompaniesQuery}
-                                                    variables={{Id: this.state.idManagement}}
+
                                                 >
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
+                                                        if (error) return <p>Nothing To Display </p>;
                                                         if (
                                                             data.getbusinesscompanies != null &&
                                                             data.getbusinesscompanies.length > 0
@@ -1215,7 +1227,7 @@ class NewContract extends Component {
                                                                     id="management"
                                                                     required
                                                                     className="form-control"
-                                                                    //disabled={!this.state.editing}
+                                                                    disabled={!this.state.editing}
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             idManagement: e.target.value
@@ -1230,10 +1242,49 @@ class NewContract extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
+                                            <div className="col-md-6">
+                                                <label>* Hotel</label>
+                                                <Query
+                                                    query={this.getbusinesscompaniesQuery}
+                                                    variables={{ Id_Parent: this.state.idManagement }}
+                                                >
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        // if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Nothing To Display</p>;
+                                                        if (
+                                                            data.getbusinesscompanies != null &&
+                                                            data.getbusinesscompanies.length > 0
+                                                        ) {
+                                                            return (
+                                                                <select
+                                                                    name="hotel"
+                                                                    id="hotel"
+                                                                    required
+                                                                    className="form-control"
+                                                                    //disabled={!this.state.editing}
+                                                                    onChange={(e) => {
+                                                                        this.setState({
+                                                                            Id_Entity: e.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.Id_Entity}
+                                                                >
+                                                                    <option value="">Select a Hotel</option>
+                                                                    {data.getbusinesscompanies.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
+                                            {/*
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Hotel</label>
                                                 <AccountDialog
@@ -1250,11 +1301,13 @@ class NewContract extends Component {
                                                                 this.validateField('Company_Signed', value);
                                                                 this.getCompanies(this.state.Company_Signed);
                                                                 this.getBusinessCompanies(this.state.Id_Entity);
+                                                                this.getManagementCompanies(this.state.Id_Entity);
                                                             }
                                                         );
                                                     }}
                                                 />
                                             </div>
+                                            */ }
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Customer Signed By</label>
 
@@ -1361,9 +1414,9 @@ class NewContract extends Component {
                                                         <label>* Contract Term (months)</label>
 
                                                         <Query query={this.getContractTermsQuery}>
-                                                            {({loading, error, data, refetch, networkStatus}) => {
+                                                            {({ loading, error, data, refetch, networkStatus }) => {
                                                                 //if (networkStatus === 4) return <LinearProgress />;
-                                                                if (loading) return <LinearProgress/>;
+                                                                if (loading) return <LinearProgress />;
                                                                 if (error) return <p>Error </p>;
                                                                 if (
                                                                     data.getcatalogitem != null &&
@@ -1467,7 +1520,7 @@ class NewContract extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6"/>
+                    <div className="col-md-6" />
                     <div className="col-md-12">
                         <div className="card">
                             <div className="card-header">Billing Information</div>
@@ -1517,10 +1570,10 @@ class NewContract extends Component {
                                     <div className="col-md-6 col-lg-4">
                                         <label>* Billing State / Providence</label>
 
-                                        <Query query={this.getStatesQuery} variables={{parent: 6}}>
-                                            {({loading, error, data, refetch, networkStatus}) => {
+                                        <Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress/>;
+                                                if (loading) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return (
@@ -1541,11 +1594,11 @@ class NewContract extends Component {
                                         <label>* Billing City</label>
                                         <Query
                                             query={this.getCitiesQuery}
-                                            variables={{parent: this.state.Billing_State}}
+                                            variables={{ parent: this.state.Billing_State }}
                                         >
-                                            {({loading, error, data, refetch, networkStatus}) => {
+                                            {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress/>;
+                                                if (loading) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return (
@@ -1558,7 +1611,7 @@ class NewContract extends Component {
                                                         />
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay/>;
+                                                return <SelectNothingToDisplay />;
                                             }}
                                         </Query>
                                     </div>

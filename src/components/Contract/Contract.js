@@ -82,6 +82,7 @@ class Contract extends React.Component {
 		value: 0,
 		contractId: 0,
 		Id_Entity: 0,
+		Id_Parent: 0,
 		companyId: 0,
 		ContractName: '',
 		loading: false
@@ -121,7 +122,8 @@ class Contract extends React.Component {
 						this.setState(
 							{
 								contractId: this.props.location.state.contract,
-								Id_Entity: this.props.location.state.Id_Entity
+								Id_Entity: this.props.location.state.Id_Entity,
+								Id_Parent: this.props.location.state.Id_Parent
 							},
 							() => {
 								this.setState({
@@ -133,7 +135,7 @@ class Contract extends React.Component {
 						this.setState({
 							contractId: 0,
 							Id_Entity: this.props.location.state.Id_Entity,
-
+							Id_Parent: this.props.location.state.Id_Parent,
 							loading: false
 						});
 					}
@@ -191,6 +193,7 @@ class Contract extends React.Component {
 						<NewContract
 							contractId={this.state.contractId}
 							Id_Entity={this.state.Id_Entity}
+							Id_Parent={this.state.Id_Parent}
 							update={this.updateContractId}
 							updateCompanyId={this.updateCompanyId}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
