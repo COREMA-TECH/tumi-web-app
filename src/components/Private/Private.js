@@ -10,7 +10,6 @@ class Private extends Component {
 	render() {
 		return (
 			<div className="main">
-				<Nav />
 				<MainContainer />
 			</div>
 		);

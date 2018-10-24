@@ -7537,6 +7537,17 @@ label:not(.custom-file-label):not(.form-check-label) {
   border: 0 !important;
   border-radius: 0 5px 5px 0 !important; }
 
+.buttonsGroup {
+  background: transparent;
+  width: 100%; }
+  .buttonsGroup-fixed {
+    background: rgba(255, 255, 255, 0.8);
+    position: fixed;
+    top: 50px;
+    z-index: 31; }
+    .buttonsGroup-fixed-right {
+      right: 10px; }
+
 .btn-circle {
   border-radius: 15px;
   height: 30px;
@@ -7930,17 +7941,20 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .Header-mobileMenu {
   color: #FFF;
+  display: block;
+  height: 25px;
+  line-height: 25px;
+  margin-bottom: 0;
   margin-left: 1rem;
+  margin-top: 0 !important;
+  position: fixed;
   -webkit-transition: margin-left .5s ease-out;
   -o-transition: margin-left .5s ease-out;
   transition: margin-left .5s ease-out;
-  margin-bottom: 0;
-  position: absolute;
-  top: 4px;
-  display: none; }
-  @media only screen and (max-width: 767px) {
-    .Header-mobileMenu {
-      display: block; } }
+  text-align: center;
+  top: 14px;
+  width: 25px;
+  z-index: 31; }
 
 .icon-menu {
   visibility: hidden; }
@@ -7978,9 +7992,6 @@ label:not(.custom-file-label):not(.form-check-label) {
   left: 0;
   z-index: 99;
   width: 0px; }
-  @media only screen and (min-width: 768px) {
-    .MenuMobile {
-      display: none; } }
   .MenuMobile-callback {
     display: none; }
   .MenuMobile-callback:checked ~ .MenuMobile {
@@ -8020,9 +8031,8 @@ label:not(.custom-file-label):not(.form-check-label) {
     .MenuMobile-link:hover {
       color: #3ca2c8;
       text-decoration: none; }
-  @media only screen and (min-width: 768px) {
-    .MenuMobile-overlay {
-      display: none !important; } }
+  .MenuMobile-overlay {
+    display: none; }
   .MenuMobile-wrapper {
     margin: 0;
     padding: 0;

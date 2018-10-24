@@ -15,6 +15,20 @@
     border-radius: 0 5px 5px 0 !important;
 }
 
+.buttonsGroup {
+    background: transparent;
+    width: 100%;
+    &-fixed {
+        background: rgba($white,0.8);
+        position: fixed;
+        top: 50px;
+        z-index: 31;
+        &-right {
+            right: 10px;
+        }
+    }
+}
+
 .btn-circle {
     border-radius: 15px;
     height: 30px;

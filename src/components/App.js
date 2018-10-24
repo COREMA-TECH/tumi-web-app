@@ -9,6 +9,7 @@ import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
+import ReactDOM from "react-dom";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
@@ -57,6 +58,27 @@ const loginClient = new ApolloClient({
 });
 
 class App extends Component {
+
+	handleScroll = (event) => {
+		const node = ReactDOM.findDOMNode(this);
+		let scroll = node.querySelector('.buttonsGroup');
+		//console.log(window.scrollY);
+		if (!scroll)
+			return false;
+		if (scroll.scrollHeight <= window.scrollY)
+			scroll.classList.add('buttonsGroup-fixed');
+		else
+			scroll.classList.remove('buttonsGroup-fixed');
+	};
+
+	componentDidMount = () => {
+		window.addEventListener('scroll', this.handleScroll);
+	};
+
+	componentWillMount() {
+		window.removeEventListener('scroll', this.handleScroll);
+	}
+
 	render() {
 		return (
 			<ApolloProvider client={client}>
@@ -89,11 +111,13 @@ class App extends Component {
 		token: token,
 		avatarURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png',
 		maxFileSize: 25 * 1024 * 1024, //This is 25 MB
-		extWord: [ '.doc', '.docx' ],
-		extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
-		extPdf: [ '.pdf' ],
+		extWord: ['.doc', '.docx'],
+		extImage: ['.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff'],
+		extPdf: ['.pdf'],
 		acceptAttachFile: 'application/pdf, image/*, application/msword'
 	});
 }
+
+
 
 export default App;

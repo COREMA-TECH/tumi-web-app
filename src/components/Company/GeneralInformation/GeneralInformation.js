@@ -1160,7 +1160,7 @@ class GeneralInformation extends Component {
 			<div className="TabSelected-container">
 				{isLoading && <LinearProgress />}
 
-				<div className="row">
+				<div className="row buttonsGroup">
 					<div className="col-md-12">
 						{this.props.idCompany != 0 ? (
 							<div className="options-company">
