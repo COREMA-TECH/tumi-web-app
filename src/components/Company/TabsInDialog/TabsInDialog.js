@@ -80,7 +80,8 @@ class CustomizedTabs extends Component {
 	state = {
 		value: 0,
 		activeTab: false,
-		idProperty: null
+		idProperty: null,
+		idManagement: null
 	};
 
 	handleChange = (event, value) => {
@@ -94,9 +95,11 @@ class CustomizedTabs extends Component {
 	};
 
 	componentWillMount() {
+		console.log("este es el props desde tabs", this.props);
 		if (this.props.idProperty) {
 			this.setState({
-				idProperty: this.props.idProperty
+				idProperty: this.props.idProperty,
+				idManagement: this.props.idCompany
 			});
 		}
 	}
@@ -140,6 +143,7 @@ class CustomizedTabs extends Component {
 					{value === 0 && (
 						<GeneralInforProperty
 							idCompany={this.props.idCompany}
+							idManagement={this.props.idManagement}
 							idProperty={this.state.idProperty}
 							Markup={this.props.Markup}
 							updateIdProperty={(id) => {
@@ -179,6 +183,7 @@ class CustomizedTabs extends Component {
 					{value === 3 && (
 						<PositionsCompanyForm
 							idCompany={this.state.idProperty}
+							idManagement={this.state.idManagement}
 							idContract={1}
 							item={this.state.item}
 							next={this.nextHandleChange}

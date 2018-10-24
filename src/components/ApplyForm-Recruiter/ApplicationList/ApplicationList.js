@@ -50,7 +50,7 @@ class ApplicationList extends Component {
 
 	GET_APPLICATION_QUERY = gql`
 		{
-			applications(isActive: true) {
+			applications(isActive: true,isLead:true) {
 				id
 				firstName
 				middleName

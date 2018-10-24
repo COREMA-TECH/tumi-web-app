@@ -56,8 +56,8 @@ export const GET_LANGUAGES_QUERY = gql`
  * Query to get application by id
  */
 export const GET_APPLICATION_BY_ID = gql`
-    query applications($id: Int!) {
-        applications(id: $id){
+    query applications($id: Int!,$isLead:Boolean) {
+        applications(id: $id,isLead: $isLead){
             firstName
             middleName
             lastName

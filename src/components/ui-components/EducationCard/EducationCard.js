@@ -54,6 +54,8 @@ class EducationCard extends Component {
             </Dialog>
         );
 
+        console.log(this.props.degree);
+
         return (
             <div className="education-card">
                 <span
@@ -79,9 +81,15 @@ class EducationCard extends Component {
                 <div className="education-card__phone" title="Graduated">
                     <i className="fas fa-graduation-cap"></i><span>{this.props.graduated ? 'Yes' : 'No'}</span>
                 </div>
-                <div className="education-card__phone" title="Degree">
-                    <i className="far fa-file-alt"></i><span>{this.props.degree}</span>
-                </div>
+                {
+                    this.props.degree === undefined ? (
+                        <div className="education-card__phone" title="Degree">
+                            <i className="far fa-file-alt"></i><span>{this.props.degree}</span>
+                        </div>
+                    ) : (
+                        ''
+                    )
+                }
 
                 {
                     renderQuestionDialog()

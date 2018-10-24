@@ -9,17 +9,12 @@ import { GET_APPLICANT_INFO, GET_CONDUCT_CODE_INFO, CREATE_DOCUMENTS_PDF_QUERY }
 import { ADD_CONDUCT_CODE } from './Mutations';
 import withGlobalContent from '../../../Generic/Global';
 import PropTypes from 'prop-types';
-import AntiHarassmentPDF from '../../../../templates/en/AntiHarassmentPDF';
-//import html from '../../../../data/Package hire/CondeConduct';
 
-if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
-	localStorage.setItem('languageForm', 'en');
-}
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const actions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
-//const lenguageform =
+const lenguageform = localStorage.getItem("languageForm");
 
 class ConductCode extends Component {
 	constructor(props) {
@@ -69,7 +64,7 @@ class ConductCode extends Component {
 					});
 				}
 			})
-			.catch((error) => {});
+			.catch((error) => { });
 	};
 
 	getConductCodeInformation = (id) => {
@@ -188,6 +183,8 @@ class ConductCode extends Component {
 		return new Promise((resolve) => setTimeout(resolve, 5000));
 	}
 
+
+
 	render() {
 		let renderSignatureDialog = () => (
 			<div>
@@ -195,27 +192,22 @@ class ConductCode extends Component {
 					fullWidth
 					open={this.state.openSignature}
 					onClose={() => {
-						this.setState(
-							{
-								openSignature: false
-							},
-							() => {
-								if (this.state.signature === '') {
-									this.setState({
-										accept: false
-									});
-								}
+						this.setState({
+							openSignature: false,
+						}, () => {
+							if (this.state.signature === '') {
+								this.setState({
+									accept: false
+								})
 							}
-						);
+						})
 					}}
-					aria-labelledby="form-dialog-title"
-				>
+					aria-labelledby="form-dialog-title">
 					<DialogTitle>
 						<h1 className="primary apply-form-container__label text-center">Please Sign</h1>
 					</DialogTitle>
 					<DialogContent>
-						<SignatureForm
-							applicationId={this.state.applicationId}
+						<SignatureForm applicationId={this.state.applicationId}
 							signatureValue={this.handleSignature}
 							showSaveIcon={null}
 						/>
@@ -231,55 +223,42 @@ class ConductCode extends Component {
 						<div className="applicant-card">
 							<div className="applicant-card__header">
 								<span className="applicant-card__title">{applyTabs[3].label}</span>
-								{this.state.id === '' ? (
-									''
-								) : (
-									<div>
-										{this.state.id !== null ? (
-											<button
-												className="applicant-card__edit-button"
-												onClick={() => {
-													this.createDocumentsPDF();
-													this.sleep()
-														.then(() => {
-															this.downloadDocumentsHandler();
-														})
-														.catch((error) => {
-															this.setState({ downloading: false });
-														});
-												}}
-											>
-												{this.state.downloading && (
-													<React.Fragment>
-														Downloading <i class="fas fa-spinner fa-spin" />
-													</React.Fragment>
-												)}
-												{!this.state.downloading && (
-													<React.Fragment>
-														{actions[9].label} <i className="fas fa-download" />
-													</React.Fragment>
-												)}
-											</button>
-										) : (
-											<button
-												className="applicant-card__edit-button"
-												onClick={() => {
-													this.setState({
-														openSignature: true
-													});
-												}}
-											>
-												{actions[8].label} <i className="far fa-edit" />
-											</button>
-										)}
-									</div>
-								)}
+								{
+									this.state.id === '' ? (
+										''
+									) : (
+											<div>
+												{
+													this.state.id !== null ? (
+														<button className="applicant-card__edit-button" onClick={() => {
+															this.createDocumentsPDF();
+															this.sleep().then(() => {
+																this.downloadDocumentsHandler();
+															}).catch(error => {
+																this.setState({ downloading: false })
+															})
+														}}>{this.state.downloading && (<React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+															{!this.state.downloading && (<React.Fragment>{actions[9].label} <i className="fas fa-download" /></React.Fragment>)}
+
+														</button>
+													) : (
+															<button className="applicant-card__edit-button" onClick={() => {
+																this.setState({
+																	openSignature: true
+																})
+															}}>{actions[8].label} <i className="far fa-edit"></i>
+															</button>
+														)
+												}
+											</div>
+										)
+								}
 							</div>
 							<div className="row pdf-container">
 								<div id="DocumentPDF" className="signature-information">
-									{localStorage.getItem('languageForm') == 'en' ? (
-										renderHTML(
-											`<div class="WordSection1">
+									{
+										lenguageform == 'en' ?
+											renderHTML(`<div class="WordSection1">
                                                 <p style="margin: 0.65pt 0in 0.0001pt 1pt; text-align: center; font-size: 11pt; font-family: 'Time New Roman', sans-serif;" align="center"><strong><span style="font-size: 15.5pt; font-family: 'Times New Roman', serif;">Tumi Staffing Code of Conduct</span></strong></p>
                                                 <p style="margin: 4.9pt 42.8pt 0.0001pt 0in; line-height: 110%; font-size: 11pt; font-family: 'Time New Roman', sans-serif;"><span style="font-size: 10.5pt; line-height: 110%;">&nbsp;</span></p>
                                                 <ol>
@@ -312,25 +291,76 @@ class ConductCode extends Component {
 												this.state.date.substring(0, 10) +
 												`</u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
                                                 <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
-                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Printed Name: <u>` +
-												this.state.applicantName +
-												`</u></p>
-                                                </div>
-                                                <p>&nbsp;</p>
-                                `
-										)
-									) : (
-										''
-									)}
-								</div>{' '}
-							</div>
+                                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Printed Name: <u>` + this.state.applicantName + `</u></p>
+                                                </div>`) :
+											renderHTML(`<div class="WordSection1">
+                                <p style="margin: 0.65pt 0in 0.0001pt 1pt; font-size: 11pt; font-family: 'Time New Roman', sans-serif; text-align: center;"
+                                    align="center"><strong><span style="font-size: 15.5pt; font-family: 'Times New Roman', serif;">Tumi Staffing
+                                            Codigo de Conducta</span></strong></p>
+                                <p style="margin: 4.9pt 42.8pt 0.0001pt 0in; line-height: 110%; font-size: 11pt; font-family: 'Time New Roman', sans-serif;"><span
+                                        style="font-size: 10.5pt; line-height: 110%;">&nbsp;</span></p>
+                                <ol>
+                                    <ol>
+                                        <li>Como trabajador de Tumi Staffing me comprometo a proporcionar un alto nivel de servicio con gran
+                                            calidad en cada aspecto de mi trabajo.</li>
+                                        <li><span style="font-size: 10.5pt;">Me comprometo a seguir todas las reglas y regulaciones tanto de Tumi
+                                                Staffing como de la compania asociada o hotel donde yo este asignado a trabajar</span></li>
+                                        <li><span style="font-size: 10.5pt;">Yo comprendo que soy responsable por mi seguridad, la seguidad de mis
+                                                companeros de trabajo, nuestros clientes y huespedes. Me conducire de una manera segura. Reportare
+                                                immediatamente cualquier accidente o insegura condicion para prevenir un accidente. </span></li>
+                                        <li><span style="font-size: 10.5pt;">Voy a llegar a mi trabajo con suficiente tiempo para cambiarme ponerme
+                                                el uniforme y estar listo para iniciar mi jornmada de trabajo a tiempo.</span></li>
+                                        <li><span style="font-size: 10.5pt;">Voy a presentarme con un buen aseo personal: banado, lavado ,peinado,
+                                                afeitado. Usare desodorante, cepillare mis dientes. Usare ropa limpia, presentable y
+                                                profesionalpara trabajar.</span></li>
+                                        <li>Cuando me encuentre en mi ambiente de trabajo me conducire con una actitud positive y profesional. Hare
+                                            contacto visual con los huespedes, ofreciendo un calida y amigable saludo.</li>
+                                        <li>Comprendo que un positvo ambiente de trabajo es crucial e importante para alcazar el exito en nuestro
+                                            negocio. Voy a tratar cada trabajador de Tumi Staffing, supervisor o manager y empleados de la compania
+                                            asociada con el mismo respeto y dignidad que trato a los huespedes.</li>
+                                        <li>Voy a hacer mis deberes de la mejor manera y en el correcto tiempo, con una actitud positive. Siempre
+                                            velare por alcanzar las espectativas del huesped y de nuestro compania asociada.</li>
+                                        <li><span style="font-size: 10.5pt;">Comprendo que una abieta y fluida comunicacion es importante para el
+                                                exito de nuestro negocio y de nuestra relacion con la compania asociada. Reportare a Tumi Staffing
+                                                manager cualquier problema que yo encuentre o que me repoten en mi area de trabajo. Reportare
+                                                cualquier inapropiada conducta de cualquier trabajador de Tumi Staffing, violacion a la seguridad,
+                                                cualquier accidente de huesped o trabajador o inapropiada o no etica conducta. Nunca ocultare
+                                                informacion entre Tumi trabajador, supervisor, manager o nuestros companeros asociados.</span></li>
+                                        <li>Me conducire con honestidad e integridad en todo momento tanto con mis companeros de trabajo, personal
+                                            del hotel, supervisors y gerentes. No permitire ninguna inseguridad o inapropiada conducta o accion que
+                                            repercuta negativamente en Tumi Staffing o Hotel asociado, o que cause conflicto de intereses en uno u
+                                            otro.</li>
+                                        <li>Me comprometo con la compania Tumi Staffing a proporcionar positivo ambiente con todos los companeros
+                                            de trabajo.</li>
+                                    </ol>
+                                </ol>
+                                <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
+                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Signed: <u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date: <u>` +
+												this.state.date.substring(0, 10) + `</u>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                <p style="margin: 0in 0in 0.0001pt; font-size: 10.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;</p>
+                                <p style="margin: 5.4pt 0in 0.0001pt; font-size: 9.5pt; font-family: 'Time New Roman', sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Printed Name: <u>` + this.state.applicantName + `</u></p>
+                            </div>
+                            <p>&nbsp;</p>
+                            `)}
+
+								</div> </div>
 						</div>
 					</div>
 				</div>
-				{renderSignatureDialog()}
+				{
+					renderSignatureDialog()
+				}
 			</div>
 		);
 	}
+
+	static contextTypes = {
+		baseUrl: PropTypes.string
+	};
 
 	static contextTypes = {
 		baseUrl: PropTypes.string

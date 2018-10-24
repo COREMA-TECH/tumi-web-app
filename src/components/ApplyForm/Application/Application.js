@@ -144,7 +144,8 @@ class Application extends Component {
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
 								comment: this.state.comment,
-								idealJob: this.state.tags.toString()
+								idealJob: this.state.tags.toString(),
+								isLead: false
 							}
 						}
 					})
@@ -299,17 +300,17 @@ class Application extends Component {
 								{this.state.editing ? (
 									''
 								) : (
-									<button
-										className="applicant-card__edit-button"
-										onClick={() => {
-											this.setState({
-												editing: true
-											});
-										}}
-									>
-										{spanishActions[1].label} <i className="far fa-edit" />
-									</button>
-								)}
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												this.setState({
+													editing: true
+												});
+											}}
+										>
+											{spanishActions[1].label} <i className="far fa-edit" />
+										</button>
+									)}
 							</div>
 							<br />
 							<div className="row">
@@ -912,8 +913,8 @@ class Application extends Component {
 									</button>
 								</div>
 							) : (
-								''
-							)}
+									''
+								)}
 						</div>
 					</div>
 				</form>
