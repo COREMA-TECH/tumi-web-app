@@ -1,15 +1,18 @@
 .Header {
     &-mobileMenu {
         color: $white;
-        margin-left: 1rem;
-        transition: margin-left .5s ease-out;
+        display: block;
+        height: 25px;
+        line-height: 25px;
         margin-bottom: 0;
-        position: absolute;
-        top: 4px;
-        display: none;
-        @media only screen and (max-width: 767px) {
-            display: block;
-        }
+        margin-left: 1rem;
+        margin-top: 0 !important;
+        position: fixed;
+        transition: margin-left .5s ease-out;
+        text-align: center;
+        top: 14px;
+        width: 25px;
+        z-index: 31;
     }
 }
 
@@ -57,9 +60,6 @@
     left: 0;
     z-index: 99;
     width: 0px;
-    @media only screen and (min-width: 768px) {
-        display: none;
-    }
     &-callback {
         display: none;
     }
@@ -102,9 +102,7 @@
         }
     }
     &-overlay {
-        @media only screen and (min-width: 768px) {
-            display: none !important;
-        }
+        display: none;
     }
     &-wrapper {
         margin: 0;

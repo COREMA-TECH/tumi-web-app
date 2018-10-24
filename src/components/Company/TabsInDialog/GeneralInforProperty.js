@@ -680,8 +680,8 @@ class GeneralInfoProperty extends Component {
 											Delete Property<i class="fas fa-ban ml-1" />
 										</button>
 									) : (
-										''
-									)}
+											''
+										)}
 									<button type="submit" className="btn btn-success">
 										Next<i class="fas fa-save ml-2" />
 									</button>
@@ -719,7 +719,7 @@ class GeneralInfoProperty extends Component {
 													}}
 													error={!this.state.rateValid}
 													maxLength="10"
-													//disabled={!this.props.showStepper}
+												//disabled={!this.props.showStepper}
 												/>
 											</div>
 											<div className="col-md-6 col-lg-2">
@@ -903,8 +903,8 @@ class GeneralInfoProperty extends Component {
 														this.state.phoneNumberValid ? (
 															'form-control'
 														) : (
-															'input-form _invalid'
-														)
+																'input-form _invalid'
+															)
 													}
 													onChange={(e) => {
 														this.setState({
@@ -929,8 +929,8 @@ class GeneralInfoProperty extends Component {
 														this.state.faxNumberValid ? (
 															'form-control'
 														) : (
-															'input-form _invalid'
-														)
+																'input-form _invalid'
+															)
 													}
 													onChange={(e) => {
 														this.setState({

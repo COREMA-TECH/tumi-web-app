@@ -206,10 +206,11 @@ class PositionsCompanyForm extends React.Component {
 
 		this.state = {
 			data: [],
-			departments: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
+			departments: [{ Id: 0, Code: 'Nothing', Description: 'Nothing' }],
 			shifts: ShiftsData,
 
 			idCompany: this.props.idCompany,
+			idManagement: this.props.idManagement,
 			companyRate: 0,
 			inputEnabled: true,
 			indexView: 0, //Loading
@@ -244,7 +245,7 @@ class PositionsCompanyForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => {}) => {
+	resetState = (func = () => { }) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -449,7 +450,7 @@ class PositionsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -479,7 +480,7 @@ class PositionsCompanyForm extends React.Component {
 	};
 	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift }) => {
 		this.setState({ showCircularLoading: false }, () => {
-			var department = this.state.departments.find(function(obj) {
+			var department = this.state.departments.find(function (obj) {
 				return obj.Id === Id_Department;
 			});
 			this.setState(
@@ -539,7 +540,7 @@ class PositionsCompanyForm extends React.Component {
 		});
 	}
 
-	loadDepartments = (func = () => {}) => {
+	loadDepartments = (func = () => { }) => {
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -577,7 +578,7 @@ class PositionsCompanyForm extends React.Component {
 		});
 	};
 
-	loadPositions = (func = () => {}) => {
+	loadPositions = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -782,7 +783,7 @@ class PositionsCompanyForm extends React.Component {
 			}
 		);
 	};
-	getRate = (func = () => {}) => {
+	getRate = (func = () => { }) => {
 		this.props.client
 			.query({
 				query: this.GET_RATE_QUERY,
@@ -872,27 +873,28 @@ class PositionsCompanyForm extends React.Component {
 													// When the user click Next button, open second tab
 													history.push({
 														pathname: '/home/contract/add',
-														state: { contract: 0, Id_Entity: this.state.idCompany }
+														state: { contract: 0, Id_Entity: this.state.idCompany, Id_Parent: this.state.idManagement }
 													});
+													//console.log(this.state);
 												}}
 											>
 												{this.props.valueTab < 3 ? (
 													'Next'
 												) : (
-													<React.Fragment>
-														Create Contract <i class="fas fa-file-contract ml-1" />
-													</React.Fragment>
-												)}
+														<React.Fragment>
+															Create Contract <i class="fas fa-file-contract ml-1" />
+														</React.Fragment>
+													)}
 											</button>
 										)}
 									/>
 								) : (
-									''
-								)}
+										''
+									)}
 							</div>
 						) : (
-							''
-						)}
+								''
+							)}
 						<button className="btn btn-success float-right mr-1" onClick={this.handleClickOpenModal}>
 							Add Rates<i class="fas fa-plus ml-1" />
 						</button>
@@ -910,8 +912,8 @@ class PositionsCompanyForm extends React.Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Position/Rate'
 							) : (
-								<h5 className="modal-title">Create Position/Rate</h5>
-							)}
+									<h5 className="modal-title">Create Position/Rate</h5>
+								)}
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 550, padding: '0px', overflowY: 'unset' }}>
@@ -991,12 +993,12 @@ class PositionsCompanyForm extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+												'Save Changes'
+											) : (
+												'Insert Record'
+											)
 									}
 								>
 									<div>

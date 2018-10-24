@@ -28,12 +28,14 @@ const theme = createMuiTheme({
 class CustomizedTabs extends React.Component {
 
 	constructor(props) {
+		console.log("Esyamos en full ", props);
 		super(props);
 		this.state = {
 			value: 0,
 			item: 4,
 			activateTabs: true,
-			idCompany: props.idCompany
+			idCompany: props.idCompany,
+			idManagement: props.idCompany
 		}
 	};
 
@@ -79,6 +81,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<GeneralInformation
 						idCompany={this.state.idCompany}
+						idManagement={this.state.idManagement}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
@@ -106,6 +109,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<DepartmentsCompanyForm
 						idCompany={this.state.idCompany}
+						idManagement={this.state.idManagement}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
 						next={this.nextHandleChange}
@@ -119,6 +123,7 @@ class CustomizedTabs extends React.Component {
 				return (
 					<PositionsCompanyForm
 						idCompany={this.state.idCompany}
+						idManagement={this.state.idManagement}
 						idContract={this.props.idContract}
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 						item={this.state.item}
