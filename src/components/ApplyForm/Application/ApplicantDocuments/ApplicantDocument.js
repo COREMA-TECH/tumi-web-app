@@ -69,6 +69,7 @@ class ApplicantDocument extends Component {
 		);
 	};
 	removeDocument = (id) => {
+		//const storageRef = firebase.storage().ref(`/files/${file.name}`);
 		this.setState({ removing: true });
 		this.props.client
 			.mutate({
@@ -175,6 +176,7 @@ class ApplicantDocument extends Component {
 			if (found) return false;
 			return (
 				<DocumentInputFileCard
+					key={item.Id}
 					cardType={'T'}
 					typeId={item.Id}
 					title={item.Name.trim()}
@@ -191,6 +193,7 @@ class ApplicantDocument extends Component {
 		return this.state.documents.map((item) => {
 			return (
 				<DocumentInputFileCard
+					key={item.id}
 					ID={item.id}
 					cardType={'D'}
 					typeId={item.CatalogItemId}

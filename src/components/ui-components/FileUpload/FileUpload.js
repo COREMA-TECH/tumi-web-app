@@ -47,7 +47,7 @@ class FileUpload extends Component {
 			});
 
 			// Build the reference based in the filename
-			const storageRef = firebase.storage().ref(`/files/${file.name}`);
+			const storageRef = firebase.storage().ref(`/files/${this.context.UID()}${file.name}`);
 
 			// Send the reference and save the file in Firebase Storage
 			const task = storageRef.put(file);
@@ -134,7 +134,8 @@ class FileUpload extends Component {
 		extImage: PropTypes.object,
 		extPdf: PropTypes.object,
 		extWord: PropTypes.object,
-		acceptAttachFile: PropTypes.string
+		acceptAttachFile: PropTypes.string,
+		UID: PropTypes.func
 	};
 }
 FileUpload.propTypes = {

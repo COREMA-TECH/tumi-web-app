@@ -95,7 +95,7 @@ class InputFileCard extends Component {
 			});
 
 			// Build the reference based in the filename
-			const storageRef = firebase.storage().ref(`/files/${file.name}`);
+			const storageRef = firebase.storage().ref(`/files/${this.context.UID()}${file.name}`);
 
 			// Send the reference and save the file in Firebase Storage
 			const task = storageRef.put(file);
@@ -152,7 +152,7 @@ class InputFileCard extends Component {
 						<div className="drag-text">
 							{!this.state.uploading && <span>+</span>}
 							{this.state.uploading && (
-								<div class={`c100 p${this.state.progress} small`}>
+								<div className={`c100 p${this.state.progress} small`}>
 									<span>{`${this.state.progress}%`}</span>
 									<div className="slice">
 										<div className="bar" />
@@ -193,7 +193,7 @@ class InputFileCard extends Component {
 						<div className="drag-text">
 							{!this.state.uploading && <i className="fas fa-cloud-upload-alt" />}
 							{this.state.uploading && (
-								<div class={`c100 p${this.state.progress} small`}>
+								<div className={`c100 p${this.state.progress} small`}>
 									<span>{`${this.state.progress}%`}</span>
 									<div className="slice">
 										<div className="bar" />
@@ -336,10 +336,11 @@ class InputFileCard extends Component {
 	}
 	static contextTypes = {
 		maxFileSize: PropTypes.number,
-		extImage: PropTypes.object,
-		extPdf: PropTypes.object,
-		extWord: PropTypes.object,
-		acceptAttachFile: PropTypes.string
+		extImage: PropTypes.array,
+		extPdf: PropTypes.array,
+		extWord: PropTypes.array,
+		acceptAttachFile: PropTypes.string,
+		UID: PropTypes.func
 	};
 }
 
