@@ -46,7 +46,11 @@
     }
 
     .invalid-input:required:invalid {
-        border: 1px solid red;
+        border: 1px solid #cd0045;
+    }
+
+    .invalid-input:required:invalid + i {
+        color: #cd0045;
     }
 
     .input-reset-container i {
@@ -59,9 +63,17 @@
     }
 }
 
+@media (min-width: 768px){
+    .reset-password-form {
+        width: 50%;
+        height: 45%;
+    }
+}
+
 @media (min-width: 992px){
     .reset-password-form {
         width: 30%;
         height: 45%;
     }
 }
+

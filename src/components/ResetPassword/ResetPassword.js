@@ -84,6 +84,7 @@ class ResetPassword extends Component {
                             }}
                             type={this.state.showPassword ? 'text' : 'password'}
                             className="reset-password-input form-control"
+                            minLength="8"
                             required
                         />
                         {
@@ -113,6 +114,7 @@ class ResetPassword extends Component {
                             }}
                             type={this.state.showPasswordConfirm ? 'text' : 'password'}
                             className="reset-password-input form-control"
+                            minLength="8"
                             required
                         />
                         {
