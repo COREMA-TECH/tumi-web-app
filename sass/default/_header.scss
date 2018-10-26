@@ -56,10 +56,10 @@
     height: 100%;
     overflow: hidden;
     transition: width .5s ease-out;
-    position: absolute;
+    position: fixed;
     left: 0;
     z-index: 99;
-    width: 0px;
+    width: 0;
     &-callback {
         display: none;
     }
@@ -78,14 +78,9 @@
         z-index: 98;
     }
     &-icon {
-        font-size: 1.35rem;
-        margin-right: 1.5rem;
         text-align: center;
         text-decoration: none;
         width: 45px;
-        &.fa, &.fas, &.far {
-            font-size: 1.75rem;
-        }
     }
     &-link {
         align-items: center;
@@ -99,6 +94,10 @@
         &:hover {
             color: $brand-primary;
             text-decoration: none;
+        }
+        &.selected {
+            background-color: darken($brand-secondary,2);
+            border-left: solid 3px $brand-primary;
         }
     }
     &-overlay {
@@ -169,5 +168,32 @@
         display: flex;
         margin-right: 1rem;
         text-align: right;
+    }
+}
+
+.SubMenu {
+    background: darken($brand-secondary,5);
+    height: 0;
+    overflow: hidden;
+    padding-bottom: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0;
+    &-icon {
+        text-align: center;
+        width: 45px;
+    }
+    &-item {
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    &-link {
+        font-family: $font-family-sans-serif;
+        color: lighten($color: $brand-primary, $amount: 0.1);
+    }
+    &-show {
+        padding-bottom: 1rem;
+        padding-top: 1rem;
+        height: auto;
     }
 }
