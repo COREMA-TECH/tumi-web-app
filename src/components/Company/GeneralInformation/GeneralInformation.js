@@ -29,6 +29,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
+
 const styles = (theme) => ({
 	wrapper: {
 		margin: theme.spacing.unit,
@@ -109,6 +110,15 @@ class GeneralInformation extends Component {
 			}
 		}
 	`;
+	GET_REGIONS_QUERY = gql`
+		query Regions {
+			getcatalogitem(Id: null, IsActive: 1, Id_Catalog:4) {
+				Id
+				Name
+				IsActive
+			}
+		}
+	`;
 
 	GET_CITIES_QUERY = gql`
 		query Cities($parent: Int!) {
@@ -141,6 +151,7 @@ class GeneralInformation extends Component {
 				End_Week
 				Start_Date
 				Legal_Name
+				Region
 				Country
 				State
 				Zipcode
@@ -217,6 +228,7 @@ class GeneralInformation extends Component {
 
 									rooms: item.Rooms ? item.Rooms.toString().trim() : '',
 									country: item.Country,
+									region: item.Region,
 									state: item.State,
 									city: item.City,
 									Id_Parent: item.Id_Parent,
@@ -332,6 +344,7 @@ class GeneralInformation extends Component {
 				End_Week
 				Start_Date
 				Legal_Name
+				Region
 				Country
 				State
 				Zipcode
@@ -387,6 +400,7 @@ class GeneralInformation extends Component {
 								Start_Week: this.state.startWeek,
 								End_Week: this.state.endWeek,
 								Legal_Name: `'${this.state.legalName}'`,
+								Region: parseInt(this.state.region),
 								Country: parseInt(this.state.country),
 								State: parseInt(this.state.state),
 								City: parseInt(this.state.city),
@@ -492,6 +506,7 @@ class GeneralInformation extends Component {
 								Start_Week: this.state.startWeek,
 								End_Week: this.state.endWeek,
 								Legal_Name: `'${this.state.legalName}'`,
+								Region: parseInt(this.state.region),
 								Country: parseInt(this.state.country),
 								State: parseInt(this.state.state),
 								City: parseInt(this.state.city),
@@ -630,6 +645,48 @@ class GeneralInformation extends Component {
 			});
 	};
 
+	loadRegions = (func = () => { }) => {
+		this.setState({
+			loadingRegions: true
+		});
+		this.props.client
+			.query({
+				query: this.GET_REGIONS_QUERY,
+				//variables: { parent: this.state.country },
+				fetchPolicy: 'no-cache'
+			})
+			.then((data) => {
+				if (data.data.getcatalogitem != null) {
+					this.setState(
+						{
+							regions: data.data.getcatalogitem,
+							loadingRegions: false,
+							loading: false,
+							indexView: 1
+						},
+						func
+					);
+				} else {
+					this.setState({
+						loadingRegions: false,
+						loading: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading regions: getcatalogitem not exists in query data',
+						firstLoad: false
+					});
+				}
+			})
+			.catch((error) => {
+				this.setState({
+					loadingRegions: false,
+					loading: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading regions: ' + error,
+					firstLoad: false
+				});
+			});
+	};
+
 	loadCities = (func = () => { }) => {
 		this.setState({
 			loadingCities: true
@@ -704,8 +761,10 @@ class GeneralInformation extends Component {
 				this.loadCountries(() => {
 					this.loadCities(() => {
 						this.loadStates(() => {
-							this.loadCompanyProperties(() => {
-								this.setState({ indexView: 1, firstLoad: false });
+							this.loadRegions(() => {
+								this.loadCompanyProperties(() => {
+									this.setState({ indexView: 1, firstLoad: false });
+								});
 							});
 						});
 					});
@@ -722,8 +781,10 @@ class GeneralInformation extends Component {
 							this.loadCountries(() => {
 								this.loadCities(() => {
 									this.loadStates(() => {
-										this.loadCompanyProperties(() => {
-											this.setState({ indexView: 1, firstLoad: false });
+										this.loadRegions(() => {
+											this.loadCompanyProperties(() => {
+												this.setState({ indexView: 1, firstLoad: false });
+											});
 										});
 									});
 								});
@@ -751,7 +812,6 @@ class GeneralInformation extends Component {
 			address: '',
 			optionalAddress: '',
 			businessType: '',
-			region: '',
 			Id_Parent: 0,
 			management: '',
 			phoneNumber: '',
@@ -782,13 +842,16 @@ class GeneralInformation extends Component {
 			countries: [],
 			states: [],
 			cities: [],
+			regions: [],
 			companyProperties: [],
 			country: 6,
 			state: 0,
 			city: 0,
+			region: 0,
 			loadingCountries: false,
 			loadingCities: false,
 			loadingStates: false,
+			loadingRegions: false,
 			loadingCompanyProperties: false,
 
 			contractURL: '',
@@ -816,10 +879,12 @@ class GeneralInformation extends Component {
 			{
 				country: id,
 				state: 0,
-				city: 0
+				city: 0,
+				region: 0
 			},
 			() => {
 				this.validateField('country', id);
+				this.loadRegions();
 				this.loadStates();
 				this.loadCities();
 			}
@@ -834,6 +899,17 @@ class GeneralInformation extends Component {
 			() => {
 				this.validateField('state', id);
 				this.loadCities();
+			}
+		);
+	};
+
+	updateRegion = (id) => {
+		this.setState(
+			{
+				region: id
+			},
+			() => {
+				this.validateField('region', id);
 			}
 		);
 	};
@@ -903,6 +979,7 @@ class GeneralInformation extends Component {
 		let zipCodeValid = this.state.zipCode.toString().trim().length >= 2;
 		let countryValid = this.state.country !== null && this.state.country !== 0 && this.state.country !== '';
 		let stateValid = this.state.state !== null && this.state.state !== 0 && this.state.state !== '';
+		let regionValid = this.state.region !== null && this.state.region !== 0 && this.state.region !== '';
 
 		//let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
 		//let suiteValid = parseInt(this.state.suite) >= 0;
@@ -932,6 +1009,7 @@ class GeneralInformation extends Component {
 				zipCodeValid,
 				countryValid,
 				stateValid,
+				regionValid,
 				//cityValid,
 				//suiteValid,
 				phoneNumberValid,
@@ -956,6 +1034,7 @@ class GeneralInformation extends Component {
 		let zipCodeValid = this.state.zipCodeValid;
 		let countryValid = this.state.countryValid;
 		let stateValid = this.state.stateValid;
+		let regionValid = this.state.regionValid;
 
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
@@ -1003,6 +1082,9 @@ class GeneralInformation extends Component {
 			case 'state':
 				stateValid = value !== null && value !== 0 && value !== '';
 
+			case 'region':
+				regionValid = value !== null && value !== 0 && value !== '';
+
 				break;
 			case 'city':
 				cityValid = value !== null && value !== 0 && value !== '';
@@ -1040,6 +1122,7 @@ class GeneralInformation extends Component {
 				countryValid,
 				stateValid,
 				cityValid,
+				regionValid,
 				//	suiteValid,
 				phoneNumberValid,
 				faxValid,
@@ -1063,7 +1146,7 @@ class GeneralInformation extends Component {
 					this.state.zipCodeValid &&
 					this.state.countryValid &&
 					this.state.stateValid &&
-					//this.state.cityValid &&
+					this.state.regionValid &&
 					//this.state.suiteValid &&
 					this.state.phoneNumberValid &&
 					this.state.faxValid
@@ -1138,6 +1221,7 @@ class GeneralInformation extends Component {
 			this.state.loadingCities ||
 			this.state.loadingCountries ||
 			this.state.loadingStates ||
+			this.state.loadingRegions ||
 			this.state.loadingCompanyProperties ||
 			this.state.firstLoad;
 
@@ -1174,9 +1258,11 @@ class GeneralInformation extends Component {
 													this.loadCountries(() => {
 														this.loadCities(() => {
 															this.loadStates(() => {
-																this.loadCompanyProperties(() => {
-																	this.props.toggleStepper();
-																	this.setState({ indexView: 1, firstLoad: false });
+																this.loadRegions(() => {
+																	this.loadCompanyProperties(() => {
+																		this.props.toggleStepper();
+																		this.setState({ indexView: 1, firstLoad: false });
+																	});
 																});
 															});
 														});
@@ -1222,9 +1308,11 @@ class GeneralInformation extends Component {
 												this.loadCountries(() => {
 													this.loadCities(() => {
 														this.loadStates(() => {
-															this.loadCompanyProperties(() => {
-																this.props.toggleStepper();
-																this.setState({ indexView: 1, firstLoad: false });
+															this.loadRegions(() => {
+																this.loadCompanyProperties(() => {
+																	this.props.toggleStepper();
+																	this.setState({ indexView: 1, firstLoad: false });
+																});
 															});
 														});
 													});
@@ -1357,6 +1445,26 @@ class GeneralInformation extends Component {
 										>
 											<option value="">Select a country</option>
 											{this.state.countries.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									</div>
+									<div className="col-md-4">
+										<label>* Region</label>
+										<select
+											name="region"
+											className={'form-control'}
+											disabled={this.state.loadingRegion}
+											onChange={(event) => {
+												this.updateRegion(event.target.value);
+											}}
+											error={!this.state.regionValid}
+											value={this.state.region}
+											disabled={!this.props.showStepper}
+											showNone={false}
+										>
+											<option value="">Select a region</option>
+											{this.state.regions.map((item) => (
 												<option value={item.Id}>{item.Name}</option>
 											))}
 										</select>
