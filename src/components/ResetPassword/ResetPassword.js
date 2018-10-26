@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './index.css'
 import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
+import {UPDATE_USER_PASSWORD} from "./Mutations";
 
 class ResetPassword extends Component {
     constructor(props){
@@ -49,13 +50,14 @@ class ResetPassword extends Component {
                 loading: true,
                 invalidPassword: false
             }, () => {
-                // this.props.client
-                //     .mutate({
-                //         mutation: '',
-                //         variables: {
-                //
-                //         }
-                //     });
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_USER_PASSWORD,
+                        variables: {
+                            id: 10,
+                            password: "'ADMIN','AES_KEY'"
+                        }
+                    });
             })
         } else {
             this.props.handleOpenSnackbar(
