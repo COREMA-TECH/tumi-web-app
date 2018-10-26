@@ -12,7 +12,8 @@ class ResetPassword extends Component {
             showPasswordConfirm: false,
             password: '',
             confirmPassword: '',
-            loading: false
+            loading: false,
+            invalidPassword: false
         }
     }
 
@@ -45,7 +46,8 @@ class ResetPassword extends Component {
 
         if(this.state.password === this.state.confirmPassword){
             this.setState({
-                loading: true
+                loading: true,
+                invalidPassword: false
             }, () => {
                 // this.props.client
                 //     .mutate({
@@ -62,6 +64,10 @@ class ResetPassword extends Component {
                 'bottom',
                 'center'
             );
+
+            this.setState({
+                invalidPassword: true
+            })
         }
     };
 
@@ -83,7 +89,7 @@ class ResetPassword extends Component {
                                 })
                             }}
                             type={this.state.showPassword ? 'text' : 'password'}
-                            className="reset-password-input form-control"
+                            className={!this.state.invalidPassword ? "reset-password-input form-control" : "reset-password-input form-control invalid-password"}
                             minLength="8"
                             required
                         />
@@ -113,7 +119,7 @@ class ResetPassword extends Component {
                                 })
                             }}
                             type={this.state.showPasswordConfirm ? 'text' : 'password'}
-                            className="reset-password-input form-control"
+                            className={!this.state.invalidPassword ? "reset-password-input form-control" : "reset-password-input form-control invalid-password"}
                             minLength="8"
                             required
                         />

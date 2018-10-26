@@ -53,6 +53,14 @@
         color: #cd0045;
     }
 
+    .invalid-password {
+        border: 1px solid #cd0045 !important;
+    }
+
+    .invalid-password + i {
+        color: #cd0045 !important;
+    }
+
     .input-reset-container i {
         position: absolute;
         top: 60%;
