@@ -7988,10 +7988,10 @@ label:not(.custom-file-label):not(.form-check-label) {
   -webkit-transition: width .5s ease-out;
   -o-transition: width .5s ease-out;
   transition: width .5s ease-out;
-  position: absolute;
+  position: fixed;
   left: 0;
   z-index: 99;
-  width: 0px; }
+  width: 0; }
   .MenuMobile-callback {
     display: none; }
   .MenuMobile-callback:checked ~ .MenuMobile {
@@ -8006,13 +8006,9 @@ label:not(.custom-file-label):not(.form-check-label) {
     width: 100%;
     z-index: 98; }
   .MenuMobile-icon {
-    font-size: 1.35rem;
-    margin-right: 1.5rem;
     text-align: center;
     text-decoration: none;
     width: 45px; }
-    .MenuMobile-icon.fa, .MenuMobile-icon.fas, .MenuMobile-icon.far {
-      font-size: 1.75rem; }
   .MenuMobile-link {
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -8031,6 +8027,9 @@ label:not(.custom-file-label):not(.form-check-label) {
     .MenuMobile-link:hover {
       color: #3ca2c8;
       text-decoration: none; }
+    .MenuMobile-link.selected {
+      background-color: #223b4a;
+      border-left: solid 3px #3ca2c8; }
   .MenuMobile-overlay {
     display: none; }
   .MenuMobile-wrapper {
@@ -8091,6 +8090,28 @@ label:not(.custom-file-label):not(.form-check-label) {
   display: flex;
   margin-right: 1rem;
   text-align: right; }
+
+.SubMenu {
+  background: #1d333f;
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0; }
+  .SubMenu-icon {
+    text-align: center;
+    width: 45px; }
+  .SubMenu-item {
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem; }
+  .SubMenu-link {
+    font-family: "Nunito Sans", sans-serif;
+    color: #3ca2c8; }
+  .SubMenu-show {
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    height: auto; }
 
 .card {
   margin-bottom: 1rem;
