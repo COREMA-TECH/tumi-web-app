@@ -20,7 +20,7 @@ if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('
  */
 //const baseEndpointURL = 'http://ec2-18-223-100-127.us-east-2.compute.amazonaws.com:4000';
 const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
-// const baseEndpointURL = 'http://localhost:4000';
+//const baseEndpointURL = 'http://localhost:4000';
 
 const token =
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklkIjoxMCwiQ29kZV9Vc2VyIjoiYWRtaW4gICAgICJ9LCJpYXQiOjE1Mzg2NjI4ODgsImV4cCI6MTg1NDIzODg4OH0.3p2Hej6LhKeiNvONYNsJ2S7-5NSeeC-gcKgYyJvc8F0';
@@ -108,9 +108,9 @@ class App extends Component {
 		token: token,
 		avatarURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png',
 		maxFileSize: 25 * 1024 * 1024, //This is 25 MB
-		extWord: [ '.doc', '.docx' ],
-		extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
-		extPdf: [ '.pdf' ],
+		extWord: ['.doc', '.docx'],
+		extImage: ['.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff'],
+		extPdf: ['.pdf'],
 		acceptAttachFile: 'application/pdf, image/*, application/msword',
 		UID: () => {
 			return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
