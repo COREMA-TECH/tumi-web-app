@@ -7,6 +7,7 @@ import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import ApplyFormMessage from '../ApplyForm/ApplyFormMessage';
 import StepperApplyForm from '../ApplyForm/Stepper/StepperApplyForm';
 import PropTypes from 'prop-types';
+import ResetPassword from "../ResetPassword/ResetPassword";
 
 class Main extends Component {
     LoginId = localStorage.getItem('LoginId');
@@ -42,6 +43,9 @@ class Main extends Component {
         return (
             <div>
                 <Route path="/login" component={Login}/>
+                <Route exact path="/reset-password" component={ResetPassword}/>
+
+
                 {/*<PrivateRoute path="/application/info" component={ApplicationInfo} />*/}
                 <PrivateRoute path="/employment-application" component={StepperApplyForm}/>
                 <PrivateRoute path="/employment-application-message" component={ApplyFormMessage}/>
