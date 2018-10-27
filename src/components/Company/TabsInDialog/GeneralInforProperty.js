@@ -33,7 +33,7 @@ class GeneralInfoProperty extends Component {
 			businessType: '',
 			country: 6,
 			state: 0,
-			region: '',
+			region: 0,
 			city: 0,
 			management: '',
 			phoneNumber: '',
@@ -55,6 +55,7 @@ class GeneralInfoProperty extends Component {
 			linearProgress: false,
 			idProperty: null,
 			Markup: null,
+			validRegion: '',
 			validState: '',
 			validCity: '',
 			validStartWeek: '',
@@ -101,6 +102,16 @@ class GeneralInfoProperty extends Component {
 		}
 	`;
 
+	getRegionsQuery = gql`
+	query Regions {
+		getcatalogitem(Id: null, IsActive: 1, Id_Catalog:4) {
+			Id
+			Name
+			IsActive
+		}
+	}
+`;
+
 	getCitiesQuery = gql`
 		query Cities($parent: Int!) {
 			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
@@ -132,6 +143,7 @@ class GeneralInfoProperty extends Component {
 				Start_Date
 				Legal_Name
 				Country
+				Region
 				State
 				Zipcode
 				Fax
@@ -204,6 +216,7 @@ class GeneralInfoProperty extends Component {
 								Start_Week: this.state.startWeek,
 								End_Week: this.state.endWeek,
 								Legal_Name: "''",
+								Region: parseInt(this.state.region),
 								Country: parseInt(this.state.country),
 								State: parseInt(this.state.state),
 								Rate: parseFloat(this.state.rate),
@@ -342,6 +355,7 @@ class GeneralInfoProperty extends Component {
 								Start_Week: this.state.startWeek,
 								End_Week: this.state.endWeek,
 								Legal_Name: "''",
+								Region: parseInt(this.state.region),
 								Country: parseInt(this.state.country),
 								State: parseInt(this.state.state),
 								// Rate: parseFloat(this.state.rate),
@@ -433,6 +447,14 @@ class GeneralInfoProperty extends Component {
 				}
 
 				//To set errors in selects
+				if (this.state.region === 0) {
+					this.setState({
+						validRegion: 'valid'
+					});
+
+					validated = false;
+				}
+
 				if (this.state.city === 0) {
 					this.setState({
 						validCity: 'valid'
@@ -532,7 +554,7 @@ class GeneralInfoProperty extends Component {
 								endWeek: item.End_Week,
 								address: item.Location.trim(),
 								optionalAddress: item.Location01.trim(),
-
+								region: item.Region,
 								country: item.Country,
 								state: item.State,
 								city: item.City,
@@ -779,6 +801,43 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-3">
+												<label>* Region</label>
+												<Query query={this.getRegionsQuery} >
+													{({ loading, error, data, refetch, networkStatus }) => {
+														//if (networkStatus === 4) return <LinearProgress />;
+														if (loading) return <LinearProgress />;
+														if (error) return <p>Nothing To Display </p>;
+														if (
+															data.getcatalogitem != null &&
+															data.getcatalogitem.length > 0
+														) {
+															return (
+																<select
+																	name="region"
+																	className={'form-control'}
+																	onChange={(event) => {
+																		this.setState({
+																			region: event.target.value,
+																			validRegion: ''
+																		});
+																	}}
+																	error={this.state.validRegion === '' ? false : true}
+																	value={this.state.region}
+																	showNone={false}
+																>
+																	<option value="">Select a region</option>
+																	{data.getcatalogitem.map((item) => (
+																		<option value={item.Id}>{item.Name}</option>
+																	))}
+																</select>
+															);
+														}
+														return <SelectNothingToDisplay />;
+													}}
+												</Query>
+											</div>
+
+											<div className="col-md-6 col-lg-3">
 												<label>* States</label>
 												<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 													{({ loading, error, data, refetch, networkStatus }) => {
@@ -808,18 +867,6 @@ class GeneralInfoProperty extends Component {
 																		<option value={item.Id}>{item.Name}</option>
 																	))}
 																</select>
-																// <SelectForm
-																// 	name="state"
-																// 	value={this.state.state}
-																// 	data={data.getcatalogitem}
-																// 	error={this.state.validState === '' ? false : true}
-																// 	update={(value) => {
-																// 		this.setState({
-																// 			state: value,
-																// 			validState: ''
-																// 		});
-																// 	}}
-																// />
 															);
 														}
 														return <SelectNothingToDisplay />;
