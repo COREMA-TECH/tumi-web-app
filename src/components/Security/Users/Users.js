@@ -139,6 +139,11 @@ class Catalogs extends React.Component {
 				Name: Full_Name
 			}
 		}
+		getcatalogitem(Id_Catalog: 4)  {
+			Id
+			Name
+			DisplayLabel
+		  }
 	`;
 	GET_ROLES_QUERY = gql`
 		{
@@ -174,6 +179,8 @@ class Catalogs extends React.Component {
 				AllowInsert
 				AllowExport
 				AllowEdit
+				IsRecruiter
+				IdRegion
 			}
 		}
 	`;
@@ -222,6 +229,8 @@ class Catalogs extends React.Component {
 		allowEdit: false,
 		allowDelete: false,
 		allowExport: false,
+		IsRecruiter: false,
+		IdRegion: null,
 
 		idContactValid: true,
 		usernameValid: true,
@@ -231,7 +240,7 @@ class Catalogs extends React.Component {
 		numberValid: true,
 		idRolValid: true,
 		idLanguageValid: true,
-
+		IdRegionValid: true,
 		idContactHasValue: false,
 		usernameHasValue: false,
 		//fullnameHasValue: false,
@@ -259,7 +268,7 @@ class Catalogs extends React.Component {
 			contacts: [],
 			roles: [ { Id: 0, Name: 'Nothing' } ],
 			languages: [ { Id: 0, Name: 'Nothing' } ],
-
+			regions: [ { Id: 0, Name: 'Nothing' } ],
 			loadingData: false,
 			loadingContacts: false,
 			loadingRoles: false,
@@ -371,6 +380,7 @@ class Catalogs extends React.Component {
 		let idRolValid = this.state.idRol !== null && this.state.idRol !== 0 && this.state.idRol !== '';
 		let idLanguageValid =
 			this.state.idLanguage !== null && this.state.idLanguage !== 0 && this.state.idLanguage !== '';
+		let IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
 		this.setState(
 			{
 				idContactValid,
@@ -380,7 +390,8 @@ class Catalogs extends React.Component {
 				numberValid,
 				passwordValid,
 				idRolValid,
-				idLanguageValid
+				idLanguageValid,
+				IdRegionValid
 			},
 			() => {
 				this.validateForm(func);
@@ -405,6 +416,7 @@ class Catalogs extends React.Component {
 		let passwordHasValue = this.state.passwordHasValue;
 		let idRolHasValue = this.state.idRolHasValue;
 		let idLanguageHasValue = this.state.idLanguageHasValue;
+		let IdRegionIsValid = true;
 
 		switch (fieldName) {
 			case 'idContact':
@@ -440,6 +452,10 @@ class Catalogs extends React.Component {
 			case 'idLanguage':
 				idLanguageValid = value !== null && value !== 0 && value !== '';
 				idLanguageHasValue = value !== null && value !== '';
+				break;
+			case 'IdRegion':
+				if (this.state.IsRecruiter) IdRegionIsValid = value !== null && value !== 0 && value !== '';
+
 				break;
 			default:
 				break;
@@ -479,7 +495,8 @@ class Catalogs extends React.Component {
 					this.state.numberValid &&
 					this.state.passwordValid &&
 					this.state.idRolValid &&
-					this.state.idLanguageValid,
+					this.state.idLanguageValid &&
+					this.state.IdRegionValid,
 				enableCancelButton:
 					this.state.idContactHasValue ||
 					this.state.usernameHasValue ||
@@ -627,10 +644,11 @@ class Catalogs extends React.Component {
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
-					if (data.data.getsupervisor != null) {
+					if (data.data.getsupervisor != null && data.data.getcatalogitem) {
 						this.setState(
 							{
 								contacts: data.data.getsupervisor,
+								regions: data.data.getcatalogitem,
 								loadingContacts: false
 							},
 							func
@@ -640,7 +658,7 @@ class Catalogs extends React.Component {
 							loadingContacts: false,
 							firstLoad: false,
 							indexView: 2,
-							errorMessage: 'Error: Loading contacts: getsupervisor not exists in query data'
+							errorMessage: 'Error: Loading contacts: object doesn´t exists in query'
 						});
 					}
 				})
