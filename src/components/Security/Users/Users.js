@@ -181,6 +181,7 @@ class Catalogs extends React.Component {
 				AllowEdit
 				IsRecruiter
 				IdRegion
+				IsActive
 			}
 		}
 	`;
@@ -219,7 +220,7 @@ class Catalogs extends React.Component {
 		idContact: '',
 		username: '',
 		//fullname: '',
-		password: 'ADMIN',
+		password: 'TEMP',
 		email: '',
 		number: '',
 		idRol: '',
@@ -231,6 +232,7 @@ class Catalogs extends React.Component {
 		allowExport: false,
 		IsRecruiter: false,
 		IdRegionValid: true,
+		IsActive: 1,
 		IdRegion: 0,
 
 		idContactValid: true,
@@ -540,7 +542,8 @@ class Catalogs extends React.Component {
 		AllowExport,
 		AllowEdit,
 		IsRecruiter,
-		IdRegion
+		IdRegion,
+		IsActive
 	}) => {
 		this.setState({ showCircularLoading: false }, () => {
 			this.setState(
@@ -561,6 +564,7 @@ class Catalogs extends React.Component {
 					allowEdit: AllowEdit == 1,
 					IsRecruiter: IsRecruiter,
 					IdRegion: IdRegion,
+					IsActive: IsActive == 1,
 
 					formValid: true,
 					idContactValid: true,
@@ -781,16 +785,15 @@ class Catalogs extends React.Component {
 								Full_Name: `'${this.state.fullname}'`,
 								Electronic_Address: `'${this.state.email}'`,
 								Phone_Number: `'${this.state.number}'`,
-								Password: `'${this.state.password}','AES_KEY'`,
 								Id_Language: this.state.idLanguage,
-								IsAdmin: this.state.isAdmin,
-								AllowDelete: this.state.allowDelete,
-								AllowInsert: this.state.allowInsert,
-								AllowEdit: this.state.allowEdit,
-								AllowExport: this.state.allowExport,
+								IsAdmin: this.state.isAdmin ? 1 : 0,
+								AllowDelete: this.state.allowDelete ? 1 : 0,
+								AllowInsert: this.state.allowInsert ? 1 : 0,
+								AllowEdit: this.state.allowEdit ? 1 : 0,
+								AllowExport: this.state.allowExport ? 1 : 0,
 								IsRecruiter: this.state.IsRecruiter,
 								IdRegion: this.state.IdRegion,
-								IsActive: 1,
+								IsActive: this.state.IsActive ? 1 : 0,
 								User_Created: 1,
 								User_Updated: 1,
 								Date_Created: "'2018-08-14 16:10:25+00'",
@@ -1115,13 +1118,31 @@ class Catalogs extends React.Component {
 								<div className="row">
 									<ul className="row w-100 border bg-light rounded">
 										<li className="col-md-4 col-sm-4 col-lg-6">
+											<label>Active?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.IsActive}
+													name="IsActive"
+													onChange={this.handleCheckedChange('IsActive')}
+													className="onoffswitch-checkbox"
+													id="IsActive"
+												/>
+												<label className="onoffswitch-label" for="IsActive">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</li>
+										<li className="col-md-4 col-sm-4 col-lg-6">
 											<label>Admin?</label>
 
 											<div className="onoffswitch">
 												<input
 													type="checkbox"
 													checked={this.state.isAdmin}
-													name="IsRecruiter"
+													name="isAdmin"
 													onChange={this.handleCheckedChange('isAdmin')}
 													className="onoffswitch-checkbox"
 													id="isAdmin"
@@ -1194,7 +1215,7 @@ class Catalogs extends React.Component {
 													type="checkbox"
 													checked={this.state.allowExport}
 													name="allowExport"
-													onChange={this.handleCheckedChange('alloallowExportwDelete')}
+													onChange={this.handleCheckedChange('allowExport')}
 													className="onoffswitch-checkbox"
 													id="allowExport"
 												/>
