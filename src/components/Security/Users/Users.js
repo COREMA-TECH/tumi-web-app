@@ -1255,8 +1255,8 @@ class Catalogs extends React.Component {
 						Add User<i class="fas fa-plus ml-2" />
 					</button>
 				</div>
-				<div className={classes.container}>
-					<div className={classes.divStyle}>
+				<div className="row">
+					<div className="col-md-12">
 						<UsersTable
 							data={this.state.data}
 							contacts={this.state.contacts}

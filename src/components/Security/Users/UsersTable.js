@@ -126,6 +126,7 @@ class EnhancedTableHead extends React.Component {
 								padding={row.disablePadding ? 'none' : 'default'}
 								sortDirection={orderBy === row.id ? order : false}
 								style={{ backgroundColor: '#3da2c7' }}
+								className={'Table-head'}
 							>
 								<Tooltip
 									title="Sort"
@@ -423,8 +424,8 @@ class UsersTable extends React.Component {
 			<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper className={classes.root}>
-				<Table className={classes.table}>
+			<Paper>
+				<Table>
 					<EnhancedTableHead
 						numSelected={selected.length}
 						order={order}
@@ -462,30 +463,32 @@ class UsersTable extends React.Component {
 											{' '}
 											<Tooltip title="Edit">
 												<div>
-													<IconButton
+													<button
+														className="btn btn-success ml-1"
 														disabled={this.props.loading}
 														onClick={(e) => {
 															e.stopPropagation();
 															return this.props.onEditHandler({ ...row });
 														}}
 													>
-														<EditIcon color="primary" />
-													</IconButton>
+														<i class="fas fa-pen" />
+													</button>
 												</div>
 											</Tooltip>
 										</CustomTableCell>
 										<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 											<Tooltip title="Delete">
 												<div>
-													<IconButton
+													<button
+														className="btn btn-danger"
 														disabled={this.props.loading}
 														onClick={(e) => {
 															e.stopPropagation();
 															return this.props.onDeleteHandler(row.Id);
 														}}
 													>
-														<DeleteIcon color="primary" />
-													</IconButton>
+														<i class="fas fa-trash" />
+													</button>
 												</div>
 											</Tooltip>
 										</CustomTableCell>
@@ -564,12 +567,6 @@ class UsersTable extends React.Component {
 									</TableRow>
 								);
 							})}
-
-						{emptyRows > 0 && (
-							<TableRow style={{ height: 48 * emptyRows }}>
-								<TableCell colSpan={13} />
-							</TableRow>
-						)}
 					</TableBody>
 					<TableFooter>
 						<TableRow>
