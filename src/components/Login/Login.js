@@ -98,6 +98,7 @@ class Login extends Component {
 	handleSubmit = (e, data) => {
 		this.setState({ loadingLogin: true });
 		e.preventDefault();
+		//console.log("estoy validando", this.state.pass);
 		if (this.checkInputs()) {
 			//this.setState({
 			this.checkUser();
@@ -137,7 +138,8 @@ class Login extends Component {
 						localStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
 						this.setState({ loadingLogin: false });
-					} else {
+					}
+					else {
 						localStorage.setItem('LoginId', user.Id);
 						localStorage.setItem('FullName', user.Full_Name);
 						localStorage.setItem('Token', user.Token);
@@ -168,7 +170,14 @@ class Login extends Component {
 							localStorage.setItem('AllowExport', false);
 						}
 
-						window.location.href = '/home';
+						if (document.getElementById('pass').value === 'TEMP') {
+							//alert("aqui estoy");
+							window.location.href = '/home/reset';
+						}
+						else {
+							window.location.href = '/home';
+						}
+
 					}
 				} else {
 					localStorage.clear();

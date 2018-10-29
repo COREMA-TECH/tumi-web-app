@@ -1,11 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css'
 import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
-import {UPDATE_USER_PASSWORD} from "./Mutations";
+import PropTypes from 'prop-types';
+
+import { UPDATE_USER_PASSWORD } from "./Mutations";
+import Button from '@material-ui/core/Button';
+import SaveIcon from '@material-ui/icons/Save';
 
 class ResetPassword extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -43,33 +47,37 @@ class ResetPassword extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        e.stopPropagation();
-
-        if(this.state.password === this.state.confirmPassword){
-            this.setState({
-                loading: true,
-                invalidPassword: false
-            }, () => {
-                this.props.client
-                    .mutate({
-                        mutation: UPDATE_USER_PASSWORD,
-                        variables: {
-                            id: 10,
-                            password: "'ADMIN','AES_KEY'"
-                        }
-                    });
-            })
-        } else {
-            this.props.handleOpenSnackbar(
-                'error',
-                'Passwords do not match. Please try again!',
-                'bottom',
-                'center'
-            );
-
-            this.setState({
-                invalidPassword: true
-            })
+        //e.stopPropagation();
+        console.log("entro al medtodo");
+        if (this.state.password === this.state.confirmPassword) {
+            console.log("Ya esta validado");
+            this.props.client
+                .mutate({
+                    mutation: UPDATE_USER_PASSWORD,
+                    variables: {
+                        id: localStorage.getItem('LoginId'),
+                        password: "'" + this.state.password + "','AES_KEY'"
+                    },
+                    fetchPolicy: 'no-cache'
+                })
+                .then(({ data }) => {
+                    this.props.handleOpenSnackbar(
+                        'success',
+                        'Password reset Successfully!',
+                        'bottom',
+                        'right'
+                    );
+                    window.location.href = '/login';
+                })
+                .catch(error => {
+                    // If there's an error show a snackbar with a error message
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to sign Anti Harrasment information. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+                });
         }
     };
 
@@ -80,7 +88,7 @@ class ResetPassword extends Component {
             <div className="reset-password-container">
                 <form className="reset-password-form" onSubmit={this.handleSubmit}>
                     <h4 className="reset-password-title">New Password</h4>
-                    <br/>
+                    <br />
                     <div className="input-reset-container">
                         <label htmlFor="" className="primary">Password</label>
                         <input
@@ -101,14 +109,14 @@ class ResetPassword extends Component {
                                     this.setState({
                                         showPassword: false
                                     })
-                                }}/>
+                                }} />
                             ) : (
-                                <i className="far fa-eye-slash" onClick={event => {
-                                    this.setState({
-                                        showPassword: true
-                                    })
-                                }}/>
-                            )
+                                    <i className="far fa-eye-slash" onClick={event => {
+                                        this.setState({
+                                            showPassword: true
+                                        })
+                                    }} />
+                                )
                         }
                     </div>
                     <div className="input-reset-container">
@@ -131,26 +139,31 @@ class ResetPassword extends Component {
                                     this.setState({
                                         showPasswordConfirm: false
                                     })
-                                }}/>
+                                }} />
                             ) : (
-                                <i className="far fa-eye-slash" onClick={event => {
-                                    this.setState({
-                                        showPasswordConfirm: true
-                                    })
-                                }}/>
-                            )
+                                    <i className="far fa-eye-slash" onClick={event => {
+                                        this.setState({
+                                            showPasswordConfirm: true
+                                        })
+                                    }} />
+                                )
                         }
                     </div>
-                    <br/>
-                    <button className="btn btn-success btn-reset-password">
-                        Save
-                    </button>
+                    <br />
+
+                    <div className="row">
+                        <div className="col-md-12">
+                            <button className="btn btn-success float-right">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+
                 </form>
             </div>
+
         );
     }
 }
-
-ResetPassword.propTypes = {};
 
 export default withApollo(withGlobalContent(ResetPassword));
