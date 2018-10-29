@@ -7703,7 +7703,14 @@ label:not(.custom-file-label):not(.form-check-label) {
 .cell-align-right {
   text-align: right !important; }
 
-.company-th, .contact-th {
+.col-right-wrapper {
+  border-left: solid 1px #dddddd; }
+  @media (max-width: 991.98px) {
+    .col-right-wrapper {
+      border-left: 0; } }
+
+.company-th,
+.contact-th {
   padding-right: 0 !important; }
 
 .logout-link {

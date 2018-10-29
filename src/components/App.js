@@ -108,9 +108,9 @@ class App extends Component {
 		token: token,
 		avatarURL: 'https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png',
 		maxFileSize: 25 * 1024 * 1024, //This is 25 MB
-		extWord: ['.doc', '.docx'],
-		extImage: ['.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff'],
-		extPdf: ['.pdf'],
+		extWord: [ '.doc', '.docx' ],
+		extImage: [ '.jpg', '.jpeg', '.bmp', '.gif', '.png', '.tiff' ],
+		extPdf: [ '.pdf' ],
 		acceptAttachFile: 'application/pdf, image/*, application/msword',
 		UID: () => {
 			return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();

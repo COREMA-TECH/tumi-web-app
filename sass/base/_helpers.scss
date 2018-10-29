@@ -17,13 +17,20 @@
 	text-align: right !important;
 }
 
-.company-th, .contact-th {
+.col-right-wrapper {
+	border-left: solid 1px $gray;
+	@include media-breakpoint-down(md) {
+		border-left: 0;
+	}
+}
+.company-th,
+.contact-th {
 	padding-right: 0 !important;
 }
 
 .logout-link {
 	color: $white;
-	margin-right: 1rem; 
+	margin-right: 1rem;
 	text-decoration: none;
 }
 

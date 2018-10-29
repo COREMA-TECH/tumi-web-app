@@ -138,12 +138,12 @@ class Catalogs extends React.Component {
 				Id
 				Name: Full_Name
 			}
+			getcatalogitem(Id_Catalog: 4) {
+				Id
+				Name
+				DisplayLabel
+			}
 		}
-		getcatalogitem(Id_Catalog: 4)  {
-			Id
-			Name
-			DisplayLabel
-		  }
 	`;
 	GET_ROLES_QUERY = gql`
 		{
@@ -230,7 +230,8 @@ class Catalogs extends React.Component {
 		allowDelete: false,
 		allowExport: false,
 		IsRecruiter: false,
-		IdRegion: null,
+		IdRegionValid: true,
+		IdRegion: 0,
 
 		idContactValid: true,
 		usernameValid: true,
@@ -240,7 +241,6 @@ class Catalogs extends React.Component {
 		numberValid: true,
 		idRolValid: true,
 		idLanguageValid: true,
-		IdRegionValid: true,
 		idContactHasValue: false,
 		usernameHasValue: false,
 		//fullnameHasValue: false,
@@ -380,7 +380,9 @@ class Catalogs extends React.Component {
 		let idRolValid = this.state.idRol !== null && this.state.idRol !== 0 && this.state.idRol !== '';
 		let idLanguageValid =
 			this.state.idLanguage !== null && this.state.idLanguage !== 0 && this.state.idLanguage !== '';
-		let IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
+		let IdRegionValid = true;
+		if (this.state.IsRecruiter)
+			IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
 		this.setState(
 			{
 				idContactValid,
@@ -536,7 +538,9 @@ class Catalogs extends React.Component {
 		AllowDelete,
 		AllowInsert,
 		AllowExport,
-		AllowEdit
+		AllowEdit,
+		IsRecruiter,
+		IdRegion
 	}) => {
 		this.setState({ showCircularLoading: false }, () => {
 			this.setState(
@@ -555,6 +559,8 @@ class Catalogs extends React.Component {
 					allowInsert: AllowInsert == 1,
 					allowExport: AllowExport == 1,
 					allowEdit: AllowEdit == 1,
+					IsRecruiter: IsRecruiter,
+					IdRegion: IdRegion,
 
 					formValid: true,
 					idContactValid: true,
@@ -782,6 +788,8 @@ class Catalogs extends React.Component {
 								AllowInsert: this.state.allowInsert,
 								AllowEdit: this.state.allowEdit,
 								AllowExport: this.state.allowExport,
+								IsRecruiter: this.state.IsRecruiter,
+								IdRegion: this.state.IdRegion,
 								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
@@ -883,6 +891,7 @@ class Catalogs extends React.Component {
 	};
 
 	handleCheckedChange = (name) => (event) => {
+		if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
 		if (name == 'isAdmin' && event.target.checked)
 			this.setState(
 				{
@@ -949,159 +958,255 @@ class Catalogs extends React.Component {
 					open={this.state.openModal}
 					onClose={this.cancelUserHandler}
 					aria-labelledby="responsive-dialog-title"
+					maxWidth="md"
 				>
-					<DialogTitle id="responsive-dialog-title">
-						<div className="card-form-header orange">
-							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
-								'Edit  User'
-							) : (
-								'Create User'
-							)}
+					<DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
+						<div className="modal-header">
+							<h5 className="modal-title">
+								{this.state.idToEdit != null &&
+								this.state.idToEdit != '' &&
+								this.state.idToEdit != 0 ? (
+									'Edit  User'
+								) : (
+									'Create User'
+								)}
+							</h5>
 						</div>
 					</DialogTitle>
-					<DialogContent style={{ width: 600 }}>
-						<div className="card-form-body">
-							<div className="card-form-row">
-								<span className="input-label primary">* Contact</span>
-								<SelectForm
-									id="idContact"
-									name="idContact"
-									data={this.state.contacts}
-									update={(id) => {
-										this.updateSelect(id, 'idContact');
-									}}
-									showNone={true}
-									error={!this.state.idContactValid}
-									value={this.state.idContact}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* User</span>
-								<InputForm
-									id="username"
-									name="username"
-									maxLength="10"
-									value={this.state.username}
-									error={!this.state.usernameValid}
-									change={(value) => this.onChangeHandler(value, 'username')}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Email</span>
-								<InputForm
-									id="email"
-									name="email"
-									maxLength="50"
-									value={this.state.email}
-									error={!this.state.emailValid}
-									change={(value) => this.onChangeHandler(value, 'email')}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Phone Number</span>
-								<InputMask
-									id="number"
-									name="number"
-									mask="+(999) 999-9999"
-									maskChar=" "
-									value={this.state.number}
-									className={this.state.numberValid ? 'input-form' : 'input-form _invalid'}
-									onChange={(e) => {
-										this.onChangeHandler(e.target.value, 'number');
-									}}
-									placeholder="+(999) 999-9999"
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Rol</span>
-								<SelectForm
-									id="idRol"
-									name="idRol"
-									data={this.state.roles}
-									update={(id) => {
-										this.updateSelect(id, 'idRol');
-									}}
-									showNone={false}
-									error={!this.state.idRolValid}
-									value={this.state.idRol}
-									disabled={this.state.loadingRoles}
-								/>
-							</div>
-							<div className="card-form-row">
-								<span className="input-label primary">* Language</span>
-								<SelectForm
-									id="idRol"
-									name="idRol"
-									data={this.state.languages}
-									update={(id) => {
-										this.updateSelect(id, 'idLanguage');
-									}}
-									showNone={false}
-									error={!this.state.idLanguageValid}
-									value={this.state.idLanguage}
-									disabled={this.state.loadingLanguages}
-								/>
-							</div>
-						</div>
-						<div className={classes.divStyleColumns}>
-							<div className={classes.divStyle}>
-								<FormControlLabel
-									control={
-										<Switch
-											id="isAdmin"
-											checked={this.state.isAdmin}
-											onChange={this.handleCheckedChange('isAdmin')}
-											value="isAdmin"
+					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
+						<div className="row">
+							<div className="col-lg-8">
+								<div className="row">
+									<div className="col-md-12 col-lg-4">
+										<label>* Contact</label>
+										<select
+											name="idContact"
+											className={'form-control'}
+											disabled={this.state.loadingContacts}
+											onChange={(event) => {
+												this.updateSelect(event.target.value, 'idContact');
+											}}
+											error={!this.state.idContactValid}
+											value={this.state.idContact}
+										>
+											<option value="">Select a contact</option>
+											{this.state.contacts.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									</div>
+									<div className="col-md-12 col-lg-4">
+										<label>* Username</label>
+										<InputForm
+											id="username"
+											name="username"
+											maxLength="10"
+											value={this.state.username}
+											error={!this.state.usernameValid}
+											change={(value) => this.onChangeHandler(value, 'username')}
 										/>
-									}
-									label="Is Admin"
-								/>
-								<FormControlLabel
-									control={
-										<Switch
-											id="allowInsert"
-											checked={this.state.allowInsert}
-											onChange={this.handleCheckedChange('allowInsert')}
-											value="allowInsert"
+									</div>
+									<div className="col-md-12 col-lg-4">
+										<label>* Email</label>
+										<InputForm
+											id="email"
+											name="email"
+											maxLength="50"
+											value={this.state.email}
+											error={!this.state.emailValid}
+											change={(value) => this.onChangeHandler(value, 'email')}
 										/>
-									}
-									label="Allow Create"
-								/>
-								<FormControlLabel
-									control={
-										<Switch
-											id="allowEdit"
-											checked={this.state.allowEdit}
-											onChange={this.handleCheckedChange('allowEdit')}
-											value="allowEdit"
+									</div>
+									<div className="col-md-12 col-lg-4">
+										<label>* Phone Number</label>
+										<InputMask
+											id="number"
+											name="number"
+											mask="+(999) 999-9999"
+											maskChar=" "
+											value={this.state.number}
+											className={
+												this.state.numberValid ? 'form-control' : 'form-control _invalid'
+											}
+											onChange={(e) => {
+												this.onChangeHandler(e.target.value, 'number');
+											}}
+											placeholder="+(999) 999-9999"
 										/>
-									}
-									label="Allow Edit"
-								/>
-								<FormControlLabel
-									control={
-										<Switch
-											id="allowDelete"
-											checked={this.state.allowDelete}
-											onChange={this.handleCheckedChange('allowDelete')}
-											value="allowDelete"
-										/>
-									}
-									label="Allow Delete"
-								/>
+									</div>
+									<div className="col-md-12 col-lg-4">
+										<label>* Rol</label>
+										<select
+											name="idRol"
+											className={'form-control'}
+											disabled={this.state.loadingRoles}
+											onChange={(event) => {
+												this.updateSelect(event.target.value, 'idRol');
+											}}
+											error={!this.state.idRolValid}
+											value={this.state.idRol}
+										>
+											<option value="">Select a rol</option>
+											{this.state.roles.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									</div>
+									<div className="col-md-12 col-lg-4">
+										<label>* Language</label>
+
+										<select
+											name="idLanguage"
+											className={'form-control'}
+											disabled={this.state.loadingLanguages}
+											onChange={(event) => {
+												this.updateSelect(event.target.value, 'idLanguage');
+											}}
+											error={!this.state.idLanguageValid}
+											value={this.state.idLanguage}
+										>
+											<option value="">Select a language</option>
+											{this.state.languages.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									</div>
+
+									<div className="col-md-3 col-lg-3">
+										<label>Recruiter?</label>
+
+										<div className="onoffswitch">
+											<input
+												type="checkbox"
+												checked={this.state.IsRecruiter}
+												name="IsRecruiter"
+												onChange={this.handleCheckedChange('IsRecruiter')}
+												className="onoffswitch-checkbox"
+												id="IsRecruiter"
+											/>
+											<label className="onoffswitch-label" for="IsRecruiter">
+												<span className="onoffswitch-inner" />
+												<span className="onoffswitch-switch" />
+											</label>
+										</div>
+									</div>
+
+									<div className="col-md-9 col-lg-9">
+										<label>Region</label>
+										<select
+											name="IdRegion"
+											className={'form-control'}
+											disabled={!this.state.IsRecruiter}
+											onChange={(event) => {
+												this.updateSelect(event.target.value, 'IdRegion');
+											}}
+											error={!this.state.IdRegionValid}
+											value={this.state.IdRegion}
+										>
+											<option value="">Select a region</option>
+											{this.state.regions.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									</div>
+								</div>
 							</div>
-							<FormControlLabel
-								style={{ width: 'fit-content' }}
-								control={
-									<Switch
-										id="allowExport"
-										checked={this.state.allowExport}
-										onChange={this.handleCheckedChange('allowExport')}
-										value="allowExport"
-									/>
-								}
-								label="Allow Export"
-							/>
+							<div className="col-lg-4">
+								<div className="row">
+									<ul className="row w-100 border bg-light rounded">
+										<li className="col-md-4 col-sm-4 col-lg-6">
+											<label>Admin?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.isAdmin}
+													name="IsRecruiter"
+													onChange={this.handleCheckedChange('isAdmin')}
+													className="onoffswitch-checkbox"
+													id="isAdmin"
+												/>
+												<label className="onoffswitch-label" for="isAdmin">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</li>
+										<li className="col-md-4 col-sm-4 col-lg-6">
+											<label>Insert?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.allowInsert}
+													name="allowInsert"
+													onChange={this.handleCheckedChange('allowInsert')}
+													className="onoffswitch-checkbox"
+													id="allowInsert"
+												/>
+												<label className="onoffswitch-label" for="allowInsert">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</li>
+										<li className="col-md-4 col-sm-4 col-lg-6">
+											<label>Edit?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.allowEdit}
+													name="allowEdit"
+													onChange={this.handleCheckedChange('allowEdit')}
+													className="onoffswitch-checkbox"
+													id="allowEdit"
+												/>
+												<label className="onoffswitch-label" for="allowEdit">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</li>
+										<li className="col-md-4 col-sm-4 col-lg-6">
+											<label>Delete?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.allowDelete}
+													name="allowDelete"
+													onChange={this.handleCheckedChange('allowDelete')}
+													className="onoffswitch-checkbox"
+													id="allowDelete"
+												/>
+												<label className="onoffswitch-label" for="allowDelete">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</li>
+										<li className="col-md-4 col-sm-4 col-lg-6">
+											<label>Export?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.allowExport}
+													name="allowExport"
+													onChange={this.handleCheckedChange('alloallowExportwDelete')}
+													className="onoffswitch-checkbox"
+													id="allowExport"
+												/>
+												<label className="onoffswitch-label" for="allowExport">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
 						</div>
 					</DialogContent>
 					<DialogActions style={{ margin: '16px 10px' }}>
@@ -1119,31 +1224,25 @@ class Catalogs extends React.Component {
 									}
 								>
 									<div>
-										<Button
+										<button
 											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
-											variant="fab"
-											color="primary"
+											className="btn btn-success"
 											onClick={this.addUserHandler}
 										>
-											<SaveIcon />
-										</Button>
+											Save {!isLoading && <i class="fas fa-save ml-1" />}
+											{isLoading && <i class="fas fa-spinner fa-spin ml-1" />}
+										</button>
 									</div>
 								</Tooltip>
-								{loading && <CircularProgress size={68} className={classes.fabProgress} />}
 							</div>
 						</div>
 						<div className={classes.root}>
 							<div className={classes.wrapper}>
 								<Tooltip title={'Cancel Operation'}>
 									<div>
-										<Button
-											//disabled={this.state.loading || !this.state.enableCancelButton}
-											variant="fab"
-											color="secondary"
-											onClick={this.cancelUserHandler}
-										>
-											<ClearIcon />
-										</Button>
+										<button className="btn btn-danger" onClick={this.cancelUserHandler}>
+											Cancel <i class="fas fa-ban ml-1" />
+										</button>
 									</div>
 								</Tooltip>
 							</div>
@@ -1152,9 +1251,8 @@ class Catalogs extends React.Component {
 				</Dialog>
 
 				<div className="users__header">
-					<button className="add-users" onClick={this.handleClickOpenModal} disabled={isLoading}>
-						{' '}
-						Add User{' '}
+					<button className="btn btn-success mr-1" onClick={this.handleClickOpenModal} disabled={isLoading}>
+						Add User<i class="fas fa-plus ml-2" />
 					</button>
 				</div>
 				<div className={classes.container}>
