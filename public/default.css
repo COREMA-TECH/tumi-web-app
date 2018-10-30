@@ -8194,7 +8194,7 @@ label:not(.custom-file-label):not(.form-check-label) {
     min-width: auto !important; } }
 
 .company-card {
-  height: 300px; }
+  height: 250px; }
 
 @media only screen and (max-width: 480px) {
   .department__header {
@@ -8386,14 +8386,9 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .UploadDocument-wrapper {
   text-align: left;
-  width: 100%;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-}
+  width: 100%; }
   @media (max-width: 991.98px) {
     .UploadDocument-wrapper {
-      justify-content: center;
       text-align: center; } }
 
 .Stepper-wrapper {
