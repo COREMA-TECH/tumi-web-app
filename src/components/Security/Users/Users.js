@@ -193,6 +193,12 @@ class Catalogs extends React.Component {
 		}
 	`;
 
+	SEND_EMAIL = gql`
+	query sendemail($username: String,$password: String,$email: String,$title:String) {
+		sendemail(username:$username,password:$password,email:$email,title:$title) 
+	}
+	`;
+
 	UPDATE_USER_QUERY = gql`
 		mutation updusers($input: iUsers!) {
 			updusers(input: $input) {
@@ -268,9 +274,9 @@ class Catalogs extends React.Component {
 		this.state = {
 			data: [],
 			contacts: [],
-			roles: [ { Id: 0, Name: 'Nothing' } ],
-			languages: [ { Id: 0, Name: 'Nothing' } ],
-			regions: [ { Id: 0, Name: 'Nothing' } ],
+			roles: [{ Id: 0, Name: 'Nothing' }],
+			languages: [{ Id: 0, Name: 'Nothing' }],
+			regions: [{ Id: 0, Name: 'Nothing' }],
 			loadingData: false,
 			loadingContacts: false,
 			loadingRoles: false,
@@ -305,7 +311,7 @@ class Catalogs extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => {}) => {
+	resetState = (func = () => { }) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -488,7 +494,7 @@ class Catalogs extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -610,7 +616,7 @@ class Catalogs extends React.Component {
 		});
 	}
 
-	loadUsers = (func = () => {}) => {
+	loadUsers = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -646,7 +652,7 @@ class Catalogs extends React.Component {
 		});
 	};
 
-	loadContacts = (func = () => {}) => {
+	loadContacts = (func = () => { }) => {
 		this.setState({ loadingContacts: true }, () => {
 			this.props.client
 				.query({
@@ -682,7 +688,7 @@ class Catalogs extends React.Component {
 				});
 		});
 	};
-	loadRoles = (func = () => {}) => {
+	loadRoles = (func = () => { }) => {
 		this.setState({ loadingRoles: true }, () => {
 			this.props.client
 				.query({
@@ -718,7 +724,7 @@ class Catalogs extends React.Component {
 		});
 	};
 
-	loadLanguages = (func = () => {}) => {
+	loadLanguages = (func = () => { }) => {
 		this.setState({ loadingLanguages: true }, () => {
 			this.props.client
 				.query({
@@ -802,7 +808,14 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
+
+						console.log("Ya hizo el id", id);
+						if (id === null) {
+							console.log("Estoy aqui");
+							this.sendMail();
+						}
 						this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
+
 						this.setState({ openModal: false, showCircularLoading: true }, () => {
 							this.loadUsers(() => {
 								this.loadContacts(() => {
@@ -859,6 +872,37 @@ class Catalogs extends React.Component {
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Deleting User: ' + error);
+						this.setState({
+							loadingConfirm: false
+						});
+					});
+			}
+		);
+	};
+
+	sendMail = () => {
+		this.setState(
+			{
+				loadingConfirm: true
+			},
+			() => {
+				console.log("Ya llegue aqui");
+				this.props.client
+					.query({
+						query: this.SEND_EMAIL,
+						variables: {
+							username: this.state.username,
+							password: `TEMP`,
+							email: this.state.email,
+							title: `Credential Information`
+						}
+					})
+					.then((data) => {
+						console.log("Envio el email");
+						this.props.handleOpenSnackbar('success', 'Email Send!');
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -967,12 +1011,12 @@ class Catalogs extends React.Component {
 						<div className="modal-header">
 							<h5 className="modal-title">
 								{this.state.idToEdit != null &&
-								this.state.idToEdit != '' &&
-								this.state.idToEdit != 0 ? (
-									'Edit  User'
-								) : (
-									'Create User'
-								)}
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Edit  User'
+									) : (
+										'Create User'
+									)}
 							</h5>
 						</div>
 					</DialogTitle>
@@ -1236,12 +1280,12 @@ class Catalogs extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+												'Save Changes'
+											) : (
+												'Insert Record'
+											)
 									}
 								>
 									<div>
