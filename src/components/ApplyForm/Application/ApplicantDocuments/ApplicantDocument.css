@@ -166,7 +166,7 @@
 }
 
 .group-container {
-	width: 280px;
+	width: 240px;
 	display: flex;
 	flex-direction: column;
 	margin: 20px;
@@ -244,14 +244,14 @@
 .image-show-wrap {
 	border-radius: 5px 5px 0 0;
 	margin-top: 0px 0px;
-	border: 2px dashed rgba(65, 175, 215, 0.4);
+	border: 1px solid rgba(65, 175, 215, 0.4);
 	border-bottom: none;
 	position: relative;
 	height: 140px;
 }
 
 .image-show-wrap:hover {
-	border: 2px dashed rgba(65, 175, 215, 0.4);
+	border: 1px solid rgba(65, 175, 215, 0.4);
 	border-bottom: none;
 	background-color: rgba(65, 175, 215, 0.06);
 }
@@ -297,9 +297,6 @@
 	cursor: pointer;
 
 	overflow: hidden;
-}
-
-.fa-container {
 }
 
 .fa-container-cancel,
@@ -353,11 +350,4 @@
 	color: #ffffff !important;
 	border-left: 1px solid rgba(255, 255, 255, 0.5);
 	background: rgba(65, 175, 215, 0.7) !important;
-}
-
-.UploadDocument-wrapper {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: flex-start;
-	align-items: center;
 }

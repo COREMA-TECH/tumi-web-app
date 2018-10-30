@@ -44,8 +44,6 @@ class CompanyList extends Component {
 		};*/
 	}
 
-
-
 	getCompaniesQuery = gql`
 		{
 			getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'", Id_Parent: 0) {
@@ -64,12 +62,12 @@ class CompanyList extends Component {
      * To delete contracts by id
      */
 	deleteCompanyQuery = gql`
-	mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
-		delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
-			Code
-			Name
+		mutation DeleteCompany($Id: Int!, $IsActive: Int!) {
+			delbusinesscompanies(Id: $Id, IsActive: $IsActive) {
+				Code
+				Name
+			}
 		}
-	}
 	`;
 
 	deleteCompany = () => {
@@ -157,7 +155,7 @@ class CompanyList extends Component {
 					}}
 				>
 					Add Management
-					</button>
+				</button>
 			</div>
 		</div>
 	);
@@ -181,7 +179,6 @@ class CompanyList extends Component {
 								type="Error-danger"
 								icon="danger"
 							/>
-
 						);
 					if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
 						return (
@@ -196,9 +193,7 @@ class CompanyList extends Component {
 											content="Do you really want to continue whit this operation?"
 										/>
 
-										<div className="">
-											{this.renderHeaderContent({ history })}
-										</div>
+										<div className="">{this.renderHeaderContent({ history })}</div>
 										<div className="company-list">
 											{this.renderCards(data.getbusinesscompanies)}
 										</div>
@@ -217,7 +212,6 @@ class CompanyList extends Component {
 		return <div>{LoadCompanyList()}</div>;
 	}
 }
-
 
 export default withStyles(styles)(withApollo(withGlobalContent(CompanyList)));
 

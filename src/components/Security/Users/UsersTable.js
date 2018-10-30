@@ -60,12 +60,7 @@ const rows = [
 	{ id: 'Electronic_Address', numeric: false, disablePadding: false, label: 'Email' },
 	{ id: 'Phone_Number', numeric: false, disablePadding: false, label: 'Phone Number' },
 	{ id: 'Id_Roles', numeric: false, disablePadding: false, label: 'Rol' },
-	{ id: 'Id_language', numeric: false, disablePadding: false, label: 'Language' },
-	{ id: 'IsAdmin', numeric: false, disablePadding: false, label: 'Admin' },
-	{ id: 'AllowDelete', numeric: false, disablePadding: false, label: 'Allow Delete' },
-	{ id: 'AllowInsert', numeric: false, disablePadding: false, label: 'Allow Insert' },
-	{ id: 'AllowEdit', numeric: false, disablePadding: false, label: 'Allow Edit' },
-	{ id: 'AllowExport', numeric: false, disablePadding: false, label: 'Allow Export' }
+	{ id: 'Id_language', numeric: false, disablePadding: false, label: 'Language' }
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -79,13 +74,6 @@ class EnhancedTableHead extends React.Component {
 		return (
 			<TableHead style={{ backgroundColor: 'black' }}>
 				<TableRow>
-					{/*<TableCell padding="checkbox">
-						<Checkbox
-							indeterminate={numSelected > 0 && numSelected < rowCount}
-							checked={numSelected === rowCount}
-							onChange={onSelectAllClick}
-		/>
-					</TableCell>*/}
 					{rows.map((row) => {
 						if (row.id == 'Edit' || row.id == 'Delete') {
 							return (
@@ -95,6 +83,7 @@ class EnhancedTableHead extends React.Component {
 									padding={row.disablePadding ? 'none' : 'default'}
 									sortDirection={orderBy === row.id ? order : false}
 									style={{ backgroundColor: '#3da2c7' }}
+									className={'Table-head'}
 								>
 									{row.label}
 								</TableCell>
@@ -112,7 +101,8 @@ class EnhancedTableHead extends React.Component {
 									numeric={row.numeric}
 									sortDirection={orderBy === row.id ? order : false}
 									padding="checkbox"
-									style={{ backgroundColor: '#3da2c7', color: '#3da2c7' }}
+									style={{ backgroundColor: '#3da2c7', color: 'white' }}
+									className={'Table-head'}
 								>
 									{row.label}
 								</TableCell>
@@ -138,6 +128,7 @@ class EnhancedTableHead extends React.Component {
 										active={orderBy === row.id}
 										direction={order}
 										onClick={this.createSortHandler(row.id)}
+										className={'Table-head'}
 									>
 										{row.label}
 									</TableSortLabel>
@@ -424,8 +415,8 @@ class UsersTable extends React.Component {
 			<NothingToDisplay title="Oops!" message={this.state.errorMessage} type="Error-success" icon="wow" />;
 		}
 		return (
-			<Paper>
-				<Table>
+			<Paper className={classes.root}>
+				<Table className={classes.table}>
 					<EnhancedTableHead
 						numSelected={selected.length}
 						order={order}
@@ -434,18 +425,7 @@ class UsersTable extends React.Component {
 						onRequestSort={this.handleRequestSort}
 						rowCount={items.length}
 					/>
-					{/*	<TableHead>
-						<TableRow>
-							<CustomTableCell padding="none" />
-							<CustomTableCell padding="none" />
-							<CustomTableCell>Catalog</CustomTableCell>
-							<CustomTableCell>Name</CustomTableCell>
-							<CustomTableCell>Display Label</CustomTableCell>
-							<CustomTableCell>Description</CustomTableCell>
-							<CustomTableCell>Parent</CustomTableCell>
-							<CustomTableCell>Value</CustomTableCell>
-						</TableRow>
-				</TableHead>*/}
+
 					<TableBody>
 						{this.getSortedItems(items, order, orderBy)
 							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -471,7 +451,7 @@ class UsersTable extends React.Component {
 															return this.props.onEditHandler({ ...row });
 														}}
 													>
-														<i class="fas fa-pen" />
+														<i className="fas fa-pen" />
 													</button>
 												</div>
 											</Tooltip>
@@ -487,23 +467,23 @@ class UsersTable extends React.Component {
 															return this.props.onDeleteHandler(row.Id);
 														}}
 													>
-														<i class="fas fa-trash" />
+														<i className="fas fa-trash" />
 													</button>
 												</div>
 											</Tooltip>
 										</CustomTableCell>
-										<CustomTableCell style={{ width: '150px' }}>
+										<CustomTableCell>
 											<Select
 												id="Id_Contact"
 												name="Id_Contact"
-												value={row.Id_Contact}
+												value={row.Id_Contact == null ? 0 : row.Id_Contact}
 												disabled
 												IconComponent="div"
 												disableUnderline={true}
 											>
 												{' '}
 												<MenuItem key={0} value={0} name="None">
-													<em>None</em>
+													<em />
 												</MenuItem>
 												{this.props.contacts.map(({ Id, Name }) => (
 													<MenuItem key={Id} value={Id} name={NamedNodeMap}>
@@ -513,11 +493,9 @@ class UsersTable extends React.Component {
 											</Select>
 										</CustomTableCell>
 										<CustomTableCell>{row.Code_User}</CustomTableCell>
-										<CustomTableCell style={{ width: '200px' }}>
-											{row.Electronic_Address}
-										</CustomTableCell>
-										<CustomTableCell style={{ width: '200px' }}>{row.Phone_Number}</CustomTableCell>
-										<CustomTableCell style={{ width: '150px' }}>
+										<CustomTableCell>{row.Electronic_Address}</CustomTableCell>
+										<CustomTableCell>{row.Phone_Number}</CustomTableCell>
+										<CustomTableCell>
 											<Select
 												id="Id_Roles"
 												name="Id_Roles"
@@ -533,7 +511,7 @@ class UsersTable extends React.Component {
 												))}
 											</Select>
 										</CustomTableCell>
-										<CustomTableCell style={{ width: '150px' }}>
+										<CustomTableCell>
 											<Select
 												id="Id_Language"
 												name="Id_Language"
@@ -549,21 +527,6 @@ class UsersTable extends React.Component {
 												))}
 											</Select>
 										</CustomTableCell>
-										<TableCell padding="checkbox">
-											<Checkbox checked={row.IsAdmin == 1} />
-										</TableCell>
-										<TableCell padding="checkbox">
-											<Checkbox checked={row.AllowInsert == 1} />
-										</TableCell>
-										<TableCell padding="checkbox">
-											<Checkbox checked={row.AllowEdit == 1} />
-										</TableCell>
-										<TableCell padding="checkbox">
-											<Checkbox checked={row.AllowDelete == 1} />
-										</TableCell>
-										<TableCell padding="checkbox">
-											<Checkbox checked={row.AllowExport == 1} />
-										</TableCell>
 									</TableRow>
 								);
 							})}

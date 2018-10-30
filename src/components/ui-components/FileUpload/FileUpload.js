@@ -131,9 +131,9 @@ class FileUpload extends Component {
 	}
 	static contextTypes = {
 		maxFileSize: PropTypes.number,
-		extImage: PropTypes.object,
-		extPdf: PropTypes.object,
-		extWord: PropTypes.object,
+		extImage: PropTypes.array,
+		extPdf: PropTypes.array,
+		extWord: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
 		UID: PropTypes.func
 	};
