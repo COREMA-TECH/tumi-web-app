@@ -451,7 +451,7 @@ class UsersTable extends React.Component {
 															return this.props.onEditHandler({ ...row });
 														}}
 													>
-														<i class="fas fa-pen" />
+														<i className="fas fa-pen" />
 													</button>
 												</div>
 											</Tooltip>
@@ -467,7 +467,7 @@ class UsersTable extends React.Component {
 															return this.props.onDeleteHandler(row.Id);
 														}}
 													>
-														<i class="fas fa-trash" />
+														<i className="fas fa-trash" />
 													</button>
 												</div>
 											</Tooltip>
@@ -476,14 +476,14 @@ class UsersTable extends React.Component {
 											<Select
 												id="Id_Contact"
 												name="Id_Contact"
-												value={row.Id_Contact}
+												value={row.Id_Contact == null ? 0 : row.Id_Contact}
 												disabled
 												IconComponent="div"
 												disableUnderline={true}
 											>
 												{' '}
 												<MenuItem key={0} value={0} name="None">
-													<em>None</em>
+													<em />
 												</MenuItem>
 												{this.props.contacts.map(({ Id, Name }) => (
 													<MenuItem key={Id} value={Id} name={NamedNodeMap}>

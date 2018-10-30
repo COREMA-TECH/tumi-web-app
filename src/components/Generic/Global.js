@@ -6,12 +6,14 @@ import React, { Component } from 'react';
  *  CONFIGURATION OF APOLLO CLIENT
  */
 
-const withGlobalContent = (WrappedComponent,) => {
+const withGlobalContent = (WrappedComponent) => {
 	return class Global extends Component {
 		state = {
 			openSnackbar: false,
 			variantSnackbar: 'info',
-			messageSnackbar: 'Dummy text!'
+			messageSnackbar: 'Dummy text!',
+			verticalAlign: 'bottom',
+			horizontalAlign: 'center'
 		};
 
 		handleCloseSnackbar = (event, reason) => {
@@ -27,8 +29,8 @@ const withGlobalContent = (WrappedComponent,) => {
 				openSnackbar: true,
 				variantSnackbar: variant,
 				messageSnackbar: message,
-                verticalAlign: verticalAlign,
-                horizontalAlign: horizontalAlign
+				verticalAlign: verticalAlign,
+				horizontalAlign: horizontalAlign
 			});
 		};
 
