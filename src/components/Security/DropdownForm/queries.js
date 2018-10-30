@@ -13,3 +13,17 @@ export const GET_FORMS_QUERY = gql`
         }
     }
 `;
+
+/**
+ * Query to get rol with forms
+ */
+export const GET_ROL_FORMS_QUERY = gql`
+    {
+        getrolesforms(Id: null, IsActive: 1){
+            Id
+            IdRoles
+            IdForms
+        }
+    }
+`;
+
