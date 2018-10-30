@@ -7865,9 +7865,13 @@ label:not(.custom-file-label):not(.form-check-label) {
   border-radius: 5px;
   overflow: hidden; }
   .Table-head {
-    background-color: #3ca2c8;
+    background-color: #3ca2c8 !important;
     font-size: 0.9rem !important;
     font-weight: 300 !important; }
+    .Table-head:first-child {
+      border-radius: 5px 0 0 0; }
+    .Table-head:last-child {
+      border-radius: 0 5px 0 0; }
 
 .login-form {
   width: 350px;
