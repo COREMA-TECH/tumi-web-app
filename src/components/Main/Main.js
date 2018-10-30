@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Route from 'react-router-dom/es/Route';
 import Login from '../Login/Login';
@@ -19,7 +19,8 @@ class Main extends Component {
             !(
                 window.location.pathname == '/home/signature/' ||
                 window.location.pathname == '/employment-application' ||
-                window.location.pathname == '/employment-application-message'
+                window.location.pathname == '/employment-application-message' ||
+                window.location.pathname == '/reset'
             )
         )
             if (!this.LoginId || !this.token) {
@@ -42,14 +43,15 @@ class Main extends Component {
         }
         return (
             <div>
-                <Route path="/login" component={Login}/>
-                <Route exact path="/reset-password" component={ResetPassword}/>
+                <Route path="/login" component={Login} />
+                <Route exact path="/reset-password" component={ResetPassword} />
 
 
                 {/*<PrivateRoute path="/application/info" component={ApplicationInfo} />*/}
-                <PrivateRoute path="/employment-application" component={StepperApplyForm}/>
-                <PrivateRoute path="/employment-application-message" component={ApplyFormMessage}/>
-                <PrivateRoute path="/home" component={Private}/>
+                <PrivateRoute path="/employment-application" component={StepperApplyForm} />
+                <PrivateRoute path="/employment-application-message" component={ApplyFormMessage} />
+                <PrivateRoute path="/reset" component={ResetPassword} />
+                <PrivateRoute path="/home" component={Private} />
             </div>
         );
     }

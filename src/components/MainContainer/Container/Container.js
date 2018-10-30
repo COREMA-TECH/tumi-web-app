@@ -15,6 +15,8 @@ import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import WorkOrders from '../../WorkOrders';
+import ResetPassword from '../../ResetPassword/ResetPassword';
+
 
 class Container extends Component {
     render() {
@@ -35,6 +37,7 @@ class Container extends Component {
                 <Route exact path="/home/RolesForms" component={CreateRolesForms} />
                 <Route exact path="/home/Forms" component={CreateForms} />
                 <Route exact path="/home/Users" component={CreateUsers} />
+                <Route exact path="/Reset" component={ResetPassword} />
                 <Route exact path="/home/catalogs" component={Catalogs} />
                 <Route exact path="/home/signature" component={Signature} />
             </div>

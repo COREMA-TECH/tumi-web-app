@@ -1,21 +1,18 @@
 import React from 'react';
 import Global from 'Generic/Global';
-import { Link } from "react-router-dom";
-
-
+import { Link } from 'react-router-dom';
 
 const MobileMenu = (props) => {
-
 	const handleItemMenuAction = (event) => {
 		event.preventDefault();
 		let selfHtml = event.currentTarget;
 		let submenu = selfHtml.nextSibling;
 		if (selfHtml.classList.contains('selected')) {
-			selfHtml.classList.remove("selected");
-			submenu.classList.remove("SubMenu-show");
+			selfHtml.classList.remove('selected');
+			submenu.classList.remove('SubMenu-show');
 		} else {
-			selfHtml.classList.add("selected");
-			submenu.classList.add("SubMenu-show");
+			selfHtml.classList.add('selected');
+			submenu.classList.add('SubMenu-show');
 		}
 	};
 
@@ -24,48 +21,53 @@ const MobileMenu = (props) => {
 			<ul className="MainMenu-container">
 				<li className="MainMenu-option">
 					<a className="closeIcon" onClick={props.handleCloseMenu}>
-						<i className="fas fa-times"></i>
+						<i className="fas fa-times" />
 					</a>
 				</li>
 				<li className="MainMenu-option">
 					<Link to={`/home/Company`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'fas fa-home MenuMobile-icon'} title={'Companies'}></i>
+						<i className={'fas fa-home MenuMobile-icon'} title={'Companies'} />
 						<span>Companies</span>
 					</Link>
 				</li>
 				<li className="MainMenu-option">
 					<Link to={`/home/Contracts`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'far fa-handshake MenuMobile-icon'} title={'Contracts'}></i>
+						<i className={'far fa-handshake MenuMobile-icon'} title={'Contracts'} />
 						<span>Contracts</span>
-					</Link >
-				</li >
+					</Link>
+				</li>
 				<li className="MainMenu-option">
 					<Link to={`/home/Recruiter`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'fas fa-clipboard MenuMobile-icon'} title={'Recruiter'}></i>
+						<i className={'fas fa-clipboard MenuMobile-icon'} title={'Recruiter'} />
 						<span>Recruiter</span>
-					</Link >
-				</li >
+					</Link>
+				</li>
 				<li className="MainMenu-option">
-					<Link to={`/home/application`} className="MenuMobile-link" onClick={handleItemMenuAction} data-submenu="1">
-						<i className="fas fa-file-signature MenuMobile-icon" title={'Operation Manager'}></i>
+					<Link
+						to={`/home/application`}
+						className="MenuMobile-link"
+						onClick={handleItemMenuAction}
+						data-submenu="1"
+					>
+						<i className="fas fa-file-signature MenuMobile-icon" title={'Operation Manager'} />
 						<span>Operation Manager</span>
 					</Link>
 					<ul className="SubMenu" id="1">
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/home/application">
-								<i className="far fa-circle SubMenu-icon"></i> New Employtes Package
+								<i className="fas fa-angle-double-right SubMenu-icon" /> New Employees Package
 							</a>
 						</li>
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/employment-application">
-								<i className="far fa-circle SubMenu-icon"></i> Public Application
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Public Application
 							</a>
 						</li>
 					</ul>
 				</li>
 			</ul>
-		</div >
-	)
+		</div>
+	);
 };
 
 export default Global(MobileMenu);
