@@ -44,14 +44,12 @@
 
 	.delete-company-icon {
 		color: #fff;
-		background: rgba(0, 0, 0, 0.2);
 		border-radius: 5px;
 		padding: .01em;
-		display: none !important;
 	}
 
 	.delete-company-icon:hover {
-		box-shadow: 0px 0px 10px #aaa;
+		color: rgb(228, 220, 220);
 	}
 
 	.company-card:hover .delete-company-icon {
