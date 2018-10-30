@@ -1,0 +1,11 @@
+.panel-dropdown:hover {
+    background: #f9f9f9;
+}
+
+.panel-body {
+    background: #FFFFFF !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
