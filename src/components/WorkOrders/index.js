@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import WorkOrdersTable from './WorkOrdersTable';
 import WorkOrdersForm from './WorkOrdersForm';
+import withGlobalContent from 'Generic/Global';
 
 class WorkOrders extends Component {
 
@@ -9,17 +10,25 @@ class WorkOrders extends Component {
 
         this.state = {
             data: [],
-            openModal: false
+            openModal: false,
+            item: null
         };
     }
 
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({ openModal: true, item: null });
     };
     handleCloseModal = (event) => {
         event.preventDefault();
         this.setState({ openModal: false });
     };
+
+    onEditHandler = (item) => {
+        this.setState({
+            openModal: true,
+            item: item
+        });
+    }
 
     render() {
         return (
@@ -33,14 +42,14 @@ class WorkOrders extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <WorkOrdersTable></WorkOrdersTable>
+                        <WorkOrdersTable onEditHandler={this.onEditHandler} />
                     </div>
                 </div>
-                <WorkOrdersForm openModal={this.state.openModal} handleCloseModal={this.handleCloseModal}></WorkOrdersForm>
+                <WorkOrdersForm item={this.state.item} handleOpenSnackbar={this.props.handleOpenSnackbar} openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
             </div>
         );
     }
 
 }
 
-export default WorkOrders;
+export default withGlobalContent(WorkOrders);
