@@ -172,7 +172,7 @@ class Login extends Component {
 
 						if (document.getElementById('pass').value === 'TEMP') {
 							//alert("aqui estoy");
-							window.location.href = '/home/reset';
+							window.location.href = '/reset';
 						}
 						else {
 							window.location.href = '/home';

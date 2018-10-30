@@ -20,7 +20,7 @@ class Main extends Component {
                 window.location.pathname == '/home/signature/' ||
                 window.location.pathname == '/employment-application' ||
                 window.location.pathname == '/employment-application-message' ||
-                window.location.pathname == '/home/reset'
+                window.location.pathname == '/reset'
             )
         )
             if (!this.LoginId || !this.token) {
@@ -50,6 +50,7 @@ class Main extends Component {
                 {/*<PrivateRoute path="/application/info" component={ApplicationInfo} />*/}
                 <PrivateRoute path="/employment-application" component={StepperApplyForm} />
                 <PrivateRoute path="/employment-application-message" component={ApplyFormMessage} />
+                <PrivateRoute path="/reset" component={ResetPassword} />
                 <PrivateRoute path="/home" component={Private} />
             </div>
         );

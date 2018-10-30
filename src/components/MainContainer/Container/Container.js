@@ -34,7 +34,7 @@ class Container extends Component {
                 <Route exact path="/home/RolesForms" component={CreateRolesForms} />
                 <Route exact path="/home/Forms" component={CreateForms} />
                 <Route exact path="/home/Users" component={CreateUsers} />
-                <Route exact path="/home/Reset" component={ResetPassword} />
+                <Route exact path="/Reset" component={ResetPassword} />
                 <Route exact path="/home/catalogs" component={Catalogs} />
                 <Route exact path="/home/signature" component={Signature} />
             </div>
