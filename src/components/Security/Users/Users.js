@@ -808,10 +808,7 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
-
-						console.log("Ya hizo el id", id);
 						if (id === null) {
-							console.log("Estoy aqui");
 							this.sendMail();
 						}
 						this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
@@ -886,7 +883,6 @@ class Catalogs extends React.Component {
 				loadingConfirm: true
 			},
 			() => {
-				console.log("Ya llegue aqui");
 				this.props.client
 					.query({
 						query: this.SEND_EMAIL,
@@ -898,7 +894,6 @@ class Catalogs extends React.Component {
 						}
 					})
 					.then((data) => {
-						console.log("Envio el email");
 						this.props.handleOpenSnackbar('success', 'Email Send!');
 					})
 					.catch((error) => {
@@ -1089,7 +1084,7 @@ class Catalogs extends React.Component {
 										<label>* Rol</label>
 										<select
 											name="idRol"
-											className={[ 'form-control', this.state.idRolValid ? '' : '_invalid' ].join(
+											className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
 												' '
 											)}
 											disabled={this.state.loadingRoles}
