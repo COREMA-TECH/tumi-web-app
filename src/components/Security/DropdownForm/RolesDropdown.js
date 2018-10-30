@@ -11,6 +11,7 @@ import DropdownBodyForm from "./DropdownBodyForm";
 import withApollo from "react-apollo/withApollo";
 import {GET_FORMS_QUERY} from "./queries";
 import withGlobalContent from "../../Generic/Global";
+import {INSERT_ROL_FORM} from "./mutations";
 const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
@@ -76,7 +77,11 @@ class ControlledExpansionPanels extends React.Component {
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-body">
                                     <Typography>
-                                        <DropdownBodyForm data={this.state.dataForm}/>
+                                        <DropdownBodyForm
+                                            rolId={item.Id}
+                                            data={this.state.dataForm}
+                                            handleInsert={this.handleInsertRolForm}
+                                        />
                                     </Typography>
                                 </ExpansionPanelDetails>
                             </ExpansionPanel>

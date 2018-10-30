@@ -17,6 +17,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import {lighten} from '@material-ui/core/styles/colorManipulator';
+import {INSERT_ROL_FORM} from "./mutations";
+import withApollo from "react-apollo/withApollo";
 
 let counter = 0;
 
@@ -162,7 +164,13 @@ let EnhancedTableToolbar = props => {
             <div className={classes.actions}>
                 {numSelected > 0 ? (
                     <Tooltip title="Assign">
-                        <button className="btn btn btn-success">Assign and Save</button>
+                        <button
+                            onClick={() => {
+                                props.handleInsert()
+                            }}
+                            className="btn btn btn-success"
+                        >Assign and Save
+                        </button>
                     </Tooltip>
                 ) : (
                     <Tooltip title="Filter list">
@@ -189,7 +197,7 @@ const styles = theme => ({
         marginTop: theme.spacing.unit * 3,
     },
     table: {
-        minWidth: 1024,
+        minWidth: 1024
     },
     tableWrapper: {
         overflowX: 'auto',
@@ -257,6 +265,40 @@ class EnhancedTable extends React.Component {
         this.setState({rowsPerPage: event.target.value});
     };
 
+    insertRolForm = (object) => {
+        this.props.client
+            .mutate({
+                mutation: INSERT_ROL_FORM,
+                variables: {
+                    input: object
+                }
+            })
+            .then(({data}) => {
+                alert("Success");
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    };
+
+    handleInsertRolForm = () => {
+        let objectRolForm = {
+            IdRoles: this.props.rolId,
+            IdForms: 0,
+            IsActive: 1,
+            User_Created: 1,
+            User_Updated: 1,
+            Date_Created: "'2018-08-14'",
+            Date_Updated: "'2018-08-14'"
+        };
+
+        this.state.selected.map(item => {
+            objectRolForm.IdForms = item;
+
+            this.insertRolForm(objectRolForm);
+        });
+    };
+
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
@@ -265,9 +307,11 @@ class EnhancedTable extends React.Component {
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
         let forms = this.props.data;
 
+        console.log(this.state.selected);
+
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length}/>
+                <EnhancedTableToolbar numSelected={selected.length} handleInsert={this.handleInsertRolForm}/>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
@@ -280,22 +324,21 @@ class EnhancedTable extends React.Component {
                         />
                         <TableBody>
                             {/*{stableSort(forms, getSorting(order, orderBy))*/}
-                                {/*.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*/}
-                                {/*.map(item => {*/}
-                                    {/*const isSelected = this.isSelected(item.Id);*/}
-                                    {/*return (*/}
-                                        {/**/}
-                                    {/*);*/}
-                                {/*})}*/}
+                            {/*.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*/}
+                            {/*.map(item => {*/}
+                            {/*const isSelected = this.isSelected(item.Id);*/}
+                            {/*return (*/}
+                            {/**/}
+                            {/*);*/}
+                            {/*})}*/}
                             {/*{emptyRows > 0 && (*/}
-                                {/*<TableRow style={{height: 49 * emptyRows}}>*/}
-                                    {/*<TableCell colSpan={6}/>*/}
-                                {/*</TableRow>*/}
+                            {/*<TableRow style={{height: 49 * emptyRows}}>*/}
+                            {/*<TableCell colSpan={6}/>*/}
+                            {/*</TableRow>*/}
                             {/*)}*/}
                             {
                                 forms.map(item => {
                                     const isSelected = this.isSelected(item.Id);
-                                    console.table(forms);
 
                                     return (
                                         <TableRow
@@ -320,31 +363,31 @@ class EnhancedTable extends React.Component {
                                 })
                             }
                             {/*{*/}
-                                {/*forms.map(item => {*/}
-                                    {/*const isSelected = this.isSelected(item.Id);*/}
-                                    {/*console.table(forms);*/}
+                            {/*forms.map(item => {*/}
+                            {/*const isSelected = this.isSelected(item.Id);*/}
+                            {/*console.table(forms);*/}
 
-                                    {/*return (*/}
-                                        {/*<TableRow*/}
-                                            {/*hover*/}
-                                            {/*onClick={event => this.handleClick(event, item.Id)}*/}
-                                            {/*role="checkbox"*/}
-                                            {/*aria-checked={isSelected}*/}
-                                            {/*tabIndex={-1}*/}
-                                            {/*key={item.Id}*/}
-                                            {/*selected={isSelected}*/}
-                                        {/*>*/}
-                                            {/*<TableCell padding="checkbox">*/}
-                                                {/*<Checkbox checked={isSelected} color={"primary"}/>*/}
-                                            {/*</TableCell>*/}
-                                            {/*<TableCell component="th" scope="row" padding="none">*/}
-                                                {/*{item.Code}*/}
-                                            {/*</TableCell>*/}
-                                            {/*<TableCell numeric>{item.Name}</TableCell>*/}
-                                            {/*<TableCell numeric>{item.Value01}</TableCell>*/}
-                                        {/*</TableRow>*/}
-                                    {/*)*/}
-                                {/*})*/}
+                            {/*return (*/}
+                            {/*<TableRow*/}
+                            {/*hover*/}
+                            {/*onClick={event => this.handleClick(event, item.Id)}*/}
+                            {/*role="checkbox"*/}
+                            {/*aria-checked={isSelected}*/}
+                            {/*tabIndex={-1}*/}
+                            {/*key={item.Id}*/}
+                            {/*selected={isSelected}*/}
+                            {/*>*/}
+                            {/*<TableCell padding="checkbox">*/}
+                            {/*<Checkbox checked={isSelected} color={"primary"}/>*/}
+                            {/*</TableCell>*/}
+                            {/*<TableCell component="th" scope="row" padding="none">*/}
+                            {/*{item.Code}*/}
+                            {/*</TableCell>*/}
+                            {/*<TableCell numeric>{item.Name}</TableCell>*/}
+                            {/*<TableCell numeric>{item.Value01}</TableCell>*/}
+                            {/*</TableRow>*/}
+                            {/*)*/}
+                            {/*})*/}
                             {/*}*/}
                         </TableBody>
                     </Table>
@@ -372,4 +415,4 @@ EnhancedTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(EnhancedTable);
+export default withStyles(styles)(withApollo(EnhancedTable));
