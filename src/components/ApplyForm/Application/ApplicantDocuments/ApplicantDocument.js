@@ -11,6 +11,7 @@ import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from '../../../Generic/Global';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import DocumentInputFileCard from './DocumentInputFileCard';
+import PropTypes from 'prop-types';
 
 const applyTabs = require(`../languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
@@ -69,7 +70,6 @@ class ApplicantDocument extends Component {
 		);
 	};
 	removeDocument = (id) => {
-		//const storageRef = firebase.storage().ref(`/files/${file.name}`);
 		this.setState({ removing: true });
 		this.props.client
 			.mutate({
@@ -173,7 +173,24 @@ class ApplicantDocument extends Component {
 			});
 
 			//If document found then , don't show template into template list
-			if (found) return false;
+			if (found) {
+				return (
+					<DocumentInputFileCard
+						key={found.id}
+						ID={found.id}
+						cardType={'D'}
+						typeId={found.CatalogItemId}
+						title={found.fileName.trim()}
+						url={found.url}
+						removeDocument={this.removeDocument}
+						removing={this.state.removing}
+						updateDocument={this.updateDocument}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						item={found}
+						fileExtension={found.fileExtension}
+					/>
+				);
+			}
 			return (
 				<DocumentInputFileCard
 					key={item.Id}
@@ -191,6 +208,12 @@ class ApplicantDocument extends Component {
 	renderDocumentList = () => {
 		if (!this.state.documents) return false;
 		return this.state.documents.map((item) => {
+			//Search for the Document Type into Applicant's Documents
+			const found = this.state.templates.find((fnd) => {
+				return fnd.Id == item.CatalogItemId;
+			});
+			if (found) return false;
+
 			return (
 				<DocumentInputFileCard
 					key={item.id}
@@ -228,7 +251,18 @@ class ApplicantDocument extends Component {
 					<div className="col-md-12">
 						<div className="applicant-card">
 							<div className="applicant-card__header">
-								<span className="applicant-card__title">{applyTabs[6].label}</span>
+								<span className="applicant-card__title">
+									{applyTabs[6].label}
+									<p>
+										<small className="font-weight-light text-success">
+											supported files ({[
+												...this.context.extImage,
+												...this.context.extPdf,
+												...this.context.extWord
+											].join(',')}) | max size {this.context.maxFileSize / 1024 / 1024} MB
+										</small>
+									</p>
+								</span>
 							</div>
 							{this.state.loading ? (
 								<div className="form-section-1 form-section--center">
@@ -256,6 +290,12 @@ class ApplicantDocument extends Component {
 			</div>
 		);
 	}
+	static contextTypes = {
+		maxFileSize: PropTypes.number,
+		extImage: PropTypes.array,
+		extPdf: PropTypes.array,
+		extWord: PropTypes.array
+	};
 }
 
 export default withApollo(withGlobalContent(ApplicantDocument));

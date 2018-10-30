@@ -175,7 +175,7 @@ class InputFileCard extends Component {
 					<div className="button-container button-container-top">
 						<a className="file-input" href={this.props.url} target="_blank">
 							{' '}
-							{this.props.title}{' '}
+							Download ({this.props.title})
 							<div className="fa-container fa-container-download">
 								<i className="fas fa-download fa-lg" />
 							</div>
@@ -191,7 +191,16 @@ class InputFileCard extends Component {
 							accept={this.context.acceptAttachFile}
 						/>
 						<div className="drag-text">
-							{!this.state.uploading && <i className="fas fa-cloud-upload-alt" />}
+							{!this.state.uploading && (
+								<ul className="text-center">
+									<li>
+										<i className="fas fa-cloud-upload-alt" />
+									</li>
+									<li>
+										<small className="text-success">upload signed document</small>
+									</li>
+								</ul>
+							)}
 							{this.state.uploading && (
 								<div className={`c100 p${this.state.progress} small`}>
 									<span>{`${this.state.progress}%`}</span>

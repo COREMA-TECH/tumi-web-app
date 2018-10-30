@@ -420,7 +420,7 @@ class Catalogs extends React.Component {
 		let passwordHasValue = this.state.passwordHasValue;
 		let idRolHasValue = this.state.idRolHasValue;
 		let idLanguageHasValue = this.state.idLanguageHasValue;
-		let IdRegionIsValid = true;
+		let IdRegionValid = true;
 
 		switch (fieldName) {
 			case 'idContact':
@@ -458,7 +458,7 @@ class Catalogs extends React.Component {
 				idLanguageHasValue = value !== null && value !== '';
 				break;
 			case 'IdRegion':
-				if (this.state.IsRecruiter) IdRegionIsValid = value !== null && value !== 0 && value !== '';
+				if (this.state.IsRecruiter) IdRegionValid = value !== null && value !== 0 && value !== '';
 
 				break;
 			default:
@@ -482,7 +482,8 @@ class Catalogs extends React.Component {
 				numberHasValue,
 				passwordHasValue,
 				idRolHasValue,
-				idLanguageHasValue
+				idLanguageHasValue,
+				IdRegionValid
 			},
 			this.validateForm
 		);
@@ -980,11 +981,14 @@ class Catalogs extends React.Component {
 						<div className="row">
 							<div className="col-lg-8">
 								<div className="row">
-									<div className="col-md-12 col-lg-4">
+									<div className="col-md-12 col-lg-6">
 										<label>* Contact</label>
 										<select
 											name="idContact"
-											className={'form-control'}
+											className={[
+												'form-control',
+												this.state.idContactValid ? '' : '_invalid'
+											].join(' ')}
 											disabled={this.state.loadingContacts}
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idContact');
@@ -998,7 +1002,7 @@ class Catalogs extends React.Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-12 col-lg-4">
+									<div className="col-md-12 col-lg-6">
 										<label>* Username</label>
 										<InputForm
 											id="username"
@@ -1009,7 +1013,7 @@ class Catalogs extends React.Component {
 											change={(value) => this.onChangeHandler(value, 'username')}
 										/>
 									</div>
-									<div className="col-md-12 col-lg-4">
+									<div className="col-md-12 col-lg-6">
 										<label>* Email</label>
 										<InputForm
 											id="email"
@@ -1020,7 +1024,7 @@ class Catalogs extends React.Component {
 											change={(value) => this.onChangeHandler(value, 'email')}
 										/>
 									</div>
-									<div className="col-md-12 col-lg-4">
+									<div className="col-md-12 col-lg-6">
 										<label>* Phone Number</label>
 										<InputMask
 											id="number"
@@ -1037,11 +1041,13 @@ class Catalogs extends React.Component {
 											placeholder="+(999) 999-9999"
 										/>
 									</div>
-									<div className="col-md-12 col-lg-4">
+									<div className="col-md-12 col-lg-6">
 										<label>* Rol</label>
 										<select
 											name="idRol"
-											className={'form-control'}
+											className={[ 'form-control', this.state.idRolValid ? '' : '_invalid' ].join(
+												' '
+											)}
 											disabled={this.state.loadingRoles}
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idRol');
@@ -1055,12 +1061,15 @@ class Catalogs extends React.Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-12 col-lg-4">
+									<div className="col-md-12 col-lg-6">
 										<label>* Language</label>
 
 										<select
 											name="idLanguage"
-											className={'form-control'}
+											className={[
+												'form-control',
+												this.state.idLanguageValid ? '' : '_invalid'
+											].join(' ')}
 											disabled={this.state.loadingLanguages}
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idLanguage');
@@ -1095,10 +1104,13 @@ class Catalogs extends React.Component {
 									</div>
 
 									<div className="col-md-9 col-lg-9">
-										<label>Region</label>
+										<label>{this.state.IsRecruiter ? '*' : ''}Region</label>
 										<select
 											name="IdRegion"
-											className={'form-control'}
+											className={[
+												'form-control',
+												this.state.IdRegionValid ? '' : '_invalid'
+											].join(' ')}
 											disabled={!this.state.IsRecruiter}
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'IdRegion');
@@ -1115,117 +1127,120 @@ class Catalogs extends React.Component {
 								</div>
 							</div>
 							<div className="col-lg-4">
-								<div className="row">
-									<ul className="row w-100 border bg-light rounded">
-										<li className="col-md-4 col-sm-4 col-lg-6">
-											<label>Active?</label>
+								<div className="card">
+									<div className="card-header info">Permissions</div>
+									<div className="card-body p-0">
+										<ul className="row w-100 bg-light ">
+											<li className="col-md-4 col-sm-4 col-lg-6">
+												<label>Active?</label>
 
-											<div className="onoffswitch">
-												<input
-													type="checkbox"
-													checked={this.state.IsActive}
-													name="IsActive"
-													onChange={this.handleCheckedChange('IsActive')}
-													className="onoffswitch-checkbox"
-													id="IsActive"
-												/>
-												<label className="onoffswitch-label" for="IsActive">
-													<span className="onoffswitch-inner" />
-													<span className="onoffswitch-switch" />
-												</label>
-											</div>
-										</li>
-										<li className="col-md-4 col-sm-4 col-lg-6">
-											<label>Admin?</label>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														checked={this.state.IsActive}
+														name="IsActive"
+														onChange={this.handleCheckedChange('IsActive')}
+														className="onoffswitch-checkbox"
+														id="IsActive"
+													/>
+													<label className="onoffswitch-label" for="IsActive">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</li>
+											<li className="col-md-4 col-sm-4 col-lg-6">
+												<label>Admin?</label>
 
-											<div className="onoffswitch">
-												<input
-													type="checkbox"
-													checked={this.state.isAdmin}
-													name="isAdmin"
-													onChange={this.handleCheckedChange('isAdmin')}
-													className="onoffswitch-checkbox"
-													id="isAdmin"
-												/>
-												<label className="onoffswitch-label" for="isAdmin">
-													<span className="onoffswitch-inner" />
-													<span className="onoffswitch-switch" />
-												</label>
-											</div>
-										</li>
-										<li className="col-md-4 col-sm-4 col-lg-6">
-											<label>Insert?</label>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														checked={this.state.isAdmin}
+														name="isAdmin"
+														onChange={this.handleCheckedChange('isAdmin')}
+														className="onoffswitch-checkbox"
+														id="isAdmin"
+													/>
+													<label className="onoffswitch-label" for="isAdmin">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</li>
+											<li className="col-md-4 col-sm-4 col-lg-6">
+												<label>Insert?</label>
 
-											<div className="onoffswitch">
-												<input
-													type="checkbox"
-													checked={this.state.allowInsert}
-													name="allowInsert"
-													onChange={this.handleCheckedChange('allowInsert')}
-													className="onoffswitch-checkbox"
-													id="allowInsert"
-												/>
-												<label className="onoffswitch-label" for="allowInsert">
-													<span className="onoffswitch-inner" />
-													<span className="onoffswitch-switch" />
-												</label>
-											</div>
-										</li>
-										<li className="col-md-4 col-sm-4 col-lg-6">
-											<label>Edit?</label>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														checked={this.state.allowInsert}
+														name="allowInsert"
+														onChange={this.handleCheckedChange('allowInsert')}
+														className="onoffswitch-checkbox"
+														id="allowInsert"
+													/>
+													<label className="onoffswitch-label" for="allowInsert">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</li>
+											<li className="col-md-4 col-sm-4 col-lg-6">
+												<label>Edit?</label>
 
-											<div className="onoffswitch">
-												<input
-													type="checkbox"
-													checked={this.state.allowEdit}
-													name="allowEdit"
-													onChange={this.handleCheckedChange('allowEdit')}
-													className="onoffswitch-checkbox"
-													id="allowEdit"
-												/>
-												<label className="onoffswitch-label" for="allowEdit">
-													<span className="onoffswitch-inner" />
-													<span className="onoffswitch-switch" />
-												</label>
-											</div>
-										</li>
-										<li className="col-md-4 col-sm-4 col-lg-6">
-											<label>Delete?</label>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														checked={this.state.allowEdit}
+														name="allowEdit"
+														onChange={this.handleCheckedChange('allowEdit')}
+														className="onoffswitch-checkbox"
+														id="allowEdit"
+													/>
+													<label className="onoffswitch-label" for="allowEdit">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</li>
+											<li className="col-md-4 col-sm-4 col-lg-6">
+												<label>Delete?</label>
 
-											<div className="onoffswitch">
-												<input
-													type="checkbox"
-													checked={this.state.allowDelete}
-													name="allowDelete"
-													onChange={this.handleCheckedChange('allowDelete')}
-													className="onoffswitch-checkbox"
-													id="allowDelete"
-												/>
-												<label className="onoffswitch-label" for="allowDelete">
-													<span className="onoffswitch-inner" />
-													<span className="onoffswitch-switch" />
-												</label>
-											</div>
-										</li>
-										<li className="col-md-4 col-sm-4 col-lg-6">
-											<label>Export?</label>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														checked={this.state.allowDelete}
+														name="allowDelete"
+														onChange={this.handleCheckedChange('allowDelete')}
+														className="onoffswitch-checkbox"
+														id="allowDelete"
+													/>
+													<label className="onoffswitch-label" for="allowDelete">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</li>
+											<li className="col-md-4 col-sm-4 col-lg-6">
+												<label>Export?</label>
 
-											<div className="onoffswitch">
-												<input
-													type="checkbox"
-													checked={this.state.allowExport}
-													name="allowExport"
-													onChange={this.handleCheckedChange('allowExport')}
-													className="onoffswitch-checkbox"
-													id="allowExport"
-												/>
-												<label className="onoffswitch-label" for="allowExport">
-													<span className="onoffswitch-inner" />
-													<span className="onoffswitch-switch" />
-												</label>
-											</div>
-										</li>
-									</ul>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														checked={this.state.allowExport}
+														name="allowExport"
+														onChange={this.handleCheckedChange('allowExport')}
+														className="onoffswitch-checkbox"
+														id="allowExport"
+													/>
+													<label className="onoffswitch-label" for="allowExport">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>

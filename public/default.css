@@ -8386,9 +8386,14 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .UploadDocument-wrapper {
   text-align: left;
-  width: 100%; }
+  width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
   @media (max-width: 991.98px) {
     .UploadDocument-wrapper {
+      justify-content: center;
       text-align: center; } }
 
 .Stepper-wrapper {
