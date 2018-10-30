@@ -140,41 +140,41 @@ class Login extends Component {
 						this.setState({ loadingLogin: false });
 					}
 					else {
-						localStorage.setItem('LoginId', user.Id);
-						localStorage.setItem('FullName', user.Full_Name);
-						localStorage.setItem('Token', user.Token);
-
-						if (user.IsAdmin == 1) {
-							localStorage.setItem('IsAdmin', true);
-						} else {
-							localStorage.setItem('IsAdmin', false);
-						}
-						if (user.AllowEdit == 1) {
-							localStorage.setItem('AllowEdit', true);
-						} else {
-							localStorage.setItem('AllowEdit', false);
-						}
-						if (user.AllowDelete == 1) {
-							localStorage.setItem('AllowDelete', true);
-						} else {
-							localStorage.setItem('AllowDelete', false);
-						}
-						if (user.AllowInsert == 1) {
-							localStorage.setItem('AllowInsert', true);
-						} else {
-							localStorage.setItem('AllowInsert', false);
-						}
-						if (user.AllowExport == 1) {
-							localStorage.setItem('AllowExport', true);
-						} else {
-							localStorage.setItem('AllowExport', false);
-						}
-
 						if (document.getElementById('pass').value === 'TEMP') {
-							//alert("aqui estoy");
+							localStorage.setItem('ChangePassword', user.Id);
 							window.location.href = '/reset';
 						}
 						else {
+							localStorage.setItem('LoginId', user.Id);
+							localStorage.setItem('FullName', user.Full_Name);
+							localStorage.setItem('Token', user.Token);
+
+							if (user.IsAdmin == 1) {
+								localStorage.setItem('IsAdmin', true);
+							} else {
+								localStorage.setItem('IsAdmin', false);
+							}
+							if (user.AllowEdit == 1) {
+								localStorage.setItem('AllowEdit', true);
+							} else {
+								localStorage.setItem('AllowEdit', false);
+							}
+							if (user.AllowDelete == 1) {
+								localStorage.setItem('AllowDelete', true);
+							} else {
+								localStorage.setItem('AllowDelete', false);
+							}
+							if (user.AllowInsert == 1) {
+								localStorage.setItem('AllowInsert', true);
+							} else {
+								localStorage.setItem('AllowInsert', false);
+							}
+							if (user.AllowExport == 1) {
+								localStorage.setItem('AllowExport', true);
+							} else {
+								localStorage.setItem('AllowExport', false);
+							}
+
 							window.location.href = '/home';
 						}
 
