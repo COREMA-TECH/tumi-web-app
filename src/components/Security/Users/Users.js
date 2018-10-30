@@ -217,7 +217,7 @@ class Catalogs extends React.Component {
 		idToDelete: null,
 		idToEdit: null,
 
-		idContact: '',
+		idContact: undefined,
 		username: '',
 		//fullname: '',
 		password: 'TEMP',
@@ -370,8 +370,7 @@ class Catalogs extends React.Component {
 		);
 	};
 	validateAllFields(func) {
-		let idContactValid =
-			this.state.idContact !== null && this.state.idContact !== -1 && this.state.idContact !== '';
+		let idContactValid = this.state.idContact !== -1 && this.state.idContact !== '';
 		let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
 		//let fullnameValid = this.state.fullname.trim().length >= 10;
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
@@ -424,8 +423,8 @@ class Catalogs extends React.Component {
 
 		switch (fieldName) {
 			case 'idContact':
-				idContactValid = value !== null && value !== -1 && value !== '';
-				idContactHasValue = value !== null && value !== -1 && value !== '';
+				idContactValid = value !== -1 && value !== '';
+				idContactHasValue = value !== -1 && value !== '';
 				break;
 			case 'username':
 				usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
@@ -550,7 +549,7 @@ class Catalogs extends React.Component {
 			this.setState(
 				{
 					idToEdit: Id,
-					idContact: Id_Contact,
+					idContact: Id_Contact == null ? undefined : Id_Contact,
 					idRol: Id_Roles,
 					username: Code_User.trim(),
 					//fullname: Full_Name.trim(),
@@ -780,7 +779,7 @@ class Catalogs extends React.Component {
 							input: {
 								Id: id,
 								Id_Entity: 1,
-								Id_Contact: this.state.idContact,
+								Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
 								Id_Roles: this.state.idRol,
 								Code_User: `'${this.state.username}'`,
 								Full_Name: `'${this.state.fullname}'`,
@@ -993,12 +992,13 @@ class Catalogs extends React.Component {
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idContact');
 											}}
-											error={!this.state.idContactValid}
 											value={this.state.idContact}
 										>
-											<option value="">Select a contact</option>
+											<option value={undefined}>Select a contact</option>
 											{this.state.contacts.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
+												<option key={item.Id} value={item.Id}>
+													{item.Name}
+												</option>
 											))}
 										</select>
 									</div>
@@ -1052,12 +1052,13 @@ class Catalogs extends React.Component {
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idRol');
 											}}
-											error={!this.state.idRolValid}
 											value={this.state.idRol}
 										>
 											<option value="">Select a rol</option>
 											{this.state.roles.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
+												<option key={item.Id} value={item.Id}>
+													{item.Name}
+												</option>
 											))}
 										</select>
 									</div>
@@ -1074,12 +1075,13 @@ class Catalogs extends React.Component {
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idLanguage');
 											}}
-											error={!this.state.idLanguageValid}
 											value={this.state.idLanguage}
 										>
 											<option value="">Select a language</option>
 											{this.state.languages.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
+												<option key={item.Id} value={item.Id}>
+													{item.Name}
+												</option>
 											))}
 										</select>
 									</div>
@@ -1096,7 +1098,7 @@ class Catalogs extends React.Component {
 												className="onoffswitch-checkbox"
 												id="IsRecruiter"
 											/>
-											<label className="onoffswitch-label" for="IsRecruiter">
+											<label className="onoffswitch-label" htmlFor="IsRecruiter">
 												<span className="onoffswitch-inner" />
 												<span className="onoffswitch-switch" />
 											</label>
@@ -1115,12 +1117,13 @@ class Catalogs extends React.Component {
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'IdRegion');
 											}}
-											error={!this.state.IdRegionValid}
 											value={this.state.IdRegion}
 										>
 											<option value="">Select a region</option>
 											{this.state.regions.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
+												<option key={item.Id} value={item.Id}>
+													{item.Name}
+												</option>
 											))}
 										</select>
 									</div>
@@ -1143,7 +1146,7 @@ class Catalogs extends React.Component {
 														className="onoffswitch-checkbox"
 														id="IsActive"
 													/>
-													<label className="onoffswitch-label" for="IsActive">
+													<label className="onoffswitch-label" htmlFor="IsActive">
 														<span className="onoffswitch-inner" />
 														<span className="onoffswitch-switch" />
 													</label>
@@ -1161,7 +1164,7 @@ class Catalogs extends React.Component {
 														className="onoffswitch-checkbox"
 														id="isAdmin"
 													/>
-													<label className="onoffswitch-label" for="isAdmin">
+													<label className="onoffswitch-label" htmlFor="isAdmin">
 														<span className="onoffswitch-inner" />
 														<span className="onoffswitch-switch" />
 													</label>
@@ -1179,7 +1182,7 @@ class Catalogs extends React.Component {
 														className="onoffswitch-checkbox"
 														id="allowInsert"
 													/>
-													<label className="onoffswitch-label" for="allowInsert">
+													<label className="onoffswitch-label" htmlFor="allowInsert">
 														<span className="onoffswitch-inner" />
 														<span className="onoffswitch-switch" />
 													</label>
@@ -1197,7 +1200,7 @@ class Catalogs extends React.Component {
 														className="onoffswitch-checkbox"
 														id="allowEdit"
 													/>
-													<label className="onoffswitch-label" for="allowEdit">
+													<label className="onoffswitch-label" htmlFor="allowEdit">
 														<span className="onoffswitch-inner" />
 														<span className="onoffswitch-switch" />
 													</label>
@@ -1215,7 +1218,7 @@ class Catalogs extends React.Component {
 														className="onoffswitch-checkbox"
 														id="allowDelete"
 													/>
-													<label className="onoffswitch-label" for="allowDelete">
+													<label className="onoffswitch-label" htmlFor="allowDelete">
 														<span className="onoffswitch-inner" />
 														<span className="onoffswitch-switch" />
 													</label>
@@ -1233,7 +1236,7 @@ class Catalogs extends React.Component {
 														className="onoffswitch-checkbox"
 														id="allowExport"
 													/>
-													<label className="onoffswitch-label" for="allowExport">
+													<label className="onoffswitch-label" htmlFor="allowExport">
 														<span className="onoffswitch-inner" />
 														<span className="onoffswitch-switch" />
 													</label>
@@ -1265,8 +1268,8 @@ class Catalogs extends React.Component {
 											className="btn btn-success"
 											onClick={this.addUserHandler}
 										>
-											Save {!isLoading && <i class="fas fa-save ml-1" />}
-											{isLoading && <i class="fas fa-spinner fa-spin ml-1" />}
+											Save {!isLoading && <i className="fas fa-save ml-1" />}
+											{isLoading && <i className="fas fa-spinner fa-spin ml-1" />}
 										</button>
 									</div>
 								</Tooltip>
@@ -1277,7 +1280,7 @@ class Catalogs extends React.Component {
 								<Tooltip title={'Cancel Operation'}>
 									<div>
 										<button className="btn btn-danger" onClick={this.cancelUserHandler}>
-											Cancel <i class="fas fa-ban ml-1" />
+											Cancel <i className="fas fa-ban ml-1" />
 										</button>
 									</div>
 								</Tooltip>
@@ -1288,7 +1291,7 @@ class Catalogs extends React.Component {
 
 				<div className="users__header">
 					<button className="btn btn-success mr-1" onClick={this.handleClickOpenModal} disabled={isLoading}>
-						Add User<i class="fas fa-plus ml-2" />
+						Add User<i className="fas fa-plus ml-2" />
 					</button>
 				</div>
 				<div className="row">

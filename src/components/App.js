@@ -94,9 +94,9 @@ class App extends Component {
 		token: PropTypes.string,
 		avatarURL: PropTypes.string,
 		maxFileSize: PropTypes.number,
-		extWord: PropTypes.object,
-		extImage: PropTypes.object,
-		extPdf: PropTypes.object,
+		extWord: PropTypes.array,
+		extImage: PropTypes.array,
+		extPdf: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
 		UID: PropTypes.func
 	};
