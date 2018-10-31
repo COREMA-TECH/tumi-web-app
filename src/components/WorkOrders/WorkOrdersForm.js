@@ -37,6 +37,40 @@ class WorkOrdersForm extends Component {
         };
     }
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.item) {
+            this.setState({
+                IdEntity: nextProps.item.IdEntity,
+                date: nextProps.item.date,
+                quantity: nextProps.item.quantity,
+                status: 30452,
+                shift: nextProps.item.shift,
+                startDate: nextProps.item.startDate,
+                endDate: nextProps.item.endDate,
+                needExperience: nextProps.item.needExperience,
+                needEnglish: nextProps.item.needEnglish,
+                comment: nextProps.item.comment,
+                PositionRateId: nextProps.item.PositionRateId,
+                userId: 1
+            });
+        } else {
+            this.setState({
+                IdEntity: 0,
+                date: '',
+                quantity: 0,
+                status: 0,
+                shift: 0,
+                startDate: '',
+                endDate: '',
+                needExperience: false,
+                needEnglish: false,
+                comment: '',
+                PositionRateId: 0,
+                userId: 1
+            });
+        }
+    }
+
     // shouldComponentUpdate(nextProps, nextState) {
 
     //     if (this.props.item !== nextProps.item || this.props.openModal !== nextProps.openModal) {
@@ -159,7 +193,7 @@ class WorkOrdersForm extends Component {
         console.log(this.state.IdEntity);
         return (
             <div>
-                <Dialog maxWidth="md" open={this.props.openModal} onClose={this.props.handleCloseModal} >
+                <Dialog maxWidth="lg" open={this.props.openModal} onClose={this.props.handleCloseModal} >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
@@ -168,18 +202,18 @@ class WorkOrdersForm extends Component {
                     <DialogContent>
                         <form action="" onSubmit={this.handleSubmit}>
                             <div className="row">
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">Hotel</label>
-                                    <select name="hotel" className="form-control" id="" onChange={this.handleChange} value={this.state.IdEntity}>
+                                    <select name="hotel" className="form-control" id="" onChange={this.handleChange}>
                                         <option value="0">Select a Hotel</option>
                                         {
                                             this.state.hotels.map((hotel) => (
-                                                <option value={hotel.Id}>{hotel.Name}</option>
+                                                <option value={hotel.Id} selected={this.state.IdEntity == hotel.Id ? true : false}>{hotel.Name}</option>
                                             ))
                                         }
                                     </select>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">Position</label>
                                     <select name="position" className="form-control" id="" onChange={this.handleChange}>
                                         <option value="0">Select a Position</option>
@@ -190,23 +224,23 @@ class WorkOrdersForm extends Component {
                                         }
                                     </select>
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">Quantity</label>
                                     <input type="text" className="form-control" name="quantity" onChange={this.handleChange} value={this.state.quantity} />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">Shift</label>
                                     <input type="text" className="form-control" name="shift" onChange={this.handleChange} value={this.state.shift} />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">Date Needed By</label>
                                     <input type="date" className="form-control" name="startDate" onChange={this.handleChange} value={this.state.startDate.substring(0, 10)} />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">To</label>
                                     <input type="date" className="form-control" name="endDate" onChange={this.handleChange} value={this.state.endDate.substring(0, 10)} />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label htmlFor="">Date</label>
                                     <input type="date" className="form-control" name="date" onChange={this.handleChange} value={this.state.date.substring(0, 10)} />
                                 </div>
