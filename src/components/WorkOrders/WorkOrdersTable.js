@@ -69,7 +69,6 @@ class WorkOrdersTable extends Component {
                         </TableHead>
                         <TableBody>
                             {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                console.log(row);
                                 return (
                                     <TableRow>
                                         <CustomTableCell>
@@ -79,10 +78,10 @@ class WorkOrdersTable extends Component {
                                                     disabled={this.props.loading}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        return this.props.onEditHandler({});
+                                                        return this.props.onEditHandler({ ...row });
                                                     }}
                                                 >
-                                                    <i class="fas fa-pen"></i>
+                                                    <i className="fas fa-pen"></i>
                                                 </button>
                                             </Tooltip>
                                             <Tooltip title="Delete">
@@ -91,14 +90,14 @@ class WorkOrdersTable extends Component {
                                                     disabled={this.props.loading}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        return this.props.onDeleteHandler();
+                                                        return this.props.onDeleteHandler({ ...row });
                                                     }}
                                                 >
-                                                    <i class="fas fa-trash"></i>
+                                                    <i className="fas fa-trash"></i>
                                                 </button>
                                             </Tooltip>
                                         </CustomTableCell>
-                                        <CustomTableCell>Position</CustomTableCell>
+                                        <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell>{row.quantity}</CustomTableCell>
                                         <CustomTableCell>{row.shift}</CustomTableCell>
                                         <CustomTableCell>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>

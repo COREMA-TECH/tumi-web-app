@@ -7,7 +7,15 @@ export const GET_WORKORDERS_QUERY = gql`
             quantity,
             shift,
             needExperience,
-            needEnglish
+            needEnglish,
+            startDate,
+            endDate,
+            comment,
+            date,
+            IdEntity,
+            position {
+                Position
+            }
         }
     }
 `;
