@@ -17,6 +17,7 @@ import {INSERT_ROL_FORM} from "./mutations";
 import withApollo from "react-apollo/withApollo";
 import {GET_ROL_FORMS_QUERY} from "./queries";
 import withGlobalContent from "../../Generic/Global";
+import TableItem from "./TableItem";
 
 let counter = 0;
 
@@ -300,12 +301,6 @@ class EnhancedTable extends React.Component {
                     forms.map(item => {
                         let checked = false;
 
-                        // this.state.dataRolForm.map((itemRolForm) => {
-                        //     if (this.props.rolId === itemRolForm.IdRoles) {
-                        //         isSelected = this.isSelected(itemRolForm.IdForms);
-                        //     }
-                        // });
-
                         this.state.dataRolForm.map((itemRolForm) => {
                             if (this.props.rolId === itemRolForm.IdRoles) {
                                 if (itemRolForm.IdRoles === item.Id) {
@@ -316,22 +311,20 @@ class EnhancedTable extends React.Component {
 
                         if (checked) {
                             return (
-                                <tr>
-                                    <input type="checkbox" checked={checked}/>
-                                    <td>{item.Code}</td>
-                                    <td>{item.Name}</td>
-                                    <td>{item.Value01}</td>
-                                </tr>
+                                <TableItem
+                                    checked={true}
+                                    code={item.Code}
+                                    name={item.Name}
+                                    url={item.url} />
                             )
                         }
 
                         return (
-                            <tr>
-                                <input type="checkbox"/>
-                                <td>{item.Code}</td>
-                                <td>{item.Name}</td>
-                                <td>{item.Value01}</td>
-                            </tr>
+                            <TableItem
+                                checked={false}
+                                code={item.Code}
+                                name={item.Name}
+                                url={item.url} />
                         )
                     })
                 }
