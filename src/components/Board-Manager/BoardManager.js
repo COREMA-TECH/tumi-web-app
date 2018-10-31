@@ -59,11 +59,8 @@ class BoardManager extends Component {
                     id: wo.id, title: wo.comment,
                     description: wo.comment, label: '30 mins'
                 };
-
                 workOrders.push(datos);
-
             });
-
             this.setState(
                 {
                     workOrder: workOrders,
