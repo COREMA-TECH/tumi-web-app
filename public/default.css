@@ -7523,6 +7523,10 @@ label:not(.custom-file-label):not(.form-check-label) {
     padding-left: 5px;
     padding-right: 5px; } }
 
+@media (max-width: 575.98px) {
+  .WorkOrder .border-right {
+    border-right: 0 !important; } }
+
 .add-company {
   float: right;
   margin: 0 auto !important; }
@@ -7572,6 +7576,22 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .buttons-group-right {
   text-align: right; }
+
+.btnWrapper-centered {
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%; }
+  @media (max-width: 575.98px) {
+    .btnWrapper-centered {
+      -webkit-box-pack: end;
+      -ms-flex-pack: end;
+      justify-content: flex-end;
+      padding-top: 0.5rem;
+      padding-right: 0.3rem; } }
 
 .custom-file-label {
   overflow: hidden; }
