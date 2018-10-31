@@ -7,7 +7,10 @@
         margin-bottom: 0 !important;
     }
     &-header {
-        background-color: $bg-card-header !important;
+        background-color: $white;
+        border-bottom: 0;
+        color: $text-color;
+        font-weight: 700;
         position: relative;
         &::after {
             bottom: -5px;

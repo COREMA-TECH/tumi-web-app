@@ -170,13 +170,18 @@
 .RightMenu {
     &-item {
         display: inline-block;
-        height: 25px;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
     }
     &-list {
         align-items: center;
         display: flex;
-        margin-right: 1rem;
+        margin-right: 1.5rem;
         text-align: right;
+        .dropdown-menu {
+            right: 0;
+            left: auto !important;
+        }
     }
 }
 
