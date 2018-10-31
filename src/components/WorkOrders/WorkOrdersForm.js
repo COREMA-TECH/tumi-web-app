@@ -11,52 +11,65 @@ import { CREATE_WORKORDER } from './mutations';
 
 class WorkOrdersForm extends Component {
 
+    _states = {
+        hotel: 0,
+        IdEntity: null,
+        date: '',
+        quantity: 0,
+        status: 0,
+        shift: 0,
+        startDate: '',
+        endDate: '',
+        needExperience: false,
+        needEnglish: false,
+        comment: '',
+        position: 0,
+        userId: 1
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             openModal: false,
             hotels: [],
             positions: [],
-            hotel: 0,
-            IdEntity: 0,
-            date: '',
-            quantity: 0,
-            status: 0,
-            shift: 0,
-            startDate: '',
-            endDate: '',
-            needExperience: false,
-            needEnglish: false,
-            comment: '',
-            position: 0,
-            userId: 1
+            ...this._states
         };
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    // shouldComponentUpdate(nextProps, nextState) {
 
-        if (this.props.item !== nextProps.item || this.props.openModal !== nextProps.openModal) {
-            this.setState({
-                IdEntity: nextProps.item.IdEntity,
-                date: nextProps.item.date,
-                quantity: nextProps.item.quantity,
-                status: 30452,
-                shift: nextProps.item.shift,
-                startDate: nextProps.item.startDate,
-                endDate: nextProps.item.endDate,
-                needExperience: nextProps.item.needExperience,
-                needEnglish: nextProps.item.needEnglish,
-                comment: nextProps.item.comment,
-                PositionRateId: nextProps.item.PositionRateId,
-                userId: 1
-            });
-            return true;
-        }
+    //     if (this.props.item !== nextProps.item || this.props.openModal !== nextProps.openModal) {
+    //         if (nextProps.item) {
+    //             this.setState({
+    //                 IdEntity: nextProps.item.IdEntity,
+    //                 date: nextProps.item.date,
+    //                 quantity: nextProps.item.quantity,
+    //                 status: 30452,
+    //                 shift: nextProps.item.shift,
+    //                 startDate: nextProps.item.startDate,
+    //                 endDate: nextProps.item.endDate,
+    //                 needExperience: nextProps.item.needExperience,
+    //                 needEnglish: nextProps.item.needEnglish,
+    //                 comment: nextProps.item.comment,
+    //                 PositionRateId: nextProps.item.PositionRateId,
+    //                 userId: 1
+    //             });
+    //         } else {
+    //             this.setState({
+    //                 ...this._states
+    //             });
+    //         }
+    //         return true;
+    //     }
+    //     if (this.state.IdEntity !== nextState.IdEntity || this.state.positions !== nextState.positions) {
+    //         return true;
+    //     }
 
-        return true;
-    }
+    //     return false;
+    // }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
 
 
         this.props.client

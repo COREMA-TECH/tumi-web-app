@@ -42,18 +42,35 @@ class ControlledExpansionPanels extends React.Component {
     };
 
     getFormsData = () => {
-        this.props.client
-            .query({
-                query: GET_FORMS_QUERY,
-            })
-            .then(({data}) => {
-                this.setState({
-                    dataForm: data.getforms
+        this.setState({
+            loadingData: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_FORMS_QUERY,
                 })
-            })
-            .catch(error => {
-                alert("Error to get forms");
-            })
+                .then(({data}) => {
+                    this.setState({
+                        dataForm: data.getforms
+                    })
+
+                    this.setState({
+                        loadingData: false
+                    });
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to get data. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+
+                    this.setState({
+                        loadingData: false
+                    });
+                })
+        });
     };
 
     componentWillMount(){
@@ -64,6 +81,10 @@ class ControlledExpansionPanels extends React.Component {
         const { classes } = this.props;
         const { expanded } = this.state;
         let items = this.props.data;
+
+        if(this.state.loadingData){
+            return <div></div>
+        }
 
         return (
             <div className={classes.root}>

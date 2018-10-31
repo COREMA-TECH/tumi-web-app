@@ -20,6 +20,7 @@ import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {INSERT_ROL_FORM} from "./mutations";
 import withApollo from "react-apollo/withApollo";
 import {GET_ROL_FORMS_QUERY} from "./queries";
+import withGlobalContent from "../../Generic/Global";
 
 let counter = 0;
 
@@ -276,10 +277,21 @@ class EnhancedTable extends React.Component {
                 }
             })
             .then(({data}) => {
-                alert("Success");
+                // Show a snackbar with a success message
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully inserted!',
+                    'bottom',
+                    'right'
+                );
             })
             .catch(error => {
-                console.log(error);
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to save permission. Please, try again!',
+                    'bottom',
+                    'right'
+                );
             })
     };
 
@@ -314,7 +326,12 @@ class EnhancedTable extends React.Component {
                 });
             })
             .catch(error => {
-                console.log(error);
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to get data. Please, try again!',
+                    'bottom',
+                    'right'
+                );
             })
     }
 
@@ -323,8 +340,6 @@ class EnhancedTable extends React.Component {
         const {data, order, orderBy, selected, rowsPerPage, page} = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
         let forms = this.props.data;
-
-        console.log(this.state.selected);
 
         return (
             <Paper className={classes.root}>
@@ -340,120 +355,38 @@ class EnhancedTable extends React.Component {
                             rowCount={data.length}
                         />
                         <TableBody>
-                            {/*{stableSort(forms, getSorting(order, orderBy))*/}
-                            {/*.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*/}
-                            {/*.map(item => {*/}
-                            {/*const isSelected = this.isSelected(item.Id);*/}
-                            {/*return (*/}
-                            {/**/}
-                            {/*);*/}
-                            {/*})}*/}
-                            {/*{emptyRows > 0 && (*/}
-                            {/*<TableRow style={{height: 49 * emptyRows}}>*/}
-                            {/*<TableCell colSpan={6}/>*/}
-                            {/*</TableRow>*/}
-                            {/*)}*/}
                             {
                                 forms.map(item => {
-                                    const isSelected = this.isSelected(item.Id);
+                                    let isSelected = this.isSelected(item.Id);
 
-                                    return this.state.dataRolForm.map((itemRolForm) => {
+                                    this.state.dataRolForm.map((itemRolForm) => {
                                         if (this.props.rolId === itemRolForm.IdRoles) {
-                                            if (itemRolForm.IdRoles === item.Id) {
-                                                return (
-                                                    <TableRow
-                                                        hover
-                                                        onClick={event => this.handleClick(event, item.Id)}
-                                                        role="checkbox"
-                                                        aria-checked={isSelected}
-                                                        tabIndex={-1}
-                                                        key={item.Id}
-                                                        selected={isSelected}
-                                                    >
-                                                        <TableCell padding="checkbox">
-                                                            <Checkbox checked={true} color={"primary"}/>
-                                                        </TableCell>
-                                                        <TableCell component="th" scope="row" padding="none">
-                                                            {item.Code}
-                                                        </TableCell>
-                                                        <TableCell numeric>{item.Name}</TableCell>
-                                                        <TableCell numeric>{item.Value01}</TableCell>
-                                                    </TableRow>
-                                                );
-                                            } else {
-                                                return (
-                                                    <TableRow
-                                                        hover
-                                                        onClick={event => this.handleClick(event, item.Id)}
-                                                        role="checkbox"
-                                                        aria-checked={isSelected}
-                                                        tabIndex={-1}
-                                                        key={item.Id}
-                                                        selected={isSelected}
-                                                    >
-                                                        <TableCell padding="checkbox">
-                                                            <Checkbox checked={isSelected} color={"primary"}/>
-                                                        </TableCell>
-                                                        <TableCell component="th" scope="row" padding="none">
-                                                            {item.Code}
-                                                        </TableCell>
-                                                        <TableCell numeric>{item.Name}</TableCell>
-                                                        <TableCell numeric>{item.Value01}</TableCell>
-                                                    </TableRow>
-                                                )
-                                            }
-                                        } else {
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    onClick={event => this.handleClick(event, item.Id)}
-                                                    role="checkbox"
-                                                    aria-checked={isSelected}
-                                                    tabIndex={-1}
-                                                    key={item.Id}
-                                                    selected={isSelected}
-                                                >
-                                                    <TableCell padding="checkbox">
-                                                        <Checkbox checked={isSelected} color={"primary"}/>
-                                                    </TableCell>
-                                                    <TableCell component="th" scope="row" padding="none">
-                                                        {item.Code}
-                                                    </TableCell>
-                                                    <TableCell numeric>{item.Name}</TableCell>
-                                                    <TableCell numeric>{item.Value01}</TableCell>
-                                                </TableRow>
-                                            )
+                                            isSelected = this.isSelected(itemRolForm.IdForms);
                                         }
                                     });
+
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={event => this.handleClick(event, item.Id)}
+                                            role="checkbox"
+                                            aria-checked={isSelected}
+                                            tabIndex={-1}
+                                            key={item.Id}
+                                            selected={isSelected}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox checked={isSelected} color={"primary"}/>
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" padding="none">
+                                                {item.Code}
+                                            </TableCell>
+                                            <TableCell numeric>{item.Name}</TableCell>
+                                            <TableCell numeric>{item.Value01}</TableCell>
+                                        </TableRow>
+                                    )
                                 })
                             }
-                            {/*{*/}
-                            {/*forms.map(item => {*/}
-                            {/*const isSelected = this.isSelected(item.Id);*/}
-                            {/*console.table(forms);*/}
-
-                            {/*return (*/}
-                            {/*<TableRow*/}
-                            {/*hover*/}
-                            {/*onClick={event => this.handleClick(event, item.Id)}*/}
-                            {/*role="checkbox"*/}
-                            {/*aria-checked={isSelected}*/}
-                            {/*tabIndex={-1}*/}
-                            {/*key={item.Id}*/}
-                            {/*selected={isSelected}*/}
-                            {/*>*/}
-                            {/*<TableCell padding="checkbox">*/}
-                            {/*<Checkbox checked={isSelected} color={"primary"}/>*/}
-                            {/*</TableCell>*/}
-                            {/*<TableCell component="th" scope="row" padding="none">*/}
-                            {/*{item.Code}*/}
-                            {/*</TableCell>*/}
-                            {/*<TableCell numeric>{item.Name}</TableCell>*/}
-                            {/*<TableCell numeric>{item.Value01}</TableCell>*/}
-                            {/*</TableRow>*/}
-                            {/*)*/}
-                            {/*})*/}
-                            {/*}*/}
                         </TableBody>
                     </Table>
                 </div>
@@ -480,4 +413,4 @@ EnhancedTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(withApollo(EnhancedTable));
+export default withStyles(styles)(withApollo(withGlobalContent(EnhancedTable)));
