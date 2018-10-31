@@ -7523,9 +7523,22 @@ label:not(.custom-file-label):not(.form-check-label) {
     padding-left: 5px;
     padding-right: 5px; } }
 
+@media (max-width: 575.98px) {
+  .WorkOrder .border-right {
+    border-right: 0 !important; } }
+
 .add-company {
   float: right;
   margin: 0 auto !important; }
+
+.btn {
+  border-radius: 50px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem; }
+  .btn-white {
+    background: #FFF;
+    border: 0;
+    color: #3ca2c8; }
 
 .btn-file {
   border: 1px solid #dddddd !important;
@@ -7572,6 +7585,22 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .buttons-group-right {
   text-align: right; }
+
+.btnWrapper-centered {
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%; }
+  @media (max-width: 575.98px) {
+    .btnWrapper-centered {
+      -webkit-box-pack: end;
+      -ms-flex-pack: end;
+      justify-content: flex-end;
+      padding-top: 0.5rem;
+      padding-right: 0.3rem; } }
 
 .custom-file-label {
   overflow: hidden; }
@@ -7865,9 +7894,13 @@ label:not(.custom-file-label):not(.form-check-label) {
   border-radius: 5px;
   overflow: hidden; }
   .Table-head {
-    background-color: #3ca2c8;
+    background-color: #3ca2c8 !important;
     font-size: 0.9rem !important;
     font-weight: 300 !important; }
+    .Table-head:first-child {
+      border-radius: 5px 0 0 0; }
+    .Table-head:last-child {
+      border-radius: 0 5px 0 0; }
 
 .login-form {
   width: 350px;
@@ -7987,8 +8020,17 @@ label:not(.custom-file-label):not(.form-check-label) {
   .MainMenu-option .menu__item {
     height: 60.41px !important; }
 
+.main-container--header {
+  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
+  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
+  background: -o-linear-gradient(right, #3ca2c8, #254151);
+  background: linear-gradient(to left, #3ca2c8, #254151);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  border-bottom: 1px solid #3ca2c8; }
+
 .MenuMobile {
-  background-color: #254151;
+  background: #FFF;
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   clear: both;
   height: 100%;
   overflow: hidden;
@@ -8020,7 +8062,7 @@ label:not(.custom-file-label):not(.form-check-label) {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    color: #FFF;
+    color: #7e7e7e;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -8028,15 +8070,19 @@ label:not(.custom-file-label):not(.form-check-label) {
     -ms-flex-pack: start;
     justify-content: flex-start;
     font-family: "Nunito Sans", sans-serif;
+    font-size: 0.95rem;
     padding: 1rem;
     text-decoration: none;
     width: 100%; }
+    .MenuMobile-link span {
+      font-weight: 700; }
     .MenuMobile-link:hover {
-      color: #3ca2c8;
+      color: #254151;
       text-decoration: none; }
     .MenuMobile-link.selected {
       background-color: #223b4a;
-      border-left: solid 3px #3ca2c8; }
+      border-left: solid 3px #3ca2c8;
+      color: #FFF; }
   .MenuMobile-overlay {
     display: none; }
   .MenuMobile-wrapper {
@@ -8086,7 +8132,8 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .RightMenu-item {
   display: inline-block;
-  height: 25px; }
+  margin-left: 0.5rem;
+  margin-right: 0.5rem; }
 
 .RightMenu-list {
   -webkit-box-align: center;
@@ -8095,8 +8142,11 @@ label:not(.custom-file-label):not(.form-check-label) {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
   text-align: right; }
+  .RightMenu-list .dropdown-menu {
+    right: 0;
+    left: auto !important; }
 
 .SubMenu {
   background: #1d333f;
@@ -8121,13 +8171,18 @@ label:not(.custom-file-label):not(.form-check-label) {
     height: auto; }
 
 .card {
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
   margin-bottom: 1rem;
   margin-top: 1rem; }
   .SubCard .card {
     margin-top: 0 !important;
     margin-bottom: 0 !important; }
   .card-header {
-    background-color: rgba(60, 162, 200, 0.06) !important;
+    background-color: #FFF;
+    border-bottom: 0;
+    color: #7e7e7e;
+    font-weight: 700;
     position: relative; }
     .card-header::after {
       bottom: -5px;

@@ -22,6 +22,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import withGlobalContent from 'Generic/Global';
+import RolesDropdown from "../DropdownForm/RolesDropdown";
 const styles = (theme) => ({
 	container: {
 		display: 'flex',
@@ -583,13 +584,17 @@ class RolesForm extends React.Component {
 					</div>
 				</div>
 				<div className={classes.divStyle}>
-					<RolesTable
-						data={this.state.data}
-						company={this.state.company}
-						loading={this.state.loading}
-						onEditHandler={this.onEditHandler}
-						onDeleteHandler={this.onDeleteHandler}
+					<RolesDropdown
+                        data={this.state.data}
 					/>
+
+					{/*<RolesTable*/}
+						{/*data={this.state.data}*/}
+						{/*company={this.state.company}*/}
+						{/*loading={this.state.loading}*/}
+						{/*onEditHandler={this.onEditHandler}*/}
+						{/*onDeleteHandler={this.onDeleteHandler}*/}
+					{/*/>*/}
 				</div>
 			</div>
 		);
