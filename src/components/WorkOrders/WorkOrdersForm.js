@@ -111,7 +111,7 @@ class WorkOrdersForm extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent>
-                        <form action="" onSubmit={handleSubmit}>
+                        <form action="" onSubmit={this.handleSubmit}>
                             <div className="row">
                                 <div className="col-md-6">
                                     <label htmlFor="">Hotel</label>
