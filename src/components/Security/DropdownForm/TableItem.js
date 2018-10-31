@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 class TableItem extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -9,9 +9,9 @@ class TableItem extends Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount() {
         this.setState({
-            checked: this.props.checked
+            checked: this.props.asiggned
         })
     }
 
@@ -27,9 +27,9 @@ class TableItem extends Component {
                         })
                     }}
                 />
-                    <td>{this.props.code}</td>
-                    <td>{this.props.name}</td>
-                    <td>{this.props.url}</td>
+                <td>{this.props.code}</td>
+                <td>{this.props.name}</td>
+                <td>{this.props.url}</td>
             </tr>
         );
     }

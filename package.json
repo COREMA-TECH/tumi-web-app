@@ -27,12 +27,9 @@
 		"react-apollo": "^2.1.11",
 		"react-autocomplete": "^1.8.1",
 		"react-autosuggest": "^9.4.1",
-<<<<<<< HEAD
+		"react-chartjs-2": "^2.7.4",
 		"react-dnd": "^5.0.0",
 		"react-dnd-html5-backend": "^5.0.1",
-=======
-		"react-chartjs-2": "^2.7.4",
->>>>>>> 7010af104a81d7658ab7370b97bd7ac199053075
 		"react-dom": "^16.4.2",
 		"react-input-mask": "^2.0.4",
 		"react-number-format": "^3.5.2",

@@ -312,7 +312,7 @@ class EnhancedTable extends React.Component {
                         if (checked) {
                             return (
                                 <TableItem
-                                    checked={true}
+                                    asiggned={true}
                                     code={item.Code}
                                     name={item.Name}
                                     url={item.url} />
@@ -321,7 +321,7 @@ class EnhancedTable extends React.Component {
 
                         return (
                             <TableItem
-                                checked={false}
+                                asiggned={false}
                                 code={item.Code}
                                 name={item.Name}
                                 url={item.url} />
