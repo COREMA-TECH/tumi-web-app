@@ -15,6 +15,7 @@ import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import ResetPassword from '../../ResetPassword/ResetPassword';
+import Board from '../../Board-Manager/BoardManager';
 
 
 class Container extends Component {
@@ -37,6 +38,8 @@ class Container extends Component {
                 <Route exact path="/Reset" component={ResetPassword} />
                 <Route exact path="/home/catalogs" component={Catalogs} />
                 <Route exact path="/home/signature" component={Signature} />
+                <Route exact path="/home/board" component={Board} />
+
             </div>
         );
     }
