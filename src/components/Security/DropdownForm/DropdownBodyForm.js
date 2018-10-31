@@ -2,16 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -20,8 +16,7 @@ import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {INSERT_ROL_FORM} from "./mutations";
 import withApollo from "react-apollo/withApollo";
 import {GET_ROL_FORMS_QUERY} from "./queries";
-import CircularProgress from "../../material-ui/CircularProgress";
-import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import withGlobalContent from "../../Generic/Global";
 
 let counter = 0;
 
@@ -221,54 +216,6 @@ class EnhancedTable extends React.Component {
         dataRolForm: []
     };
 
-    handleRequestSort = (event, property) => {
-        const orderBy = property;
-        let order = 'desc';
-
-        if (this.state.orderBy === property && this.state.order === 'desc') {
-            order = 'asc';
-        }
-
-        this.setState({order, orderBy});
-    };
-
-    handleSelectAllClick = event => {
-        if (event.target.checked) {
-            this.setState(state => ({selected: state.data.map(n => n.id)}));
-            return;
-        }
-        this.setState({selected: []});
-    };
-
-    handleClick = (event, id) => {
-        const {selected} = this.state;
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        this.setState({selected: newSelected});
-    };
-
-    handleChangePage = (event, page) => {
-        this.setState({page});
-    };
-
-    handleChangeRowsPerPage = event => {
-        this.setState({rowsPerPage: event.target.value});
-    };
-
     insertRolForm = (object) => {
         this.props.client
             .mutate({
@@ -278,10 +225,23 @@ class EnhancedTable extends React.Component {
                 }
             })
             .then(({data}) => {
-                alert("Success");
+                // Show a snackbar with a success message
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully inserted!',
+                    'bottom',
+                    'right'
+                );
+
+                this.props.closeItem();
             })
             .catch(error => {
-                console.log(error);
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to save permission. Please, try again!',
+                    'bottom',
+                    'right'
+                );
             })
     };
 
@@ -303,177 +263,80 @@ class EnhancedTable extends React.Component {
         });
     };
 
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
-
     componentWillMount() {
-        this.setState({
-            loading: true
-        }, () => {
-            this.props.client
-                .query({
-                    query: GET_ROL_FORMS_QUERY,
-                })
-                .then(({data}) => {
-                    this.setState({
-                        dataRolForm: data.getrolesforms
-                    });
-
-                    this.setState({
-                        loading: false
-                    });
-                })
-                .catch(error => {
-                    console.log(error);
-
-                    this.setState({
-                        loading: false
-                    });
-                })
-        })
+        this.props.client
+            .query({
+                query: GET_ROL_FORMS_QUERY,
+            })
+            .then(({data}) => {
+                this.setState({
+                    dataRolForm: data.getrolesforms
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to get data. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
     }
 
     render() {
-        const {classes} = this.props;
-        const {data, order, orderBy, selected, rowsPerPage, page} = this.state;
-        const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
         let forms = this.props.data;
 
-        console.log(this.state.selected);
-
-        if(this.state.loading) {
-            return <LinearProgress />
-        }
-
         return (
-            <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} handleInsert={this.handleInsertRolForm}/>
-                <div className={classes.tableWrapper}>
-                    <Table className={classes.table} aria-labelledby="tableTitle">
-                        <EnhancedTableHead
-                            numSelected={selected.length}
-                            order={order}
-                            orderBy={orderBy}
-                            onSelectAllClick={this.handleSelectAllClick}
-                            onRequestSort={this.handleRequestSort}
-                            rowCount={data.length}
-                        />
-                        <TableBody>
-                            {/*{stableSort(forms, getSorting(order, orderBy))*/}
-                            {/*.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)*/}
-                            {/*.map(item => {*/}
-                            {/*const isSelected = this.isSelected(item.Id);*/}
-                            {/*return (*/}
-                            {/**/}
-                            {/*);*/}
-                            {/*})}*/}
-                            {/*{emptyRows > 0 && (*/}
-                            {/*<TableRow style={{height: 49 * emptyRows}}>*/}
-                            {/*<TableCell colSpan={6}/>*/}
-                            {/*</TableRow>*/}
-                            {/*)}*/}
-                            {
-                                forms.map(item => {
-                                    const isSelected = this.isSelected(item.Id);
-                                    let checked = false;
+            <table className="table">
+                <thead className="thead-dark">
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    forms.map(item => {
+                        let checked = false;
 
-                                    this.state.dataRolForm.map((itemRolForm) => {
-                                        if (this.props.rolId === itemRolForm.IdRoles) {
-                                            if (itemRolForm.IdRoles === item.Id) {
-                                                checked = true;
-                                            }
-                                        }
-                                    });
+                        // this.state.dataRolForm.map((itemRolForm) => {
+                        //     if (this.props.rolId === itemRolForm.IdRoles) {
+                        //         isSelected = this.isSelected(itemRolForm.IdForms);
+                        //     }
+                        // });
 
-                                    if(checked) {
-                                        return (
-                                            <TableRow
-                                                hover
-                                                onClick={event => this.handleClick(event, item.Id)}
-                                                role="checkbox"
-                                                aria-checked={isSelected}
-                                                tabIndex={-1}
-                                                key={item.Id}
-                                                selected={isSelected}
-                                            >
-                                                <TableCell padding="checkbox">
-                                                    <Checkbox checked={true} color={"primary"}/>
-                                                </TableCell>
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    {item.Code}
-                                                </TableCell>
-                                                <TableCell numeric>{item.Name}</TableCell>
-                                                <TableCell numeric>{item.Value01}</TableCell>
-                                            </TableRow>
-                                        )
-                                    }
-
-                                    return (
-                                        <TableRow
-                                            hover
-                                            onClick={event => this.handleClick(event, item.Id)}
-                                            role="checkbox"
-                                            aria-checked={isSelected}
-                                            tabIndex={-1}
-                                            key={item.Id}
-                                            selected={isSelected}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox checked={isSelected} color={"primary"}/>
-                                            </TableCell>
-                                            <TableCell component="th" scope="row" padding="none">
-                                                {item.Code}
-                                            </TableCell>
-                                            <TableCell numeric>{item.Name}</TableCell>
-                                            <TableCell numeric>{item.Value01}</TableCell>
-                                        </TableRow>
-                                    )
-                                })
+                        this.state.dataRolForm.map((itemRolForm) => {
+                            if (this.props.rolId === itemRolForm.IdRoles) {
+                                if (itemRolForm.IdRoles === item.Id) {
+                                    checked = true;
+                                }
                             }
-                            {/*{*/}
-                            {/*forms.map(item => {*/}
-                            {/*const isSelected = this.isSelected(item.Id);*/}
-                            {/*console.table(forms);*/}
+                        });
 
-                            {/*return (*/}
-                            {/*<TableRow*/}
-                            {/*hover*/}
-                            {/*onClick={event => this.handleClick(event, item.Id)}*/}
-                            {/*role="checkbox"*/}
-                            {/*aria-checked={isSelected}*/}
-                            {/*tabIndex={-1}*/}
-                            {/*key={item.Id}*/}
-                            {/*selected={isSelected}*/}
-                            {/*>*/}
-                            {/*<TableCell padding="checkbox">*/}
-                            {/*<Checkbox checked={isSelected} color={"primary"}/>*/}
-                            {/*</TableCell>*/}
-                            {/*<TableCell component="th" scope="row" padding="none">*/}
-                            {/*{item.Code}*/}
-                            {/*</TableCell>*/}
-                            {/*<TableCell numeric>{item.Name}</TableCell>*/}
-                            {/*<TableCell numeric>{item.Value01}</TableCell>*/}
-                            {/*</TableRow>*/}
-                            {/*)*/}
-                            {/*})*/}
-                            {/*}*/}
-                        </TableBody>
-                    </Table>
-                </div>
-                <TablePagination
-                    component="div"
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    backIconButtonProps={{
-                        'aria-label': 'Previous Page',
-                    }}
-                    nextIconButtonProps={{
-                        'aria-label': 'Next Page',
-                    }}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-            </Paper>
+                        if (checked) {
+                            return (
+                                <tr>
+                                    <input type="checkbox" checked={checked}/>
+                                    <td>{item.Code}</td>
+                                    <td>{item.Name}</td>
+                                    <td>{item.Value01}</td>
+                                </tr>
+                            )
+                        }
+
+                        return (
+                            <tr>
+                                <input type="checkbox"/>
+                                <td>{item.Code}</td>
+                                <td>{item.Name}</td>
+                                <td>{item.Value01}</td>
+                            </tr>
+                        )
+                    })
+                }
+                </tbody>
+            </table>
         );
     }
 }
@@ -482,4 +345,4 @@ EnhancedTable.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(withApollo(EnhancedTable));
+export default withStyles(styles)(withApollo(withGlobalContent(EnhancedTable)));

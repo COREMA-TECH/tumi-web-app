@@ -42,18 +42,35 @@ class ControlledExpansionPanels extends React.Component {
     };
 
     getFormsData = () => {
-        this.props.client
-            .query({
-                query: GET_FORMS_QUERY,
-            })
-            .then(({data}) => {
-                this.setState({
-                    dataForm: data.getforms
+        this.setState({
+            loadingData: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_FORMS_QUERY,
                 })
-            })
-            .catch(error => {
-                alert("Error to get forms");
-            })
+                .then(({data}) => {
+                    this.setState({
+                        dataForm: data.getforms
+                    })
+
+                    this.setState({
+                        loadingData: false
+                    });
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error to get data. Please, try again!',
+                        'bottom',
+                        'right'
+                    );
+
+                    this.setState({
+                        loadingData: false
+                    });
+                })
+        });
     };
 
     componentWillMount(){
@@ -65,12 +82,16 @@ class ControlledExpansionPanels extends React.Component {
         const { expanded } = this.state;
         let items = this.props.data;
 
+        if(this.state.loadingData){
+            return <div></div>
+        }
+
         return (
             <div className={classes.root}>
                 {
                     items.map(item => {
                         return (
-                            <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
+                            <ExpansionPanel  className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography className={classes.heading}>{item.Description}</Typography>
                                     <Typography className={classes.secondaryHeading}>0 Options</Typography>
@@ -81,6 +102,9 @@ class ControlledExpansionPanels extends React.Component {
                                             rolId={item.Id}
                                             data={this.state.dataForm}
                                             handleInsert={this.handleInsertRolForm}
+                                            closeItem={() => {
+                                                this.handleChange(uuidv4())
+                                            }}
                                         />
                                     </Typography>
                                 </ExpansionPanelDetails>
