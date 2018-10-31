@@ -21,7 +21,8 @@ class BoardManager extends Component {
         this.state = {
             loading: false,
             // workOrder: [{ id: '', title: '', description: '', label: '' }]
-            workOrder: []
+            workOrder: [],
+            lane: [],
         }
 
         console.log("Inicializacion de variables");
@@ -38,11 +39,12 @@ class BoardManager extends Component {
         this.setState(
             {
                 loading: true
+            }, () => {
+
+                this.getWorkOrders();
+
             });
-        console.log("mandamos a llenar el array");
-        this.getWorkOrders();
-        console.log("Ya el array esta lleno");
-        console.log("aqui esta el array ", this.state.workOrder);
+
 
     }
 
@@ -64,24 +66,12 @@ class BoardManager extends Component {
             this.setState(
                 {
                     workOrder: workOrders,
-                    loading: false
-                });
-
-            console.log("esta es la variable ya hecha ", this.state.workOrder);
-        }).catch(error => { })
-    };
-
-    render() {
-        console.log("ya esta activo el render");
-        return <
-            Board data={
-                {
-                    lanes: [
+                    lane: [
                         {
                             id: 'lane1',
                             title: 'Work Orders',
                             label: ' ',
-                            cards: [this.state.workOrder]
+                            cards: workOrders
                         },
                         {
                             id: 'lane2',
@@ -107,7 +97,18 @@ class BoardManager extends Component {
                             label: ' ',
                             cards: []
                         }
-                    ]
+                    ],
+                    loading: false
+                });
+        }).catch(error => { })
+    };
+
+    render() {
+        console.log("Datos", this.state.workOrder)
+        return <
+            Board data={
+                {
+                    lanes: this.state.lane
                 }
             }
 
