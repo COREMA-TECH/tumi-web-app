@@ -55,7 +55,7 @@ class WorkOrdersTable extends Component {
 
         return (
             <div>
-                <Paper>
+                <Paper style={{ overflowX: 'auto' }}>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -123,7 +123,7 @@ class WorkOrdersTable extends Component {
                         </TableFooter>
                     </Table>
                 </Paper>
-            </div>
+            </div >
         );
     }
 
