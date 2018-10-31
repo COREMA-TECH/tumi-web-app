@@ -20,6 +20,8 @@ import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {INSERT_ROL_FORM} from "./mutations";
 import withApollo from "react-apollo/withApollo";
 import {GET_ROL_FORMS_QUERY} from "./queries";
+import CircularProgress from "../../material-ui/CircularProgress";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 let counter = 0;
 
@@ -304,18 +306,30 @@ class EnhancedTable extends React.Component {
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     componentWillMount() {
-        this.props.client
-            .query({
-                query: GET_ROL_FORMS_QUERY,
-            })
-            .then(({data}) => {
-                this.setState({
-                    dataRolForm: data.getrolesforms
-                });
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_ROL_FORMS_QUERY,
+                })
+                .then(({data}) => {
+                    this.setState({
+                        dataRolForm: data.getrolesforms
+                    });
+
+                    this.setState({
+                        loading: false
+                    });
+                })
+                .catch(error => {
+                    console.log(error);
+
+                    this.setState({
+                        loading: false
+                    });
+                })
+        })
     }
 
     render() {
@@ -325,6 +339,10 @@ class EnhancedTable extends React.Component {
         let forms = this.props.data;
 
         console.log(this.state.selected);
+
+        if(this.state.loading) {
+            return <LinearProgress />
+        }
 
         return (
             <Paper className={classes.root}>
@@ -356,75 +374,59 @@ class EnhancedTable extends React.Component {
                             {
                                 forms.map(item => {
                                     const isSelected = this.isSelected(item.Id);
+                                    let checked = false;
 
-                                    return this.state.dataRolForm.map((itemRolForm) => {
+                                    this.state.dataRolForm.map((itemRolForm) => {
                                         if (this.props.rolId === itemRolForm.IdRoles) {
                                             if (itemRolForm.IdRoles === item.Id) {
-                                                return (
-                                                    <TableRow
-                                                        hover
-                                                        onClick={event => this.handleClick(event, item.Id)}
-                                                        role="checkbox"
-                                                        aria-checked={isSelected}
-                                                        tabIndex={-1}
-                                                        key={item.Id}
-                                                        selected={isSelected}
-                                                    >
-                                                        <TableCell padding="checkbox">
-                                                            <Checkbox checked={true} color={"primary"}/>
-                                                        </TableCell>
-                                                        <TableCell component="th" scope="row" padding="none">
-                                                            {item.Code}
-                                                        </TableCell>
-                                                        <TableCell numeric>{item.Name}</TableCell>
-                                                        <TableCell numeric>{item.Value01}</TableCell>
-                                                    </TableRow>
-                                                );
-                                            } else {
-                                                return (
-                                                    <TableRow
-                                                        hover
-                                                        onClick={event => this.handleClick(event, item.Id)}
-                                                        role="checkbox"
-                                                        aria-checked={isSelected}
-                                                        tabIndex={-1}
-                                                        key={item.Id}
-                                                        selected={isSelected}
-                                                    >
-                                                        <TableCell padding="checkbox">
-                                                            <Checkbox checked={isSelected} color={"primary"}/>
-                                                        </TableCell>
-                                                        <TableCell component="th" scope="row" padding="none">
-                                                            {item.Code}
-                                                        </TableCell>
-                                                        <TableCell numeric>{item.Name}</TableCell>
-                                                        <TableCell numeric>{item.Value01}</TableCell>
-                                                    </TableRow>
-                                                )
+                                                checked = true;
                                             }
-                                        } else {
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    onClick={event => this.handleClick(event, item.Id)}
-                                                    role="checkbox"
-                                                    aria-checked={isSelected}
-                                                    tabIndex={-1}
-                                                    key={item.Id}
-                                                    selected={isSelected}
-                                                >
-                                                    <TableCell padding="checkbox">
-                                                        <Checkbox checked={isSelected} color={"primary"}/>
-                                                    </TableCell>
-                                                    <TableCell component="th" scope="row" padding="none">
-                                                        {item.Code}
-                                                    </TableCell>
-                                                    <TableCell numeric>{item.Name}</TableCell>
-                                                    <TableCell numeric>{item.Value01}</TableCell>
-                                                </TableRow>
-                                            )
                                         }
                                     });
+
+                                    if(checked) {
+                                        return (
+                                            <TableRow
+                                                hover
+                                                onClick={event => this.handleClick(event, item.Id)}
+                                                role="checkbox"
+                                                aria-checked={isSelected}
+                                                tabIndex={-1}
+                                                key={item.Id}
+                                                selected={isSelected}
+                                            >
+                                                <TableCell padding="checkbox">
+                                                    <Checkbox checked={true} color={"primary"}/>
+                                                </TableCell>
+                                                <TableCell component="th" scope="row" padding="none">
+                                                    {item.Code}
+                                                </TableCell>
+                                                <TableCell numeric>{item.Name}</TableCell>
+                                                <TableCell numeric>{item.Value01}</TableCell>
+                                            </TableRow>
+                                        )
+                                    }
+
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={event => this.handleClick(event, item.Id)}
+                                            role="checkbox"
+                                            aria-checked={isSelected}
+                                            tabIndex={-1}
+                                            key={item.Id}
+                                            selected={isSelected}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox checked={isSelected} color={"primary"}/>
+                                            </TableCell>
+                                            <TableCell component="th" scope="row" padding="none">
+                                                {item.Code}
+                                            </TableCell>
+                                            <TableCell numeric>{item.Name}</TableCell>
+                                            <TableCell numeric>{item.Value01}</TableCell>
+                                        </TableRow>
+                                    )
                                 })
                             }
                             {/*{*/}
