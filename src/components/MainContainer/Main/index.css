@@ -11,19 +11,12 @@
 
 .main-container--header {
 	height: 50px;
-	background: rgba(0,145,189,1);
-	background: -moz-linear-gradient(45deg, rgba(0,145,189,1) 0%, rgba(0,145,189,1) 50%, rgba(36,155,195,1) 50%, rgba(36,155,195,1) 51%, rgba(36,155,195,1) 71%, rgba(36,155,195,1) 100%);
-	background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(0,145,189,1)), color-stop(50%, rgba(0,145,189,1)), color-stop(50%, rgba(36,155,195,1)), color-stop(51%, rgba(36,155,195,1)), color-stop(71%, rgba(36,155,195,1)), color-stop(100%, rgba(36,155,195,1)));
-	background: -webkit-linear-gradient(45deg, rgba(0,145,189,1) 0%, rgba(0,145,189,1) 50%, rgba(36,155,195,1) 50%, rgba(36,155,195,1) 51%, rgba(36,155,195,1) 71%, rgba(36,155,195,1) 100%);
-	background: -o-linear-gradient(45deg, rgba(0,145,189,1) 0%, rgba(0,145,189,1) 50%, rgba(36,155,195,1) 50%, rgba(36,155,195,1) 51%, rgba(36,155,195,1) 71%, rgba(36,155,195,1) 100%);
-	background: -ms-linear-gradient(45deg, rgba(0,145,189,1) 0%, rgba(0,145,189,1) 50%, rgba(36,155,195,1) 50%, rgba(36,155,195,1) 51%, rgba(36,155,195,1) 71%, rgba(36,155,195,1) 100%);
-	background: linear-gradient(45deg, rgba(0,145,189,1) 0%, rgba(0,145,189,1) 50%, rgba(36,155,195,1) 50%, rgba(36,155,195,1) 51%, rgba(36,155,195,1) 71%, rgba(36,155,195,1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0091bd', endColorstr='#249bc3', GradientType=1 );
+	
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-bottom: 1px solid #0092BD;
+	
 	position: fixed;
 	z-index: 30;
 	width: 100%;

@@ -28,73 +28,89 @@ class Dashboard extends React.Component {
 	}
 
 	handleClickOpenModal = () => {
-		this.setState({ openModal: true });
+		this.setState({ openModal: true, item: null });
 	};
 	handleCloseModal = (e) => {
 		e.preventDefault();
 		this.setState({ openModal: false });
 	};
-
+	onEditHandler = (item) => {
+		this.setState({
+			openModal: true,
+			item: item
+		});
+	};
 	render() {
 		return (
-			<div className="row">
+			<div className="row WorkOrder">
 				<div className="col-md-12">
-					<div className="card mt-0">
-						<div className="card-header">Work Orders</div>
+					<div className="card">
 						<div className="card-body p-0">
-							<div className="row pt-2 pb-2 pl-2 pr-0">
-								<div className="col-sm-3 col-lg-2 col-md-2 border-right">
-									<label>Show All?</label>
-									<div className="onoffswitch">
-										<input
-											type="checkbox"
-											name="showAll"
-											onChange={(e) => {
-												this.setState({
-													showAll: e.target.checked
-												});
-											}}
-											className="onoffswitch-checkbox"
-											id="showAll"
-											checked={this.state.showAll}
-										/>
-										<label className="onoffswitch-label" htmlFor="showAll">
-											<span className="onoffswitch-inner" />
-											<span className="onoffswitch-switch" />
-										</label>
+							<div className="row">
+								<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+									<div className="row p-0">
+										<div className="col-12">
+											<div className="border-right">
+												<label>Show All?</label>
+												<div className="onoffswitch">
+													<input
+														type="checkbox"
+														name="showAll"
+														onChange={(e) => {
+															this.setState({
+																showAll: e.target.checked
+															});
+														}}
+														className="onoffswitch-checkbox"
+														id="showAll"
+														checked={this.state.showAll}
+													/>
+													<label className="onoffswitch-label" htmlFor="showAll">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
-
-								<div className="col-md-3 col-lg-3">
-									<label> Start Date</label>
-									<input
-										type="date"
-										className="form-control"
-										placeholder="2018-10-30"
-										value="2018-10-30"
-									/>
+								<div className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
+									<div className="row p-0">
+										<div className="col-sm-6 col-xs-12">
+											<label> Start Date</label>
+											<input
+												type="date"
+												className="form-control"
+												placeholder="2018-10-30"
+												value="2018-10-30"
+											/>
+										</div>
+										<div className="col-sm-6 col-xs-12">
+											<label> End Date</label>
+											<input
+												type="date"
+												className="form-control"
+												placeholder="2018-10-30"
+												value="2018-10-30"
+											/>
+										</div>
+									</div>
 								</div>
-								<div className="col-md-3 col-lg-3">
-									<label> End Date</label>
-									<input
-										type="date"
-										className="form-control"
-										placeholder="2018-10-30"
-										value="2018-10-30"
-									/>
-								</div>
-							</div>
-
-							<div className="row">
-								<div className="col-sm-12">
-									<WorkOrdersTable />
+								<div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
+									<div className="btnWrapper-centered pb-1">
+										<button className="btn btn-success" type="submit">
+											Filter<i className="fas fa-filter ml2" />
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+
+					<WorkOrdersTable onEditHandler={this.onEditHandler} />
 				</div>
 				<div className="col-md-12 col-lg-5">
-					<div className="card mt-0">
+					<div className="card">
 						<div className="card-header info">Quick Actions</div>
 						<div className="card-body">
 							<ul className="row">
@@ -121,7 +137,7 @@ class Dashboard extends React.Component {
 					</div>
 				</div>
 				<div className="col-md-12 col-lg-7">
-					<div className="card mt-0">
+					<div className="card">
 						<div className="card-header danger">Chart</div>
 						<div className="card-body">
 							<Bar
@@ -136,7 +152,7 @@ class Dashboard extends React.Component {
 					</div>
 				</div>
 				<WorkOrdersForm
-					item={null}
+					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
 					handleCloseModal={this.handleCloseModal}

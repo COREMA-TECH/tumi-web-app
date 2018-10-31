@@ -16,35 +16,36 @@ import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import WorkOrders from '../../WorkOrders';
 import ResetPassword from '../../ResetPassword/ResetPassword';
-import Dashboard from 'Dashboard';
+import Board from '../../Board-Manager/BoardManager';
+
 
 class Container extends Component {
-	render() {
-		return (
-			<div className="container-fluid">
-				<Route exact path="/home/application/info" component={ApplicationTabs} />
-				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
-				<Route exact path="/home/contract/add" component={Contract} />
-				<Route exact path="/home/contracts" component={MainContract} />
-				<Route exact path="/home/company" component={CompanyList} />
-				<Route exact path="/home/company/edit" component={CreateCompany} />
-				<Route exact path="/home/company/add" component={CreateCompany} />
-				<Route exact path="/home/application" component={ApplicationList} />
+    render() {
+        return (
+            <div className="container-fluid">
+                <Route exact path="/home/application/info" component={ApplicationTabs} />
+                <Route exact path="/home/application/Form" component={ApplicationInfoFast} />
+                <Route exact path="/home/contract/add" component={Contract} />
+                <Route exact path="/home/contracts" component={MainContract} />
+                <Route exact path="/home/company" component={CompanyList} />
+                <Route exact path="/home/company/edit" component={CreateCompany} />
+                <Route exact path="/home/company/add" component={CreateCompany} />
+                <Route exact path="/home/application" component={ApplicationList} />
 
-				<Route exact path="/home/work-orders" component={WorkOrders} />
+                <Route exact path="/home/work-orders" component={WorkOrders} />
 
-				<Route exact path="/home/Roles" component={CreateRole} />
-				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
-				<Route exact path="/home/Forms" component={CreateForms} />
-				<Route exact path="/home/Users" component={CreateUsers} />
-				<Route exact path="/Reset" component={ResetPassword} />
-				<Route exact path="/home/catalogs" component={Catalogs} />
-				<Route exact path="/home/signature" component={Signature} />
+                <Route exact path="/home/Roles" component={CreateRole} />
+                <Route exact path="/home/RolesForms" component={CreateRolesForms} />
+                <Route exact path="/home/Forms" component={CreateForms} />
+                <Route exact path="/home/Users" component={CreateUsers} />
+                <Route exact path="/Reset" component={ResetPassword} />
+                <Route exact path="/home/catalogs" component={Catalogs} />
+                <Route exact path="/home/signature" component={Signature} />
+                <Route exact path="/home/board" component={Board} />
 
-				<Route exact path="/home/dashboard" component={Dashboard} />
-			</div>
-		);
-	}
+            </div>
+        );
+    }
 }
 
 export default Container;

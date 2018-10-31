@@ -50,8 +50,12 @@
     }
 }
 
+.main-container--header {
+    background: linear-gradient(to left, $brand-primary, $brand-secondary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border-bottom: 1px solid $brand-primary;
+}
 .MenuMobile {
-    background-color: $brand-secondary;
+    background: $white; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     clear: both;
     height: 100%;
     overflow: hidden;
@@ -84,20 +88,25 @@
     }
     &-link {
         align-items: center;
-        color: $white;
+        color: $text-color;
         display: flex;
         justify-content: flex-start;
         font-family: $font-family-sans-serif;
+        font-size: 0.95rem;
         padding: 1rem; 
         text-decoration: none;
         width: 100%;
+        span {
+            font-weight: 700;
+        }
         &:hover {
-            color: $brand-primary;
+            color: $brand-secondary;
             text-decoration: none;
         }
         &.selected {
             background-color: darken($brand-secondary,2);
             border-left: solid 3px $brand-primary;
+            color: $white;
         }
     }
     &-overlay {
@@ -161,13 +170,18 @@
 .RightMenu {
     &-item {
         display: inline-block;
-        height: 25px;
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
     }
     &-list {
         align-items: center;
         display: flex;
-        margin-right: 1rem;
+        margin-right: 1.5rem;
         text-align: right;
+        .dropdown-menu {
+            right: 0;
+            left: auto !important;
+        }
     }
 }
 

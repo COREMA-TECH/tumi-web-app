@@ -7,3 +7,11 @@ export const CREATE_WORKORDER = gql`
 		}
 	}
 `;
+
+export const UPDATE_WORKORDER = gql`
+	mutation updateWorkOrder($workOrder: inputUpdateWorkOrder) {
+		updateWorkOrder(workOrder: $workOrder) {
+			id
+		}
+	}
+`;
