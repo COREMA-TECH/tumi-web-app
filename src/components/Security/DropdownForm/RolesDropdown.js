@@ -91,7 +91,7 @@ class ControlledExpansionPanels extends React.Component {
                 {
                     items.map(item => {
                         return (
-                            <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
+                            <ExpansionPanel  className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography className={classes.heading}>{item.Description}</Typography>
                                     <Typography className={classes.secondaryHeading}>0 Options</Typography>
@@ -102,6 +102,9 @@ class ControlledExpansionPanels extends React.Component {
                                             rolId={item.Id}
                                             data={this.state.dataForm}
                                             handleInsert={this.handleInsertRolForm}
+                                            closeItem={() => {
+                                                this.handleChange(uuidv4())
+                                            }}
                                         />
                                     </Typography>
                                 </ExpansionPanelDetails>

@@ -284,6 +284,8 @@ class EnhancedTable extends React.Component {
                     'bottom',
                     'right'
                 );
+
+                this.props.closeItem();
             })
             .catch(error => {
                 this.props.handleOpenSnackbar(
@@ -359,11 +361,11 @@ class EnhancedTable extends React.Component {
                                 forms.map(item => {
                                     let isSelected = this.isSelected(item.Id);
 
-                                    this.state.dataRolForm.map((itemRolForm) => {
-                                        if (this.props.rolId === itemRolForm.IdRoles) {
-                                            isSelected = this.isSelected(itemRolForm.IdForms);
-                                        }
-                                    });
+                                    // this.state.dataRolForm.map((itemRolForm) => {
+                                    //     if (this.props.rolId === itemRolForm.IdRoles) {
+                                    //         isSelected = this.isSelected(itemRolForm.IdForms);
+                                    //     }
+                                    // });
 
                                     return (
                                         <TableRow
