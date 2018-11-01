@@ -145,6 +145,7 @@ class Login extends Component {
 							window.location.href = '/reset';
 						}
 						else {
+							localStorage.setItem('ChangePassword', user.Id);
 							localStorage.setItem('LoginId', user.Id);
 							localStorage.setItem('FullName', user.Full_Name);
 							localStorage.setItem('Token', user.Token);
@@ -252,10 +253,9 @@ class Login extends Component {
 								type="submit"
 							>
 								Sign in
+								{this.state.loadingLogin && (<i class="fas fa-spinner fa-spin ml-2" />)}
 							</button>
-							{this.state.loadingLogin && (
-								<CircularProgress size={24} className={classes.buttonProgress} />
-							)}
+
 						</div>
 						<div class="clearfix">
 							<label class="pull-left Remember-label checkbox-inline"><input type="checkbox" /> Remember me</label>
