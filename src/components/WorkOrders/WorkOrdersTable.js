@@ -52,6 +52,7 @@ class WorkOrdersTable extends Component {
     }
 
     handleDelete = (id) => {
+        this.setState({removing:true})
         this.props.client.mutate({
             mutation: DELETE_WORKORDER,
             variables: {
@@ -59,9 +60,10 @@ class WorkOrdersTable extends Component {
             }
         }).then((data) => {
             this.props.handleOpenSnackbar('success', 'Record Deleted!');
-            this.setState({ openModal: false });
+            this.setState({ openModal: false,removing:false });
             window.location.reload();
         }).catch((error) => {
+            this.setState({removing:false})
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
         });
     }
@@ -153,7 +155,7 @@ class WorkOrdersTable extends Component {
                             this.handleDelete(this.state.idToDelete);
                         }}
                         title={'are you sure you want to delete this record?'}
-                        loading={this.props.removing}
+                        loading={this.state.removing}
                     />
                 </Paper>
             </div >
