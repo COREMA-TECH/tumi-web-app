@@ -81,7 +81,6 @@ class WorkOrdersForm extends Component {
         this.setState({
             openModal: nextProps.openModal
         });
-
     }
 
     UNSAFE_componentWillMount() {
@@ -103,53 +102,53 @@ class WorkOrdersForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (this.state.IdEntity == 0 ||
+        if (
+            this.state.IdEntity == 0 ||
             this.state.PositionRateId == 0 ||
-            this.state.quantity == "" ||
+            this.state.quantity == '' ||
             this.state.quantity == 0 ||
-            this.state.date == "" ||
-            this.state.startDate == "" ||
-            this.state.endDate == "" ||
-            this.state.shift == "" ||
-            this.state.shift == 0) {
-            this.props.handleOpenSnackbar(
-                'error',
-                'Error all fields are required'
-            );
+            this.state.date == '' ||
+            this.state.startDate == '' ||
+            this.state.endDate == '' ||
+            this.state.shift == '' ||
+            this.state.shift == 0
+        ) {
+            this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
-            if (this.state.id == null)
-                this.add();
-            else
-                this.update();
+            if (this.state.id == null) this.add();
+            else this.update();
         }
     };
 
     add = () => {
-        this.props.client.mutate({
-            mutation: CREATE_WORKORDER,
-            variables: {
-                workOrder: {
-                    IdEntity: this.state.IdEntity,
-                    date: this.state.date,
-                    quantity: this.state.quantity,
-                    status: 30452,
-                    shift: this.state.shift,
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    needExperience: this.state.needExperience,
-                    needEnglish: this.state.needEnglish,
-                    comment: this.state.comment,
-                    PositionRateId: this.state.PositionRateId,
-                    userId: 1
+        this.props.client
+            .mutate({
+                mutation: CREATE_WORKORDER,
+                variables: {
+                    workOrder: {
+                        IdEntity: this.state.IdEntity,
+                        date: this.state.date,
+                        quantity: this.state.quantity,
+                        status: 30452,
+                        shift: this.state.shift,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        needExperience: this.state.needExperience,
+                        needEnglish: this.state.needEnglish,
+                        comment: this.state.comment,
+                        PositionRateId: this.state.PositionRateId,
+                        userId: 1
+                    }
                 }
-            }
-        }).then((data) => {
-            this.props.handleOpenSnackbar('success', 'Preference Inserted!');
-            this.setState({ openModal: false });
-            window.location.reload();
-        }).catch((error) => {
-            this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
-        });
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+                this.setState({ openModal: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+            });
     };
 
     update = (status = 1) => {
@@ -342,7 +341,6 @@ class WorkOrdersForm extends Component {
             </div>
         );
     }
-
 
 }
 

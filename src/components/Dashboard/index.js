@@ -6,7 +6,7 @@ import withGlobalContent from 'Generic/Global';
 
 class Dashboard extends React.Component {
 	data = {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ],
 		datasets: [
 			{
 				label: 'My First dataset',
@@ -15,7 +15,7 @@ class Dashboard extends React.Component {
 				borderWidth: 1,
 				hoverBackgroundColor: 'rgba(255,99,132,0.4)',
 				hoverBorderColor: 'rgba(255,99,132,1)',
-				data: [65, 59, 80, 81, 56, 55, 40]
+				data: [ 65, 59, 80, 81, 56, 55, 40 ]
 			}
 		]
 	};
@@ -108,16 +108,21 @@ class Dashboard extends React.Component {
 						</div>
 					</div>
 
-					<WorkOrdersTable onEditHandler={this.onEditHandler} />
+					<WorkOrdersTable
+						onEditHandler={this.onEditHandler}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
 				</div>
 				<div className="col-md-12 col-lg-5">
 					<div className="card">
-						<div className="card-header info">
-							Quick Access
-						</div>
+						<div className="card-header info">Quick Access</div>
 						<div className="row">
 							<div className="col-md-4 col-lg-6">
-								<a href="" className="card bg-gd-danger QuickButton" onClick={this.handleClickOpenModal}>
+								<a
+									href=""
+									className="card bg-gd-danger QuickButton"
+									onClick={this.handleClickOpenModal}
+								>
 									<div className="card-body">
 										<div>
 											<i className="fas fa-plus fa-5x" />
