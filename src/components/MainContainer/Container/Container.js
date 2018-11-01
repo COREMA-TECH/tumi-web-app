@@ -15,6 +15,7 @@ import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import WorkOrders from '../../WorkOrders';
+import WorkOrdersPosition from '../../WorkOrderPosition';
 import ResetPassword from '../../ResetPassword/ResetPassword';
 import Board from '../../Board-Manager/BoardManager';
 import Dashboard from 'Dashboard';
@@ -43,6 +44,7 @@ class Container extends Component {
 				<Route exact path="/home/signature" component={Signature} />
 				<Route exact path="/home/board" component={Board} />
 				<Route exact path="/home/dashboard" component={Dashboard} />
+				<Route exact path="/home/openings" component={WorkOrdersPosition} />
 			</div>
 		);
 	}
