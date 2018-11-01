@@ -3,10 +3,68 @@
 	margin: 0 auto !important;
 }
 
+.app-shortcuts {
+	margin: 0;
+    padding: 1rem;
+	width: 320px;
+	&__helper {
+		position: absolute;
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+		top: 15px;
+		left: 0;
+		right: 0;
+		margin: auto;
+		z-index: -1;
+		transition: -webkit-transform .5s;
+		transition: transform .5s;
+		transition: transform .5s,-webkit-transform .5s;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+	&__item {
+		padding: 1rem 0;
+		border-radius: 2px;
+		position: relative;
+		overflow: hidden;
+		transition: background-color .3s;
+		text-align: center;
+		& > i {
+			width: 45px;
+			height: 45px;
+			border-radius: 50%;
+			color: #FFF;
+			line-height: 39px;
+			font-size: 1.5rem;
+			transition: background-color .5s;
+		}
+		& > small {
+			display: block;
+			margin-top: .5rem;
+			color: #9c9c9c;
+			transition: color .5s;
+		}
+		&:hover {
+			.app-shortcuts__helper {
+				transform: scale(3.5);
+			}
+			> small {
+				color: $white;
+			}
+		}
+	}
+}
+
 .btn {
     border-radius: 50px;
     padding-left: 1.5rem;
 	padding-right: 1.5rem;
+	&-empty {
+		color: $white;
+		padding-left: 0;
+		padding-right: 0;
+	}
 	&-white {
 		background: $white;
 		border: 0;
