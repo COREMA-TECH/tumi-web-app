@@ -15,7 +15,7 @@ import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import WorkOrders from '../../WorkOrders';
-import WorkOrdersPosition from '../../WorkOrderPosition';
+import WorkOrdersPosition from '../../WorkOrdersPosition';
 import ResetPassword from '../../ResetPassword/ResetPassword';
 import Board from '../../Board-Manager/BoardManager';
 import Dashboard from 'Dashboard';

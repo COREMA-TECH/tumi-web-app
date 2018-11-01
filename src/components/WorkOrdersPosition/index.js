@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import WorkOrdersPositionTable from './WorkOrdersPositionTable';
-import WorkOrdersPositionForm from './WorkOrdersPositionForm';
+import WorkOrdersTable from './WorkOrdersPositionTable';
+import WorkOrdersForm from './WorkOrdersPositionForm';
+import WorkOrdersView from './WorkOrdersPositionView';
 import withGlobalContent from 'Generic/Global';
 
-class WorkOrdersPosition extends Component {
+class WorkOrders extends Component {
 	constructor(props) {
 		super(props);
 
@@ -34,20 +35,19 @@ class WorkOrdersPosition extends Component {
 			<div>
 				<div className="row">
 					<div className="col-md-12">
-						<button className="btn btn-success float-right" onClick={this.handleClickOpenModal}>
-							Add Work Order <i className="fas fa-plus" />
-						</button>
-					</div>
-				</div>
-				<div className="row">
-					<div className="col-md-12">
-						<WorkOrdersPositionTable
+						<WorkOrdersTable
 							onEditHandler={this.onEditHandler}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 						/>
 					</div>
 				</div>
-				<WorkOrdersPositionForm
+				<WorkOrdersForm
+					item={this.state.item}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
+					openModal={this.state.openModal}
+					handleCloseModal={this.handleCloseModal}
+				/>
+				<WorkOrdersView
 					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
@@ -58,4 +58,4 @@ class WorkOrdersPosition extends Component {
 	}
 }
 
-export default withGlobalContent(WorkOrdersPosition);
+export default withGlobalContent(WorkOrders);
