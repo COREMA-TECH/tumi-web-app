@@ -17,7 +17,6 @@ class Toolbar extends Component {
     }
 
     changeLanguage = (event) => {
-        console.log(localStorage.getItem('languageForm'));
         if (this.state.languageIcon == 'en')
             localStorage.setItem('languageForm', 'es');
         else
@@ -27,7 +26,6 @@ class Toolbar extends Component {
     }
 
     componentWillMount() {
-        console.log(localStorage.getItem('languageForm'));
         this.setState({
             languageIcon: localStorage.getItem('languageForm')
         });
