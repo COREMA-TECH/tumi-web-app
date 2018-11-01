@@ -264,10 +264,11 @@ class EnhancedTable extends React.Component {
         });
     };
 
-    componentWillMount() {
+    getRolForms = () => {
         this.props.client
             .query({
                 query: GET_ROL_FORMS_QUERY,
+                fetchPolicy: 'no-cache'
             })
             .then(({data}) => {
                 this.setState({
@@ -282,6 +283,10 @@ class EnhancedTable extends React.Component {
                     'right'
                 );
             })
+    };
+
+    componentWillMount() {
+        this.getRolForms()
     }
 
     render() {
@@ -291,43 +296,44 @@ class EnhancedTable extends React.Component {
             <table className="table">
                 <thead className="thead-dark">
                 <tr>
+                    <th scope="col">Assigned</th>
                     <th scope="col">Code</th>
                     <th scope="col">Name</th>
                     <th scope="col">Value</th>
                 </tr>
                 </thead>
                 <tbody>
-                {
-                    forms.map(item => {
-                        let checked = false;
+                {forms.map((item) => {
+                    let checked = false;
+                    let isActive = false;
+                    let idRolForm = 0;
 
-                        this.state.dataRolForm.map((itemRolForm) => {
-                            if (this.props.rolId === itemRolForm.IdRoles) {
-                                if (itemRolForm.IdRoles === item.Id) {
+                    this.state.dataRolForm.map((itemRolForm) => {
+                        if (this.props.rolId === itemRolForm.IdRoles) {
+                            if (itemRolForm.IdForms === item.Id) {
+                                if (itemRolForm.IsActive === 1) {
                                     checked = true;
                                 }
+                                isActive = true;
+                                idRolForm = itemRolForm.Id;
                             }
-                        });
-
-                        if (checked) {
-                            return (
-                                <TableItem
-                                    asiggned={true}
-                                    code={item.Code}
-                                    name={item.Name}
-                                    url={item.url} />
-                            )
                         }
+                    });
 
-                        return (
-                            <TableItem
-                                asiggned={false}
-                                code={item.Code}
-                                name={item.Name}
-                                url={item.url} />
-                        )
-                    })
-                }
+                    return (
+                        <TableItem
+                            idRolForm={idRolForm}
+                            formId={item.Id}
+                            rolId={this.props.rolId}
+                            active={isActive}
+                            asiggned={checked}
+                            code={item.Code}
+                            name={item.Name}
+                            url={item.Value}
+                            updateRolForms={this.getRolForms}
+                        />
+                    );
+                })}
                 </tbody>
             </table>
         );

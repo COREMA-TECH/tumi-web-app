@@ -9,7 +9,7 @@ export const GET_FORMS_QUERY = gql`
             Id
             Code
             Name
-            Value01
+            Value
         }
     }
 `;
@@ -19,10 +19,11 @@ export const GET_FORMS_QUERY = gql`
  */
 export const GET_ROL_FORMS_QUERY = gql`
     {
-        getrolesforms(Id: null, IsActive: 1){
+        getrolesforms(Id: null){
             Id
             IdRoles
             IdForms
+            IsActive
         }
     }
 `;
