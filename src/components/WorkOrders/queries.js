@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 export const GET_WORKORDERS_QUERY = gql`
     query workOrder($id: Int) {
-        workOrder(id: $id) {
+        workOrder(id: $id, status:1) {
             id,
             quantity,
             shift,
