@@ -331,7 +331,10 @@ class WorkOrdersForm extends Component {
                                     <div className="mt-2">
                                         <button className="btn btn-danger ml-1 float-right" onClick={this.props.handleCloseModal}>Cancel</button>
                                         <button className="btn btn-success ml-1 float-right" type="submit">Save</button>
-                                        <button className="btn btn-info float-right" onClick={this.handleChangeState}>Convert to Opening</button>
+                                        {
+                                            this.state.id &&
+                                            <button className="btn btn-info float-right" onClick={this.handleChangeState}>Convert to Opening</button>
+                                        }
                                     </div>
                                 </div>
                             </div>
