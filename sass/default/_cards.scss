@@ -67,6 +67,12 @@
             height: auto;
         }
     }
+    &-solid {
+        .card-header {
+            background: transparent;
+            color: $white;
+        }
+    }
     &-wrapper {
         border: solid 1px #ccc;
         border-radius: $border-radius-wrapper;
