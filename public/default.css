@@ -7540,6 +7540,9 @@ label:not(.custom-file-label):not(.form-check-label) {
 .row {
   margin-left: 0 !important;
   margin-right: 0 !important; }
+  .row .row {
+    margin-left: -15px !important;
+    margin-right: -15px !important; }
 
 @media (max-width: 767.98px) {
   .card div[class*='col-'] {
