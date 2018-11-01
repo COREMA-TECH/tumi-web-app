@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import WorkOrdersTable from './WorkOrdersTable';
 import WorkOrdersForm from './WorkOrdersForm';
+import WorkOrdersView from './WorkOrdersView';
 import withGlobalContent from 'Generic/Global';
 
 class WorkOrders extends Component {
@@ -42,10 +43,11 @@ class WorkOrders extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <WorkOrdersTable onEditHandler={this.onEditHandler} />
+                        <WorkOrdersTable onEditHandler={this.onEditHandler} handleOpenSnackbar={this.props.handleOpenSnackbar} />
                     </div>
                 </div>
                 <WorkOrdersForm item={this.state.item} handleOpenSnackbar={this.props.handleOpenSnackbar} openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
+                <WorkOrdersView item={this.state.item} handleOpenSnackbar={this.props.handleOpenSnackbar} openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
             </div>
         );
     }

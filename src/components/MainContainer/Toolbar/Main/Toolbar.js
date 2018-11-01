@@ -17,7 +17,6 @@ class Toolbar extends Component {
     }
 
     changeLanguage = (event) => {
-        console.log(localStorage.getItem('languageForm'));
         if (this.state.languageIcon == 'en')
             localStorage.setItem('languageForm', 'es');
         else
@@ -27,7 +26,6 @@ class Toolbar extends Component {
     }
 
     componentWillMount() {
-        console.log(localStorage.getItem('languageForm'));
         this.setState({
             languageIcon: localStorage.getItem('languageForm')
         });
@@ -57,6 +55,32 @@ class Toolbar extends Component {
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#" onClick={this.handleLogout}>Logout</a>
                                 <a class="dropdown-item" href="/reset">Reset Password</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li className="RightMenu-item">
+                        <div class="dropdown">
+                            <button onClick={this.handleDropDown} class="btn btn-link btn-empty" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div className="row app-shortcuts">
+                                    <a class="col-4 app-shortcuts__item" href="/home/work-orders" onClick={this.handleLogout}>
+                                        <i class="fas fa-briefcase"></i>
+                                        <small>Work Orders</small>
+                                        <span class="app-shortcuts__helper bg-gd-danger"></span>
+                                    </a>
+                                    <a class="col-4 app-shortcuts__item" href="/home/company/add" onClick={this.handleLogout}>
+                                        <i class="fas fa-home"></i>
+                                        <small>Add Management</small>
+                                        <span class="app-shortcuts__helper bg-gd-primary"></span>
+                                    </a>
+                                    <a class="col-4 app-shortcuts__item" href="/home/contract/add" onClick={this.handleLogout}>
+                                        <i class="far fa-handshake"></i>
+                                        <small>Add Contract</small>
+                                        <span class="app-shortcuts__helper bg-gd-info"></span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </li>

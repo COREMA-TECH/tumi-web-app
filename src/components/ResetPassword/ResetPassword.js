@@ -47,10 +47,12 @@ class ResetPassword extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        //e.stopPropagation();
-        console.log("entro al medtodo");
+
         if (this.state.password === this.state.confirmPassword) {
-            console.log("Ya esta validado");
+
+            this.setState(
+                { Changing: true }
+            )
             this.props.client
                 .mutate({
                     mutation: UPDATE_USER_PASSWORD,
@@ -61,6 +63,9 @@ class ResetPassword extends Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then(({ data }) => {
+                    this.setState(
+                        { Changing: false }
+                    )
                     this.props.handleOpenSnackbar(
                         'success',
                         'Password reset Successfully!',
@@ -71,13 +76,23 @@ class ResetPassword extends Component {
                 })
                 .catch(error => {
                     // If there's an error show a snackbar with a error message
+                    this.setState(
+                        { Changing: false }
+                    )
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error to sign Anti Harrasment information. Please, try again!',
+                        'Error reset password. Please, try again!',
                         'bottom',
                         'right'
                     );
                 });
+        } else {
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error reset password. both password is not equal!',
+                'bottom',
+                'center'
+            );
         }
     };
 
@@ -153,8 +168,9 @@ class ResetPassword extends Component {
 
                     <div className="row">
                         <div className="col-md-12">
-                            <button className="btn btn-success float-right">
+                            <button className="btn btn-md btn-success float-right">
                                 Save
+                            {this.state.Changing && (<i class="fas fa-spinner fa-spin ml-2" />)}
                             </button>
                         </div>
                     </div>

@@ -27,8 +27,9 @@ class Dashboard extends React.Component {
 		};
 	}
 
-	handleClickOpenModal = () => {
-		this.setState({ openModal: true, item: null });
+	handleClickOpenModal = (event) => {
+		event.preventDefault();
+		this.setState({ openModal: true });
 	};
 	handleCloseModal = (e) => {
 		e.preventDefault();
@@ -107,32 +108,39 @@ class Dashboard extends React.Component {
 						</div>
 					</div>
 
-					<WorkOrdersTable onEditHandler={this.onEditHandler} />
+					<WorkOrdersTable
+						onEditHandler={this.onEditHandler}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+					/>
 				</div>
 				<div className="col-md-12 col-lg-5">
 					<div className="card">
-						<div className="card-header info">Quick Actions</div>
-						<div className="card-body">
-							<ul className="row">
-								<li
-									className="btn btn-primary ml-2 btn-lg  col-sm-4 col-lg-3 mt-2 p-3"
+						<div className="card-header info">Quick Access</div>
+						<div className="row">
+							<div className="col-md-4 col-lg-6">
+								<a
+									href=""
+									className="card bg-gd-danger QuickButton"
 									onClick={this.handleClickOpenModal}
 								>
-									<i className="fas fa-plus fa-2x" />
-									<br />
-									<p className="text-white">
-										<small>Add Work Order</small>
-									</p>
-								</li>
-
-								<li className="btn btn-success ml-2 btn-lg  col-sm-4 col-lg-3 mt-2 p-3">
-									<i className="fas fa-tv fa-2x" />
-									<br />
-									<p className="text-white">
-										<small>Go to board</small>
-									</p>
-								</li>
-							</ul>
+									<div className="card-body">
+										<div>
+											<i className="fas fa-plus fa-5x" />
+										</div>
+										<span>Add Work Order</span>
+									</div>
+								</a>
+							</div>
+							<div className="col-md-4 col-lg-6">
+								<a href="/home/board" className="card bg-gd-info QuickButton">
+									<div className="card-body">
+										<div>
+											<i className="fas fa-tv fa-5x" />
+										</div>
+										<span>Go to board</span>
+									</div>
+								</a>
+							</div>
 						</div>
 					</div>
 				</div>

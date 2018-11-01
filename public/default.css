@@ -7506,6 +7506,29 @@ body {
 input[type="date"]::-webkit-inner-spin-button {
   display: none; }
 
+.bg-gd-primary {
+  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
+  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
+  background: -o-linear-gradient(right, #3ca2c8, #254151);
+  background: linear-gradient(to left, #3ca2c8, #254151);
+  border-color: #3ca2c8; }
+
+.bg-gd-danger {
+  background: -webkit-gradient(linear, right top, left top, from(#f50057), to(#5c0021));
+  background: -webkit-linear-gradient(right, #f50057, #5c0021);
+  background: -o-linear-gradient(right, #f50057, #5c0021);
+  background: linear-gradient(to left, #f50057, #5c0021);
+  border-color: #f50057; }
+
+.bg-gd-info {
+  background: -webkit-linear-gradient(to right, #0a2c12, #28a745);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-gradient(linear, left top, right top, from(#0a2c12), to(#28a745));
+  background: -webkit-linear-gradient(left, #0a2c12, #28a745);
+  background: -o-linear-gradient(left, #0a2c12, #28a745);
+  background: linear-gradient(to right, #0a2c12, #28a745);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
+
 label:not(.custom-file-label):not(.form-check-label) {
   margin-bottom: 0 !important;
   margin-top: 0.5rem; }
@@ -7517,6 +7540,9 @@ label:not(.custom-file-label):not(.form-check-label) {
 .row {
   margin-left: 0 !important;
   margin-right: 0 !important; }
+  .row .row {
+    margin-left: -15px !important;
+    margin-right: -15px !important; }
 
 @media (max-width: 767.98px) {
   .card div[class*='col-'] {
@@ -7531,10 +7557,69 @@ label:not(.custom-file-label):not(.form-check-label) {
   float: right;
   margin: 0 auto !important; }
 
+.app-shortcuts {
+  margin: 0;
+  padding: 1rem;
+  width: 320px; }
+  .app-shortcuts__helper {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    top: 15px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: -1;
+    transition: -webkit-transform .5s;
+    -webkit-transition: -webkit-transform .5s;
+    -o-transition: transform .5s;
+    transition: transform .5s;
+    transition: transform .5s, -webkit-transform .5s;
+    transition: transform .5s,-webkit-transform .5s;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden; }
+  .app-shortcuts__item {
+    padding: 1rem 0;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+    -webkit-transition: background-color .3s;
+    -o-transition: background-color .3s;
+    transition: background-color .3s;
+    text-align: center; }
+    .app-shortcuts__item > i {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      color: #FFF;
+      line-height: 39px;
+      font-size: 1.5rem;
+      -webkit-transition: background-color .5s;
+      -o-transition: background-color .5s;
+      transition: background-color .5s; }
+    .app-shortcuts__item > small {
+      display: block;
+      margin-top: .5rem;
+      color: #9c9c9c;
+      -webkit-transition: color .5s;
+      -o-transition: color .5s;
+      transition: color .5s; }
+    .app-shortcuts__item:hover .app-shortcuts__helper {
+      -webkit-transform: scale(3.5);
+      -ms-transform: scale(3.5);
+      transform: scale(3.5); }
+    .app-shortcuts__item:hover > small {
+      color: #FFF; }
+
 .btn {
   border-radius: 50px;
   padding-left: 1.5rem;
   padding-right: 1.5rem; }
+  .btn-empty {
+    color: #FFF;
+    padding-left: 0;
+    padding-right: 0; }
   .btn-white {
     background: #FFF;
     border: 0;
@@ -7601,6 +7686,9 @@ label:not(.custom-file-label):not(.form-check-label) {
       justify-content: flex-end;
       padding-top: 0.5rem;
       padding-right: 0.3rem; } }
+
+.QuickButton {
+  color: #FFF !important; }
 
 .custom-file-label {
   overflow: hidden; }
@@ -8226,6 +8314,9 @@ label:not(.custom-file-label):not(.form-check-label) {
         display: block !important;
         min-height: 765px;
         height: auto; } }
+  .card-solid .card-header {
+    background: transparent;
+    color: #FFF; }
   .card-wrapper {
     border: solid 1px #ccc;
     border-radius: 30px;

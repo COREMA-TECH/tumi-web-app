@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
-import { Route } from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import CompanyList from '../../Company/CompanyList/';
 import CreateCompany from '../../Company/CreateCompany/CreateCompany';
 import Contract from '../../Contract/Contract';
@@ -10,7 +10,6 @@ import CreateRolesForms from '../../Security/RolesForms';
 import CreateUsers from '../../Security/Users';
 import Catalogs from '../../Catalogs/';
 import Signature from '../../Contract/Signature';
-import MainContract from '../../Contract/Main/MainContract/MainContract';
 import ApplicationList from 'ApplyForm/ApplicationList/ApplicationList';
 import ApplicationInfoFast from 'ApplyForm-Recruiter/Application/ApplicationInfo';
 import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
@@ -93,7 +92,7 @@ class Container extends Component {
         });
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.getRolesFormsInfo();
         this.getFormsInfo();
     }
@@ -110,68 +109,68 @@ class Container extends Component {
             <div className="container-fluid">
                 {
                     this.state.dataRolForm.map(item => {
-                        if(item.IdRoles === this.state.userLoggedRol){
+                        if (item.IdRoles === this.state.userLoggedRol) {
                             return this.state.dataForm.map(formItem => {
-                                if (item.IdForms == formItem.Id){
-                                    if(formItem.Value.trim() == "/home/company") {
+                                if (item.IdForms == formItem.Id) {
+                                    if (formItem.Value.trim() == "/home/company") {
                                         return (
-                                            <Route exact path="/home/company" component={CompanyList} />
+                                            <Route exact path="/home/company" component={CompanyList}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/company/edit") {
+                                    } else if (formItem.Value.trim() == "/home/company/edit") {
                                         return (
-                                            <Route exact path="/home/company/edit" component={CreateCompany} />
+                                            <Route exact path="/home/company/edit" component={CreateCompany}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/company/add") {
+                                    } else if (formItem.Value.trim() == "/home/company/add") {
                                         return (
-                                            <Route exact path="/home/company/add" component={CreateCompany} />
+                                            <Route exact path="/home/company/add" component={CreateCompany}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/application/info") {
+                                    } else if (formItem.Value.trim() == "/home/application/info") {
                                         return (
-                                            <Route exact path="/home/application/info" component={ApplicationTabs} />
+                                            <Route exact path="/home/application/info" component={ApplicationTabs}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/application/Form") {
+                                    } else if (formItem.Value.trim() == "/home/application/Form") {
                                         return (
-                                            <Route exact path="/home/application/Form" component={ApplicationInfoFast} />
+                                            <Route exact path="/home/application/Form" component={ApplicationInfoFast}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/contract/add") {
+                                    } else if (formItem.Value.trim() == "/home/contract/add") {
                                         return (
-                                            <Route exact path="/home/contract/add" component={Contract} />
+                                            <Route exact path="/home/contract/add" component={Contract}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/application") {
+                                    } else if (formItem.Value.trim() == "/home/application") {
                                         return (
-                                            <Route exact path="/home/application" component={ApplicationList} />
+                                            <Route exact path="/home/application" component={ApplicationList}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/work-orders") {
+                                    } else if (formItem.Value.trim() == "/home/work-orders") {
                                         return (
-                                            <Route exact path="/home/work-orders" component={WorkOrders} />
+                                            <Route exact path="/home/work-orders" component={WorkOrders}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/Roles") {
+                                    } else if (formItem.Value.trim() == "/home/Roles") {
                                         return (
-                                            <Route exact path="/home/Roles" component={CreateRole} />
+                                            <Route exact path="/home/Roles" component={CreateRole}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/RolesForms") {
+                                    } else if (formItem.Value.trim() == "/home/RolesForms") {
                                         return (
-                                            <Route exact path="/home/RolesForms" component={CreateRolesForms} />
+                                            <Route exact path="/home/RolesForms" component={CreateRolesForms}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/Forms") {
+                                    } else if (formItem.Value.trim() == "/home/Forms") {
                                         return (
-                                            <Route exact path="/home/Forms" component={CreateForms} />
+                                            <Route exact path="/home/Forms" component={CreateForms}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/Users") {
+                                    } else if (formItem.Value.trim() == "/home/Users") {
                                         return (
-                                            <Route exact path="/home/Users" component={CreateUsers} />
+                                            <Route exact path="/home/Users" component={CreateUsers}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/catalogs") {
+                                    } else if (formItem.Value.trim() == "/home/catalogs") {
                                         return (
-                                            <Route exact path="/home/catalogs" component={Catalogs} />
+                                            <Route exact path="/home/catalogs" component={Catalogs}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/signature") {
+                                    } else if (formItem.Value.trim() == "/home/signature") {
                                         return (
-                                            <Route exact path="/home/signature" component={Signature} />
+                                            <Route exact path="/home/signature" component={Signature}/>
                                         )
-                                    } else if(formItem.Value.trim() == "/home/board") {
+                                    } else if (formItem.Value.trim() == "/home/board") {
                                         return (
-                                            <Route exact path="/home/board" component={Board} />
+                                            <Route exact path="/home/board" component={Board}/>
                                         )
                                     }
                                 }
@@ -180,9 +179,9 @@ class Container extends Component {
                     })
                 }
 
-                <Route exact path="/home/RolesForms" component={CreateRolesForms} />
-                <Route exact path="/Reset" component={ResetPassword} />
-                <Route path='*' component={NotFound} />
+                <Route exact path="/home/RolesForms" component={CreateRolesForms}/>
+                <Route exact path="/Reset" component={ResetPassword}/>
+                <Route path='*' component={NotFound}/>
             </div>
         );
     }

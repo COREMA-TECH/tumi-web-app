@@ -81,56 +81,55 @@ class TableItem extends Component {
             <tr>
                 <td>
                     <input
-                    type="checkbox"
-                    checked={this.state.checked}
-                    onChange={(e) => {
-                        this.setState({
-                            checked: e.target.checked
-                        }, () => {
-                            if (this.props.active) {
-                                let objectRolForm = {
-                                    Id: this.props.idRolForm,
-                                    IdRoles: this.props.rolId,
-                                    IdForms: 0,
-                                    IsActive: 1,
-                                    User_Created: 1,
-                                    User_Updated: 1,
-                                    Date_Created: "'2018-08-14'",
-                                    Date_Updated: "'2018-08-14'"
-                                };
+                        type="checkbox"
+                        checked={this.state.checked}
+                        onChange={(e) => {
+                            this.setState({
+                                checked: e.target.checked
+                            }, () => {
+                                if (this.props.active) {
+                                    let objectRolForm = {
+                                        Id: this.props.idRolForm,
+                                        IdRoles: this.props.rolId,
+                                        IdForms: 0,
+                                        IsActive: 1,
+                                        User_Created: 1,
+                                        User_Updated: 1,
+                                        Date_Created: "'2018-08-14'",
+                                        Date_Updated: "'2018-08-14'"
+                                    };
 
-                                objectRolForm.IdForms = this.props.formId;
-                                if(this.state.checked) {
-                                    objectRolForm.IsActive = 1;
+                                    objectRolForm.IdForms = this.props.formId;
+                                    if (this.state.checked) {
+                                        objectRolForm.IsActive = 1;
+                                    } else {
+                                        objectRolForm.IsActive = 0;
+                                    }
+                                    this.updateRolForm(objectRolForm);
                                 } else {
-                                    objectRolForm.IsActive = 0;
+                                    let objectRolForm = {
+                                        Id: this.props.idRolForm,
+                                        IdRoles: this.props.rolId,
+                                        IdForms: 0,
+                                        IsActive: 1,
+                                        User_Created: 1,
+                                        User_Updated: 1,
+                                        Date_Created: "'2018-08-14'",
+                                        Date_Updated: "'2018-08-14'"
+                                    };
+
+                                    objectRolForm.IdForms = this.props.formId;
+                                    if (this.state.checked) {
+                                        objectRolForm.IsActive = 1;
+                                    } else {
+                                        objectRolForm.IsActive = 0;
+                                    }
+
+                                    this.insertRolForm(objectRolForm);
                                 }
-                                this.updateRolForm(objectRolForm);
-                            } else {
-                                let objectRolForm = {
-                                    Id: this.props.idRolForm,
-                                    IdRoles: this.props.rolId,
-                                    IdForms: 0,
-                                    IsActive: 1,
-                                    User_Created: 1,
-                                    User_Updated: 1,
-                                    Date_Created: "'2018-08-14'",
-                                    Date_Updated: "'2018-08-14'"
-                                };
-
-                                objectRolForm.IdForms = this.props.formId;
-                                if(this.state.checked) {
-                                    objectRolForm.IsActive = 1;
-                                } else {
-                                    objectRolForm.IsActive = 0;
-                                }
-
-                                this.insertRolForm(objectRolForm);
-                            }
-                        });
-
-                    }}
-                /></td>
+                            });
+                        }}
+                    /></td>
                 <td>{this.props.code}</td>
                 <td>{this.props.name}</td>
                 <td>{this.props.url}</td>
@@ -141,3 +140,4 @@ class TableItem extends Component {
 
 
 export default withApollo(withGlobalContent(TableItem));
+
