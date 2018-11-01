@@ -38,8 +38,10 @@ class WorkOrdersForm extends Component {
         };
     }
 
+    ReceiveStatus = false;
+
     UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.item) {
+        if (nextProps.item && !this.state.openModal) {
             this.setState({
                 id: nextProps.item.id,
                 IdEntity: nextProps.item.IdEntity,
@@ -52,11 +54,13 @@ class WorkOrdersForm extends Component {
                 needExperience: nextProps.item.needExperience,
                 needEnglish: nextProps.item.needEnglish,
                 comment: nextProps.item.comment,
-                userId: 1
+                userId: 1,
+                openModal: nextProps.openModal
             }, () => {
                 this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
+                this.ReceiveStatus = true;
             });
-        } else {
+        } else if (!this.state.openModal) {
             this.setState({
                 IdEntity: 0,
                 date: '',
@@ -72,6 +76,10 @@ class WorkOrdersForm extends Component {
                 userId: 1
             });
         }
+        this.setState({
+            openModal: nextProps.openModal
+        });
+
     }
 
     UNSAFE_componentWillMount() {
@@ -202,7 +210,7 @@ class WorkOrdersForm extends Component {
     render() {
         return (
             <div>
-                <Dialog maxWidth="lg" open={this.props.openModal} onClose={this.props.handleCloseModal} >
+                <Dialog maxWidth="lg" open={this.state.openModal} onClose={this.props.handleCloseModal} >
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
