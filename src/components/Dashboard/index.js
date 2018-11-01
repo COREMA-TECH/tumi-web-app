@@ -35,7 +35,12 @@ class Dashboard extends React.Component {
 		e.preventDefault();
 		this.setState({ openModal: false });
 	};
-
+	onEditHandler = (item) => {
+		this.setState({
+			openModal: true,
+			item: item
+		});
+	};
 	render() {
 		return (
 			<div className="row WorkOrder">
@@ -103,7 +108,7 @@ class Dashboard extends React.Component {
 						</div>
 					</div>
 
-					<WorkOrdersTable />
+					<WorkOrdersTable onEditHandler={this.onEditHandler} />
 				</div>
 				<div className="col-md-12 col-lg-5">
 					<div className="card">
@@ -150,7 +155,7 @@ class Dashboard extends React.Component {
 					</div>
 				</div>
 				<WorkOrdersForm
-					item={null}
+					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
 					handleCloseModal={this.handleCloseModal}
