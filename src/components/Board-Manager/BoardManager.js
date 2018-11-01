@@ -7,11 +7,25 @@ import PropTypes from 'prop-types';
 import { GET_WORK_ORDERS } from "./Mutations";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
-import Board from 'react-trello'
+//import Board from 'react-trello'
+import { Board } from 'react-trello'
+
 import { InputLabel } from '@material-ui/core';
 import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 
+const handleDragStart = (cardId, laneId) => {
+    console.log('drag started')
+    console.log(`cardId: ${cardId}`)
+    console.log(`laneId: ${laneId}`)
+}
+
+const handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
+    console.log('drag ended')
+    console.log(`cardId: ${cardId}`)
+    console.log(`sourceLaneId: ${sourceLaneId}`)
+    console.log(`targetLaneId: ${targetLaneId}`)
+}
 
 
 class BoardManager extends Component {
@@ -21,7 +35,8 @@ class BoardManager extends Component {
         this.state = {
             loading: false,
             // workOrder: [{ id: '', title: '', description: '', label: '' }]
-            workOrder: []
+            workOrder: [],
+            lane: [],
         }
 
         console.log("Inicializacion de variables");
@@ -38,50 +53,49 @@ class BoardManager extends Component {
         this.setState(
             {
                 loading: true
-            });
-        console.log("mandamos a llenar el array");
-        this.getWorkOrders();
-        console.log("Ya el array esta lleno");
-        console.log("aqui esta el array ", this.state.workOrder);
+            }, () => {
 
+                this.getWorkOrders();
+
+            });
     }
 
+    validateInvalidInput = () => {
+        console.log("estoy en accion");
+    };
 
+    shouldReceiveNewData = nextData => {
+        console.log('New card has been added')
+        console.log(nextData)
+    }
+
+    handleCardAdd = (card, laneId) => {
+        console.log(`New card added to lane ${laneId}`)
+        console.dir(card)
+    }
 
     getWorkOrders = () => {
         this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
 
-            let datos = [];
+            let datas = [];
             let workOrders = [];
 
             data.workOrder.forEach((wo) => {
-                datos = {
+                datas = {
                     id: wo.id, title: wo.comment,
                     description: wo.comment, label: '30 mins'
                 };
-                workOrders.push(datos);
+                workOrders.push(datas);
             });
             this.setState(
                 {
                     workOrder: workOrders,
-                    loading: false
-                });
-
-            console.log("esta es la variable ya hecha ", this.state.workOrder);
-        }).catch(error => { })
-    };
-
-    render() {
-        console.log("ya esta activo el render");
-        return <
-            Board data={
-                {
-                    lanes: [
+                    lane: [
                         {
                             id: 'lane1',
                             title: 'Work Orders',
                             label: ' ',
-                            cards: [this.state.workOrder]
+                            cards: workOrders
                         },
                         {
                             id: 'lane2',
@@ -107,11 +121,40 @@ class BoardManager extends Component {
                             label: ' ',
                             cards: []
                         }
-                    ]
-                }
-            }
+                    ],
+                    loading: false
+                });
+        }).catch(error => { })
+    };
 
-        />
+    render() {
+        return (
+            <div className="App">
+                <div className="App-header">
+
+                </div>
+                <div className="App-intro">
+
+                    <Board
+                        // editable
+                        onCardAdd={this.handleCardAdd}
+                        data={{ lanes: this.state.lane }}
+                        draggable
+                        onDataChange={this.shouldReceiveNewData}
+                        eventBusHandle={this.setEventBus}
+                        handleDragStart={handleDragStart}
+                        handleDragEnd={handleDragEnd}
+                    // onClick={alert("aqui estoy")}
+                    />
+                </div>
+            </div>
+        )
+        /* return <
+             Board data={
+                 { lanes: this.state.lane }
+             }
+ 
+         />*/
     }
 }
 
