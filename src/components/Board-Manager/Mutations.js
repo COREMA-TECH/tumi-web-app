@@ -10,7 +10,6 @@ query workorder {
         IdEntity
         userId
         date
-
         quantity
         shift
         startDate
@@ -19,6 +18,6 @@ query workorder {
         needEnglish
         PositionRateId
         comment
-                }
+}
 }
 `;

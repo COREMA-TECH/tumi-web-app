@@ -31,7 +31,7 @@
 		"react-dom": "^16.4.2",
 		"react-input-mask": "^2.0.4",
 		"react-number-format": "^3.5.2",
-		"react-redux": "^5.0.7",
+		"react-redux": "^5.1.0",
 		"react-render-html": "^0.6.0",
 		"react-router-dom": "^4.3.1",
 		"react-scripts": "1.1.4",
@@ -41,7 +41,7 @@
 		"react-tagsinput": "^3.19.0",
 		"react-text-mask": "^5.4.3",
 		"react-trello": "^2.0.1",
-		"redux": "^4.0.0",
+		"redux": "^4.0.1",
 		"uuid": "^3.3.2",
 		"webpack": "^3.11.0"
 	},
