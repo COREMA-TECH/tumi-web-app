@@ -15,3 +15,9 @@ export const UPDATE_WORKORDER = gql`
 		}
 	}
 `;
+
+export const DELETE_WORKORDER = gql`
+	mutation deleteWorkOrder($id: [Int]) {
+		deleteWorkOrder(id: $id)
+	}
+`;

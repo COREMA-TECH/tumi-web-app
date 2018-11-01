@@ -12,6 +12,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { withApollo } from 'react-apollo';
 import { GET_WORKORDERS_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+import { DELETE_WORKORDER } from './mutations';
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -30,7 +32,8 @@ class WorkOrdersTable extends Component {
         this.state = {
             data: [],
             rowsPerPage: 10,
-            page: 0
+            page: 0,
+            openConfirm: false
 
         }
     }
@@ -46,6 +49,21 @@ class WorkOrdersTable extends Component {
                 });
             })
             .catch();
+    }
+
+    handleDelete = (id) => {
+        this.props.client.mutate({
+            mutation: DELETE_WORKORDER,
+            variables: {
+                id: id
+            }
+        }).then((data) => {
+            this.props.handleOpenSnackbar('success', 'Record Deleted!');
+            this.setState({ openModal: false });
+            window.location.reload();
+        }).catch((error) => {
+            this.props.handleOpenSnackbar('error', 'Error: ' + error);
+        });
     }
 
     render() {
@@ -88,9 +106,13 @@ class WorkOrdersTable extends Component {
                                                 <button
                                                     className="btn btn-danger float-left"
                                                     disabled={this.props.loading}
+                                                    // onClick={(e) => {
+                                                    //     e.stopPropagation();
+                                                    //     return this.props.onDeleteHandler({ ...row });
+                                                    // }}
                                                     onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        return this.props.onDeleteHandler({ ...row });
+                                                        e.preventDefault();
+                                                        this.setState({ openConfirm: true, idToDelete: row.id });
                                                     }}
                                                 >
                                                     <i className="fas fa-trash"></i>
@@ -122,6 +144,17 @@ class WorkOrdersTable extends Component {
                             </TableRow>
                         </TableFooter>
                     </Table>
+                    <ConfirmDialog
+                        open={this.state.openConfirm}
+                        closeAction={() => {
+                            this.setState({ openConfirm: false });
+                        }}
+                        confirmAction={() => {
+                            this.handleDelete(this.state.idToDelete);
+                        }}
+                        title={'are you sure you want to delete this record?'}
+                        loading={this.props.removing}
+                    />
                 </Paper>
             </div >
         );

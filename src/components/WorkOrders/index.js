@@ -42,7 +42,7 @@ class WorkOrders extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <WorkOrdersTable onEditHandler={this.onEditHandler} />
+                        <WorkOrdersTable onEditHandler={this.onEditHandler} handleOpenSnackbar={this.props.handleOpenSnackbar} />
                     </div>
                 </div>
                 <WorkOrdersForm item={this.state.item} handleOpenSnackbar={this.props.handleOpenSnackbar} openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />

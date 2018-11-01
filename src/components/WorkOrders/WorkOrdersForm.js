@@ -8,6 +8,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
+import ShiftsData from '../../data/shitfs.json';
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -17,7 +18,7 @@ class WorkOrdersForm extends Component {
         date: '',
         quantity: 0,
         status: 0,
-        shift: 0,
+        shift: '',
         startDate: '',
         endDate: '',
         needExperience: false,
@@ -25,7 +26,8 @@ class WorkOrdersForm extends Component {
         comment: '',
         position: 0,
         PositionRateId: null,
-        userId: 1
+        userId: 1,
+        ShiftsData: ShiftsData
     };
 
     constructor(props) {
@@ -66,7 +68,7 @@ class WorkOrdersForm extends Component {
                 date: '',
                 quantity: 0,
                 status: 0,
-                shift: 0,
+                shift: '',
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -144,6 +146,7 @@ class WorkOrdersForm extends Component {
         }).then((data) => {
             this.props.handleOpenSnackbar('success', 'Preference Inserted!');
             this.setState({ openModal: false });
+            window.location.reload();
         }).catch((error) => {
             this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
         });
@@ -172,6 +175,7 @@ class WorkOrdersForm extends Component {
         }).then((data) => {
             this.props.handleOpenSnackbar('success', 'Preference Inserted!');
             this.setState({ openModal: false });
+            window.location.reload();
         }).catch((error) => {
             this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
         });
@@ -247,7 +251,14 @@ class WorkOrdersForm extends Component {
                                 </div>
                                 <div className="col-md-4">
                                     <label htmlFor="">Shift</label>
-                                    <input type="text" className="form-control" name="shift" onChange={this.handleChange} value={this.state.shift} />
+                                    <select className="form-control" name="shift" onChange={this.handleChange} value={this.state.shift}>
+                                        <option value="0">Select a Shift</option>
+                                        {
+                                            this.state.ShiftsData.map((shift) => (
+                                                <option value={shift.Id} >{shift.Name}</option>
+                                            ))
+                                        }
+                                    </select>
                                 </div>
                                 <div className="col-md-4">
                                     <label htmlFor="">Date Needed By</label>
