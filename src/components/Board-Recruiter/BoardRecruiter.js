@@ -59,7 +59,8 @@ const CustomCard = props => {
                     }}>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
-                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}</div>
+                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}
+                    </div>
                 </header>
             </div>
         </div>
@@ -73,8 +74,8 @@ class BoardRecruiter extends Component {
         this.state = {
             loading: false,
             // workOrder: [{ id: '', title: '', description: '', label: '' }]
-            workOrder: [],
-            leads: [],
+            Opening: [],
+            lead: [],
             lane: [],
             Position: '',
             Hotel: ''
@@ -92,7 +93,7 @@ class BoardRecruiter extends Component {
                 loading: true
             }, () => {
 
-                this.getWorkOrders();
+                this.getOpenings();
 
             });
     }
@@ -111,13 +112,38 @@ class BoardRecruiter extends Component {
         console.dir(card)
     }
 
-    getWorkOrders = () => {
+    getOpenings = () => {
+        let datas = [];
+        let leads = [];
+
         this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
+            console.log("Esto es del lead ", data);
+            data.applications.forEach((wo) => {
+                //const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
+                //const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
+                //const Users = data.getcontacts.find((item) => { return item.Id == 10 });
+                console.log("entro en el data ", data);
+                console.log("este es el wo ", wo);
+                datas = {
+                    id: wo.id,
+                    name: wo.firstName + ' ' + wo.lastName,
+                    // dueOn: 'Q: ',
+                    //subTitle: wo.comment,
+                    subTitle: wo.cellPhone,
+                    //body: Users.First_Name + ' ' + Users.Last_Name,
+                    //  escalationTextLeft: Hotel.Name,
+                    //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
+                    escalationTextRight: wo.car == true ? "Yes" : "No",
+                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                    //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
+                };
+                leads.push(datas);
+            });
         }).catch(error => { })
         this.props.client.query({ query: GET_OPENING, variables: {} }).then(({ data }) => {
-            let datas = [];
-            let workOrders = [];
-            let leads = [];
+            //let datas = [];
+            let Openings = [];
+
 
             data.workOrder.forEach((wo) => {
                 const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
@@ -137,17 +163,17 @@ class BoardRecruiter extends Component {
                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                     //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
                 };
-                workOrders.push(datas);
+                Openings.push(datas);
             });
             this.setState(
                 {
-                    workOrder: workOrders,
+                    Opening: Openings,
                     lane: [
                         {
                             id: 'lane1',
                             title: 'Openings',
                             label: ' ',
-                            cards: workOrders
+                            cards: Openings
                         },
                         {
                             id: 'lane2',

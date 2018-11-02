@@ -18,7 +18,7 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_LEAD = gql`
-		query getlead($Id: Int) {
+		query getlead {
 			applications(isActive: true , isLead: true) {
 				id
 			firstName
