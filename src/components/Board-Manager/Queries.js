@@ -17,6 +17,28 @@ export const GET_POSTIONS_QUERY = gql`
 		}
     `;
 
+export const GET_MATCH = gql`
+	query getlead {
+		applications(isActive: true , isLead: false) {
+			id
+		firstName
+		lastName
+		cellPhone
+		homePhone
+		car
+		city
+		cityInfo{
+			DisplayLabel
+		  }
+		state	
+		stateInfo{
+			DisplayLabel
+		  }
+		  generalComment
+		}
+	}
+`;
+
 export const GET_WORK_ORDERS = gql`
     query workorder {
         workOrder(status:1){
@@ -40,7 +62,7 @@ export const GET_WORK_ORDERS = gql`
             Id
             Name
         }
-        getusers(Id: null) {
+        getusers(Id: null,IsActive: 1) {
             Id
             Id_Contact
         }
