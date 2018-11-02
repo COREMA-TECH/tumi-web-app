@@ -5,7 +5,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
 //import { GET_WORK_ORDERS } from "./Mutations";
-import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_WORK_ORDERS } from "./Queries";
+import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_OPENING, GET_LEAD } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 //import Board from 'react-trello'
@@ -74,6 +74,7 @@ class BoardRecruiter extends Component {
             loading: false,
             // workOrder: [{ id: '', title: '', description: '', label: '' }]
             workOrder: [],
+            leads: [],
             lane: [],
             Position: '',
             Hotel: ''
@@ -111,9 +112,12 @@ class BoardRecruiter extends Component {
     }
 
     getWorkOrders = () => {
-        this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
+        this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
+        }).catch(error => { })
+        this.props.client.query({ query: GET_OPENING, variables: {} }).then(({ data }) => {
             let datas = [];
             let workOrders = [];
+            let leads = [];
 
             data.workOrder.forEach((wo) => {
                 const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
@@ -141,31 +145,31 @@ class BoardRecruiter extends Component {
                     lane: [
                         {
                             id: 'lane1',
-                            title: 'Work Orders',
+                            title: 'Openings',
                             label: ' ',
                             cards: workOrders
                         },
                         {
                             id: 'lane2',
-                            title: 'Matches',
+                            title: 'Leads',
                             label: ' ',
-                            cards: []
+                            cards: leads
                         },
                         {
                             id: 'lane3',
-                            title: 'Notify',
+                            title: 'Applied',
                             label: ' ',
                             cards: []
                         },
                         {
                             id: 'lane4',
-                            title: 'Accepted',
+                            title: 'Candidate',
                             label: ' ',
                             cards: []
                         },
                         {
                             id: 'lane5',
-                            title: 'Add to Schedule',
+                            title: 'Placement',
                             label: ' ',
                             cards: []
                         }
