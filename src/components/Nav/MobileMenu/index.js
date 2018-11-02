@@ -54,6 +54,16 @@ const MobileMenu = (props) => {
 					</Link>
 					<ul className="SubMenu" id="1">
 						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/dashboard/manager">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/board/manager">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Board
+							</a>
+						</li>
+						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/home/application">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> New Employees Package
 							</a>
@@ -61,6 +71,52 @@ const MobileMenu = (props) => {
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/employment-application">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Public Application
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li className="MainMenu-option">
+					<Link
+						to={`/home/application`}
+						className="MenuMobile-link"
+						onClick={handleItemMenuAction}
+						data-submenu="1"
+					>
+						<i className="fas fa-file-signature MenuMobile-icon" title={'Hotel Manager'} />
+						<span>Hotel Manager</span>
+					</Link>
+					<ul className="SubMenu" id="1">
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/dashboard/manager">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/board/manager">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Board
+							</a>
+						</li>
+					</ul>
+				</li>
+				<li className="MainMenu-option">
+					<Link
+						to={`/home/application`}
+						className="MenuMobile-link"
+						onClick={handleItemMenuAction}
+						data-submenu="1"
+					>
+						<i className="fas fa-file-signature MenuMobile-icon" title={'Recruiter'} />
+						<span>Recruiter</span>
+					</Link>
+					<ul className="SubMenu" id="1">
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/dashboard/recruiter">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/board/recruiter">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Board
 							</a>
 						</li>
 					</ul>
