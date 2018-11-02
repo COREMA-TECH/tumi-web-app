@@ -14,6 +14,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			date
 			IdEntity
 			PositionRateId
+			status
 			position {
 				Position
 			}

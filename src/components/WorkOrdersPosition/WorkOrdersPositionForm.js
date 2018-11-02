@@ -27,7 +27,8 @@ class WorkOrdersPositionForm extends Component {
 		position: 0,
 		PositionRateId: null,
 		userId: 1,
-		ShiftsData: ShiftsData
+		ShiftsData: ShiftsData,
+		saving: false
 	};
 
 	constructor(props) {
@@ -103,6 +104,125 @@ class WorkOrdersPositionForm extends Component {
 		});
 	}
 
+	handleSubmit = (event) => {
+		event.preventDefault();
+
+		if (
+			this.state.IdEntity == 0 ||
+			this.state.PositionRateId == 0 ||
+			this.state.quantity == '' ||
+			this.state.quantity == 0 ||
+			this.state.date == '' ||
+			this.state.startDate == '' ||
+			this.state.endDate == '' ||
+			this.state.shift == '' ||
+			this.state.shift == 0
+		) {
+			this.props.handleOpenSnackbar('error', 'Error all fields are required');
+		} else {
+			this.setState({ saving: true });
+			if (this.state.id == null) this.add();
+			else this.update();
+		}
+	};
+
+	add = () => {
+		this.props.client
+			.mutate({
+				mutation: CREATE_WORKORDER,
+				variables: {
+					workOrder: {
+						IdEntity: this.state.IdEntity,
+						date: this.state.date,
+						quantity: this.state.quantity,
+						status: 30452,
+						shift: this.state.shift,
+						startDate: this.state.startDate,
+						endDate: this.state.endDate,
+						needExperience: this.state.needExperience,
+						needEnglish: this.state.needEnglish,
+						comment: this.state.comment,
+						PositionRateId: this.state.PositionRateId,
+						userId: 1
+					}
+				}
+			})
+			.then((data) => {
+				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+				this.setState({ openModal: false, saving: false });
+				window.location.reload();
+			})
+			.catch((error) => {
+				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+				this.setState({ saving: false });
+			});
+	};
+
+	update = (status = 1) => {
+		this.props.client
+			.mutate({
+				mutation: UPDATE_WORKORDER,
+				variables: {
+					workOrder: {
+						id: this.state.id,
+						IdEntity: this.state.IdEntity,
+						date: this.state.date,
+						quantity: this.state.quantity,
+						status: this.state.status,
+						shift: this.state.shift,
+						startDate: this.state.startDate,
+						endDate: this.state.endDate,
+						needExperience: this.state.needExperience,
+						needEnglish: this.state.needEnglish,
+						comment: this.state.comment,
+						PositionRateId: this.state.PositionRateId,
+						userId: localStorage.getItem('LoginId')
+					}
+				}
+			})
+			.then((data) => {
+				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+				this.setState({ openModal: false });
+				window.location.reload();
+			})
+			.catch((error) => {
+				this.setState({ saving: false });
+				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+			});
+	};
+
+	handleChangeState = () => {
+		if (
+			this.state.IdEntity == 0 ||
+			this.state.PositionRateId == 0 ||
+			this.state.quantity == '' ||
+			this.state.quantity == 0 ||
+			this.state.date == '' ||
+			this.state.startDate == '' ||
+			this.state.endDate == '' ||
+			this.state.shift == '' ||
+			this.state.shift == 0
+		) {
+			this.props.handleOpenSnackbar('error', 'Error all fields are required');
+		} else {
+			this.update(2);
+		}
+	};
+
+	handleChange = (event) => {
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.name;
+
+		this.setState({
+			[name]: value
+		});
+
+		if (name === 'IdEntity') {
+			this.getPositions(value);
+		}
+	};
+
 	getPositions = (id, PositionId = null) => {
 		this.props.client
 			.query({
@@ -124,7 +244,7 @@ class WorkOrdersPositionForm extends Component {
 				<Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
 					<DialogTitle style={{ padding: '0px' }}>
 						<div className="modal-header">
-							<h5 className="modal-title">Work Order</h5>
+							<h5 className="modal-title">Opening</h5>
 						</div>
 					</DialogTitle>
 					<DialogContent>
@@ -140,7 +260,6 @@ class WorkOrdersPositionForm extends Component {
 												id=""
 												onChange={this.handleChange}
 												value={this.state.IdEntity}
-												disabled={true}
 											>
 												<option value={0}>Select a Hotel</option>
 												{this.state.hotels.map((hotel) => (
@@ -156,7 +275,6 @@ class WorkOrdersPositionForm extends Component {
 												id=""
 												onChange={this.handleChange}
 												value={this.state.PositionRateId}
-												disabled={true}
 											>
 												<option value="0">Select a Position</option>
 												{this.state.positions.map((position) => (
@@ -172,7 +290,6 @@ class WorkOrdersPositionForm extends Component {
 												name="quantity"
 												onChange={this.handleChange}
 												value={this.state.quantity}
-												disabled={true}
 											/>
 										</div>
 										<div className="col-md-6">
@@ -182,7 +299,6 @@ class WorkOrdersPositionForm extends Component {
 												name="shift"
 												onChange={this.handleChange}
 												value={this.state.shift}
-												disabled={true}
 											>
 												<option value="0">Select a Shift</option>
 												{this.state.ShiftsData.map((shift) => (
@@ -198,7 +314,6 @@ class WorkOrdersPositionForm extends Component {
 												name="startDate"
 												onChange={this.handleChange}
 												value={this.state.startDate.substring(0, 10)}
-												disabled={true}
 											/>
 										</div>
 										<div className="col-md-6">
@@ -209,7 +324,6 @@ class WorkOrdersPositionForm extends Component {
 												name="endDate"
 												onChange={this.handleChange}
 												value={this.state.endDate.substring(0, 10)}
-												disabled={true}
 											/>
 										</div>
 										<div className="col-md-6">
@@ -220,7 +334,6 @@ class WorkOrdersPositionForm extends Component {
 												name="date"
 												onChange={this.handleChange}
 												value={this.state.date.substring(0, 10)}
-												disabled={true}
 											/>
 										</div>
 									</div>
@@ -238,7 +351,6 @@ class WorkOrdersPositionForm extends Component {
 													className="onoffswitch-checkbox"
 													id="myonoffswitch"
 													checked={this.state.needExperience}
-													disabled={true}
 												/>
 												<label className="onoffswitch-label" htmlFor="myonoffswitch">
 													<span className="onoffswitch-inner" />
@@ -257,7 +369,6 @@ class WorkOrdersPositionForm extends Component {
 													className="onoffswitch-checkbox"
 													id="myonoffswitchSpeak"
 													checked={this.state.needEnglish}
-													disabled={true}
 												/>
 												<label className="onoffswitch-label" htmlFor="myonoffswitchSpeak">
 													<span className="onoffswitch-inner" />
@@ -276,7 +387,6 @@ class WorkOrdersPositionForm extends Component {
 												cols="30"
 												rows="10"
 												value={this.state.comment}
-												disabled={true}
 											/>
 										</div>
 									</div>
@@ -287,7 +397,11 @@ class WorkOrdersPositionForm extends Component {
 											className="btn btn-danger ml-1 float-right"
 											onClick={this.props.handleCloseModal}
 										>
-											Close <i class="fas fa-ban ml-1" />
+											Cancel<i class="fas fa-ban ml-2" />
+										</button>
+										<button className="btn btn-success ml-1 float-right" type="submit">
+											Save {!this.state.saving && <i class="fas fa-save ml2" />}
+											{this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
 										</button>
 									</div>
 								</div>

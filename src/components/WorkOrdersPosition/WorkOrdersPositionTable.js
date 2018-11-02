@@ -13,7 +13,7 @@ import { withApollo } from 'react-apollo';
 import { GET_WORKORDERS_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import { DELETE_WORKORDER } from './mutations';
+import { REJECT_WORKORDER } from './mutations';
 
 const CustomTableCell = withStyles((theme) => ({
 	head: {
@@ -53,13 +53,13 @@ class WorkOrdersPositionTable extends Component {
 		this.setState({ removing: true });
 		this.props.client
 			.mutate({
-				mutation: DELETE_WORKORDER,
+				mutation: REJECT_WORKORDER,
 				variables: {
 					id: id
 				}
 			})
 			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Record Deleted!');
+				this.props.handleOpenSnackbar('success', 'Record Rejected!');
 				this.setState({ openModal: false, removing: false });
 				window.location.reload();
 			})
@@ -102,7 +102,19 @@ class WorkOrdersPositionTable extends Component {
 														return this.props.onEditHandler({ ...row });
 													}}
 												>
-													<i class="fas fa-info" />
+													<i className="fas fa-pen" />
+												</button>
+											</Tooltip>
+											<Tooltip title="Reject Opening">
+												<button
+													className="btn btn-danger float-left"
+													disabled={this.props.loading}
+													onClick={(e) => {
+														e.preventDefault();
+														this.setState({ openConfirm: true, idToDelete: row.id });
+													}}
+												>
+													<i class="fas fa-eject" />
 												</button>
 											</Tooltip>
 										</CustomTableCell>
@@ -131,6 +143,17 @@ class WorkOrdersPositionTable extends Component {
 							</TableRow>
 						</TableFooter>
 					</Table>
+					<ConfirmDialog
+						open={this.state.openConfirm}
+						closeAction={() => {
+							this.setState({ openConfirm: false });
+						}}
+						confirmAction={() => {
+							this.handleDelete(this.state.idToDelete);
+						}}
+						title={'are you sure you want to reject this opening?'}
+						loading={this.state.removing}
+					/>
 				</Paper>
 			</div>
 		);
