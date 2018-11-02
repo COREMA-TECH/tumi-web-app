@@ -17,11 +17,7 @@ query workorder {
         needExperience
         needEnglish
         PositionRateId
-        position{
-            Position
-          }
         comment
 }
-
 }
 `;

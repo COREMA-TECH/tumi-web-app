@@ -17,7 +17,7 @@ import ApplicationTabs from '../../ApplyForm/Application/ApplicationTabs';
 import WorkOrders from '../../WorkOrders';
 import ResetPassword from '../../ResetPassword/ResetPassword';
 import Board from '../../Board-Manager/BoardManager';
-
+import BoardRecruiter from '../../Board-Recruiter/BoardRecruiter';
 
 class Container extends Component {
     render() {
@@ -42,6 +42,7 @@ class Container extends Component {
                 <Route exact path="/home/catalogs" component={Catalogs} />
                 <Route exact path="/home/signature" component={Signature} />
                 <Route exact path="/home/board" component={Board} />
+                <Route exact path="/home/board-recruiter" component={BoardRecruiter} />
             </div>
         );
     }

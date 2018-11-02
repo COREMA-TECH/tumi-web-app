@@ -19,7 +19,7 @@ export const GET_POSTIONS_QUERY = gql`
 
 export const GET_WORK_ORDERS = gql`
     query workorder {
-        workOrder(status:1){
+        workOrder(status:2){
             id
             IdEntity
             userId

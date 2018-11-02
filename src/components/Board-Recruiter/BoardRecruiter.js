@@ -66,7 +66,7 @@ const CustomCard = props => {
     )
 }
 
-class BoardManager extends Component {
+class BoardRecruiter extends Component {
     constructor(props) {
         super(props);
 
@@ -211,4 +211,4 @@ class BoardManager extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(BoardManager));
+export default withApollo(withGlobalContent(BoardRecruiter));
