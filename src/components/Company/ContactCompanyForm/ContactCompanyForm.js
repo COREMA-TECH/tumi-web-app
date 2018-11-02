@@ -1140,8 +1140,7 @@ class ContactcontactForm extends React.Component {
 				/>
 				<div className="row">
 					<div className="col-md-12">
-						<button className="btn btn-success mr-1" onClick={this.handleClickOpenModal}>
-			
+						<button className="btn btn-success mr-1 float-right" onClick={this.handleClickOpenModal}>
 							Add Contact<i class="fas fa-plus ml-1" />
 						</button>
 					</div>
