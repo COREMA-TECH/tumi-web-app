@@ -35,6 +35,13 @@ class WorkOrders extends Component {
 			<div>
 				<div className="row">
 					<div className="col-md-12">
+						<button className="btn btn-success float-right" onClick={this.handleClickOpenModal}>
+							Add Work Order <i className="fas fa-plus"></i>
+						</button>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-md-12">
 						<WorkOrdersTable
 							onEditHandler={this.onEditHandler}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
