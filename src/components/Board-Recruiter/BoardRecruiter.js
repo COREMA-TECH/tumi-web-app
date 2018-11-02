@@ -48,8 +48,20 @@ const CustomCard = props => {
                     }}>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
-                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}
-                    </div>
+                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
+                </header>
+                <header
+                    style={{
+                        paddingBottom: 0,
+                        marginBottom: 0,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        color: props.cardColor
+                    }}>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
+                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                 </header>
             </div>
         </div>
@@ -67,7 +79,8 @@ class BoardRecruiter extends Component {
             lead: [],
             lane: [],
             Position: '',
-            Hotel: ''
+            Hotel: '',
+            checked: true
         }
     }
 
@@ -84,10 +97,10 @@ class BoardRecruiter extends Component {
         console.log(`targetLaneId: ${targetLaneId}`)
 
         if (sourceLaneId == "lane2" && targetLaneId == "lane3") {
-            this.updateApplicationInformation(cardId, false);
+            this.updateApplicationInformation(cardId, false, 'Lead now is a Applicant');
         }
         if (sourceLaneId == "lane3" && targetLaneId == "lane2") {
-            this.updateApplicationInformation(cardId, true);
+            this.updateApplicationInformation(cardId, true, 'Applicant now is a Lead ');
         }
 
     }
@@ -116,7 +129,7 @@ class BoardRecruiter extends Component {
         console.dir(card)
     }
 
-    updateApplicationInformation = (id, isLead) => {
+    updateApplicationInformation = (id, isLead, Message) => {
         this.setState(
             {
                 insertDialogLoading: true
@@ -137,7 +150,7 @@ class BoardRecruiter extends Component {
                             editing: false
                         });
 
-                        this.props.handleOpenSnackbar('success', 'Lead now is a Applicant', 'bottom', 'right');
+                        this.props.handleOpenSnackbar('success', Message, 'bottom', 'right');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar(
@@ -169,10 +182,10 @@ class BoardRecruiter extends Component {
                     // dueOn: 'Q: ',
                     //subTitle: wo.comment,
                     subTitle: wo.cellPhone,
-                    body: wo.cityInfo.DisplayLabel + ',' + wo.stateInfo.DisplayLabel,
-                    //  escalationTextLeft: Hotel.Name,
+                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                    escalationTextLeftLead: wo.generalComment,
                     //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
-                    escalationTextRight: wo.car == true ? "Yes" : "No",
+                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                     //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
                 };
@@ -187,7 +200,8 @@ class BoardRecruiter extends Component {
             data.workOrder.forEach((wo) => {
                 const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                 const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                const Users = data.getcontacts.find((item) => { return item.Id == 10 });
+                const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                const Contacts = data.getcontacts.find((item) => { return item.Id == Users.Id_Contact });
                 console.log("entro en el data ", data);
                 datas = {
                     id: wo.id,
@@ -195,12 +209,11 @@ class BoardRecruiter extends Component {
                     dueOn: 'Q: ' + wo.quantity,
                     //subTitle: wo.comment,
                     subTitle: 'ID: 000' + wo.id,
-                    //body: Users.First_Name + ' ' + Users.Last_Name,
-                    escalationTextLeft: Hotel.Name,
-                    //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
+                    body: Hotel.Name,
+                    //escalationTextLeft: Hotel.Name,
+                    escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
                     escalationTextRight: Shift.Name + '-Shift',
                     cardStyle: { borderRadius: 6, marginBottom: 15 }
-                    //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
                 };
                 Openings.push(datas);
             });
@@ -244,11 +257,39 @@ class BoardRecruiter extends Component {
         }).catch(error => { })
     };
 
+    handleSwitchView = (event) => {
+        this.setState({ checked: false });
+        window.setTimeout(function () {
+
+            // Move to a new location or you can do something else
+            window.location.href = "/home/board/manager"
+
+        }, 1000);
+    }
+
     render() {
         return (
             <div className="App">
                 <div className="App-header">
-
+                    <div className="row">
+                        <div className="col-md-12">
+                            <label>View Like Recruiter?</label>
+                            <div className="onoffswitch">
+                                <input
+                                    checked={this.state.checked == true ? true : false}
+                                    type="checkbox"
+                                    name="needEnglishggg"
+                                    onChange={this.handleSwitchView}
+                                    className="onoffswitch-checkbox"
+                                    id="myonoffswitchSpeak1"
+                                />
+                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak1">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="App-intro">
                     <Board
