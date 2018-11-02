@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
+import onClickOutside from 'react-onclickoutside'
 
 class Toolbar extends Component {
 	constructor(props) {
@@ -7,6 +8,17 @@ class Toolbar extends Component {
 		this.state = {
 			languageIcon: ''
 		};
+	}
+
+	handleClickOutside = () => {
+		let dropdowns = document.getElementsByClassName("dropdown-menu");
+		var i;
+		for (i = 0; i < dropdowns.length; i++) {
+			var openDropdown = dropdowns[i];
+			if (openDropdown.classList.contains('show')) {
+				openDropdown.classList.remove('show');
+			}
+		}
 	}
 
 	handleLogout = (event) => {
@@ -80,7 +92,7 @@ class Toolbar extends Component {
 										<span class="app-shortcuts__helper bg-gd-info" />
 									</a>
 									<a class="col-4 app-shortcuts__item" href="/reset">
-										<i class="fas fa-power-off"></i>
+										<i class="fas fa-retweet"></i>
 										<small>Reset Password</small>
 										<span class="app-shortcuts__helper bg-gd-danger" />
 									</a>
@@ -94,4 +106,4 @@ class Toolbar extends Component {
 	}
 }
 
-export default Toolbar;
+export default onClickOutside(Toolbar);
