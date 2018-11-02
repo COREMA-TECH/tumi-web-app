@@ -34,6 +34,7 @@ export const GET_LEAD = gql`
 			stateInfo{
 				DisplayLabel
 			  }
+			  generalComment
 			}
 		}
     `;

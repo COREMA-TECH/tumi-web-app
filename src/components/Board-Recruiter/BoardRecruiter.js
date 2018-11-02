@@ -48,8 +48,20 @@ const CustomCard = props => {
                     }}>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
-                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}
-                    </div>
+                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
+                </header>
+                <header
+                    style={{
+                        paddingBottom: 0,
+                        marginBottom: 0,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        color: props.cardColor
+                    }}>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
+                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                 </header>
             </div>
         </div>
@@ -169,10 +181,10 @@ class BoardRecruiter extends Component {
                     // dueOn: 'Q: ',
                     //subTitle: wo.comment,
                     subTitle: wo.cellPhone,
-                    body: wo.cityInfo.DisplayLabel + ',' + wo.stateInfo.DisplayLabel,
-                    //  escalationTextLeft: Hotel.Name,
+                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                    escalationTextLeftLead: wo.generalComment,
                     //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
-                    escalationTextRight: wo.car == true ? "Yes" : "No",
+                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                     //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
                 };
