@@ -148,12 +148,12 @@ class WorkOrdersPositionForm extends Component {
 				}
 			})
 			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+				this.props.handleOpenSnackbar('success', 'Record Inserted!');
 				this.setState({ openModal: false, saving: false });
 				window.location.reload();
 			})
 			.catch((error) => {
-				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: ' + error);
 				this.setState({ saving: false });
 			});
 	};
@@ -181,13 +181,13 @@ class WorkOrdersPositionForm extends Component {
 				}
 			})
 			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+				this.props.handleOpenSnackbar('success', 'Record Updated!');
 				this.setState({ openModal: false });
 				window.location.reload();
 			})
 			.catch((error) => {
 				this.setState({ saving: false });
-				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: ' + error);
 			});
 	};
 
@@ -340,7 +340,7 @@ class WorkOrdersPositionForm extends Component {
 								</div>
 								<div className="col-md-5 col-5">
 									<div className="row">
-										<div className="col-md-6">
+										<div className="col-md-5">
 											<label>Need Experience?</label>
 											<div className="onoffswitch">
 												<input
@@ -358,7 +358,7 @@ class WorkOrdersPositionForm extends Component {
 												</label>
 											</div>
 										</div>
-										<div className="col-md-6">
+										<div className="col-md-7">
 											<label>Need to Speak English?</label>
 											<div className="onoffswitch">
 												<input
