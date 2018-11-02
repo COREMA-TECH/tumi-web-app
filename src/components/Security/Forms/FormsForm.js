@@ -510,7 +510,7 @@ class FormsForm extends React.Component {
 							id="name"
 							name="name"
 							inputProps={{
-								maxLength: 15,
+								maxLength: 50,
 								classes: {
 									input: classes.nameControl
 								}
@@ -528,7 +528,7 @@ class FormsForm extends React.Component {
 							id="value"
 							name="value"
 							inputProps={{
-								maxLength: 15,
+								maxLength: 40,
 								classes: {
 									input: classes.valueControl
 								}

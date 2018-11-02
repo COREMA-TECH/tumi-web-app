@@ -10,7 +10,7 @@ import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
 
-class WorkOrdersForm extends Component {
+class WorkOrdersPositionForm extends Component {
 	_states = {
 		id: null,
 		hotel: 0,
@@ -51,7 +51,7 @@ class WorkOrdersForm extends Component {
 					IdEntity: nextProps.item.IdEntity,
 					date: nextProps.item.date,
 					quantity: nextProps.item.quantity,
-					status: nextProps.item.status,
+					status: 2,
 					shift: nextProps.item.shift,
 					startDate: nextProps.item.startDate,
 					endDate: nextProps.item.endDate,
@@ -106,6 +106,7 @@ class WorkOrdersForm extends Component {
 
 	handleSubmit = (event) => {
 		event.preventDefault();
+
 		if (
 			this.state.IdEntity == 0 ||
 			this.state.PositionRateId == 0 ||
@@ -134,7 +135,7 @@ class WorkOrdersForm extends Component {
 						IdEntity: this.state.IdEntity,
 						date: this.state.date,
 						quantity: this.state.quantity,
-						status: 1,
+						status: 30452,
 						shift: this.state.shift,
 						startDate: this.state.startDate,
 						endDate: this.state.endDate,
@@ -152,8 +153,8 @@ class WorkOrdersForm extends Component {
 				window.location.reload();
 			})
 			.catch((error) => {
-				this.setState({ saving: true });
 				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+				this.setState({ saving: false });
 			});
 	};
 
@@ -167,7 +168,7 @@ class WorkOrdersForm extends Component {
 						IdEntity: this.state.IdEntity,
 						date: this.state.date,
 						quantity: this.state.quantity,
-						status: status,
+						status: this.state.status,
 						shift: this.state.shift,
 						startDate: this.state.startDate,
 						endDate: this.state.endDate,
@@ -181,17 +182,16 @@ class WorkOrdersForm extends Component {
 			})
 			.then((data) => {
 				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
-				this.setState({ openModal: false, saving: false, converting: false });
+				this.setState({ openModal: false });
 				window.location.reload();
 			})
 			.catch((error) => {
-				this.setState({ saving: true, converting: false });
+				this.setState({ saving: false });
 				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
 			});
 	};
 
-	handleChangeState = (event) => {
-		event.preventDefault();
+	handleChangeState = () => {
 		if (
 			this.state.IdEntity == 0 ||
 			this.state.PositionRateId == 0 ||
@@ -205,7 +205,6 @@ class WorkOrdersForm extends Component {
 		) {
 			this.props.handleOpenSnackbar('error', 'Error all fields are required');
 		} else {
-			this.setState({ converting: true });
 			this.update(2);
 		}
 	};
@@ -245,7 +244,7 @@ class WorkOrdersForm extends Component {
 				<Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
 					<DialogTitle style={{ padding: '0px' }}>
 						<div className="modal-header">
-							<h5 className="modal-title">Work Order</h5>
+							<h5 className="modal-title">Opening</h5>
 						</div>
 					</DialogTitle>
 					<DialogContent>
@@ -404,16 +403,6 @@ class WorkOrdersForm extends Component {
 											Save {!this.state.saving && <i class="fas fa-save ml2" />}
 											{this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
 										</button>
-										{this.state.id && (
-											<button
-												className="btn btn-info float-right"
-												onClick={this.handleChangeState}
-											>
-												Convert To Opening
-												{!this.state.converting && <i class="fab fa-telegram-plane  ml-2" />}
-												{this.state.converting && <i class="fas fa-spinner fa-spin  ml-2" />}
-											</button>
-										)}
 									</div>
 								</div>
 							</div>
@@ -425,4 +414,4 @@ class WorkOrdersForm extends Component {
 	}
 }
 
-export default withStyles()(withMobileDialog()(withApollo(WorkOrdersForm)));
+export default withStyles()(withMobileDialog()(withApollo(WorkOrdersPositionForm)));
