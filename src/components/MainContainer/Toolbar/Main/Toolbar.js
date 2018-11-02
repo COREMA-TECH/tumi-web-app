@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './index.css';
-import onClickOutside from 'react-onclickoutside'
+import onClickOutside from 'react-onclickoutside';
+import { withRouter } from 'react-router-dom';
 
 class Toolbar extends Component {
 	constructor(props) {
@@ -11,7 +12,7 @@ class Toolbar extends Component {
 	}
 
 	handleClickOutside = () => {
-		let dropdowns = document.getElementsByClassName("dropdown-menu");
+		let dropdowns = document.getElementsByClassName('dropdown-menu');
 		var i;
 		for (i = 0; i < dropdowns.length; i++) {
 			var openDropdown = dropdowns[i];
@@ -19,7 +20,7 @@ class Toolbar extends Component {
 				openDropdown.classList.remove('show');
 			}
 		}
-	}
+	};
 
 	handleLogout = (event) => {
 		localStorage.clear();
@@ -76,23 +77,45 @@ class Toolbar extends Component {
 										<small>Work Orders</small>
 										<span class="app-shortcuts__helper bg-gd-danger" />
 									</a>
-									<a class="col-4 app-shortcuts__item" href="/home/company/add">
+									<a
+										class="col-4 app-shortcuts__item"
+										href=""
+										onClick={(e) => {
+											e.preventDefault();
+											document.getElementById('dropdownMenuButton').click();
+											this.props.history.push({
+												pathname: '/home/company/add',
+												state: { idCompany: 0, idContract: 0 }
+											});
+										}}
+									>
 										<i class="fas fa-home" />
 										<small>Add Management</small>
 										<span class="app-shortcuts__helper bg-gd-primary" />
 									</a>
-									<a class="col-4 app-shortcuts__item" href="/home/contract/add">
+									<a
+										class="col-4 app-shortcuts__item"
+										href=""
+										onClick={(e) => {
+											e.preventDefault();
+											document.getElementById('dropdownMenuButton').click();
+											this.props.history.push({
+												pathname: '/home/contract/add',
+												state: { contract: 0 }
+											});
+										}}
+									>
 										<i class="far fa-handshake" />
 										<small>Add Contract</small>
 										<span class="app-shortcuts__helper bg-gd-info" />
 									</a>
 									<a class="col-4 app-shortcuts__item" href="" onClick={this.handleLogout}>
-										<i class="fas fa-sign-out-alt"></i>
+										<i class="fas fa-sign-out-alt" />
 										<small>LogOut</small>
 										<span class="app-shortcuts__helper bg-gd-info" />
 									</a>
 									<a class="col-4 app-shortcuts__item" href="/reset">
-										<i class="fas fa-retweet"></i>
+										<i class="fas fa-retweet" />
 										<small>Reset Password</small>
 										<span class="app-shortcuts__helper bg-gd-danger" />
 									</a>
@@ -106,4 +129,4 @@ class Toolbar extends Component {
 	}
 }
 
-export default onClickOutside(Toolbar);
+export default withRouter(onClickOutside(Toolbar));
