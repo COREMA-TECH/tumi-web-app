@@ -27,7 +27,13 @@ export const GET_LEAD = gql`
 			homePhone
 			car
 			city
+			cityInfo{
+				DisplayLabel
+			  }
 			state	
+			stateInfo{
+				DisplayLabel
+			  }
 			}
 		}
     `;

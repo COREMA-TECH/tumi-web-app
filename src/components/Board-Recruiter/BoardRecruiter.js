@@ -4,7 +4,7 @@ import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
-//import { GET_WORK_ORDERS } from "./Mutations";
+import { UPDATE_APPLICANT } from "./Mutations";
 import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_OPENING, GET_LEAD } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
@@ -15,18 +15,7 @@ import { InputLabel } from '@material-ui/core';
 import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 
-const handleDragStart = (cardId, laneId) => {
-    console.log('drag started')
-    console.log(`cardId: ${cardId}`)
-    console.log(`laneId: ${laneId}`)
-}
 
-const handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
-    console.log('drag ended')
-    console.log(`cardId: ${cardId}`)
-    console.log(`sourceLaneId: ${sourceLaneId}`)
-    console.log(`targetLaneId: ${targetLaneId}`)
-}
 
 const CustomCard = props => {
     return (
@@ -82,11 +71,26 @@ class BoardRecruiter extends Component {
         }
     }
 
-    /* const Cards = {
-         
-  
-     };*/
+    handleDragStart = (cardId, laneId) => {
+        console.log('drag started')
+        console.log(`cardId: ${cardId}`)
+        console.log(`laneId: ${laneId}`)
+    }
 
+    handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
+        console.log('drag ended')
+        console.log(`cardId: ${cardId}`)
+        console.log(`sourceLaneId: ${sourceLaneId}`)
+        console.log(`targetLaneId: ${targetLaneId}`)
+
+        if (sourceLaneId == "lane2" && targetLaneId == "lane3") {
+            this.updateApplicationInformation(cardId, false);
+        }
+        if (sourceLaneId == "lane3" && targetLaneId == "lane2") {
+            this.updateApplicationInformation(cardId, true);
+        }
+
+    }
     componentWillMount() {
         this.setState(
             {
@@ -112,6 +116,41 @@ class BoardRecruiter extends Component {
         console.dir(card)
     }
 
+    updateApplicationInformation = (id, isLead) => {
+        this.setState(
+            {
+                insertDialogLoading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_APPLICANT,
+                        variables: {
+
+                            id: id,
+                            isLead: isLead
+
+                        }
+                    })
+                    .then(({ data }) => {
+                        this.setState({
+                            editing: false
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Lead now is a Applicant', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
+
     getOpenings = () => {
         let datas = [];
         let leads = [];
@@ -130,7 +169,7 @@ class BoardRecruiter extends Component {
                     // dueOn: 'Q: ',
                     //subTitle: wo.comment,
                     subTitle: wo.cellPhone,
-                    //body: Users.First_Name + ' ' + Users.Last_Name,
+                    body: wo.cityInfo.DisplayLabel + ',' + wo.stateInfo.DisplayLabel,
                     //  escalationTextLeft: Hotel.Name,
                     //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
                     escalationTextRight: wo.car == true ? "Yes" : "No",
@@ -219,8 +258,8 @@ class BoardRecruiter extends Component {
                         draggable
                         onDataChange={this.shouldReceiveNewData}
                         eventBusHandle={this.setEventBus}
-                        handleDragStart={handleDragStart}
-                        handleDragEnd={handleDragEnd}
+                        handleDragStart={this.handleDragStart}
+                        handleDragEnd={this.handleDragEnd}
                         //onCardClick={() => alert("ola")}
                         //onCardAdd={() => alert("NadaS")}
                         style={{
