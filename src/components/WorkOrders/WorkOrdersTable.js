@@ -14,6 +14,7 @@ import { GET_WORKORDERS_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { DELETE_WORKORDER } from './mutations';
+import ShiftsData from '../../data/shitfs.json';
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -33,8 +34,8 @@ class WorkOrdersTable extends Component {
             data: [],
             rowsPerPage: 10,
             page: 0,
-            openConfirm: false
-
+            openConfirm: false,
+            ShiftsData: ShiftsData
         }
     }
 
@@ -52,7 +53,7 @@ class WorkOrdersTable extends Component {
     }
 
     handleDelete = (id) => {
-        this.setState({removing:true})
+        this.setState({ removing: true })
         this.props.client.mutate({
             mutation: DELETE_WORKORDER,
             variables: {
@@ -60,10 +61,10 @@ class WorkOrdersTable extends Component {
             }
         }).then((data) => {
             this.props.handleOpenSnackbar('success', 'Record Deleted!');
-            this.setState({ openModal: false,removing:false });
+            this.setState({ openModal: false, removing: false });
             window.location.reload();
         }).catch((error) => {
-            this.setState({removing:false})
+            this.setState({ removing: false })
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
         });
     }
@@ -123,7 +124,11 @@ class WorkOrdersTable extends Component {
                                         </CustomTableCell>
                                         <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell>{row.quantity}</CustomTableCell>
-                                        <CustomTableCell>{row.shift}</CustomTableCell>
+                                        <CustomTableCell>
+                                            {this.state.ShiftsData.map((shift) => (
+                                                shift.Id == row.shift ? shift.Name : ''
+                                            ))}
+                                        </CustomTableCell>
                                         <CustomTableCell>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                         <CustomTableCell>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
                                     </TableRow>
