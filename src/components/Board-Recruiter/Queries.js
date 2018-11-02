@@ -17,7 +17,21 @@ export const GET_POSTIONS_QUERY = gql`
 		}
     `;
 
-export const GET_WORK_ORDERS = gql`
+export const GET_LEAD = gql`
+		query getlead {
+			applications(isActive: true , isLead: true) {
+				id
+			firstName
+			lastName
+			cellPhone
+			homePhone
+			car
+			city
+			state	
+			}
+		}
+    `;
+export const GET_OPENING = gql`
     query workorder {
         workOrder(status:2){
             id
