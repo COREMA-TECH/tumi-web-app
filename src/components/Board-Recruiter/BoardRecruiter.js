@@ -79,7 +79,8 @@ class BoardRecruiter extends Component {
             lead: [],
             lane: [],
             Position: '',
-            Hotel: ''
+            Hotel: '',
+            checked: true
         }
     }
 
@@ -256,11 +257,39 @@ class BoardRecruiter extends Component {
         }).catch(error => { })
     };
 
+    handleSwitchView = (event) => {
+        this.setState({ checked: false });
+        window.setTimeout(function () {
+
+            // Move to a new location or you can do something else
+            window.location.href = "/home/board/manager"
+
+        }, 1000);
+    }
+
     render() {
         return (
             <div className="App">
                 <div className="App-header">
-
+                    <div className="row">
+                        <div className="col-md-12">
+                            <label>View Like Recruiter?</label>
+                            <div className="onoffswitch">
+                                <input
+                                    checked={this.state.checked == true ? true : false}
+                                    type="checkbox"
+                                    name="needEnglishggg"
+                                    onChange={this.handleSwitchView}
+                                    className="onoffswitch-checkbox"
+                                    id="myonoffswitchSpeak1"
+                                />
+                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak1">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="App-intro">
                     <Board

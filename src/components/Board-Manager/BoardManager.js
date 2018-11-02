@@ -162,9 +162,6 @@ class BoardManager extends Component {
                 const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                 const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                 const Contacts = data.getcontacts.find((item) => { return item.Id == Users.Id_Contact });
-                console.log("este es el user ", Users.Id_Contact);
-                console.log("entro en el data ", data);
-                console.log("entro en el contacts ", Contacts);
 
                 datas = {
                     id: wo.id,
@@ -221,11 +218,37 @@ class BoardManager extends Component {
         }).catch(error => { })
     };
 
+    handleSwitchView = () => {
+        window.setTimeout(function () {
+
+            // Move to a new location or you can do something else
+            window.location.href = "/home/board/recruiter"
+
+        }, 1000);
+    }
+
     render() {
         return (
             <div className="App">
                 <div className="App-header">
-
+                    <div className="row">
+                        <div className="col-md-12">
+                            <label>View Like Recruiter?</label>
+                            <div className="onoffswitch">
+                                <input
+                                    type="checkbox"
+                                    name="needEnglish"
+                                    onChange={this.handleSwitchView}
+                                    className="onoffswitch-checkbox"
+                                    id="myonoffswitchSpeak"
+                                />
+                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className="App-intro">
                     <Board
