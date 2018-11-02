@@ -199,7 +199,8 @@ class BoardRecruiter extends Component {
             data.workOrder.forEach((wo) => {
                 const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                 const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                const Users = data.getcontacts.find((item) => { return item.Id == 10 });
+                const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                const Contacts = data.getcontacts.find((item) => { return item.Id == Users.Id_Contact });
                 console.log("entro en el data ", data);
                 datas = {
                     id: wo.id,
@@ -207,12 +208,11 @@ class BoardRecruiter extends Component {
                     dueOn: 'Q: ' + wo.quantity,
                     //subTitle: wo.comment,
                     subTitle: 'ID: 000' + wo.id,
-                    //body: Users.First_Name + ' ' + Users.Last_Name,
-                    escalationTextLeft: Hotel.Name,
-                    //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
+                    body: Hotel.Name,
+                    //escalationTextLeft: Hotel.Name,
+                    escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
                     escalationTextRight: Shift.Name + '-Shift',
                     cardStyle: { borderRadius: 6, marginBottom: 15 }
-                    //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
                 };
                 Openings.push(datas);
             });

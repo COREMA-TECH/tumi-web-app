@@ -39,3 +39,14 @@ export const GET_POSITION_BY_QUERY = gql`
 		}
 	}
 `;
+
+export const GET_RECRUITER = gql`
+    query getUsers {
+		getusers(Id: null,IsActive: 1 ,IsRecruiter:1) {
+            Id
+			Id_Contact
+			Full_Name
+        }
+       
+    }
+    `;

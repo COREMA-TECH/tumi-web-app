@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY } from './queries';
+import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
 
@@ -26,6 +26,7 @@ class WorkOrdersForm extends Component {
         comment: '',
         position: 0,
         PositionRateId: null,
+        RecruiterId: null,
         userId: 1,
         ShiftsData: ShiftsData,
         saving: false
@@ -37,6 +38,7 @@ class WorkOrdersForm extends Component {
             openModal: false,
             hotels: [],
             positions: [],
+            recruiters: [],
             ...this._states
         };
     }
@@ -63,6 +65,8 @@ class WorkOrdersForm extends Component {
                 },
                 () => {
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
+                    this.getRecruiter();
+
                     this.ReceiveStatus = true;
                 }
             );
@@ -235,6 +239,21 @@ class WorkOrdersForm extends Component {
                 this.setState({
                     positions: data.getposition,
                     PositionRateId: PositionId
+                });
+            })
+            .catch();
+    };
+
+    getRecruiter = () => {
+        this.props.client
+            .query({
+                query: GET_RECRUITER,
+                variables: {}
+            })
+            .then(({ data }) => {
+                this.setState({
+                    recruiters: data.getusers
+
                 });
             })
             .catch();
@@ -434,15 +453,18 @@ class WorkOrdersForm extends Component {
                                             {this.state.id && (
                                                 <div class="input-group">
                                                     <select
-                                                        name="userId"
-                                                        class="custom-select"
-                                                        id="inputGroupSelect04"
-                                                        aria-label="Example select with button addon"
+                                                        required
+                                                        name="RecruiterId"
+                                                        className="form-control"
+                                                        id=""
+                                                        onChange={this.handleChange}
+                                                        value={this.state.RecruiterId}
+                                                        onBlur={this.handleValidate}
                                                     >
-                                                        <option selected>Assign Recruiter</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
+                                                        <option value="0">Select a Recruiter</option>
+                                                        {this.state.recruiters.map((recruiter) => (
+                                                            < option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                        ))}
                                                     </select>
                                                     <div class="input-group-append">
                                                         <button
