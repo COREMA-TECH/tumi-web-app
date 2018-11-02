@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './index.css';
-import withGlobalContent from '../Generic/Global';
-import withApollo from 'react-apollo/withApollo';
+import './index.css'
+import withGlobalContent from "../Generic/Global";
+import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
 //import { GET_WORK_ORDERS } from "./Mutations";
@@ -16,10 +16,10 @@ import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 
 const handleDragStart = (cardId, laneId) => {
-    console.log('drag started');
-    console.log(`cardId: ${cardId}`);
-    console.log(`laneId: ${laneId}`);
-};
+    console.log('drag started')
+    console.log(`cardId: ${cardId}`)
+    console.log(`laneId: ${laneId}`)
+}
 
 const handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
     console.log('drag ended')
@@ -66,7 +66,7 @@ const CustomCard = props => {
     )
 }
 
-class BoardManager extends Component {
+class BoardRecruiter extends Component {
     constructor(props) {
         super(props);
 
@@ -80,7 +80,7 @@ class BoardManager extends Component {
         }
     }
 
-	/* const Cards = {
+    /* const Cards = {
          
   
      };*/
@@ -211,4 +211,4 @@ class BoardManager extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(BoardManager));
+export default withApollo(withGlobalContent(BoardRecruiter));

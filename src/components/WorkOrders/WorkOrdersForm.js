@@ -27,7 +27,8 @@ class WorkOrdersForm extends Component {
         position: 0,
         PositionRateId: null,
         userId: 1,
-        ShiftsData: ShiftsData
+        ShiftsData: ShiftsData,
+        saving: false
     };
 
     constructor(props) {
@@ -44,24 +45,27 @@ class WorkOrdersForm extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.item && !this.state.openModal) {
-            this.setState({
-                id: nextProps.item.id,
-                IdEntity: nextProps.item.IdEntity,
-                date: nextProps.item.date,
-                quantity: nextProps.item.quantity,
-                status: 2,
-                shift: nextProps.item.shift,
-                startDate: nextProps.item.startDate,
-                endDate: nextProps.item.endDate,
-                needExperience: nextProps.item.needExperience,
-                needEnglish: nextProps.item.needEnglish,
-                comment: nextProps.item.comment,
-                userId: 1,
-                openModal: nextProps.openModal
-            }, () => {
-                this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
-                this.ReceiveStatus = true;
-            });
+            this.setState(
+                {
+                    id: nextProps.item.id,
+                    IdEntity: nextProps.item.IdEntity,
+                    date: nextProps.item.date,
+                    quantity: nextProps.item.quantity,
+                    status: nextProps.item.status,
+                    shift: nextProps.item.shift,
+                    startDate: nextProps.item.startDate,
+                    endDate: nextProps.item.endDate,
+                    needExperience: nextProps.item.needExperience,
+                    needEnglish: nextProps.item.needEnglish,
+                    comment: nextProps.item.comment,
+                    userId: 1,
+                    openModal: nextProps.openModal
+                },
+                () => {
+                    this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
+                    this.ReceiveStatus = true;
+                }
+            );
         } else if (!this.state.openModal) {
             this.setState({
                 IdEntity: 0,
@@ -115,6 +119,7 @@ class WorkOrdersForm extends Component {
         ) {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
+            this.setState({ saving: true });
             if (this.state.id == null) this.add();
             else this.update();
         }
@@ -129,7 +134,7 @@ class WorkOrdersForm extends Component {
                         IdEntity: this.state.IdEntity,
                         date: this.state.date,
                         quantity: this.state.quantity,
-                        status: 30452,
+                        status: 1,
                         shift: this.state.shift,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
@@ -143,61 +148,67 @@ class WorkOrdersForm extends Component {
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Preference Inserted!');
-                this.setState({ openModal: false });
+                this.setState({ openModal: false, saving: false });
                 window.location.reload();
             })
             .catch((error) => {
+                this.setState({ saving: true });
                 this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
             });
     };
 
     update = (status = 1) => {
-        this.props.client.mutate({
-            mutation: UPDATE_WORKORDER,
-            variables: {
-                workOrder: {
-                    id: this.state.id,
-                    IdEntity: this.state.IdEntity,
-                    date: this.state.date,
-                    quantity: this.state.quantity,
-                    status: this.state.status,
-                    shift: this.state.shift,
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    needExperience: this.state.needExperience,
-                    needEnglish: this.state.needEnglish,
-                    comment: this.state.comment,
-                    PositionRateId: this.state.PositionRateId,
-                    userId: localStorage.getItem('LoginId')
+        this.props.client
+            .mutate({
+                mutation: UPDATE_WORKORDER,
+                variables: {
+                    workOrder: {
+                        id: this.state.id,
+                        IdEntity: this.state.IdEntity,
+                        date: this.state.date,
+                        quantity: this.state.quantity,
+                        status: status,
+                        shift: this.state.shift,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        needExperience: this.state.needExperience,
+                        needEnglish: this.state.needEnglish,
+                        comment: this.state.comment,
+                        PositionRateId: this.state.PositionRateId,
+                        userId: localStorage.getItem('LoginId')
+                    }
                 }
-            }
-        }).then((data) => {
-            this.props.handleOpenSnackbar('success', 'Preference Inserted!');
-            this.setState({ openModal: false });
-            window.location.reload();
-        }).catch((error) => {
-            this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
-        });
-    }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+                this.setState({ openModal: false, saving: false, converting: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true, converting: false });
+                this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+            });
+    };
 
-    handleChangeState = () => {
-        if (this.state.IdEntity == 0 ||
+    handleChangeState = (event) => {
+        event.preventDefault();
+        if (
+            this.state.IdEntity == 0 ||
             this.state.PositionRateId == 0 ||
-            this.state.quantity == "" ||
+            this.state.quantity == '' ||
             this.state.quantity == 0 ||
-            this.state.date == "" ||
-            this.state.startDate == "" ||
-            this.state.endDate == "" ||
-            this.state.shift == "" ||
-            this.state.shift == 0) {
-            this.props.handleOpenSnackbar(
-                'error',
-                'Error all fields are required'
-            );
+            this.state.date == '' ||
+            this.state.startDate == '' ||
+            this.state.endDate == '' ||
+            this.state.shift == '' ||
+            this.state.shift == 0
+        ) {
+            this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
+            this.setState({ converting: true });
             this.update(2);
         }
-    }
+    };
 
     handleChange = (event) => {
         const target = event.target;
@@ -208,7 +219,6 @@ class WorkOrdersForm extends Component {
             [name]: value
         });
 
-
         if (name === 'IdEntity') {
             this.getPositions(value);
         }
@@ -218,7 +228,7 @@ class WorkOrdersForm extends Component {
         this.props.client
             .query({
                 query: GET_POSITION_BY_QUERY,
-                variables: { id: id },
+                variables: { id: id }
             })
             .then(({ data }) => {
                 this.setState({
@@ -227,12 +237,12 @@ class WorkOrdersForm extends Component {
                 });
             })
             .catch();
-    }
+    };
 
     render() {
         return (
             <div>
-                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal} >
+                <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 className="modal-title">Work Order</h5>
@@ -245,85 +255,140 @@ class WorkOrdersForm extends Component {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <label htmlFor="">Hotel</label>
-                                            <select name="IdEntity" className="form-control" id="" onChange={this.handleChange} value={this.state.IdEntity}>
+                                            <select
+                                                name="IdEntity"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.IdEntity}
+                                            >
                                                 <option value={0}>Select a Hotel</option>
-                                                {
-                                                    this.state.hotels.map((hotel) => (
-                                                        <option value={hotel.Id} >{hotel.Name}</option>
-                                                    ))
-                                                }
+                                                {this.state.hotels.map((hotel) => (
+                                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Position</label>
-                                            <select name="PositionRateId" className="form-control" id="" onChange={this.handleChange} value={this.state.PositionRateId}>
+                                            <select
+                                                name="PositionRateId"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.PositionRateId}
+                                            >
                                                 <option value="0">Select a Position</option>
-                                                {
-                                                    this.state.positions.map((position) => (
-                                                        <option value={position.Id} >{position.Position}</option>
-                                                    ))
-                                                }
+                                                {this.state.positions.map((position) => (
+                                                    <option value={position.Id}>{position.Position}</option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Quantity</label>
-                                            <input type="number" className="form-control" name="quantity" onChange={this.handleChange} value={this.state.quantity} />
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                name="quantity"
+                                                onChange={this.handleChange}
+                                                value={this.state.quantity}
+                                            />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift</label>
-                                            <select className="form-control" name="shift" onChange={this.handleChange} value={this.state.shift}>
+                                            <select
+                                                className="form-control"
+                                                name="shift"
+                                                onChange={this.handleChange}
+                                                value={this.state.shift}
+                                            >
                                                 <option value="0">Select a Shift</option>
-                                                {
-                                                    this.state.ShiftsData.map((shift) => (
-                                                        <option value={shift.Id} >{shift.Name}</option>
-                                                    ))
-                                                }
+                                                {this.state.ShiftsData.map((shift) => (
+                                                    <option value={shift.Id}>{shift.Name}</option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Date Needed By</label>
-                                            <input type="date" className="form-control" name="startDate" onChange={this.handleChange} value={this.state.startDate.substring(0, 10)} />
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name="startDate"
+                                                onChange={this.handleChange}
+                                                value={this.state.startDate.substring(0, 10)}
+                                            />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">To</label>
-                                            <input type="date" className="form-control" name="endDate" onChange={this.handleChange} value={this.state.endDate.substring(0, 10)} />
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name="endDate"
+                                                onChange={this.handleChange}
+                                                value={this.state.endDate.substring(0, 10)}
+                                            />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Date</label>
-                                            <input type="date" className="form-control" name="date" onChange={this.handleChange} value={this.state.date.substring(0, 10)} />
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                name="date"
+                                                onChange={this.handleChange}
+                                                value={this.state.date.substring(0, 10)}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label>
-                                                Need Experience?
-                                    </label>
+                                            <label>Need Experience?</label>
                                             <div className="onoffswitch">
-                                                <input type="checkbox" name="needExperience" onClick={this.toggleState} onChange={this.handleChange} className="onoffswitch-checkbox" id="myonoffswitch" checked={this.state.needExperience} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="needExperience"
+                                                    onClick={this.toggleState}
+                                                    onChange={this.handleChange}
+                                                    className="onoffswitch-checkbox"
+                                                    id="myonoffswitch"
+                                                    checked={this.state.needExperience}
+                                                />
                                                 <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                    <span className="onoffswitch-inner"></span>
-                                                    <span className="onoffswitch-switch"></span>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </div>
                                         <div className="col-md-6">
-                                            <label>
-                                                Need to Speak English?
-                                    </label>
+                                            <label>Need to Speak English?</label>
                                             <div className="onoffswitch">
-                                                <input type="checkbox" name="needEnglish" onClick={this.toggleState} onChange={this.handleChange} className="onoffswitch-checkbox" id="myonoffswitchSpeak" checked={this.state.needEnglish} />
+                                                <input
+                                                    type="checkbox"
+                                                    name="needEnglish"
+                                                    onClick={this.toggleState}
+                                                    onChange={this.handleChange}
+                                                    className="onoffswitch-checkbox"
+                                                    id="myonoffswitchSpeak"
+                                                    checked={this.state.needEnglish}
+                                                />
                                                 <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak">
-                                                    <span className="onoffswitch-inner"></span>
-                                                    <span className="onoffswitch-switch"></span>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </div>
 
                                         <div className="col-md-12">
                                             <label htmlFor="">Comment</label>
-                                            <textarea onChange={this.handleChange} name="comment" className="form-control" id="" cols="30" rows="10" value={this.state.comment}></textarea>
+                                            <textarea
+                                                onChange={this.handleChange}
+                                                name="comment"
+                                                className="form-control"
+                                                id=""
+                                                cols="30"
+                                                rows="10"
+                                                value={this.state.comment}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -358,7 +423,6 @@ class WorkOrdersForm extends Component {
             </div>
         );
     }
-
 }
 
 export default withStyles()(withMobileDialog()(withApollo(WorkOrdersForm)));
