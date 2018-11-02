@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
+import onClickOutside from 'react-onclickoutside'
 
 class Toolbar extends Component {
 	constructor(props) {
@@ -7,6 +8,17 @@ class Toolbar extends Component {
 		this.state = {
 			languageIcon: ''
 		};
+	}
+
+	handleClickOutside = () => {
+		let dropdowns = document.getElementsByClassName("dropdown-menu");
+		var i;
+		for (i = 0; i < dropdowns.length; i++) {
+			var openDropdown = dropdowns[i];
+			if (openDropdown.classList.contains('show')) {
+				openDropdown.classList.remove('show');
+			}
+		}
 	}
 
 	handleLogout = (event) => {
@@ -48,29 +60,6 @@ class Toolbar extends Component {
 						<div class="dropdown">
 							<button
 								onClick={this.handleDropDown}
-								class="btn btn-success btn-white dropdown-toggle"
-								type="button"
-								id="dropdownMenuButton"
-								data-toggle="dropdown"
-								aria-haspopup="true"
-								aria-expanded="false"
-							>
-								<i class="fas fa-user-alt" />
-							</button>
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="#" onClick={this.handleLogout}>
-									Logout
-								</a>
-								<a class="dropdown-item" href="/reset">
-									Reset Password
-								</a>
-							</div>
-						</div>
-					</li>
-					<li className="RightMenu-item">
-						<div class="dropdown">
-							<button
-								onClick={this.handleDropDown}
 								class="btn btn-link btn-empty"
 								type="button"
 								id="dropdownMenuButton"
@@ -97,6 +86,16 @@ class Toolbar extends Component {
 										<small>Add Contract</small>
 										<span class="app-shortcuts__helper bg-gd-info" />
 									</a>
+									<a class="col-4 app-shortcuts__item" href="" onClick={this.handleLogout}>
+										<i class="fas fa-sign-out-alt"></i>
+										<small>LogOut</small>
+										<span class="app-shortcuts__helper bg-gd-info" />
+									</a>
+									<a class="col-4 app-shortcuts__item" href="/reset">
+										<i class="fas fa-retweet"></i>
+										<small>Reset Password</small>
+										<span class="app-shortcuts__helper bg-gd-danger" />
+									</a>
 								</div>
 							</div>
 						</div>
@@ -107,4 +106,4 @@ class Toolbar extends Component {
 	}
 }
 
-export default Toolbar;
+export default onClickOutside(Toolbar);

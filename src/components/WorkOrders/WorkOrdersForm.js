@@ -341,7 +341,7 @@ class WorkOrdersForm extends Component {
                                 </div>
                                 <div className="col-md-5 col-5">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-5">
                                             <label>Need Experience?</label>
                                             <div className="onoffswitch">
                                                 <input
@@ -359,7 +359,7 @@ class WorkOrdersForm extends Component {
                                                 </label>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-7">
                                             <label>Need to Speak English?</label>
                                             <div className="onoffswitch">
                                                 <input
