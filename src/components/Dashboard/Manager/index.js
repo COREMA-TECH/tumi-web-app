@@ -1,21 +1,18 @@
 import React from 'react';
 import WorkOrdersTable from 'WorkOrders/WorkOrdersTable';
-import { Bar } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
 import withGlobalContent from 'Generic/Global';
 
-class Dashboard extends React.Component {
+class DashboardManager extends React.Component {
 	data = {
-		labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ],
+		labels: [ 'Banquet', 'Housemen', 'Cook' ],
 		datasets: [
 			{
-				label: 'My First dataset',
-				backgroundColor: 'rgba(255,99,132,0.2)',
-				borderColor: 'rgba(255,99,132,1)',
-				borderWidth: 1,
-				hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-				hoverBorderColor: 'rgba(255,99,132,1)',
-				data: [ 65, 59, 80, 81, 56, 55, 40 ]
+				label: 'Demand for positions',
+				data: [ 300, 50, 100 ],
+				backgroundColor: [ '#FF6384', '#36A2EB', '#FFCE56' ],
+				hoverBackgroundColor: [ '#FF6384', '#36A2EB', '#FFCE56' ]
 			}
 		]
 	};
@@ -113,7 +110,7 @@ class Dashboard extends React.Component {
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				</div>
-				<div className="col-md-12 col-lg-5">
+				<div className="col-md-12 col-lg-7">
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
 						<div className="row">
@@ -132,7 +129,7 @@ class Dashboard extends React.Component {
 								</a>
 							</div>
 							<div className="col-md-4 col-lg-6">
-								<a href="/home/board" className="card bg-gd-info QuickButton">
+								<a href="/home/board/manager" className="card bg-gd-info QuickButton">
 									<div className="card-body">
 										<div>
 											<i className="fas fa-tv fa-5x" />
@@ -144,13 +141,13 @@ class Dashboard extends React.Component {
 						</div>
 					</div>
 				</div>
-				<div className="col-md-12 col-lg-7">
+				<div className="col-md-12 col-lg-5">
 					<div className="card">
-						<div className="card-header danger">Chart</div>
+						<div className="card-header danger">Demand for positions</div>
 						<div className="card-body">
-							<Bar
+							<Pie
 								data={this.data}
-								width={100}
+								width={200}
 								height={200}
 								options={{
 									maintainAspectRatio: false
@@ -170,4 +167,4 @@ class Dashboard extends React.Component {
 	}
 }
 
-export default withGlobalContent(Dashboard);
+export default withGlobalContent(DashboardManager);

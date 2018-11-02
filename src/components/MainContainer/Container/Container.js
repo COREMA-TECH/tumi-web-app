@@ -27,7 +27,9 @@ import { GET_ROLES_FORMS } from '../Queries';
 import withGlobalContent from '../../Generic/Global';
 import { GET_FORMS_QUERY } from '../../Security/DropdownForm/queries';
 import NotFound from '../../NotFound/NotFound';
-import Dashboard from '../../Dashboard';
+import DashboardManager from '../../Dashboard/Manager';
+import DashboardRecruiter from '../../Dashboard/Recruiter';
+
 class Container extends Component {
 	constructor(props) {
 		super(props);
@@ -133,9 +135,10 @@ class Container extends Component {
 				<Route exact path="/Reset" component={ResetPassword} />
 				<Route exact path="/home/catalogs" component={Catalogs} />
 				<Route exact path="/home/signature" component={Signature} />
-				<Route exact path="/home/board" component={Board} />
-				<Route exact path="/home/board-recruiter" component={BoardRecruiter} />
-				<Route exact path="/home/dashboard" component={Dashboard} />
+				<Route exact path="/home/board/manager" component={Board} />
+				<Route exact path="/home/board/recruiter" component={BoardRecruiter} />
+				<Route exact path="/home/dashboard/manager" component={DashboardManager} />
+				<Route exact path="/home/dashboard/recruiter" component={DashboardRecruiter} />
 				<Route exact path="/home/openings" component={WorkOrdersPosition} />
 			</div>
 		);
