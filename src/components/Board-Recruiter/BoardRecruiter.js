@@ -96,10 +96,10 @@ class BoardRecruiter extends Component {
         console.log(`targetLaneId: ${targetLaneId}`)
 
         if (sourceLaneId == "lane2" && targetLaneId == "lane3") {
-            this.updateApplicationInformation(cardId, false);
+            this.updateApplicationInformation(cardId, false, 'Lead now is a Applicant');
         }
         if (sourceLaneId == "lane3" && targetLaneId == "lane2") {
-            this.updateApplicationInformation(cardId, true);
+            this.updateApplicationInformation(cardId, true, 'Applicant now is a Lead ');
         }
 
     }
@@ -128,7 +128,7 @@ class BoardRecruiter extends Component {
         console.dir(card)
     }
 
-    updateApplicationInformation = (id, isLead) => {
+    updateApplicationInformation = (id, isLead, Message) => {
         this.setState(
             {
                 insertDialogLoading: true
@@ -149,7 +149,7 @@ class BoardRecruiter extends Component {
                             editing: false
                         });
 
-                        this.props.handleOpenSnackbar('success', 'Lead now is a Applicant', 'bottom', 'right');
+                        this.props.handleOpenSnackbar('success', Message, 'bottom', 'right');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar(

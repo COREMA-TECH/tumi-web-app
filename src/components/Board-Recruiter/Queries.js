@@ -61,7 +61,7 @@ export const GET_OPENING = gql`
             Id
             Name
         }
-        getusers(Id: null) {
+        getusers(Id: null,IsActive: 1) {
             Id
             Id_Contact
         }
