@@ -29,7 +29,7 @@ class Dashboard extends React.Component {
 
 	handleClickOpenModal = (event) => {
 		event.preventDefault();
-		this.setState({ openModal: true });
+		this.setState({ openModal: true, item: null });
 	};
 	handleCloseModal = (e) => {
 		e.preventDefault();

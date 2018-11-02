@@ -148,13 +148,13 @@ class WorkOrdersForm extends Component {
                 }
             })
             .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+                this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.setState({ openModal: false, saving: false });
                 window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true });
-                this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
     };
 
@@ -181,13 +181,13 @@ class WorkOrdersForm extends Component {
                 }
             })
             .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
                 window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true, converting: false });
-                this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
     };
 
@@ -431,24 +431,42 @@ class WorkOrdersForm extends Component {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            {
-                                                this.state.id &&
+                                            {this.state.id && (
                                                 <div class="input-group">
-                                                    <select name="userId" class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                                    <select
+                                                        name="userId"
+                                                        class="custom-select"
+                                                        id="inputGroupSelect04"
+                                                        aria-label="Example select with button addon"
+                                                    >
                                                         <option selected>Assign Recruiter</option>
                                                         <option value="1">One</option>
                                                         <option value="2">Two</option>
                                                         <option value="3">Three</option>
                                                     </select>
                                                     <div class="input-group-append">
-                                                        <button className="btn btn-info float-right" type="button" onClick={this.handleChangeState}>Create Opening</button>
+                                                        <button
+                                                            className="btn btn-info float-right"
+                                                            type="button"
+                                                            onClick={this.handleChangeState}
+                                                        >
+                                                            Create Opening
+														</button>
                                                     </div>
                                                 </div>
-                                            }
+                                            )}
                                         </div>
                                         <div className="col-md-6">
-                                            <button className="btn btn-danger ml-1 float-right" onClick={this.props.handleCloseModal}>Cancel</button>
-                                            <button className="btn btn-success ml-1 float-right" type="submit">Save</button>
+                                            <button
+                                                className="btn btn-danger ml-1 float-right"
+                                                onClick={this.props.handleCloseModal}
+                                            >
+                                                Cancel<i class="fas fa-ban ml-2" />
+                                            </button>
+                                            <button className="btn btn-success ml-1 float-right" type="submit">
+                                                Save {!this.state.saving && <i class="fas fa-save ml2" />}
+                                                {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
