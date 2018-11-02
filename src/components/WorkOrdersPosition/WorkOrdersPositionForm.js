@@ -148,12 +148,12 @@ class WorkOrdersPositionForm extends Component {
 				}
 			})
 			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+				this.props.handleOpenSnackbar('success', 'Record Inserted!');
 				this.setState({ openModal: false, saving: false });
 				window.location.reload();
 			})
 			.catch((error) => {
-				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: ' + error);
 				this.setState({ saving: false });
 			});
 	};
@@ -181,13 +181,13 @@ class WorkOrdersPositionForm extends Component {
 				}
 			})
 			.then((data) => {
-				this.props.handleOpenSnackbar('success', 'Preference Inserted!');
+				this.props.handleOpenSnackbar('success', 'Record Updated!');
 				this.setState({ openModal: false });
 				window.location.reload();
 			})
 			.catch((error) => {
 				this.setState({ saving: false });
-				this.props.handleOpenSnackbar('error', 'Error Preferences: ' + error);
+				this.props.handleOpenSnackbar('error', 'Error: ' + error);
 			});
 	};
 
