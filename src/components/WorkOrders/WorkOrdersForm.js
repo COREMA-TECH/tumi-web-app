@@ -328,13 +328,27 @@ class WorkOrdersForm extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-12">
-                                    <div className="mt-2">
-                                        <button className="btn btn-danger ml-1 float-right" onClick={this.props.handleCloseModal}>Cancel</button>
-                                        <button className="btn btn-success ml-1 float-right" type="submit">Save</button>
-                                        {
-                                            this.state.id &&
-                                            <button className="btn btn-info float-right" onClick={this.handleChangeState}>Convert to Opening</button>
-                                        }
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            {
+                                                this.state.id &&
+                                                <div class="input-group">
+                                                    <select name="userId" class="custom-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                                                        <option selected>Assign Recruiter</option>
+                                                        <option value="1">One</option>
+                                                        <option value="2">Two</option>
+                                                        <option value="3">Three</option>
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button className="btn btn-info float-right" type="button" onClick={this.handleChangeState}>Create Opening</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div className="col-md-6">
+                                            <button className="btn btn-danger ml-1 float-right" onClick={this.props.handleCloseModal}>Cancel</button>
+                                            <button className="btn btn-success ml-1 float-right" type="submit">Save</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
