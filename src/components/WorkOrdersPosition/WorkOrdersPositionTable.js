@@ -14,6 +14,7 @@ import { GET_WORKORDERS_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { REJECT_WORKORDER } from './mutations';
+import ShiftsData from '../../data/shitfs.json';
 
 const CustomTableCell = withStyles((theme) => ({
 	head: {
@@ -120,7 +121,9 @@ class WorkOrdersPositionTable extends Component {
 										</CustomTableCell>
 										<CustomTableCell>{row.position.Position}</CustomTableCell>
 										<CustomTableCell>{row.quantity}</CustomTableCell>
-										<CustomTableCell>{row.shift}</CustomTableCell>
+										<CustomTableCell>
+											{ShiftsData.map((shift) => (shift.Id == row.shift ? shift.Name : ''))}
+										</CustomTableCell>
 										<CustomTableCell>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
 										<CustomTableCell>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
 									</TableRow>
