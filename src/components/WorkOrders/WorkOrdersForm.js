@@ -117,6 +117,7 @@ class WorkOrdersForm extends Component {
             this.state.shift == '' ||
             this.state.shift == 0
         ) {
+
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ saving: true });
@@ -239,6 +240,27 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
+    validateInvalidInput = () => {
+        if (document.addEventListener) {
+            document.addEventListener(
+                'invalid',
+                (e) => {
+                    e.target.className += ' invalid-apply-form';
+                },
+                true
+            );
+        }
+    };
+
+    handleValidate = (event) => {
+        let selfHtml = event.currentTarget;
+        if (selfHtml.value == "" || selfHtml.value == 0)
+            selfHtml.classList.add("is-invalid");
+        else
+            selfHtml.classList.remove("is-invalid");
+
+    }
+
     render() {
         return (
             <div>
@@ -256,11 +278,13 @@ class WorkOrdersForm extends Component {
                                         <div className="col-md-6">
                                             <label htmlFor="">Hotel</label>
                                             <select
+                                                required
                                                 name="IdEntity"
                                                 className="form-control"
                                                 id=""
                                                 onChange={this.handleChange}
                                                 value={this.state.IdEntity}
+                                                onBlur={this.handleValidate}
                                             >
                                                 <option value={0}>Select a Hotel</option>
                                                 {this.state.hotels.map((hotel) => (
@@ -271,11 +295,13 @@ class WorkOrdersForm extends Component {
                                         <div className="col-md-6">
                                             <label htmlFor="">Position</label>
                                             <select
+                                                required
                                                 name="PositionRateId"
                                                 className="form-control"
                                                 id=""
                                                 onChange={this.handleChange}
                                                 value={this.state.PositionRateId}
+                                                onBlur={this.handleValidate}
                                             >
                                                 <option value="0">Select a Position</option>
                                                 {this.state.positions.map((position) => (
@@ -286,20 +312,24 @@ class WorkOrdersForm extends Component {
                                         <div className="col-md-6">
                                             <label htmlFor="">Quantity</label>
                                             <input
+                                                required
                                                 type="number"
                                                 className="form-control"
                                                 name="quantity"
                                                 onChange={this.handleChange}
                                                 value={this.state.quantity}
+                                                onBlur={this.handleValidate}
                                             />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift</label>
                                             <select
+                                                required
                                                 className="form-control"
                                                 name="shift"
                                                 onChange={this.handleChange}
                                                 value={this.state.shift}
+                                                onBlur={this.handleValidate}
                                             >
                                                 <option value="0">Select a Shift</option>
                                                 {this.state.ShiftsData.map((shift) => (
@@ -310,31 +340,37 @@ class WorkOrdersForm extends Component {
                                         <div className="col-md-6">
                                             <label htmlFor="">Date Needed By</label>
                                             <input
+                                                required
                                                 type="date"
                                                 className="form-control"
                                                 name="startDate"
                                                 onChange={this.handleChange}
                                                 value={this.state.startDate.substring(0, 10)}
+                                                onBlur={this.handleValidate}
                                             />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">To</label>
                                             <input
+                                                required
                                                 type="date"
                                                 className="form-control"
                                                 name="endDate"
                                                 onChange={this.handleChange}
                                                 value={this.state.endDate.substring(0, 10)}
+                                                onBlur={this.handleValidate}
                                             />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Date</label>
                                             <input
+                                                required
                                                 type="date"
                                                 className="form-control"
                                                 name="date"
                                                 onChange={this.handleChange}
                                                 value={this.state.date.substring(0, 10)}
+                                                onBlur={this.handleValidate}
                                             />
                                         </div>
                                     </div>
