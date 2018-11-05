@@ -24,7 +24,7 @@ export const GET_WORKORDERS_QUERY = gql`
 
 export const GET_HOTEL_QUERY = gql`
 	query hotels($id: Int) {
-		getbusinesscompanies(Id: $id, IsActive: null, Contract_Status: null, Id_Parent: null) {
+		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: null) {
 			Id
 			Name
 		}

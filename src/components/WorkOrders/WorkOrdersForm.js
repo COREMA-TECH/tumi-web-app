@@ -29,7 +29,9 @@ class WorkOrdersForm extends Component {
         RecruiterId: null,
         userId: 1,
         ShiftsData: ShiftsData,
-        saving: false
+        saving: false,
+        isAdmin: Boolean(localStorage.getItem('IsAdmin'))
+
     };
 
     constructor(props) {
@@ -61,7 +63,8 @@ class WorkOrdersForm extends Component {
                     needEnglish: nextProps.item.needEnglish,
                     comment: nextProps.item.comment,
                     userId: 1,
-                    openModal: nextProps.openModal
+                    openModal: nextProps.openModal,
+                    isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
@@ -83,7 +86,8 @@ class WorkOrdersForm extends Component {
                 needEnglish: false,
                 comment: '',
                 PositionRateId: 0,
-                userId: 1
+                userId: localStorage.getItem('LoginId'),
+                isAdmin: Boolean(localStorage.getItem('IsAdmin'))
             });
         }
         this.setState({
@@ -92,6 +96,7 @@ class WorkOrdersForm extends Component {
     }
 
     UNSAFE_componentWillMount() {
+
         this.props.client
             .query({
                 query: GET_HOTEL_QUERY
@@ -105,6 +110,7 @@ class WorkOrdersForm extends Component {
 
         this.setState({
             openModal: this.props.openModal
+
         });
     }
 
@@ -147,7 +153,7 @@ class WorkOrdersForm extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         PositionRateId: this.state.PositionRateId,
-                        userId: 1
+                        userId: this.state.userId
                     }
                 }
             })
@@ -180,7 +186,7 @@ class WorkOrdersForm extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         PositionRateId: this.state.PositionRateId,
-                        userId: localStorage.getItem('LoginId')
+                        userId: this.state.userId
                     }
                 }
             })
@@ -281,8 +287,11 @@ class WorkOrdersForm extends Component {
     }
 
     render() {
+
+        console.log("esto es la variable 2", !this.state.isAdmin)
         return (
-            <div>
+
+            < div >
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
@@ -303,6 +312,7 @@ class WorkOrdersForm extends Component {
                                                 id=""
                                                 onChange={this.handleChange}
                                                 value={this.state.IdEntity}
+                                                disabled={!this.state.isAdmin}
                                                 onBlur={this.handleValidate}
                                             >
                                                 <option value={0}>Select a Hotel</option>
@@ -333,6 +343,8 @@ class WorkOrdersForm extends Component {
                                             <input
                                                 required
                                                 type="number"
+                                                maxLength="10"
+                                                min={0}
                                                 className="form-control"
                                                 name="quantity"
                                                 onChange={this.handleChange}
@@ -496,7 +508,7 @@ class WorkOrdersForm extends Component {
                         </form>
                     </DialogContent>
                 </Dialog>
-            </div>
+            </div >
         );
     }
 }

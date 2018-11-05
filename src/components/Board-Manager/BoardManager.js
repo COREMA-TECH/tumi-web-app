@@ -5,7 +5,7 @@ import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
 //import { GET_WORK_ORDERS } from "./Mutations";
-import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_WORK_ORDERS, GET_MATCH } from "./Queries";
+import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_WORK_ORDERS, GET_MATCH, GET_HOTEL_QUERY } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 //import Board from 'react-trello'
@@ -87,6 +87,7 @@ class BoardManager extends Component {
         this.state = {
             loading: false,
             // workOrder: [{ id: '', title: '', description: '', label: '' }]
+            hotels: [],
             workOrder: [],
             lane: [],
             Position: '',
@@ -100,6 +101,17 @@ class BoardManager extends Component {
      };*/
 
     componentWillMount() {
+        this.props.client
+            .query({
+                query: GET_HOTEL_QUERY
+            })
+            .then(({ data }) => {
+                this.setState({
+                    hotels: data.getbusinesscompanies
+                });
+            })
+            .catch();
+
         this.setState(
             {
                 loading: true
@@ -228,11 +240,12 @@ class BoardManager extends Component {
     }
 
     render() {
+        console.log("valor de la isAdmin", this.state.isAdmin);
         return (
             <div className="App">
                 <div className="App-header">
                     <div className="row">
-                        <div className="col-md-12">
+                        <div className="col-md-6">
                             <label>View Like Recruiter?</label>
                             <div className="onoffswitch">
                                 <input
@@ -247,6 +260,24 @@ class BoardManager extends Component {
                                     <span className="onoffswitch-switch" />
                                 </label>
                             </div>
+                        </div>
+                        <div className="col-md-6">
+                            <label htmlFor="">Hotel</label>
+                            <select
+                                required
+                                name="IdEntity"
+                                className="form-control"
+                                id=""
+                                onChange={this.handleChange}
+                                value={this.state.IdEntity}
+                                disabled={true}
+                                onBlur={this.handleValidate}
+                            >
+                                <option value={0}>Select a Hotel</option>
+                                {this.state.hotels.map((hotel) => (
+                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                 </div>

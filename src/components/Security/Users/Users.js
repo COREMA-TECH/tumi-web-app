@@ -1046,7 +1046,7 @@ class Catalogs extends React.Component {
 										<InputForm
 											id="username"
 											name="username"
-											maxLength="10"
+											maxLength="15"
 											value={this.state.username}
 											error={!this.state.usernameValid}
 											change={(value) => this.onChangeHandler(value, 'username')}
