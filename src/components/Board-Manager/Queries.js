@@ -72,7 +72,16 @@ export const GET_WORK_ORDERS = gql`
             Last_Name
         }
     }
-    `;
+	`;
+
+export const GET_HOTEL_QUERY = gql`
+	query hotels($id: Int) {
+		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: null) {
+			Id
+			Name
+		}
+	}
+`;
 
 export const GET_COMPANY_QUERY = gql`
 		query getCompany($id: Int!) {
