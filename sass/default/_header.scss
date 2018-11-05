@@ -230,7 +230,7 @@
     }
     &-link {
         font-family: $font-family-sans-serif;
-        color: lighten($color: $brand-primary, $amount: 0.1);
+        color: lighten($color: $brand-primary, $amount: 25);
     }
     &-show {
         padding-bottom: 1rem;

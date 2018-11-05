@@ -54,12 +54,6 @@ class WorkOrders extends Component {
 					openModal={this.state.openModal}
 					handleCloseModal={this.handleCloseModal}
 				/>
-				<WorkOrdersView
-					item={this.state.item}
-					handleOpenSnackbar={this.props.handleOpenSnackbar}
-					openModal={this.state.openModal}
-					handleCloseModal={this.handleCloseModal}
-				/>
 			</div>
 		);
 	}

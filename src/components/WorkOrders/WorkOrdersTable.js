@@ -13,7 +13,7 @@ import { withApollo } from 'react-apollo';
 import { GET_WORKORDERS_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import { DELETE_WORKORDER } from './mutations';
+import { DELETE_WORKORDER, UPDATE_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
 
 const CustomTableCell = withStyles((theme) => ({
@@ -35,7 +35,25 @@ class WorkOrdersTable extends Component {
             rowsPerPage: 10,
             page: 0,
             openConfirm: false,
-            ShiftsData: ShiftsData
+            ShiftsData: ShiftsData,
+            id: null,
+            hotel: 0,
+            IdEntity: null,
+            date: '',
+            quantity: 0,
+            status: 1,
+            shift: '',
+            startDate: '',
+            endDate: '',
+            needExperience: false,
+            needEnglish: false,
+            comment: '',
+            position: 0,
+            PositionRateId: null,
+            RecruiterId: null,
+            userId: 1,
+            ShiftsData: ShiftsData,
+            saving: false,
         }
     }
 
@@ -68,6 +86,60 @@ class WorkOrdersTable extends Component {
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
         });
     }
+
+    handleConvertToOpening = (data) => {
+        this.setState({
+            id: data.id,
+            IdEntity: data.IdEntity,
+            date: data.IdEntity,
+            quantity: data.quantity,
+            status: 2,
+            shift: data.shift,
+            startDate: data.startDate,
+            endDate: data.endDate,
+            needExperience: data.needExperience,
+            needEnglish: data.needExperience,
+            comment: data.comment,
+            PositionRateId: data.PositionRateId,
+            RecruiterId: data.RecruiterId,
+            userId: 1
+        }, () => {
+            this.update();
+        });
+    }
+
+    update = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_WORKORDER,
+                variables: {
+                    workOrder: {
+                        id: this.state.id,
+                        IdEntity: this.state.IdEntity,
+                        date: this.state.date,
+                        quantity: this.state.quantity,
+                        status: this.state.status,
+                        shift: this.state.shift,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        needExperience: this.state.needExperience,
+                        needEnglish: this.state.needEnglish,
+                        comment: this.state.comment,
+                        PositionRateId: this.state.PositionRateId,
+                        userId: this.state.userId
+                    }
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
+                this.setState({ openModal: false, saving: false, converting: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true, converting: false });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            });
+    };
 
     render() {
         let items = this.state.data;
@@ -119,6 +191,22 @@ class WorkOrdersTable extends Component {
                                                     }}
                                                 >
                                                     <i className="fas fa-trash"></i>
+                                                </button>
+                                            </Tooltip>
+                                            <Tooltip title="Convert to Opening">
+                                                <button
+                                                    className="btn btn-info float-left ml-1"
+                                                    disabled={this.props.loading}
+                                                    // onClick={(e) => {
+                                                    //     e.stopPropagation();
+                                                    //     return this.props.onDeleteHandler({ ...row });
+                                                    // }}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        this.handleConvertToOpening({ ...row });
+                                                    }}
+                                                >
+                                                    <i class="fas fa-exchange-alt"></i>
                                                 </button>
                                             </Tooltip>
                                         </CustomTableCell>
