@@ -1172,7 +1172,7 @@ class Catalogs extends React.Component {
 								<div className="card">
 									<div className="card-header info">Permissions</div>
 									<div className="card-body p-0">
-										<ul className="row w-100 bg-light ">
+										<ul className="row w-100 bg-light CardPermissions">
 											<li className="col-md-4 col-sm-4 col-lg-6">
 												<label>Active?</label>
 

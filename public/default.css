@@ -8188,7 +8188,7 @@ label:not(.custom-file-label):not(.form-check-label) {
     -ms-flex-pack: start;
     justify-content: flex-start;
     font-family: "Nunito Sans", sans-serif;
-    font-size: 1.1rem;
+    font-size: 0.8rem;
     padding: 1rem;
     text-decoration: none;
     width: 100%; }
@@ -8360,6 +8360,9 @@ label:not(.custom-file-label):not(.form-check-label) {
       width: 100% !important; }
     .card-wrapper .select-form-customized {
       width: 100% !important; }
+
+.row.CardPermissions {
+  margin-left: 0 !important; }
 
 .SubCard {
   padding: 0 !important; }
