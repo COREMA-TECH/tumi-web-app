@@ -7514,19 +7514,19 @@ input[type="date"]::-webkit-inner-spin-button {
   border-color: #3ca2c8; }
 
 .bg-gd-danger {
-  background: -webkit-gradient(linear, right top, left top, from(#f50057), to(#5c0021));
-  background: -webkit-linear-gradient(right, #f50057, #5c0021);
-  background: -o-linear-gradient(right, #f50057, #5c0021);
-  background: linear-gradient(to left, #f50057, #5c0021);
+  background: -webkit-gradient(linear, right top, left top, from(#ff5c96), to(#f50057));
+  background: -webkit-linear-gradient(right, #ff5c96, #f50057);
+  background: -o-linear-gradient(right, #ff5c96, #f50057);
+  background: linear-gradient(to left, #ff5c96, #f50057);
   border-color: #f50057; }
 
 .bg-gd-info {
-  background: -webkit-linear-gradient(to right, #0a2c12, #28a745);
+  background: -webkit-linear-gradient(to right, #28a745, #5dd879);
   /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-gradient(linear, left top, right top, from(#0a2c12), to(#28a745));
-  background: -webkit-linear-gradient(left, #0a2c12, #28a745);
-  background: -o-linear-gradient(left, #0a2c12, #28a745);
-  background: linear-gradient(to right, #0a2c12, #28a745);
+  background: -webkit-gradient(linear, left top, right top, from(#28a745), to(#5dd879));
+  background: -webkit-linear-gradient(left, #28a745, #5dd879);
+  background: -o-linear-gradient(left, #28a745, #5dd879);
+  background: linear-gradient(to right, #28a745, #5dd879);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
 
 label:not(.custom-file-label):not(.form-check-label) {
@@ -8082,7 +8082,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   text-align: center;
   top: 14px;
   width: 25px;
-  z-index: 31; }
+  z-index: 1051; }
 
 .icon-menu {
   visibility: hidden; }
@@ -8099,7 +8099,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   list-style: none; }
   .MainMenu-option .closeIcon {
     display: block;
-    color: #FFF;
+    color: #FFF !important;
     text-align: right;
     padding-right: 1rem;
     padding-top: 10px; }
@@ -8114,25 +8114,55 @@ label:not(.custom-file-label):not(.form-check-label) {
   background: -o-linear-gradient(right, #3ca2c8, #254151);
   background: linear-gradient(to left, #3ca2c8, #254151);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  border-bottom: 1px solid #3ca2c8; }
+  border-bottom: 1px solid #3ca2c8;
+  z-index: 1050 !important; }
+
+.MainMenu-container {
+  position: relative;
+  z-index: 999; }
+
+.MainMenu-option {
+  border-bottom: solid 1px #44555d; }
+  .MainMenu-option:first-child, .MainMenu-option:last-child {
+    border-bottom: 0; }
 
 .MenuMobile {
-  background: #FFF;
+  background: transparent;
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   clear: both;
   height: 100%;
   overflow: hidden;
-  -webkit-transition: width .5s ease-out;
-  -o-transition: width .5s ease-out;
-  transition: width .5s ease-out;
+  -webkit-transition: left .5s ease-out;
+  -o-transition: left .5s ease-out;
+  transition: left .5s ease-out;
   position: fixed;
-  left: 0;
-  z-index: 99;
-  width: 0; }
+  left: -290px;
+  z-index: 9999;
+  width: 290px; }
+  .MenuMobile::before {
+    background: #0F2027;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-gradient(linear, left top, left bottom, from(#2C5364), color-stop(#203A43), to(#0F2027));
+    background: -webkit-linear-gradient(top, #2C5364, #203A43, #0F2027);
+    background: -o-linear-gradient(top, #2C5364, #203A43, #0F2027);
+    background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background-size: cover;
+    content: " ";
+    display: block;
+    opacity: .9;
+    position: absolute;
+    height: 100%;
+    width: 100%; }
   .MenuMobile-callback {
     display: none; }
   .MenuMobile-callback:checked ~ .MenuMobile {
-    width: 290px; }
+    left: 0px; }
+    @media (max-width: 767.98px) {
+      .MenuMobile-callback:checked ~ .MenuMobile {
+        width: 100%; } }
   .MenuMobile-callback:checked ~ .Header-mobileMenu {
     margin-left: 3rem; }
   .MenuMobile-callback:checked ~ .MenuMobile-overlay {
@@ -8150,7 +8180,7 @@ label:not(.custom-file-label):not(.form-check-label) {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    color: #7e7e7e;
+    color: #FFF;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -8158,17 +8188,16 @@ label:not(.custom-file-label):not(.form-check-label) {
     -ms-flex-pack: start;
     justify-content: flex-start;
     font-family: "Nunito Sans", sans-serif;
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     padding: 1rem;
     text-decoration: none;
     width: 100%; }
     .MenuMobile-link span {
-      font-weight: 700; }
+      font-weight: 400; }
     .MenuMobile-link:hover {
-      color: #254151;
+      color: #FFF;
       text-decoration: none; }
     .MenuMobile-link.selected {
-      background-color: #223b4a;
       border-left: solid 3px #3ca2c8;
       color: #FFF; }
   .MenuMobile-overlay {
@@ -8529,7 +8558,8 @@ label:not(.custom-file-label):not(.form-check-label) {
     width: 50%; }
 
 .UploadDocument-item {
-  display: inline-block; }
+  display: inline-block;
+  vertical-align: top; }
 
 .UploadDocument-wrapper {
   text-align: left;

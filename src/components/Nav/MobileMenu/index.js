@@ -21,7 +21,7 @@ const MobileMenu = (props) => {
 			<ul className="MainMenu-container">
 				<li className="MainMenu-option">
 					<a className="closeIcon" onClick={props.handleCloseMenu}>
-						<i className="fas fa-times" />
+						<i className="fas fa-times fa-3x" />
 					</a>
 				</li>
 				<li className="MainMenu-option">

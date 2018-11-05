@@ -12,7 +12,7 @@
         text-align: center;
         top: 14px;
         width: 25px;
-        z-index: 31;
+        z-index: 1051;
     }
 }
 
@@ -36,7 +36,7 @@
         list-style: none;
         .closeIcon {
             display: block;
-            color: $white;
+            color: $white !important;
             text-align: right;
             padding-right: 1rem;
             padding-top: 10px;
@@ -53,22 +53,50 @@
 .main-container--header {
     background: linear-gradient(to left, $brand-primary, $brand-secondary); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     border-bottom: 1px solid $brand-primary;
+    z-index: 1050 !important;
+}
+.MainMenu {
+    &-container {
+        position: relative;
+        z-index: 999;
+    }
+    &-option {
+        border-bottom: solid 1px #44555d;
+        &:first-child, &:last-child {
+            border-bottom: 0;
+        }
+    }
 }
 .MenuMobile {
-    background: $white; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: transparent; /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     clear: both;
     height: 100%;
     overflow: hidden;
-    transition: width .5s ease-out;
+    transition: left .5s ease-out;
     position: fixed;
-    left: 0;
-    z-index: 99;
-    width: 0;
+    left: -290px;
+    z-index: 9999;
+    width: 290px;
+    &::before {
+        background: #0F2027;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background-size: cover;
+        content: " ";
+        display: block;
+        opacity: .9;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
     &-callback {
         display: none;
     }
     &-callback:checked~.MenuMobile {
-        width: 290px;
+        left: 0px;
+        @include media-breakpoint-down(sm) {
+            width: 100%;
+        }
     }
     &-callback:checked~.Header-mobileMenu {
         margin-left: 3rem;
@@ -88,23 +116,22 @@
     }
     &-link {
         align-items: center;
-        color: $text-color;
+        color: $white;
         display: flex;
         justify-content: flex-start;
         font-family: $font-family-sans-serif;
-        font-size: 0.95rem;
+        font-size: 1.1rem;
         padding: 1rem; 
         text-decoration: none;
         width: 100%;
         span {
-            font-weight: 700;
+            font-weight: 400;
         }
         &:hover {
-            color: $brand-secondary;
+            color: $white;
             text-decoration: none;
         }
         &.selected {
-            background-color: darken($brand-secondary,2);
             border-left: solid 3px $brand-primary;
             color: $white;
         }
