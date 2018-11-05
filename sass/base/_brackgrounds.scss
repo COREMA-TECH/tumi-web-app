@@ -5,12 +5,12 @@
             border-color: $brand-primary;
         }
         &-danger {
-            background: linear-gradient(to left, $red, darken($red,30));
+            background: linear-gradient(to left, lighten($red,20),$red);
             border-color: $red;
         }
         &-info {
-            background: -webkit-linear-gradient(to right, darken($info,30), $info); /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, darken($info,30), $info); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: -webkit-linear-gradient(to right, $info, lighten($info,20)); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, $info, lighten($info,20)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         }
     }
 }
