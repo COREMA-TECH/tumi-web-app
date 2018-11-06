@@ -45,6 +45,7 @@ class Toolbar extends Component {
 	handleDropDown = (event) => {
 		event.preventDefault();
 		let selfHtml = event.currentTarget;
+		console.log(selfHtml);
 		let submenu = selfHtml.nextSibling;
 		submenu.classList.toggle('show');
 	};
