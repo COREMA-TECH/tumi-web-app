@@ -270,7 +270,7 @@ class BoardRecruiter extends Component {
     render() {
         return (
             <div className="App">
-                <div className="App-header">
+                {/*<div className="App-header">
                     <div className="row">
                         <div className="col-md-12">
                             <label>View Like Recruiter?</label>
@@ -290,7 +290,8 @@ class BoardRecruiter extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
+
                 <div className="App-intro">
                     <Board
                         //editable
