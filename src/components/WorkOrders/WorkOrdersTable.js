@@ -10,7 +10,7 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withApollo } from 'react-apollo';
-import { GET_WORKORDERS_QUERY } from './queries';
+import { GET_WORKORDERS_QUERY, GET_RECRUITER } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { DELETE_WORKORDER, UPDATE_WORKORDER } from './mutations';
@@ -54,6 +54,7 @@ class WorkOrdersTable extends Component {
             userId: 1,
             ShiftsData: ShiftsData,
             saving: false,
+            recruiters: []
         }
     }
 
@@ -68,6 +69,8 @@ class WorkOrdersTable extends Component {
                 });
             })
             .catch();
+
+        this.getRecruiter();
     }
 
     handleDelete = (id) => {
@@ -87,26 +90,41 @@ class WorkOrdersTable extends Component {
         });
     }
 
-    handleConvertToOpening = (data) => {
-        this.setState({
-            id: data.id,
-            IdEntity: data.IdEntity,
-            date: data.IdEntity,
-            quantity: data.quantity,
-            status: 2,
-            shift: data.shift,
-            startDate: data.startDate,
-            endDate: data.endDate,
-            needExperience: data.needExperience,
-            needEnglish: data.needExperience,
-            comment: data.comment,
-            PositionRateId: data.PositionRateId,
-            RecruiterId: data.RecruiterId,
-            userId: 1
-        }, () => {
-            this.update();
-        });
+    handleConvertToOpening = (event, data) => {
+        event.preventDefault();
+        if (this.state[`RecruiterId${data.id}`]) {
+            this.setState({
+                id: data.id,
+                IdEntity: data.IdEntity,
+                date: data.IdEntity,
+                quantity: data.quantity,
+                status: 2,
+                shift: data.shift,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                needExperience: data.needExperience,
+                needEnglish: data.needExperience,
+                comment: data.comment,
+                PositionRateId: data.PositionRateId,
+                RecruiterId: parseInt(this.state[`RecruiterId${data.id}`]),
+                userId: 1
+            }, () => {
+                this.update();
+            });
+        } else {
+            this.props.handleOpenSnackbar('error', 'Recruiter fields is required');
+        }
     }
+
+    handleChange = (event, key) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name + key]: value
+        });
+    };
 
     update = () => {
         this.props.client
@@ -141,6 +159,21 @@ class WorkOrdersTable extends Component {
             });
     };
 
+    getRecruiter = () => {
+        this.props.client
+            .query({
+                query: GET_RECRUITER,
+                variables: {}
+            })
+            .then(({ data }) => {
+                this.setState({
+                    recruiters: data.getusers
+
+                });
+            })
+            .catch();
+    };
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
@@ -152,6 +185,7 @@ class WorkOrdersTable extends Component {
                     <Table>
                         <TableHead>
                             <TableRow>
+                                <CustomTableCell className={"Table-head"}></CustomTableCell>
                                 <CustomTableCell className={"Table-head"}></CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>Quantity</CustomTableCell>
@@ -193,22 +227,39 @@ class WorkOrdersTable extends Component {
                                                     <i className="fas fa-trash"></i>
                                                 </button>
                                             </Tooltip>
-                                            <Tooltip title="Convert to Opening">
-                                                <button
-                                                    className="btn btn-info float-left ml-1"
-                                                    disabled={this.props.loading}
-                                                    // onClick={(e) => {
-                                                    //     e.stopPropagation();
-                                                    //     return this.props.onDeleteHandler({ ...row });
-                                                    // }}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        this.handleConvertToOpening({ ...row });
-                                                    }}
+                                        </CustomTableCell>
+                                        <CustomTableCell>
+                                            <div class="input-group">
+                                                <select
+                                                    required
+                                                    name={`RecruiterId`}
+                                                    className="form-control"
+                                                    id=""
+                                                    onChange={(e) => { this.handleChange(e, row.id) }}
+                                                    value={this.state.RecruiterId}
+                                                    onBlur={this.handleValidate}
                                                 >
-                                                    <i class="fas fa-exchange-alt"></i>
-                                                </button>
-                                            </Tooltip>
+                                                    <option value="0">Select a Recruiter</option>
+                                                    {this.state.recruiters.map((recruiter) => (
+                                                        < option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                    ))}
+                                                </select>
+                                                <div class="input-group-append">
+
+                                                    <Tooltip title="Convert to Opening">
+                                                        <button
+                                                            className="btn btn-info float-left ml-1"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                this.handleConvertToOpening(e, { ...row });
+                                                            }}
+                                                        >
+                                                            <i class="fas fa-exchange-alt"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                </div>
+                                            </div>
                                         </CustomTableCell>
                                         <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell>{row.quantity}</CustomTableCell>

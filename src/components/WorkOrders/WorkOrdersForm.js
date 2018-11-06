@@ -287,8 +287,6 @@ class WorkOrdersForm extends Component {
     }
 
     render() {
-
-        console.log("esto es la variable 2", !this.state.isAdmin)
         return (
 
             < div >
