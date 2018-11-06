@@ -33,6 +33,7 @@ class Toolbar extends Component {
 		else localStorage.setItem('languageForm', 'en');
 		window.location.reload();
 		event.preventDefault();
+
 	};
 
 	componentWillMount() {
