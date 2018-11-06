@@ -9,13 +9,15 @@ import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
+import { parse } from 'path';
+import { bool } from 'prop-types';
 
 class WorkOrdersForm extends Component {
     _states = {
         id: null,
         hotel: 0,
         IdEntity: null,
-        date: '',
+        date: new Date().toISOString().substring(0, 10),
         quantity: 0,
         status: 1,
         shift: '',
@@ -62,9 +64,9 @@ class WorkOrdersForm extends Component {
                     needExperience: nextProps.item.needExperience,
                     needEnglish: nextProps.item.needEnglish,
                     comment: nextProps.item.comment,
-                    userId: 1,
-                    openModal: nextProps.openModal,
-                    isAdmin: Boolean(localStorage.getItem('IsAdmin'))
+                    userId: localStorage.getItem('LoginId'),
+                    openModal: nextProps.openModal
+                    //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
@@ -76,7 +78,7 @@ class WorkOrdersForm extends Component {
         } else if (!this.state.openModal) {
             this.setState({
                 IdEntity: 0,
-                date: '',
+                date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
                 status: 0,
                 shift: '',
@@ -288,7 +290,8 @@ class WorkOrdersForm extends Component {
 
     render() {
 
-        console.log("esto es la variable 2", !this.state.isAdmin)
+        const isAdmin = localStorage.getItem('IsAdmin') == "true"
+
         return (
 
             < div >
@@ -312,7 +315,7 @@ class WorkOrdersForm extends Component {
                                                 id=""
                                                 onChange={this.handleChange}
                                                 value={this.state.IdEntity}
-                                                disabled={!this.state.isAdmin}
+                                                disabled={!isAdmin}
                                                 onBlur={this.handleValidate}
                                             >
                                                 <option value={0}>Select a Hotel</option>
@@ -399,6 +402,7 @@ class WorkOrdersForm extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 name="date"
+                                                disabled={!isAdmin}
                                                 onChange={this.handleChange}
                                                 value={this.state.date.substring(0, 10)}
                                                 onBlur={this.handleValidate}

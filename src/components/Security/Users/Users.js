@@ -38,7 +38,7 @@ import InputMask from 'react-input-mask';
 import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import './index.css';
-
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
 
 const styles = (theme) => ({
@@ -132,11 +132,14 @@ const styles = (theme) => ({
 });
 
 class Catalogs extends React.Component {
+
 	GET_CONTACTS_QUERY = gql`
 		{
 			getsupervisor(IsActive: 1, Id_Entity: 0, Id: 0) {
 				Id
 				Name: Full_Name
+				Electronic_Address
+				Phone_Number
 			}
 			getcatalogitem(Id_Catalog: 4) {
 				Id
@@ -145,6 +148,21 @@ class Catalogs extends React.Component {
 			}
 		}
 	`;
+
+	GET_CONTACTS_QUERY_BY_ID = gql`
+	query getsupervisor($Id: Int) {
+		getcontacts(IsActive: 1,  Id: $Id) {
+				Id
+			  	First_Name
+		  		Middle_Name
+		  		Last_Name
+				Electronic_Address
+				Phone_Number
+		  		Id_Entity
+		}
+		}
+	`;
+
 	GET_ROLES_QUERY = gql`
 		{
 			getroles(IsActive: 1) {
@@ -344,14 +362,50 @@ class Catalogs extends React.Component {
 	}
 
 	updateSelect = (id, name) => {
+
 		this.setState(
 			{
 				[name]: id
 			},
 			() => {
+				console.log("Id de la fila ", id);
 				this.validateField(name, id);
 			}
 		);
+	};
+
+	SelectContac = (id) => {
+		console.log("entro al select");
+		this.props.client
+			.query({
+				query: this.GET_CONTACTS_QUERY_BY_ID,
+				variables: {
+					Id: id
+				}
+			})
+			.then((data) => {
+				console.log("este es el data ", data.data.getcontacts[0].Electronic_Address);
+
+				if (data.data.getcontacts != null) {
+
+					this.setState(
+						{
+
+							email: data.data.getcontacts[0].Electronic_Address,
+							number: data.data.getcontacts[0].Phone_Number,
+							fullname: data.data.getcontacts[0].First_Name.trim + ' ' + data.data.getcontacts[0].Last_Name.trim
+						},
+					);
+				}
+			})
+			.catch((error) => {
+				this.setState({
+					loadingContacts: false,
+					firstLoad: false,
+					indexView: 2,
+					errorMessage: 'Error: Loading contacts: ' + error
+				});
+			});
 	};
 
 	enableCancelButton = () => {
@@ -594,7 +648,8 @@ class Catalogs extends React.Component {
 					openModal: true,
 					buttonTitle: this.TITLE_EDIT
 				},
-				this.focusTextInput
+				this.focusTextInput,
+				console.log("este es el contacto ", this.state.idContact)
 			);
 		});
 	};
@@ -661,10 +716,13 @@ class Catalogs extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getsupervisor != null && data.data.getcatalogitem) {
+
 						this.setState(
 							{
 								contacts: data.data.getsupervisor,
 								regions: data.data.getcatalogitem,
+								//email: data.data.Electronic_Address,
+								//number: data.data.Phone_Number,
 								loadingContacts: false
 							},
 							func
@@ -1030,8 +1088,10 @@ class Catalogs extends React.Component {
 											disabled={this.state.loadingContacts}
 											onChange={(event) => {
 												this.updateSelect(event.target.value, 'idContact');
+												this.SelectContac(event.target.value);
 											}}
 											value={this.state.idContact}
+
 										>
 											<option value={undefined}>Select a contact</option>
 											{this.state.contacts.map((item) => (
@@ -1165,6 +1225,7 @@ class Catalogs extends React.Component {
 												</option>
 											))}
 										</select>
+
 									</div>
 								</div>
 							</div>
