@@ -243,6 +243,7 @@ class BoardManager extends Component {
         console.log("valor de la isAdmin", this.state.isAdmin);
         return (
             <div className="App">
+                {/*
                 <div className="App-header">
                     <div className="row">
                         <div className="col-md-6">
@@ -281,6 +282,7 @@ class BoardManager extends Component {
                         </div>
                     </div>
                 </div>
+                */ }
                 <div className="App-intro">
                     <Board
                         //editable
