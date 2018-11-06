@@ -8281,7 +8281,11 @@ label:not(.custom-file-label):not(.form-check-label) {
     margin-top: 0.5rem; }
   .SubMenu-link {
     font-family: "Nunito Sans", sans-serif;
+<<<<<<< HEAD
     color: #92d0e8; }
+=======
+    color: #9fd1e4; }
+>>>>>>> 20f0df06716ecf7606349f7e45c5d5b74cd9d158
   .SubMenu-show {
     padding-bottom: 1rem;
     padding-top: 1rem;
