@@ -243,7 +243,7 @@ class Catalogs extends React.Component {
 
 		idContact: undefined,
 		username: '',
-		//fullname: '',
+		fullname: '',
 		password: 'TEMP',
 		email: '',
 		number: '',
@@ -393,7 +393,7 @@ class Catalogs extends React.Component {
 
 							email: data.data.getcontacts[0].Electronic_Address,
 							number: data.data.getcontacts[0].Phone_Number,
-							fullname: data.data.getcontacts[0].First_Name.trim + ' ' + data.data.getcontacts[0].Last_Name.trim
+							fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
 						},
 					);
 				}
@@ -612,7 +612,7 @@ class Catalogs extends React.Component {
 					idContact: Id_Contact == null ? undefined : Id_Contact,
 					idRol: Id_Roles,
 					username: Code_User.trim(),
-					//fullname: Full_Name.trim(),
+					fullname: Full_Name.trim(),
 					email: Electronic_Address.trim(),
 					number: Phone_Number.trim(),
 					password: Password.trim(),
