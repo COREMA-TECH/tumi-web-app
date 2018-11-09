@@ -7,7 +7,6 @@ const MobileMenu = (props) => {
 		event.preventDefault();
 		let selfHtml = event.currentTarget;
 		let submenu = selfHtml.nextSibling;
-		console.log(submenu);
 		if (selfHtml.classList.contains('selected')) {
 			selfHtml.classList.remove('selected');
 			submenu.classList.remove('SubMenu-show');

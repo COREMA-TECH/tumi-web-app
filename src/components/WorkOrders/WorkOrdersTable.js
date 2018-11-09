@@ -185,13 +185,13 @@ class WorkOrdersTable extends Component {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <CustomTableCell className={"Table-head"}></CustomTableCell>
-                                <CustomTableCell className={"Table-head"}></CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}></CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Quantity</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Shift</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Need Experience?</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Need to Speak English?</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Need Experience?</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Need to Speak English?</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}></CustomTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -228,8 +228,18 @@ class WorkOrdersTable extends Component {
                                                 </button>
                                             </Tooltip>
                                         </CustomTableCell>
+                                        <CustomTableCell>{row.position.Position}</CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>
+                                            {this.state.ShiftsData.map((shift) => (
+                                                shift.Id == row.shift ? shift.Name : ''
+                                            ))}
+                                        </CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
+
                                         <CustomTableCell>
-                                            <div class="input-group">
+                                            <div className="input-group">
                                                 <select
                                                     required
                                                     name={`RecruiterId`}
@@ -241,35 +251,23 @@ class WorkOrdersTable extends Component {
                                                 >
                                                     <option value="0">Select a Recruiter</option>
                                                     {this.state.recruiters.map((recruiter) => (
-                                                        < option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                        <option value={recruiter.Id} > {recruiter.Full_Name}</option>
                                                     ))}
                                                 </select>
-                                                <div class="input-group-append">
-
-                                                    <Tooltip title="Convert to Opening">
-                                                        <button
-                                                            className="btn btn-info float-left ml-1"
-                                                            disabled={this.props.loading}
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                this.handleConvertToOpening(e, { ...row });
-                                                            }}
-                                                        >
-                                                            <i class="fas fa-exchange-alt"></i>
-                                                        </button>
-                                                    </Tooltip>
-                                                </div>
+                                                <Tooltip title="Convert to Opening">
+                                                    <button
+                                                        className="btn btn-link float-left ml-1"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            this.handleConvertToOpening(e, { ...row });
+                                                        }}
+                                                    >
+                                                        <i class="fas fa-exchange-alt text-info"></i>
+                                                    </button>
+                                                </Tooltip>
                                             </div>
                                         </CustomTableCell>
-                                        <CustomTableCell>{row.position.Position}</CustomTableCell>
-                                        <CustomTableCell>{row.quantity}</CustomTableCell>
-                                        <CustomTableCell>
-                                            {this.state.ShiftsData.map((shift) => (
-                                                shift.Id == row.shift ? shift.Name : ''
-                                            ))}
-                                        </CustomTableCell>
-                                        <CustomTableCell>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
-                                        <CustomTableCell>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
                                     </TableRow>
                                 );
                             })}

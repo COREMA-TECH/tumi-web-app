@@ -6,13 +6,13 @@ import withGlobalContent from 'Generic/Global';
 
 class DashboardManager extends React.Component {
 	data = {
-		labels: [ 'Banquet', 'Housemen', 'Cook' ],
+		labels: ['Banquet', 'Housemen', 'Cook'],
 		datasets: [
 			{
 				label: 'Demand for positions',
-				data: [ 300, 50, 100 ],
-				backgroundColor: [ '#FF6384', '#36A2EB', '#FFCE56' ],
-				hoverBackgroundColor: [ '#FF6384', '#36A2EB', '#FFCE56' ]
+				data: [300, 50, 100],
+				backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+				hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
 			}
 		]
 	};
@@ -114,28 +114,16 @@ class DashboardManager extends React.Component {
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
 						<div className="row">
-							<div className="col-md-4 col-lg-6">
-								<a
-									href=""
-									className="card bg-gd-danger QuickButton"
-									onClick={this.handleClickOpenModal}
-								>
-									<div className="card-body">
-										<div>
-											<i className="fas fa-plus fa-5x" />
-										</div>
-										<span>Add Work Order</span>
-									</div>
+							<div className="col-md-2 col-lg-2">
+								<a href="" className="text-center d-block" onClick={this.handleClickOpenModal}>
+									<img src="/icons/actions/list.svg" alt="" className="w-50" />
+									<span className="d-block">Add Work Order</span>
 								</a>
 							</div>
-							<div className="col-md-4 col-lg-6">
-								<a href="/home/board/manager" className="card bg-gd-info QuickButton">
-									<div className="card-body">
-										<div>
-											<i className="fas fa-tv fa-5x" />
-										</div>
-										<span>Go to board</span>
-									</div>
+							<div className="col-md-2 col-lg-2">
+								<a href="/home/board/manager" className="text-center d-block">
+									<img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
+									<span className="d-block">Go to board</span>
 								</a>
 							</div>
 						</div>
