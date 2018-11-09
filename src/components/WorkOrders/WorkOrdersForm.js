@@ -29,7 +29,7 @@ class WorkOrdersForm extends Component {
         position: 0,
         PositionRateId: null,
         RecruiterId: null,
-        userId: 1,
+        userId: localStorage.getItem('LoginId'),
         ShiftsData: ShiftsData,
         saving: false,
         isAdmin: Boolean(localStorage.getItem('IsAdmin'))
