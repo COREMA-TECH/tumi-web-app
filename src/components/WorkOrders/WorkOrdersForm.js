@@ -11,6 +11,7 @@ import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
 import { bool } from 'prop-types';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -325,6 +326,24 @@ class WorkOrdersForm extends Component {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
+                                            <label htmlFor="">Requested by</label>
+                                            <select
+                                                required
+                                                name="IdEntity"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.IdEntity}
+                                                disabled={!isAdmin}
+                                                onBlur={this.handleValidate}
+                                            >
+                                                <option value={0}>Select a Hotel</option>
+                                                {this.state.hotels.map((hotel) => (
+                                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6">
                                             <label htmlFor="">Position</label>
                                             <select
                                                 required
@@ -340,6 +359,19 @@ class WorkOrdersForm extends Component {
                                                     <option value={position.Id}>{position.Position}</option>
                                                 ))}
                                             </select>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">Requested on Date</label>
+                                            <input
+                                                required
+                                                type="date"
+                                                className="form-control"
+                                                name="date"
+                                                disabled={!isAdmin}
+                                                onChange={this.handleChange}
+                                                value={this.state.date.substring(0, 10)}
+                                                onBlur={this.handleValidate}
+                                            />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Quantity</label>
@@ -395,19 +427,25 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Date</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="date"
-                                                disabled={!isAdmin}
-                                                onChange={this.handleChange}
-                                                value={this.state.date.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
+                                        {this.state.id && (
+                                            <div className="col-md-6">
+                                                <label htmlFor="">Assign to</label>
+                                                <select
+                                                    required
+                                                    name="RecruiterId"
+                                                    className="form-control"
+                                                    id=""
+                                                    onChange={this.handleChange}
+                                                    value={this.state.RecruiterId}
+                                                    onBlur={this.handleValidate}
+                                                >
+                                                    <option value="0">Select a Recruiter</option>
+                                                    {this.state.recruiters.map((recruiter) => (
+                                                        < option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
@@ -466,7 +504,7 @@ class WorkOrdersForm extends Component {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            {this.state.id && (
+                                            {/*this.state.id && (
                                                 <div class="input-group">
                                                     <select
                                                         required
@@ -482,6 +520,7 @@ class WorkOrdersForm extends Component {
                                                             < option value={recruiter.Id} > {recruiter.Full_Name}</option>
                                                         ))}
                                                     </select>
+
                                                     <div class="input-group-append">
                                                         <button
                                                             className="btn btn-info float-right"
@@ -492,9 +531,9 @@ class WorkOrdersForm extends Component {
 														</button>
                                                     </div>
                                                 </div>
-                                            )}
+                                                        )*/}
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-12">
                                             <button
                                                 className="btn btn-danger ml-1 float-right"
                                                 onClick={this.props.handleCloseModal}
@@ -505,6 +544,12 @@ class WorkOrdersForm extends Component {
                                                 Save {!this.state.saving && <i class="fas fa-save ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
+                                            {this.state.id && (
+                                                <button className="btn btn-info ml-1 float-right" type="submit">
+                                                    Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
+                                                    {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
