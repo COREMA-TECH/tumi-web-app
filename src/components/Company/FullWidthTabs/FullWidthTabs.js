@@ -28,7 +28,6 @@ const theme = createMuiTheme({
 class CustomizedTabs extends React.Component {
 
 	constructor(props) {
-		console.log("Esyamos en full ", props);
 		super(props);
 		this.state = {
 			value: 0,

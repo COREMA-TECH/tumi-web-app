@@ -71,7 +71,6 @@ class CompanyList extends Component {
 	`;
 
 	deleteCompany = () => {
-		console.log(this.props);
 		this.setState(
 			{
 				loadingRemoving: true
