@@ -243,7 +243,7 @@ class Catalogs extends React.Component {
 
 		idContact: undefined,
 		username: '',
-		//fullname: '',
+		fullname: '',
 		password: 'TEMP',
 		email: '',
 		number: '',
@@ -256,6 +256,7 @@ class Catalogs extends React.Component {
 		allowExport: false,
 		IsRecruiter: false,
 		IdRegionValid: true,
+		RegionName: '',
 		IsActive: 1,
 		IdRegion: 0,
 
@@ -393,9 +394,10 @@ class Catalogs extends React.Component {
 
 							email: data.data.getcontacts[0].Electronic_Address,
 							number: data.data.getcontacts[0].Phone_Number,
-							fullname: data.data.getcontacts[0].First_Name.trim + ' ' + data.data.getcontacts[0].Last_Name.trim
+							fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
 						},
 					);
+					console.log("Full Name str ", this.state.fullname);
 				}
 			})
 			.catch((error) => {
@@ -612,7 +614,7 @@ class Catalogs extends React.Component {
 					idContact: Id_Contact == null ? undefined : Id_Contact,
 					idRol: Id_Roles,
 					username: Code_User.trim(),
-					//fullname: Full_Name.trim(),
+					fullname: Full_Name.trim(),
 					email: Electronic_Address.trim(),
 					number: Phone_Number.trim(),
 					password: Password.trim(),
@@ -716,11 +718,12 @@ class Catalogs extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-
+						console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
 						this.setState(
 							{
 								contacts: data.data.getsupervisor,
 								regions: data.data.getcatalogitem,
+								RegionName: data.data.getcatalogitem[0].Name,
 								//email: data.data.Electronic_Address,
 								//number: data.data.Phone_Number,
 								loadingContacts: false
@@ -1205,7 +1208,22 @@ class Catalogs extends React.Component {
 									</div>
 
 									<div className="col-md-9 col-lg-9">
-										<label>{this.state.IsRecruiter ? '*' : ''}Region</label>
+										<label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
+										<AutosuggestInput
+											id="IdRegion"
+											name="IdRegion"
+											data={this.state.regions}
+											error={!this.state.IdRegionValid}
+											disabled={!this.state.IsRecruiter}
+											value={this.state.RegionName}
+											onChange={(value) => {
+												this.updateSelect(value, 'RegionName');
+											}}
+											onSelect={(value) => {
+												this.updateSelect(value, 'RegionName');
+											}}
+										/>
+										{/*
 										<select
 											name="IdRegion"
 											className={[
@@ -1225,7 +1243,7 @@ class Catalogs extends React.Component {
 												</option>
 											))}
 										</select>
-
+										*/}
 									</div>
 								</div>
 							</div>
