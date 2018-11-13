@@ -7506,29 +7506,6 @@ body {
 input[type="date"]::-webkit-inner-spin-button {
   display: none; }
 
-.bg-gd-primary {
-  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
-  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
-  background: -o-linear-gradient(right, #3ca2c8, #254151);
-  background: linear-gradient(to left, #3ca2c8, #254151);
-  border-color: #3ca2c8; }
-
-.bg-gd-danger {
-  background: -webkit-gradient(linear, right top, left top, from(#ff5c96), to(#f50057));
-  background: -webkit-linear-gradient(right, #ff5c96, #f50057);
-  background: -o-linear-gradient(right, #ff5c96, #f50057);
-  background: linear-gradient(to left, #ff5c96, #f50057);
-  border-color: #f50057; }
-
-.bg-gd-info {
-  background: -webkit-linear-gradient(to right, #28a745, #5dd879);
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-gradient(linear, left top, right top, from(#28a745), to(#5dd879));
-  background: -webkit-linear-gradient(left, #28a745, #5dd879);
-  background: -o-linear-gradient(left, #28a745, #5dd879);
-  background: linear-gradient(to right, #28a745, #5dd879);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
-
 label:not(.custom-file-label):not(.form-check-label) {
   margin-bottom: 0 !important;
   margin-top: 0.5rem; }
@@ -8434,6 +8411,7 @@ label:not(.custom-file-label):not(.form-check-label) {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  margin-top: 1rem;
   padding: 1rem;
   position: relative; }
   .HotelCard-controls {
@@ -8509,6 +8487,29 @@ label:not(.custom-file-label):not(.form-check-label) {
   background-color: #f5f7f9;
   width: 100%;
   margin-top: -1px; }
+
+.bg-gd-primary {
+  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
+  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
+  background: -o-linear-gradient(right, #3ca2c8, #254151);
+  background: linear-gradient(to left, #3ca2c8, #254151);
+  border-color: #3ca2c8; }
+
+.bg-gd-danger {
+  background: -webkit-gradient(linear, right top, left top, from(#ff5c96), to(#f50057));
+  background: -webkit-linear-gradient(right, #ff5c96, #f50057);
+  background: -o-linear-gradient(right, #ff5c96, #f50057);
+  background: linear-gradient(to left, #ff5c96, #f50057);
+  border-color: #f50057; }
+
+.bg-gd-info {
+  background: -webkit-linear-gradient(to right, #28a745, #5dd879);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-gradient(linear, left top, right top, from(#28a745), to(#5dd879));
+  background: -webkit-linear-gradient(left, #28a745, #5dd879);
+  background: -o-linear-gradient(left, #28a745, #5dd879);
+  background: linear-gradient(to right, #28a745, #5dd879);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ }
 
 .Apply-container {
   margin: 0 auto;

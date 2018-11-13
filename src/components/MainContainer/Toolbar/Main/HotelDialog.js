@@ -25,6 +25,7 @@ class HotelDialog extends Component {
     }
 
     render() {
+        console.log(this.props);
         return (
             <div>
                 <Dialog
@@ -45,7 +46,7 @@ class HotelDialog extends Component {
                     </AppBar>
                     <DialogContent>
                         <TabsInDialog
-                            idCompany={99999}
+                            idCompany={this.props.idCompany}
                             Markup={this.props.Markup}
                             idProperty={this.props.idProperty}
                             handleClose={this.handleClose}

@@ -16,20 +16,23 @@ class HotelList extends Component {
             deleteId: null,
             loadingRemoving: false,
             Markup: 0,
-            idProperty: null
+            idProperty: null,
+            idCompany: null
         }
     }
 
     getCompaniesQuery = gql`
         {
-            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: 99999) {
+            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
                 Id
                 Id_Contract
+                Id_Company
                 Code
                 Name
                 Description
                 ImageURL
                 Address
+                Id_Parent
             }
         }
     `;
@@ -112,16 +115,16 @@ class HotelList extends Component {
         this.setState({ open: false });
     };
 
-    handleClickOpenEdit = (boolValue, id, rate) => (event) => {
+    handleClickOpenEdit = (boolValue, id, rate, idCompany) => (event) => {
         //if (!this.props.showStepper) return false;
         event.preventDefault();
         this.setState({
             propertyClick: boolValue,
             idProperty: id,
-            Markup: rate
+            Markup: rate,
+            idCompany: idCompany
         }, () => {
             this.setState({ open: true });
-            console.log(this.state, 'hotel');
         });
     };
 
@@ -136,9 +139,13 @@ class HotelList extends Component {
                             </button>
                         </div>
                     </div>
+                    <div className="col-md-12">
+                        <span class="badge badge-danger mr-1">Not Assigned</span>
+                        <span class="badge badge-success">Assigned</span>
+                    </div>
                     {this.state.hotels.map((hotel) => (
                         <li className="col-md-2">
-                            <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate)} className="HotelCard">
+                            <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard bg-gd-danger" : "HotelCard"}>
                                 <div href="" className="HotelCard-controls">
                                     <AlertDialogSlide
                                         handleClose={this.handleCloseAlertDialog}
@@ -166,7 +173,7 @@ class HotelList extends Component {
                 <HotelDialog
                     open={this.state.open}
                     Markup={this.state.Markup}
-                    idCompany={99999}
+                    idCompany={this.state.idCompany}
                     idProperty={this.state.idProperty}
                     handleClose={this.handleClose}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}

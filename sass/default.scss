@@ -19,7 +19,6 @@
 @import "base/reset";
 
 //Base
-@import "base/brackgrounds";
 @import "base/bootstrap_modify.scss";
 @import "base/buttons";
 @import "base/forms";
@@ -44,6 +43,9 @@
 @import "default/preferences";
 @import "default/tabs";
 @import "default/footer";
+
+//Base override classes
+@import "base/brackgrounds";
 
 //Apply
 @import "apply/apply";
