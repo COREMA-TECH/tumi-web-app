@@ -32,7 +32,7 @@ class MainContainer extends Component {
 				<div className="main-container--header">
 					<span className="icon-menu" onClick={this.handleClickMenu} />
 					<span className="main-container__title">{this.setTitle(window.location.pathname)}</span>
-					<Toolbar />
+					<Toolbar handleOpenSnackbar={this.props.handleOpenSnackbar} />
 				</div>
 				<div className="main-container--container">
 					<Container />

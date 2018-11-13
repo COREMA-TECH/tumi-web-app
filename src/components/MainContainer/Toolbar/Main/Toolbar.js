@@ -2,14 +2,27 @@ import React, { Component } from 'react';
 import './index.css';
 import onClickOutside from 'react-onclickoutside';
 import { withRouter } from 'react-router-dom';
+import HotelDialog from './HotelDialog';
 
 class Toolbar extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			languageIcon: ''
+			languageIcon: '',
+			open: false
 		};
 	}
+
+	handleClickOpen = (event) => {
+		event.preventDefault();
+		this.setState({
+			open: true
+		});
+	};
+
+	handleClose = () => {
+		this.setState({ open: false });
+	};
 
 	handleClickOutside = () => {
 		let dropdowns = document.getElementsByClassName('dropdown-menu');
@@ -45,7 +58,6 @@ class Toolbar extends Component {
 	handleDropDown = (event) => {
 		event.preventDefault();
 		let selfHtml = event.currentTarget;
-		console.log(selfHtml);
 		let submenu = selfHtml.nextSibling;
 		submenu.classList.toggle('show');
 	};
@@ -79,20 +91,22 @@ class Toolbar extends Component {
 										<small>Work Orders</small>
 										<span class="app-shortcuts__helper bg-gd-danger" />
 									</a>
-									<a
-										class="col-4 app-shortcuts__item"
-										href=""
-										onClick={(e) => {
-											e.preventDefault();
-											document.getElementById('dropdownMenuButton').click();
-											this.props.history.push({
-												pathname: '/home/company/add',
-												state: { idCompany: 0, idContract: 0 }
-											});
-										}}
+									<a class="col-4 app-shortcuts__item" href="" onClick={(e) => {
+										e.preventDefault();
+										document.getElementById('dropdownMenuButton').click();
+										this.props.history.push({
+											pathname: '/home/company/add',
+											state: { idCompany: 0, idContract: 0 }
+										});
+									}}
 									>
 										<i class="fas fa-home" />
 										<small>Add Management</small>
+										<span class="app-shortcuts__helper bg-gd-primary" />
+									</a>
+									<a class="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
+										<i class="fas fa-home" />
+										<small>Add Hotel</small>
 										<span class="app-shortcuts__helper bg-gd-primary" />
 									</a>
 									<a
@@ -126,6 +140,7 @@ class Toolbar extends Component {
 						</div>
 					</li>
 				</ul>
+				<HotelDialog open={this.state.open} handleClose={this.handleClose} handleOpenSnackbar={this.props.handleOpenSnackbar} />
 			</div>
 		);
 	}

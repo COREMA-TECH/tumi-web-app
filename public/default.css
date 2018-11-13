@@ -8422,6 +8422,32 @@ label:not(.custom-file-label):not(.form-check-label) {
   .main-contract .company-list__header {
     height: auto !important; } }
 
+.HotelCard {
+  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
+  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
+  background: -o-linear-gradient(right, #3ca2c8, #254151);
+  background: linear-gradient(to left, #3ca2c8, #254151);
+  border-radius: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 1rem; }
+  .HotelCard-img {
+    border-radius: 50px;
+    height: 50px;
+    overflow: hidden;
+    margin-right: .5rem;
+    width: 50px; }
+    .HotelCard-img img {
+      height: 100%;
+      width: auto; }
+  .HotelCard-title {
+    color: #FFF;
+    font-weight: 700; }
+
 .main-contract__content {
   width: 100% !important; }
 

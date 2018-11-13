@@ -1,0 +1,22 @@
+.HotelCard {
+    background: linear-gradient(to left, $brand-primary, $brand-secondary);
+    border-radius: $border-radius-standar;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    &-img {
+        border-radius: 50px;
+        height: 50px;
+        overflow: hidden;
+        margin-right: .5rem;
+        width: 50px;
+        img {
+            height: 100%;
+            width: auto;
+        }
+    }
+    &-title {
+        color: $white;
+        font-weight: 700;
+    }
+}
