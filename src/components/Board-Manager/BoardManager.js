@@ -14,19 +14,9 @@ import ShiftsData from '../../data/shitfs.json';
 import { InputLabel } from '@material-ui/core';
 import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+//import { withInfo } from '@storybook/addon-info'
+//import { storiesOf } from '@storybook/react'
 
-const handleDragStart = (cardId, laneId) => {
-    console.log('drag started');
-    console.log(`cardId: ${cardId}`);
-    console.log(`laneId: ${laneId}`);
-};
-
-const handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
-    console.log('drag ended')
-    console.log(`cardId: ${cardId}`)
-    console.log(`sourceLaneId: ${sourceLaneId}`)
-    console.log(`targetLaneId: ${targetLaneId}`)
-}
 
 const CustomCard = props => {
     return (
@@ -89,24 +79,36 @@ class BoardManager extends Component {
             // workOrder: [{ id: '', title: '', description: '', label: '' }]
             workOrder: [],
             lane: [],
+
+            matches: [],
+            workOrders: [],
             Position: '',
             Hotel: ''
         }
     }
 
-	/* const Cards = {
-         
-  
-     };*/
+
+    handleDragStart = (cardId, laneId) => {
+        console.log('drag started');
+        console.log(`cardId: ${cardId}`);
+        console.log(`laneId: ${laneId}`);
+    };
+
+    handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
+        console.log('drag ended')
+        console.log(`cardId: ${cardId}`)
+        console.log(`sourceLaneId: ${sourceLaneId}`)
+        console.log(`targetLaneId: ${targetLaneId}`)
+    }
+
+
 
     componentWillMount() {
         this.setState(
             {
                 loading: true
             }, () => {
-
                 this.getWorkOrders();
-
             });
     }
 
@@ -124,91 +126,66 @@ class BoardManager extends Component {
         console.dir(card)
     }
 
-    getWorkOrders = () => {
+    addCardLink = (cardId, metadata, laneId) => {
+
+        console.log("cardId ", cardId);
+        console.log("metadata ", metadata);
+
+        this.getMatches(true, true, true, laneId);
+    }
+
+
+    onCardClick = (cardId, metadata, laneId) => {
+
+        console.log("cardId ", cardId);
+        console.log("metadata ", metadata);
+
+        this.getMatches(true, true, true, laneId);
+    }
+
+    getMatches = async (language, experience, location, laneId) => {
+        let getmatches = [];
         let datas = [];
-        let matches = [];
 
-        this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
-            console.log("Esto es del lead ", data);
-            data.applications.forEach((wo) => {
-                //const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                //const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                //const Users = data.getcontacts.find((item) => { return item.Id == 10 });
-                console.log("entro en el data ", data);
-                console.log("este es el wo ", wo);
-                datas = {
-                    id: wo.id,
-                    name: wo.firstName + ' ' + wo.lastName,
-                    // dueOn: 'Q: ',
-                    //subTitle: wo.comment,
-                    subTitle: wo.cellPhone,
-                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                    escalationTextLeftMatch: wo.generalComment,
-                    //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
-                    escalationTextRightMatch: wo.car == true ? " Yes" : " No",
-                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                    //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
-                };
-                matches.push(datas);
+        if (laneId == "lane1") {
+
+            await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
+                data.applications.forEach((wo) => {
+
+                    datas = {
+                        id: wo.id,
+                        name: wo.firstName + ' ' + wo.lastName,
+                        subTitle: wo.cellPhone,
+                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                        escalationTextLeftMatch: wo.generalComment,
+                        escalationTextRightMatch: wo.car == true ? " Yes" : " No",
+                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                    };
+
+                    getmatches.push(datas);
+                });
+            }).catch(error => { })
+
+            this.setState({
+                matches: getmatches
             });
-        }).catch(error => { })
-
-        this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
-            console.log("Esto es del wodata ", data);
-
-            let workOrders = [];
-
-            data.workOrder.forEach((wo) => {
-                console.log("entramos en el foreach ");
-
-                const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                console.log("entramos en hotel ", Hotel);
-                const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                console.log("entramos en Shift ", Shift);
-
-                const Users = data.getusers.find((item) => { return item.Id == wo.userId });
-                console.log("entramos en Users ", Users);
-
-                const Contacts = data.getcontacts.find((item) => { return item.Id == Users.Id_Contact });
-                console.log("entramos en Contacts ", Contacts);
-
-                /*                console.log("este es el user ", Users.Id_Contact);
-                                console.log("entro en el data ", data);
-                                console.log("entro en el contacts ", Contacts);
-                */
-                datas = {
-                    id: wo.id,
-                    name: 'Title: ' + wo.position.Position,
-                    dueOn: 'Q: ' + wo.quantity,
-                    //subTitle: wo.comment,
-                    subTitle: 'ID: 000' + wo.id,
-                    body: Hotel.Name,
-                    //escalationTextLeft: Hotel.Name,
-                    escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
-                    escalationTextRight: Shift.Name + '-Shift',
-                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                    //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
-                };
-                workOrders.push(datas);
-            });
-            console.log("datos workOrders ", workOrders);
-            console.log("datos matches ", matches);
 
             this.setState(
                 {
-                    workOrder: workOrders,
+                    workOrder: this.state.workOrders,
                     lane: [
                         {
                             id: 'lane1',
                             title: 'Work Orders',
                             label: ' ',
-                            cards: workOrders
+                            cards: this.state.workOrders,
+                            laneStyle: { borderRadius: 10, marginBottom: 15 }
                         },
                         {
                             id: 'lane2',
                             title: 'Matches',
                             label: ' ',
-                            cards: matches
+                            cards: this.state.matches
                         },
                         {
                             id: 'lane3',
@@ -231,42 +208,105 @@ class BoardManager extends Component {
                     ],
                     loading: false
                 });
+        }
+    };
+
+    getWorkOrders = async () => {
+        let getworkOrders = [];
+        let datas = [];
+
+        await this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
+            data.workOrder.forEach((wo) => {
+                const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
+                const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
+                const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
+
+                datas = {
+                    id: wo.id,
+                    name: 'Title: ' + wo.position.Position,
+                    dueOn: 'Q: ' + wo.quantity,
+                    subTitle: 'ID: 000' + wo.id,
+                    body: Hotel != null ? Hotel.Name : '',
+                    escalationTextLeft: Contacts != null ? Contacts.First_Name + ' ' + Contacts.Last_Name : '',
+                    escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                };
+                getworkOrders.push(datas);
+            });
+
+            this.setState({
+                workOrders: getworkOrders
+            });
+
+
         }).catch(error => { })
+
+        this.setState(
+            {
+                workOrder: this.state.workOrders,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Work Orders',
+                        label: ' ',
+                        cards: this.state.workOrders,
+                        laneStyle: { borderRadius: 10, marginBottom: 15 }
+                    },
+                    {
+                        id: 'lane2',
+                        title: 'Matches',
+                        label: ' ',
+                        cards: this.state.matches
+                    },
+                    {
+                        id: 'lane3',
+                        title: 'Notify',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'lane4',
+                        title: 'Accepted',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'lane5',
+                        title: 'Add to Schedule',
+                        label: ' ',
+                        cards: []
+                    }
+                ],
+                loading: false
+            });
     };
 
     render() {
         return (
             <div className="App">
                 <div className="App-header">
-
                 </div>
                 <div className="App-intro">
                     <Board
-                        //editable
-                        onCardAdd={this.handleCardAdd}
                         data={{ lanes: this.state.lane }}
-                        draggable
+                        draggable={true}
+                        laneDraggable={false}
                         onDataChange={this.shouldReceiveNewData}
                         eventBusHandle={this.setEventBus}
-                        handleDragStart={handleDragStart}
-                        handleDragEnd={handleDragEnd}
-                        //onCardClick={() => alert("ola")}
-                        //onCardAdd={() => alert("NadaS")}
+                        handleDragStart={this.handleDragStart}
+                        handleDragEnd={this.handleDragEnd}
+                        onCardClick={this.onCardClick}
                         style={{
                             backgroundColor: '#f5f7f9'
                         }}
                         customCardLayout>
                         <CustomCard />
+
                     </Board>
                 </div>
             </div>
         )
-        /* return <
-             Board data={
-                 { lanes: this.state.lane }
-             }
-     
-         />*/
     }
 }
 

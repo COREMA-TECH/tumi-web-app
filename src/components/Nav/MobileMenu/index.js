@@ -36,12 +36,13 @@ const MobileMenu = (props) => {
 						<span>Contracts</span>
 					</Link>
 				</li>
-				<li className="MainMenu-option">
+				{/* <li className="MainMenu-option">
 					<Link to={`/home/Recruiter`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
 						<i className={'fas fa-clipboard MenuMobile-icon'} title={'Recruiter'} />
 						<span>Recruiter</span>
 					</Link>
-				</li>
+				</li>*/}
+
 				<li className="MainMenu-option">
 					<Link
 						to={`/home/application`}
@@ -49,7 +50,7 @@ const MobileMenu = (props) => {
 						onClick={handleItemMenuAction}
 						data-submenu="1"
 					>
-						<i className="fas fa-file-signature MenuMobile-icon" title={'Operation Manager'} />
+						<i className="fas fa-user-cog MenuMobile-icon" title={'Operation Manager'} />
 						<span>Operation Manager</span>
 					</Link>
 					<ul className="SubMenu" id="1">
@@ -82,7 +83,7 @@ const MobileMenu = (props) => {
 						onClick={handleItemMenuAction}
 						data-submenu="1"
 					>
-						<i className="fas fa-file-signature MenuMobile-icon" title={'Hotel Manager'} />
+						<i className="fas fa-chalkboard-teacher MenuMobile-icon" title={'Hotel Manager'} />
 						<span>Hotel Manager</span>
 					</Link>
 					<ul className="SubMenu" id="1">
@@ -105,7 +106,7 @@ const MobileMenu = (props) => {
 						onClick={handleItemMenuAction}
 						data-submenu="1"
 					>
-						<i className="fas fa-file-signature MenuMobile-icon" title={'Recruiter'} />
+						<i className="far fa-address-card MenuMobile-icon" title={'Recruiter'} />
 						<span>Recruiter</span>
 					</Link>
 					<ul className="SubMenu" id="1">
@@ -117,6 +118,11 @@ const MobileMenu = (props) => {
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/home/board/recruiter">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Board
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/Recruiter">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> New Lead
 							</a>
 						</li>
 					</ul>

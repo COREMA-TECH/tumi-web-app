@@ -104,6 +104,7 @@ class BoardRecruiter extends Component {
         }
 
     }
+
     componentWillMount() {
         this.setState(
             {
