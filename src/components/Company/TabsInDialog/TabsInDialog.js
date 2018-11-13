@@ -95,7 +95,6 @@ class CustomizedTabs extends Component {
 	};
 
 	componentWillMount() {
-		console.log("este es el props desde tabs", this.props);
 		if (this.props.idProperty) {
 			this.setState({
 				idProperty: this.props.idProperty,

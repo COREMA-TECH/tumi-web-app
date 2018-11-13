@@ -8434,15 +8434,33 @@ label:not(.custom-file-label):not(.form-check-label) {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 1rem; }
+  padding: 1rem;
+  position: relative; }
+  .HotelCard-controls {
+    position: absolute;
+    top: 0;
+    right: 0; }
+    .HotelCard-controls .btn {
+      color: #FFF;
+      padding-left: 5px;
+      padding-right: 5px; }
   .HotelCard-img {
     border-radius: 50px;
     height: 50px;
-    overflow: hidden;
     margin-right: .5rem;
+    overflow: hidden;
+    position: relative;
     width: 50px; }
     .HotelCard-img img {
-      height: 100%;
+      height: 75px;
+      position: absolute;
+      top: 50%;
+      /* position the top  edge of the element at the middle of the parent */
+      left: 50%;
+      /* position the left edge of the element at the middle of the parent */
+      -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
       width: auto; }
   .HotelCard-title {
     color: #FFF;

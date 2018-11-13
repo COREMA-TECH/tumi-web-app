@@ -14,14 +14,14 @@ class HotelDialog extends Component {
     constructor() {
         super();
         this.state = {
-            open: false
+            open: false,
+            idProperty: null,
+            idManagement: 99999
         }
     }
 
     UNSAFE_componentWillMount() {
-        this.setState({
-            open: this.props.open
-        });
+
     }
 
     render() {
@@ -45,8 +45,9 @@ class HotelDialog extends Component {
                     </AppBar>
                     <DialogContent>
                         <TabsInDialog
-                            idCompany={9999}
-                            Markup={0}
+                            idCompany={99999}
+                            Markup={this.props.Markup}
+                            idProperty={this.props.idProperty}
                             handleClose={this.handleClose}
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
                         />
