@@ -100,12 +100,12 @@ class Toolbar extends Component {
 										});
 									}}
 									>
-										<i class="fas fa-home" />
+										<i class="fas fa-warehouse" />
 										<small>Add Management</small>
 										<span class="app-shortcuts__helper bg-gd-primary" />
 									</a>
 									<a class="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
-										<i class="fas fa-home" />
+										<i class="fas fa-building" />
 										<small>Add Hotel</small>
 										<span class="app-shortcuts__helper bg-gd-primary" />
 									</a>

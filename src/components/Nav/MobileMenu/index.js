@@ -26,13 +26,13 @@ const MobileMenu = (props) => {
 				</li>
 				<li className="MainMenu-option">
 					<Link to={`/home/Company`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'fas fa-home MenuMobile-icon'} title={'Companies'} />
-						<span>Companies</span>
+						<i className={'fas fa-warehouse MenuMobile-icon'} title={'Companies'} />
+						<span>Management</span>
 					</Link>
 				</li>
 				<li className="MainMenu-option">
 					<Link to={`/home/Hotels`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'fas fa-home MenuMobile-icon'} title={'Hotels'} />
+						<i className={'fas fa-building MenuMobile-icon'} title={'Hotels'} />
 						<span>Hotels</span>
 					</Link>
 				</li>
