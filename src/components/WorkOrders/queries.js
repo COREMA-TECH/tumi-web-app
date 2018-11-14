@@ -40,6 +40,16 @@ export const GET_POSITION_BY_QUERY = gql`
 	}
 `;
 
+export const GET_CONTACT_BY_QUERY = gql`
+	query getcontacts($id: Int) {
+		getcontacts(Id: null, IsActive: 1, Id_Entity: $id) {
+			Id
+			First_Name
+			Last_Name
+		}
+	}
+`;
+
 export const GET_RECRUITER = gql`
     query getUsers {
 		getusers(Id: null,IsActive: 1 ,IsRecruiter:1) {
