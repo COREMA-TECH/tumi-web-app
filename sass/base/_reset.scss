@@ -12,3 +12,7 @@ body {
 input[type="date"]::-webkit-inner-spin-button{
     display: none;
 }
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
