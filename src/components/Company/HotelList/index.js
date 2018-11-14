@@ -17,7 +17,8 @@ class HotelList extends Component {
             loadingRemoving: false,
             Markup: 0,
             idProperty: null,
-            idCompany: null
+            idCompany: null,
+            searchbox: ''
         }
     }
 
@@ -128,11 +129,40 @@ class HotelList extends Component {
         });
     };
 
+    handleChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        let hotelFind = [];
+
+        if (value != "") {
+            this.state.hotels.forEach(hotel => {
+                if (hotel.Name.includes(value)) {
+                    hotelFind.push(hotel);
+                }
+            });
+            this.setState({
+                hotels: hotelFind
+            });
+        } else {
+            this.getHotels();
+        }
+    };
+
     render() {
         return (
             <div className="container-fluid">
                 <ul className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
+                        <div class="input-group">
+                            <input onChange={this.handleChange} type="text" name="searchbox" className="form-control" placeholder="Search" />
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fas fa-search"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
                         <div className="float-right">
                             <button className="btn btn-success" onClick={this.handleClickOpen}>
                                 Add Hotel
