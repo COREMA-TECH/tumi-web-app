@@ -40,8 +40,8 @@ export const GET_MATCH = gql`
 `;
 
 export const GET_WORK_ORDERS = gql`
-    query workorder {
-        workOrder(status:1){
+    query workorder ($IdEntity: Int, $status: Int)  {
+        workOrder(IdEntity:$IdEntity, status:$status){
             id
             IdEntity
             userId
@@ -76,11 +76,35 @@ export const GET_WORK_ORDERS = gql`
 
 export const GET_HOTEL_QUERY = gql`
 	query hotels($id: Int) {
-		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: null) {
+		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent : -1) {
 			Id
 			Name
+			Country
+			State
+			City
 		}
 	}
+`;
+
+export const GET_STATES_QUERY = gql`
+query States($id: Int,$parent: Int!) {
+	getcatalogitem(Id: $id, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+		Id
+		Name
+		IsActive
+	}
+}
+`;
+
+
+export const GET_CITIES_QUERY = gql`
+query Cities($id: Int) {
+	getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 5) {
+		Id
+		Name
+		IsActive
+	}
+}
 `;
 
 export const GET_COMPANY_QUERY = gql`

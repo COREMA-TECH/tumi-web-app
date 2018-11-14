@@ -5,7 +5,7 @@ import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
 //import { GET_WORK_ORDERS } from "./Mutations";
-import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_WORK_ORDERS, GET_MATCH } from "./Queries";
+import { GET_STATES_QUERY, GET_CITIES_QUERY, GET_WORK_ORDERS, GET_MATCH, GET_HOTEL_QUERY } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 //import Board from 'react-trello'
@@ -83,7 +83,21 @@ class BoardManager extends Component {
             matches: [],
             workOrders: [],
             Position: '',
-            Hotel: ''
+            Hotel: '',
+            states: [],
+            cities: [],
+            hotels: [],
+            country: 6,
+            hotel: 0,
+            state: 0,
+            city: 0,
+            region: 0,
+            status: 1,
+            loadingCountries: false,
+            loadingCities: false,
+            loadingStates: false,
+            loadingRegions: false,
+            loadingCompanyProperties: false
         }
     }
 
@@ -108,9 +122,124 @@ class BoardManager extends Component {
             {
                 loading: true
             }, () => {
+                this.loadhotel();
                 this.getWorkOrders();
+                // this.loadStates();
+                //this.loadCities();
             });
     }
+
+    loadhotel = () => {
+        this.props.client
+            .query({
+                query: GET_HOTEL_QUERY
+            })
+            .then(({ data }) => {
+                this.setState({
+                    hotels: data.getbusinesscompanies
+                });
+            })
+            .catch();
+    }
+
+    loadStates = () => {
+        this.props.client
+            .query({
+                query: GET_STATES_QUERY,
+                variables: {
+                    id: this.state.state,
+                    parent: this.state.country
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    states: data.getcatalogitem
+                });
+            })
+            .catch();
+    };
+
+    loadCities = () => {
+        this.props.client
+            .query({
+                query: GET_CITIES_QUERY,
+                variables: {
+                    id: this.state.city,
+                    parent: this.state.state
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    cities: data.getcatalogitem
+                });
+            })
+            .catch();
+    };
+
+    updateHotel = (id) => {
+
+        if (id != 0) {
+            this.setState(
+                {
+                    hotel: id,
+                    state: this.state.hotels.find((item) => { return item.Id == id }).State,
+                    city: this.state.hotels.find((item) => { return item.Id == id }).City,
+                    matches: []
+                },
+                () => {
+                    // this.validateField('state', id);
+                    this.loadStates();
+                    this.loadCities();
+                    this.getWorkOrders();
+                    this.getMatches();
+                }
+            );
+
+        } else {
+            this.setState(
+                {
+                    hotel: 0,
+                    state: 0,
+                    city: 0,
+                    matches: []
+                },
+                () => {
+                    // this.validateField('state', id);
+                    this.getWorkOrders();
+                    this.loadStates();
+                    this.loadCities();
+                    this.getMatches();
+                }
+            );
+
+        }
+
+    };
+
+    updateStatus = (id) => {
+        this.setState(
+            {
+                state: id
+            },
+            () => {
+                this.getWorkOrders();
+            }
+        );
+    };
+
+    /* updateCity = (id) => {
+         this.setState(
+             {
+                 city: id
+             },
+             () => {
+                 // this.validateField('city', id);
+             }
+         );
+     };*/
+
 
     validateInvalidInput = () => {
         console.log("estoy en accion");
@@ -139,17 +268,21 @@ class BoardManager extends Component {
 
         console.log("cardId ", cardId);
         console.log("metadata ", metadata);
+        console.log(this.state.workOrders);
+        console.log(this.state.workOrders.find((item) => { return item.id == cardId }));
+        //        console.log(this.state.workOrders.find((item) => { return item.Id == cardId }).needExperience);
 
-        this.getMatches(true, true, true, laneId);
+        this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, true, laneId);
     }
 
     getMatches = async (language, experience, location, laneId) => {
+        console.log("Son os parametros ", language, experience);
         let getmatches = [];
         let datas = [];
 
         if (laneId == "lane1") {
 
-            await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
+            await this.props.client.query({ query: GET_MATCH, variables: { idLanguage: language ? 194 : null } }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
                     datas = {
@@ -214,33 +347,63 @@ class BoardManager extends Component {
     getWorkOrders = async () => {
         let getworkOrders = [];
         let datas = [];
+        console.log("Este es el hotel ", this.state.hotel);
 
-        await this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
-            data.workOrder.forEach((wo) => {
-                const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                const Users = data.getusers.find((item) => { return item.Id == wo.userId });
-                const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
+        if (this.state.hotel == 0) {
+            await this.props.client.query({ query: GET_WORK_ORDERS, variables: { status: this.state.status } }).then(({ data }) => {
+                data.workOrder.forEach((wo) => {
 
-                datas = {
-                    id: wo.id,
-                    name: 'Title: ' + wo.position.Position,
-                    dueOn: 'Q: ' + wo.quantity,
-                    subTitle: 'ID: 000' + wo.id,
-                    body: Hotel != null ? Hotel.Name : '',
-                    escalationTextLeft: Contacts != null ? Contacts.First_Name + ' ' + Contacts.Last_Name : '',
-                    escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                };
-                getworkOrders.push(datas);
-            });
+                    const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
+                    const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
+                    const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                    const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
-            this.setState({
-                workOrders: getworkOrders
-            });
+                    datas = {
+                        id: wo.id,
+                        name: 'Title: ' + wo.position.Position,
+                        dueOn: 'Q: ' + wo.quantity,
+                        subTitle: 'ID: 000' + wo.id,
+                        body: Hotel != null ? Hotel.Name : '',
+                        escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                        cardStyle: { borderRadius: 6, marginBottom: 15 },
+                        needExperience: wo.needExperience,
+                        needEnglish: wo.needEnglish
+                    };
+                    getworkOrders.push(datas);
+                });
+                console.log("este es el work ", getworkOrders)
+                this.setState({
+                    workOrders: getworkOrders
+                });
+            }).catch(error => { })
+        } else {
+            await this.props.client.query({ query: GET_WORK_ORDERS, variables: { IdEntity: this.state.hotel, status: this.state.status } }).then(({ data }) => {
+                data.workOrder.forEach((wo) => {
 
+                    const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
+                    const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
+                    const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                    const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
-        }).catch(error => { })
+                    datas = {
+                        id: wo.id,
+                        name: 'Title: ' + wo.position.Position,
+                        dueOn: 'Q: ' + wo.quantity,
+                        subTitle: 'ID: 000' + wo.id,
+                        body: Hotel != null ? Hotel.Name : '',
+                        escalationTextLeft: Contacts != null ? Contacts.First_Name + ' ' + Contacts.Last_Name : '',
+                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                    };
+                    getworkOrders.push(datas);
+                });
+                this.setState({
+                    workOrders: getworkOrders
+                });
+            }).catch(error => { })
+        }
+
 
         this.setState(
             {
@@ -286,6 +449,89 @@ class BoardManager extends Component {
         return (
             <div className="App">
                 <div className="App-header">
+
+                    <div className="col-md-12 col-lg-8">
+                        <div class="card">
+                            <div class="card-header info">
+
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <select
+                                            required
+                                            name="IdEntity"
+                                            className="form-control"
+                                            id=""
+                                            onChange={(event) => {
+                                                this.updateHotel(event.target.value);
+                                            }}
+                                            value={this.state.IdEntity}
+                                            //disabled={!isAdmin}
+                                            onBlur={this.handleValidate}
+                                        >
+                                            <option value={0}>Select a Hotel</option>
+                                            {this.state.hotels.map((hotel) => (
+                                                <option value={hotel.Id} label={hotel.State}>{hotel.Name}</option>
+
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <select
+                                            name="state"
+                                            className={'form-control'}
+                                            /* onChange={(event) => {
+                                                 this.updateState(event.target.value);
+                                             }}*/
+                                            value={this.state.state}
+                                            showNone={false}
+                                        >
+                                            <option value="">Select a state</option>
+                                            {this.state.states.map((item) => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <select
+                                            name="city"
+                                            className={'form-control'}
+                                            // disabled={this.state.loadingCities}
+                                            /* onChange={(event) => {
+                                                 this.updateCity(event.target.value);
+                                             }}*/
+                                            //error={!this.state.cityValid}
+                                            value={this.state.city}
+                                            showNone={false}
+                                        >
+                                            <option value="">Select a city</option>
+                                            {this.state.cities.map((item) => (
+                                                <option value={item.Id}>{item.Name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <select
+                                            name="city"
+                                            className={'form-control'}
+                                            // disabled={this.state.loadingCities}
+                                            onChange={(event) => {
+                                                this.updateStatus(event.target.value);
+                                            }}
+                                            //error={!this.state.cityValid}
+                                            value={this.state.city}
+                                            showNone={false}
+                                        >
+
+                                            <option value={0}>Work Order Active</option>
+                                            <option value={1}>Work Order Close</option>
+                                            <option value={2}>All Work Order</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div className="App-intro">
                     <Board
@@ -305,7 +551,7 @@ class BoardManager extends Component {
 
                     </Board>
                 </div>
-            </div>
+            </div >
         )
     }
 }
