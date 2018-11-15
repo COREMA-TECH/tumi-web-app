@@ -279,12 +279,31 @@ class BoardManager extends Component {
         console.log("Son os parametros ", language, experience);
         let getmatches = [];
         let datas = [];
+        let SpeakEnglish;
+        let Employment;
 
         if (laneId == "lane1") {
 
-            await this.props.client.query({ query: GET_MATCH, variables: { idLanguage: language ? 194 : null } }).then(({ data }) => {
+
+            await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
+                    //  console.log("Estoy en matches  ", wo.employments.length);
+                    //console.log("Estoy en matches data ", data);
+                    if (language) {
+                        SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
+                    } else {
+                        SpeakEnglish = 1;
+                    }
+
+                    if (experience) {
+                        Employment = wo.employments.length;
+                    } else {
+                        Employment = 1;
+                    }
+
+
+                    console.log("Estoy en matches  ", SpeakEnglish);
                     datas = {
                         id: wo.id,
                         name: wo.firstName + ' ' + wo.lastName,
@@ -295,10 +314,15 @@ class BoardManager extends Component {
                         cardStyle: { borderRadius: 6, marginBottom: 15 }
                     };
 
-                    getmatches.push(datas);
+                    if (SpeakEnglish == 1 && Employment == 1) {
+                        //console.log("este es el speak", datas.SpeakEnglish);
+                        getmatches.push(datas);
+                    }
+
                 });
             }).catch(error => { })
 
+            // console.log("Array de matches ", getmatches);
             this.setState({
                 matches: getmatches
             });
