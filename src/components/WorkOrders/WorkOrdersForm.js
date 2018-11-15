@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER } from './queries';
+import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -31,6 +31,7 @@ class WorkOrdersForm extends Component {
         position: 0,
         PositionRateId: null,
         RecruiterId: null,
+        contactId: null,
         userId: localStorage.getItem('LoginId'),
         ShiftsData: ShiftsData,
         saving: false,
@@ -45,6 +46,7 @@ class WorkOrdersForm extends Component {
             hotels: [],
             positions: [],
             recruiters: [],
+            contacts: [],
             ...this._states
         };
     }
@@ -72,6 +74,7 @@ class WorkOrdersForm extends Component {
                 },
                 () => {
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
+                    this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
 
                     this.ReceiveStatus = true;
@@ -190,7 +193,8 @@ class WorkOrdersForm extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         PositionRateId: this.state.PositionRateId,
-                        userId: this.state.userId
+                        userId: this.state.userId,
+                        contactId: this.state.contactId
                     }
                 }
             })
@@ -205,11 +209,26 @@ class WorkOrdersForm extends Component {
             });
     };
 
+    getContacts = (id) => {
+        this.props.client
+            .query({
+                query: GET_CONTACT_BY_QUERY,
+                variables: { id: id }
+            })
+            .then(({ data }) => {
+                this.setState({
+                    contacts: data.getcontacts
+                });
+            })
+            .catch();
+    };
+
     handleChangeState = (event) => {
         event.preventDefault();
         if (
             this.state.IdEntity == 0 ||
             this.state.PositionRateId == 0 ||
+            this.state.contactId == 0 ||
             this.state.quantity == '' ||
             this.state.quantity == 0 ||
             this.state.date == '' ||
@@ -236,6 +255,7 @@ class WorkOrdersForm extends Component {
 
         if (name === 'IdEntity') {
             this.getPositions(value);
+            this.getContacts(value);
         }
     };
 
@@ -296,7 +316,7 @@ class WorkOrdersForm extends Component {
 
         return (
 
-            < div >
+            <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
@@ -330,17 +350,17 @@ class WorkOrdersForm extends Component {
                                             <label htmlFor="">Requested by</label>
                                             <select
                                                 required
-                                                name="IdEntity"
+                                                name="IdContact"
                                                 className="form-control"
                                                 id=""
                                                 onChange={this.handleChange}
-                                                value={this.state.IdEntity}
+                                                value={this.state.contactId}
                                                 disabled={!isAdmin}
                                                 onBlur={this.handleValidate}
                                             >
-                                                <option value={0}>Select a Hotel</option>
-                                                {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                                <option value={0}>Select a Contact</option>
+                                                {this.state.contacts.map((contact) => (
+                                                    <option value={contact.Id}>{contact.First_Name + contact.Last_Name}</option>
                                                 ))}
                                             </select>
                                         </div>

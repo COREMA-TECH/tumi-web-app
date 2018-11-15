@@ -7506,6 +7506,9 @@ body {
 input[type="date"]::-webkit-inner-spin-button {
   display: none; }
 
+input[type=number] {
+  -moz-appearance: textfield; }
+
 label:not(.custom-file-label):not(.form-check-label) {
   margin-bottom: 0 !important;
   margin-top: 0.5rem; }
