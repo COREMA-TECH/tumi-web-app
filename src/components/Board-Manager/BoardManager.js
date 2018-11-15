@@ -17,6 +17,8 @@ import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNoth
 //import { withInfo } from '@storybook/addon-info'
 //import { storiesOf } from '@storybook/react'
 
+import Filters from './Filters';
+
 
 const CustomCard = props => {
     return (
@@ -97,7 +99,8 @@ class BoardManager extends Component {
             loadingCities: false,
             loadingStates: false,
             loadingRegions: false,
-            loadingCompanyProperties: false
+            loadingCompanyProperties: false,
+            openModal: false
         }
     }
 
@@ -445,6 +448,11 @@ class BoardManager extends Component {
             });
     };
 
+    handleCloseModal = (event) => {
+        event.preventDefault();
+        this.setState({ openModal: false });
+    };
+
     render() {
         return (
             <div className="App">
@@ -551,6 +559,7 @@ class BoardManager extends Component {
 
                     </Board>
                 </div>
+                <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
             </div >
         )
     }

@@ -315,7 +315,7 @@ class WorkOrdersForm extends Component {
 
         return (
 
-            < div >
+            <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
