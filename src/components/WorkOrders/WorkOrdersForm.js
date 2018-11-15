@@ -8,7 +8,8 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
-import ShiftsData from '../../data/shitfs.json';
+import ShiftsData from '../../data/shitfsWorkOrder.json';
+//import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
 import { bool } from 'prop-types';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
@@ -471,7 +472,7 @@ class WorkOrdersForm extends Component {
                                 <div className="col-md-5 col-5">
                                     <div className="row">
                                         <div className="col-md-5">
-                                            <label>Need Experience?</label>
+                                            <label>Needs Experience?</label>
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
@@ -489,7 +490,7 @@ class WorkOrdersForm extends Component {
                                             </div>
                                         </div>
                                         <div className="col-md-7">
-                                            <label>Need to Speak English?</label>
+                                            <label>Needs to Speak English?</label>
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
@@ -508,7 +509,7 @@ class WorkOrdersForm extends Component {
                                         </div>
 
                                         <div className="col-md-12">
-                                            <label htmlFor="">Comment</label>
+                                            <label htmlFor="">Comments</label>
                                             <textarea
                                                 onChange={this.handleChange}
                                                 name="comment"

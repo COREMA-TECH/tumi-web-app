@@ -18,25 +18,34 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-	query getlead {
-		applications(isActive: true , isLead: false) {
-			id
-		firstName
-		lastName
-		cellPhone
-		homePhone
-		car
-		city
-		cityInfo{
-			DisplayLabel
-		  }
-		state	
-		stateInfo{
-			DisplayLabel
-		  }
-		  generalComment
-		}
+query getlead {
+	applications(isActive: true , isLead: false) {
+		id
+	firstName
+	lastName
+	cellPhone
+	homePhone
+	car
+	city
+	cityInfo{
+		DisplayLabel
+	  }
+	state	
+	stateInfo{
+		DisplayLabel
+	  }
+	  generalComment
+ languages
+{
+language
+}
+employments
+{
+  id
+}
 	}
+
+}
 `;
 
 export const GET_WORK_ORDERS = gql`

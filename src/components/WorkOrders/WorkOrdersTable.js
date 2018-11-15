@@ -189,8 +189,8 @@ class WorkOrdersTable extends Component {
                                 <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Need Experience?</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Need to Speak English?</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}></CustomTableCell>
                             </TableRow>
                         </TableHead>
