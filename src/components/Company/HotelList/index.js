@@ -112,6 +112,10 @@ class HotelList extends Component {
         });
     };
 
+    handleCloseAlertDialog = () => {
+        this.setState({ openAlert: false, deleteId: null });
+    };
+
     handleClose = () => {
         this.setState({ open: false });
     };
@@ -173,30 +177,32 @@ class HotelList extends Component {
                         <span class="badge badge-danger mr-1">Not Assigned</span>
                         <span class="badge badge-success">Assigned</span>
                     </div>
+                    <AlertDialogSlide
+                        handleClose={this.handleCloseAlertDialog}
+                        handleConfirm={this.handleConfirmAlertDialog}
+                        open={this.state.openAlert}
+                        loadingConfirm={this.state.loadingRemoving}
+                        content="Do you really want to continue whit this operation?"
+                    />
                     {this.state.hotels.map((hotel) => (
                         <li className="col-md-2">
-                            <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard bg-gd-danger" : "HotelCard"}>
-                                <div href="" className="HotelCard-controls">
-                                    <AlertDialogSlide
-                                        handleClose={this.handleCloseAlertDialog}
-                                        handleConfirm={this.handleConfirmAlertDialog}
-                                        open={this.state.openAlert}
-                                        loadingConfirm={this.state.loadingRemoving}
-                                        content="Do you really want to continue whit this operation?"
-                                    />
+                            <div className="HotelCard-wrapper">
+                                <div className="HotelCard-controls">
                                     <button className="btn btn-link" onClick={(e) => { this.handleAlertOpen(hotel.Id) }}>
                                         <i className="fas fa-trash"></i>
                                     </button>
                                 </div>
-                                <div className="HotelCard-img">
-                                    <figure>
-                                        <img src="http://beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg" alt="" />
-                                    </figure>
-                                </div>
-                                <div className="HotelCard-info">
-                                    <span className="HotelCard-title">{hotel.Name}</span>
-                                </div>
-                            </a>
+                                <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item bg-gd-danger" : "HotelCard-item"}>
+                                    <div className="HotelCard-img">
+                                        <figure>
+                                            <img src="http://beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg" alt="" />
+                                        </figure>
+                                    </div>
+                                    <div className="HotelCard-info">
+                                        <span className="HotelCard-title">{hotel.Name}</span>
+                                    </div>
+                                </a>
+                            </div>
                         </li>
                     ))}
                 </ul>

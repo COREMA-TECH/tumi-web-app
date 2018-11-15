@@ -48,7 +48,7 @@ class HotelDialog extends Component {
                             idCompany={this.props.idCompany}
                             Markup={this.props.Markup}
                             idProperty={this.props.idProperty}
-                            handleClose={this.handleClose}
+                            handleClose={this.props.handleClose}
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
                         />
                     </DialogContent>

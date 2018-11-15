@@ -1,11 +1,12 @@
 .HotelCard {
-    background: linear-gradient(to left, $brand-primary, $brand-secondary);
-    border-radius: $border-radius-standar;
-    display: flex;
-    align-items: center;
-    margin-top: 1rem;
-    padding: 1rem;
-    position: relative;
+    &-item {
+        background: linear-gradient(to left, $brand-primary, $brand-secondary);
+        border-radius: $border-radius-standar;
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 1rem;
+    }
     &-controls {
         position: absolute;
         top: 0;
@@ -35,5 +36,8 @@
     &-title {
         color: $white;
         font-weight: 700;
+    }
+    &-wrapper {
+        position: relative;
     }
 }
