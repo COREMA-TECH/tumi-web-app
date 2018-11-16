@@ -185,13 +185,13 @@ class WorkOrdersTable extends Component {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <CustomTableCell className={"Table-head text-center"}></CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}></CustomTableCell>
+                                <CustomTableCell className={"Table-head text-center"}>Assign to</CustomTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
