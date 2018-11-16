@@ -93,6 +93,7 @@ class WorkOrdersForm extends Component {
                 needEnglish: false,
                 comment: '',
                 PositionRateId: 0,
+                contactId: 0,
                 userId: localStorage.getItem('LoginId'),
                 isAdmin: Boolean(localStorage.getItem('IsAdmin'))
             });
@@ -160,6 +161,7 @@ class WorkOrdersForm extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         PositionRateId: this.state.PositionRateId,
+                        contactId: this.state.contactId,
                         userId: this.state.userId
                     }
                 }
@@ -350,7 +352,7 @@ class WorkOrdersForm extends Component {
                                             <label htmlFor="">Requested by</label>
                                             <select
                                                 required
-                                                name="IdContact"
+                                                name="contactId"
                                                 className="form-control"
                                                 id=""
                                                 onChange={this.handleChange}
