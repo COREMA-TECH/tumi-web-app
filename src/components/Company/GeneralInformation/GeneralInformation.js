@@ -102,8 +102,8 @@ class GeneralInformation extends Component {
 	`;
 
 	GET_STATES_QUERY = gql`
-		query States($parent: Int!) {
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+		query States($parent: Int!, $Value: String) {
+			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $Value) {
 				Id
 				Name
 				IsActive
@@ -762,9 +762,9 @@ class GeneralInformation extends Component {
 					this.loadCities(() => {
 						this.loadStates(() => {
 							this.loadRegions(() => {
-								this.loadCompanyProperties(() => {
-									this.setState({ indexView: 1, firstLoad: false });
-								});
+								//this.loadCompanyProperties(() => {
+								this.setState({ indexView: 1, firstLoad: false });
+								//});
 							});
 						});
 					});
@@ -960,12 +960,41 @@ class GeneralInformation extends Component {
 		this.setState(
 			{
 				[name]: text
-			},
-			() => {
+			}, () => {
 				this.validateField(name, text);
+				if (name == "zipCode") {
+					fetch('http://ziptasticapi.com/' + text).then((response) => {
+						return response.json()
+					}).then((cities) => {
+						if (!cities.error)
+							this.findByZipCode(cities.state, cities.city.toLowerCase());
+					});
+				}
 			}
 		);
 	};
+
+	findByZipCode = (zipCode = null, cityFinal = null) => {
+		if (!zipCode) {
+			return false;
+		}
+
+		this.props.client.query({
+			query: this.GET_STATES_QUERY,
+			variables: { parent: -1, Value: `'${zipCode}'` },
+			fetchPolicy: 'no-cache'
+		}).then((data) => {
+			this.updateState(data.data.getcatalogitem[0].Id);
+		}).then(() => {
+			this.loadCities(() => {
+				let citySelected = this.state.cities.filter(city => {
+					return city.Name.toLowerCase().includes(cityFinal);
+				});
+				this.updateCity(citySelected[0].Id);
+			});
+		});
+
+	}
 
 	validateAllFields(fun) {
 		let codeValid = this.state.Code.trim().length >= 2;
@@ -1430,7 +1459,7 @@ class GeneralInformation extends Component {
 											className={'form-control'}
 										/>
 									</div>
-									<div className="col-md-4">
+									<div className="col-md-5">
 										<label>* Countries</label>
 										<select
 											name="country"
@@ -1449,7 +1478,7 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-4">
+									<div className="col-md-5">
 										<label>* Region</label>
 										<select
 											name="region"
@@ -1469,7 +1498,21 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-4">
+									<div className="col-md-3 col-lg-2">
+										<label>* Zip Code</label>
+										<InputForm
+											value={this.state.zipCode}
+											change={(text) => {
+												this.updateInput(text, 'zipCode');
+											}}
+											error={!this.state.zipCodeValid}
+											maxLength="10"
+											min={0}
+											type="number"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-6">
 										<label>* State</label>
 										<select
 											name="state"
@@ -1489,7 +1532,7 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-4">
+									<div className="col-md-6">
 										<label>* City</label>
 										<select
 											name="city"
@@ -1509,20 +1552,7 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-3 col-lg-2">
-										<label>* Zip Code</label>
-										<InputForm
-											value={this.state.zipCode}
-											change={(text) => {
-												this.updateInput(text, 'zipCode');
-											}}
-											error={!this.state.zipCodeValid}
-											maxLength="10"
-											min={0}
-											type="number"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
+
 									<div className="col-md-5">
 										<label>* Phone Number</label>
 										<InputMask

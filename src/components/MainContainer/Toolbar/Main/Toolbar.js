@@ -140,7 +140,10 @@ class Toolbar extends Component {
 						</div>
 					</li>
 				</ul>
-				<HotelDialog open={this.state.open} handleClose={this.handleClose} handleOpenSnackbar={this.props.handleOpenSnackbar} />
+				<HotelDialog
+					open={this.state.open}
+					handleClose={this.handleClose}
+					handleOpenSnackbar={this.props.handleOpenSnackbar} />
 			</div>
 		);
 	}
