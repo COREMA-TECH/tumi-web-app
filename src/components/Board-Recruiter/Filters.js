@@ -29,9 +29,9 @@ class Filters extends Component {
     };
 
     CloseWin = () => {
-        sessionStorage.setItem('NewFilter', false);
-        sessionStorage.setItem('needExperience', false);
-        sessionStorage.setItem('needEnglish', false);
+        sessionStorage.setItem('NewFilterLead', false);
+        sessionStorage.setItem('needExperienceLead', false);
+        sessionStorage.setItem('needEnglishLead', false);
 
         this.props.handleCloseModal
     }
@@ -39,9 +39,9 @@ class Filters extends Component {
     NewFilters = () => {
         //sessionStorage.removeItem('WindowsFilter');
 
-        sessionStorage.setItem('NewFilter', true);
-        sessionStorage.setItem('needExperience', this.state.needExperience);
-        sessionStorage.setItem('needEnglish', this.state.needEnglish);
+        sessionStorage.setItem('NewFilterLead', true);
+        sessionStorage.setItem('needExperienceLead', this.state.needExperience);
+        sessionStorage.setItem('needEnglishLead', this.state.needEnglish);
 
 
         this.props.handleCloseModal
