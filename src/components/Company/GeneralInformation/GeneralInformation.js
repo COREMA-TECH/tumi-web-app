@@ -762,9 +762,9 @@ class GeneralInformation extends Component {
 					this.loadCities(() => {
 						this.loadStates(() => {
 							this.loadRegions(() => {
-								this.loadCompanyProperties(() => {
-									this.setState({ indexView: 1, firstLoad: false });
-								});
+								//this.loadCompanyProperties(() => {
+								this.setState({ indexView: 1, firstLoad: false });
+								//});
 							});
 						});
 					});
