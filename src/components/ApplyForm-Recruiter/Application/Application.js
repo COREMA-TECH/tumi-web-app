@@ -154,7 +154,8 @@ class Application extends Component {
 								convictedExplain: this.state.convictedExplain,
 								comment: this.state.comment,
 								generalComment: this.state.generalComment,
-								isLead: true
+								isLead: true,
+								idRecruiter: localStorage.getItem('LoginId')
 							}
 						}
 					})
@@ -218,7 +219,8 @@ class Application extends Component {
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
 								generalComment: this.state.generalComment,
-								isLead: true
+								isLead: true,
+								idRecruiter: localStorage.getItem('LoginId')
 							}
 						}
 					})
