@@ -227,7 +227,7 @@ class GeneralInfoProperty extends Component {
 								Phone_Number: `'${this.state.phoneNumber}'`,
 								Phone_Prefix: `'${this.state.phonePrefix}'`,
 								City: parseInt(this.state.city),
-								Id_Parent: parseInt(id),
+								Id_Parent: id ? parseInt(id) : 99999,
 								IsActive: parseInt(this.state.active),
 								User_Created: 1,
 								User_Updated: 1,
