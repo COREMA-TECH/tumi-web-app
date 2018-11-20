@@ -271,12 +271,10 @@ class BoardManager extends Component {
 
     onCardClick = (cardId, metadata, laneId) => {
         if (sessionStorage.getItem('NewFilter') === false) {
-            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, true, laneId);
+            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
         } else {
-            this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), true, laneId);
+            this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), sessionStorage.getItem('NewDistances'), laneId);
         }
-        //        alert("La session es " + sessionStorage.getItem('myData'))
-        //alert("La session es " + sessionStorage.getItem('NewFilter'))
 
     }
 
@@ -286,29 +284,19 @@ class BoardManager extends Component {
         let SpeakEnglish;
         let Employment;
 
-        console.log("este es el lenguaje ", language);
-        console.log("este es el experience ", experience);
-
-
         if (laneId == "lane1") {
-
-
             await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
                     if (language == 'true') {
-                        console.log("verifico lenguaje ");
                         SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
                     } else {
-                        console.log("No verifico lenguaje ");
                         SpeakEnglish = 1;
                     }
 
                     if (experience == 'true') {
-                        console.log("verifico experience ");
                         Employment = wo.employments.length;
                     } else {
-                        console.log("NO verifico experience ");
                         Employment = 1;
                     }
 

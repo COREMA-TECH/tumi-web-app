@@ -95,6 +95,17 @@ export const GET_HOTEL_QUERY = gql`
 	}
 `;
 
+export const GET_COORDENADAS = gql`
+		query coordenadas($Zipcode:String){
+			zipcode(Zipcode:$Zipcode){
+			  Zipcode
+			  Lat
+			  Long
+			}
+		  }
+	}
+`;
+
 export const GET_STATES_QUERY = gql`
 query States($id: Int,$parent: Int!) {
 	getcatalogitem(Id: $id, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
