@@ -28,6 +28,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Hotels from './hotels';
 
 
 const styles = (theme) => ({
@@ -271,11 +272,16 @@ class GeneralInformation extends Component {
 		);
 	};
 
+	handleOpenHotels = () => {
+		this.setState({
+			hotelModal: true
+		});
+	}
+
 	loadCompanyProperties = (func = () => { }) => {
-		this.setState(
-			{
-				loadingCompanyProperties: true
-			},
+		this.setState({
+			loadingCompanyProperties: true
+		},
 			() => {
 				this.props.client
 					.query({
@@ -870,7 +876,8 @@ class GeneralInformation extends Component {
 
 			loadingUpdate: false,
 			indexView: 0, //Loading
-			errorMessage: ''
+			errorMessage: '',
+			hotelModal: false
 		};
 	}
 
@@ -1714,6 +1721,9 @@ class GeneralInformation extends Component {
 									</TableBody>
 								</Table>
 								<div className="card-form-footer">
+									<button className="btn btn-success mr-1" onClick={this.handleOpenHotels}>
+										Add Hotel <i class="fas fa-plus" />
+									</button>
 									<button
 										className={
 											this.props.idCompany == 0 ? (
@@ -1732,6 +1742,8 @@ class GeneralInformation extends Component {
 						</div>
 					</div>
 				</div>
+
+				<Hotels ManagmentId={this.state.idCompany} open={this.state.hotelModal} />
 
 				<Dialog
 					open={this.state.open}
