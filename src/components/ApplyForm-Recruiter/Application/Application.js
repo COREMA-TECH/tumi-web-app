@@ -601,10 +601,18 @@ class Application extends Component {
 													//if (networkStatus === 4) return <LinearProgress />;
 													if (error) return <p>Error </p>;
 													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-														var citySelected = 0;
+														var citySelected = null;
 														citySelected = data.getcatalogitem.filter(city => {
 															return city.Name.toLowerCase().includes(this.state.cityFinal);
 														});
+														if (citySelected.length != 0) {
+															console.log(citySelected)
+															if ((citySelected[0].Id != this.state.city)) {
+																this.setState({
+																	city: citySelected[0].Id
+																});
+															}
+														}
 														return (
 															<select
 																name="city"
@@ -617,7 +625,7 @@ class Application extends Component {
 																		city: e.target.value
 																	});
 																}}
-																value={citySelected == 0 ? this.state.city : citySelected[0].Id}
+																value={this.state.city}
 															>
 																<option value="">Select a city</option>
 																{data.getcatalogitem.map((item) => (
