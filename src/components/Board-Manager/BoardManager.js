@@ -5,7 +5,7 @@ import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
 //import { GET_WORK_ORDERS } from "./Mutations";
-import { GET_STATES_QUERY, GET_CITIES_QUERY, GET_WORK_ORDERS, GET_MATCH, GET_HOTEL_QUERY } from "./Queries";
+import { GET_STATES_QUERY, GET_CITIES_QUERY, GET_WORK_ORDERS, GET_MATCH, GET_HOTEL_QUERY, GET_COORDENADAS } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 //import Board from 'react-trello'
@@ -72,6 +72,8 @@ const CustomCard = props => {
     )
 }
 
+//const { getDistance } = this.context
+
 class BoardManager extends Component {
     constructor(props) {
         super(props);
@@ -102,7 +104,14 @@ class BoardManager extends Component {
             loadingStates: false,
             loadingRegions: false,
             loadingCompanyProperties: false,
-            openModal: false
+            openModal: false,
+
+            latitud1: 0,
+            longitud1: 0,
+            latitud2: 0,
+            longitud2: 0,
+            distance: 0
+
         }
     }
 
@@ -270,6 +279,7 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
+        console.log("esto es mio ", this.state.workOrders)
         if (sessionStorage.getItem('NewFilter') === false) {
             this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
         } else {
@@ -300,7 +310,24 @@ class BoardManager extends Component {
                         Employment = 1;
                     }
 
-                    console.log("Estos son los data ", wo);
+                    //const { getDistance } = this.context;
+                    // const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
+                    //const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
+
+                    /*  this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: wo.zipCode } }).then(({ data }) => {
+                          data.applications.forEach((wo) => {
+                              this.setState({
+                                  latitud2: wo.Lat,
+                                  longitud2: wo.Long,
+                                  distance: getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'K')
+                              });
+                          });
+                      }).catch(error => { })*/
+
+
+
+                    // console.log("Estos son los data ", wo);
+                    console.log("estos son los datos de la coordenaas ", this.state.latitud2, " longitud ", this.state.longitud2)
                     datas = {
                         id: wo.id,
                         name: wo.firstName + ' ' + wo.lastName,
@@ -378,6 +405,16 @@ class BoardManager extends Component {
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
+                    this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: Hotel.Zipcode } }).then(({ data }) => {
+                        data.applications.forEach((wo) => {
+                            this.setState({
+                                latitud1: wo.Lat,
+                                longitud1: wo.Long,
+                                // distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'K')
+                            });
+                        });
+                    }).catch(error => { })
+
                     datas = {
                         id: wo.id,
                         name: 'Title: ' + wo.position.Position,
@@ -388,7 +425,9 @@ class BoardManager extends Component {
                         escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
                         cardStyle: { borderRadius: 6, marginBottom: 15 },
                         needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish
+                        needEnglish: wo.needEnglish,
+                        latitud1: this.state.latitud1,
+                        longitud1: this.state.longitud1
                     };
                     getworkOrders.push(datas);
                 });

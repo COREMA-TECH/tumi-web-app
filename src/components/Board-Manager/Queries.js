@@ -69,7 +69,8 @@ export const GET_WORK_ORDERS = gql`
     }
         getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
             Id
-            Name
+			Name
+			Zipcode
         }
         getusers(Id: null,IsActive: 1) {
             Id
@@ -103,7 +104,7 @@ export const GET_COORDENADAS = gql`
 			  Long
 			}
 		  }
-	}
+	
 `;
 
 export const GET_STATES_QUERY = gql`
