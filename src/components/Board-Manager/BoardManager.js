@@ -483,6 +483,13 @@ class BoardManager extends Component {
     };
 
     render() {
+        const { getDistance } = this.context;
+        const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
+        const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
+
+
+        console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
+
         return (
             <div className="App">
                 <div className="App-header">
@@ -599,6 +606,9 @@ class BoardManager extends Component {
             </div >
         )
     }
+    static contextTypes = {
+        getDistance: PropTypes.func,
+    };
 }
 
 export default withApollo(withGlobalContent(BoardManager));

@@ -57,6 +57,29 @@ const loginClient = new ApolloClient({
 	cache: new InMemoryCache()
 });
 
+const getDistance = (lat1, lon1, lat2, lon2, unit) => {
+
+	if ((lat1 == lat2) && (lon1 == lon2)) {
+		return 0;
+	}
+	else {
+		var radlat1 = Math.PI * lat1 / 180;
+		var radlat2 = Math.PI * lat2 / 180;
+		var theta = lon1 - lon2;
+		var radtheta = Math.PI * theta / 180;
+		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+		if (dist > 1) {
+			dist = 1;
+		}
+		dist = Math.acos(dist);
+		dist = dist * 180 / Math.PI;
+		dist = dist * 60 * 1.1515;
+		if (unit == "K") { dist = dist * 1.609344 }
+		if (unit == "N") { dist = dist * 0.8684 }
+		return dist;
+	}
+
+}
 class App extends Component {
 	handleScroll = (event) => {
 		const node = ReactDOM.findDOMNode(this);
@@ -98,7 +121,8 @@ class App extends Component {
 		extImage: PropTypes.array,
 		extPdf: PropTypes.array,
 		acceptAttachFile: PropTypes.string,
-		UID: PropTypes.func
+		UID: PropTypes.func,
+		getDistance: PropTypes.func
 	};
 
 	getChildContext = () => ({
@@ -114,7 +138,8 @@ class App extends Component {
 		acceptAttachFile: 'application/pdf, image/*, application/msword',
 		UID: () => {
 			return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
-		}
+		},
+		getDistance
 	});
 }
 
