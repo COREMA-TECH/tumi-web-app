@@ -94,7 +94,8 @@ class Application extends Component {
 			// Editing state properties - To edit general info
 			editing: false,
 
-			loading: false
+			loading: false,
+			idRecruiter: localStorage.getItem('LoginId')
 		};
 	}
 
@@ -155,7 +156,7 @@ class Application extends Component {
 								comment: this.state.comment,
 								generalComment: this.state.generalComment,
 								isLead: true,
-								idRecruiter: localStorage.getItem('LoginId')
+								idRecruiter: parseInt(this.state.idRecruiter)
 							}
 						}
 					})
@@ -220,7 +221,7 @@ class Application extends Component {
 								convictedExplain: this.state.convictedExplain,
 								generalComment: this.state.generalComment,
 								isLead: true,
-								idRecruiter: localStorage.getItem('LoginId')
+								idRecruiter: parseInt(this.state.idRecruiter)
 							}
 						}
 					})
