@@ -1714,6 +1714,9 @@ class GeneralInformation extends Component {
 									</TableBody>
 								</Table>
 								<div className="card-form-footer">
+									<button className="btn btn-success mr-1" onClick={this.handleOpenHotels}>
+										Add Hotel <i class="fas fa-plus" />
+									</button>
 									<button
 										className={
 											this.props.idCompany == 0 ? (

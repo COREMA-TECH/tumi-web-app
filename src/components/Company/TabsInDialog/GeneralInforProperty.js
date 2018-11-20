@@ -76,7 +76,8 @@ class GeneralInfoProperty extends Component {
 			other01File: '',
 
 			phoneNumberValid: true,
-			faxNumberValid: true
+			faxNumberValid: true,
+			cityFinal: ''
 		};
 	}
 	/**
@@ -93,8 +94,8 @@ class GeneralInfoProperty extends Component {
 	`;
 
 	getStatesQuery = gql`
-		query States($parent: Int!) {
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+		query States($parent: Int!, $value: String) {
+			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
 				Id
 				Name
 				IsActive
@@ -677,6 +678,25 @@ class GeneralInfoProperty extends Component {
 			);
 		}
 	};
+
+	findByZipCode = (zipCode = null, cityFinal = null) => {
+		if (!zipCode) {
+			return false;
+		}
+
+		this.props.client.query({
+			query: this.getStatesQuery,
+			variables: { parent: -1, value: `'${zipCode}'` },
+			fetchPolicy: 'no-cache'
+		}).then((data) => {
+			this.setState({
+				state: data.data.getcatalogitem[0].Id,
+				cityFinal: cityFinal
+			});
+		});
+
+	}
+
 	render() {
 		this.changeStylesInCompletedInputs();
 
@@ -836,7 +856,27 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div>
-
+											<div className="col-md-6 col-lg-2">
+												<label>* Zip Code</label>
+												<InputValid
+													change={(text) => {
+														this.setState({
+															zipCode: text
+														});
+														fetch('http://ziptasticapi.com/' + text).then((response) => {
+															return response.json()
+														}).then((cities) => {
+															if (!cities.error) {
+																this.findByZipCode(cities.state, cities.city.toLowerCase());
+															}
+														});
+													}}
+													value={this.state.zipCode}
+													maxLength="10"
+													type="number"
+													required
+												/>
+											</div>
 											<div className="col-md-6 col-lg-3">
 												<label>* States</label>
 												<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
@@ -887,6 +927,10 @@ class GeneralInfoProperty extends Component {
 															data.getcatalogitem != null &&
 															data.getcatalogitem.length > 0
 														) {
+															var citySelected = 0;
+															citySelected = data.getcatalogitem.filter(city => {
+																return city.Name.toLowerCase().includes(this.state.cityFinal);
+															});
 															return (
 																<select
 																	name="city"
@@ -898,7 +942,7 @@ class GeneralInfoProperty extends Component {
 																		});
 																	}}
 																	error={this.state.validCity === '' ? false : true}
-																	value={this.state.city}
+																	value={citySelected[0].Id}
 																	showNone={false}
 																>
 																	<option value="">Select a city</option>
@@ -906,37 +950,11 @@ class GeneralInfoProperty extends Component {
 																		<option value={item.Id}>{item.Name}</option>
 																	))}
 																</select>
-																// <SelectForm
-																// 	name="city"
-																// 	value={this.state.city}
-																// 	data={data.getcatalogitem}
-																// 	error={this.state.validCity === '' ? false : true}
-																// 	update={(value) => {
-																// 		this.setState({
-																// 			city: value,
-																// 			validCity: ''
-																// 		});
-																// 	}}
-																// />
 															);
 														}
 														return <SelectNothingToDisplay />;
 													}}
 												</Query>
-											</div>
-											<div className="col-md-6 col-lg-2">
-												<label>* Zip Code</label>
-												<InputValid
-													change={(text) => {
-														this.setState({
-															zipCode: text
-														});
-													}}
-													value={this.state.zipCode}
-													maxLength="10"
-													type="number"
-													required
-												/>
 											</div>
 											<div className="col-md-6 col-lg-2">
 												<label>* Phone Number</label>
