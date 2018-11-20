@@ -447,6 +447,7 @@ class GeneralInfoProperty extends Component {
 					}
 				}
 
+				console.log(this.state)
 				//To set errors in selects
 				if (this.state.region === 0) {
 					this.setState({
@@ -931,6 +932,12 @@ class GeneralInfoProperty extends Component {
 															citySelected = data.getcatalogitem.filter(city => {
 																return city.Name.toLowerCase().includes(this.state.cityFinal);
 															});
+															if (citySelected[0].Id != this.state.city) {
+																this.setState({
+																	city: citySelected[0].Id
+																});
+															}
+
 															return (
 																<select
 																	name="city"
@@ -942,7 +949,7 @@ class GeneralInfoProperty extends Component {
 																		});
 																	}}
 																	error={this.state.validCity === '' ? false : true}
-																	value={citySelected[0].Id}
+																	value={this.state.city}
 																	showNone={false}
 																>
 																	<option value="">Select a city</option>
