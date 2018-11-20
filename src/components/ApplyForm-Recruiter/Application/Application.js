@@ -547,7 +547,7 @@ class Application extends Component {
 													});
 													let zip_code = '';
 													zip_code = event.target.value.substring(0, 5);
-													fetch(`http://ziptasticapi.com/${zip_code}`).then((response) => {
+													fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
 														return response.json()
 													}).then((cities) => {
 														if (!cities.error) {
