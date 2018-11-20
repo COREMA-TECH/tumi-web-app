@@ -864,7 +864,7 @@ class GeneralInfoProperty extends Component {
 														this.setState({
 															zipCode: text
 														});
-														fetch('http://ziptasticapi.com/' + text).then((response) => {
+														fetch('https://ziptasticapi.com/' + text).then((response) => {
 															return response.json()
 														}).then((cities) => {
 															if (!cities.error) {

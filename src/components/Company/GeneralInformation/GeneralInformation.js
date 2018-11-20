@@ -974,7 +974,7 @@ class GeneralInformation extends Component {
 			}, () => {
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('http://ziptasticapi.com/' + text).then((response) => {
+					fetch('https://ziptasticapi.com/' + text).then((response) => {
 						return response.json()
 					}).then((cities) => {
 						if (!cities.error)

@@ -94,7 +94,8 @@ class Application extends Component {
 			// Editing state properties - To edit general info
 			editing: false,
 
-			loading: false
+			loading: false,
+			idRecruiter: localStorage.getItem('LoginId')
 		};
 	}
 
@@ -154,7 +155,8 @@ class Application extends Component {
 								convictedExplain: this.state.convictedExplain,
 								comment: this.state.comment,
 								generalComment: this.state.generalComment,
-								isLead: true
+								isLead: true,
+								idRecruiter: parseInt(this.state.idRecruiter)
 							}
 						}
 					})
@@ -218,7 +220,8 @@ class Application extends Component {
 								convicted: this.state.convicted,
 								convictedExplain: this.state.convictedExplain,
 								generalComment: this.state.generalComment,
-								isLead: true
+								isLead: true,
+								idRecruiter: parseInt(this.state.idRecruiter)
 							}
 						}
 					})
@@ -544,7 +547,7 @@ class Application extends Component {
 													});
 													let zip_code = '';
 													zip_code = event.target.value.substring(0, 5);
-													fetch(`http://ziptasticapi.com/${zip_code}`).then((response) => {
+													fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
 														return response.json()
 													}).then((cities) => {
 														if (!cities.error) {
