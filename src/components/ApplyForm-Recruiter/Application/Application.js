@@ -350,6 +350,24 @@ class Application extends Component {
 		}
 	}
 
+	findByZipCode = (zipCode = null, cityFinal = null) => {
+		if (!zipCode) {
+			return false;
+		}
+
+		this.props.client.query({
+			query: GET_STATES_QUERY,
+			variables: { parent: -1, value: `'${zipCode}'` },
+			fetchPolicy: 'no-cache'
+		}).then((data) => {
+			this.setState({
+				state: data.data.getcatalogitem[0].Id,
+				cityFinal: cityFinal
+			});
+		});
+
+	}
+
 	render() {
 		return (
 			<div className="Apply-container--application">
@@ -360,7 +378,6 @@ class Application extends Component {
 					onSubmit={(e) => {
 						e.preventDefault();
 						e.stopPropagation();
-						console.log(this.props.applicationId);
 						if (this.props.applicationId == 0) {
 							this.insertApplicationInformation();
 						} else {
@@ -509,7 +526,38 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="5"
                                                 />
-                                                </div>*/}
+												</div>*/}
+										<div className="col-md-6 ">
+											<span className="primary applicant-card__label ">
+												* {formSpanish[5].label}
+											</span>
+											<InputMask
+												id="zipCode"
+												name="zipCode"
+												mask="99999-99999"
+												maskChar=" "
+												className="form-control"
+												disabled={!this.state.editing}
+												onChange={(event) => {
+													this.setState({
+														zipCode: event.target.value
+													});
+													let zip_code = '';
+													zip_code = event.target.value.substring(0, 5);
+													fetch(`http://ziptasticapi.com/${zip_code}`).then((response) => {
+														return response.json()
+													}).then((cities) => {
+														if (!cities.error) {
+															this.findByZipCode(cities.state, cities.city.toLowerCase());
+														}
+													});
+												}}
+												value={this.state.zipCode}
+												placeholder="99999-99999"
+												required
+												minLength="15"
+											/>
+										</div>
 										<div className="col-md-6 ">
 											<span className="primary applicant-card__label ">
 												* {formSpanish[6].label}
@@ -553,6 +601,10 @@ class Application extends Component {
 													//if (networkStatus === 4) return <LinearProgress />;
 													if (error) return <p>Error </p>;
 													if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+														var citySelected = 0;
+														citySelected = data.getcatalogitem.filter(city => {
+															return city.Name.toLowerCase().includes(this.state.cityFinal);
+														});
 														return (
 															<select
 																name="city"
@@ -565,7 +617,7 @@ class Application extends Component {
 																		city: e.target.value
 																	});
 																}}
-																value={this.state.city}
+																value={citySelected == 0 ? this.state.city : citySelected[0].Id}
 															>
 																<option value="">Select a city</option>
 																{data.getcatalogitem.map((item) => (
@@ -578,28 +630,7 @@ class Application extends Component {
 												}}
 											</Query>
 										</div>
-										<div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[5].label}
-											</span>
-											<InputMask
-												id="zipCode"
-												name="zipCode"
-												mask="99999-99999"
-												maskChar=" "
-												className="form-control"
-												disabled={!this.state.editing}
-												onChange={(event) => {
-													this.setState({
-														zipCode: event.target.value
-													});
-												}}
-												value={this.state.zipCode}
-												placeholder="99999-99999"
-												required
-												minLength="15"
-											/>
-										</div>
+
 										<div className="col-md-6">
 											<span className="primary applicant-card__label ">
 												{formSpanish[23].label}
