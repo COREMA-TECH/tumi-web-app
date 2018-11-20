@@ -278,6 +278,10 @@ class GeneralInformation extends Component {
 		});
 	}
 
+	handleCloseHotels = () => {
+		this.setState({ hotelModal: false }, this.loadCompanyProperties);
+	};
+
 	loadCompanyProperties = (func = () => { }) => {
 		this.setState({
 			loadingCompanyProperties: true
@@ -1743,7 +1747,7 @@ class GeneralInformation extends Component {
 					</div>
 				</div>
 
-				<Hotels ManagmentId={this.state.idCompany} open={this.state.hotelModal} />
+				<Hotels handleOpenSnackbar={this.props.handleOpenSnackbar} ManagmentId={this.props.idCompany} open={this.state.hotelModal} handleClose={this.handleCloseHotels} />
 
 				<Dialog
 					open={this.state.open}
