@@ -271,9 +271,9 @@ class BoardManager extends Component {
 
     onCardClick = (cardId, metadata, laneId) => {
         if (sessionStorage.getItem('NewFilter') === false) {
-            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, true, laneId);
+            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
         } else {
-            this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), true, laneId);
+            this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), sessionStorage.getItem('NewDistances'), laneId);
         }
 
     }
