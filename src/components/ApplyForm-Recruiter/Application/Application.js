@@ -515,7 +515,7 @@ class Application extends Component {
 											/>
 										</div>
 										<div className="col-md-6 ">
-											<span className="primary applicant-card__label skeleton">
+											<span className="primary applicant-card__label ">
 												{formSpanish[24].label}
 											</span>
 											<input
