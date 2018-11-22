@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "label": "General"
+  },
+  {
+    "id": 1,
+    "label": "Horario"
+  },
+  {
+    "id": 2,
+    "label": "Documentos"
+  },
+  {
+    "id": 3,
+    "label": "Beneficios"
+  },
+  {
+    "id": 4,
+    "label": "Tiempo libre y baja por enfermedad"
+  },
+  {
+    "id": 5,
+    "label": "Recursos"
+  }
+]

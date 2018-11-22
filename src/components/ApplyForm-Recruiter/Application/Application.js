@@ -238,7 +238,7 @@ class Application extends Component {
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
 							'error',
-							'Errorn to update aaplicant information. Please, try again!',
+							'Error to update aaplicant information. Please, try again!',
 							'bottom',
 							'right'
 						);
@@ -264,10 +264,8 @@ class Application extends Component {
 						}
 					})
 					.then(({ data }) => {
-						console.log('esta es la aplicacion ', data);
 						if (data.applications != null && data.applications.length > 0) {
 							let applicantData = data.applications[0];
-							console.log('esta es la aplicacion ', applicantData);
 							this.setState(
 								{
 									firstName: applicantData.firstName,
@@ -336,7 +334,6 @@ class Application extends Component {
 
 	// To show skeleton animation in css
 	removeSkeletonAnimation = () => {
-		console.log('entro al remove');
 		let inputs, index;
 
 		inputs = document.getElementsByTagName('span');
@@ -635,7 +632,6 @@ class Application extends Component {
 															return city.Name.toLowerCase().includes(this.state.cityFinal);
 														});
 														if (citySelected.length != 0) {
-															console.log(citySelected)
 															if ((citySelected[0].Id != this.state.city)) {
 																this.setState({
 																	city: citySelected[0].Id
@@ -787,10 +783,13 @@ class Application extends Component {
 									<button
 										className="applicant-card__cancel-button"
 										onClick={() => {
-											//this.getApplicationById(this.props.applicationId);
+											if (this.props.applicationId == 0) {
+												window.location.href = '/home/Recruiter'
+											}
+
 											this.removeSkeletonAnimation();
 											this.setState({
-												loading: false
+												loading: false, editing: false
 											});
 										}}
 									>

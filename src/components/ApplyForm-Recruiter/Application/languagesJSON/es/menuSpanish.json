@@ -1,7 +1,7 @@
 [
 	{
 		"id": 1,
-		"label": "Información General"
+		"label": "Información del Prospecto"
 	},
 	{
 		"id": 2,
@@ -9,18 +9,10 @@
 	},
 	{
 		"id": 3,
-		"label": "Educación"
-	},
-	{
-		"id": 4,
 		"label": "Empleos Anteriores"
 	},
 	{
-		"id": 5,
-		"label": "Servicio Militar"
-	},
-	{
-		"id": 6,
+		"id": 4,
 		"label": "Habilidades"
 	}
 ]
