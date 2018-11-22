@@ -83,6 +83,7 @@ class GeneralInformation extends Component {
 		cityValid: true,
 		suiteValid: true,
 		phoneNumberValid: true,
+
 		faxValid: true,
 		startDateValid: true,
 		otherNameEdit: false,
@@ -170,6 +171,7 @@ class GeneralInformation extends Component {
 				Location01
 				Primary_Email
 				Phone_Number
+				Phone_Prefix
 				Suite
 				Contract_URL
 				Contract_File
@@ -236,6 +238,7 @@ class GeneralInformation extends Component {
 									rate: item.Rate,
 									email: item.Primary_Email.trim(),
 									phoneNumber: item.Phone_Number.trim(),
+									phonePrefix: item.Phone_Prefix.trim(),
 									avatar: item.ImageURL,
 									Code: item.Code.trim(),
 									Code01: item.Code01.trim(),
@@ -419,7 +422,7 @@ class GeneralInformation extends Component {
 								Fax: `'${this.state.fax}'`,
 								Primary_Email: `'correo@gmail.com'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+								Phone_Prefix: `'${this.state.phonePrefix}'`,
 								Id_Parent: this.state.idCompany == 0 ? 0 : this.state.Id_Parent,
 								IsActive: 1,
 								User_Created: 1,
@@ -526,7 +529,7 @@ class GeneralInformation extends Component {
 								//Primary_Email: `'${this.state.email}'`,
 								Primary_Email: `'coreo@gmail.com'`,
 								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: "''", //`'${this.state.phonePrefix}'`,
+								Phone_Prefix: `'${this.state.phonePrefix}'`,
 								Id_Parent: parseInt(this.state.Id_Parent),
 								IsActive: parseInt(this.state.active),
 								User_Created: 1,
@@ -1079,6 +1082,7 @@ class GeneralInformation extends Component {
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
 		let phoneNumberValid = this.state.phoneNumberValid;
+		let phoneNumber2Valid = this.state.phoneNumber2Valid;
 		let faxValid = this.state.faxValid;
 		let startDateValid = this.state.startDateValid;
 
@@ -1577,6 +1581,22 @@ class GeneralInformation extends Component {
 											}
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'phoneNumber');
+											}}
+											placeholder="+(999) 999-9999"
+											disabled={!this.props.showStepper}
+										/>
+									</div>
+									<div className="col-md-5">
+										<label>Secondary Phone Number</label>
+										<InputMask
+											id="number"
+											name="number"
+											mask="+(999) 999-9999"
+											maskChar=" "
+											value={this.state.phonePrefix}
+											className={'form-control'}
+											onChange={(e) => {
+												this.updateInput(e.target.value, 'phonePrefix');
 											}}
 											placeholder="+(999) 999-9999"
 											disabled={!this.props.showStepper}

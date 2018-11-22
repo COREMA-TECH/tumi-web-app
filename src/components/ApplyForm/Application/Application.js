@@ -30,6 +30,7 @@ class Application extends Component {
 			firstName: '',
 			middleName: '',
 			lastName: '',
+			lastName2: '',
 			date: '',
 			streetAddress: '',
 			aptNumber: '',
@@ -123,6 +124,7 @@ class Application extends Component {
 								firstName: this.state.firstName,
 								middleName: this.state.middleName,
 								lastName: this.state.lastName,
+								lastName2: this.state.lastName2,
 								date: this.state.date,
 								streetAddress: this.state.streetAddress,
 								aptNumber: this.state.aptNumber,
@@ -187,11 +189,13 @@ class Application extends Component {
 					})
 					.then(({ data }) => {
 						let applicantData = data.applications[0];
+						console.log("applicantData ", applicantData);
 						this.setState(
 							{
 								firstName: applicantData.firstName,
 								middleName: applicantData.middleName,
 								lastName: applicantData.lastName,
+								lastName2: applicantData.lastName2,
 								date:
 									applicantData.date !== null
 										? applicantData.date.substring(0, 10)
@@ -357,7 +361,7 @@ class Application extends Component {
 												minLength="1"
 											/>
 										</div>
-										<div className="col-md-12 ">
+										<div className="col-md-6 ">
 											<span className="primary applicant-card__label skeleton">
 												* {formSpanish[2].label}
 											</span>
@@ -373,6 +377,27 @@ class Application extends Component {
 												className="form-control"
 												disabled={!this.state.editing}
 												required
+												min="0"
+												maxLength="50"
+												minLength="3"
+											/>
+										</div>
+										<div className="col-md-6 ">
+											<span className="primary applicant-card__label skeleton">
+												{formSpanish[24].label}
+											</span>
+											<input
+												onChange={(event) => {
+													this.setState({
+														lastName2: event.target.value
+													});
+												}}
+												value={this.state.lastName2}
+												name="lastName2"
+												type="text"
+												className="form-control"
+												disabled={!this.state.editing}
+
 												min="0"
 												maxLength="50"
 												minLength="3"
