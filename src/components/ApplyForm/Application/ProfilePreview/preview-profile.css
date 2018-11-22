@@ -5,12 +5,12 @@
         display: flex;
         justify-content: space-around;
         align-items: flex-start;
-        background: #FFFFFF;
+        background:  #FFFFFF;
     }
 
     .header-profile-menu .avatar {
-        width: 75px;
-        height: 75px;
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         box-shadow: 0 0 5px #dddddd;
         background: #EEEEEE;
@@ -32,6 +32,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        border-bottom: 1px solid #eee;
     }
 
     .item .row {
@@ -83,4 +84,10 @@
         font-weight: 600;
     }
 
+}
+
+@media (min-width: 920px) {
+    .item {
+        border-bottom: none;
+    }
 }

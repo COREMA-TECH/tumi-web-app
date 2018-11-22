@@ -62,7 +62,7 @@ class General extends Component {
         return (
             <div className="Apply-container--application">
                 <div className="">
-                    <div className="col-md-12">
+                    <div className="">
                         <div className="applicant-card">
                             <div className="row">
                                 <div className="item col-sm-12 col-md-3">
@@ -77,13 +77,13 @@ class General extends Component {
                                         <span className="col-sm-6 col-lg-12">Department: Banquet</span>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12  col-md-2">
+                                <div className="item col-6 col-md-2">
                                     <div className="row">
                                         <span className="col-sm-12 font-weight-bold">Schedule Type</span>
                                         <span className="col-sm-12">Text</span>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12  col-md-2">
+                                <div className="item col-6 col-md-2">
                                     <div className="row">
                                         <span className="col-sm-12 font-weight-bold">Payroll Preference</span>
                                         <span className="col-sm-12">Text</span>
@@ -91,20 +91,22 @@ class General extends Component {
                                 </div>
                                 <div className="item col-sm-12  col-md-1">
                                     <div className="row">
-                                        <span className="col-sm-12 font-weight-bold">Active</span>
-                                        <label className="switch">
-                                            <input
-                                                id="vehicleReportRequired"
-                                                type="checkbox"
-                                                className="form-control"
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="10"
-                                                form="background-check-form"
-                                                checked={this.state.data.isActive}
-                                            />
-                                            <p className="slider round"></p>
-                                        </label>
+                                        <span className="col-12 col-md-12 font-weight-bold">Active</span>
+                                        <div className="col-12 col-md-12">
+                                            <label className="switch">
+                                                <input
+                                                    id="vehicleReportRequired"
+                                                    type="checkbox"
+                                                    className="form-control"
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="10"
+                                                    form="background-check-form"
+                                                    checked={this.state.data.isActive}
+                                                />
+                                                <p className="slider round"></p>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="item col-sm-12  col-md-2">
@@ -114,36 +116,38 @@ class General extends Component {
                         </div>
                         <br/>
                         <div className="applicant-card general-table-container">
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div className="table-responsive">
+                                <table className="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">First</th>
+                                        <th scope="col">Last</th>
+                                        <th scope="col">Handle</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>Larry</td>
+                                        <td>the Bird</td>
+                                        <td>@twitter</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <br/>
                             <br/>
                             <div className="row">
