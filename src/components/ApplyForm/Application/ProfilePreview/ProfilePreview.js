@@ -107,7 +107,7 @@ class VerticalLinearStepper extends Component {
         };
 
         return (
-            <div className="main-stepper-container">
+            <div className="main-stepper-container profile-preview-component">
                 <div className="row">
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">

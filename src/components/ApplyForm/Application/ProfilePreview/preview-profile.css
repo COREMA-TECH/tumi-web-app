@@ -1,3 +1,19 @@
+@media (max-width: 820px) {
+    .profile-preview-component .Stepper-wrapper {
+        overflow: hidden;
+    }
+
+    .profile-preview-component .Stepper-wrapper div:last-child{
+        display: flex;
+        flex-direction: row !important;
+        overflow-x: auto;
+    }
+
+    .profile-preview-component .Stepper-wrapper div:last-child .MenuStep-item{
+        width: 100% !important;
+    }
+}
+
 @media (min-width: 320px) {
     .header-profile-menu {
         height: 22vh;
