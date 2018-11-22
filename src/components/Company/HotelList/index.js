@@ -23,8 +23,8 @@ class HotelList extends Component {
     }
 
     getCompaniesQuery = gql`
-        {
-            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
+        query getbusinesscompanies($Id_Parent: Int) {
+            getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: $Id_Parent) {
                 Id
                 Id_Contract
                 Id_Company
@@ -82,13 +82,13 @@ class HotelList extends Component {
     };
 
     UNSAFE_componentWillMount() {
-        this.getHotels();
+        this.getHotels(-1);
     }
 
-    getHotels = () => {
+    getHotels = (idParent) => {
         this.props.client.query({
             query: this.getCompaniesQuery,
-            variables: {},
+            variables: { Id_Parent: idParent },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             this.setState({
@@ -148,9 +148,18 @@ class HotelList extends Component {
                 hotels: hotelFind
             });
         } else {
-            this.getHotels();
+            this.getHotels(-1);
         }
     };
+
+    handleFindByTag = (isAssign) => (event) => {
+        event.preventDefault();
+        if (isAssign == true)
+            this.getHotels(-2);
+        else {
+            this.getHotels(99999);
+        }
+    }
 
     render() {
         return (
@@ -174,8 +183,8 @@ class HotelList extends Component {
                         </div>
                     </div>
                     <div className="col-md-12">
-                        <span class="badge badge-danger mr-1">Not Assigned</span>
-                        <span class="badge badge-success">Assigned</span>
+                        <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned</a>
+                        <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success">Assigned</a>
                     </div>
                     <AlertDialogSlide
                         handleClose={this.handleCloseAlertDialog}
