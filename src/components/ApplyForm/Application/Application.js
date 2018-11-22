@@ -189,6 +189,7 @@ class Application extends Component {
 					})
 					.then(({ data }) => {
 						let applicantData = data.applications[0];
+						console.log("applicantData ", applicantData);
 						this.setState(
 							{
 								firstName: applicantData.firstName,
@@ -360,7 +361,7 @@ class Application extends Component {
 												minLength="1"
 											/>
 										</div>
-										<div className="col-md-12 ">
+										<div className="col-md-6 ">
 											<span className="primary applicant-card__label skeleton">
 												* {formSpanish[2].label}
 											</span>
@@ -381,7 +382,7 @@ class Application extends Component {
 												minLength="3"
 											/>
 										</div>
-										<div className="col-md-12 ">
+										<div className="col-md-6 ">
 											<span className="primary applicant-card__label skeleton">
 												{formSpanish[24].label}
 											</span>
@@ -396,7 +397,7 @@ class Application extends Component {
 												type="text"
 												className="form-control"
 												disabled={!this.state.editing}
-												required
+
 												min="0"
 												maxLength="50"
 												minLength="3"
