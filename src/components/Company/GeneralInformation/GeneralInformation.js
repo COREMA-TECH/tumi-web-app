@@ -1587,7 +1587,7 @@ class GeneralInformation extends Component {
 										/>
 									</div>
 									<div className="col-md-5">
-										<label>Second Phone Number</label>
+										<label>Secondary Phone Number</label>
 										<InputMask
 											id="number"
 											name="number"
