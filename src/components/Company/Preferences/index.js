@@ -43,7 +43,9 @@ class Preferences extends React.Component {
                         charge: data.companyPreferences[0].charge,
                         amount: data.companyPreferences[0].amount,
                         EntityId: data.companyPreferences[0].EntityId,
-                        disabled: !data.companyPreferences[0].charge
+                        disabled: !data.companyPreferences[0].charge,
+                        startMonth: !data.companyPreferences[0].FiscalMonth1,
+                        endMonth: !data.companyPreferences[0].FiscalMonth2,
                     });
                 }
             })
@@ -105,6 +107,8 @@ class Preferences extends React.Component {
                     PeriodId: this.state.period,
                     amount: parseFloat(this.state.amount),
                     charge: this.state.charge,
+                    FiscalMonth1: this.state.startMonth,
+                    FiscalMonth2: this.state.endMonth,
                 }
             }
         })
@@ -134,6 +138,8 @@ class Preferences extends React.Component {
                     PeriodId: this.state.period,
                     amount: parseFloat(this.state.amount),
                     charge: this.state.charge,
+                    FiscalMonth1: this.state.startMonth,
+                    FiscalMonth2: this.state.endMonth,
                 }
             }
         })
@@ -161,6 +167,8 @@ class Preferences extends React.Component {
                 PeriodId
                 amount
                 charge
+                FiscalMonth1
+                FiscalMonth2
             }
         }
     `;
@@ -173,6 +181,8 @@ class Preferences extends React.Component {
                 charge
                 amount
                 EntityId
+                FiscalMonth1
+                FiscalMonth2
             }
         }
     `;
@@ -185,6 +195,8 @@ class Preferences extends React.Component {
                 charge
                 amount
                 EntityId
+                FiscalMonth1
+                FiscalMonth2
             }
         }
     `;
@@ -267,6 +279,7 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
+                                                        required
                                                         value={this.state.startMonth}
                                                         className="form-control"
                                                         onChange={(event) => {
@@ -296,6 +309,7 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
+                                                        required
                                                         value={this.state.endMonth}
                                                         className="form-control"
                                                         onChange={(event) => {
