@@ -81,7 +81,7 @@ export const GET_APPLICATION_BY_ID = gql`
 			scheduleExplain
 			convicted
 			convictedExplain
-			comment,
+			comment
 			idealJob
 		}
 	}
