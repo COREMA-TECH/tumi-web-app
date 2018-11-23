@@ -113,13 +113,13 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application applicationId={this.state.applicationId} />;
+                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext}/>;
                 case 1:
-                    return <Language applicationId={this.state.applicationId} />;
+                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
                 case 2:
-                    return <PreviousEmployment applicationId={this.state.applicationId} />;
+                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
                 case 3:
-                    return <Skills applicationId={this.state.applicationId} />;
+                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
                 default:
                     return 'Unknown step';
             }

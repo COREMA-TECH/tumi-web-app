@@ -184,8 +184,6 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 </div>
-
-
             </div>
         );
     }

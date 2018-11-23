@@ -407,6 +407,23 @@ class PreviousEmployment extends Component {
 									renderPreviousEmploymentSection()
 								)}
 							</div>
+                            <div className="applicant-card__footer">
+                                <button
+                                    className="applicant-card__cancel-button"
+                                    onClick={() => {
+                                        this.props.handleBack();
+                                    }}
+                                >
+                                    {spanishActions[9].label}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        this.props.handleNext();
+                                    }}
+                                    className="applicant-card__save-button">
+                                    {spanishActions[8].label}
+                                </button>
+                            </div>
 						</div>
 					</div>
 				</div>
