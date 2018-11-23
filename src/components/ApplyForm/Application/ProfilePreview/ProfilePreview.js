@@ -16,6 +16,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {GET_APPLICATION_PROFILE_INFO} from "./Queries";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
@@ -68,7 +69,9 @@ class VerticalLinearStepper extends Component {
 
         this.state = {
             activeStep: 0,
-            applicationId: null
+            applicationId: null,
+            loading: false,
+            data: []
         }
     }
 
@@ -93,12 +96,12 @@ class VerticalLinearStepper extends Component {
         });
     };
 
-    getProfileInformation = (id) => {
+    getProfileInformation = () => {
         this.props.client
             .query({
                 query: GET_APPLICATION_PROFILE_INFO,
                 variables: {
-                    id: id
+                    id: this.props.applicationId
                 }
             })
             .then(({data}) => {
@@ -124,6 +127,12 @@ class VerticalLinearStepper extends Component {
         try {
             this.setState({
                 applicationId: this.props.applicationId
+            }, () => {
+                this.setState({
+                    loading: true
+                }, () => {
+                    this.getProfileInformation();
+                })
             });
 
             localStorage.setItem('languageForm', 'en');
@@ -144,6 +153,10 @@ class VerticalLinearStepper extends Component {
                     return <General applicationId={this.props.applicationId}/>;
             }
         };
+
+        if (this.state.loading) {
+            return <LinearProgress />
+        }
 
         return (
             <div className="main-stepper-container profile-preview-component">
