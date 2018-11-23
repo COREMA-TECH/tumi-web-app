@@ -1,8 +1,9 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { withApollo } from 'react-apollo';
+import {withApollo} from 'react-apollo';
 import CatalogItem from 'Generic/CatalogItem';
-import { select } from 'async';
+import {select} from 'async';
+import months from './months';
 
 class Preferences extends React.Component {
 
@@ -15,7 +16,11 @@ class Preferences extends React.Component {
             amount: 0,
             idCompany: this.props.idCompany,
             Entityid: this.props.idCompany,
-            disabled: true
+            disabled: true,
+
+
+            startMonth: null,
+            endMonth: null,
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
@@ -26,7 +31,7 @@ class Preferences extends React.Component {
         this.props.client
             .query({
                 query: this.GET_QUERY,
-                variables: { id: this.state.idCompany },
+                variables: {id: this.state.idCompany},
                 fetchPolicy: 'no-cache'
             })
             .then((result) => {
@@ -76,7 +81,7 @@ class Preferences extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.setState({saving:true},()=>{
+        this.setState({saving: true}, () => {
             if (this.state.disabled && (this.props.idCompany == "" || this.state.period == undefined || this.state.amount == undefined || this.state.amount < 0)) {
                 this.props.handleOpenSnackbar(
                     'error',
@@ -87,9 +92,8 @@ class Preferences extends React.Component {
                     this.add();
                 else
                     this.update();
-            }          
+            }
         })
-       
     }
 
     add() {
@@ -109,10 +113,10 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Inserted!'
                 );
-                this.setState({saving:false})
+                this.setState({saving: false})
             })
             .catch((error) => {
-                this.setState({saving:false})
+                this.setState({saving: false})
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
@@ -138,14 +142,14 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Updated!'
                 );
-                this.setState({saving:false})
+                this.setState({saving: false})
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
                 );
-                this.setState({saving:false})
+                this.setState({saving: false})
             });
     }
 
@@ -192,8 +196,8 @@ class Preferences extends React.Component {
                     <div className="row">
                         <div className="col-md-12">
                             <button type="submit" className="btn btn-success edit-company-button float-right">
-                            Save {!this.state.saving && <i class="fas fa-save ml-1" />}
-											{this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
+                                Save {!this.state.saving && <i class="fas fa-save ml-1"/>}
+                                {this.state.saving && <i class="fas fa-spinner fa-spin ml-1"/>}
                             </button>
                         </div>
                     </div>
@@ -209,7 +213,9 @@ class Preferences extends React.Component {
                                             </label>
 
                                             <div class="onoffswitch">
-                                                <input type="checkbox" checked={this.state.charge} name="charge" onClick={this.toggleState} onChange={this.handleChange} className="onoffswitch-checkbox" id="myonoffswitch" />
+                                                <input type="checkbox" checked={this.state.charge} name="charge"
+                                                       onClick={this.toggleState} onChange={this.handleChange}
+                                                       className="onoffswitch-checkbox" id="myonoffswitch"/>
                                                 <label class="onoffswitch-label" for="myonoffswitch">
                                                     <span class="onoffswitch-inner"></span>
                                                     <span class="onoffswitch-switch"></span>
@@ -224,7 +230,7 @@ class Preferences extends React.Component {
                                                 (!this.state.disabled) ?
                                                     <CatalogItem
                                                         update={(id) => {
-                                                            this.setState({ period: id })
+                                                            this.setState({period: id})
                                                         }}
                                                         PeriodId={11}
                                                         name="period"
@@ -240,7 +246,75 @@ class Preferences extends React.Component {
                                             <label>
                                                 Amount
                                             </label>
-                                            <input type="number" min="0" name="amount" step=".01" disabled={(this.state.disabled) ? "disabled" : ""} value={this.state.amount} className="form-control" onChange={this.handleChange} />
+                                            <input type="number" min="0" name="amount" step=".01"
+                                                   disabled={(this.state.disabled) ? "disabled" : ""}
+                                                   value={this.state.amount} className="form-control"
+                                                   onChange={this.handleChange}/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="card">
+                                <div className="card-header">Fiscal Year</div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <label>
+                                                        Start Month
+                                                    </label>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <select
+                                                        value={this.state.startMonth}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                startMonth: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select a month</option>
+                                                        {
+                                                            months.map(month => {
+                                                                if(this.state.endMonth != month.id){
+                                                                    return <option value={month.id}>{month.description}</option>
+                                                                }
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <label>
+                                                        End Month
+                                                    </label>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <select
+                                                        value={this.state.endMonth}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                endMonth: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select a month</option>
+                                                        {
+                                                            months.map(month => {
+                                                                if(this.state.startMonth != month.id){
+                                                                    return <option value={month.id}>{month.description}</option>
+                                                                }
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
