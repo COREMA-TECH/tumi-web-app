@@ -4,6 +4,7 @@ import {withApollo} from 'react-apollo';
 import CatalogItem from 'Generic/CatalogItem';
 import {select} from 'async';
 import months from './months';
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 class Preferences extends React.Component {
 
@@ -28,32 +29,45 @@ class Preferences extends React.Component {
     }
 
     componentWillMount() {
-        this.props.client
-            .query({
-                query: this.GET_QUERY,
-                variables: {id: this.state.idCompany},
-                fetchPolicy: 'no-cache'
-            })
-            .then((result) => {
-                let data = result.data;
-                if (data.companyPreferences != null) {
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: this.GET_QUERY,
+                    variables: {id: this.state.idCompany},
+                    fetchPolicy: 'no-cache'
+                })
+                .then((result) => {
+                    let data = result.data;
+                    if (data.companyPreferences != null) {
+                        this.setState({
+                            Id: data.companyPreferences[0].id,
+                            period: data.companyPreferences[0].PeriodId,
+                            charge: data.companyPreferences[0].charge,
+                            amount: data.companyPreferences[0].amount,
+                            EntityId: data.companyPreferences[0].EntityId,
+                            disabled: !data.companyPreferences[0].charge,
+                            startMonth: !data.companyPreferences[0].FiscalMonth1,
+                            endMonth: !data.companyPreferences[0].FiscalMonth2,
+                        }, () => {
+                            this.setState({
+                                loading: false
+                            })
+                        });
+                    }
+                })
+                .catch((error) => {
                     this.setState({
-                        Id: data.companyPreferences[0].id,
-                        period: data.companyPreferences[0].PeriodId,
-                        charge: data.companyPreferences[0].charge,
-                        amount: data.companyPreferences[0].amount,
-                        EntityId: data.companyPreferences[0].EntityId,
-                        disabled: !data.companyPreferences[0].charge,
-                        startMonth: !data.companyPreferences[0].FiscalMonth1,
-                        endMonth: !data.companyPreferences[0].FiscalMonth2,
+                        errorMessage: 'Error: Loading departments: ' + error
                     });
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    errorMessage: 'Error: Loading departments: ' + error
+
+                    this.setState({
+                        loading: false
+                    })
                 });
-            });
+        });
+
     }
 
     toggleState = (event) => {
@@ -202,6 +216,10 @@ class Preferences extends React.Component {
     `;
 
     render() {
+        if (this.state.loading) {
+            return <LinearProgress />
+        }
+
         return (
             <div className="">
                 <form onSubmit={this.handleSubmit} className="Preferences-form">
