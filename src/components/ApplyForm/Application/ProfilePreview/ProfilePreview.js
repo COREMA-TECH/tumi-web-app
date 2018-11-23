@@ -12,6 +12,9 @@ import '../stepper.css';
 import '../../index.css';
 import withApollo from "react-apollo/withApollo";
 import General from "./General";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
@@ -19,6 +22,11 @@ const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageFo
 const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
+    tabs: {
+        flexGrow: 1,
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+    },
     root: {
         width: '100%',
         display: 'flex'
@@ -63,6 +71,10 @@ class VerticalLinearStepper extends Component {
         }
     }
 
+    handleChange = (event, value) => {
+        this.setState({activeStep: value});
+    };
+
     // To handle the stepper
     handleNext = () => {
         this.setState(state => ({
@@ -96,13 +108,14 @@ class VerticalLinearStepper extends Component {
 
     render() {
         const {classes} = this.props;
+        const {value} = this.state;
         const steps = getSteps();
         const {activeStep} = this.state;
 
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <General applicationId={this.props.applicationId} />;
+                    return <General applicationId={this.props.applicationId}/>;
             }
         };
 
@@ -112,9 +125,31 @@ class VerticalLinearStepper extends Component {
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header header-profile-menu">
-                                <img className="avatar" src="https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png" />
+                                <img className="avatar-profile"
+                                     src="https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png"/>
+                                <div className="user-information">
+                                    <span>Username</span>
+                                </div>
                             </div>
-                            <Stepper activeStep={activeStep} orientation="vertical" className="">
+                            <div className={"tabs"}>
+                                <AppBar position="static" color="#0092BD">
+                                    <Tabs
+                                        value={value}
+                                        onChange={this.handleChange}
+                                        indicatorColor="#000000"
+                                        textColor="primary"
+                                        scrollable
+                                        scrollButtons="auto"
+                                    >
+                                        {steps.map((label, index) => {
+                                            return (
+                                                <Tab label={label} key={index}/>
+                                            );
+                                        })}
+                                    </Tabs>
+                                </AppBar>
+                            </div>
+                            <Stepper activeStep={activeStep} orientation="vertical" className="stepper-menu">
                                 {steps.map((label, index) => {
                                     return (
                                         <div
@@ -157,7 +192,7 @@ class VerticalLinearStepper extends Component {
 }
 
 VerticalLinearStepper.propTypes = {
-    classes: PropTypes.object,
+    classes: PropTypes.object
 };
 
 export default withStyles(styles)(withApollo(VerticalLinearStepper));
