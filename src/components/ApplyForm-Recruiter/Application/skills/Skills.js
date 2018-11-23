@@ -322,6 +322,23 @@ class Skills extends Component {
 									<div className="col-12">{renderSkillsSection()}</div>
 								)}
 							</div>
+                            <div className="applicant-card__footer">
+                                <button
+                                    className="applicant-card__cancel-button"
+                                    onClick={() => {
+                                        this.props.handleBack();
+                                    }}
+                                >
+                                    {spanishActions[9].label}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        window.location.href = '/home/Recruiter'
+                                    }}
+                                    className="applicant-card__save-button">
+                                    {spanishActions[10].label}
+                                </button>
+                            </div>
 							{/*{*/}
 							{/*this.state.editing ? (*/}
 							{/*<div className="applicant-card__footer">*/}

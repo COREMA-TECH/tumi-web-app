@@ -4,13 +4,35 @@
     }
 
     .profile-preview-component .Stepper-wrapper div:last-child{
-        display: flex;
         flex-direction: row !important;
         overflow-x: auto;
     }
 
+    .stepper-menu {
+        display: none !important;
+    }
+
     .profile-preview-component .Stepper-wrapper div:last-child .MenuStep-item{
         width: 100% !important;
+    }
+
+    .tabs {
+        display: block;
+    }
+
+    .tabs button {
+        background: #FFFFFF !important;
+        outline: 1px solid #eee;
+    }
+
+    .avatar-profile-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background: red;
+        width: 100%;
+        height: 12vh;
     }
 }
 
@@ -19,18 +41,30 @@
         height: 22vh;
 
         display: flex;
-        justify-content: space-around;
+        justify-content: flex-start;
         align-items: flex-start;
         background:  #FFFFFF;
     }
 
-    .header-profile-menu .avatar {
-        width: 100px;
-        height: 100px;
+    .header-profile-menu .user-information {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        font-weight: bold;
+        color: #41afd7;
+        font-size: 1.3em;
+    }
+
+    .header-profile-menu .avatar-profile {
+        width: 85px;
+        height: 85px;
         border-radius: 50%;
         box-shadow: 0 0 5px #dddddd;
         background: #EEEEEE;
         border: 3px solid #FFFFFF;
+        margin: 0;
     }
 
     .general-first-block {
@@ -105,5 +139,17 @@
 @media (min-width: 920px) {
     .item {
         border-bottom: none;
+    }
+
+    .tabs {
+        display: none;
+    }
+
+    .user-information {
+        display: none !important;
+    }
+
+    .header-profile-menu {
+        justify-content: center;
     }
 }

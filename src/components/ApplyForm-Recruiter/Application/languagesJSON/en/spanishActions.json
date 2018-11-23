@@ -30,5 +30,17 @@
 	{
 		"id": 7,
 		"label": "Template"
+	},
+	{
+		"id": 8,
+		"label": "Next"
+	},
+	{
+		"id": 9,
+		"label": "Back"
+	},
+	{
+		"id": 10,
+		"label": "Finish"
 	}
 ]
