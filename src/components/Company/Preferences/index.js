@@ -3,7 +3,8 @@ import gql from 'graphql-tag';
 import {withApollo} from 'react-apollo';
 import CatalogItem from 'Generic/CatalogItem';
 import {select} from 'async';
-import months from './months';
+import months from './months.json';
+import timeZones from './timezones.json';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 class Preferences extends React.Component {
@@ -217,7 +218,7 @@ class Preferences extends React.Component {
 
     render() {
         if (this.state.loading) {
-            return <LinearProgress />
+            return <LinearProgress/>
         }
 
         return (
@@ -309,8 +310,9 @@ class Preferences extends React.Component {
                                                         <option value="">Select a month</option>
                                                         {
                                                             months.map(month => {
-                                                                if(this.state.endMonth != month.id){
-                                                                    return <option value={month.id}>{month.description}</option>
+                                                                if (this.state.endMonth != month.id) {
+                                                                    return <option
+                                                                        value={month.id}>{month.description}</option>
                                                                 }
                                                             })
                                                         }
@@ -339,9 +341,51 @@ class Preferences extends React.Component {
                                                         <option value="">Select a month</option>
                                                         {
                                                             months.map(month => {
-                                                                if(this.state.startMonth != month.id){
-                                                                    return <option value={month.id}>{month.description}</option>
+                                                                if (this.state.startMonth != month.id) {
+                                                                    return <option
+                                                                        value={month.id}>{month.description}</option>
                                                                 }
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {/* Time Zone preferences*/}
+                            <div className="card">
+                                <div className="card-header">Time Zone</div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <label>
+                                                        Time Zone
+                                                    </label>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <select
+                                                        required
+                                                        value={this.state.startMonth}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                startMonth: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        {
+                                                            timeZones.map(item => {
+                                                                    return (
+                                                                        <option
+                                                                            value={item.id}
+                                                                        >{item.offset + ' ' + item.name}</option>)
                                                             })
                                                         }
                                                     </select>
