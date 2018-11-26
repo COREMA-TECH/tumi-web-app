@@ -113,6 +113,7 @@ class Preferences extends React.Component {
         })
     }
 
+
     add() {
         this.props.client.mutate({
             mutation: this.INSERT_QUERY,
@@ -124,6 +125,7 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
+                    // TODO: add timezones
                 }
             }
         })
@@ -155,6 +157,7 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
+                    // TODO: add timezones
                 }
             }
         })
