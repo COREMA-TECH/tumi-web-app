@@ -23,6 +23,7 @@ class Preferences extends React.Component {
 
             startMonth: null,
             endMonth: null,
+            timeZone: null,
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
@@ -125,6 +126,7 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
+                    Timezone: parseInt(this.state.timeZone)
                     // TODO: add timezones
                 }
             }
@@ -157,6 +159,7 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
+                    Timezone: parseInt(this.state.timeZone)
                     // TODO: add timezones
                 }
             }
@@ -187,6 +190,7 @@ class Preferences extends React.Component {
                 charge
                 FiscalMonth1
                 FiscalMonth2
+                Timezone
             }
         }
     `;
@@ -201,6 +205,7 @@ class Preferences extends React.Component {
                 EntityId
                 FiscalMonth1
                 FiscalMonth2
+                Timezone
             }
         }
     `;
@@ -215,6 +220,7 @@ class Preferences extends React.Component {
                 EntityId
                 FiscalMonth1
                 FiscalMonth2
+                Timezone
             }
         }
     `;
@@ -374,11 +380,11 @@ class Preferences extends React.Component {
                                                 <div className="col-md-12">
                                                     <select
                                                         required
-                                                        value={this.state.startMonth}
+                                                        value={this.state.timeZone}
                                                         className="form-control"
                                                         onChange={(event) => {
                                                             this.setState({
-                                                                startMonth: event.target.value
+                                                                timeZone: event.target.value
                                                             })
                                                         }}
                                                     >
