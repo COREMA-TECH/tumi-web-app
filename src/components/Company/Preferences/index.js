@@ -50,12 +50,15 @@ class Preferences extends React.Component {
                             amount: data.companyPreferences[0].amount,
                             EntityId: data.companyPreferences[0].EntityId,
                             disabled: !data.companyPreferences[0].charge,
-                            startMonth: !data.companyPreferences[0].FiscalMonth1,
-                            endMonth: !data.companyPreferences[0].FiscalMonth2,
+                            startMonth: data.companyPreferences[0].FiscalMonth1,
+                            endMonth: data.companyPreferences[0].FiscalMonth2,
+                            timeZone: data.companyPreferences[0].Timezone,
                         }, () => {
                             this.setState({
                                 loading: false
                             })
+
+                            console.table(this.state);
                         });
                     }
                 })
