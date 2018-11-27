@@ -11,6 +11,7 @@ import ConductCode from "./ConductCode/ConductCode";
 import AntiHarassment from "./AntiHarassment/AntiHarassment";
 import WorkerCompensation from "./WorkerCompensation/WorkerCompensation";
 import ApplicantDocument from "./ApplicantDocuments/ApplicantDocument";
+import ProfilePreview from "./ProfilePreview/ProfilePreview";
 
 const applyTabs = require(`./languagesJSON/${localStorage.getItem('languageForm')}/applyTabs`);
 
@@ -113,8 +114,8 @@ class CustomizedTabs extends React.Component {
                     return <WorkerCompensation applicationId={this.state.applicationId} />;
                 case 6:
                     return <ApplicantDocument applicationId={this.state.applicationId} />;
-                default:
-                    return 'Unknown step';
+                case 7:
+                    return <ProfilePreview applicationId={this.state.applicationId}/>;
             }
         };
 
@@ -162,6 +163,11 @@ class CustomizedTabs extends React.Component {
                             disableRipple
                             classes={{ root: "Tab-item", selected: "Tab-selected" }}
                             label={applyTabs[6].label}
+                        />
+                        <Tab
+                            disableRipple
+                            classes={{ root: "Tab-item", selected: "Tab-selected" }}
+                            label={applyTabs[7].label}
                         />
                     </Tabs>
                     {getTabContent(value)}

@@ -60,6 +60,7 @@ export const GET_APPLICATION_BY_ID = gql`
 			firstName
 			middleName
 			lastName
+			lastName2
 			date
 			streetAddress
 			emailAddress
@@ -80,7 +81,7 @@ export const GET_APPLICATION_BY_ID = gql`
 			scheduleExplain
 			convicted
 			convictedExplain
-			comment,
+			comment
 			idealJob
 		}
 	}

@@ -615,6 +615,7 @@ class Education extends Component {
                                         )
                                     }
                                 </div>
+
                                 {/*{*/}
                                 {/*this.state.editing ? (*/}
                                 {/*<div className="applicant-card__footer">*/}

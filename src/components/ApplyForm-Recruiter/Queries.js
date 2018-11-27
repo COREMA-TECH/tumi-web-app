@@ -61,6 +61,7 @@ export const GET_APPLICATION_BY_ID = gql`
             firstName
             middleName
             lastName
+            lastName2
             date
             streetAddress
             emailAddress

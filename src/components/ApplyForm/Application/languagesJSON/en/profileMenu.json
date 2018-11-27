@@ -1,0 +1,26 @@
+[
+  {
+    "id": 0,
+    "label": "General"
+  },
+  {
+    "id": 1,
+    "label": "Schedule"
+  },
+  {
+    "id": 2,
+    "label": "Documents"
+  },
+  {
+    "id": 3,
+    "label": "Benefits"
+  },
+  {
+    "id": 4,
+    "label": "Time"
+  },
+  {
+    "id": 5,
+    "label": "Resources"
+  }
+]

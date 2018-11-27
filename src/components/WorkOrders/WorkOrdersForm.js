@@ -411,7 +411,7 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Shift</label>
+                                            <label htmlFor="">Shift Start</label>
                                             <select
                                                 required
                                                 className="form-control"

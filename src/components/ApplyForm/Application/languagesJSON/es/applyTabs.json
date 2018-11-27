@@ -26,5 +26,9 @@
   {
     "id": 6,
     "label": "Documentos"
+  },
+  {
+    "id": 7,
+    "label": "Perfil"
   }
 ]

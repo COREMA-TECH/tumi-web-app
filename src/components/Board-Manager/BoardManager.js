@@ -117,16 +117,16 @@ class BoardManager extends Component {
 
 
     handleDragStart = (cardId, laneId) => {
-        console.log('drag started');
-        console.log(`cardId: ${cardId}`);
-        console.log(`laneId: ${laneId}`);
+        //////////console.log('drag started');
+        //console.log(`cardId: ${cardId}`);
+        //console.log(`laneId: ${laneId}`);
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
-        console.log('drag ended')
-        console.log(`cardId: ${cardId}`)
-        console.log(`sourceLaneId: ${sourceLaneId}`)
-        console.log(`targetLaneId: ${targetLaneId}`)
+        //console.log('drag ended')
+        //console.log(`cardId: ${cardId}`)
+        //console.log(`sourceLaneId: ${sourceLaneId}`)
+        //console.log(`targetLaneId: ${targetLaneId}`)
     }
 
 
@@ -256,30 +256,30 @@ class BoardManager extends Component {
 
 
     validateInvalidInput = () => {
-        console.log("estoy en accion");
+        //console.log("estoy en accion");
     };
 
     shouldReceiveNewData = nextData => {
-        console.log('New card has been added')
-        console.log(nextData)
+        //console.log('New card has been added')
+        //console.log(nextData)
     }
 
     handleCardAdd = (card, laneId) => {
-        console.log(`New card added to lane ${laneId}`)
+        //console.log(`New card added to lane ${laneId}`)
         console.dir(card)
     }
 
     addCardLink = (cardId, metadata, laneId) => {
 
-        console.log("cardId ", cardId);
-        console.log("metadata ", metadata);
+        //console.log("cardId ", cardId);
+        //console.log("metadata ", metadata);
 
         this.getMatches(true, true, true, laneId);
     }
 
 
     onCardClick = (cardId, metadata, laneId) => {
-        console.log("esto es mio ", this.state.workOrders)
+        //console.log("esto es mio ", this.state.workOrders)
         if (sessionStorage.getItem('NewFilter') === false) {
             this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
         } else {
@@ -326,8 +326,8 @@ class BoardManager extends Component {
 
 
 
-                    // console.log("Estos son los data ", wo);
-                    console.log("estos son los datos de la coordenaas ", this.state.latitud2, " longitud ", this.state.longitud2)
+                    // //console.log("Estos son los data ", wo);
+                    //console.log("estos son los datos de la coordenaas ", this.state.latitud2, " longitud ", this.state.longitud2)
                     datas = {
                         id: wo.id,
                         name: wo.firstName + ' ' + wo.lastName,
@@ -339,7 +339,7 @@ class BoardManager extends Component {
                     };
 
                     if (SpeakEnglish == 1 && Employment >= 1) {
-                        console.log("este es el speak", datas);
+                        //console.log("este es el speak", datas);
                         getmatches.push(datas);
                     }
 
@@ -391,10 +391,27 @@ class BoardManager extends Component {
         }
     };
 
+    getLatLong = async (zipcode) => {
+        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
+            console.log("aqui vamos por coordenasas  ", zipcode)
+            console.log("aqui vamos por data  ", data)
+            data.applications.forEach((coor) => {
+                //console.log("coordenadas ", coor)
+                this.setState({
+                    latitud1: coor.Lat,
+                    longitud1: coor.Long,
+                    // distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'K')
+                });
+            });
+        }).catch(error => { })
+        console.log("aqui vamos por coordenasas  ", this.state.latitud1);
+        console.log("aqui vamos por coordenasas  ", this.state.longitud1);
+    };
+
     getWorkOrders = async () => {
         let getworkOrders = [];
         let datas = [];
-        console.log("Este es el hotel ", this.state.hotel);
+        //console.log("Este es el hotel ", this.state.hotel);
 
         if (this.state.hotel == 0) {
             await this.props.client.query({ query: GET_WORK_ORDERS, variables: { status: this.state.status } }).then(({ data }) => {
@@ -405,15 +422,8 @@ class BoardManager extends Component {
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
-                    this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: Hotel.Zipcode } }).then(({ data }) => {
-                        data.applications.forEach((wo) => {
-                            this.setState({
-                                latitud1: wo.Lat,
-                                longitud1: wo.Long,
-                                // distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'K')
-                            });
-                        });
-                    }).catch(error => { })
+                    //console.log("Datos basicos del hotel  ", Hotel)
+                    this.getLatLong("0" + Hotel.Zipcode);
 
                     datas = {
                         id: wo.id,
@@ -431,7 +441,7 @@ class BoardManager extends Component {
                     };
                     getworkOrders.push(datas);
                 });
-                console.log("este es el work ", getworkOrders)
+                //console.log("este es el work ", getworkOrders)
                 this.setState({
                     workOrders: getworkOrders
                 });
@@ -510,12 +520,12 @@ class BoardManager extends Component {
     };
 
     render() {
-        const { getDistance } = this.context;
-        const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
-        const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
+        //const { getDistance } = this.context;
+        //const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
+        //const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
 
 
-        console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
+        ////console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
 
         return (
             <div className="App">
