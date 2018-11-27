@@ -110,7 +110,6 @@ class ContactModal extends Component {
             Date_Updated: "'2018-08-14 16:10:25+00'",
 
 
-
             contactTypes: ContactTypesData,
         }
     }
