@@ -12,6 +12,9 @@ import 'ui-components/InputForm/index.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import './index.css';
 import PropTypes from 'prop-types';
+import {withStyles} from "@material-ui/core";
+import {withApollo} from "react-apollo";
+import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 
 const styles = (theme) => ({
     container: {
@@ -106,13 +109,13 @@ class ContactModal extends Component {
 
         return (
             <Dialog
-                fullScreen={false}
+                fullScreen={fullScreen}
                 open={true}
                 onClose={this.cancelContactHandler}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <DialogTitle style={{padding: '0px'}}>
+                <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 class="modal-title">
                             {' '}
@@ -126,7 +129,7 @@ class ContactModal extends Component {
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600, padding: '0px'}}>
+                <DialogContent style={{ minWidth: 600, padding: '0px' }}>
                     <div className="container">
                         <div className="">
                             <div className="row">
@@ -233,9 +236,9 @@ class ContactModal extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{margin: '20px 20px'}}>
-                    <div>
-                        <div>
+                <DialogActions style={{ margin: '20px 20px' }}>
+                    <div className={classes.root}>
+                        <div className={classes.wrapper}>
                             <Tooltip
                                 title={
                                     this.state.idToEdit != null &&
@@ -254,15 +257,15 @@ class ContactModal extends Component {
                                         className="btn btn-success"
                                         onClick={this.addContactHandler}
                                     >
-                                        Save {!this.state.saving && <i class="fas fa-save"/>}
-                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                        Save {!this.state.saving && <i class="fas fa-save" />}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin" />}
                                     </button>
                                 </div>
                             </Tooltip>
                         </div>
                     </div>
-                    <div>
-                        <div>
+                    <div className={classes.root}>
+                        <div className={classes.wrapper}>
                             <Tooltip title={'Cancel Operation'}>
                                 <div>
                                     <button
@@ -271,7 +274,7 @@ class ContactModal extends Component {
                                         className="btn btn-danger"
                                         onClick={this.cancelContactHandler}
                                     >
-                                        Cancel <i class="fas fa-ban"/>
+                                        Cancel <i class="fas fa-ban" />
                                     </button>
                                 </div>
                             </Tooltip>
@@ -288,4 +291,5 @@ ContactModal.propTypes = {
     fullScreen: PropTypes.bool.isRequired
 };
 
-export default ContactModal;
+
+export default withStyles(styles)(withApollo(withMobileDialog()(ContactModal)));

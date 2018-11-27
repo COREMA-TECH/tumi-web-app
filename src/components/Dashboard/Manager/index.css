@@ -1,0 +1,26 @@
+/* TODO: move styles to the css folder */
+.stat-card {
+    background: #f9f9f9;
+    border: 1px solid #fefefe;
+    border-radius: 5px;
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    padding: .8em;
+}
+
+.stat-description {
+    color: #555555;
+    font-size: 1.1em;
+}
+
+.stat-number {
+    color: #41afd7;
+    font-size: 2em;
+    margin-top: .8em;
+}

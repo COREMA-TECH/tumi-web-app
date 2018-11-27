@@ -3,6 +3,8 @@ import WorkOrdersTable from 'WorkOrders/WorkOrdersTable';
 import { Pie } from 'react-chartjs-2';
 import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
 import withGlobalContent from 'Generic/Global';
+import './index.css';
+import NotShowApplicantsTable from "./NotShowApplicantsTable";
 
 class DashboardManager extends React.Component {
 	data = {
@@ -104,11 +106,68 @@ class DashboardManager extends React.Component {
 							</div>
 						</div>
 					</div>
+					<div className="row">
+						<div className="col-md-12">
+                            <WorkOrdersTable
+                                onEditHandler={this.onEditHandler}
+                                handleOpenSnackbar={this.props.handleOpenSnackbar}
+                            />
+						</div>
+						<div className="col-md-12">
+							<div className="card">
+								<div className="row">
+									<div className="col-md-12">
+                                        <h3 className="text-success">Stats</h3>
+									</div>
+								</div>
+                                <div className="row">
+                                    <div className="col-md-2">
+                                        <div className="stat-card">
+											<div className="stat-description">Not Show</div>
+											<div className="stat-number">20</div>
+										</div>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <div className="stat-card">
+                                            <div className="stat-description">Disqualified</div>
+                                            <div className="stat-number">150</div>
+                                        </div>
+									</div>
+                                    <div className="col-md-2">
+                                        <div className="stat-card">
+                                            <div className="stat-description">Disqualified</div>
+                                            <div className="stat-number">150</div>
+                                        </div>
+                                    </div>
+									<div className="col-md-2">
+                                        <div className="stat-card">
+                                            <div className="stat-description">Disqualified</div>
+                                            <div className="stat-number">150</div>
+                                        </div>
+                                    </div>
+									<div className="col-md-2">
+                                        <div className="stat-card">
+                                            <div className="stat-description">Disqualified</div>
+                                            <div className="stat-number">150</div>
+                                        </div>
+                                    </div>
+									<div className="col-md-2">
+                                        <div className="stat-card">
+                                            <div className="stat-description">Disqualified</div>
+                                            <div className="stat-number">150</div>
+                                        </div>
+                                    </div>
 
-					<WorkOrdersTable
-						onEditHandler={this.onEditHandler}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-					/>
+                                </div>
+							</div>
+						</div>
+                        {/*<div className="col-md-6">*/}
+							{/*<NotShowApplicantsTable*/}
+                                {/*onEditHandler={this.onEditHandler}*/}
+                                {/*handleOpenSnackbar={this.props.handleOpenSnackbar}*/}
+							{/*/>*/}
+                        {/*</div>*/}
+					</div>
 				</div>
 				<div className="col-md-12 col-lg-7">
 					<div className="card">
