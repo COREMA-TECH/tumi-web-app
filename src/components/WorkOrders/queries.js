@@ -31,6 +31,24 @@ export const GET_HOTEL_QUERY = gql`
 	}
 `;
 
+export const PHASE_WORK_ORDER = gql`
+	query phaseworkOrder($WorkOrderId:Int){
+			phaseworkOrder(WorkOrderId:$WorkOrderId){
+			userId
+			phaseworkOrderId
+			actions{
+				Id
+				Name
+			  }
+			  users{
+				Code_User
+			  }
+			createdAt
+			WorkOrderId
+		}
+   }
+`;
+
 export const GET_POSITION_BY_QUERY = gql`
 	query getPosition($id: Int) {
 		getposition(Id: null, IsActive: null, Id_Entity: $id) {

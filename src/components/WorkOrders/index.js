@@ -3,6 +3,7 @@ import WorkOrdersTable from './WorkOrdersTable';
 import WorkOrdersForm from './WorkOrdersForm';
 import WorkOrdersView from './WorkOrdersView';
 import withGlobalContent from 'Generic/Global';
+import LifeCycleWorkOrdersTable from './LifeCycleWorkOrdersTable';
 
 class WorkOrders extends Component {
 	constructor(props) {
@@ -11,21 +12,34 @@ class WorkOrders extends Component {
 		this.state = {
 			data: [],
 			openModal: false,
+			openLife: false,
 			item: null
 		};
 	}
 
 	handleClickOpenModal = () => {
-		this.setState({ openModal: true, item: null });
+		this.setState({ openModal: true, openLife: true, item: null });
 	};
 	handleCloseModal = (event) => {
 		event.preventDefault();
-		this.setState({ openModal: false });
+		this.setState({
+			openModal: false, openLife: false
+
+		});
 	};
 
 	onEditHandler = (item) => {
 		this.setState({
 			openModal: true,
+			openLife: false,
+			item: item
+		});
+	};
+
+	onLifeHandler = (item) => {
+		this.setState({
+			openModal: false,
+			openLife: true,
 			item: item
 		});
 	};
@@ -44,6 +58,7 @@ class WorkOrders extends Component {
 					<div className="col-md-12">
 						<WorkOrdersTable
 							onEditHandler={this.onEditHandler}
+							onLifeHandler={this.onLifeHandler}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}
 						/>
 					</div>
@@ -52,6 +67,12 @@ class WorkOrders extends Component {
 					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
 					openModal={this.state.openModal}
+					handleCloseModal={this.handleCloseModal}
+				/>
+				<LifeCycleWorkOrdersTable
+					item={this.state.item}
+					handleOpenSnackbar={this.props.handleOpenSnackbar}
+					openLife={this.state.openLife}
 					handleCloseModal={this.handleCloseModal}
 				/>
 			</div>

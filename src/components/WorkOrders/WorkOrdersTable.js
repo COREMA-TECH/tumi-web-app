@@ -199,6 +199,19 @@ class WorkOrdersTable extends Component {
                                 return (
                                     <TableRow>
                                         <CustomTableCell>
+                                            <Tooltip title="Life Cycle">
+                                                <button
+                                                    className="btn btn-success mr-1 float-left"
+                                                    disabled={this.props.loading}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        this.props.onLifeHandler({ ...row });
+                                                        // return this.props.onEditHandler({ ...row });
+                                                    }}
+                                                >
+                                                    <i class="fas fa-info"></i>
+                                                </button>
+                                            </Tooltip>
                                             <Tooltip title="Edit">
                                                 <button
                                                     className="btn btn-success mr-1 float-left"
