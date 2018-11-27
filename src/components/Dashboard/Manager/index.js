@@ -115,7 +115,7 @@ class DashboardManager extends React.Component {
 						</div>
 						<div className="col-md-12">
 							<div className="card">
-								<div className="row">
+								<div className="row stat-header">
 									<div className="col-md-12">
                                         <h3 className="text-success">Stats</h3>
 									</div>
@@ -136,25 +136,25 @@ class DashboardManager extends React.Component {
                                     <div className="col-md-2">
                                         <div className="stat-card">
                                             <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number">150</div>
+                                            <div className="stat-number stat-number--secondary">150</div>
                                         </div>
                                     </div>
 									<div className="col-md-2">
                                         <div className="stat-card">
                                             <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number">150</div>
+                                            <div className="stat-number stat-number--secondary">150</div>
                                         </div>
                                     </div>
 									<div className="col-md-2">
                                         <div className="stat-card">
                                             <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number">150</div>
+                                            <div className="stat-number stat-number--null">0</div>
                                         </div>
                                     </div>
 									<div className="col-md-2">
                                         <div className="stat-card">
                                             <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number">150</div>
+                                            <div className="stat-number stat-number--null">0</div>
                                         </div>
                                     </div>
 
