@@ -18,7 +18,7 @@ class WorkOrders extends Component {
 	}
 
 	handleClickOpenModal = () => {
-		this.setState({ openModal: true, openLife: true, item: null });
+		this.setState({ openModal: true, openLife: false, item: null });
 	};
 	handleCloseModal = (event) => {
 		event.preventDefault();
