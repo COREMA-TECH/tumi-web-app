@@ -5,6 +5,8 @@ import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
 import withGlobalContent from 'Generic/Global';
 import './index.css';
 import NotShowApplicantsTable from "./NotShowApplicantsTable";
+import withApollo from "react-apollo/withApollo";
+import {GET_CATALOG} from "./Queries";
 
 class DashboardManager extends React.Component {
 	data = {
@@ -22,7 +24,8 @@ class DashboardManager extends React.Component {
 		super(props);
 		this.state = {
 			showAll: false,
-			openModal: false
+			openModal: false,
+			catalogs: [],
 		};
 	}
 
@@ -40,6 +43,31 @@ class DashboardManager extends React.Component {
 			item: item
 		});
 	};
+
+	/**
+	 * Get catalogs from API
+	 * */
+	getApplicantStatsCodes = () => {
+		this.props.client
+			.query({
+				query: GET_CATALOG
+			})
+			.then(({data}) => {
+				this.setState({
+                    catalogs: data.getcatalogitem[0]
+				}, () => {
+					console.table(this.state);
+				})
+			})
+			.catch(error => {
+
+			})
+	};
+
+	componentWillMount() {
+		this.getApplicantStatsCodes();
+	}
+
 	render() {
 		return (
 			<div className="row WorkOrder">
@@ -113,54 +141,7 @@ class DashboardManager extends React.Component {
                                 handleOpenSnackbar={this.props.handleOpenSnackbar}
                             />
 						</div>
-						<div className="col-md-12">
-							<div className="card">
-								<div className="row stat-header">
-									<div className="col-md-12">
-                                        <h3 className="text-success">Stats</h3>
-									</div>
-								</div>
-                                <div className="row">
-                                    <div className="col-md-2">
-                                        <div className="stat-card">
-											<div className="stat-description">Not Show</div>
-											<div className="stat-number">20</div>
-										</div>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <div className="stat-card">
-                                            <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number">150</div>
-                                        </div>
-									</div>
-                                    <div className="col-md-2">
-                                        <div className="stat-card">
-                                            <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number stat-number--secondary">150</div>
-                                        </div>
-                                    </div>
-									<div className="col-md-2">
-                                        <div className="stat-card">
-                                            <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number stat-number--secondary">150</div>
-                                        </div>
-                                    </div>
-									<div className="col-md-2">
-                                        <div className="stat-card">
-                                            <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number stat-number--null">0</div>
-                                        </div>
-                                    </div>
-									<div className="col-md-2">
-                                        <div className="stat-card">
-                                            <div className="stat-description">Disqualified</div>
-                                            <div className="stat-number stat-number--null">0</div>
-                                        </div>
-                                    </div>
 
-                                </div>
-							</div>
-						</div>
                         {/*<div className="col-md-6">*/}
 							{/*<NotShowApplicantsTable*/}
                                 {/*onEditHandler={this.onEditHandler}*/}
@@ -169,6 +150,29 @@ class DashboardManager extends React.Component {
                         {/*</div>*/}
 					</div>
 				</div>
+                <div className="col-md-12">
+                    <div className="card">
+                        <div className="row stat-header">
+                            <div className="col-md-12">
+                                <h3 className="text-success">Stats</h3>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-2">
+                                <div className="stat-card">
+                                    <div className="stat-description">Not Show</div>
+                                    <div className="stat-number">20</div>
+                                </div>
+                            </div>
+                            <div className="col-md-2">
+                                <div className="stat-card">
+                                    <div className="stat-description">Disqualified</div>
+                                    <div className="stat-number stat-number--secondary">150</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 				<div className="col-md-12 col-lg-7">
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
@@ -214,4 +218,4 @@ class DashboardManager extends React.Component {
 	}
 }
 
-export default withGlobalContent(DashboardManager);
+export default withGlobalContent(withApollo(DashboardManager));
