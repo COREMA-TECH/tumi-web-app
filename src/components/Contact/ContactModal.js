@@ -106,103 +106,60 @@ class ContactModal extends Component {
     /**
      * Function to insert a contact
      */
-    insertContact = () => {
-        var IdDeparment = 0,
-            IdTitle = 0;
+    insertContacts = (idDepartment, idTitle) => {
+        const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
-        var department = this.state.departments.find((obj) => {
-            return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
-        });
-
-        var title = this.state.titles.find((obj) => {
-            return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
-        });
-
-        let insdepartmentAsync = async () => {
-            if (department) {
-                IdDeparment = department.Id;
-            } else {
-                //const InsertDepartmentNew =
-                await this.props.client
-                    .mutate({
-                        mutation: this.INSERT_DEPARTMENTS_QUERY,
-                        variables: {
-                            input: {
-                                Id: 0,
-                                Id_Catalog: 8,
-                                Id_Parent: 0,
-                                Name: `'${this.state.departmentName}'`,
-                                DisplayLabel: `'${this.state.departmentName}'`,
-                                Description: `'${this.state.departmentName}'`,
-                                Value: null,
-                                Value01: null,
-                                Value02: null,
-                                Value03: null,
-                                Value04: null,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: "'2018-09-20 08:10:25+00'",
-                                Date_Updated: "'2018-09-20 08:10:25+00'"
-                            }
-                        }
-                    })
-                    .then((data) => {
-                        IdDeparment = data.data.inscatalogitem.Id;
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-                        this.setState({
-                            saving: false
+        this.props.client
+            .mutate({
+                mutation: query,
+                variables: {
+                    input: {
+                        Id: id,
+                        Id_Entity: this.props.idCompany,
+                        First_Name: `'${this.state.firstname}'`,
+                        Middle_Name: `'${this.state.middlename}'`,
+                        Last_Name: `'${this.state.lastname}'`,
+                        Electronic_Address: `'${this.state.email}'`,
+                        Phone_Number: `'${this.state.number}'`,
+                        //Contact_Title: this.state.title,
+                        Contact_Title: idTitle,
+                        Contact_Type: this.state.type,
+                        Id_Deparment: idDepartment,
+                        Id_Supervisor: this.state.idSupervisor,
+                        IsActive: 1,
+                        User_Created: 1,
+                        User_Updated: 1,
+                        Date_Created: "'2018-08-14 16:10:25+00'",
+                        Date_Updated: "'2018-08-14 16:10:25+00'"
+                    }
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
+                this.setState({ openModal: false, loading: true, showCircularLoading: true }, () => {
+                    this.loadContacts(() => {
+                        this.loadDepartments(() => {
+                            this.loadTitles(() => {
+                                this.loadAllSupervisors(() => {
+                                    this.loadSupervisors(0, () => {
+                                        this.resetState();
+                                    });
+                                });
+                            });
                         });
-                        return false;
                     });
-            }
-
-            if (title) {
-                IdTitle = title.Id;
-            } else {
-                //const InsertDepartmentNew =
-                await this.props.client
-                    .mutate({
-                        mutation: this.INSERT_DEPARTMENTS_QUERY,
-                        variables: {
-                            input: {
-                                Id: 0,
-                                Id_Catalog: 6,
-                                Id_Parent: 0,
-                                Name: `'${this.state.titleName}'`,
-                                DisplayLabel: `'${this.state.titleName}'`,
-                                Description: `'${this.state.titleName}'`,
-                                Value: null,
-                                Value01: null,
-                                Value02: null,
-                                Value03: null,
-                                Value04: null,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: "'2018-09-20 08:10:25+00'",
-                                Date_Updated: "'2018-09-20 08:10:25+00'"
-                            }
-                        }
-                    })
-                    .then((data) => {
-                        IdTitle = data.data.inscatalogitem.Id;
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-                        this.setState({
-                            saving: false
-                        });
-                        return false;
-                    });
-            }
-
-            this.insertContacts(IdDeparment, IdTitle);
-        };
-
-        insdepartmentAsync();
+                });
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+                );
+                this.setState({
+                    saving: false
+                });
+                return false;
+            });
     };
 
     render() {
