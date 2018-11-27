@@ -9,3 +9,14 @@ export const GET_CATALOG = gql`
     }
 `;
 
+export const GET_APPLICANTS_PHASES = gql`
+    {
+        application_phase {
+            id
+            UserId
+            StageId
+            ReasonId
+        }
+    }
+`;
+

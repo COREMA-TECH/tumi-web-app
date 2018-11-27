@@ -5,7 +5,8 @@ import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
 import withGlobalContent from 'Generic/Global';
 import './index.css';
 import withApollo from "react-apollo/withApollo";
-import {GET_CATALOG} from "./Queries";
+import {GET_APPLICANTS_PHASES, GET_CATALOG} from "./Queries";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 class DashboardManager extends React.Component {
     data = {
@@ -26,6 +27,9 @@ class DashboardManager extends React.Component {
             showAll: false,
             openModal: false,
             catalogs: [],
+            phases: [],
+            notShow: 0,
+            disqualified: 0
         };
     }
 
@@ -48,27 +52,76 @@ class DashboardManager extends React.Component {
      * Get catalogs from API
      * */
     getApplicantStatsCodes = () => {
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: GET_CATALOG
+                })
+                .then(({data}) => {
+                    this.setState({
+                        catalogs: data.getcatalogitem
+                    }, () => {
+                        this.getApplicantPhases();
+                    })
+                })
+                .catch(error => {
+                    this.setState({
+                        loading: false
+                    });
+                })
+        });
+    };
+
+    /**
+     * Get catalogs from API
+     * */
+    getApplicantPhases = () => {
         this.props.client
             .query({
-                query: GET_CATALOG
+                query: GET_APPLICANTS_PHASES
             })
             .then(({data}) => {
                 this.setState({
-                    catalogs: data.getcatalogitem[0]
+                    phases: data.application_phase
                 }, () => {
-                    console.table(this.state);
+                    this.state.phases.map(item => {
+                        if(this.state.catalogs[1].Id == item.ReasonId) {
+                            this.setState(prevState => ({
+                                notShow: prevState.notShow + 1
+                            }))
+                        } else if(this.state.catalogs[0].Id == item.ReasonId) {
+                            this.setState(prevState => ({
+                                disqualified: prevState.disqualified + 1
+                            }))
+                        }
+                    });
+
+                    this.setState({
+                        loading: false
+                    });
                 })
             })
             .catch(error => {
-
+                this.setState({
+                    loading: false
+                });
             })
     };
+
 
     componentWillMount() {
         this.getApplicantStatsCodes();
     }
 
     render() {
+        if(this.state.loading) {
+            return (
+                <LinearProgress />
+            )
+        }
+
         return (
             <div className="row WorkOrder">
                 <div className="col-md-12">
@@ -159,13 +212,13 @@ class DashboardManager extends React.Component {
                             <div className="col-md-2">
                                 <div className="stat-card">
                                     <div className="stat-description">Not Show</div>
-                                    <div className="stat-number">20</div>
+                                    <div className="stat-number">{this.state.notShow}</div>
                                 </div>
                             </div>
                             <div className="col-md-2">
                                 <div className="stat-card">
                                     <div className="stat-description">Disqualified</div>
-                                    <div className="stat-number stat-number--secondary">150</div>
+                                    <div className="stat-number stat-number--secondary">{this.state.disqualified}</div>
                                 </div>
                             </div>
                         </div>
