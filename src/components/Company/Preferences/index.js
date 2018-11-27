@@ -56,7 +56,7 @@ class Preferences extends React.Component {
                         }, () => {
                             this.setState({
                                 loading: false
-                            })
+                            });
 
                             console.table(this.state);
                         });

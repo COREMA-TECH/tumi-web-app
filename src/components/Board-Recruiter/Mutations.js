@@ -18,3 +18,11 @@ export const UPDATE_APPLICATION_STAGE = gql`
 		}
 	}
 `;
+
+export const ADD_APPLICATION_PHASES = gql`
+	mutation addApplicantPhase($applicationPhases: [inputApplicantPhase]) {
+		addApplicantPhase(applicationPhases: $applicationPhases) {
+			id
+		}
+	}
+`;
