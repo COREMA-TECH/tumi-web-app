@@ -4,7 +4,7 @@ import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
-import { UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
+import { UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE, ADD_APPLICATION_PHASES } from "./Mutations";
 import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_OPENING, GET_LEAD, GET_HOTEL_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
@@ -15,6 +15,7 @@ import { InputLabel } from '@material-ui/core';
 import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Filters from './Filters';
+import ApplicationPhasesForm from './ApplicationPhasesForm';
 
 
 const CustomCard = props => {
@@ -99,17 +100,17 @@ class BoardRecruiter extends Component {
             openModal: false,
             Intopening: 0,
             userId: localStorage.getItem('LoginId'),
+            openReason: false
         }
     }
 
     handleDragStart = (cardId, laneId) => {
-        console.log('drag started')
-        console.log(`cardId: ${cardId}`)
-        console.log(`laneId: ${laneId}`)
+
     }
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
         let IdLane;
+        console.log(sourceLaneId);
 
         switch (targetLaneId) {
             case "lane1":
@@ -138,6 +139,7 @@ class BoardRecruiter extends Component {
 
         if (targetLaneId == "lane4") {
             this.updateApplicationInformation(cardId, false, 'Lead now is a Candidate');
+            this.addApplicarionPhase();
         }
         if ((sourceLaneId == "lane4" && targetLaneId == "lane3") || (sourceLaneId == "lane4" && targetLaneId == "lane2")) {
             this.updateApplicationInformation(cardId, true, 'Candidate now is a Lead ');
@@ -145,7 +147,36 @@ class BoardRecruiter extends Component {
 
     }
 
-    componentWillMount() {
+    addApplicarionPhase = () => {
+        this.props.client.mutate({
+            mutation: ADD_APPLICATION_PHASES,
+            variables: {
+                applicationPhases: {
+                    Comment: " ",
+                    UserId: parseInt(this.state.userId),
+                    WorkOrderId: this.state.Intopening,
+                    ReasonId: 411,
+                    ApplicationId: 88,
+                    StageId: 1
+                }
+            }
+        }).then(({ data }) => {
+            this.setState({
+                editing: false
+            });
+
+            this.props.handleOpenSnackbar('success', "Message", 'bottom', 'right');
+        }).catch((error) => {
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to Add applicant information. Please, try again!',
+                'bottom',
+                'right'
+            );
+        });
+    }
+
+    UNSAFE_componentWillMount() {
         this.setState(
             {
                 loading: true
@@ -269,17 +300,12 @@ class BoardRecruiter extends Component {
 
 
     validateInvalidInput = () => {
-        console.log("estoy en accion");
     };
 
     shouldReceiveNewData = nextData => {
-        console.log('New card has been added')
-        console.log(nextData)
     }
 
     handleCardAdd = (card, laneId) => {
-        console.log(`New card added to lane ${laneId}`)
-        console.dir(card)
     }
 
     onCardClick = (cardId, metadata, laneId) => {
@@ -377,31 +403,21 @@ class BoardRecruiter extends Component {
         let SpeakEnglish;
         let Employment;
 
-        console.log("este es el lenguaje ", language);
-        console.log("este es el experience ", experience);
-
-
         if (laneId == "lane1") {
             await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
                     //  console.log("Verifico el dataset", wo);
                     if (language == 'true') {
-                        console.log("verifico lenguaje ");
                         SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
-                        console.log("Este es el valor de SpeakEnglish", SpeakEnglish);
                     } else {
-                        console.log("No verifico lenguaje ");
                         SpeakEnglish = 1;
                     }
 
                     if (experience == 'true') {
-                        console.log("verifico experience ");
                         Employment = wo.employments.length;
 
-                        console.log("Este es el valor de Employment", Employment);
                     } else {
-                        console.log("NO verifico experience ");
                         Employment = 1;
                     }
 
@@ -409,8 +425,6 @@ class BoardRecruiter extends Component {
                     //const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     //const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     //const Users = data.getcontacts.find((item) => { return item.Id == 10 });
-                    console.log("entro en el data ", data);
-                    console.log("este es el wo ", wo);
                     datas = {
                         id: wo.id,
                         name: wo.firstName + ' ' + wo.lastName,
@@ -425,7 +439,6 @@ class BoardRecruiter extends Component {
                         //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
                     };
                     if (SpeakEnglish == 1 && Employment >= 1) {
-                        console.log("Entro al if y esto es el dataaaaa", datas)
                         getleads.push(datas);
                     }
                 });
@@ -743,6 +756,10 @@ class BoardRecruiter extends Component {
                     </Board>
                 </div>
                 <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
+                <ApplicationPhasesForm
+                    WorkOrderId={this.state.Intopening}
+                    openReason={this.state.openReason}
+                />
             </div>
         )
         /* return <
