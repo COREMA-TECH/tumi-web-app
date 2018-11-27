@@ -568,7 +568,16 @@ class WorkOrdersForm extends Component {
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
                                             {this.state.id && (
-                                                <button className="btn btn-info ml-1 float-right" type="submit">
+                                                /*<button className="btn btn-info ml-1 float-right" type="submit">
+                                                    Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
+                                                    {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
+                                                </button>*/
+
+                                                <button
+                                                    className="btn btn-info float-right"
+                                                    type="button"
+                                                    onClick={this.handleChangeState}
+                                                >
                                                     Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
                                                     {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                                 </button>
