@@ -1,14 +1,90 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import InputMask from "react-input-mask";
-import DialogActions from "@material-ui/core/DialogActions/DialogActions";
-import Tooltip from "@material-ui/core/Tooltip/Tooltip";
-import Dialog from "@material-ui/core/Dialog/Dialog";
+import green from "@material-ui/core/colors/green";
+import Tooltip from '@material-ui/core/Tooltip';
+import InputForm from 'ui-components/InputForm/InputForm';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import SelectForm from 'ui-components/SelectForm/SelectForm';
+import 'ui-components/InputForm/index.css';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import './index.css';
+import PropTypes from 'prop-types';
 
-class  extends Component {
-    constructor(props){
+const styles = (theme) => ({
+    container: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        marginBottom: '30px',
+        width: '100%'
+    },
+    root: {
+        display: 'flex',
+        alignItems: 'center'
+    },
+    formControl: {
+        margin: theme.spacing.unit
+        //width: '100px'
+    },
+    numberControl: {
+        //width: '200px'
+    },
+    nameControl: {
+        //width: '100px'
+    },
+    emailControl: {
+        //width: '200px'
+    },
+    comboControl: {
+        //width: '200px'
+    },
+    resize: {
+        //width: '200px'
+    },
+    divStyle: {
+        width: '95%',
+        display: 'flex',
+        justifyContent: 'space-around'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    input: {
+        display: 'none'
+    },
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative'
+    },
+    buttonSuccess: {
+        backgroundColor: green[500],
+        '&:hover': {
+            backgroundColor: green[700]
+        }
+    },
+    fabProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: -6,
+        left: -6,
+        zIndex: 1
+    },
+    buttonProgress: {
+        color: green[500],
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12
+    }
+});
+
+class ContactModal extends Component {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -17,23 +93,26 @@ class  extends Component {
     }
 
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({openModal: true});
     };
 
     handleCloseModal = () => {
-        this.setState({ openModal: false });
+        this.setState({openModal: false});
     };
 
     render() {
+        const {classes} = this.props;
+        const {fullScreen} = this.props;
+
         return (
             <Dialog
                 fullScreen={false}
-                open={this.state.openModal}
+                open={true}
                 onClose={this.cancelContactHandler}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <DialogTitle style={{ padding: '0px' }}>
+                <DialogTitle style={{padding: '0px'}}>
                     <div className="modal-header">
                         <h5 class="modal-title">
                             {' '}
@@ -47,7 +126,7 @@ class  extends Component {
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{ minWidth: 600, padding: '0px' }}>
+                <DialogContent style={{minWidth: 600, padding: '0px'}}>
                     <div className="container">
                         <div className="">
                             <div className="row">
@@ -154,9 +233,9 @@ class  extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ margin: '20px 20px' }}>
-                    <div className={classes.root}>
-                        <div className={classes.wrapper}>
+                <DialogActions style={{margin: '20px 20px'}}>
+                    <div>
+                        <div>
                             <Tooltip
                                 title={
                                     this.state.idToEdit != null &&
@@ -170,20 +249,20 @@ class  extends Component {
                             >
                                 <div>
                                     <button
-                                        disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
+                                        // disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
                                         variant="fab"
                                         className="btn btn-success"
                                         onClick={this.addContactHandler}
                                     >
-                                        Save {!this.state.saving && <i class="fas fa-save" />}
-                                        {this.state.saving && <i class="fas fa-spinner fa-spin" />}
+                                        Save {!this.state.saving && <i class="fas fa-save"/>}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
                                     </button>
                                 </div>
                             </Tooltip>
                         </div>
                     </div>
-                    <div className={classes.root}>
-                        <div className={classes.wrapper}>
+                    <div>
+                        <div>
                             <Tooltip title={'Cancel Operation'}>
                                 <div>
                                     <button
@@ -192,7 +271,7 @@ class  extends Component {
                                         className="btn btn-danger"
                                         onClick={this.cancelContactHandler}
                                     >
-                                        Cancel <i class="fas fa-ban" />
+                                        Cancel <i class="fas fa-ban"/>
                                     </button>
                                 </div>
                             </Tooltip>
@@ -204,6 +283,9 @@ class  extends Component {
     }
 }
 
-.propTypes = {};
+ContactModal.propTypes = {
+    classes: PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired
+};
 
-export default ;
+export default ContactModal;
