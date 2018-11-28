@@ -13,6 +13,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			comment
 			date
 			IdEntity
+			contactId
 			PositionRateId
 			status
 			position {

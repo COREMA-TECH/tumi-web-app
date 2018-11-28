@@ -1,11 +1,12 @@
 import React from 'react';
 import WorkOrdersTable from 'WorkOrders/WorkOrdersTable';
-import {Pie} from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import WorkOrdersForm from 'WorkOrders/WorkOrdersForm';
+import LifeCycleWorkOrdersTable from 'WorkOrders/LifeCycleWorkOrdersTable';
 import withGlobalContent from 'Generic/Global';
 import './index.css';
 import withApollo from "react-apollo/withApollo";
-import {GET_APPLICANTS_PHASES, GET_CATALOG} from "./Queries";
+import { GET_APPLICANTS_PHASES, GET_CATALOG } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 class DashboardManager extends React.Component {
@@ -26,6 +27,7 @@ class DashboardManager extends React.Component {
         this.state = {
             showAll: false,
             openModal: false,
+            openLife: false,
             catalogs: [],
             phases: [],
             notShow: 0,
@@ -35,15 +37,24 @@ class DashboardManager extends React.Component {
 
     handleClickOpenModal = (event) => {
         event.preventDefault();
-        this.setState({openModal: true, item: null});
+        this.setState({ openModal: true, openLife: true, item: null });
     };
     handleCloseModal = (e) => {
         e.preventDefault();
-        this.setState({openModal: false});
+        this.setState({ openModal: false, openLife: false });
     };
     onEditHandler = (item) => {
         this.setState({
             openModal: true,
+            openLife: false,
+            item: item
+        });
+    };
+
+    onLifeHandler = (item) => {
+        this.setState({
+            openModal: false,
+            openLife: true,
             item: item
         });
     };
@@ -59,7 +70,7 @@ class DashboardManager extends React.Component {
                 .query({
                     query: GET_CATALOG
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
                     this.setState({
                         catalogs: data.getcatalogitem
                     }, () => {
@@ -82,16 +93,16 @@ class DashboardManager extends React.Component {
             .query({
                 query: GET_APPLICANTS_PHASES
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     phases: data.application_phase
                 }, () => {
                     this.state.phases.map(item => {
-                        if(this.state.catalogs[1].Id == item.ReasonId) {
+                        if (this.state.catalogs[1].Id == item.ReasonId) {
                             this.setState(prevState => ({
                                 notShow: prevState.notShow + 1
                             }))
-                        } else if(this.state.catalogs[0].Id == item.ReasonId) {
+                        } else if (this.state.catalogs[0].Id == item.ReasonId) {
                             this.setState(prevState => ({
                                 disqualified: prevState.disqualified + 1
                             }))
@@ -116,7 +127,7 @@ class DashboardManager extends React.Component {
     }
 
     render() {
-        if(this.state.loading) {
+        if (this.state.loading) {
             return (
                 <LinearProgress />
             )
@@ -147,8 +158,8 @@ class DashboardManager extends React.Component {
                                                         checked={this.state.showAll}
                                                     />
                                                     <label className="onoffswitch-label" htmlFor="showAll">
-                                                        <span className="onoffswitch-inner"/>
-                                                        <span className="onoffswitch-switch"/>
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
                                             </div>
@@ -180,7 +191,7 @@ class DashboardManager extends React.Component {
                                 <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xl-2">
                                     <div className="btnWrapper-centered pb-1">
                                         <button className="btn btn-success" type="submit">
-                                            Filter<i className="fas fa-filter ml2"/>
+                                            Filter<i className="fas fa-filter ml2" />
                                         </button>
                                     </div>
                                 </div>
@@ -190,8 +201,10 @@ class DashboardManager extends React.Component {
                     <div className="col-md-12">
                         <WorkOrdersTable
                             onEditHandler={this.onEditHandler}
+                            onLifeHandler={this.onLifeHandler}
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
                         />
+
                     </div>
 
                     {/*<div className="col-md-6">*/}
@@ -230,13 +243,13 @@ class DashboardManager extends React.Component {
                         <div className="row">
                             <div className="col-md-2 col-lg-2">
                                 <a href="" className="text-center d-block" onClick={this.handleClickOpenModal}>
-                                    <img src="/icons/actions/list.svg" alt="" className="w-50"/>
+                                    <img src="/icons/actions/list.svg" alt="" className="w-50" />
                                     <span className="d-block">Add Work Order</span>
                                 </a>
                             </div>
                             <div className="col-md-2 col-lg-2">
                                 <a href="/home/board/manager" className="text-center d-block">
-                                    <img src="/icons/actions/notepad-3.svg" alt="" className="w-50"/>
+                                    <img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
                                     <span className="d-block">Go to board</span>
                                 </a>
                             </div>
@@ -262,6 +275,12 @@ class DashboardManager extends React.Component {
                     item={this.state.item}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                     openModal={this.state.openModal}
+                    handleCloseModal={this.handleCloseModal}
+                />
+                <LifeCycleWorkOrdersTable
+                    item={this.state.item}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    openLife={this.state.openLife}
                     handleCloseModal={this.handleCloseModal}
                 />
             </div>

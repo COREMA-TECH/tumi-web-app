@@ -16,8 +16,18 @@ export const UPDATE_WORKORDER = gql`
 	}
 `;
 
+
+export const CONVERT_TO_OPENING = gql`
+mutation convertToOpening($id: Int, $userId: Int) {
+	convertToOpening(id: $id, userId: $userId)
+	{
+		id
+	}
+}
+`;
+
 export const DELETE_WORKORDER = gql`
-	mutation deleteWorkOrder($id: [Int]) {
+	mutation deleteWorkOrder($id: Int) {
 		deleteWorkOrder(id: $id)
 	}
 `;

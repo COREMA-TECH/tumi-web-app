@@ -13,7 +13,7 @@ import { withApollo } from 'react-apollo';
 import { GET_WORKORDERS_QUERY, GET_RECRUITER } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import { DELETE_WORKORDER, UPDATE_WORKORDER } from './mutations';
+import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
 
 const CustomTableCell = withStyles((theme) => ({
@@ -51,10 +51,11 @@ class WorkOrdersTable extends Component {
             position: 0,
             PositionRateId: null,
             RecruiterId: null,
-            userId: 1,
+            userId: localStorage.getItem('LoginId'),
             ShiftsData: ShiftsData,
             saving: false,
-            recruiters: []
+            recruiters: [],
+            contactId: null,
         }
     }
 
@@ -105,11 +106,13 @@ class WorkOrdersTable extends Component {
                 needExperience: data.needExperience,
                 needEnglish: data.needExperience,
                 comment: data.comment,
+                contactId: data.contactId,
                 PositionRateId: data.PositionRateId,
                 RecruiterId: parseInt(this.state[`RecruiterId${data.id}`]),
-                userId: 1
+                userId: this.state.userId
             }, () => {
-                this.update();
+                // this.update();
+                this.CONVERT_TO_OPENING();
             });
         } else {
             this.props.handleOpenSnackbar('error', 'Recruiter fields is required');
@@ -144,8 +147,29 @@ class WorkOrdersTable extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         PositionRateId: this.state.PositionRateId,
-                        userId: this.state.userId
+                        userId: this.state.userId,
+                        contactId: this.state.contactId
                     }
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
+                this.setState({ openModal: false, saving: false, converting: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true, converting: false });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            });
+    };
+
+    CONVERT_TO_OPENING = () => {
+        this.props.client
+            .mutate({
+                mutation: CONVERT_TO_OPENING,
+                variables: {
+                    id: this.state.id,
+                    userId: this.state.userId,
                 }
             })
             .then((data) => {

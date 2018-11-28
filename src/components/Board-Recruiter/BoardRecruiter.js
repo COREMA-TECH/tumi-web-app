@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
-import ShiftsData from '../../data/shitfs.json';
+import ShiftsData from '../../data/shitfsWorkOrder.json';
 import { InputLabel } from '@material-ui/core';
 import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
@@ -91,7 +91,7 @@ class BoardRecruiter extends Component {
             state: 0,
             city: 0,
             region: 0,
-            status: 1,
+            status: 2,
             loadingCountries: false,
             loadingCities: false,
             loadingStates: false,
@@ -516,14 +516,20 @@ class BoardRecruiter extends Component {
                 leads.push(datas);
             });
         }).catch(error => { })*/
+        console.log("hotelsssss ", this.state.hotel);
         if (this.state.hotel == 0) {
-
-            await this.props.client.query({ query: GET_OPENING, variables: {} }).then(({ data }) => {
+            console.log("entro aqui");
+            await this.props.client.query({ query: GET_OPENING, variables: { status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
+                    console.log("esta es la info de wo ", wo);
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
+                    console.log("esta es la info de Hotel ", Hotel);
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
+                    console.log("esta es la info de Shift ", Shift);
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                    console.log("esta es la info de Users ", Users);
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
+                    console.log("esta es la info de Contacts ", Contacts);
 
                     datas = {
                         id: wo.id,
@@ -572,8 +578,10 @@ class BoardRecruiter extends Component {
                 });
             }).catch(error => { })
         }
+        console.log("this.state.Openings ", this.state.Openings);
         this.setState(
             {
+
                 Opening: this.state.Openings,
                 lane: [
                     {
