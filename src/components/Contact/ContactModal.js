@@ -15,6 +15,8 @@ import PropTypes from 'prop-types';
 import {withStyles} from "@material-ui/core";
 import {withApollo} from "react-apollo";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
+import {INSERT_CONTACT} from "./Mutations";
+import ContactTypesData from '../../data/contactTypes';
 
 const styles = (theme) => ({
     container: {
@@ -91,7 +93,24 @@ class ContactModal extends Component {
         super(props);
 
         this.state = {
-            openModal: false
+            openModal: false,
+            Id: 0,
+            idCompany: null,
+            firstname: '',
+            middlename: '',
+            lastname: '',
+            email: '',
+            number: '',
+            type: '',
+            idSupervisor: null,
+            IsActive: 1,
+            User_Created: 1,
+            User_Updated: 1,
+            Date_Created: "'2018-08-14 16:10:25+00'",
+            Date_Updated: "'2018-08-14 16:10:25+00'",
+
+
+            contactTypes: ContactTypesData,
         }
     }
 
@@ -111,7 +130,7 @@ class ContactModal extends Component {
 
         this.props.client
             .mutate({
-                mutation: query,
+                mutation: INSERT_CONTACT,
                 variables: {
                     input: {
                         Id: id,
