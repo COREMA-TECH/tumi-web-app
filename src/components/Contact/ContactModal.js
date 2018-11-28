@@ -17,6 +17,7 @@ import {withApollo} from "react-apollo";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import {INSERT_CONTACT} from "./Mutations";
 import ContactTypesData from '../../data/contactTypes';
+import withGlobalContent from "../Generic/Global";
 
 const styles = (theme) => ({
     container: {
@@ -93,7 +94,7 @@ class ContactModal extends Component {
         super(props);
 
         this.state = {
-            openModal: false,
+            openModal: true,
             Id: 0,
             idCompany: null,
             firstname: '',
@@ -181,6 +182,13 @@ class ContactModal extends Component {
             });
     };
 
+
+    UNSAFE_componentWillMount() {
+        this.setState({
+            openModal: this.props.open
+        })
+    }
+
     render() {
         const {classes} = this.props;
         const {fullScreen} = this.props;
@@ -188,7 +196,7 @@ class ContactModal extends Component {
         return (
             <Dialog
                 fullScreen={fullScreen}
-                open={true}
+                open={this.state.openModal}
                 onClose={this.cancelContactHandler}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
@@ -226,15 +234,15 @@ class ContactModal extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Department</label>
-                                    <AutosuggestInput
-                                        id="department"
-                                        name="department"
-                                        data={this.state.departments}
-                                        error={!this.state.departmentNameValid}
-                                        value={this.state.departmentName}
-                                        onChange={this.updateDepartmentName}
-                                        onSelect={this.updateDepartmentName}
-                                    />
+                                    {/*<AutosuggestInput*/}
+                                        {/*id="department"*/}
+                                        {/*name="department"*/}
+                                        {/*data={this.state.departments}*/}
+                                        {/*error={!this.state.departmentNameValid}*/}
+                                        {/*value={this.state.departmentName}*/}
+                                        {/*onChange={this.updateDepartmentName}*/}
+                                        {/*onSelect={this.updateDepartmentName}*/}
+                                    {/*/>*/}
                                 </div>
                                 <div className="col-md-12 col-lg-4">
                                     <label>* First Name</label>
@@ -300,15 +308,15 @@ class ContactModal extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-4">
                                     <label>* Contact Title</label>
-                                    <AutosuggestInput
-                                        id="title"
-                                        name="title"
-                                        data={this.state.titles}
-                                        error={!this.state.titleNameValid}
-                                        value={this.state.titleName}
-                                        onChange={this.updateTitleName}
-                                        onSelect={this.updateTitleName}
-                                    />
+                                    {/*<AutosuggestInput*/}
+                                        {/*id="title"*/}
+                                        {/*name="title"*/}
+                                        {/*data={this.state.titles}*/}
+                                        {/*error={!this.state.titleNameValid}*/}
+                                        {/*value={this.state.titleName}*/}
+                                        {/*onChange={this.updateTitleName}*/}
+                                        {/*onSelect={this.updateTitleName}*/}
+                                    {/*/>*/}
                                 </div>
                             </div>
                         </div>
@@ -350,7 +358,7 @@ class ContactModal extends Component {
                                         //disabled={this.state.loading || !this.state.enableCancelButton}
                                         variant="fab"
                                         className="btn btn-danger"
-                                        onClick={this.cancelContactHandler}
+                                        onClick={this.handleCloseModal}
                                     >
                                         Cancel <i class="fas fa-ban" />
                                     </button>
@@ -370,4 +378,4 @@ ContactModal.propTypes = {
 };
 
 
-export default withStyles(styles)(withApollo(withMobileDialog()(ContactModal)));
+export default withGlobalContent(withStyles(styles)(withApollo(withMobileDialog()(ContactModal))));
