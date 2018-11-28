@@ -29,6 +29,7 @@ const httpLink = createHttpLink({
 	uri: baseEndpointURL + '/graphql'
 });
 
+
 const authLink = setContext((_, { headers }) => {
 	// get the authentication token from local storage if it exists
 	const token = localStorage.getItem('Token');
