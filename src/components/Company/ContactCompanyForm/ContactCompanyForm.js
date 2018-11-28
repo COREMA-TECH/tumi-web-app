@@ -1300,7 +1300,7 @@ class ContactcontactForm extends React.Component {
 											disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
 											variant="fab"
 											className="btn btn-success"
-											onClick={this.addContactHandler}
+											onClick={this.insertDepartment}
 										>
 											Save {!this.state.saving && <i class="fas fa-save" />}
 											{this.state.saving && <i class="fas fa-spinner fa-spin" />}
