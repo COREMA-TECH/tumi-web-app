@@ -63,3 +63,12 @@ export const GET_SUPERVISORS_QUERY = gql`
         }
     }
 `;
+
+export const GET_HOTELS_QUERY = gql`
+    {
+        getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
+            Id
+            Name
+        }
+    }
+`;

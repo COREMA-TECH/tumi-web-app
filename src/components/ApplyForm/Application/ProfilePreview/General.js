@@ -2,7 +2,13 @@ import React, {Component} from 'react';
 import './preview-profile.css';
 import './../index.css';
 import withApollo from "react-apollo/withApollo";
-import {GET_APPLICATION_PROFILE_INFO, GET_CONTACTS_QUERY, GET_DEPARTMENTS_QUERY, GET_TYPES_QUERY} from "./Queries";
+import {
+    GET_APPLICATION_PROFILE_INFO,
+    GET_CONTACTS_QUERY,
+    GET_DEPARTMENTS_QUERY,
+    GET_HOTELS_QUERY,
+    GET_TYPES_QUERY
+} from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import InputMask from "react-input-mask";
 import green from "@material-ui/core/colors/green";
@@ -177,6 +183,29 @@ class General extends Component {
             })
     };
 
+
+    /**
+     * Fetch hotels
+     */
+    getHotels = () => {
+        this.props.client
+            .query({
+                query: GET_HOTELS_QUERY
+            })
+            .then(({ data }) => {
+                this.setState({
+                    hotels: data.getbusinesscompanies
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+
+            });
+    };
+
     /**
      * To get a list od departments
      */
@@ -240,9 +269,7 @@ class General extends Component {
                     this.setState({
                         titles: data.data.getcatalogitem,
                     }, () => {
-                        this.setState({
-                            loading: false
-                        })
+                        this.getHotels()
                     });
                 }
             })
