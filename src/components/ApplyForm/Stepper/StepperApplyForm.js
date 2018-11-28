@@ -90,7 +90,7 @@ class VerticalLinearStepper extends Component {
             middleName: '',
             lastName: '',
             lastName2: '',
-            date: '',
+            date: new Date().toISOString().substring(0, 10),
             streetAddress: '',
             aptNumber: '',
             city: '',
@@ -684,7 +684,7 @@ class VerticalLinearStepper extends Component {
                             <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-md-3">
+                    {/* <div className="col-md-3">
                         <span className="primary">* Date</span>
                         <div className="input-container--validated">
                             <input
@@ -703,7 +703,8 @@ class VerticalLinearStepper extends Component {
                             />
                             <span className="check-icon" />
                         </div>
-                    </div>
+                    </div>*/}
+
                 </div>
                 <div className="row form-section">
                     <div className="col-md-8">
