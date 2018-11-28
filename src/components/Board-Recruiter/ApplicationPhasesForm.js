@@ -14,7 +14,7 @@ class ApplicationPhasesForm extends Component {
         super();
         this.state = {
             ReasonId: 0,
-            Comment: " "
+            Comment: ""
         }
     }
 
@@ -50,8 +50,8 @@ class ApplicationPhasesForm extends Component {
             this.setState({
                 editing: false
             });
-
-            this.props.handleOpenSnackbar('success', "Message", 'bottom', 'right');
+            this.props.handleCloseModal;
+            this.props.handleOpenSnackbar('success', "The Candidate was rejected", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(
                 'error',
@@ -64,7 +64,7 @@ class ApplicationPhasesForm extends Component {
 
     render() {
         return (
-            <Dialog maxWidth="xl" open={this.props.openReason} onClose={this.props.handleCloseModal}>
+            <Dialog maxWidth="xl" open={this.props.openReason}>
                 <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">Application Rejected</h5>
@@ -82,12 +82,12 @@ class ApplicationPhasesForm extends Component {
                             <div className="col-md-6">
                                 <div class="inputGroup">
                                     <input id="radio2" name="ReasonId" type="radio" value="30459" onChange={this.handleChange} />
-                                    <label for="radio2">Disqualifier</label>
+                                    <label for="radio2">Disqualify</label>
                                 </div>
                             </div>
                             <div className="col-md-12">
                                 <label htmlFor="">Comment</label>
-                                <textarea name="Comment" className="form-control" id="" cols="30" rows="10"></textarea>
+                                <textarea onChange={this.handleChange} name="Comment" className="form-control" id="" cols="30" rows="10"></textarea>
                             </div>
                             <div className="col-md-12 mt-2">
                                 <button className="btn btn-success float-right">
