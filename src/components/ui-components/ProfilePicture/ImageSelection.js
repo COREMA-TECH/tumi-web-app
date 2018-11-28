@@ -90,7 +90,8 @@ class ImageSelection extends Component {
         document.getElementById("IS-animationWrapper").classList.add("slide-left")
     }
     goToImageSelection = () => {
-        document.getElementById("IS-animationWrapper").classList.remove("slide-left")
+        document.getElementById("IS-animationWrapper").classList.remove("slide-left");
+        this.setState({ capturedImage: '' })
     }
     initVideoCamera = () => {
         if (this.videoElement) {
@@ -130,7 +131,7 @@ class ImageSelection extends Component {
                 </button>
             </React.Fragment>
         if (this.state.capturedImage !== '')
-            return <img width="100%" height="300" src={this.state.capturedImate} />
+            return <img width="100%" height="300" src={this.state.capturedImage} />
 
     }
     render() {
