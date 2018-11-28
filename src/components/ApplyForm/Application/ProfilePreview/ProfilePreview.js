@@ -17,6 +17,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {GET_APPLICATION_PROFILE_INFO} from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import ContactModal from "../../../Contact/ContactModal";
 
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
@@ -71,7 +72,8 @@ class VerticalLinearStepper extends Component {
             activeStep: 0,
             applicationId: null,
             loading: false,
-            data: []
+            data: [],
+            openModal: false
         }
     }
 
@@ -223,6 +225,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 </div>
+
             </div>
         );
     }
