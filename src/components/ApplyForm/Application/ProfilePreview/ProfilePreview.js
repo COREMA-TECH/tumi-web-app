@@ -72,7 +72,8 @@ class VerticalLinearStepper extends Component {
             activeStep: 0,
             applicationId: null,
             loading: false,
-            data: []
+            data: [],
+            openModal: false
         }
     }
 
@@ -218,6 +219,7 @@ class VerticalLinearStepper extends Component {
                         </div>
                     </div>
                 </div>
+
             </div>
         );
     }

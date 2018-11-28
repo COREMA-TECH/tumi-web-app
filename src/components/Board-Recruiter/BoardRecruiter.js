@@ -110,7 +110,6 @@ class BoardRecruiter extends Component {
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
         let IdLane;
-        console.log(sourceLaneId);
 
         switch (targetLaneId) {
             case "lane1":
@@ -137,6 +136,12 @@ class BoardRecruiter extends Component {
 
         this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
 
+        if (targetLaneId == "lane2" && sourceLaneId == "lane3") {
+            this.setState({
+                openReason: true
+            });
+        }
+
         if (targetLaneId == "lane4") {
             this.updateApplicationInformation(cardId, false, 'Lead now is a Candidate');
             this.addApplicarionPhase();
@@ -146,6 +151,14 @@ class BoardRecruiter extends Component {
         }
 
     }
+
+    handleCloseModal = (event) => {
+        event.preventDefault();
+        this.setState({
+            openReason: false
+
+        });
+    };
 
     addApplicarionPhase = () => {
         this.props.client.mutate({
@@ -362,7 +375,6 @@ class BoardRecruiter extends Component {
     };
 
     updateApplicationStages = (id, idStages, Message) => {
-        console.log("este es el id ", id, " y este es el stage ", idStages)
         this.setState(
             {
                 insertDialogLoading: true
@@ -516,20 +528,13 @@ class BoardRecruiter extends Component {
                 leads.push(datas);
             });
         }).catch(error => { })*/
-        console.log("hotelsssss ", this.state.hotel);
         if (this.state.hotel == 0) {
-            console.log("entro aqui");
             await this.props.client.query({ query: GET_OPENING, variables: { status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
-                    console.log("esta es la info de wo ", wo);
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                    console.log("esta es la info de Hotel ", Hotel);
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                    console.log("esta es la info de Shift ", Shift);
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
-                    console.log("esta es la info de Users ", Users);
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
-                    console.log("esta es la info de Contacts ", Contacts);
 
                     datas = {
                         id: wo.id,
@@ -578,7 +583,6 @@ class BoardRecruiter extends Component {
                 });
             }).catch(error => { })
         }
-        console.log("this.state.Openings ", this.state.Openings);
         this.setState(
             {
 
@@ -767,6 +771,8 @@ class BoardRecruiter extends Component {
                 <ApplicationPhasesForm
                     WorkOrderId={this.state.Intopening}
                     openReason={this.state.openReason}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    handleCloseModal={this.handleCloseModal}
                 />
             </div>
         )
