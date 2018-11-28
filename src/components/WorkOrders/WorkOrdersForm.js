@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
 import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY } from './queries';
-import { CREATE_WORKORDER, UPDATE_WORKORDER } from './mutations';
+import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
@@ -58,6 +58,7 @@ class WorkOrdersForm extends Component {
             this.setState(
                 {
                     id: nextProps.item.id,
+                    contactId: nextProps.item.contactId,
                     IdEntity: nextProps.item.IdEntity,
                     date: nextProps.item.date,
                     quantity: nextProps.item.quantity,
@@ -133,7 +134,8 @@ class WorkOrdersForm extends Component {
             this.state.startDate == '' ||
             this.state.endDate == '' ||
             this.state.shift == '' ||
-            this.state.shift == 0
+            this.state.shift == 0 ||
+            this.state.contactId == ''
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
@@ -151,6 +153,7 @@ class WorkOrdersForm extends Component {
                 variables: {
                     workOrder: {
                         IdEntity: this.state.IdEntity,
+                        //contactId: this.state.contactId
                         date: this.state.date,
                         quantity: this.state.quantity,
                         status: 1,
@@ -242,8 +245,29 @@ class WorkOrdersForm extends Component {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
             this.setState({ converting: true });
-            this.update(2);
+            // this.update(2);
+            this.CONVERT_TO_OPENING();
         }
+    };
+
+    CONVERT_TO_OPENING = () => {
+        this.props.client
+            .mutate({
+                mutation: CONVERT_TO_OPENING,
+                variables: {
+                    id: this.state.id,
+                    userId: this.state.userId,
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
+                this.setState({ openModal: false, saving: false, converting: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true, converting: false });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            });
     };
 
     handleChange = (event) => {
@@ -568,9 +592,18 @@ class WorkOrdersForm extends Component {
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
                                             {this.state.id && (
-                                                <button className="btn btn-info ml-1 float-right" type="submit">
+                                                /*<button className="btn btn-info ml-1 float-right" type="submit">
                                                     Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
                                                     {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
+                                                </button>*/
+
+                                                <button
+                                                    className="btn btn-info float-right"
+                                                    type="button"
+                                                    onClick={this.handleChangeState}
+                                                >
+                                                    Convert to Opening {!this.state.converting && <i class="fas fa-sync-alt"></i>}
+                                                    {this.state.converting && <i class="fas fa-spinner fa-spin  ml2" />}
                                                 </button>
                                             )}
                                         </div>

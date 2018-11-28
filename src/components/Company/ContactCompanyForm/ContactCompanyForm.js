@@ -22,6 +22,7 @@ import 'ui-components/InputForm/index.css';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import './index.css';
+import ContactModal from "../../Contact/ContactModal";
 
 const styles = (theme) => ({
 	container: {
@@ -1145,6 +1146,13 @@ class ContactcontactForm extends React.Component {
 						</button>
 					</div>
 				</div>
+				{/*{*/}
+					{/*this.state.openModal ? (*/}
+						{/*<ContactModal/>*/}
+					{/*) : (*/}
+						{/*''*/}
+					{/*)*/}
+				{/*}*/}
 				<Dialog
 					fullScreen={fullScreen}
 					open={this.state.openModal}

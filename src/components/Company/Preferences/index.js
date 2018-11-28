@@ -3,7 +3,8 @@ import gql from 'graphql-tag';
 import {withApollo} from 'react-apollo';
 import CatalogItem from 'Generic/CatalogItem';
 import {select} from 'async';
-import months from './months';
+import months from './months.json';
+import timeZones from './timezones.json';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 class Preferences extends React.Component {
@@ -22,6 +23,7 @@ class Preferences extends React.Component {
 
             startMonth: null,
             endMonth: null,
+            timeZone: null,
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
@@ -48,12 +50,15 @@ class Preferences extends React.Component {
                             amount: data.companyPreferences[0].amount,
                             EntityId: data.companyPreferences[0].EntityId,
                             disabled: !data.companyPreferences[0].charge,
-                            startMonth: !data.companyPreferences[0].FiscalMonth1,
-                            endMonth: !data.companyPreferences[0].FiscalMonth2,
+                            startMonth: data.companyPreferences[0].FiscalMonth1,
+                            endMonth: data.companyPreferences[0].FiscalMonth2,
+                            timeZone: data.companyPreferences[0].Timezone,
                         }, () => {
                             this.setState({
                                 loading: false
-                            })
+                            });
+
+                            console.table(this.state);
                         });
                     }
                 })
@@ -112,6 +117,7 @@ class Preferences extends React.Component {
         })
     }
 
+
     add() {
         this.props.client.mutate({
             mutation: this.INSERT_QUERY,
@@ -123,6 +129,8 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
+                    Timezone: parseInt(this.state.timeZone)
+                    // TODO: add timezones
                 }
             }
         })
@@ -154,6 +162,8 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
+                    Timezone: parseInt(this.state.timeZone)
+                    // TODO: add timezones
                 }
             }
         })
@@ -183,6 +193,7 @@ class Preferences extends React.Component {
                 charge
                 FiscalMonth1
                 FiscalMonth2
+                Timezone
             }
         }
     `;
@@ -197,6 +208,7 @@ class Preferences extends React.Component {
                 EntityId
                 FiscalMonth1
                 FiscalMonth2
+                Timezone
             }
         }
     `;
@@ -211,13 +223,14 @@ class Preferences extends React.Component {
                 EntityId
                 FiscalMonth1
                 FiscalMonth2
+                Timezone
             }
         }
     `;
 
     render() {
         if (this.state.loading) {
-            return <LinearProgress />
+            return <LinearProgress/>
         }
 
         return (
@@ -309,8 +322,9 @@ class Preferences extends React.Component {
                                                         <option value="">Select a month</option>
                                                         {
                                                             months.map(month => {
-                                                                if(this.state.endMonth != month.id){
-                                                                    return <option value={month.id}>{month.description}</option>
+                                                                if (this.state.endMonth != month.id) {
+                                                                    return <option
+                                                                        value={month.id}>{month.description}</option>
                                                                 }
                                                             })
                                                         }
@@ -339,9 +353,51 @@ class Preferences extends React.Component {
                                                         <option value="">Select a month</option>
                                                         {
                                                             months.map(month => {
-                                                                if(this.state.startMonth != month.id){
-                                                                    return <option value={month.id}>{month.description}</option>
+                                                                if (this.state.startMonth != month.id) {
+                                                                    return <option
+                                                                        value={month.id}>{month.description}</option>
                                                                 }
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {/* Time Zone preferences*/}
+                            <div className="card">
+                                <div className="card-header">Time Zone</div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <label>
+                                                        Time Zone
+                                                    </label>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <select
+                                                        required
+                                                        value={this.state.timeZone}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                timeZone: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        {
+                                                            timeZones.map(item => {
+                                                                    return (
+                                                                        <option
+                                                                            value={item.id}
+                                                                        >{item.offset + ' ' + item.name}</option>)
                                                             })
                                                         }
                                                     </select>
