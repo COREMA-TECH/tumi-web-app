@@ -87,11 +87,16 @@ class ImageSelection extends Component {
             </div>
     }
     showCamera = () => {
+        this.initVideoCamera();
         document.getElementById("IS-animationWrapper").classList.add("slide-left")
     }
     goToImageSelection = () => {
+        this.stopVideoCamera()
         document.getElementById("IS-animationWrapper").classList.remove("slide-left");
         this.setState({ capturedImage: '' })
+        if (this.videoElement)
+            this.videoElement.pause();
+
     }
     initVideoCamera = () => {
         if (this.videoElement) {
@@ -101,37 +106,57 @@ class ImageSelection extends Component {
             }
         }
     }
-    componentDidMount() {
-        this.initVideoCamera()
+    stopVideoCamera = () => {
+        if (this.state.stream) {
+            var track = this.state.stream.getTracks()[0];
+            track.stop();
+        }
     }
+
     handleVideo = (stream) => {
         // Update the state, triggering the component to re-render with the correct stream
-        this.setState({ videoSrc: window.URL.createObjectURL(stream) });
+        this.setState({ videoSrc: window.URL.createObjectURL(stream), stream: stream });
         this.videoElement.play();
     }
     videoError = () => {
     }
     captureImage = () => {
+        const scale = 1;
         var canvas = document.createElement("CANVAS");
         var video = this.videoElement;
+        //var canvas = this.canvas;
+        canvas.width = video.videoWidth * scale;
+        canvas.height = video.videoHeight * scale;
+
         canvas.getContext('2d').drawImage(video, 0, 0);
         this.setState({ capturedImage: canvas.toDataURL() })
     }
     showCameraContainer = () => {
-        console.log("Show Camera Container", this.state.capturedImage)
-        if (this.state.capturedImage === '')
+        if (this.state.capturedImage === '') {
             return <React.Fragment>
-                <video ref="videoElement" id="video" width="100%" height="300" src={this.state.videoSrc} autoPlay="true"
+                <video ref="videoElement" id="video" width="100%" height="auto" className="cameraFrame" src={this.state.videoSrc} autoPlay="true"
                     ref={(input) => { this.videoElement = input; }}></video>
-                <button className="ProfileCamera-back btn btn-danger btn-circle btn-lg" onClick={this.goToImageSelection}>
-                    <i class="fas fa-arrow-left"></i>
+            </React.Fragment>
+        }
+        if (this.state.capturedImage !== '') {
+            return <img id="imgPreview" width="100%" height="auto" src={this.state.capturedImage} />
+        }
+    }
+    showAcceptCapturedImagesBtn = () => {
+        if (!this.state.capturedImage) {
+            return <button className="btn btn-success btn-circle btn-lg" onClick={this.captureImage}>
+                <i class="fas fa-camera-retro"></i>
+            </button>
+        } else {
+            return <React.Fragment>
+                <button className="btn btn-info btn-circle btn-lg" onClick={() => this.props.returnImage(this.state.capturedImage)}>
+                    <i class="fas fa-check"></i>
                 </button>
-                <button className="ProfileCamera-button btn btn-success btn-circle btn-lg" onClick={this.captureImage}>
-                    <i class="fas fa-camera-retro"></i>
+                <button className="btn btn-danger btn-circle btn-lg" onClick={() => { this.setState({ capturedImage: '' }) }}>
+                    <i class="fas fa-times"></i>
                 </button>
             </React.Fragment>
-        if (this.state.capturedImage !== '')
-            return <img width="100%" height="300" src={this.state.capturedImage} />
+        }
 
     }
     render() {
@@ -153,7 +178,15 @@ class ImageSelection extends Component {
                     </a>
                 </div>
                 <div id="ProfileCameraContiner" className="ProfileCamera">
-                    {this.showCameraContainer()}
+                    <div style={{ width: '100%', height: '400px' }}>
+                        {this.showCameraContainer()}
+                        <button className="ProfileCamera-back btn btn-danger btn-circle btn-lg" onClick={this.goToImageSelection}>
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div className="ProfileCamera-button">
+                            {this.showAcceptCapturedImagesBtn()}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div >
