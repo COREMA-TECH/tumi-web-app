@@ -95,6 +95,9 @@ class ContactModal extends Component {
 
         this.state = {
             openModal: true,
+
+
+
             Id: 0,
             idCompany: null,
             firstname: '',
@@ -277,7 +280,6 @@ class ContactModal extends Component {
                                         change={(value) => this.onLastNameChangeHandler(value)}
                                     />
                                 </div>
-
                                 <div className="col-md-12 col-lg-4">
                                     <label>* Email</label>
                                     <InputForm
