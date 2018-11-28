@@ -1,0 +1,93 @@
+.ImageSelectionWrapper{
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    min-width: 500px;
+    overflow: hidden;
+    height: 310px;
+    margin: 0 auto;
+    @include media-breakpoint-down(sm){
+        min-width: auto;
+    }
+}
+.ProfilePicture{
+    width: 50%;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ProfileCamera{
+    float: left;
+    position: relative;
+    width: 50%;
+    &-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    &-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+}
+.ProfilePicture .image-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-width: 2px;
+    border-color: #dcdbdb;
+    border-style: dotted;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 300px;
+}
+
+.image-container:hover{
+    background-color:  rgba(234, 226, 226, 0.37);
+}
+.ProfilePicture .image-upload{
+    color: gray !important; 
+    margin-bottom: 5px !important;
+   
+}
+.ProfilePicture .input-file{
+    border: solid #e8e7e7 1px;
+    width: 100%;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    padding: 2px;
+    font-style: italic;
+    font-size: 13px;
+    color: lightgray;
+  }
+  .ProfilePicture .division-text{
+      font-size: 20px;
+      margin: 5px;
+      margin-bottom: 20px;
+  }
+
+  .ProfilePicture .upload_btn{
+    position:absolute;
+    width:200px;
+    height:40px;
+    margin-top:-40px;
+    z-index:10;
+    height: 0;
+    visibility: hidden;
+}
+
+.slide-left{
+    left: -500px !important;
+}
+.IS-animationWrapper{
+    width: 1000px;
+    position:absolute;
+    left:0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    transition: left 1s;
+}

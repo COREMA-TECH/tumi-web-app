@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
@@ -15,9 +15,10 @@ import General from "./General";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import {GET_APPLICATION_PROFILE_INFO} from "./Queries";
+import { GET_APPLICATION_PROFILE_INFO } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
-
+import { ProfilePicture } from 'ui-components/ProfilePicture/'
+import GenericContent from 'Generic/Global'
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
 
@@ -76,7 +77,7 @@ class VerticalLinearStepper extends Component {
     }
 
     handleChange = (event, value) => {
-        this.setState({activeStep: value});
+        this.setState({ activeStep: value });
     };
 
     // To handle the stepper
@@ -104,7 +105,7 @@ class VerticalLinearStepper extends Component {
                     id: this.props.applicationId
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     data: data.applications[0]
                 }, () => {
@@ -142,15 +143,15 @@ class VerticalLinearStepper extends Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {value} = this.state;
+        const { classes } = this.props;
+        const { value } = this.state;
         const steps = getSteps();
-        const {activeStep} = this.state;
+        const { activeStep } = this.state;
 
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <General applicationId={this.props.applicationId}/>;
+                    return <General applicationId={this.props.applicationId} />;
             }
         };
 
@@ -163,13 +164,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
-                            <div className="applicant-card__header header-profile-menu">
-                                <img className="avatar-profile"
-                                     src="https://upload.wikimedia.org/wikipedia/commons/f/f4/User_Avatar_2.png"/>
-                                <div className="user-information">
-                                    <span>Username</span>
-                                </div>
-                            </div>
+                            <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar}></ProfilePicture>
                             <div className={"tabs"}>
                                 <AppBar position="static" color="#0092BD">
                                     <Tabs
@@ -182,7 +177,7 @@ class VerticalLinearStepper extends Component {
                                     >
                                         {steps.map((label, index) => {
                                             return (
-                                                <Tab label={label} key={index}/>
+                                                <Tab label={label} key={index} />
                                             );
                                         })}
                                     </Tabs>
@@ -194,7 +189,7 @@ class VerticalLinearStepper extends Component {
                                         <div
                                             key={label}
                                             onClick={() => {
-                                                this.setState({activeStep: index})
+                                                this.setState({ activeStep: index })
                                             }}
                                             className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item'}
                                         >
@@ -232,4 +227,4 @@ VerticalLinearStepper.propTypes = {
     classes: PropTypes.object
 };
 
-export default withStyles(styles)(withApollo(VerticalLinearStepper));
+export default withStyles(styles)(withApollo(GenericContent(VerticalLinearStepper)));
