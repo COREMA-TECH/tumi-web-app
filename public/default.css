@@ -8789,10 +8789,10 @@ label:not(.custom-file-label):not(.form-check-label) {
     visibility: hidden; }
 
 .slide-left {
-  left: -500px !important; }
+  left: -100% !important; }
 
 .IS-animationWrapper {
-  width: 1000px;
+  width: 200%;
   position: absolute;
   left: 0;
   right: 0;
