@@ -163,6 +163,7 @@ class General extends Component {
 
             languages: [],
             loadingLanguages: false,
+            createdProfile: false,
 
             ...this.DEFAULT_STATE
         }
@@ -895,7 +896,7 @@ class General extends Component {
                         }
                     })
                     .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Email Send!');
+                        this.props.handleOpenSnackbar('success', 'Email Send with credentials!');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
@@ -951,12 +952,16 @@ class General extends Component {
                         }
                     })
                     .then((data) => {
-                        // if (id === null) {
-                        //     this.sendMail();
-                        // }
+                        this.sendMail();
+
                         this.props.handleOpenSnackbar('success', 'User Inserted!');
 
-                        this.setState({ openUserModal: false, showCircularLoading: true });
+                        this.setState({
+                            createdProfile: true
+                        }, () => {
+                            this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
+                        });
+
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar(
@@ -1614,15 +1619,22 @@ class General extends Component {
                                     }}>Associate
                                     </button>
                                 </div>
-                                <div className="item col-6 col-md-2">
-                                    {/*<div className="row">*/}
-                                    {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
-                                    {/*<span className="col-sm-12">Text</span>*/}
-                                    {/*</div>*/}
-                                    <button className="btn btn-outline-success btn-large" onClick={() => {
-                                        this.handleClickOpenUserModal();
-                                    }}>Create Profile</button>
-                                </div>
+                                {
+                                    this.state.createdProfile ? (
+                                        ''
+                                    ) : (
+                                        <div className="item col-6 col-md-2">
+                                            {/*<div className="row">*/}
+                                            {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
+                                            {/*<span className="col-sm-12">Text</span>*/}
+                                            {/*</div>*/}
+                                            <button className="btn btn-outline-success btn-large" onClick={() => {
+                                                this.handleClickOpenUserModal();
+                                            }}>Create Profile</button>
+                                        </div>
+                                    )
+                                }
+
                             </div>
                         </div>
                         <br/>
