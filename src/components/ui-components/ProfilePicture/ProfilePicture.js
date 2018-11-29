@@ -18,7 +18,7 @@ class ProfilePicture extends Component {
     }
     render() {
         return <div className="applicant-card__header header-profile-menu">
-            <img className="avatar-profile" onClick={this.onClickPicture} src={this.state.url} />
+            <img className="avatar-profile" style={{ cursor: 'pointer' }} onClick={this.onClickPicture} src={this.state.url} />
             <GenericDialog
                 open={this.state.open}
                 handleClose={this.handleClose}
