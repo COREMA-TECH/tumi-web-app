@@ -28,6 +28,8 @@ import withGlobalContent from "../../../Generic/Global";
 import {INSERT_CONTACT} from "./Mutations";
 import {INSERT_DEPARTMENT} from "./Mutations";
 import {GET_LANGUAGES_QUERY} from "../../../ApplyForm-Recruiter/Queries";
+import gql from 'graphql-tag';
+
 
 
 const styles = (theme) => ({
@@ -109,6 +111,7 @@ class General extends Component {
             error: false,
             data: [],
             openModal: false,
+            openUserModal: false,
 
 
             // Modal state
@@ -159,9 +162,88 @@ class General extends Component {
             loadingRoles: false,
 
             languages: [],
-            loadingLanguages: false
+            loadingLanguages: false,
+
+            ...this.DEFAULT_STATE
         }
     }
+
+    DEFAULT_STATE = {
+        id: '',
+        idToDelete: null,
+        idToEdit: null,
+
+        idContact: undefined,
+        username: '',
+        fullname: '',
+        password: 'TEMP',
+        email: '',
+        number: '',
+        idRol: '',
+        idLanguage: '',
+        isAdmin: false,
+        allowInsert: false,
+        allowEdit: false,
+        allowDelete: false,
+        allowExport: false,
+        IsRecruiter: false,
+        IdRegionValid: true,
+        RegionName: '',
+        IsActive: 1,
+        IdRegion: 0,
+
+        idContactValid: true,
+        usernameValid: true,
+        //fullnameValid: false,
+        passwordValid: true,
+        emailValid: true,
+        numberValid: true,
+        idRolValid: true,
+        idLanguageValid: true,
+        idContactHasValue: false,
+        usernameHasValue: false,
+        //fullnameHasValue: false,
+        passwordHasValue: false,
+        emailHasValue: false,
+        numberHasValue: false,
+        idRolHasValue: false,
+        idLanguageHasValue: false,
+
+        formValid: true,
+        opendialog: false,
+        buttonTitle: this.TITLE_ADD,
+        enableCancelButton: false,
+
+        loading: false,
+        loadingConfirm: false,
+        openModal: false,
+        showCircularLoading: false
+    };
+
+    /**
+     * Mutations
+     */
+    GET_CONTACTS_QUERY_BY_ID = gql`
+        query getsupervisor($Id: Int) {
+            getcontacts(IsActive: 1,  Id: $Id) {
+                Id
+                First_Name
+                Middle_Name
+                Last_Name
+                Electronic_Address
+                Phone_Number
+                Id_Entity
+            }
+        }
+    `;
+
+    SEND_EMAIL = gql`
+        query sendemail($username: String,$password: String,$email: String,$title:String) {
+            sendemail(username:$username,password:$password,email:$email,title:$title)
+        }
+    `;
+
+
 
     handleClickOpenModal = () => {
         this.setState({openModal: true});
@@ -170,6 +252,16 @@ class General extends Component {
     handleCloseModal = () => {
         this.setState({openModal: false});
     };
+
+    handleClickOpenUserModal = () => {
+        this.setState({openUserModal: true});
+    };
+
+    handleCloseUserModal = () => {
+        this.setState({openUserModal: false});
+    };
+
+
 
     /**
      * To get the profile information for applicant
@@ -211,9 +303,7 @@ class General extends Component {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
-                    this.setState({
-                        loading: false
-                    })
+                    this.fetchContacts()
                 });
             })
             .catch(error => {
@@ -265,6 +355,8 @@ class General extends Component {
                             regions: data.data.getcatalogitem,
                             RegionName: data.data.getcatalogitem[0].Name,
                             loadingContacts: false
+                    }, () => {
+                        this.fetchRoles();
                     });
                 }
             })
@@ -284,6 +376,8 @@ class General extends Component {
                     this.setState({
                             roles: data.data.getroles,
                             loadingRoles: false
+                    }, () => {
+                        this.fetchLanguages();
                     });
                 }
             })
@@ -303,6 +397,10 @@ class General extends Component {
                     this.setState({
                             languages: data.data.getcatalogitem,
                             loadingLanguages: false
+                    }, () => {
+                        this.setState({
+                            loading: false
+                        })
                     });
                 }
             })
@@ -517,7 +615,6 @@ class General extends Component {
         })
     }
 
-
     handleCheckedChange = (name) => (event) => {
         if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
         if (name == 'isAdmin' && event.target.checked)
@@ -546,6 +643,333 @@ class General extends Component {
         );
     };
 
+    SelectContac = (id) => {
+        console.log("entro al select");
+        this.props.client
+            .query({
+                query: this.GET_CONTACTS_QUERY_BY_ID,
+                variables: {
+                    Id: id
+                }
+            })
+            .then((data) => {
+                console.log("este es el data ", data.data.getcontacts[0].Electronic_Address);
+
+                if (data.data.getcontacts != null) {
+
+                    this.setState(
+                        {
+
+                            email: data.data.getcontacts[0].Electronic_Address,
+                            number: data.data.getcontacts[0].Phone_Number,
+                            fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
+                        },
+                    );
+                    console.log("Full Name str ", this.state.fullname);
+                }
+            })
+            .catch((error) => {
+                this.setState({
+                    loadingContacts: false,
+                    firstLoad: false,
+                    indexView: 2,
+                    errorMessage: 'Error: Loading contacts: ' + error
+                });
+            });
+    };
+
+    onChangeHandler(value, name) {
+        this.setState({ [name]: value }, this.validateField(name, value));
+    }
+
+    enableCancelButton = () => {
+        let idContactHasValue = this.state.idContact !== null && this.state.idContact !== '';
+        let usernameHasValue = this.state.username != '';
+        //let fullnameHasValue = this.state.fullname != '';
+        let emailHasValue = this.state.email != '';
+        let numberHasValue = this.state.number != '';
+        let passwordHasValue = this.state.password != '';
+        let idRolHasValue = this.state.idRol !== null && this.state.idRol !== '';
+        let idLanguageHasValue = this.state.idLanguage !== null && this.state.idLanguage !== '';
+
+        return (
+            idContactHasValue ||
+            usernameHasValue ||
+            //fullnameHasValue ||
+            emailHasValue ||
+            numberHasValue ||
+            passwordHasValue ||
+            idRolHasValue ||
+            idLanguageHasValue
+        );
+    };
+
+    validateAllFields(func) {
+        let idContactValid = this.state.idContact !== -1 && this.state.idContact !== '';
+        let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
+        //let fullnameValid = this.state.fullname.trim().length >= 10;
+        let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        let numberValid =
+            this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+                .length == 10;
+        let passwordValid = this.state.password.trim().length >= 2;
+        let idRolValid = this.state.idRol !== null && this.state.idRol !== 0 && this.state.idRol !== '';
+        let idLanguageValid =
+            this.state.idLanguage !== null && this.state.idLanguage !== 0 && this.state.idLanguage !== '';
+        let IdRegionValid = true;
+        if (this.state.IsRecruiter)
+            IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
+        this.setState(
+            {
+                idContactValid,
+                usernameValid,
+                //fullnameValid,
+                emailValid,
+                numberValid,
+                passwordValid,
+                idRolValid,
+                idLanguageValid,
+                IdRegionValid
+            },
+            () => {
+                this.validateForm(func);
+            }
+        );
+    }
+
+    validateField(fieldName, value) {
+        let idContactValid = this.state.idContactValid;
+        let usernameValid = this.state.usernameValid;
+        //let fullnameValid = this.state.fullnameValid;
+        let emailValid = this.state.emailValid;
+        let numberValid = this.state.numberValid;
+        let passwordValid = this.state.passwordValid;
+        let idRolValid = this.state.idRolValid;
+        let idLanguageValid = this.state.idLanguageValid;
+
+        let idContactHasValue = this.state.idContactHasValue;
+        let usernameHasValue = this.state.usernameHasValue;
+        //let fullnameHasValue = this.state.fullnameHasValue;
+        let emailHasValue = this.state.emailHasValue;
+        let numberHasValue = this.state.numberHasValue;
+        let passwordHasValue = this.state.passwordHasValue;
+        let idRolHasValue = this.state.idRolHasValue;
+        let idLanguageHasValue = this.state.idLanguageHasValue;
+        let IdRegionValid = true;
+
+        switch (fieldName) {
+            case 'idContact':
+                idContactValid = value !== -1 && value !== '';
+                idContactHasValue = value !== -1 && value !== '';
+                break;
+            case 'username':
+                usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
+                usernameHasValue = value != '';
+                break;
+            //case 'fullname':
+            //	fullnameValid = value.trim().length >= 10;
+            //	fullnameHasValue = value != '';
+            //	break;
+            case 'email':
+                emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+                emailHasValue = value != '';
+                break;
+            case 'number':
+                numberValid =
+                    value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+                        .length == 10;
+                numberHasValue = value != '';
+                break;
+            case 'password':
+                passwordValid = value.trim().length >= 2;
+                passwordHasValue = value != '';
+                break;
+            case 'idRol':
+                idRolValid = value !== null && value !== 0 && value !== '';
+                idRolHasValue = value !== null && value !== '';
+                break;
+            case 'idLanguage':
+                idLanguageValid = value !== null && value !== 0 && value !== '';
+                idLanguageHasValue = value !== null && value !== '';
+                break;
+            case 'IdRegion':
+                if (this.state.IsRecruiter) IdRegionValid = value !== null && value !== 0 && value !== '';
+
+                break;
+            default:
+                break;
+        }
+        this.setState(
+            {
+                idContactValid,
+                usernameValid,
+                //fullnameValid,
+                emailValid,
+                numberValid,
+                passwordValid,
+                idRolValid,
+                idLanguageValid,
+
+                idContactHasValue,
+                usernameHasValue,
+                //fullnameHasValue,
+                emailHasValue,
+                numberHasValue,
+                passwordHasValue,
+                idRolHasValue,
+                idLanguageHasValue,
+                IdRegionValid
+            },
+            this.validateForm
+        );
+    }
+
+    validateForm(func = () => { }) {
+        this.setState(
+            {
+                formValid:
+                    this.state.idContactValid &&
+                    this.state.usernameValid &&
+                    //this.state.fullnameValid &&
+                    this.state.emailValid &&
+                    this.state.numberValid &&
+                    this.state.passwordValid &&
+                    this.state.idRolValid &&
+                    this.state.idLanguageValid &&
+                    this.state.IdRegionValid,
+                enableCancelButton:
+                    this.state.idContactHasValue ||
+                    this.state.usernameHasValue ||
+                    //this.state.fullnameHasValue ||
+                    this.state.emailHasValue ||
+                    this.state.numberHasValue ||
+                    this.state.passwordHasValue ||
+                    this.state.idRolHasValue ||
+                    this.state.idLanguageHasValue ||
+                    this.state.isAdmin ||
+                    this.state.allowInsert ||
+                    this.state.allowEdit ||
+                    this.state.allowDelete ||
+                    this.state.allowExport
+            },
+            func
+        );
+    }
+
+    addUserHandler = () => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.validateAllFields(() => {
+                    if (this.state.formValid) this.insertUser();
+                    else {
+                        this.props.handleOpenSnackbar(
+                            'warning',
+                            'Error: Saving Information: You must fill all the required fields'
+                        );
+                        this.setState({
+                            loading: false
+                        });
+                    }
+                });
+            }
+        );
+    };
+
+    sendMail = () => {
+        this.setState(
+            {
+                loadingConfirm: true
+            },
+            () => {
+                this.props.client
+                    .query({
+                        query: this.SEND_EMAIL,
+                        variables: {
+                            username: this.state.username,
+                            password: `TEMP`,
+                            email: this.state.email,
+                            title: `Credential Information`
+                        }
+                    })
+                    .then((data) => {
+                        this.props.handleOpenSnackbar('success', 'Email Send!');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);
+                        this.setState({
+                            loadingConfirm: false
+                        });
+                    });
+            }
+        );
+    };
+
+    INSERT_USER_QUERY = gql`
+        mutation insusers($input: iUsers!) {
+            insusers(input: $input) {
+                Id
+            }
+        }
+    `;
+
+    insertUser = () => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: this.INSERT_USER_QUERY,
+                        variables: {
+                            input: {
+                                Id: null,
+                                Id_Entity: 1,
+                                Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
+                                Id_Roles: this.state.idRol,
+                                Code_User: `'${this.state.username}'`,
+                                Full_Name: `'${this.state.fullname}'`,
+                                Electronic_Address: `'${this.state.email}'`,
+                                Phone_Number: `'${this.state.number}'`,
+                                Id_Language: this.state.idLanguage,
+                                IsAdmin: this.state.isAdmin ? 1 : 0,
+                                AllowDelete: this.state.allowDelete ? 1 : 0,
+                                AllowInsert: this.state.allowInsert ? 1 : 0,
+                                AllowEdit: this.state.allowEdit ? 1 : 0,
+                                AllowExport: this.state.allowExport ? 1 : 0,
+                                IsRecruiter: this.state.IsRecruiter,
+                                IdRegion: this.state.IdRegion,
+                                IsActive: this.state.IsActive ? 1 : 0,
+                                User_Created: 1,
+                                User_Updated: 1,
+                                Date_Created: "'2018-08-14 16:10:25+00'",
+                                Date_Updated: "'2018-08-14 16:10:25+00'"
+                            }
+                        }
+                    })
+                    .then((data) => {
+                        // if (id === null) {
+                        //     this.sendMail();
+                        // }
+                        this.props.handleOpenSnackbar('success', 'User Inserted!');
+
+                        this.setState({ openUserModal: false, showCircularLoading: true });
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error', 'Error: Inserting User: ' + error
+                        );
+                        this.setState({
+                            loading: false
+                        });
+                    });
+            }
+        );
+    };
+
     render() {
         const {classes} = this.props;
         const {fullScreen} = this.props;
@@ -566,8 +990,8 @@ class General extends Component {
         let renderUserDialog = () => (
             <Dialog
                 fullScreen={fullScreen}
-                open={this.state.openModal}
-                onClose={this.handleCloseModal}
+                open={this.state.openUserModal}
+                onClose={this.handleCloseUserModal}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="md"
             >
@@ -1195,7 +1619,9 @@ class General extends Component {
                                     {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
                                     {/*<span className="col-sm-12">Text</span>*/}
                                     {/*</div>*/}
-                                    <button className="btn btn-outline-success btn-large">Create Profile</button>
+                                    <button className="btn btn-outline-success btn-large" onClick={() => {
+                                        this.handleClickOpenUserModal();
+                                    }}>Create Profile</button>
                                 </div>
                             </div>
                         </div>
