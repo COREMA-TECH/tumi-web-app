@@ -1,6 +1,6 @@
 $profile-width: 500px;
 
-.ImageSelectionWrapper{
+.ImageSelectionWrapper {
     position: relative;
     width: 100%;
     max-width: $profile-width;
@@ -83,10 +83,10 @@ $profile-width: 500px;
 }
 
 .slide-left{
-    left: -500px !important;
+    left: -100% !important;
 }
 .IS-animationWrapper{
-    width: 1000px;
+    width: 200%;
     position:absolute;
     left:0;
     right: 0;
