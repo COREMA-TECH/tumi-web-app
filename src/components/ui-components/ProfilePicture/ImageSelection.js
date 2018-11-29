@@ -115,10 +115,11 @@ class ImageSelection extends Component {
 
     handleVideo = (stream) => {
         // Update the state, triggering the component to re-render with the correct stream
-        this.setState({ videoSrc: window.URL.createObjectURL(stream), stream: stream });
+        this.setState({ videoSrc: window.URL.createObjectURL(stream), stream: stream, cameraError: '' });
         this.videoElement.play();
     }
-    videoError = () => {
+    videoError = (e) => {
+        this.setState({ cameraError: e })
     }
     captureImage = () => {
         const scale = 1;
@@ -132,9 +133,15 @@ class ImageSelection extends Component {
         this.setState({ capturedImage: canvas.toDataURL() })
     }
     showCameraContainer = () => {
+        if (this.state.cameraError) {
+            return <div className="camera-crash">
+                <img id="imgPreview" width="30%" style={{ margin: '0 auto' }} height="auto" src='/icons/camera.png' />
+                <h4 className="mt-2 text-secondary">Camera not available</h4>
+            </div>
+        }
         if (this.state.capturedImage === '') {
             return <React.Fragment>
-                <video ref="videoElement" id="video" width="100%" height="auto" className="cameraFrame" src={this.state.videoSrc} autoPlay="true"
+                <video ref="videoElement" id="video" width="100%" height="auto" className="cameraFrame" src={this.state.videoSrc} autoPlay={true}
                     ref={(input) => { this.videoElement = input; }}></video>
             </React.Fragment>
         }
@@ -143,6 +150,8 @@ class ImageSelection extends Component {
         }
     }
     showAcceptCapturedImagesBtn = () => {
+        if (this.state.cameraError)
+            return <React.Fragment></React.Fragment>
         if (!this.state.capturedImage) {
             return <button className="btn btn-success btn-circle btn-lg" onClick={this.captureImage}>
                 <i class="fas fa-camera-retro"></i>
@@ -158,6 +167,9 @@ class ImageSelection extends Component {
             </React.Fragment>
         }
 
+    }
+    componentWillUnmount() {
+        this.stopVideoCamera()
     }
     render() {
         return <div className="ImageSelectionWrapper">
@@ -192,7 +204,7 @@ class ImageSelection extends Component {
         </div >
     }
     static contextTypes = {
-        extImage: PropTypes.object
+        extImage: PropTypes.array
     };
 }
 
