@@ -1,39 +1,39 @@
 [
     {
         "Id": "A",
-        "Name": "1:00 am"
+        "Name": "01:00 am"
     },
     {
         "Id": "B",
-        "Name": "2:00 am"
+        "Name": "02:00 am"
     },
     {
         "Id": "C",
-        "Name": "3:00 am"
+        "Name": "03:00 am"
     },
     {
         "Id": "D",
-        "Name": "4:00 am"
+        "Name": "04:00 am"
     },
     {
         "Id": "E",
-        "Name": "5:00 am"
+        "Name": "05:00 am"
     },
     {
         "Id": "F",
-        "Name": "6:00 am"
+        "Name": "06:00 am"
     },
     {
         "Id": "G",
-        "Name": "7:00 am"
+        "Name": "07:00 am"
     },
     {
         "Id": "H",
-        "Name": "8:00 am"
+        "Name": "08:00 am"
     },
     {
         "Id": "I",
-        "Name": "9:00 am"
+        "Name": "09:00 am"
     },
     {
         "Id": "J",

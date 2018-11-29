@@ -14,7 +14,7 @@ import { GET_WORKORDERS_QUERY, GET_RECRUITER } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
-import ShiftsData from '../../data/shitfs.json';
+import ShiftsData from '../../data/shitfsWorkOrder.json';
 
 const CustomTableCell = withStyles((theme) => ({
     head: {

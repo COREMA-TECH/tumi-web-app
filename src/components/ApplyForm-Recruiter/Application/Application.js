@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import {GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY} from '../Queries';
+import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
 
-import {CREATE_APPLICATION, UPDATE_APPLICATION} from '../Mutations';
+import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
 
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -29,7 +29,7 @@ class Application extends Component {
             middleName: '',
             lastName: '',
             lastName2: '',
-            date: '',
+            date: new Date().toISOString().substring(0, 10),
             streetAddress: '',
             aptNumber: '',
             city: 0,
@@ -136,7 +136,7 @@ class Application extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 lastName2: this.state.lastName2,
-                                //  date: this.state.date,
+                                date: this.state.date,
                                 // streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
@@ -163,7 +163,7 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         localStorage.setItem('idApplication', data.addApplication.id);
                         this.setState({
                             editing: false
@@ -202,7 +202,7 @@ class Application extends Component {
                                 middleName: this.state.middleName,
                                 lastName: this.state.lastName,
                                 lastName2: this.state.lastName2,
-                                //  date: this.state.date,
+                                date: this.state.date,
                                 //streetAddress: this.state.streetAddress,
                                 aptNumber: this.state.aptNumber,
                                 city: this.state.city,
@@ -227,7 +227,7 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             editing: false
                         });
@@ -262,7 +262,7 @@ class Application extends Component {
                             id: id
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         if (data.applications != null && data.applications.length > 0) {
                             let applicantData = data.applications[0];
                             this.setState(
@@ -361,7 +361,7 @@ class Application extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: {parent: -1, value: `'${zipCode}'`},
+            variables: { parent: -1, value: `'${zipCode}'` },
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({
@@ -396,29 +396,29 @@ class Application extends Component {
                                 {this.state.editing ? (
                                     ''
                                 ) : (
-                                    <button
-                                        className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            //alert(this.props.applicationId);
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
-                                    >
-                                        {spanishActions[1].label} <i className="far fa-edit"/>
-                                    </button>
-                                )}
+                                        <button
+                                            className="applicant-card__edit-button"
+                                            onClick={() => {
+                                                //alert(this.props.applicationId);
+                                                this.setState({
+                                                    editing: true
+                                                });
+                                            }}
+                                        >
+                                            {spanishActions[1].label} <i className="far fa-edit" />
+                                        </button>
+                                    )}
                             </div>
-                            <br/>
+                            <br />
                             <div className="row">
                                 <div className="col-md-12 col-lg-6 form-section-1">
                                     <div className="row">
                                         <div className="col-md-6">
-											<span className="primary applicant-card__label">
-												{formSpanish[16].label}
-											</span>
+                                            <span className="primary applicant-card__label">
+                                                {formSpanish[16].label}
+                                            </span>
                                             <Query query={GET_POSITIONS_QUERY}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Nothing To Display </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -442,16 +442,16 @@ class Application extends Component {
                                                             </select>
                                                         );
                                                     }
-                                                    return <SelectNothingToDisplay/>;
+                                                    return <SelectNothingToDisplay />;
                                                 }}
                                             </Query>
                                         </div>
                                     </div>
                                     <div className="row">
                                         <div className="col-md-6">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[0].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[0].label}
+                                            </span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -470,9 +470,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												{formSpanish[1].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[1].label}
+                                            </span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -490,9 +490,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[2].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[2].label}
+                                            </span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -511,9 +511,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												{formSpanish[24].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[24].label}
+                                            </span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -553,9 +553,9 @@ class Application extends Component {
                                                 />
 												</div>*/}
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[5].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[5].label}
+                                            </span>
                                             <InputMask
                                                 id="zipCode"
                                                 name="zipCode"
@@ -584,11 +584,11 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[6].label}
-											</span>
-                                            <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[6].label}
+                                            </span>
+                                            <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -613,16 +613,16 @@ class Application extends Component {
                                                             </select>
                                                         );
                                                     }
-                                                    return <SelectNothingToDisplay/>;
+                                                    return <SelectNothingToDisplay />;
                                                 }}
                                             </Query>
                                         </div>
                                         <div className="col-md-6">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[7].label}
-											</span>
-                                            <Query query={GET_CITIES_QUERY} variables={{parent: this.state.state}}>
-                                                {({loading, error, data, refetch, networkStatus}) => {
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[7].label}
+                                            </span>
+                                            <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
                                                     //if (networkStatus === 4) return <LinearProgress />;
                                                     if (error) return <p>Error </p>;
                                                     if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -658,15 +658,15 @@ class Application extends Component {
                                                             </select>
                                                         );
                                                     }
-                                                    return <SelectNothingToDisplay/>;
+                                                    return <SelectNothingToDisplay />;
                                                 }}
                                             </Query>
                                         </div>
 
                                         <div className="col-md-6">
-											<span className="primary applicant-card__label ">
-												{formSpanish[23].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[23].label}
+                                            </span>
                                             <label className="switch">
                                                 <input
                                                     onChange={(event) => {
@@ -684,7 +684,7 @@ class Application extends Component {
                                                     maxLength="50"
                                                     minLength="10"
                                                 />
-                                                <p className="slider round"/>
+                                                <p className="slider round" />
                                             </label>
                                         </div>
                                     </div>
@@ -692,9 +692,9 @@ class Application extends Component {
                                 <div className="col-md-12 col-lg-6 form-section-2">
                                     <div className="row">
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												{formSpanish[9].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[9].label}
+                                            </span>
                                             <InputMask
                                                 id="home-number"
                                                 name="homePhone"
@@ -713,9 +713,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6 ">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[10].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[10].label}
+                                            </span>
                                             <InputMask
                                                 id="cell-number"
                                                 name="cellPhone"
@@ -735,9 +735,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-12">
-											<span className="primary applicant-card__label ">
-												* {formSpanish[13].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                * {formSpanish[13].label}
+                                            </span>
                                             <input
                                                 onChange={(event) => {
                                                     this.setState({
@@ -757,9 +757,9 @@ class Application extends Component {
                                             />
                                         </div>
                                         <div className="col-md-12">
-											<span className="primary applicant-card__label ">
-												{formSpanish[21].label}
-											</span>
+                                            <span className="primary applicant-card__label ">
+                                                {formSpanish[21].label}
+                                            </span>
                                             <textarea
                                                 onChange={(event) => {
                                                     this.setState({
@@ -799,24 +799,24 @@ class Application extends Component {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="applicant-card__footer">
-                                    <button
-                                        className="applicant-card__cancel-button"
-                                        onClick={() => {
-                                            window.location.href = '/home/Recruiter'
-                                        }}
-                                    >
-                                        {spanishActions[9].label}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            this.props.handleNext();
-                                        }}
-                                        className="applicant-card__save-button">
-                                        {spanishActions[8].label}
-                                    </button>
-                                </div>
-                            )}
+                                    <div className="applicant-card__footer">
+                                        <button
+                                            className="applicant-card__cancel-button"
+                                            onClick={() => {
+                                                window.location.href = '/home/Recruiter'
+                                            }}
+                                        >
+                                            {spanishActions[9].label}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                this.props.handleNext();
+                                            }}
+                                            className="applicant-card__save-button">
+                                            {spanishActions[8].label}
+                                        </button>
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </form>

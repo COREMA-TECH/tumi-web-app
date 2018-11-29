@@ -403,7 +403,7 @@ class Application extends Component {
 												minLength="3"
 											/>
 										</div>
-										<div className="col-md-12 ">
+										{/*<div className="col-md-12 ">
 											<span className="primary applicant-card__label skeleton">
 												* {formSpanish[3].label}
 											</span>
@@ -422,7 +422,7 @@ class Application extends Component {
 												min="0"
 												maxLength="50"
 											/>
-										</div>
+										</div> */}
 										<div className="col-md-12 ">
 											<span className="primary applicant-card__label skeleton">
 												* {formSpanish[22].label}

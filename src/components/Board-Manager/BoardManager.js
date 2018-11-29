@@ -635,6 +635,7 @@ class BoardManager extends Component {
                         style={{
                             backgroundColor: '#f5f7f9'
                         }}
+
                         customCardLayout>
                         <CustomCard />
 
