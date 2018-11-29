@@ -3,10 +3,10 @@ import './preview-profile.css';
 import './../index.css';
 import withApollo from "react-apollo/withApollo";
 import {
-    GET_APPLICATION_PROFILE_INFO,
+    GET_APPLICATION_PROFILE_INFO, GET_CONTACTS_IN_USER_DIALOG,
     GET_CONTACTS_QUERY,
     GET_DEPARTMENTS_QUERY,
-    GET_HOTELS_QUERY,
+    GET_HOTELS_QUERY, GET_ROLES_QUERY,
     GET_TYPES_QUERY
 } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -27,6 +27,7 @@ import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
 import {INSERT_CONTACT} from "./Mutations";
 import {INSERT_DEPARTMENT} from "./Mutations";
+import {GET_LANGUAGES_QUERY} from "../../../ApplyForm-Recruiter/Queries";
 
 
 const styles = (theme) => ({
@@ -146,6 +147,19 @@ class General extends Component {
             indexView: 0, //Loading
             errorMessage: '',
             activateTabs: true,
+
+
+            // User dialog state
+            contacts: [],
+            regions: [],
+            RegionName: '',
+            loadingContacts: false,
+
+            roles:[],
+            loadingRoles: false,
+
+            languages: [],
+            loadingLanguages: false
         }
     }
 
@@ -240,19 +254,65 @@ class General extends Component {
     fetchContacts = () => {
         this.props.client
             .query({
-                query: GET_CONTACTS_QUERY,
-                variables: {IdEntity: this.state.idCompany},
+                query: GET_CONTACTS_IN_USER_DIALOG,
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.getcontacts != null) {
+                if (data.data.getsupervisor != null && data.data.getcatalogitem) {
+                    console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
                     this.setState({
-                        data: data.data.getcontacts,
+                            contacts: data.data.getsupervisor,
+                            regions: data.data.getcatalogitem,
+                            RegionName: data.data.getcatalogitem[0].Name,
+                            loadingContacts: false
                     });
                 }
             })
             .catch((error) => {
-                // TODO: show a SnackBar with error message
+
+            });
+    };
+
+    fetchRoles = () => {
+        this.props.client
+            .query({
+                query: GET_ROLES_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.getroles != null) {
+                    this.setState({
+                            roles: data.data.getroles,
+                            loadingRoles: false
+                    });
+                }
+            })
+            .catch((error) => {
+
+            });
+    };
+
+    fetchLanguages = () => {
+        this.props.client
+            .query({
+                query: GET_LANGUAGES_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.getcatalogitem != null) {
+                    this.setState({
+                            languages: data.data.getcatalogitem,
+                            loadingLanguages: false
+                    });
+                }
+            })
+            .catch((error) => {
+                this.setState({
+                    loadingLanguages: false,
+                    firstLoad: false,
+                    indexView: 2,
+                    errorMessage: 'Error: Loading languages: ' + error
+                });
             });
     };
 
@@ -457,6 +517,35 @@ class General extends Component {
         })
     }
 
+
+    handleCheckedChange = (name) => (event) => {
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
+        if (name == 'isAdmin' && event.target.checked)
+            this.setState(
+                {
+                    [name]: event.target.checked,
+                    allowEdit: true,
+                    allowInsert: true,
+                    allowDelete: true,
+                    allowExport: true
+                },
+                this.validateForm
+            );
+        else this.setState({ [name]: event.target.checked }, this.validateForm);
+    };
+
+    updateSelect = (id, name) => {
+        this.setState(
+            {
+                [name]: id
+            },
+            () => {
+                console.log("Id de la fila ", id);
+                this.validateField(name, id);
+            }
+        );
+    };
+
     render() {
         const {classes} = this.props;
         const {fullScreen} = this.props;
@@ -474,9 +563,358 @@ class General extends Component {
         /**
          * Function to render a dialog with user options
          **/
-        let renderUserDialog = () => {
+        let renderUserDialog = () => (
+            <Dialog
+                fullScreen={fullScreen}
+                open={this.state.openModal}
+                onClose={this.handleCloseModal}
+                aria-labelledby="responsive-dialog-title"
+                maxWidth="md"
+            >
+                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
+                    <div className="modal-header">
+                        <h5 className="modal-title">
+                            {this.state.idToEdit != null &&
+                            this.state.idToEdit != '' &&
+                            this.state.idToEdit != 0 ? (
+                                'Edit  User'
+                            ) : (
+                                'Create User'
+                            )}
+                        </h5>
+                    </div>
+                </DialogTitle>
+                <DialogContent style={{ minWidth: 600, padding: '0px' }}>
+                    <div className="row">
+                        <div className="col-lg-8">
+                            <div className="row">
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Contact</label>
+                                    <select
+                                        name="idContact"
+                                        className={[
+                                            'form-control',
+                                            this.state.idContactValid ? '' : '_invalid'
+                                        ].join(' ')}
+                                        disabled={this.state.loadingContacts}
+                                        onChange={(event) => {
+                                            this.updateSelect(event.target.value, 'idContact');
+                                            this.SelectContac(event.target.value);
+                                        }}
+                                        value={this.state.idContact}
 
-        };
+                                    >
+                                        <option value={undefined}>Select a contact</option>
+                                        {this.state.contacts.map((item) => (
+                                            <option key={item.Id} value={item.Id}>
+                                                {item.Name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Username</label>
+                                    <InputForm
+                                        id="username"
+                                        name="username"
+                                        maxLength="15"
+                                        value={this.state.username}
+                                        error={!this.state.usernameValid}
+                                        change={(value) => this.onChangeHandler(value, 'username')}
+                                    />
+                                </div>
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Email</label>
+                                    <InputForm
+                                        id="email"
+                                        name="email"
+                                        maxLength="50"
+                                        value={this.state.email}
+                                        error={!this.state.emailValid}
+                                        change={(value) => this.onChangeHandler(value, 'email')}
+                                    />
+                                </div>
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Phone Number</label>
+                                    <InputMask
+                                        id="number"
+                                        name="number"
+                                        mask="+(999) 999-9999"
+                                        maskChar=" "
+                                        value={this.state.number}
+                                        className={
+                                            this.state.numberValid ? 'form-control' : 'form-control _invalid'
+                                        }
+                                        onChange={(e) => {
+                                            this.onChangeHandler(e.target.value, 'number');
+                                        }}
+                                        placeholder="+(999) 999-9999"
+                                    />
+                                </div>
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Rol</label>
+                                    <select
+                                        name="idRol"
+                                        className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
+                                            ' '
+                                        )}
+                                        disabled={this.state.loadingRoles}
+                                        onChange={(event) => {
+                                            this.updateSelect(event.target.value, 'idRol');
+                                        }}
+                                        value={this.state.idRol}
+                                    >
+                                        <option value="">Select a rol</option>
+                                        {this.state.roles.map((item) => (
+                                            <option key={item.Id} value={item.Id}>
+                                                {item.Name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-12 col-lg-6">
+                                    <label>* Language</label>
+
+                                    <select
+                                        name="idLanguage"
+                                        className={[
+                                            'form-control',
+                                            this.state.idLanguageValid ? '' : '_invalid'
+                                        ].join(' ')}
+                                        disabled={this.state.loadingLanguages}
+                                        onChange={(event) => {
+                                            this.updateSelect(event.target.value, 'idLanguage');
+                                        }}
+                                        value={this.state.idLanguage}
+                                    >
+                                        <option value="">Select a language</option>
+                                        {this.state.languages.map((item) => (
+                                            <option key={item.Id} value={item.Id}>
+                                                {item.Name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="col-md-3 col-lg-3">
+                                    <label>Recruiter?</label>
+
+                                    <div className="onoffswitch">
+                                        <input
+                                            type="checkbox"
+                                            checked={this.state.IsRecruiter}
+                                            name="IsRecruiter"
+                                            onChange={this.handleCheckedChange('IsRecruiter')}
+                                            className="onoffswitch-checkbox"
+                                            id="IsRecruiter"
+                                        />
+                                        <label className="onoffswitch-label" htmlFor="IsRecruiter">
+                                            <span className="onoffswitch-inner" />
+                                            <span className="onoffswitch-switch" />
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div className="col-md-9 col-lg-9">
+                                    <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
+                                    <AutosuggestInput
+                                        id="IdRegion"
+                                        name="IdRegion"
+                                        data={this.state.regions}
+                                        error={!this.state.IdRegionValid}
+                                        disabled={!this.state.IsRecruiter}
+                                        value={this.state.RegionName}
+                                        onChange={(value) => {
+                                            this.updateSelect(value, 'RegionName');
+                                        }}
+                                        onSelect={(value) => {
+                                            this.updateSelect(value, 'RegionName');
+                                        }}
+                                    />
+                                    {/*
+										<select
+											name="IdRegion"
+											className={[
+												'form-control',
+												this.state.IdRegionValid ? '' : '_invalid'
+											].join(' ')}
+											disabled={!this.state.IsRecruiter}
+											onChange={(event) => {
+												this.updateSelect(event.target.value, 'IdRegion');
+											}}
+											value={this.state.IdRegion}
+										>
+											<option value="">Select a region</option>
+											{this.state.regions.map((item) => (
+												<option key={item.Id} value={item.Id}>
+													{item.Name}
+												</option>
+											))}
+										</select>
+										*/}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-4">
+                            <div className="card">
+                                <div className="card-header info">Permissions</div>
+                                <div className="card-body p-0">
+                                    <ul className="row w-100 bg-light CardPermissions">
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Active?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.IsActive}
+                                                    name="IsActive"
+                                                    onChange={this.handleCheckedChange('IsActive')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="IsActive"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="IsActive">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Admin?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.isAdmin}
+                                                    name="isAdmin"
+                                                    onChange={this.handleCheckedChange('isAdmin')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="isAdmin"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="isAdmin">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Insert?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowInsert}
+                                                    name="allowInsert"
+                                                    onChange={this.handleCheckedChange('allowInsert')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowInsert"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowInsert">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Edit?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowEdit}
+                                                    name="allowEdit"
+                                                    onChange={this.handleCheckedChange('allowEdit')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowEdit"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowEdit">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Delete?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowDelete}
+                                                    name="allowDelete"
+                                                    onChange={this.handleCheckedChange('allowDelete')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowDelete"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowDelete">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Export?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowExport}
+                                                    name="allowExport"
+                                                    onChange={this.handleCheckedChange('allowExport')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowExport"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowExport">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+                <DialogActions style={{ margin: '16px 10px' }}>
+                    <div className={classes.root}>
+                        <div className={classes.wrapper}>
+                            <Tooltip
+                                title={
+                                    this.state.idToEdit != null &&
+                                    this.state.idToEdit != '' &&
+                                    this.state.idToEdit != 0 ? (
+                                        'Save Changes'
+                                    ) : (
+                                        'Insert Record'
+                                    )
+                                }
+                            >
+                                <div>
+                                    <button
+                                        className="btn btn-success"
+                                        onClick={this.addUserHandler}
+                                    >
+                                        Save
+                                        {/*{!isLoading && <i className="fas fa-save ml-1" />}*/}
+                                        {/*{isLoading && <i className="fas fa-spinner fa-spin ml-1" />}*/}
+                                    </button>
+                                </div>
+                            </Tooltip>
+                        </div>
+                    </div>
+                    <div className={classes.root}>
+                        <div className={classes.wrapper}>
+                            <Tooltip title={'Cancel Operation'}>
+                                <div>
+                                    <button className="btn btn-danger" onClick={this.cancelUserHandler}>
+                                        Cancel <i className="fas fa-ban ml-1" />
+                                    </button>
+                                </div>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </DialogActions>
+            </Dialog>
+        );
 
         let renderDialog = () => (
             <Dialog
@@ -832,6 +1270,9 @@ class General extends Component {
                 </div>
                 {
                     renderDialog()
+                }
+                {
+                    renderUserDialog()
                 }
             </div>
         );
