@@ -6,7 +6,6 @@ import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
 
 class HotelList extends Component {
-
     constructor() {
         super();
         this.state = {
@@ -159,7 +158,7 @@ class HotelList extends Component {
         else {
             this.getHotels(99999);
         }
-    }
+    };
 
     render() {
         return (

@@ -25,7 +25,8 @@ import {withStyles} from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import {INSERT_CONTACT} from "../../../Contact/Mutations";
+import {INSERT_CONTACT} from "./Mutations";
+import {INSERT_DEPARTMENT} from "./Mutations";
 
 
 const styles = (theme) => ({
@@ -324,7 +325,7 @@ class General extends Component {
                 //const InsertDepartmentNew =
                 await this.props.client
                     .mutate({
-                        mutation: INSERT_CONTACT,
+                        mutation: INSERT_DEPARTMENT,
                         variables: {
                             input: {
                                 Id: 0,
@@ -364,7 +365,7 @@ class General extends Component {
                 //const InsertDepartmentNew =
                 await this.props.client
                     .mutate({
-                        mutation: this.INSERT_DEPARTMENTS_QUERY,
+                        mutation: INSERT_DEPARTMENT,
                         variables: {
                             input: {
                                 Id: 0,
@@ -405,15 +406,13 @@ class General extends Component {
     };
 
     insertContacts = (idDepartment, idTitle) => {
-        const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
-
         this.props.client
             .mutate({
-                mutation: query,
+                mutation: INSERT_CONTACT,
                 variables: {
                     input: {
-                        Id: id,
-                        Id_Entity: this.props.idCompany,
+                        Id: null,
+                        Id_Entity: this.state.hotelId,
                         First_Name: `'${this.state.firstname}'`,
                         Middle_Name: `'${this.state.middlename}'`,
                         Last_Name: `'${this.state.lastname}'`,
@@ -433,25 +432,15 @@ class General extends Component {
                 }
             })
             .then((data) => {
-                this.props.handleOpenSnackbar('success', isEdition ? 'Contact Updated!' : 'Contact Inserted!');
-                this.setState({ openModal: false, loading: true, showCircularLoading: true }, () => {
-                    this.loadContacts(() => {
-                        this.loadDepartments(() => {
-                            this.loadTitles(() => {
-                                this.loadAllSupervisors(() => {
-                                    this.loadSupervisors(0, () => {
-                                        this.resetState();
-                                    });
-                                });
-                            });
-                        });
-                    });
+                this.props.handleOpenSnackbar('success', 'Contact Inserted!');
+                this.setState({
+                    openModal: false
                 });
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    isEdition ? 'Error: Updating Contact: ' + error : 'Error: Inserting Contact: ' + error
+                    'Error: Inserting Contact: ' + error
                 );
                 this.setState({
                     saving: false
@@ -482,6 +471,13 @@ class General extends Component {
             return <LinearProgress/>
         }
 
+        /**
+         * Function to render a dialog with user options
+         **/
+        let renderUserDialog = () => {
+
+        };
+
         let renderDialog = () => (
             <Dialog
                 fullScreen={fullScreen}
@@ -505,7 +501,7 @@ class General extends Component {
                     </div>
                 </DialogTitle>
                 <DialogContent style={{minWidth: 600, padding: '0px'}}>
-                    <div className="container">
+                    <form className="container">
                         <div className="">
                             <div className="row">
                                 <div className="col-md-12 col-lg-4">
@@ -567,6 +563,7 @@ class General extends Component {
                                     <InputForm
                                         id="firstname"
                                         name="firstname"
+                                        required
                                         maxLength="15"
                                         value={this.state.firstname}
                                         error={false}
@@ -652,7 +649,7 @@ class General extends Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </DialogContent>
                 <DialogActions style={{margin: '20px 20px'}}>
                     <div className={classes.root}>
@@ -673,7 +670,7 @@ class General extends Component {
                                         // disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
                                         variant="fab"
                                         className="btn btn-success"
-                                        onClick={this.addContactHandler}
+                                        onClick={this.insertDepartment}
                                     >
                                         Save {!this.state.saving && <i class="fas fa-save"/>}
                                         {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
@@ -729,12 +726,6 @@ class General extends Component {
                                         <span className="col-sm-12">Text</span>
                                     </div>
                                 </div>
-                                <div className="item col-6 col-md-2">
-                                    <div className="row">
-                                        <span className="col-sm-12 font-weight-bold">Payroll Preference</span>
-                                        <span className="col-sm-12">Text</span>
-                                    </div>
-                                </div>
                                 <div className="item col-sm-12  col-md-1">
                                     <div className="row">
                                         <span className="col-12 col-md-12 font-weight-bold">Active</span>
@@ -756,10 +747,17 @@ class General extends Component {
                                     </div>
                                 </div>
                                 <div className="item col-sm-12  col-md-2">
-                                    <button className="btn btn-info" onClick={() => {
+                                    <button className="btn btn-outline-info btn-large" onClick={() => {
                                         this.handleClickOpenModal();
-                                    }}>Create Profile
+                                    }}>Associate
                                     </button>
+                                </div>
+                                <div className="item col-6 col-md-2">
+                                    {/*<div className="row">*/}
+                                    {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
+                                    {/*<span className="col-sm-12">Text</span>*/}
+                                    {/*</div>*/}
+                                    <button className="btn btn-outline-success btn-large">Create Profile</button>
                                 </div>
                             </div>
                         </div>
