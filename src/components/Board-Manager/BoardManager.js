@@ -22,7 +22,7 @@ import Filters from './Filters';
 
 const CustomCard = props => {
     return (
-        <div>
+        <div style={{ padding: '6px', background: '#f6f9ff' }}>
             <header
                 style={{
                     borderBottom: '1px solid #eee',
@@ -68,6 +68,7 @@ const CustomCard = props => {
                     {props.escalationTextRightMatch && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightMatch}  </div>}
                 </header>
             </div>
+
         </div>
     )
 }
@@ -280,6 +281,7 @@ class BoardManager extends Component {
 
     onCardClick = (cardId, metadata, laneId) => {
         //console.log("esto es mio ", this.state.workOrders)
+        alert("doy clic en ", cardId);
         if (sessionStorage.getItem('NewFilter') === false) {
             this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
         } else {
@@ -359,7 +361,7 @@ class BoardManager extends Component {
                             title: 'Work Orders',
                             label: ' ',
                             cards: this.state.workOrders,
-                            laneStyle: { borderRadius: 10, marginBottom: 15 }
+                            laneStyle: { borderRadius: 50, marginBottom: 15 }
                         },
                         {
                             id: 'lane2',
@@ -483,7 +485,7 @@ class BoardManager extends Component {
                         title: 'Work Orders',
                         label: ' ',
                         cards: this.state.workOrders,
-                        laneStyle: { borderRadius: 10, marginBottom: 15 }
+                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
                     },
                     {
                         id: 'lane2',
