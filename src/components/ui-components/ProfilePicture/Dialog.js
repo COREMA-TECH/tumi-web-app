@@ -21,9 +21,9 @@ class CustomDialog extends Component {
                 {this.props.children}
             </DialogContent>
             <DialogActions>
-                <Button onClick={this.props.handleClose} color="primary">
-                    Close
-                 </Button>
+                <button onClick={this.props.handleClose} className="btn btn-danger">
+                    Close&nbsp;<i class="fas fa-ban"></i>
+                </button>
             </DialogActions>
         </Dialog>
     }
