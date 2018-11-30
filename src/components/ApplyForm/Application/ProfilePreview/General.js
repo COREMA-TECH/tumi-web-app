@@ -251,7 +251,11 @@ class General extends Component {
     };
 
     handleCloseModal = () => {
-        this.setState({openModal: false});
+        this.setState({
+                openModal: false
+        }, () => {
+
+        });
     };
 
     handleClickOpenUserModal = () => {
@@ -284,6 +288,9 @@ class General extends Component {
                     this.setState({
                         email: this.state.data.emailAddress,
                         number: this.state.data.cellPhone,
+                        firstname: this.state.data.firstName,
+                        middlename: this.state.data.middleName,
+                        lastname: this.state.data.lastName
                     })
                 });
             })
