@@ -30,6 +30,7 @@ import { GET_FORMS_QUERY } from '../../Security/DropdownForm/queries';
 import NotFound from '../../NotFound/NotFound';
 import DashboardManager from '../../Dashboard/Manager';
 import DashboardRecruiter from '../../Dashboard/Recruiter';
+import Holidays from '../../Holidays';
 
 class Container extends Component {
 	constructor(props) {
@@ -142,6 +143,8 @@ class Container extends Component {
 				<Route exact path="/home/dashboard/manager" component={DashboardManager} />
 				<Route exact path="/home/dashboard/recruiter" component={DashboardRecruiter} />
 				<Route exact path="/home/openings" component={WorkOrdersPosition} />
+
+				<Route exact path="/home/holidays" component={Holidays} />
 			</div>
 		);
 	}

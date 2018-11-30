@@ -5,7 +5,7 @@ import withApollo from "react-apollo/withApollo";
 import {
     GET_APPLICATION_PROFILE_INFO, GET_CONTACTS_IN_USER_DIALOG,
     GET_CONTACTS_QUERY,
-    GET_DEPARTMENTS_QUERY,
+    GET_DEPARTMENTS_QUERY, GET_EMAILS_USER,
     GET_HOTELS_QUERY, GET_ROLES_QUERY,
     GET_TYPES_QUERY
 } from "./Queries";
@@ -161,6 +161,8 @@ class General extends Component {
             roles:[],
             loadingRoles: false,
 
+            dataEmail: [],
+
             languages: [],
             loadingLanguages: false,
             createdProfile: false,
@@ -251,7 +253,16 @@ class General extends Component {
     };
 
     handleCloseModal = () => {
-        this.setState({openModal: false});
+        this.setState({
+                openModal: false
+        }, () => {
+            this.setState({
+                hotelId: null,
+                type: null,
+                departmentName: '',
+                titleName: ''
+            })
+        });
     };
 
     handleClickOpenUserModal = () => {
@@ -259,7 +270,20 @@ class General extends Component {
     };
 
     handleCloseUserModal = () => {
-        this.setState({openUserModal: false});
+        this.setState({
+            openUserModal: false,
+        }, () => {
+            this.resetUserModalState();
+        });
+    };
+
+    resetUserModalState = () => {
+        this.setState({
+            username: '',
+            idRol: null,
+            idLanguage: null,
+            usernameValid: true
+        })
     };
 
 
@@ -280,7 +304,14 @@ class General extends Component {
                 this.setState({
                     data: data.applications[0]
                 }, () => {
-                    this.fetchDepartments()
+                    this.fetchDepartments();
+                    this.setState({
+                        email: this.state.data.emailAddress,
+                        number: this.state.data.cellPhone,
+                        firstname: this.state.data.firstName,
+                        middlename: this.state.data.middleName,
+                        lastname: this.state.data.lastName
+                    })
                 });
             })
             .catch(error => {
@@ -399,9 +430,7 @@ class General extends Component {
                             languages: data.data.getcatalogitem,
                             loadingLanguages: false
                     }, () => {
-                        this.setState({
-                            loading: false
-                        })
+                        this.fetchEmails();
                     });
                 }
             })
@@ -595,6 +624,13 @@ class General extends Component {
                 this.setState({
                     openModal: false
                 });
+
+                this.setState({
+                    hotelId: null,
+                    type: null,
+                    departmentName: '',
+                    titleName: ''
+                })
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
@@ -929,7 +965,7 @@ class General extends Component {
                             input: {
                                 Id: null,
                                 Id_Entity: 1,
-                                Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
+                                Id_Contact: null,
                                 Id_Roles: this.state.idRol,
                                 Code_User: `'${this.state.username}'`,
                                 Full_Name: `'${this.state.fullname}'`,
@@ -941,8 +977,8 @@ class General extends Component {
                                 AllowInsert: this.state.allowInsert ? 1 : 0,
                                 AllowEdit: this.state.allowEdit ? 1 : 0,
                                 AllowExport: this.state.allowExport ? 1 : 0,
-                                IsRecruiter: this.state.IsRecruiter,
-                                IdRegion: this.state.IdRegion,
+                                IsRecruiter: false,
+                                IdRegion: null,
                                 IsActive: this.state.IsActive ? 1 : 0,
                                 User_Created: 1,
                                 User_Updated: 1,
@@ -960,6 +996,7 @@ class General extends Component {
                             createdProfile: true
                         }, () => {
                             this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
+                            this.resetUserModalState();
                         });
 
                     })
@@ -975,9 +1012,28 @@ class General extends Component {
         );
     };
 
+    fetchEmails = () => {
+        this.props.client
+            .query({
+                query: GET_EMAILS_USER
+            })
+            .then(({data}) => {
+                this.setState({
+                    dataEmail: data.getusers
+                }, () => {this.setState({
+                        loading: false
+                    });
+                })
+            })
+            .catch(error => {
+                alert("Error to get users");
+            })
+    };
+
     render() {
         const {classes} = this.props;
         const {fullScreen} = this.props;
+        let userExist = false;
 
 
         if (this.state.loading) {
@@ -988,6 +1044,13 @@ class General extends Component {
         if (this.state.error) {
             return <LinearProgress/>
         }
+
+        this.state.dataEmail.map(item => {
+            if(item.Electronic_Address.trim() === this.state.email.trim()){
+                userExist = true;
+            }
+        });
+
 
         /**
          * Function to render a dialog with user options
@@ -1015,32 +1078,8 @@ class General extends Component {
                 </DialogTitle>
                 <DialogContent style={{ minWidth: 600, padding: '0px' }}>
                     <div className="row">
-                        <div className="col-lg-8">
+                        <div className="col-lg-7">
                             <div className="row">
-                                <div className="col-md-12 col-lg-6">
-                                    <label>* Contact</label>
-                                    <select
-                                        name="idContact"
-                                        className={[
-                                            'form-control',
-                                            this.state.idContactValid ? '' : '_invalid'
-                                        ].join(' ')}
-                                        disabled={this.state.loadingContacts}
-                                        onChange={(event) => {
-                                            this.updateSelect(event.target.value, 'idContact');
-                                            this.SelectContac(event.target.value);
-                                        }}
-                                        value={this.state.idContact}
-
-                                    >
-                                        <option value={undefined}>Select a contact</option>
-                                        {this.state.contacts.map((item) => (
-                                            <option key={item.Id} value={item.Id}>
-                                                {item.Name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
                                     <InputForm
@@ -1101,7 +1140,7 @@ class General extends Component {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-12 col-lg-6">
+                                <div className="col-md-12 col-lg-12">
                                     <label>* Language</label>
 
                                     <select
@@ -1125,73 +1164,17 @@ class General extends Component {
                                     </select>
                                 </div>
 
-                                <div className="col-md-3 col-lg-3">
-                                    <label>Recruiter?</label>
-
-                                    <div className="onoffswitch">
-                                        <input
-                                            type="checkbox"
-                                            checked={this.state.IsRecruiter}
-                                            name="IsRecruiter"
-                                            onChange={this.handleCheckedChange('IsRecruiter')}
-                                            className="onoffswitch-checkbox"
-                                            id="IsRecruiter"
-                                        />
-                                        <label className="onoffswitch-label" htmlFor="IsRecruiter">
-                                            <span className="onoffswitch-inner" />
-                                            <span className="onoffswitch-switch" />
-                                        </label>
-                                    </div>
-                                </div>
-
                                 <div className="col-md-9 col-lg-9">
-                                    <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
-                                    <AutosuggestInput
-                                        id="IdRegion"
-                                        name="IdRegion"
-                                        data={this.state.regions}
-                                        error={!this.state.IdRegionValid}
-                                        disabled={!this.state.IsRecruiter}
-                                        value={this.state.RegionName}
-                                        onChange={(value) => {
-                                            this.updateSelect(value, 'RegionName');
-                                        }}
-                                        onSelect={(value) => {
-                                            this.updateSelect(value, 'RegionName');
-                                        }}
-                                    />
-                                    {/*
-										<select
-											name="IdRegion"
-											className={[
-												'form-control',
-												this.state.IdRegionValid ? '' : '_invalid'
-											].join(' ')}
-											disabled={!this.state.IsRecruiter}
-											onChange={(event) => {
-												this.updateSelect(event.target.value, 'IdRegion');
-											}}
-											value={this.state.IdRegion}
-										>
-											<option value="">Select a region</option>
-											{this.state.regions.map((item) => (
-												<option key={item.Id} value={item.Id}>
-													{item.Name}
-												</option>
-											))}
-										</select>
-										*/}
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-4">
+                        <div className="col-lg-5">
                             <div className="card">
                                 <div className="card-header info">Permissions</div>
                                 <div className="card-body p-0">
                                     <ul className="row w-100 bg-light CardPermissions">
                                         <li className="col-md-4 col-sm-4 col-lg-6">
                                             <label>Active?</label>
-
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
@@ -1303,7 +1286,7 @@ class General extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ margin: '16px 10px' }}>
+                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <Tooltip
@@ -1334,7 +1317,7 @@ class General extends Component {
                         <div className={classes.wrapper}>
                             <Tooltip title={'Cancel Operation'}>
                                 <div>
-                                    <button className="btn btn-danger" onClick={this.cancelUserHandler}>
+                                    <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
                                         Cancel <i className="fas fa-ban ml-1" />
                                     </button>
                                 </div>
@@ -1597,19 +1580,32 @@ class General extends Component {
                                     <div className="row">
                                         <span className="col-12 col-md-12 font-weight-bold">Active</span>
                                         <div className="col-12 col-md-12">
-                                            <label className="switch">
+                                            <div className="onoffswitch">
                                                 <input
-                                                    id="vehicleReportRequired"
                                                     type="checkbox"
-                                                    className="form-control"
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="10"
-                                                    form="background-check-form"
-                                                    checked={this.state.data.isActive}
+                                                    checked={this.state.isActive}
+                                                    name="IsActive"
+                                                    className="onoffswitch-checkbox"
+                                                    id="IsActive"
                                                 />
-                                                <p className="slider round"></p>
-                                            </label>
+                                                <label className="onoffswitch-label" htmlFor="IsActive">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                            {/*<label className="switch">*/}
+                                                {/*<input*/}
+                                                    {/*id="vehicleReportRequired"*/}
+                                                    {/*type="checkbox"*/}
+                                                    {/*className="form-control"*/}
+                                                    {/*min="0"*/}
+                                                    {/*maxLength="50"*/}
+                                                    {/*minLength="10"*/}
+                                                    {/*form="background-check-form"*/}
+                                                    {/*checked={this.state.data.isActive}*/}
+                                                {/*/>*/}
+                                                {/*<p className="slider round"></p>*/}
+                                            {/*</label>*/}
                                         </div>
                                     </div>
                                 </div>
@@ -1620,10 +1616,10 @@ class General extends Component {
                                     </button>
                                 </div>
                                 {
-                                    this.state.createdProfile ? (
+                                    userExist || this.state.createdProfile ? (
                                         ''
                                     ) : (
-                                        <div className="item col-6 col-md-2">
+                                        <div className="item col-sm-12 col-md-2">
                                             {/*<div className="row">*/}
                                             {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
                                             {/*<span className="col-sm-12">Text</span>*/}

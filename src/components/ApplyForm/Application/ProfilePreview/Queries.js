@@ -5,8 +5,11 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
         applications(id: $id) {
             id
             firstName
+            middleName
             lastName
             isActive
+            emailAddress
+            cellPhone
             position {
                 Id
                 Name
@@ -105,6 +108,14 @@ export const GET_LANGUAGES_QUERY = gql`
             Id
             Name
             IsActive
+        }
+    }
+`;
+
+export const GET_EMAILS_USER = gql`
+    {
+        getusers {
+            Electronic_Address
         }
     }
 `;

@@ -1,0 +1,27 @@
+.Months {
+    &-list {
+        text-align: center;
+    }
+    &-item {
+        background: linear-gradient(to right, $info, lighten($info,20));
+        border-radius: 45px;
+        color: $white;
+        cursor: pointer;
+        display: inline-block;
+        font-weight: 700;
+        height: 45px;
+        line-height: 45px;
+        margin-bottom: 16px;
+        margin-left: 13px;
+        margin-right: 13px;
+        margin-top: 16px;
+        text-align: center;
+        transition: all .5s;
+        width: 140px;
+        &:hover {
+            background: $white;
+            border-color: $brand-secondary;
+            color: $brand-secondary;
+        }
+    }
+}

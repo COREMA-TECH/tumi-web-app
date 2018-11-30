@@ -135,7 +135,8 @@
     }
 
     .btn-large {
-        width: 100% !important;
+        width: 60% !important;
+        margin: 0 auto;
     }
 }
 
@@ -154,5 +155,9 @@
 
     .header-profile-menu {
         justify-content: center;
+    }
+
+    .btn-large {
+        width: 100% !important;
     }
 }
