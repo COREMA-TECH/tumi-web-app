@@ -624,6 +624,13 @@ class General extends Component {
                 this.setState({
                     openModal: false
                 });
+
+                this.setState({
+                    hotelId: null,
+                    type: null,
+                    departmentName: '',
+                    titleName: ''
+                })
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
@@ -1047,30 +1054,6 @@ class General extends Component {
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
-                                {/*<div className="col-md-12 col-lg-6">*/}
-                                    {/*<label>* Contact</label>*/}
-                                    {/*<select*/}
-                                        {/*name="idContact"*/}
-                                        {/*className={[*/}
-                                            {/*'form-control',*/}
-                                            {/*this.state.idContactValid ? '' : '_invalid'*/}
-                                        {/*].join(' ')}*/}
-                                        {/*disabled={this.state.loadingContacts}*/}
-                                        {/*onChange={(event) => {*/}
-                                            {/*this.updateSelect(event.target.value, 'idContact');*/}
-                                            {/*this.SelectContac(event.target.value);*/}
-                                        {/*}}*/}
-                                        {/*value={this.state.idContact}*/}
-
-                                    {/*>*/}
-                                        {/*<option value={undefined}>Select a contact</option>*/}
-                                        {/*{this.state.contacts.map((item) => (*/}
-                                            {/*<option key={item.Id} value={item.Id}>*/}
-                                                {/*{item.Name}*/}
-                                            {/*</option>*/}
-                                        {/*))}*/}
-                                    {/*</select>*/}
-                                {/*</div>*/}
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
                                     <InputForm
@@ -1155,62 +1138,7 @@ class General extends Component {
                                     </select>
                                 </div>
 
-                                {/*<div className="col-md-3 col-lg-3">*/}
-                                    {/*<label>Recruiter?</label>*/}
-
-                                    {/*<div className="onoffswitch">*/}
-                                        {/*<input*/}
-                                            {/*type="checkbox"*/}
-                                            {/*checked={this.state.IsRecruiter}*/}
-                                            {/*name="IsRecruiter"*/}
-                                            {/*onChange={this.handleCheckedChange('IsRecruiter')}*/}
-                                            {/*className="onoffswitch-checkbox"*/}
-                                            {/*id="IsRecruiter"*/}
-                                        {/*/>*/}
-                                        {/*<label className="onoffswitch-label" htmlFor="IsRecruiter">*/}
-                                            {/*<span className="onoffswitch-inner" />*/}
-                                            {/*<span className="onoffswitch-switch" />*/}
-                                        {/*</label>*/}
-                                    {/*</div>*/}
-                                {/*</div>*/}
-
                                 <div className="col-md-9 col-lg-9">
-                                    {/*<label>{this.state.IsRecruiter ? '* ' : ''}Region</label>*/}
-                                    {/*<AutosuggestInput*/}
-                                        {/*id="IdRegion"*/}
-                                        {/*name="IdRegion"*/}
-                                        {/*data={this.state.regions}*/}
-                                        {/*error={!this.state.IdRegionValid}*/}
-                                        {/*disabled={!this.state.IsRecruiter}*/}
-                                        {/*value={this.state.RegionName}*/}
-                                        {/*onChange={(value) => {*/}
-                                            {/*this.updateSelect(value, 'RegionName');*/}
-                                        {/*}}*/}
-                                        {/*onSelect={(value) => {*/}
-                                            {/*this.updateSelect(value, 'RegionName');*/}
-                                        {/*}}*/}
-                                    {/*/>*/}
-                                    {/*
-										<select
-											name="IdRegion"
-											className={[
-												'form-control',
-												this.state.IdRegionValid ? '' : '_invalid'
-											].join(' ')}
-											disabled={!this.state.IsRecruiter}
-											onChange={(event) => {
-												this.updateSelect(event.target.value, 'IdRegion');
-											}}
-											value={this.state.IdRegion}
-										>
-											<option value="">Select a region</option>
-											{this.state.regions.map((item) => (
-												<option key={item.Id} value={item.Id}>
-													{item.Name}
-												</option>
-											))}
-										</select>
-										*/}
                                 </div>
                             </div>
                         </div>
@@ -1626,19 +1554,32 @@ class General extends Component {
                                     <div className="row">
                                         <span className="col-12 col-md-12 font-weight-bold">Active</span>
                                         <div className="col-12 col-md-12">
-                                            <label className="switch">
+                                            <div className="onoffswitch">
                                                 <input
-                                                    id="vehicleReportRequired"
                                                     type="checkbox"
-                                                    className="form-control"
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="10"
-                                                    form="background-check-form"
-                                                    checked={this.state.data.isActive}
+                                                    checked={this.state.isActive}
+                                                    name="IsActive"
+                                                    className="onoffswitch-checkbox"
+                                                    id="IsActive"
                                                 />
-                                                <p className="slider round"></p>
-                                            </label>
+                                                <label className="onoffswitch-label" htmlFor="IsActive">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                            {/*<label className="switch">*/}
+                                                {/*<input*/}
+                                                    {/*id="vehicleReportRequired"*/}
+                                                    {/*type="checkbox"*/}
+                                                    {/*className="form-control"*/}
+                                                    {/*min="0"*/}
+                                                    {/*maxLength="50"*/}
+                                                    {/*minLength="10"*/}
+                                                    {/*form="background-check-form"*/}
+                                                    {/*checked={this.state.data.isActive}*/}
+                                                {/*/>*/}
+                                                {/*<p className="slider round"></p>*/}
+                                            {/*</label>*/}
                                         </div>
                                     </div>
                                 </div>

@@ -112,3 +112,11 @@ export const GET_LANGUAGES_QUERY = gql`
     }
 `;
 
+export const GET_EMAILS_USER = gql`
+    {
+        getusers {
+            Electronic_Address
+        }
+    }
+`;
+
