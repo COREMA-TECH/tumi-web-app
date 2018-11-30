@@ -254,7 +254,12 @@ class General extends Component {
         this.setState({
                 openModal: false
         }, () => {
-
+            this.setState({
+                hotelId: null,
+                type: null,
+                departmentName: '',
+                titleName: ''
+            })
         });
     };
 
@@ -263,7 +268,20 @@ class General extends Component {
     };
 
     handleCloseUserModal = () => {
-        this.setState({openUserModal: false});
+        this.setState({
+            openUserModal: false,
+        }, () => {
+            this.resetUserModalState();
+        });
+    };
+
+    resetUserModalState = () => {
+        this.setState({
+            username: '',
+            idRol: null,
+            idLanguage: null,
+            usernameValid: true
+        })
     };
 
 
@@ -971,6 +989,7 @@ class General extends Component {
                             createdProfile: true
                         }, () => {
                             this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
+                            this.resetUserModalState();
                         });
 
                     })
@@ -1344,7 +1363,7 @@ class General extends Component {
                         <div className={classes.wrapper}>
                             <Tooltip title={'Cancel Operation'}>
                                 <div>
-                                    <button className="btn btn-danger" onClick={this.cancelUserHandler}>
+                                    <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
                                         Cancel <i className="fas fa-ban ml-1" />
                                     </button>
                                 </div>
