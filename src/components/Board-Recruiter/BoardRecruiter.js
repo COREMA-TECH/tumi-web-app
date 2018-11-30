@@ -142,7 +142,11 @@ class BoardRecruiter extends Component {
         }
 
         this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
-        this.addApplicationPhase(cardId, IdLane);
+
+        if (targetLaneId != "Leads") {
+            this.addApplicationPhase(cardId, IdLane);
+        }
+
 
         if (targetLaneId == "Leads" && sourceLaneId == "Applied") {
             this.setState({
@@ -339,9 +343,9 @@ class BoardRecruiter extends Component {
             })
 
         if (sessionStorage.getItem('NewFilterLead') === false) {
-            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, true, laneId);
+            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, true, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).PositionRateId);
         } else {
-            this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), true, laneId);
+            this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), true, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).PositionRateId);
         }
         //        alert("La session es " + sessionStorage.getItem('myData'))
         //alert("La session es " + sessionStorage.getItem('NewFilter'))
@@ -515,30 +519,7 @@ class BoardRecruiter extends Component {
         let datas = [];
         let getleads = [];
         let getOpenings = [];
-        /*this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
-            console.log("Esto es del lead ", data);
-            data.applications.forEach((wo) => {
-                //const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                //const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                //const Users = data.getcontacts.find((item) => { return item.Id == 10 });
-                console.log("entro en el data ", data);
-                console.log("este es el wo ", wo);
-                datas = {
-                    id: wo.id,
-                    name: wo.firstName + ' ' + wo.lastName,
-                    // dueOn: 'Q: ',
-                    //subTitle: wo.comment,
-                    subTitle: wo.cellPhone,
-                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                    escalationTextLeftLead: wo.generalComment,
-                    //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
-                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                    //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
-                };
-                leads.push(datas);
-            });
-        }).catch(error => { })*/
+
         if (this.state.hotel == 0) {
             await this.props.client.query({ query: GET_OPENING, variables: { status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {

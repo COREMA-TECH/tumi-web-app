@@ -30,10 +30,10 @@ class ApplicationPhasesForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.addApplicationPhase();
+        this.addApplicationPhase(event);
     }
 
-    addApplicationPhase = () => {
+    addApplicationPhase = (event) => {
         this.props.client.mutate({
             mutation: ADD_APPLICATION_PHASES,
             variables: {
@@ -50,9 +50,10 @@ class ApplicationPhasesForm extends Component {
             this.setState({
                 editing: false
             });
-            this.props.handleCloseModal();
+            this.props.handleCloseModal(event);
             this.props.handleOpenSnackbar('success', "The Candidate was rejected", 'bottom', 'right');
         }).catch((error) => {
+            console.log(error);
             this.props.handleOpenSnackbar(
                 'error',
                 'Error to Add applicant information. Please, try again!',
