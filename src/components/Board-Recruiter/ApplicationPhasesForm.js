@@ -30,10 +30,10 @@ class ApplicationPhasesForm extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.addApplicarionPhase();
+        this.addApplicationPhase();
     }
 
-    addApplicarionPhase = () => {
+    addApplicationPhase = () => {
         this.props.client.mutate({
             mutation: ADD_APPLICATION_PHASES,
             variables: {
@@ -42,15 +42,15 @@ class ApplicationPhasesForm extends Component {
                     UserId: localStorage.getItem('LoginId'),
                     WorkOrderId: this.props.WorkOrderId,
                     ReasonId: this.state.ReasonId,
-                    ApplicationId: 88,
-                    StageId: 1
+                    ApplicationId: this.props.ApplicationId,
+                    StageId: 30460
                 }
             }
         }).then(({ data }) => {
             this.setState({
                 editing: false
             });
-            this.props.handleCloseModal;
+            this.props.handleCloseModal();
             this.props.handleOpenSnackbar('success', "The Candidate was rejected", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(

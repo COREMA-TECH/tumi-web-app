@@ -100,7 +100,9 @@ class BoardRecruiter extends Component {
             openModal: false,
             Intopening: 0,
             userId: localStorage.getItem('LoginId'),
-            openReason: false
+            openReason: false,
+            ReasonId: 30471,
+            ApplicationId: 0
         }
     }
 
@@ -112,41 +114,48 @@ class BoardRecruiter extends Component {
         let IdLane;
 
         switch (targetLaneId) {
-            case "lane1":
-                IdLane = 1
+            case "Leads":
+                IdLane = 30460
                 break;
-            case "lane2":
-                IdLane = 2
+            case "Applied":
+                IdLane = 30461
                 break;
-            case "lane3":
-                IdLane = 3
+            case "Candidate":
+                IdLane = 30462
                 break;
-            case "lane4":
-                IdLane = 4
+            case "Placement":
+                IdLane = 30463
                 break;
-            case "lane5":
-                IdLane = 5
+            case "Notify":
+                IdLane = 30464
                 break;
-            case "lane6":
-                IdLane = 6
+            case "Accepted":
+                IdLane = 30465
                 break;
+            case "Add to Schedule":
+                IdLane = 30466
+                break;
+            case "Matches":
+                IdLane = 30466
             default:
                 IdLane = 1000
         }
 
         this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
+        this.addApplicationPhase(cardId, IdLane);
 
-        if (targetLaneId == "lane2" && sourceLaneId == "lane3") {
+        if (targetLaneId == "Leads" && sourceLaneId == "Applied") {
             this.setState({
+                ApplicationId: cardId,
                 openReason: true
             });
         }
 
-        if (targetLaneId == "lane4") {
+        if (targetLaneId == "Candidate") {
             this.updateApplicationInformation(cardId, false, 'Lead now is a Candidate');
-            this.addApplicarionPhase();
+            // this.addApplicationPhase(cardId, IdLane);
         }
-        if ((sourceLaneId == "lane4" && targetLaneId == "lane3") || (sourceLaneId == "lane4" && targetLaneId == "lane2")) {
+        if ((sourceLaneId == "Candidate" && targetLaneId == "Applied") || (sourceLaneId == "Candidate" && targetLaneId == "Leads")) {
             this.updateApplicationInformation(cardId, true, 'Candidate now is a Lead ');
         }
 
@@ -160,7 +169,7 @@ class BoardRecruiter extends Component {
         });
     };
 
-    addApplicarionPhase = () => {
+    addApplicationPhase = (id, laneId) => {
         this.props.client.mutate({
             mutation: ADD_APPLICATION_PHASES,
             variables: {
@@ -168,9 +177,9 @@ class BoardRecruiter extends Component {
                     Comment: " ",
                     UserId: parseInt(this.state.userId),
                     WorkOrderId: this.state.Intopening,
-                    ReasonId: 411,
-                    ApplicationId: 88,
-                    StageId: 1
+                    ReasonId: this.state.ReasonId,
+                    ApplicationId: id,
+                    StageId: laneId
                 }
             }
         }).then(({ data }) => {
@@ -471,25 +480,25 @@ class BoardRecruiter extends Component {
                             cards: this.state.Openings
                         },
                         {
-                            id: 'lane2',
+                            id: 'Leads',
                             title: 'Leads',
                             label: ' ',
                             cards: this.state.leads
                         },
                         {
-                            id: 'lane3',
+                            id: 'Applied',
                             title: 'Applied',
                             label: ' ',
                             cards: []
                         },
                         {
-                            id: 'lane4',
+                            id: 'Candidate',
                             title: 'Candidate',
                             label: ' ',
                             cards: []
                         },
                         {
-                            id: 'lane5',
+                            id: 'Placement',
                             title: 'Placement',
                             label: ' ',
                             cards: []
@@ -595,25 +604,25 @@ class BoardRecruiter extends Component {
                         cards: this.state.Openings
                     },
                     {
-                        id: 'lane2',
+                        id: 'Leads',
                         title: 'Leads',
                         label: ' ',
                         cards: this.state.leads
                     },
                     {
-                        id: 'lane3',
+                        id: 'Applied',
                         title: 'Applied',
                         label: ' ',
                         cards: []
                     },
                     {
-                        id: 'lane4',
+                        id: 'Candidate',
                         title: 'Candidate',
                         label: ' ',
                         cards: []
                     },
                     {
-                        id: 'lane5',
+                        id: 'Placement',
                         title: 'Placement',
                         label: ' ',
                         cards: []
@@ -770,6 +779,7 @@ class BoardRecruiter extends Component {
                 <Filters openModal={this.state.openModal} handleCloseModal={this.handleCloseModal} />
                 <ApplicationPhasesForm
                     WorkOrderId={this.state.Intopening}
+                    ApplicationId={this.state.ApplicationId}
                     openReason={this.state.openReason}
                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                     handleCloseModal={this.handleCloseModal}
