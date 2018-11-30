@@ -1,0 +1,71 @@
+.Weeks {
+    margin-bottom: 45px;
+    &-list {
+        text-align: center;
+    }
+    &-item {
+        display: inline-block;
+        color: $brand-secondary;
+        cursor: pointer;
+        height: 125px;
+        line-height: 125px;
+        text-align: center;
+        position: relative;
+        width: 20%;
+        @include media-breakpoint-down(sm) {
+            width: 50%;
+        }
+        &:after {
+            background-color: var(--danger);
+            border: lighten($red, 40%) solid;
+            border-width:  0px;
+            border-radius: 125px;
+            box-sizing: border-box;
+            content: " ";
+            display: block;
+            height: 0;
+            left: 0;
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transition: width .5s, height .5s, top .5s, border-width .5s;
+            width: 0;
+            z-index: 1;
+        }
+        &:hover {
+            color: $white;
+            &:after {
+                border-width: 7px;
+                height: 125px;
+                top: 0;
+                width: 125px;
+            }
+        }
+        &:first-child {
+            @include media-breakpoint-down(sm) {
+                width: 100%;
+            }
+            &:after {
+                display: none;
+            }
+            span {
+                color: $brand-secondary;
+                font-size: 3rem;
+            }
+        }
+        span {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.5;
+            position: relative;
+            vertical-align: middle;
+            z-index: 2;
+        }
+    }
+    &-title {
+        color: $brand-secondary;
+        font-weight: 900 !important;
+    }
+}
