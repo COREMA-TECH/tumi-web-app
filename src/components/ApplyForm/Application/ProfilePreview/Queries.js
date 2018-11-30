@@ -5,8 +5,11 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
         applications(id: $id) {
             id
             firstName
+            middleName
             lastName
             isActive
+            emailAddress
+            cellPhone
             position {
                 Id
                 Name
@@ -72,3 +75,48 @@ export const GET_HOTELS_QUERY = gql`
         }
     }
 `;
+
+
+export const GET_CONTACTS_IN_USER_DIALOG = gql`
+    {
+        getsupervisor(IsActive: 1, Id_Entity: 0, Id: 0) {
+            Id
+            Name: Full_Name
+            Electronic_Address
+            Phone_Number
+        }
+        getcatalogitem(Id_Catalog: 4) {
+            Id
+            Name
+            DisplayLabel
+        }
+    }
+`;
+
+export const GET_ROLES_QUERY = gql`
+    {
+        getroles(IsActive: 1) {
+            Id
+            Name: Description
+        }
+    }
+`;
+
+export const GET_LANGUAGES_QUERY = gql`
+    {
+        getcatalogitem(IsActive: 1, Id_Catalog: 9) {
+            Id
+            Name
+            IsActive
+        }
+    }
+`;
+
+export const GET_EMAILS_USER = gql`
+    {
+        getusers {
+            Electronic_Address
+        }
+    }
+`;
+

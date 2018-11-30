@@ -8781,6 +8781,22 @@ label:not(.custom-file-label):not(.form-check-label) {
     height: 0;
     visibility: hidden; }
 
+.camera-crash {
+  width: 100%;
+  height: 100%;
+  vertical-align: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  text-align: center; }
+
 .slide-left {
   left: -100% !important; }
 

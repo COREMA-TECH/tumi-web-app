@@ -134,6 +134,10 @@
         font-weight: 600;
     }
 
+    .btn-large {
+        width: 60% !important;
+        margin: 0 auto;
+    }
 }
 
 @media (min-width: 920px) {
@@ -151,5 +155,9 @@
 
     .header-profile-menu {
         justify-content: center;
+    }
+
+    .btn-large {
+        width: 100% !important;
     }
 }

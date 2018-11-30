@@ -108,9 +108,9 @@ class BoardRecruiter extends Component {
 
     }
 
-    handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
+    handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
         let IdLane;
-
+        console.log("Card Details", cardDetails)
         switch (targetLaneId) {
             case "lane1":
                 IdLane = 1
@@ -139,6 +139,8 @@ class BoardRecruiter extends Component {
         if (targetLaneId == "lane2" && sourceLaneId == "lane3") {
             this.setState({
                 openReason: true
+            }, () => {
+                this.onCardClick = (cardId, null, targetLaneId)
             });
         }
 
