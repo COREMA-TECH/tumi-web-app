@@ -280,7 +280,11 @@ class General extends Component {
                 this.setState({
                     data: data.applications[0]
                 }, () => {
-                    this.fetchDepartments()
+                    this.fetchDepartments();
+                    this.setState({
+                        email: this.state.data.emailAddress,
+                        number: this.state.data.cellPhone,
+                    })
                 });
             })
             .catch(error => {
@@ -929,7 +933,7 @@ class General extends Component {
                             input: {
                                 Id: null,
                                 Id_Entity: 1,
-                                Id_Contact: this.state.idContact == undefined ? null : this.state.idContact,
+                                Id_Contact: null,
                                 Id_Roles: this.state.idRol,
                                 Code_User: `'${this.state.username}'`,
                                 Full_Name: `'${this.state.fullname}'`,
@@ -941,8 +945,8 @@ class General extends Component {
                                 AllowInsert: this.state.allowInsert ? 1 : 0,
                                 AllowEdit: this.state.allowEdit ? 1 : 0,
                                 AllowExport: this.state.allowExport ? 1 : 0,
-                                IsRecruiter: this.state.IsRecruiter,
-                                IdRegion: this.state.IdRegion,
+                                IsRecruiter: false,
+                                IdRegion: null,
                                 IsActive: this.state.IsActive ? 1 : 0,
                                 User_Created: 1,
                                 User_Updated: 1,
@@ -1015,32 +1019,32 @@ class General extends Component {
                 </DialogTitle>
                 <DialogContent style={{ minWidth: 600, padding: '0px' }}>
                     <div className="row">
-                        <div className="col-lg-8">
+                        <div className="col-lg-7">
                             <div className="row">
-                                <div className="col-md-12 col-lg-6">
-                                    <label>* Contact</label>
-                                    <select
-                                        name="idContact"
-                                        className={[
-                                            'form-control',
-                                            this.state.idContactValid ? '' : '_invalid'
-                                        ].join(' ')}
-                                        disabled={this.state.loadingContacts}
-                                        onChange={(event) => {
-                                            this.updateSelect(event.target.value, 'idContact');
-                                            this.SelectContac(event.target.value);
-                                        }}
-                                        value={this.state.idContact}
+                                {/*<div className="col-md-12 col-lg-6">*/}
+                                    {/*<label>* Contact</label>*/}
+                                    {/*<select*/}
+                                        {/*name="idContact"*/}
+                                        {/*className={[*/}
+                                            {/*'form-control',*/}
+                                            {/*this.state.idContactValid ? '' : '_invalid'*/}
+                                        {/*].join(' ')}*/}
+                                        {/*disabled={this.state.loadingContacts}*/}
+                                        {/*onChange={(event) => {*/}
+                                            {/*this.updateSelect(event.target.value, 'idContact');*/}
+                                            {/*this.SelectContac(event.target.value);*/}
+                                        {/*}}*/}
+                                        {/*value={this.state.idContact}*/}
 
-                                    >
-                                        <option value={undefined}>Select a contact</option>
-                                        {this.state.contacts.map((item) => (
-                                            <option key={item.Id} value={item.Id}>
-                                                {item.Name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                    {/*>*/}
+                                        {/*<option value={undefined}>Select a contact</option>*/}
+                                        {/*{this.state.contacts.map((item) => (*/}
+                                            {/*<option key={item.Id} value={item.Id}>*/}
+                                                {/*{item.Name}*/}
+                                            {/*</option>*/}
+                                        {/*))}*/}
+                                    {/*</select>*/}
+                                {/*</div>*/}
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Username</label>
                                     <InputForm
@@ -1101,7 +1105,7 @@ class General extends Component {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-12 col-lg-6">
+                                <div className="col-md-12 col-lg-12">
                                     <label>* Language</label>
 
                                     <select
@@ -1125,41 +1129,41 @@ class General extends Component {
                                     </select>
                                 </div>
 
-                                <div className="col-md-3 col-lg-3">
-                                    <label>Recruiter?</label>
+                                {/*<div className="col-md-3 col-lg-3">*/}
+                                    {/*<label>Recruiter?</label>*/}
 
-                                    <div className="onoffswitch">
-                                        <input
-                                            type="checkbox"
-                                            checked={this.state.IsRecruiter}
-                                            name="IsRecruiter"
-                                            onChange={this.handleCheckedChange('IsRecruiter')}
-                                            className="onoffswitch-checkbox"
-                                            id="IsRecruiter"
-                                        />
-                                        <label className="onoffswitch-label" htmlFor="IsRecruiter">
-                                            <span className="onoffswitch-inner" />
-                                            <span className="onoffswitch-switch" />
-                                        </label>
-                                    </div>
-                                </div>
+                                    {/*<div className="onoffswitch">*/}
+                                        {/*<input*/}
+                                            {/*type="checkbox"*/}
+                                            {/*checked={this.state.IsRecruiter}*/}
+                                            {/*name="IsRecruiter"*/}
+                                            {/*onChange={this.handleCheckedChange('IsRecruiter')}*/}
+                                            {/*className="onoffswitch-checkbox"*/}
+                                            {/*id="IsRecruiter"*/}
+                                        {/*/>*/}
+                                        {/*<label className="onoffswitch-label" htmlFor="IsRecruiter">*/}
+                                            {/*<span className="onoffswitch-inner" />*/}
+                                            {/*<span className="onoffswitch-switch" />*/}
+                                        {/*</label>*/}
+                                    {/*</div>*/}
+                                {/*</div>*/}
 
                                 <div className="col-md-9 col-lg-9">
-                                    <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
-                                    <AutosuggestInput
-                                        id="IdRegion"
-                                        name="IdRegion"
-                                        data={this.state.regions}
-                                        error={!this.state.IdRegionValid}
-                                        disabled={!this.state.IsRecruiter}
-                                        value={this.state.RegionName}
-                                        onChange={(value) => {
-                                            this.updateSelect(value, 'RegionName');
-                                        }}
-                                        onSelect={(value) => {
-                                            this.updateSelect(value, 'RegionName');
-                                        }}
-                                    />
+                                    {/*<label>{this.state.IsRecruiter ? '* ' : ''}Region</label>*/}
+                                    {/*<AutosuggestInput*/}
+                                        {/*id="IdRegion"*/}
+                                        {/*name="IdRegion"*/}
+                                        {/*data={this.state.regions}*/}
+                                        {/*error={!this.state.IdRegionValid}*/}
+                                        {/*disabled={!this.state.IsRecruiter}*/}
+                                        {/*value={this.state.RegionName}*/}
+                                        {/*onChange={(value) => {*/}
+                                            {/*this.updateSelect(value, 'RegionName');*/}
+                                        {/*}}*/}
+                                        {/*onSelect={(value) => {*/}
+                                            {/*this.updateSelect(value, 'RegionName');*/}
+                                        {/*}}*/}
+                                    {/*/>*/}
                                     {/*
 										<select
 											name="IdRegion"
@@ -1184,14 +1188,13 @@ class General extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-4">
+                        <div className="col-lg-5">
                             <div className="card">
                                 <div className="card-header info">Permissions</div>
                                 <div className="card-body p-0">
                                     <ul className="row w-100 bg-light CardPermissions">
                                         <li className="col-md-4 col-sm-4 col-lg-6">
                                             <label>Active?</label>
-
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
@@ -1303,7 +1306,7 @@ class General extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ margin: '16px 10px' }}>
+                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <Tooltip

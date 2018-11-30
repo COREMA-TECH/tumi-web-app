@@ -5,8 +5,11 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
         applications(id: $id) {
             id
             firstName
+            middleName
             lastName
             isActive
+            emailAddress
+            cellPhone
             position {
                 Id
                 Name
