@@ -1619,7 +1619,7 @@ class General extends Component {
                                     userExist || this.state.createdProfile ? (
                                         ''
                                     ) : (
-                                        <div className="item col-6 col-md-2">
+                                        <div className="item col-sm-12 col-md-2">
                                             {/*<div className="row">*/}
                                             {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
                                             {/*<span className="col-sm-12">Text</span>*/}
