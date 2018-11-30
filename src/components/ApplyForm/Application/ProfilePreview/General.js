@@ -5,7 +5,7 @@ import withApollo from "react-apollo/withApollo";
 import {
     GET_APPLICATION_PROFILE_INFO, GET_CONTACTS_IN_USER_DIALOG,
     GET_CONTACTS_QUERY,
-    GET_DEPARTMENTS_QUERY,
+    GET_DEPARTMENTS_QUERY, GET_EMAILS_USER,
     GET_HOTELS_QUERY, GET_ROLES_QUERY,
     GET_TYPES_QUERY
 } from "./Queries";
@@ -160,6 +160,8 @@ class General extends Component {
 
             roles:[],
             loadingRoles: false,
+
+            dataEmail: [],
 
             languages: [],
             loadingLanguages: false,
@@ -428,9 +430,7 @@ class General extends Component {
                             languages: data.data.getcatalogitem,
                             loadingLanguages: false
                     }, () => {
-                        this.setState({
-                            loading: false
-                        })
+                        this.fetchEmails();
                     });
                 }
             })
@@ -1012,9 +1012,28 @@ class General extends Component {
         );
     };
 
+    fetchEmails = () => {
+        this.props.client
+            .query({
+                query: GET_EMAILS_USER
+            })
+            .then(({data}) => {
+                this.setState({
+                    dataEmail: data.getusers
+                }, () => {this.setState({
+                        loading: false
+                    });
+                })
+            })
+            .catch(error => {
+                alert("Error to get users");
+            })
+    };
+
     render() {
         const {classes} = this.props;
         const {fullScreen} = this.props;
+        let userExist = false;
 
 
         if (this.state.loading) {
@@ -1025,6 +1044,13 @@ class General extends Component {
         if (this.state.error) {
             return <LinearProgress/>
         }
+
+        this.state.dataEmail.map(item => {
+            if(item.Electronic_Address.trim() === this.state.email.trim()){
+                userExist = true;
+            }
+        });
+
 
         /**
          * Function to render a dialog with user options
@@ -1590,7 +1616,7 @@ class General extends Component {
                                     </button>
                                 </div>
                                 {
-                                    this.state.createdProfile ? (
+                                    userExist || this.state.createdProfile ? (
                                         ''
                                     ) : (
                                         <div className="item col-6 col-md-2">
