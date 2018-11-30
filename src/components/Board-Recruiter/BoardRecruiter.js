@@ -110,9 +110,9 @@ class BoardRecruiter extends Component {
 
     }
 
-    handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
+    handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
         let IdLane;
-
+        console.log("Card Details", cardDetails)
         switch (targetLaneId) {
             case "Leads":
                 IdLane = 30460
@@ -148,6 +148,8 @@ class BoardRecruiter extends Component {
             this.setState({
                 ApplicationId: cardId,
                 openReason: true
+            }, () => {
+                this.onCardClick = (cardId, null, targetLaneId)
             });
         }
 

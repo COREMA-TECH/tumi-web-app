@@ -90,8 +90,13 @@ class ApplicationPhasesForm extends Component {
                                 <textarea onChange={this.handleChange} name="Comment" className="form-control" id="" cols="30" rows="10"></textarea>
                             </div>
                             <div className="col-md-12 mt-2">
-                                <button className="btn btn-success float-right">
+                                <button className="btn btn-danger float-right" onClick={this.props.handleCloseModal}>
+                                    Cancel
+                                    <i class="fas fa-ban ml-1"></i>
+                                </button>
+                                <button className="btn btn-success float-right mr-1" >
                                     Save
+                                    <i class="fas fa-save ml-1"></i>
                                 </button>
                             </div>
                         </div>
