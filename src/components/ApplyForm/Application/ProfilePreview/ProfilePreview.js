@@ -15,7 +15,10 @@ import General from "./General";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
 import { GET_APPLICATION_PROFILE_INFO } from "./Queries";
+import { UDPATE_PROFILE_PICTURE } from './Mutations';
+
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { ProfilePicture } from 'ui-components/ProfilePicture/'
 import GenericContent from 'Generic/Global'
@@ -122,7 +125,29 @@ class VerticalLinearStepper extends Component {
                 })
             })
     };
-
+    updateImage = (url) => {
+        console.log("Calling Update Image")
+        this.props.client
+            .mutate({
+                mutation: UDPATE_PROFILE_PICTURE,
+                variables: {
+                    id: this.props.applicationId,
+                    url: url
+                }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', 'Profile picture updated!', 'bottom', 'right');
+            })
+            .catch(error => {
+                console.log(":Errrordsfasdfsd", error)
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error updating profile picture. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    }
 
     componentWillMount() {
         // Get id of the application and pass to the components
@@ -165,7 +190,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
-                            <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar}></ProfilePicture>
+                            <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar} updateImage={this.updateImage}></ProfilePicture>
                             <div className={"tabs"}>
                                 <AppBar position="static" color="#0092BD">
                                     <Tabs

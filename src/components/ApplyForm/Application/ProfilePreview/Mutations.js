@@ -15,3 +15,13 @@ export const INSERT_CONTACT = gql`
         }
     }
 `;
+
+export const UDPATE_PROFILE_PICTURE = gql`
+    mutation updateUrlphoto($id: Int!, $url: String!) {
+        updateUrlphoto(id:$id,Urlphoto:$url){
+            id
+            idLanguage
+            Urlphoto
+          }
+    }
+`;
