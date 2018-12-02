@@ -25,7 +25,8 @@ import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import withGlobalContent from 'Generic/Global';
-
+import Query from 'react-apollo/Query';
+import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import './index.css';
 import { Route } from 'react-router-dom';
 
@@ -111,6 +112,15 @@ class PositionsCompanyForm extends React.Component {
 		}
 	`;
 
+	GET_POSITIONS_QUERY = gql`
+query getposition {
+        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
+            Id
+            IsActive
+            Description
+        }
+    }
+`;
 	GET_RATE_QUERY = gql`
 		query getbusinesscompanies($Id: Int) {
 			getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: null) {
@@ -198,7 +208,9 @@ class PositionsCompanyForm extends React.Component {
 		loadingConfirm: false,
 		openModal: false,
 		showCircularLoading: false,
-		saving: false
+		saving: false,
+		positionApplyingFor: 1,
+		userId: localStorage.getItem('LoginId')
 	};
 
 	constructor(props) {
@@ -641,13 +653,14 @@ class PositionsCompanyForm extends React.Component {
 						Id_Entity: this.props.idCompany,
 						Id_Contract: this.props.idContract,
 						Id_Department: idDepartment,
+						Id_positionApplying: this.state.positionApplyingFor,
 						Position: `'${this.state.position}'`,
 						Bill_Rate: this.state.billrate,
 						Pay_Rate: this.state.payrate,
 						Shift: `'${this.state.shift}'`,
 						IsActive: 1,
-						User_Created: 1,
-						User_Updated: 1,
+						User_Created: this.state.userId,
+						User_Updated: this.state.userId,
 						Date_Created: "'2018-08-14 16:10:25+00'",
 						Date_Updated: "'2018-08-14 16:10:25+00'"
 					}
@@ -929,6 +942,37 @@ class PositionsCompanyForm extends React.Component {
 									onChange={this.updateDepartmentName}
 									onSelect={this.updateDepartmentName}
 								/>
+							</div>
+							<div className="col-md-12 col-lg-6">
+								<label>* Positions</label>
+								<Query query={this.GET_POSITIONS_QUERY}>
+									{({ loading, error, data, refetch, networkStatus }) => {
+										//if (networkStatus === 4) return <LinearProgress />;
+										if (error) return <p>Nothing To Display </p>;
+										if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+											return (
+												<select
+													name="positionApply"
+													id="positionApply"
+													onChange={(event) => {
+														this.setState({
+															positionApplyingFor: event.target.value
+														});
+													}}
+													value={this.state.positionApplyingFor}
+													className="form-control"
+
+												>
+													<option value="">Select a position</option>
+													{data.getcatalogitem.map((item) => (
+														<option value={item.Id}>{item.Description}</option>
+													))}
+												</select>
+											);
+										}
+										return <SelectNothingToDisplay />;
+									}}
+								</Query>
 							</div>
 							<div className="col-md-12 col-lg-6">
 								<label>* Title</label>

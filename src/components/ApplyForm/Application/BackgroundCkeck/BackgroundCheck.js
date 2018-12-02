@@ -352,15 +352,15 @@ class BackgroundCheck extends Component {
                                                     {backgroundCheckJson[0].label}
                                                 </span>
                                                 <br/>
-                                                <label className="switch">
+                                                <div className="onoffswitch">
                                                     <input
                                                         id="vehicleReportRequired"
                                                         type="checkbox"
-                                                        className="form-control"
                                                         min="0"
                                                         maxLength="50"
                                                         minLength="10"
                                                         form="background-check-form"
+                                                        className="onoffswitch-checkbox"
                                                         onChange={(e) => {
                                                             this.setState({
                                                                 vehicleReportRequired: e.target.checked
@@ -374,14 +374,49 @@ class BackgroundCheck extends Component {
                                                                         licenseExpiration: "",
                                                                     })
                                                                 }
-                                                            })
+                                                            });
+
+                                                            console.log( e.target.checked);
                                                         }}
                                                         value={this.state.vehicleReportRequired}
                                                         checked={this.state.vehicleReportRequired}
                                                         disabled={this.state.editing}
                                                     />
-                                                    <p className="slider round"></p>
-                                                </label>
+                                                    <label className="onoffswitch-label" htmlFor="vehicleReportRequired">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                                {/*<label className="switch">*/}
+                                                    {/*<input*/}
+                                                        {/*id="vehicleReportRequired"*/}
+                                                        {/*type="checkbox"*/}
+                                                        {/*className="form-control"*/}
+                                                        {/*min="0"*/}
+                                                        {/*maxLength="50"*/}
+                                                        {/*minLength="10"*/}
+                                                        {/*form="background-check-form"*/}
+                                                        {/*onChange={(e) => {*/}
+                                                            {/*this.setState({*/}
+                                                                {/*vehicleReportRequired: e.target.checked*/}
+                                                            {/*}, () => {*/}
+                                                                {/*if (this.state.vehicleReportRequired === false) {*/}
+                                                                    {/*this.setState({*/}
+                                                                        {/*vehicleReportRequired: false,*/}
+                                                                        {/*driverLicenseNumber: '',*/}
+                                                                        {/*commercialDriverLicense: false,*/}
+                                                                        {/*licenseState: "",*/}
+                                                                        {/*licenseExpiration: "",*/}
+                                                                    {/*})*/}
+                                                                {/*}*/}
+                                                            {/*})*/}
+                                                        {/*}}*/}
+                                                        {/*value={this.state.vehicleReportRequired}*/}
+                                                        {/*checked={this.state.vehicleReportRequired}*/}
+                                                        {/*disabled={this.state.editing}*/}
+                                                    {/*/>*/}
+                                                    {/*<p className="slider round"></p>*/}
+                                                {/*</label>*/}
                                             </div>
                                             <div className="col-md-12">
                                                 <label className="primary applicant-card__label">
@@ -470,27 +505,52 @@ class BackgroundCheck extends Component {
                                                     {backgroundCheckJson[4].label}
                                                 </span>
                                                 <br/>
-                                                <label className="switch">
+                                                <div className="onoffswitch">
                                                     <input
                                                         id="commercialDriverLicense"
                                                         type="checkbox"
-                                                        className="form-control"
                                                         min="0"
                                                         maxLength="50"
                                                         minLength="10"
                                                         form="background-check-form"
                                                         onChange={(e) => {
-
                                                             this.setState({
                                                                 commercialDriverLicense: e.target.checked
+                                                            }, () => {
+                                                                console.log("commercialDriverLicense: " + this.state.commercialDriverLicense);
                                                             })
                                                         }}
                                                         value={this.state.commercialDriverLicense}
                                                         checked={this.state.commercialDriverLicense}
                                                         disabled={this.state.editing || !this.state.vehicleReportRequired}
+                                                        className="onoffswitch-checkbox"
                                                     />
-                                                    <p className="slider round"></p>
-                                                </label>
+                                                    <label className="onoffswitch-label" htmlFor="commercialDriverLicense">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                                {/*<label className="switch">*/}
+                                                    {/*<input*/}
+                                                        {/*id="commercialDriverLicense"*/}
+                                                        {/*type="checkbox"*/}
+                                                        {/*className="form-control"*/}
+                                                        {/*min="0"*/}
+                                                        {/*maxLength="50"*/}
+                                                        {/*minLength="10"*/}
+                                                        {/*form="background-check-form"*/}
+                                                        {/*onChange={(e) => {*/}
+
+                                                            {/*this.setState({*/}
+                                                                {/*commercialDriverLicense: e.target.checked*/}
+                                                            {/*})*/}
+                                                        {/*}}*/}
+                                                        {/*value={this.state.commercialDriverLicense}*/}
+                                                        {/*checked={this.state.commercialDriverLicense}*/}
+                                                        {/*disabled={this.state.editing || !this.state.vehicleReportRequired}*/}
+                                                    {/*/>*/}
+                                                    {/*<p className="slider round"></p>*/}
+                                                {/*</label>*/}
                                             </div>
                                             {
                                                 this.state.signature !== '' ? (

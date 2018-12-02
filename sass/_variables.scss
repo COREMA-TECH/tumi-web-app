@@ -21,7 +21,15 @@ $brand-apply-secondary: $brand-primary;
 $info: #28a745;
 $black: #000;
 $white: #FFF;
+$white-shades: (
+    light: #fbfbfb
+);
 $gray: #dddddd;
+$gray-shades: (
+    light: #f5f7f9,
+    second-light: #999,
+    blue-gray: #97a8b4
+);
 $light-gray: #f5f7f9;
 $second-light-gray: #999;
 $red: #f50057;

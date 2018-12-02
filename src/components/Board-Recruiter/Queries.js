@@ -46,7 +46,9 @@ employments
 	}
 
 }
-    `;
+	`;
+
+
 export const GET_OPENING = gql`
 query workorder ($IdEntity: Int, $status: Int)  {
 	workOrder(IdEntity:$IdEntity, status:$status){
