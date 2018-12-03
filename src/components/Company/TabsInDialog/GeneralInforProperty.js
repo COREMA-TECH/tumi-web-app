@@ -1021,7 +1021,7 @@ class GeneralInfoProperty extends Component {
 									<div class="card-header">Legal Docs</div>
 									<div class="card-body">
 										<div className="row">
-											<div className="col-md-6 col-lg-3">
+											<div className="col-md-6 col-lg-4">
 												<label>* Hotel Code</label>
 												<InputValid
 													change={(text) => {
