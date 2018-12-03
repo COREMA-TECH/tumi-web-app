@@ -80,6 +80,45 @@ class ImageSelection extends Component {
             event.target.value = '';
         }
     }
+    uploadPhotoFireBase = (image) => {
+
+        // Loading state
+        this.setState({
+            loading: true
+        });
+
+        // Build the reference based in the filename
+        const storageRef = firebase.storage().ref(`/images/${uuidv4()}`);
+
+        // Send the reference and save the file in Firebase Storage
+        const task = storageRef.putString(image, 'data_url', { contentType: 'image/png' });
+
+        task.on(
+            'state_changed',
+            (snapshot) => {
+                let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+
+                // Update the progress
+                this.setState({
+                    progress: percentage
+                });
+            },
+            (error) => {
+                this.setState({ loading: false });
+                this.props.handleOpenSnackbar('error', 'Error Loading File', 'bottom', 'right');
+            },
+            () => {
+                storageRef.getDownloadURL().then((url) => {
+                    setTimeout(() => {
+                        this.setState({ loading: false });
+                        this.props.returnImage(url)
+                    }, 500);
+                });
+            }
+        );
+
+    }
+
     showProgress = () => {
         if (this.state.loading)
             return <div className="progress" >
@@ -115,8 +154,15 @@ class ImageSelection extends Component {
 
     handleVideo = (stream) => {
         // Update the state, triggering the component to re-render with the correct stream
-        this.setState({ videoSrc: window.URL.createObjectURL(stream), stream: stream, cameraError: '' });
-        this.videoElement.play();
+        try {
+            this.setState({ videoSrc: window.URL.createObjectURL(stream), stream: stream, cameraError: '' });
+            this.videoElement.play();
+        }
+        catch (err) {
+            this.setState({ cameraError: 'Browser not supported' });
+        }
+
+
     }
     videoError = (e) => {
         this.setState({ cameraError: e })
@@ -141,27 +187,35 @@ class ImageSelection extends Component {
         }
         if (this.state.capturedImage === '') {
             return <React.Fragment>
+                <div className="progress" style={{ width: 0 }} >
+                    <div className="progress-bar" role="progressbar" style={{ width: 0 }} aria-valuemax="100"></div>
+                </div>
                 <video ref="videoElement" id="video" width="100%" height="auto" className="cameraFrame" src={this.state.videoSrc} autoPlay={true}
                     ref={(input) => { this.videoElement = input; }}></video>
             </React.Fragment>
         }
         if (this.state.capturedImage !== '') {
-            return <img id="imgPreview" width="100%" height="auto" src={this.state.capturedImage} />
+            return <React.Fragment>
+                <div className="progress" >
+                    <div className="progress-bar" role="progressbar" style={{ width: `${this.state.progress}%` }} aria-valuemax="100"></div>
+                </div>
+                <img id="imgPreview" width="100%" height="auto" src={this.state.capturedImage} />
+            </React.Fragment>
         }
     }
     showAcceptCapturedImagesBtn = () => {
         if (this.state.cameraError)
             return <React.Fragment></React.Fragment>
         if (!this.state.capturedImage) {
-            return <button className="btn btn-success btn-circle btn-lg" onClick={this.captureImage}>
+            return <button className="btn btn-success btn-circle btn-lg" onClick={this.captureImage} disabled={this.state.loading}>
                 <i class="fas fa-camera-retro"></i>
             </button>
         } else {
             return <React.Fragment>
-                <button className="btn btn-info btn-circle btn-lg" onClick={() => this.props.returnImage(this.state.capturedImage)}>
+                <button className="btn btn-info btn-circle btn-lg" onClick={() => this.uploadPhotoFireBase(this.state.capturedImage)} disabled={this.state.loading}>
                     <i class="fas fa-check"></i>
                 </button>
-                <button className="btn btn-danger btn-circle btn-lg" onClick={() => { this.setState({ capturedImage: '' }) }}>
+                <button className="btn btn-danger btn-circle btn-lg" onClick={() => { this.setState({ capturedImage: '' }) }} disabled={this.state.loading}>
                     <i class="fas fa-times"></i>
                 </button>
             </React.Fragment>
@@ -192,7 +246,7 @@ class ImageSelection extends Component {
                 <div id="ProfileCameraContiner" className="ProfileCamera">
                     <div style={{ width: '100%', height: '400px' }}>
                         {this.showCameraContainer()}
-                        <button className="ProfileCamera-back btn btn-danger btn-circle btn-lg" onClick={this.goToImageSelection}>
+                        <button className="ProfileCamera-back btn btn-danger btn-circle btn-lg" onClick={this.goToImageSelection} disabled={this.state.loading}>
                             <i class="fas fa-arrow-left"></i>
                         </button>
                         <div className="ProfileCamera-button">

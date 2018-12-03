@@ -14,7 +14,11 @@ class ProfilePicture extends Component {
         this.setState({ open: false });
     };
     updateImage = (url) => {
-        this.setState({ url, open: false })
+        this.setState({ url, open: false }, () => this.props.updateImage(url))
+    }
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.url)
+            this.setState({ url: nextProps.url })
     }
     render() {
         return <div className="applicant-card__header header-profile-menu">
