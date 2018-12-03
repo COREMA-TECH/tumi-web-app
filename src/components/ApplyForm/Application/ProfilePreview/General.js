@@ -1524,7 +1524,7 @@ class General extends Component {
                     <div className="">
                         <div className="applicant-card">
                             <div className="row">
-                                <div className="item col-sm-12 col-md-3">
+                                <div className="item col-sm-12 col-md-3 col-user-info">
                                     <div className="row">
                                         <span
                                             className="username col-sm-12">{this.state.data.firstName + ' ' + this.state.data.lastName}</span>
@@ -1539,7 +1539,7 @@ class General extends Component {
                                         <span className="col-sm-6 col-lg-12">Department: Banquet</span>
                                     </div>
                                 </div>
-                                <div className="item col-6 col-md-2">
+                                <div className="item col-12 col-md-2">
                                     <div className="row">
                                         <span className="col-sm-12 font-weight-bold">Schedule Type</span>
                                         <span className="col-sm-12">Text</span>
