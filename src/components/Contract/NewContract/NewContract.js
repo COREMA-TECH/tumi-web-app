@@ -1120,7 +1120,7 @@ class NewContract extends Component {
                     <div className="col-md-12">
                         <div className="card">
                             <div className="card-header">Contract Information</div>
-                            <div className="">
+                            <div className="card-body">
                                 <div className="row">
                                     <div className="col-md-12 col-lg-6">
                                         <div className="row">
@@ -1371,7 +1371,7 @@ class NewContract extends Component {
                                     </div>
                                     <div className="col-md-12 col-lg-6">
                                         <div className="row SubCard">
-                                            <div className="card bg-light">
+                                            <div className="SubCard-body bg-light">
                                                 <div className="row">
                                                     <div className="col-md-6 col-lg-6">
                                                         <label>* Status</label>

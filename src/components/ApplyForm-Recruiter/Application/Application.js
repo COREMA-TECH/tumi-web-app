@@ -410,128 +410,129 @@ class Application extends Component {
                                     )}
                             </div>
                             <br />
-                            <div className="row">
-                                <div className="col-md-12 col-lg-6 form-section-1">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <span className="primary applicant-card__label">
-                                                {formSpanish[16].label}
-                                            </span>
-                                            <Query query={GET_POSITIONS_QUERY}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>Nothing To Display </p>;
-                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        return (
-                                                            <select
-                                                                name="positionApply"
-                                                                id="positionApply"
-                                                                onChange={(event) => {
-                                                                    this.setState({
-                                                                        positionApplyingFor: event.target.value
-                                                                    });
-                                                                }}
-                                                                value={this.state.positionApplyingFor}
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                            >
-                                                                <option value="">Select a position</option>
-                                                                {data.getcatalogitem.map((item) => (
-                                                                    <option value={item.Id}>{item.Description}</option>
-                                                                ))}
-                                                            </select>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-6 form-section-1">
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label">
+                                                    {formSpanish[16].label}
+                                                </span>
+                                                <Query query={GET_POSITIONS_QUERY}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Nothing To Display </p>;
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                            return (
+                                                                <select
+                                                                    name="positionApply"
+                                                                    id="positionApply"
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            positionApplyingFor: event.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.positionApplyingFor}
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                >
+                                                                    <option value="">Select a position</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Description}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[0].label}
-                                            </span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        firstName: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.firstName}
-                                                name="firstName"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                {formSpanish[1].label}
-                                            </span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        middleName: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.middleName}
-                                                name="midleName"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="1"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[2].label}
-                                            </span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        lastName: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.lastName}
-                                                name="lastName"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                required
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                {formSpanish[24].label}
-                                            </span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        lastName2: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.lastName2}
-                                                name="lastName2"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[0].label}
+                                                </span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            firstName: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.firstName}
+                                                    name="firstName"
+                                                    type="text"
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    required
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="3"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    {formSpanish[1].label}
+                                                </span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            middleName: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.middleName}
+                                                    name="midleName"
+                                                    type="text"
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="1"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[2].label}
+                                                </span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            lastName: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.lastName}
+                                                    name="lastName"
+                                                    type="text"
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    required
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="3"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    {formSpanish[24].label}
+                                                </span>
+                                                <input
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            lastName2: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.lastName2}
+                                                    name="lastName2"
+                                                    type="text"
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
 
-                                                min="0"
-                                                maxLength="50"
-                                                minLength="3"
-                                            />
-                                        </div>
-                                        {/*
+                                                    min="0"
+                                                    maxLength="50"
+                                                    minLength="3"
+                                                />
+                                            </div>
+                                            {/*
                                             <div className="col-md-12 ">
                                                 <span
                                                     className="primary applicant-card__label ">{formSpanish[22].label}</span>
@@ -552,227 +553,228 @@ class Application extends Component {
                                                     minLength="5"
                                                 />
 												</div>*/}
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[5].label}
-                                            </span>
-                                            <InputMask
-                                                id="zipCode"
-                                                name="zipCode"
-                                                mask="99999-99999"
-                                                maskChar=" "
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        zipCode: event.target.value
-                                                    });
-                                                    let zip_code = '';
-                                                    zip_code = event.target.value.substring(0, 5);
-                                                    fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                                        return response.json()
-                                                    }).then((cities) => {
-                                                        if (!cities.error) {
-                                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                        }
-                                                    });
-                                                }}
-                                                value={this.state.zipCode}
-                                                placeholder="99999-99999"
-                                                required
-                                                minLength="15"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[6].label}
-                                            </span>
-                                            <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        return (
-                                                            <select
-                                                                name="state"
-                                                                id="state"
-                                                                required
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                                onChange={(e) => {
-                                                                    this.setState({
-                                                                        state: e.target.value
-                                                                    });
-                                                                }}
-                                                                value={this.state.state}
-                                                            >
-                                                                <option value="">Select a state</option>
-                                                                {data.getcatalogitem.map((item) => (
-                                                                    <option value={item.Id}>{item.Name}</option>
-                                                                ))}
-                                                            </select>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[7].label}
-                                            </span>
-                                            <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        var citySelected = null;
-                                                        citySelected = data.getcatalogitem.filter(city => {
-                                                            return city.Name.toLowerCase().includes(this.state.cityFinal);
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[5].label}
+                                                </span>
+                                                <InputMask
+                                                    id="zipCode"
+                                                    name="zipCode"
+                                                    mask="99999-99999"
+                                                    maskChar=" "
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            zipCode: event.target.value
                                                         });
-                                                        if (citySelected.length != 0) {
-                                                            if ((citySelected[0].Id != this.state.city)) {
-                                                                this.setState({
-                                                                    city: citySelected[0].Id
-                                                                });
+                                                        let zip_code = '';
+                                                        zip_code = event.target.value.substring(0, 5);
+                                                        fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
+                                                            return response.json()
+                                                        }).then((cities) => {
+                                                            if (!cities.error) {
+                                                                this.findByZipCode(cities.state, cities.city.toLowerCase());
                                                             }
+                                                        });
+                                                    }}
+                                                    value={this.state.zipCode}
+                                                    placeholder="99999-99999"
+                                                    required
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[6].label}
+                                                </span>
+                                                <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                            return (
+                                                                <select
+                                                                    name="state"
+                                                                    id="state"
+                                                                    required
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                    onChange={(e) => {
+                                                                        this.setState({
+                                                                            state: e.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.state}
+                                                                >
+                                                                    <option value="">Select a state</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
                                                         }
-                                                        return (
-                                                            <select
-                                                                name="city"
-                                                                id="city"
-                                                                required
-                                                                className="form-control"
-                                                                disabled={!this.state.editing}
-                                                                onChange={(e) => {
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[7].label}
+                                                </span>
+                                                <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                            var citySelected = null;
+                                                            citySelected = data.getcatalogitem.filter(city => {
+                                                                return city.Name.toLowerCase().includes(this.state.cityFinal);
+                                                            });
+                                                            if (citySelected.length != 0) {
+                                                                if ((citySelected[0].Id != this.state.city)) {
                                                                     this.setState({
-                                                                        city: e.target.value
+                                                                        city: citySelected[0].Id
                                                                     });
-                                                                }}
-                                                                value={this.state.city}
-                                                            >
-                                                                <option value="">Select a city</option>
-                                                                {data.getcatalogitem.map((item) => (
-                                                                    <option value={item.Id}>{item.Name}</option>
-                                                                ))}
-                                                            </select>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
-                                        </div>
+                                                                }
+                                                            }
+                                                            return (
+                                                                <select
+                                                                    name="city"
+                                                                    id="city"
+                                                                    required
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                    onChange={(e) => {
+                                                                        this.setState({
+                                                                            city: e.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.city}
+                                                                >
+                                                                    <option value="">Select a city</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option value={item.Id}>{item.Name}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
 
-                                        <div className="col-md-6">
-                                            <span className="primary applicant-card__label ">
-                                                {formSpanish[23].label}
-                                            </span>
-                                            <label className="switch">
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label ">
+                                                    {formSpanish[23].label}
+                                                </span>
+                                                <label className="switch">
+                                                    <input
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                car: event.target.checked
+                                                            });
+                                                        }}
+                                                        checked={this.state.car}
+                                                        value={this.state.car}
+                                                        name="car"
+                                                        type="checkbox"
+                                                        className="form-control"
+                                                        disabled={!this.state.editing}
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="10"
+                                                    />
+                                                    <p className="slider round" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 col-lg-6 form-section-2">
+                                        <div className="row">
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    {formSpanish[9].label}
+                                                </span>
+                                                <InputMask
+                                                    id="home-number"
+                                                    name="homePhone"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.homePhone}
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            homePhone: event.target.value
+                                                        });
+                                                    }}
+                                                    placeholder="+(999) 999-9999"
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                            <div className="col-md-6 ">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[10].label}
+                                                </span>
+                                                <InputMask
+                                                    id="cell-number"
+                                                    name="cellPhone"
+                                                    mask="+(999) 999-9999"
+                                                    maskChar=" "
+                                                    value={this.state.cellPhone}
+                                                    className="form-control"
+                                                    disabled={!this.state.editing}
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            cellPhone: event.target.value
+                                                        });
+                                                    }}
+                                                    placeholder="+(999) 999-9999"
+                                                    required
+                                                    minLength="15"
+                                                />
+                                            </div>
+                                            <div className="col-md-12">
+                                                <span className="primary applicant-card__label ">
+                                                    * {formSpanish[13].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
-                                                            car: event.target.checked
+                                                            emailAddress: event.target.value
                                                         });
                                                     }}
-                                                    checked={this.state.car}
-                                                    value={this.state.car}
-                                                    name="car"
-                                                    type="checkbox"
+                                                    value={this.state.emailAddress}
+                                                    name="emailAddress"
+                                                    type="email"
                                                     className="form-control"
+                                                    required
                                                     disabled={!this.state.editing}
                                                     min="0"
+                                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
                                                     maxLength="50"
-                                                    minLength="10"
+                                                    minLength="8"
                                                 />
-                                                <p className="slider round" />
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-12 col-lg-6 form-section-2">
-                                    <div className="row">
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                {formSpanish[9].label}
-                                            </span>
-                                            <InputMask
-                                                id="home-number"
-                                                name="homePhone"
-                                                mask="+(999) 999-9999"
-                                                maskChar=" "
-                                                value={this.state.homePhone}
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        homePhone: event.target.value
-                                                    });
-                                                }}
-                                                placeholder="+(999) 999-9999"
-                                                minLength="15"
-                                            />
-                                        </div>
-                                        <div className="col-md-6 ">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[10].label}
-                                            </span>
-                                            <InputMask
-                                                id="cell-number"
-                                                name="cellPhone"
-                                                mask="+(999) 999-9999"
-                                                maskChar=" "
-                                                value={this.state.cellPhone}
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        cellPhone: event.target.value
-                                                    });
-                                                }}
-                                                placeholder="+(999) 999-9999"
-                                                required
-                                                minLength="15"
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <span className="primary applicant-card__label ">
-                                                * {formSpanish[13].label}
-                                            </span>
-                                            <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        emailAddress: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.emailAddress}
-                                                name="emailAddress"
-                                                type="email"
-                                                className="form-control"
-                                                required
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                                maxLength="50"
-                                                minLength="8"
-                                            />
-                                        </div>
-                                        <div className="col-md-12">
-                                            <span className="primary applicant-card__label ">
-                                                {formSpanish[21].label}
-                                            </span>
-                                            <textarea
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        generalComment: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.generalComment}
-                                                name="form-control"
-                                                cols="60"
-                                                rows="3"
-                                                disabled={!this.state.editing}
-                                                className="form-control textarea-apply-form"
-                                            />
+                                            </div>
+                                            <div className="col-md-12">
+                                                <span className="primary applicant-card__label ">
+                                                    {formSpanish[21].label}
+                                                </span>
+                                                <textarea
+                                                    onChange={(event) => {
+                                                        this.setState({
+                                                            generalComment: event.target.value
+                                                        });
+                                                    }}
+                                                    value={this.state.generalComment}
+                                                    name="form-control"
+                                                    cols="60"
+                                                    rows="3"
+                                                    disabled={!this.state.editing}
+                                                    className="form-control textarea-apply-form"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

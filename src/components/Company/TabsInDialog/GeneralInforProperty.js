@@ -963,7 +963,7 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div>
-											<div className="col-md-6 col-lg-2">
+											<div className="col-md-6 col-lg-1">
 												<label>* Phone Number</label>
 												<InputMask
 													id="prop-number"

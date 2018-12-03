@@ -5,7 +5,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
 import { UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE, ADD_APPLICATION_PHASES } from "./Mutations";
-import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_OPENING, GET_LEAD, GET_HOTEL_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY } from "./Queries";
+import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_OPENING, GET_LEAD, GET_HOTEL_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY, GET_COORDENADAS } from "./Queries";
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 //import Board from 'react-trello'
@@ -79,6 +79,9 @@ class BoardRecruiter extends Component {
             Opening: [],
             Openings: [],
             leads: [],
+            Candidate: [],
+            Applied: [],
+            Placement: [],
             lane: [],
             Position: '',
             Hotel: '',
@@ -102,7 +105,13 @@ class BoardRecruiter extends Component {
             userId: localStorage.getItem('LoginId'),
             openReason: false,
             ReasonId: 30471,
-            ApplicationId: 0
+            ApplicationId: 0,
+
+            latitud1: 0,
+            longitud1: 0,
+            latitud2: 0,
+            longitud2: 0,
+            distance: 0
         }
     }
 
@@ -342,13 +351,15 @@ class BoardRecruiter extends Component {
                 Intopening: cardId
             })
 
-        if (sessionStorage.getItem('NewFilterLead') === false) {
-            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, true, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).PositionRateId);
+        console.log("zipcode hotel ", this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+        this.getLatLong(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+
+        console.log("Nuevos filtros ", sessionStorage.getItem('NewFilterLead'));
+        if (sessionStorage.getItem('NewFilterLead') === 'true') {
+            this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         } else {
-            this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), true, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).PositionRateId);
+            this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         }
-        //        alert("La session es " + sessionStorage.getItem('myData'))
-        //alert("La session es " + sessionStorage.getItem('NewFilter'))
 
     }
 
@@ -410,7 +421,7 @@ class BoardRecruiter extends Component {
                             editing: false
                         });
 
-                        // this.props.handleOpenSnackbar('success', Message, 'bottom', 'right');
+
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar(
@@ -424,94 +435,178 @@ class BoardRecruiter extends Component {
         );
     };
 
+    getLatLong = async (op, zipcode, fnc = () => { }) => {
+        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
+            if (op === 1) {
+                console.log("entro a la opcion 1 ");
+                this.setState({
+                    latitud1: data.zipcode[0].Lat,
+                    longitud1: data.zipcode[0].Long
+                });
+            }
+            if (op === 2) {
+                console.log("entro a la opcion 2 ");
+
+                this.setState({
+                    latitud2: data.zipcode[0].Lat,
+                    longitud2: data.zipcode[0].Long
+                },
+                    fnc
+                );
+
+
+            }
+        }).catch(error => { })
+    };
+
     getMatches = async (language, experience, location, laneId, PositionId) => {
         let getleads = [];
+        let getApplied = [];
+        let getCandidate = [];
+        let getPlacement = [];
+
         let datas = [];
         let SpeakEnglish;
         let Employment;
+        let distances;
+        let Phases = [];
+
+
+        console.log("Comienzan las variables");
+        console.log("language ", language);
+        console.log("experience ", experience);
+        console.log("location ", location);
+
 
         if (laneId == "lane1") {
-            await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
+            await this.props.client.query({ query: GET_LEAD, variables: { positionApplyingFor: PositionId } }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
-                    //  console.log("Verifico el dataset", wo);
-                    if (language == 'true') {
-                        SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
-                    } else {
-                        SpeakEnglish = 1;
+
+                    console.log("Informacion de las pagases ", wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening }))
+                    if (wo.applicationPhases.length != 0) {
+
+                        if (wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening }) === undefined) {
+                            console.log("entro aqui en el undifined");
+                            Phases = [];
+                        } else {
+                            Phases = wo.applicationPhases.slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening }).StageId;
+                        }
+
+
                     }
 
-                    if (experience == 'true') {
-                        Employment = wo.employments.length;
+                    console.log("get Application phases", Phases);
 
-                    } else {
-                        Employment = 1;
-                    }
+                    console.log("zipcode ", wo.zipCode.substring(0, 5));
+                    this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+
+                        console.log("estas son las direcc del hotel ", this.state.latitud1, this.state.longitud1);
+                        console.log("estas son las direcc del matches ", this.state.latitud2, this.state.longitud2);
+
+                        const { getDistance } = this.context;
+                        const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
 
-                    //const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                    //const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                    //const Users = data.getcontacts.find((item) => { return item.Id == 10 });
-                    datas = {
-                        id: wo.id,
-                        name: wo.firstName + ' ' + wo.lastName,
-                        // dueOn: 'Q: ',
-                        //subTitle: wo.comment,
-                        subTitle: wo.cellPhone,
-                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                        escalationTextLeftLead: wo.generalComment,
-                        //escalationTextCenter: Users.First_Name + ' ' + Users.Last_Name,
-                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                        //                    id: wo.id, title: wo.comment, description: wo.comment, label: '30 mins'
-                    };
-                    if (SpeakEnglish == 1 && Employment >= 1) {
-                        getleads.push(datas);
-                    }
+                        console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
+
+                        if (language == 'true') {
+                            SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
+                        } else {
+                            SpeakEnglish = 1;
+                        }
+
+                        if (experience == 'true') {
+                            Employment = wo.employments.length;
+                        } else {
+                            Employment = 1;
+                        }
+
+                        if (distance > location) {
+                            distances = 0;
+                        } else {
+                            distances = 1;
+                        }
+
+                        // console.log("esta es la distancia ", distances)
+                        datas = {
+                            id: wo.id,
+                            name: wo.firstName + ' ' + wo.lastName,
+                            subTitle: wo.cellPhone,
+                            body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                            escalationTextLeftLead: wo.generalComment,
+                            escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                            cardStyle: { borderRadius: 6, marginBottom: 15 }
+                        };
+
+                        console.log("Informacion de data ", datas);
+                        console.log("Informacion de Phases ", Phases.length);
+                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1) {
+                            if (Phases.length == 0 || Phases == 30460) { getleads.push(datas); }
+                            if (Phases == 30461) { getApplied.push(datas); }
+                            if (Phases == 30462) { getCandidate.push(datas); }
+                            if (Phases == 30463) { getPlacement.push(datas); }
+
+                        }
+
+                        /*this.setState({
+                            leads: getleads,
+                            Applied: getApplied,
+                            Candidate: getCandidate,
+                            Placement: getPlacement
+                        });
+
+                        console.log("Informacion de getleads ", getleads);
+                        console.log("Informacion de getApplied ", getApplied);
+                        console.log("Informacion de getCandidate ", getCandidate);
+                        console.log("Informacion de getPlacement ", getPlacement);
+*/
+                        this.setState(
+                            {
+                                Opening: this.state.Openings,
+                                lane: [
+                                    {
+                                        id: 'lane1',
+                                        title: 'Openings',
+                                        label: ' ',
+                                        cards: this.state.Openings
+                                    },
+                                    {
+                                        id: 'Leads',
+                                        title: 'Leads',
+                                        label: ' ',
+                                        cards: getleads
+                                    },
+                                    {
+                                        id: 'Applied',
+                                        title: 'Applied',
+                                        label: ' ',
+                                        cards: getApplied
+                                    },
+                                    {
+                                        id: 'Candidate',
+                                        title: 'Candidate',
+                                        label: ' ',
+                                        cards: getCandidate
+                                    },
+                                    {
+                                        id: 'Placement',
+                                        title: 'Placement',
+                                        label: ' ',
+                                        cards: getPlacement
+                                    }
+                                ],
+                                loading: false
+                            });
+
+
+                    });
                 });
+
             }).catch(error => { })
 
-            this.setState({
-                leads: getleads
-            });
 
-            this.setState(
-                {
-                    Opening: this.state.Openings,
-                    lane: [
-                        {
-                            id: 'lane1',
-                            title: 'Openings',
-                            label: ' ',
-                            cards: this.state.Openings
-                        },
-                        {
-                            id: 'Leads',
-                            title: 'Leads',
-                            label: ' ',
-                            cards: this.state.leads
-                        },
-                        {
-                            id: 'Applied',
-                            title: 'Applied',
-                            label: ' ',
-                            cards: []
-                        },
-                        {
-                            id: 'Candidate',
-                            title: 'Candidate',
-                            label: ' ',
-                            cards: []
-                        },
-                        {
-                            id: 'Placement',
-                            title: 'Placement',
-                            label: ' ',
-                            cards: []
-                        }
-                    ],
-                    loading: false
-                });
+
         }
     };
 
@@ -523,11 +618,13 @@ class BoardRecruiter extends Component {
         if (this.state.hotel == 0) {
             await this.props.client.query({ query: GET_OPENING, variables: { status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
+                    console.log("esta es la data del wo ", wo.position);
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
+                    console.log("Hotel california ", Hotel);
                     datas = {
                         id: wo.id,
                         name: 'Title: ' + wo.position.Position,
@@ -540,7 +637,9 @@ class BoardRecruiter extends Component {
                         escalationTextRight: Shift.Name + '-Shift',
                         cardStyle: { borderRadius: 6, marginBottom: 15 },
                         needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish
+                        needEnglish: wo.needEnglish,
+                        PositionApplyfor: wo.position.Id_positionApplying,
+                        Zipcode: Hotel.Zipcode
                     };
                     getOpenings.push(datas);
                 });
@@ -551,11 +650,13 @@ class BoardRecruiter extends Component {
         } else {
             await this.props.client.query({ query: GET_OPENING, variables: { IdEntity: this.state.hotel, status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
+                    console.log("esta es la data del wo ", wo.position);
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
-                    const Contacts = data.getcontacts.find((item) => { return item.Id == Users.Id_Contact });
+                    const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
+                    console.log("Hotel california ", Hotel);
                     datas = {
                         id: wo.id,
                         name: 'Title: ' + wo.position.Position,
@@ -566,12 +667,18 @@ class BoardRecruiter extends Component {
                         //escalationTextLeft: Hotel.Name,
                         escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
                         escalationTextRight: Shift.Name + '-Shift',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                        cardStyle: { borderRadius: 6, marginBottom: 15 },
+                        needExperience: wo.needExperience,
+                        needEnglish: wo.needEnglish,
+                        PositionApplyfor: wo.position.Id_positionApplying,
+                        Zipcode: Hotel.Zipcode
                     };
                     getOpenings.push(datas);
                 });
+
                 this.setState({
                     Openings: getOpenings
+
                 });
             }).catch(error => { })
         }
@@ -776,6 +883,9 @@ class BoardRecruiter extends Component {
      
          />*/
     }
+    static contextTypes = {
+        getDistance: PropTypes.func,
+    };
 }
 
 export default withApollo(withGlobalContent(BoardRecruiter));

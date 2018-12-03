@@ -31,27 +31,23 @@
 }
 
 .apply-form .input-container--validated .form-control {
-    border-radius: 5px 0 0 5px;
-    border-right: none;
+
 }
 
 .apply-form .input-container--validated .form-control--without-validation {
-    border-radius: 5px;
-    border-right: 1px solid #ced4da;
+
 }
 
 .apply-form input:required:focus:valid,
 .apply-form input:optional:focus:valid,
 .apply-form select:required:focus:valid,
 .apply-form textarea:required:focus:valid{
-    border-color: green;
 }
 
 .apply-form input:required:valid,
 .apply-form input:optional:valid,
 .apply-form select:required:valid,
 .apply-form textarea:required:valid {
-    border-color: green;
 }
 
 .apply-form input:disabled,

@@ -1527,7 +1527,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-6">
+									<div className="col-md-5">
 										<label>* State</label>
 										<select
 											name="state"
@@ -1547,7 +1547,7 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-6">
+									<div className="col-md-5">
 										<label>* City</label>
 										<select
 											name="city"
@@ -1568,7 +1568,7 @@ class GeneralInformation extends Component {
 										</select>
 									</div>
 
-									<div className="col-md-5">
+									<div className="col-md-3 col-lg-2">
 										<label>* Phone Number</label>
 										<InputMask
 											id="number"
