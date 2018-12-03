@@ -3,10 +3,12 @@ import './preview-profile.css';
 import './../index.css';
 import withApollo from "react-apollo/withApollo";
 import {
-    GET_APPLICATION_PROFILE_INFO, GET_CONTACTS_IN_USER_DIALOG,
-    GET_CONTACTS_QUERY,
-    GET_DEPARTMENTS_QUERY, GET_EMAILS_USER,
-    GET_HOTELS_QUERY, GET_ROLES_QUERY,
+    GET_APPLICATION_PROFILE_INFO,
+    GET_CONTACTS_IN_USER_DIALOG,
+    GET_DEPARTMENTS_QUERY,
+    GET_EMAILS_USER,
+    GET_HOTELS_QUERY,
+    GET_ROLES_QUERY,
     GET_TYPES_QUERY
 } from "./Queries";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -25,11 +27,9 @@ import {withStyles} from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import {INSERT_CONTACT} from "./Mutations";
-import {INSERT_DEPARTMENT} from "./Mutations";
+import {INSERT_CONTACT, INSERT_DEPARTMENT} from "./Mutations";
 import {GET_LANGUAGES_QUERY} from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
-
 
 
 const styles = (theme) => ({
@@ -122,7 +122,7 @@ class General extends Component {
             lastname: '',
             email: '',
             number: '',
-            type: '',
+            type: null,
             idSupervisor: null,
             IsActive: 1,
             User_Created: 1,
@@ -158,7 +158,7 @@ class General extends Component {
             RegionName: '',
             loadingContacts: false,
 
-            roles:[],
+            roles: [],
             loadingRoles: false,
 
             dataEmail: [],
@@ -194,6 +194,9 @@ class General extends Component {
         RegionName: '',
         IsActive: 1,
         IdRegion: 0,
+
+        departmentName: '',
+        titleName: '',
 
         idContactValid: true,
         usernameValid: true,
@@ -247,14 +250,13 @@ class General extends Component {
     `;
 
 
-
     handleClickOpenModal = () => {
         this.setState({openModal: true});
     };
 
     handleCloseModal = () => {
         this.setState({
-                openModal: false
+            openModal: false
         }, () => {
             this.setState({
                 hotelId: null,
@@ -285,7 +287,6 @@ class General extends Component {
             usernameValid: true
         })
     };
-
 
 
     /**
@@ -331,7 +332,7 @@ class General extends Component {
             .query({
                 query: GET_HOTELS_QUERY
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -383,10 +384,10 @@ class General extends Component {
                 if (data.data.getsupervisor != null && data.data.getcatalogitem) {
                     console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
                     this.setState({
-                            contacts: data.data.getsupervisor,
-                            regions: data.data.getcatalogitem,
-                            RegionName: data.data.getcatalogitem[0].Name,
-                            loadingContacts: false
+                        contacts: data.data.getsupervisor,
+                        regions: data.data.getcatalogitem,
+                        RegionName: data.data.getcatalogitem[0].Name,
+                        loadingContacts: false
                     }, () => {
                         this.fetchRoles();
                     });
@@ -406,8 +407,8 @@ class General extends Component {
             .then((data) => {
                 if (data.data.getroles != null) {
                     this.setState({
-                            roles: data.data.getroles,
-                            loadingRoles: false
+                        roles: data.data.getroles,
+                        loadingRoles: false
                     }, () => {
                         this.fetchLanguages();
                     });
@@ -427,8 +428,8 @@ class General extends Component {
             .then((data) => {
                 if (data.data.getcatalogitem != null) {
                     this.setState({
-                            languages: data.data.getcatalogitem,
-                            loadingLanguages: false
+                        languages: data.data.getcatalogitem,
+                        loadingLanguages: false
                     }, () => {
                         this.fetchEmails();
                     });
@@ -494,103 +495,353 @@ class General extends Component {
             });
     };
 
+    updateType = (id) => {
+        this.setState(
+            {
+                type: id
+            },
+            () => {
+                this.validateNewField('type', id);
+            }
+        );
+    };
+
+    updateDepartmentName = (value) => {
+        this.setState(
+            {
+                departmentName: value
+            },
+            () => {
+                this.validateNewField('departmentName', value);
+            }
+        );
+    };
+
+    updateTitleName = (value) => {
+        this.setState(
+            {
+                titleName: value
+            },
+            () => {
+                this.validateNewField('titleName', value);
+            }
+        );
+    };
+
+    onFirstNameChangeHandler(value) {
+        this.setState({firstname: value}, this.validateField('firstname', value));
+    }
+
+    onMiddleNameChangeHandler(value) {
+        this.setState({middlename: value}, this.validateField('middlename', value));
+    }
+
+    onLastNameChangeHandler(value) {
+        this.setState({lastname: value}, this.validateField('lastname', value));
+    }
+
+    onEmailChangeHandler(value) {
+        this.setState({email: value}, this.validateField('email', value));
+    }
+
+    onNumberChangeHandler(value) {
+        this.setState({number: value}, this.validateField('number', value));
+    }
+
+
+    validateAllNewFields(fun) {
+        let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        let firstnameValid = this.state.firstname.trim().length >= 2;
+        //let middlenameValid = this.state.middlename.trim().length >= 2;
+        let lastnameValid = this.state.lastname.trim().length >= 2;
+        let numberValid =
+            this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+                .length == 10; //this.state.number.trim().length >= 2;
+        //let titleValid = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
+        let typeValid = this.state.type !== null && this.state.type !== '';
+        let idDepartmentValid =
+            this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
+        let idSupervisorValid =
+            this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
+        let departmentNameValid = this.state.departmentName.trim().length >= 2;
+        let titleNameValid = this.state.titleName.trim().length >= 2;
+
+        this.setState(
+            {
+                emailValid,
+                firstnameValid,
+                //	middlenameValid,
+                lastnameValid,
+                numberValid,
+                //titleValid,
+                //idDepartmentValid,
+                idSupervisorValid,
+                typeValid,
+                departmentNameValid,
+                titleNameValid
+            },
+            () => {
+                this.validateForm(fun);
+            }
+        );
+    }
+
+    validateNewField(fieldName, value) {
+        let emailValid = this.state.emailValid;
+        let firstnameValid = this.state.firstnameValid;
+        //	let middlenameValid = this.state.middlenameValid;
+        let lastnameValid = this.state.lastnameValid;
+        let numberValid = this.state.numberValid;
+        //let titleValid = this.state.titleValid;
+        let typeValid = this.state.typeValid;
+        let idDepartmentValid = this.state.idDepartmentValid;
+        let departmentNameValid = this.state.departmentNameValid;
+        let titleNameValid = this.state.titleNameValid;
+        let idSupervisorValid = this.state.idSupervisorValid;
+
+        let emailHasValue = this.state.emailHasValue;
+        let firstnameHasValue = this.state.firstnameHasValue;
+        let middlenameHasValue = this.state.middlenameHasValue;
+        let lastnameHasValue = this.state.lastnameHasValue;
+        let numberHasValue = this.state.numberHasValue;
+        let titleHasValue = this.state.titleHasValue;
+        let typeHasValue = this.state.typeHasValue;
+        let idDepartmentHasValue = this.state.idDepartmentHasValue;
+        let departmentNameHasValue = this.state.departmentName;
+        let titleNameHasValue = this.state.titleName;
+        let idSupervisorHasValue = this.state.idSupervisorHasValue;
+
+        switch (fieldName) {
+            case 'email':
+                emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+                emailHasValue = value != '';
+                break;
+            case 'firstname':
+                firstnameValid = value.trim().length >= 2;
+                firstnameHasValue = value != '';
+                break;
+            case 'middlename':
+                //	middlenameValid = value.trim().length >= 2;
+                middlenameHasValue = value != '';
+                break;
+            case 'lastname':
+                lastnameValid = value.trim().length >= 2;
+                lastnameHasValue = value != '';
+                break;
+            case 'number':
+                numberValid =
+                    value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+                        .length == 10;
+                numberHasValue = value != '';
+                break;
+            /*case 'title':
+                titleValid = value !== null && value !== 0 && value !== '';
+                titleHasValue = value !== null && value !== 0 && value !== '';
+                break;*/
+            case 'type':
+                typeValid = value !== null && value !== '';
+                typeHasValue = value !== null && value !== '';
+                break;
+            case 'idDepartment':
+                idDepartmentValid = value !== null && value !== 0 && value !== '';
+                idDepartmentHasValue = value !== null && value !== 0 && value !== '';
+                break;
+            case 'departmentName':
+                departmentNameValid = value.trim().length >= 2;
+                departmentNameHasValue = value != '';
+                break;
+            case 'titleName':
+                titleNameValid = value.trim().length >= 2;
+                titleNameHasValue = value != '';
+                break;
+            case 'idSupervisor':
+                idSupervisorValid = value !== null && value !== -1 && value !== '';
+                idSupervisorHasValue = value !== null && value !== -1 && value !== '';
+                break;
+            default:
+                break;
+        }
+        this.setState(
+            {
+                emailValid,
+                firstnameValid,
+                //	middlenameValid,
+                lastnameValid,
+                numberValid,
+                //titleValid,
+                typeValid,
+                //idDepartmentValid,
+                departmentNameValid,
+                titleNameValid,
+                idSupervisorValid,
+                emailHasValue,
+                firstnameHasValue,
+                middlenameHasValue,
+                lastnameHasValue,
+                numberHasValue,
+                titleHasValue,
+                typeHasValue,
+                idDepartmentHasValue,
+                departmentNameHasValue,
+                titleNameHasValue,
+                idSupervisorHasValue
+            },
+            this.validateForm
+        );
+    }
+
+    validateNewForm(func = () => {
+    }) {
+        this.setState(
+            {
+                formValid:
+                    this.state.emailValid &&
+                    this.state.firstnameValid &&
+                    //		this.state.middlenameValid &&
+                    this.state.lastnameValid &&
+                    this.state.numberValid &&
+                    //this.state.titleValid &&
+                    this.state.typeValid &&
+                    //this.state.idDepartmentValid &&
+                    this.state.departmentNameValid &&
+                    this.state.titleNameValid &&
+                    this.state.idSupervisorValid,
+                enableCancelButton:
+                    this.state.emailHasValue ||
+                    this.state.firstnameHasValue ||
+                    this.state.middlenameHasValue ||
+                    this.state.lastnameHasValue ||
+                    this.state.numberHasValue ||
+                    this.state.titleHasValue ||
+                    this.state.typeHasValue ||
+                    //	this.state.idDepartmentHasValue ||
+                    this.state.departmentName ||
+                    this.state.titleName ||
+                    this.state.idSupervisorHasValue
+            },
+            func
+        );
+    }
+
+    validateAllDialogFields = () => {
+        let valids = false;
+
+        if (this.state.firstname) {
+
+        } else if (this.state.middlename) {
+
+        } else if (this.state.lastname) {
+
+        }
+    };
+
     insertDepartment = () => {
-        var IdDeparment = 0,
-            IdTitle = 0;
+        if (
+            this.state.hotelId === null
+            || this.state.type === null
+            || this.state.departmentName.length < 3
+            || this.state.titleName.length < 3
+        ) {
+            this.props.handleOpenSnackbar('warning', 'Complete all the fields');
+        } else {
+            var IdDeparment = 0,
+                IdTitle = 0;
 
-        var department = this.state.departments.find((obj) => {
-            return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
-        });
+            var department = this.state.departments.find((obj) => {
+                return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
+            });
 
-        var title = this.state.titles.find((obj) => {
-            return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
-        });
+            var title = this.state.titles.find((obj) => {
+                return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
+            });
 
-        let insdepartmentAsync = async () => {
-            if (department) {
-                IdDeparment = department.Id;
-            } else {
-                //const InsertDepartmentNew =
-                await this.props.client
-                    .mutate({
-                        mutation: INSERT_DEPARTMENT,
-                        variables: {
-                            input: {
-                                Id: 0,
-                                Id_Catalog: 8,
-                                Id_Parent: 0,
-                                Name: `'${this.state.departmentName}'`,
-                                DisplayLabel: `'${this.state.departmentName}'`,
-                                Description: `'${this.state.departmentName}'`,
-                                Value: null,
-                                Value01: null,
-                                Value02: null,
-                                Value03: null,
-                                Value04: null,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: "'2018-09-20 08:10:25+00'",
-                                Date_Updated: "'2018-09-20 08:10:25+00'"
+            let insdepartmentAsync = async () => {
+                if (department) {
+                    IdDeparment = department.Id;
+                } else {
+                    //const InsertDepartmentNew =
+                    await this.props.client
+                        .mutate({
+                            mutation: INSERT_DEPARTMENT,
+                            variables: {
+                                input: {
+                                    Id: 0,
+                                    Id_Catalog: 8,
+                                    Id_Parent: 0,
+                                    Name: `'${this.state.departmentName}'`,
+                                    DisplayLabel: `'${this.state.departmentName}'`,
+                                    Description: `'${this.state.departmentName}'`,
+                                    Value: null,
+                                    Value01: null,
+                                    Value02: null,
+                                    Value03: null,
+                                    Value04: null,
+                                    IsActive: 1,
+                                    User_Created: 1,
+                                    User_Updated: 1,
+                                    Date_Created: "'2018-09-20 08:10:25+00'",
+                                    Date_Updated: "'2018-09-20 08:10:25+00'"
+                                }
                             }
-                        }
-                    })
-                    .then((data) => {
-                        IdDeparment = data.data.inscatalogitem.Id;
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-                        this.setState({
-                            saving: false
+                        })
+                        .then((data) => {
+                            IdDeparment = data.data.inscatalogitem.Id;
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+                            this.setState({
+                                saving: false
+                            });
+                            return false;
                         });
-                        return false;
-                    });
-            }
+                }
 
-            if (title) {
-                IdTitle = title.Id;
-            } else {
-                //const InsertDepartmentNew =
-                await this.props.client
-                    .mutate({
-                        mutation: INSERT_DEPARTMENT,
-                        variables: {
-                            input: {
-                                Id: 0,
-                                Id_Catalog: 6,
-                                Id_Parent: 0,
-                                Name: `'${this.state.titleName}'`,
-                                DisplayLabel: `'${this.state.titleName}'`,
-                                Description: `'${this.state.titleName}'`,
-                                Value: null,
-                                Value01: null,
-                                Value02: null,
-                                Value03: null,
-                                Value04: null,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: "'2018-09-20 08:10:25+00'",
-                                Date_Updated: "'2018-09-20 08:10:25+00'"
+                if (title) {
+                    IdTitle = title.Id;
+                } else {
+                    //const InsertDepartmentNew =
+                    await this.props.client
+                        .mutate({
+                            mutation: INSERT_DEPARTMENT,
+                            variables: {
+                                input: {
+                                    Id: 0,
+                                    Id_Catalog: 6,
+                                    Id_Parent: 0,
+                                    Name: `'${this.state.titleName}'`,
+                                    DisplayLabel: `'${this.state.titleName}'`,
+                                    Description: `'${this.state.titleName}'`,
+                                    Value: null,
+                                    Value01: null,
+                                    Value02: null,
+                                    Value03: null,
+                                    Value04: null,
+                                    IsActive: 1,
+                                    User_Created: 1,
+                                    User_Updated: 1,
+                                    Date_Created: "'2018-09-20 08:10:25+00'",
+                                    Date_Updated: "'2018-09-20 08:10:25+00'"
+                                }
                             }
-                        }
-                    })
-                    .then((data) => {
-                        IdTitle = data.data.inscatalogitem.Id;
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-                        this.setState({
-                            saving: false
+                        })
+                        .then((data) => {
+                            IdTitle = data.data.inscatalogitem.Id;
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
+                            this.setState({
+                                saving: false
+                            });
+                            return false;
                         });
-                        return false;
-                    });
-            }
+                }
 
-            this.insertContacts(IdDeparment, IdTitle);
-        };
+                this.insertContacts(IdDeparment, IdTitle);
+            };
 
-        insdepartmentAsync();
+            insdepartmentAsync();
+        }
+
     };
 
     insertContacts = (idDepartment, idTitle) => {
@@ -653,7 +904,7 @@ class General extends Component {
     }
 
     handleCheckedChange = (name) => (event) => {
-        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({IdRegion: 0, IdRegionValid: true});
         if (name == 'isAdmin' && event.target.checked)
             this.setState(
                 {
@@ -665,7 +916,7 @@ class General extends Component {
                 },
                 this.validateForm
             );
-        else this.setState({ [name]: event.target.checked }, this.validateForm);
+        else this.setState({[name]: event.target.checked}, this.validateForm);
     };
 
     updateSelect = (id, name) => {
@@ -716,7 +967,7 @@ class General extends Component {
     };
 
     onChangeHandler(value, name) {
-        this.setState({ [name]: value }, this.validateField(name, value));
+        this.setState({[name]: value}, this.validateField(name, value));
     }
 
     enableCancelButton = () => {
@@ -861,7 +1112,8 @@ class General extends Component {
         );
     }
 
-    validateForm(func = () => { }) {
+    validateForm(func = () => {
+    }) {
         this.setState(
             {
                 formValid:
@@ -995,7 +1247,7 @@ class General extends Component {
                         this.setState({
                             createdProfile: true
                         }, () => {
-                            this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
+                            this.setState({openUserModal: false, showCircularLoading: true, loading: false});
                             this.resetUserModalState();
                         });
 
@@ -1020,7 +1272,8 @@ class General extends Component {
             .then(({data}) => {
                 this.setState({
                     dataEmail: data.getusers
-                }, () => {this.setState({
+                }, () => {
+                    this.setState({
                         loading: false
                     });
                 })
@@ -1046,7 +1299,7 @@ class General extends Component {
         }
 
         this.state.dataEmail.map(item => {
-            if(item.Electronic_Address.trim() === this.state.email.trim()){
+            if (item.Electronic_Address.trim() === this.state.email.trim()) {
                 userExist = true;
             }
         });
@@ -1063,7 +1316,7 @@ class General extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="md"
             >
-                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
+                <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
                     <div className="modal-header">
                         <h5 className="modal-title">
                             {this.state.idToEdit != null &&
@@ -1076,7 +1329,7 @@ class General extends Component {
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{ minWidth: 600, padding: '0px' }}>
+                <DialogContent style={{minWidth: 600, padding: '0px'}}>
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
@@ -1185,8 +1438,8 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1203,8 +1456,8 @@ class General extends Component {
                                                     id="isAdmin"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1221,8 +1474,8 @@ class General extends Component {
                                                     id="allowInsert"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1239,8 +1492,8 @@ class General extends Component {
                                                     id="allowEdit"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1257,8 +1510,8 @@ class General extends Component {
                                                     id="allowDelete"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1275,8 +1528,8 @@ class General extends Component {
                                                     id="allowExport"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1286,7 +1539,7 @@ class General extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
+                <DialogActions style={{margin: '16px 10px', borderTop: '1px solid #eee'}}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <Tooltip
@@ -1318,7 +1571,7 @@ class General extends Component {
                             <Tooltip title={'Cancel Operation'}>
                                 <div>
                                     <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
-                                        Cancel <i className="fas fa-ban ml-1" />
+                                        Cancel <i className="fas fa-ban ml-1"/>
                                     </button>
                                 </div>
                             </Tooltip>
@@ -1338,23 +1591,14 @@ class General extends Component {
             >
                 <DialogTitle style={{padding: '0px'}}>
                     <div className="modal-header">
-                        <h5 class="modal-title">
-                            {' '}
-                            {this.state.idToEdit != null &&
-                            this.state.idToEdit != '' &&
-                            this.state.idToEdit != 0 ? (
-                                'Edit  Contact'
-                            ) : (
-                                'Create Contact'
-                            )}
-                        </h5>
+                        <h5 class="modal-title">Associate Contact</h5>
                     </div>
                 </DialogTitle>
                 <DialogContent style={{minWidth: 600, padding: '0px'}}>
                     <form className="container">
                         <div className="">
                             <div className="row">
-                                <div className="col-md-12 col-lg-4">
+                                <div className="col-md-12 col-lg-6">
                                     <label>* Hotel</label>
                                     <SelectForm
                                         id="type"
@@ -1371,24 +1615,20 @@ class General extends Component {
                                         value={this.state.hotelId}
                                     />
                                 </div>
-                                <div className="col-md-12 col-lg-4">
+                                <div className="col-md-12 col-lg-6">
                                     <label>* Contact Type</label>
                                     <SelectForm
                                         id="type"
                                         name="type"
                                         data={this.state.contactTypes}
-                                        update={(value) => {
-                                            this.setState({
-                                                type: value
-                                            })
-                                        }}
+                                        update={this.updateType}
                                         showNone={false}
                                         //noneName="Employee"
                                         error={false}
                                         value={this.state.type}
                                     />
                                 </div>
-                                <div className="col-md-12 col-lg-4">
+                                <div className="col-md-12 col-lg-6">
                                     <label>* Department</label>
                                     <AutosuggestInput
                                         id="department"
@@ -1396,88 +1636,72 @@ class General extends Component {
                                         data={this.state.departments}
                                         error={false}
                                         value={this.state.departmentName}
-                                        onChange={(value) => {
-                                            this.setState({
-                                                departmentName: value
-                                            })
-                                        }}
-                                        onSelect={(value) => {
-                                            this.setState({
-                                                departmentName: value
-                                            })
-                                        }}
+                                        onChange={this.updateDepartmentName}
+                                        onSelect={this.updateDepartmentName}
                                     />
                                 </div>
-                                <div className="col-md-12 col-lg-4">
-                                    <label>* First Name</label>
-                                    <InputForm
-                                        id="firstname"
-                                        name="firstname"
-                                        required
-                                        maxLength="15"
-                                        value={this.state.firstname}
-                                        error={false}
-                                        change={(value) => {
-                                            this.setState({firstname: value})
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-4">
-                                    <label>Middle Name</label>
-                                    <InputForm
-                                        id="middlename"
-                                        name="middlename"
-                                        maxLength="15"
-                                        error={false}
-                                        value={this.state.middlename}
-                                        change={(value) => {
-                                            this.setState({middlename: value})
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-4">
-                                    <label>* Last Name</label>
-                                    <InputForm
-                                        id="lastname"
-                                        name="lastname"
-                                        maxLength="20"
-                                        error={false}
-                                        value={this.state.lastname}
-                                        change={(value) => {
-                                            this.setState({lastname: value})
-                                        }}
-                                    />
-                                </div>
+                                {/*<div className="col-md-12 col-lg-4">*/}
+                                {/*<label>* First Name</label>*/}
+                                {/*<InputForm*/}
+                                {/*id="firstname"*/}
+                                {/*name="firstname"*/}
+                                {/*required*/}
+                                {/*maxLength="15"*/}
+                                {/*value={this.state.firstname}*/}
+                                {/*//error={!this.state.firstnameValid}*/}
+                                {/*change={(value) => this.onFirstNameChangeHandler(value)}*/}
+                                {/*/>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-md-12 col-lg-4">*/}
+                                {/*<label>Middle Name</label>*/}
+                                {/*<InputForm*/}
+                                {/*id="middlename"*/}
+                                {/*name="middlename"*/}
+                                {/*maxLength="15"*/}
+                                {/*error={false}*/}
+                                {/*value={this.state.middlename}*/}
+                                {/*change={(value) => this.onMiddleNameChangeHandler(value)}*/}
+                                {/*/>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-md-12 col-lg-4">*/}
+                                {/*<label>* Last Name</label>*/}
+                                {/*<InputForm*/}
+                                {/*id="lastname"*/}
+                                {/*name="lastname"*/}
+                                {/*maxLength="20"*/}
+                                {/*error={!this.state.lastnameValid}*/}
+                                {/*value={this.state.lastname}*/}
+                                {/*change={(value) => this.onLastNameChangeHandler(value)}*/}
+                                {/*/>*/}
+                                {/*</div>*/}
 
-                                <div className="col-md-12 col-lg-4">
-                                    <label>* Email</label>
-                                    <InputForm
-                                        id="email"
-                                        name="email"
-                                        maxLength="50"
-                                        error={false}
-                                        value={this.state.email}
-                                        change={(value) => {
-                                            this.setState({email: value})
-                                        }}
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-4">
-                                    <label>* Phone Number</label>
-                                    <InputMask
-                                        id="number"
-                                        name="number"
-                                        mask="+(999) 999-9999"
-                                        maskChar=" "
-                                        value={this.state.number}
-                                        className={'form-control'}
-                                        onChange={(e) => {
-                                            this.setState({number: e.target.value})
-                                        }}
-                                        placeholder="+(999) 999-9999"
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-4">
+                                {/*<div className="col-md-12 col-lg-4">*/}
+                                {/*<label>* Email</label>*/}
+                                {/*<InputForm*/}
+                                {/*id="email"*/}
+                                {/*name="email"*/}
+                                {/*maxLength="50"*/}
+                                {/*error={!this.state.emailValid}*/}
+                                {/*value={this.state.email}*/}
+                                {/*change={(value) => this.onEmailChangeHandler(value)}*/}
+                                {/*/>*/}
+                                {/*</div>*/}
+                                {/*<div className="col-md-12 col-lg-4">*/}
+                                {/*<label>* Phone Number</label>*/}
+                                {/*<InputMask*/}
+                                {/*id="number"*/}
+                                {/*name="number"*/}
+                                {/*mask="+(999) 999-9999"*/}
+                                {/*maskChar=" "*/}
+                                {/*value={this.state.number}*/}
+                                {/*className={'form-control'}*/}
+                                {/*onChange={(e) => {*/}
+                                {/*this.onNumberChangeHandler(e.target.value);*/}
+                                {/*}}*/}
+                                {/*placeholder="+(999) 999-9999"*/}
+                                {/*/>*/}
+                                {/*</div>*/}
+                                <div className="col-md-12 col-lg-6">
                                     <label>* Contact Title</label>
                                     <AutosuggestInput
                                         id="title"
@@ -1485,16 +1709,8 @@ class General extends Component {
                                         data={this.state.titles}
                                         error={false}
                                         value={this.state.titleName}
-                                        onChange={(value) => {
-                                            this.setState({
-                                                titleName: value
-                                            })
-                                        }}
-                                        onSelect={(value) => {
-                                            this.setState({
-                                                titleName: value
-                                            })
-                                        }}
+                                        onChange={this.updateTitleName}
+                                        onSelect={this.updateTitleName}
                                     />
                                 </div>
                             </div>
@@ -1589,22 +1805,22 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                             {/*<label className="switch">*/}
-                                                {/*<input*/}
-                                                    {/*id="vehicleReportRequired"*/}
-                                                    {/*type="checkbox"*/}
-                                                    {/*className="form-control"*/}
-                                                    {/*min="0"*/}
-                                                    {/*maxLength="50"*/}
-                                                    {/*minLength="10"*/}
-                                                    {/*form="background-check-form"*/}
-                                                    {/*checked={this.state.data.isActive}*/}
-                                                {/*/>*/}
-                                                {/*<p className="slider round"></p>*/}
+                                            {/*<input*/}
+                                            {/*id="vehicleReportRequired"*/}
+                                            {/*type="checkbox"*/}
+                                            {/*className="form-control"*/}
+                                            {/*min="0"*/}
+                                            {/*maxLength="50"*/}
+                                            {/*minLength="10"*/}
+                                            {/*form="background-check-form"*/}
+                                            {/*checked={this.state.data.isActive}*/}
+                                            {/*/>*/}
+                                            {/*<p className="slider round"></p>*/}
                                             {/*</label>*/}
                                         </div>
                                     </div>
@@ -1626,7 +1842,8 @@ class General extends Component {
                                             {/*</div>*/}
                                             <button className="btn btn-outline-success btn-large" onClick={() => {
                                                 this.handleClickOpenUserModal();
-                                            }}>Create Profile</button>
+                                            }}>Create Profile
+                                            </button>
                                         </div>
                                     )
                                 }
