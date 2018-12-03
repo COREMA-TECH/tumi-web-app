@@ -1535,8 +1535,10 @@ class General extends Component {
                                 <div className="item col-sm-12 col-md-2">
                                     <div className="row">
                                         <span
-                                            className="col-sm-6 col-lg-12">Title: {this.state.data.position.Name.trim()}</span>
-                                        <span className="col-sm-6 col-lg-12">Department: Banquet</span>
+                                            className="col-sm-6 col-lg-12 font-weight-bold">Title</span>
+                                        <span
+                                            className="col-sm-6 col-lg-12">{this.state.data.position.Name.trim()}</span>
+                                        {/*<span className="col-sm-6 col-lg-12">Department: Banquet</span>*/}
                                     </div>
                                 </div>
                                 <div className="item col-12 col-md-2">
