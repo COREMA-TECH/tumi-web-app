@@ -167,7 +167,12 @@ class General extends Component {
             loadingLanguages: false,
             createdProfile: false,
 
-            ...this.DEFAULT_STATE
+            ...this.DEFAULT_STATE,
+
+            hotelValid: false,
+            typeValid: false,
+            departmentNameValid: false,
+            titleNameValid: false,
         }
     }
 
@@ -471,269 +476,6 @@ class General extends Component {
             });
     };
 
-    /**
-     * To fetch supervisors
-     */
-    fetchSupervisors = () => {
-        this.props.client
-            .query({
-                query: this.GET_SUPERVISORS_QUERY,
-                variables: {Id_Entity: this.state.idCompany, Id: 0},
-                fetchPolicy: 'no-cache'
-            })
-            .then((data) => {
-                if (data.data.getsupervisor != null) {
-                    this.setState({
-                        supervisors: data.data.getsupervisor,
-                    }, () => {
-
-                    });
-                }
-            })
-            .catch((error) => {
-
-            });
-    };
-
-    updateType = (id) => {
-        this.setState(
-            {
-                type: id
-            },
-            () => {
-                this.validateNewField('type', id);
-            }
-        );
-    };
-
-    updateDepartmentName = (value) => {
-        this.setState(
-            {
-                departmentName: value
-            },
-            () => {
-                this.validateNewField('departmentName', value);
-            }
-        );
-    };
-
-    updateTitleName = (value) => {
-        this.setState(
-            {
-                titleName: value
-            },
-            () => {
-                this.validateNewField('titleName', value);
-            }
-        );
-    };
-
-    onFirstNameChangeHandler(value) {
-        this.setState({firstname: value}, this.validateField('firstname', value));
-    }
-
-    onMiddleNameChangeHandler(value) {
-        this.setState({middlename: value}, this.validateField('middlename', value));
-    }
-
-    onLastNameChangeHandler(value) {
-        this.setState({lastname: value}, this.validateField('lastname', value));
-    }
-
-    onEmailChangeHandler(value) {
-        this.setState({email: value}, this.validateField('email', value));
-    }
-
-    onNumberChangeHandler(value) {
-        this.setState({number: value}, this.validateField('number', value));
-    }
-
-
-    validateAllNewFields(fun) {
-        let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        let firstnameValid = this.state.firstname.trim().length >= 2;
-        //let middlenameValid = this.state.middlename.trim().length >= 2;
-        let lastnameValid = this.state.lastname.trim().length >= 2;
-        let numberValid =
-            this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
-                .length == 10; //this.state.number.trim().length >= 2;
-        //let titleValid = this.state.title !== null && this.state.title !== 0 && this.state.title !== '';
-        let typeValid = this.state.type !== null && this.state.type !== '';
-        let idDepartmentValid =
-            this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
-        let idSupervisorValid =
-            this.state.idSupervisor !== null && this.state.idSupervisor !== -1 && this.state.idSupervisor !== '';
-        let departmentNameValid = this.state.departmentName.trim().length >= 2;
-        let titleNameValid = this.state.titleName.trim().length >= 2;
-
-        this.setState(
-            {
-                emailValid,
-                firstnameValid,
-                //	middlenameValid,
-                lastnameValid,
-                numberValid,
-                //titleValid,
-                //idDepartmentValid,
-                idSupervisorValid,
-                typeValid,
-                departmentNameValid,
-                titleNameValid
-            },
-            () => {
-                this.validateForm(fun);
-            }
-        );
-    }
-
-    validateNewField(fieldName, value) {
-        let emailValid = this.state.emailValid;
-        let firstnameValid = this.state.firstnameValid;
-        //	let middlenameValid = this.state.middlenameValid;
-        let lastnameValid = this.state.lastnameValid;
-        let numberValid = this.state.numberValid;
-        //let titleValid = this.state.titleValid;
-        let typeValid = this.state.typeValid;
-        let idDepartmentValid = this.state.idDepartmentValid;
-        let departmentNameValid = this.state.departmentNameValid;
-        let titleNameValid = this.state.titleNameValid;
-        let idSupervisorValid = this.state.idSupervisorValid;
-
-        let emailHasValue = this.state.emailHasValue;
-        let firstnameHasValue = this.state.firstnameHasValue;
-        let middlenameHasValue = this.state.middlenameHasValue;
-        let lastnameHasValue = this.state.lastnameHasValue;
-        let numberHasValue = this.state.numberHasValue;
-        let titleHasValue = this.state.titleHasValue;
-        let typeHasValue = this.state.typeHasValue;
-        let idDepartmentHasValue = this.state.idDepartmentHasValue;
-        let departmentNameHasValue = this.state.departmentName;
-        let titleNameHasValue = this.state.titleName;
-        let idSupervisorHasValue = this.state.idSupervisorHasValue;
-
-        switch (fieldName) {
-            case 'email':
-                emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-                emailHasValue = value != '';
-                break;
-            case 'firstname':
-                firstnameValid = value.trim().length >= 2;
-                firstnameHasValue = value != '';
-                break;
-            case 'middlename':
-                //	middlenameValid = value.trim().length >= 2;
-                middlenameHasValue = value != '';
-                break;
-            case 'lastname':
-                lastnameValid = value.trim().length >= 2;
-                lastnameHasValue = value != '';
-                break;
-            case 'number':
-                numberValid =
-                    value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
-                        .length == 10;
-                numberHasValue = value != '';
-                break;
-            /*case 'title':
-                titleValid = value !== null && value !== 0 && value !== '';
-                titleHasValue = value !== null && value !== 0 && value !== '';
-                break;*/
-            case 'type':
-                typeValid = value !== null && value !== '';
-                typeHasValue = value !== null && value !== '';
-                break;
-            case 'idDepartment':
-                idDepartmentValid = value !== null && value !== 0 && value !== '';
-                idDepartmentHasValue = value !== null && value !== 0 && value !== '';
-                break;
-            case 'departmentName':
-                departmentNameValid = value.trim().length >= 2;
-                departmentNameHasValue = value != '';
-                break;
-            case 'titleName':
-                titleNameValid = value.trim().length >= 2;
-                titleNameHasValue = value != '';
-                break;
-            case 'idSupervisor':
-                idSupervisorValid = value !== null && value !== -1 && value !== '';
-                idSupervisorHasValue = value !== null && value !== -1 && value !== '';
-                break;
-            default:
-                break;
-        }
-        this.setState(
-            {
-                emailValid,
-                firstnameValid,
-                //	middlenameValid,
-                lastnameValid,
-                numberValid,
-                //titleValid,
-                typeValid,
-                //idDepartmentValid,
-                departmentNameValid,
-                titleNameValid,
-                idSupervisorValid,
-                emailHasValue,
-                firstnameHasValue,
-                middlenameHasValue,
-                lastnameHasValue,
-                numberHasValue,
-                titleHasValue,
-                typeHasValue,
-                idDepartmentHasValue,
-                departmentNameHasValue,
-                titleNameHasValue,
-                idSupervisorHasValue
-            },
-            this.validateForm
-        );
-    }
-
-    validateNewForm(func = () => {
-    }) {
-        this.setState(
-            {
-                formValid:
-                    this.state.emailValid &&
-                    this.state.firstnameValid &&
-                    //		this.state.middlenameValid &&
-                    this.state.lastnameValid &&
-                    this.state.numberValid &&
-                    //this.state.titleValid &&
-                    this.state.typeValid &&
-                    //this.state.idDepartmentValid &&
-                    this.state.departmentNameValid &&
-                    this.state.titleNameValid &&
-                    this.state.idSupervisorValid,
-                enableCancelButton:
-                    this.state.emailHasValue ||
-                    this.state.firstnameHasValue ||
-                    this.state.middlenameHasValue ||
-                    this.state.lastnameHasValue ||
-                    this.state.numberHasValue ||
-                    this.state.titleHasValue ||
-                    this.state.typeHasValue ||
-                    //	this.state.idDepartmentHasValue ||
-                    this.state.departmentName ||
-                    this.state.titleName ||
-                    this.state.idSupervisorHasValue
-            },
-            func
-        );
-    }
-
-    validateAllDialogFields = () => {
-        let valids = false;
-
-        if (this.state.firstname) {
-
-        } else if (this.state.middlename) {
-
-        } else if (this.state.lastname) {
-
-        }
-    };
 
     insertDepartment = () => {
         if (
@@ -743,6 +485,30 @@ class General extends Component {
             || this.state.titleName.length < 3
         ) {
             this.props.handleOpenSnackbar('warning', 'Complete all the fields');
+
+            if(this.state.hotelId === null) {
+                this.setState({
+                    hotelValid: true
+                })
+            }
+
+            if(this.state.type === null ) {
+                this.setState({
+                    typeValid: true
+                })
+            }
+
+            if(this.state.departmentName.length < 3) {
+                this.setState({
+                    departmentNameValid: true
+                })
+            }
+
+            if(this.state.titleName.length < 3 ) {
+                this.setState({
+                    titleNameValid: true
+                })
+            }
         } else {
             var IdDeparment = 0,
                 IdTitle = 0;
@@ -1587,7 +1353,7 @@ class General extends Component {
                 open={this.state.openModal}
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth="lg"
+                maxWidth="md"
             >
                 <DialogTitle style={{padding: '0px'}}>
                     <div className="modal-header">
@@ -1607,11 +1373,15 @@ class General extends Component {
                                         update={(value) => {
                                             this.setState({
                                                 hotelId: value
+                                            }, () => {
+                                                this.setState({
+                                                    hotelValid: false
+                                                })
                                             })
                                         }}
                                         showNone={false}
                                         //noneName="Employee"
-                                        error={false}
+                                        error={this.state.hotelValid}
                                         value={this.state.hotelId}
                                     />
                                 </div>
@@ -1621,10 +1391,18 @@ class General extends Component {
                                         id="type"
                                         name="type"
                                         data={this.state.contactTypes}
-                                        update={this.updateType}
+                                        update={(value) => {
+                                            this.setState({
+                                                type: value
+                                            }, () => {
+                                                this.setState({
+                                                    typeValid: false
+                                                })
+                                            })
+                                        }}
                                         showNone={false}
                                         //noneName="Employee"
-                                        error={false}
+                                        error={this.state.typeValid}
                                         value={this.state.type}
                                     />
                                 </div>
@@ -1634,83 +1412,58 @@ class General extends Component {
                                         id="department"
                                         name="department"
                                         data={this.state.departments}
-                                        error={false}
+                                        error={this.state.departmentNameValid}
                                         value={this.state.departmentName}
-                                        onChange={this.updateDepartmentName}
-                                        onSelect={this.updateDepartmentName}
+                                        onChange={(value) => {
+                                            this.setState({
+                                                departmentName: value
+                                            }, () => {
+                                                this.setState({
+                                                    departmentNameValid: false
+                                                })
+                                            })
+                                        }}
+                                        // onChange={this.updateDepartmentName}
+                                        onSelect={(value) => {
+                                            this.setState({
+                                                departmentName: value
+                                            }, () => {
+                                                this.setState({
+                                                    departmentNameValid: false
+                                                })
+                                            })
+                                        }}
                                     />
                                 </div>
-                                {/*<div className="col-md-12 col-lg-4">*/}
-                                {/*<label>* First Name</label>*/}
-                                {/*<InputForm*/}
-                                {/*id="firstname"*/}
-                                {/*name="firstname"*/}
-                                {/*required*/}
-                                {/*maxLength="15"*/}
-                                {/*value={this.state.firstname}*/}
-                                {/*//error={!this.state.firstnameValid}*/}
-                                {/*change={(value) => this.onFirstNameChangeHandler(value)}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-4">*/}
-                                {/*<label>Middle Name</label>*/}
-                                {/*<InputForm*/}
-                                {/*id="middlename"*/}
-                                {/*name="middlename"*/}
-                                {/*maxLength="15"*/}
-                                {/*error={false}*/}
-                                {/*value={this.state.middlename}*/}
-                                {/*change={(value) => this.onMiddleNameChangeHandler(value)}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-4">*/}
-                                {/*<label>* Last Name</label>*/}
-                                {/*<InputForm*/}
-                                {/*id="lastname"*/}
-                                {/*name="lastname"*/}
-                                {/*maxLength="20"*/}
-                                {/*error={!this.state.lastnameValid}*/}
-                                {/*value={this.state.lastname}*/}
-                                {/*change={(value) => this.onLastNameChangeHandler(value)}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-
-                                {/*<div className="col-md-12 col-lg-4">*/}
-                                {/*<label>* Email</label>*/}
-                                {/*<InputForm*/}
-                                {/*id="email"*/}
-                                {/*name="email"*/}
-                                {/*maxLength="50"*/}
-                                {/*error={!this.state.emailValid}*/}
-                                {/*value={this.state.email}*/}
-                                {/*change={(value) => this.onEmailChangeHandler(value)}*/}
-                                {/*/>*/}
-                                {/*</div>*/}
-                                {/*<div className="col-md-12 col-lg-4">*/}
-                                {/*<label>* Phone Number</label>*/}
-                                {/*<InputMask*/}
-                                {/*id="number"*/}
-                                {/*name="number"*/}
-                                {/*mask="+(999) 999-9999"*/}
-                                {/*maskChar=" "*/}
-                                {/*value={this.state.number}*/}
-                                {/*className={'form-control'}*/}
-                                {/*onChange={(e) => {*/}
-                                {/*this.onNumberChangeHandler(e.target.value);*/}
-                                {/*}}*/}
-                                {/*placeholder="+(999) 999-9999"*/}
-                                {/*/>*/}
-                                {/*</div>*/}
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Contact Title</label>
                                     <AutosuggestInput
                                         id="title"
                                         name="title"
                                         data={this.state.titles}
-                                        error={false}
+                                        error={this.state.titleNameValid}
                                         value={this.state.titleName}
-                                        onChange={this.updateTitleName}
-                                        onSelect={this.updateTitleName}
+                                        // onChange={this.updateTitleName}
+                                        // onSelect={this.updateTitleName}
+                                        onChange={(value) => {
+                                            this.setState({
+                                                titleName: value
+                                            }, () => {
+                                                this.setState({
+                                                    titleNameValid: false
+                                                })
+                                            })
+                                        }}
+                                        // onChange={this.updateDepartmentName}
+                                        onSelect={(value) => {
+                                            this.setState({
+                                                titleName: value
+                                            }, () => {
+                                                this.setState({
+                                                    titleNameValid: false
+                                                })
+                                            })
+                                        }}
                                     />
                                 </div>
                             </div>
