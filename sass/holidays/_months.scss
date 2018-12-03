@@ -1,4 +1,9 @@
 .Months {
+    li[data-selected="true"] {
+        background: $white;
+        border-color: $brand-secondary;
+        color: $brand-secondary;
+    }
     &-list {
         text-align: center;
     }

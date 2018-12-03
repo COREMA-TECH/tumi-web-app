@@ -619,29 +619,24 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-md-3">
-                        <div className="row">
-                            <span className="primary">Middle Name</span>
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        middleName: event.target.value
-                                    });
-                                }}
-                                value={this.state.middleName}
-                                name="midleName"
-                                type="text"
-                                className="form-control"
-                                min="0"
-                                maxLength="50"
-                                minLength="1"
-                            />
-                            <span className="check-icon" />
-                            <i className="optional" />
-                        </div>
+                        <span className="primary">Middle Name</span>
+                        <input
+                            onChange={(event) => {
+                                this.setState({
+                                    middleName: event.target.value
+                                });
+                            }}
+                            value={this.state.middleName}
+                            name="midleName"
+                            type="text"
+                            className="form-control"
+                            min="0"
+                            maxLength="50"
+                            minLength="1"
+                        />
                     </div>
                     <div className="col-md-3">
                         <span className="primary">* Last Name</span>
@@ -661,7 +656,6 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-md-3">
@@ -681,7 +675,6 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="3"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
                     {/* <div className="col-md-3">
@@ -707,7 +700,7 @@ class VerticalLinearStepper extends Component {
 
                 </div>
                 <div className="row form-section">
-                    <div className="col-md-8">
+                    <div className="col-md-9">
                         <span className="primary">* Street Address</span>
                         <div className="input-container--validated">
                             <input
@@ -725,10 +718,9 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="5"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary">Apt Number</span>
                         <input
                             onChange={(event) => {
@@ -744,12 +736,10 @@ class VerticalLinearStepper extends Component {
                             maxLength="50"
                             minLength="5"
                         />
-                        <span className="check-icon" />
-                        <i className="optional" />
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary">* State</span>
                         <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                             {({ loading, error, data, refetch, networkStatus }) => {
@@ -781,7 +771,7 @@ class VerticalLinearStepper extends Component {
                             }}
                         </Query>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary">* City</span>
                         <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
                             {({ loading, error, data, refetch, networkStatus }) => {
@@ -811,7 +801,7 @@ class VerticalLinearStepper extends Component {
                             }}
                         </Query>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary">* Zip Code</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -831,12 +821,9 @@ class VerticalLinearStepper extends Component {
                                 minLength="15"
                             />
 
-                            <span className="check-icon" />
                         </div>
                     </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary"> Home Phone</span>
                         <InputMask
                             id="home-number"
@@ -853,10 +840,11 @@ class VerticalLinearStepper extends Component {
                             placeholder="+(999) 999-9999"
                             minLength="15"
                         />
-                        <i className="optional" />
                     </div>
+                </div>
+                <div className="row">
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary">* Cell Phone</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -875,11 +863,10 @@ class VerticalLinearStepper extends Component {
                                 required
                                 minLength="15"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                         <span className="primary">* Social Security Number</span>
                         <div className="input-container--validated">
                             <InputMask
@@ -898,60 +885,57 @@ class VerticalLinearStepper extends Component {
                                 required
                                 minLength="15"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
-                </div>
-                <div className="row">
-                    {/*<div className="col-md-6">*/}
-                    {/*<span className="primary"> Birth Day</span>*/}
-                    {/*<div className="input-container--validated">*/}
-                    {/*<input*/}
-                    {/*onChange={(event) => {*/}
-                    {/*this.setState({*/}
-                    {/*birthDay: event.target.value*/}
-                    {/*});*/}
-                    {/*}}*/}
-                    {/*value={this.state.birthDay}*/}
-                    {/*name="birthDay"*/}
-                    {/*type="date"*/}
-                    {/*className="form-control"*/}
-                    {/*required*/}
-                    {/*min="0"*/}
-                    {/*maxLength="50"*/}
-                    {/*minLength="10"*/}
-                    {/*/>*/}
-                    {/*<span className="check-icon"/>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-                    <div className="col-md-6">
-                        <div className="row">
-                            <div className="col-md-12">
-                                <span className="primary"> Do you own transportation?</span>
-                            </div>
-                            <div className="col-md-12">
-                                <label className="switch">
-                                    <input
-                                        onChange={(event) => {
-                                            this.setState({
-                                                car: event.target.checked
-                                            });
-                                        }}
-                                        checked={this.state.car}
-                                        value={this.state.car}
-                                        name="car"
-                                        type="checkbox"
-                                        className="form-control"
-                                        min="0"
-                                        maxLength="50"
-                                        minLength="10"
-                                    />
-                                    <p className="slider round" />
+                    <div className="col-md-3">
+                        <div className="col-md-12">
+                            <span className="primary"> Do you own transportation?</span>
+                        </div>
+                        <div className="col-md-12">
+                            <div className="onoffswitch">
+                                <input
+                                    id="carSwitch"
+                                    className="onoffswitch-checkbox"
+                                    onChange={(event) => {
+                                        this.setState({
+                                            car: event.target.checked
+                                        });
+                                    }}
+                                    checked={this.state.car}
+                                    value={this.state.car}
+                                    name="car"
+                                    type="checkbox"
+                                    min="0"
+                                    maxLength="50"
+                                    minLength="10"
+                                />
+                                <label className="onoffswitch-label" htmlFor="carSwitch">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
                                 </label>
                             </div>
+
+                            {/*<label className="switch">*/}
+                                {/*<input*/}
+                                    {/*onChange={(event) => {*/}
+                                        {/*this.setState({*/}
+                                            {/*car: event.target.checked*/}
+                                        {/*});*/}
+                                    {/*}}*/}
+                                    {/*checked={this.state.car}*/}
+                                    {/*value={this.state.car}*/}
+                                    {/*name="car"*/}
+                                    {/*type="checkbox"*/}
+                                    {/*className="form-control"*/}
+                                    {/*min="0"*/}
+                                    {/*maxLength="50"*/}
+                                    {/*minLength="10"*/}
+                                {/*/>*/}
+                                {/*<p className="slider round" />*/}
+                            {/*</label>*/}
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-3">
                         <span className="primary">* Type Of ID</span>
                         <select
                             name="typeOfID"
@@ -977,6 +961,31 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="row">
+                    {/*<div className="col-md-6">*/}
+                    {/*<span className="primary"> Birth Day</span>*/}
+                    {/*<div className="input-container--validated">*/}
+                    {/*<input*/}
+                    {/*onChange={(event) => {*/}
+                    {/*this.setState({*/}
+                    {/*birthDay: event.target.value*/}
+                    {/*});*/}
+                    {/*}}*/}
+                    {/*value={this.state.birthDay}*/}
+                    {/*name="birthDay"*/}
+                    {/*type="date"*/}
+                    {/*className="form-control"*/}
+                    {/*required*/}
+                    {/*min="0"*/}
+                    {/*maxLength="50"*/}
+                    {/*minLength="10"*/}
+                    {/*/>*/}
+                    {/*<span className="check-icon"/>*/}
+                    {/*</div>*/}
+                    {/*</div>*/}
+
+
+                </div>
+                <div className="row">
                     <div className="col-md-6">
                         <span className="primary">* Expire Date ID</span>
                         <div className="input-container--validated">
@@ -995,7 +1004,6 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="10"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -1017,7 +1025,6 @@ class VerticalLinearStepper extends Component {
                                 maxLength="50"
                                 minLength="8"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
                 </div>
@@ -1053,7 +1060,6 @@ class VerticalLinearStepper extends Component {
                                 return <SelectNothingToDisplay />;
                             }}
                         </Query>
-                        <i className="optional" />
                     </div>
                     <div className="col-md-6">
                         <span className="primary">* Date Available</span>
@@ -1072,7 +1078,6 @@ class VerticalLinearStepper extends Component {
                                 min="0"
                                 maxLength="50"
                             />
-                            <span className="check-icon" />
                         </div>
                     </div>
                     {/*<form*/}
@@ -1205,33 +1210,34 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-4">
                         <span className="primary"> Have you ever been convicted of a felony? </span>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    convicted: event.target.value
-                                });
-                            }}
-                            value="1"
-                            type="radio"
-                            name="convicted"
-                            className=""
-                        />
-                        <label className="radio-label"> Yes</label>
-                        <input
-                            onChange={(event) => {
-                                this.setState({
-                                    convicted: event.target.value,
-                                    convictedExplain: ''
-                                });
-                            }}
-                            value="0"
-                            type="radio"
-                            name="convicted"
-                            className=""
-                            checked={this.state.convicted === '0'}
-                        />
-                        <label className="radio-label"> No</label>
-                        <span className="check-icon" />
+                        <div className="col-md-12">
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        convicted: event.target.value
+                                    });
+                                }}
+                                value="1"
+                                type="radio"
+                                name="convicted"
+                                className=""
+                            />
+                            <label className="radio-label"> Yes</label>
+                            <input
+                                onChange={(event) => {
+                                    this.setState({
+                                        convicted: event.target.value,
+                                        convictedExplain: ''
+                                    });
+                                }}
+                                value="0"
+                                type="radio"
+                                name="convicted"
+                                className=""
+                                checked={this.state.convicted === '0'}
+                            />
+                            <label className="radio-label"> No</label>
+                        </div>
                     </div>
                     <div className="col-md-8">
                         <span className="primary"> If yes, please explain </span>
@@ -1621,8 +1627,10 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-md-2">
                         <label className="primary">Graduated</label> <br />
-                        <label className="switch">
+
+                        <div className="onoffswitch">
                             <input
+                                className="onoffswitch-checkbox"
                                 onChange={(e) => {
                                     this.setState({
                                         graduated: document.getElementById('graduated').checked
@@ -1634,8 +1642,27 @@ class VerticalLinearStepper extends Component {
                                 name="graduated"
                                 id="graduated"
                             />
-                            <p className="slider round" />
-                        </label>
+                            <label className="onoffswitch-label" htmlFor="graduated">
+                                <span className="onoffswitch-inner" />
+                                <span className="onoffswitch-switch" />
+                            </label>
+                        </div>
+
+                        {/*<label className="switch">*/}
+                            {/*<input*/}
+                                {/*onChange={(e) => {*/}
+                                    {/*this.setState({*/}
+                                        {/*graduated: document.getElementById('graduated').checked*/}
+                                    {/*});*/}
+                                {/*}}*/}
+                                {/*form="education-form"*/}
+                                {/*type="checkbox"*/}
+                                {/*value="graduated"*/}
+                                {/*name="graduated"*/}
+                                {/*id="graduated"*/}
+                            {/*/>*/}
+                            {/*<p className="slider round" />*/}
+                        {/*</label>*/}
                     </div>
                     <div className="col-md-4">
                         <label className="primary">Degree</label>

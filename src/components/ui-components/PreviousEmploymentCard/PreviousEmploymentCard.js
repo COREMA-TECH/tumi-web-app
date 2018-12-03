@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -20,7 +20,7 @@ class PreviousEmploymentCard extends Component {
 
     // To open the skill dialog
     handleClickOpen = () => {
-        this.setState({open: true});
+        this.setState({ open: true });
     };
 
     // To close the skill dialog
@@ -54,8 +54,6 @@ class PreviousEmploymentCard extends Component {
             </Dialog>
         );
 
-        console.log("Address: " + this.props.address);
-
         return (
             <div className="previous-employment-card">
                 <span
@@ -75,8 +73,8 @@ class PreviousEmploymentCard extends Component {
                             <i className="fas fa-map-marker-alt"></i><span> {this.props.address}</span>
                         </div>
                     ) : (
-                        ''
-                    )
+                            ''
+                        )
                 }
                 {
                     this.props.phone.length > 0 ? (
@@ -84,8 +82,8 @@ class PreviousEmploymentCard extends Component {
                             <i className="fas fa-phone"></i><span> {this.props.phone}</span>
                         </div>
                     ) : (
-                        ''
-                    )
+                            ''
+                        )
                 }
                 <div className="previous-employment-card__phone">
                     <i className="far fa-calendar-alt"></i><span>{dialogMessages[1].label} <b>{this.props.startDate.substring(0, 10)}</b> {dialogMessages[2].label} <b>{this.props.endDate.substring(0, 10)}</b></span>

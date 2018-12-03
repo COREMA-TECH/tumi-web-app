@@ -281,22 +281,44 @@ class Education extends Component {
 								</div>
 								<div className="col-md-6">
 									<label className="primary">{educationFormLanguage[5].label}</label> <br />
-									<label className="switch">
-										<input
-											onChange={(e) => {
-												this.setState({
-													graduated: document.getElementById('graduated').checked
-												});
-											}}
-											form="education-form"
-											type="checkbox"
-											value="graduated"
-											name="graduated"
-											pattern=".*[^ ].*"
-											id="graduated"
-										/>
-										<p className="slider round" />
-									</label>
+
+                                    <div className="onoffswitch">
+                                        <input
+                                            className="onoffswitch-checkbox"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    graduated: document.getElementById('graduated').checked
+                                                });
+                                            }}
+                                            form="education-form"
+                                            type="checkbox"
+                                            value="graduated"
+                                            name="graduated"
+                                            pattern=".*[^ ].*"
+                                            id="graduated"
+                                        />
+                                        <label className="onoffswitch-label" htmlFor="graduated">
+                                            <span className="onoffswitch-inner" />
+                                            <span className="onoffswitch-switch" />
+                                        </label>
+                                    </div>
+
+									{/*<label className="switch">*/}
+										{/*<input*/}
+											{/*onChange={(e) => {*/}
+												{/*this.setState({*/}
+													{/*graduated: document.getElementById('graduated').checked*/}
+												{/*});*/}
+											{/*}}*/}
+											{/*form="education-form"*/}
+											{/*type="checkbox"*/}
+											{/*value="graduated"*/}
+											{/*name="graduated"*/}
+											{/*pattern=".*[^ ].*"*/}
+											{/*id="graduated"*/}
+										{/*/>*/}
+										{/*<p className="slider round" />*/}
+									{/*</label>*/}
 								</div>
 								<div className="col-md-6">
 									<label className="primary">{educationFormLanguage[6].label}</label>

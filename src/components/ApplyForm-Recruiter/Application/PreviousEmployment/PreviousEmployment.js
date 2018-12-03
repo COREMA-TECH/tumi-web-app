@@ -174,7 +174,7 @@ class PreviousEmployment extends Component {
 							};
 
 							this.insertPreviousEmploymentApplication(item);
-						} catch (e) {}
+						} catch (e) { }
 					}}
 					className="apply-form"
 				>
@@ -317,8 +317,8 @@ class PreviousEmployment extends Component {
 								</div>
 							</div>
 						) : (
-							''
-						)}
+								''
+							)}
 					</DialogContent>
 					<DialogActions>
 						<div className="applicant-card__footer">
@@ -340,7 +340,7 @@ class PreviousEmployment extends Component {
 
 		// To render the Previous Employment Section
 		let renderPreviousEmploymentSection = () => (
-			<div className="">
+			<div className="card-body">
 				<div className="row">
 					{this.state.previousEmployment.map((employmentItem) => (
 						<div className="col-3">
@@ -385,18 +385,18 @@ class PreviousEmployment extends Component {
 								{this.state.editing ? (
 									''
 								) : (
-									<button
-										className="applicant-card__edit-button"
-										onClick={() => {
-											this.setState({
-												open: true,
-												editing: true
-											});
-										}}
-									>
-										{spanishActions[0].label} <i className="fas fa-plus" />
-									</button>
-								)}
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												this.setState({
+													open: true,
+													editing: true
+												});
+											}}
+										>
+											{spanishActions[0].label} <i className="fas fa-plus" />
+										</button>
+									)}
 							</div>
 							<div className="">
 								{this.state.loading ? (
@@ -404,26 +404,26 @@ class PreviousEmployment extends Component {
 										<CircularProgressLoading />
 									</div>
 								) : (
-									renderPreviousEmploymentSection()
-								)}
+										renderPreviousEmploymentSection()
+									)}
 							</div>
-                            <div className="applicant-card__footer">
-                                <button
-                                    className="applicant-card__cancel-button"
-                                    onClick={() => {
-                                        this.props.handleBack();
-                                    }}
-                                >
-                                    {spanishActions[9].label}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        this.props.handleNext();
-                                    }}
-                                    className="applicant-card__save-button">
-                                    {spanishActions[8].label}
-                                </button>
-                            </div>
+							<div className="applicant-card__footer">
+								<button
+									className="applicant-card__cancel-button"
+									onClick={() => {
+										this.props.handleBack();
+									}}
+								>
+									{spanishActions[9].label}
+								</button>
+								<button
+									onClick={() => {
+										this.props.handleNext();
+									}}
+									className="applicant-card__save-button">
+									{spanishActions[8].label}
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>

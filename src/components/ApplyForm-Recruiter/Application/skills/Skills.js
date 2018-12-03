@@ -171,7 +171,7 @@ class Skills extends Component {
 	render() {
 		// To render the skills section
 		let renderSkillsSection = () => (
-			<div className="">
+			<div className="card-body">
 				<div className="row">
 					<div className="row-skill">
 						{this.state.skills.map((skillItem) => (
@@ -220,7 +220,7 @@ class Skills extends Component {
 						this.setState(
 							(prevState) => ({
 								open: false,
-								skills: [ ...prevState.skills, item ]
+								skills: [...prevState.skills, item]
 							}),
 							() => {
 								this.insertSkillsApplication();
@@ -292,23 +292,23 @@ class Skills extends Component {
 								{this.state.editing ? (
 									''
 								) : (
-									<button
-										className="applicant-card__edit-button"
-										onClick={() => {
-											this.setState({
-												editing: true,
-												open: true
-											});
-										}}
-									>
-										{
-											<span>
-												{' '}
-												{spanishActions[0].label} <i className="fas fa-plus" />
-											</span>
-										}
-									</button>
-								)}
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												this.setState({
+													editing: true,
+													open: true
+												});
+											}}
+										>
+											{
+												<span>
+													{' '}
+													{spanishActions[0].label} <i className="fas fa-plus" />
+												</span>
+											}
+										</button>
+									)}
 							</div>
 							<div className="row">
 								{this.state.loading ? (
@@ -319,26 +319,26 @@ class Skills extends Component {
 										</div>
 									</div>
 								) : (
-									<div className="col-12">{renderSkillsSection()}</div>
-								)}
+										<div className="col-12">{renderSkillsSection()}</div>
+									)}
 							</div>
-                            <div className="applicant-card__footer">
-                                <button
-                                    className="applicant-card__cancel-button"
-                                    onClick={() => {
-                                        this.props.handleBack();
-                                    }}
-                                >
-                                    {spanishActions[9].label}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        window.location.href = '/home/Recruiter'
-                                    }}
-                                    className="applicant-card__save-button">
-                                    {spanishActions[10].label}
-                                </button>
-                            </div>
+							<div className="applicant-card__footer">
+								<button
+									className="applicant-card__cancel-button"
+									onClick={() => {
+										this.props.handleBack();
+									}}
+								>
+									{spanishActions[9].label}
+								</button>
+								<button
+									onClick={() => {
+										window.location.href = '/home/Recruiter'
+									}}
+									className="applicant-card__save-button">
+									{spanishActions[10].label}
+								</button>
+							</div>
 							{/*{*/}
 							{/*this.state.editing ? (*/}
 							{/*<div className="applicant-card__footer">*/}

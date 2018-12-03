@@ -5,12 +5,12 @@ class Holidays extends Component {
     state = {
         name: '',
         description: '',
-        weekDays: [{ id: 1, name: 'MON', selected: false }, { id: 2, name: 'TUE', selected: false }, { id: 3, name: 'WED', selected: false }, { id: 4, name: 'TU', selected: false }, { id: 5, name: 'FRY', selected: false }, { id: 6, name: 'SAT', selected: false }, { id: 7, name: 'SUN', selected: false }],
+        anually: false,
+        weekDays: [{ id: 1, name: 'MON', selected: false, selected: false }, { id: 2, name: 'TUE', selected: false }, { id: 3, name: 'WED', selected: false }, { id: 4, name: 'TU', selected: false }, { id: 5, name: 'FRY', selected: false }, { id: 6, name: 'SAT', selected: false }, { id: 7, name: 'SUN', selected: false }],
         weekNumbers: [{ id: 1, name: '1st', selected: false }, { id: 2, name: '2nd', selected: false }, { id: 3, name: '3rd', selected: false }, { id: 4, name: '4rt', selected: false }],
-        monthNumbers: [{ id: 1, name: 'JAN', selected: false }, { id: 2, name: 'FEB', selected: false }, { id: 3, name: 'MAR', selected: false }, { id: 4, name: 'APR', selected: false }, { id: 5, name: 'MAY', selected: false }, { id: 6, name: 'JUN', selected: false }, { id: 7, name: 'JUL', selected: false }, { id: 8, name: 'AUG', selected: false }, { id: 9, name: 'SEP', selected: false }, { id: 10, name: 'OCT', selected: false }, { id: 11, name: 'NOV', selected: false }, { id: 12, name: 'DIC', selected: false }]
+        monthNumbers: [{ id: 1, name: 'JAN', selected: false }, { id: 2, name: 'FEB', selected: false }, { id: 3, name: 'MAR', selected: false }, { id: 4, name: 'APR', selected: false }, { id: 5, name: 'MAY', selected: false }, { id: 6, name: 'JUN', selected: false }, { id: 7, name: 'JUL', selected: false }, { id: 8, name: 'AUG', selected: false }, { id: 9, name: 'SEP', selected: false }, { id: 10, name: 'OCT', selected: false }, { id: 11, name: 'NOV', selected: false }, { id: 12, name: 'DIC', selected: false }],
+        calendarDays: [{ id: 1, selected: false }, { id: 2, selected: false }, { id: 3, selected: false }, { id: 4, selected: false }, { id: 5, selected: false }, { id: 6, selected: false }, { id: 7, selected: false }, { id: 8, selected: false }, { id: 9, selected: false }, { id: 10, selected: false }, { id: 11, selected: false }, { id: 12, selected: false }, { id: 13, selected: false }, { id: 14, selected: false }, { id: 15, selected: false }, { id: 16, selected: false }, { id: 17, selected: false }, { id: 18, selected: false }, { id: 19, selected: false }, { id: 20, selected: false }, { id: 21, selected: false }, { id: 22, selected: false }, { id: 23, selected: false }, { id: 24, selected: false }, { id: 25, selected: false }, { id: 26, selected: false }, { id: 27, selected: false }, { id: 28, selected: false }, { id: 29, selected: false }, { id: 30, selected: false }, { id: 31, selected: false }]
     }
-
-    numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
 
     inputChanged = (name) => (e) => {
         this.setState({ [name]: e.currentTarget.value })
@@ -31,6 +31,11 @@ class Holidays extends Component {
         //Update state with the new array
         this.setState({ weekNumbers })
     }
+    calendarDaysSelected = (e) => {
+        let calendarDays = this.getNewData(this.state.calendarDays, e.currentTarget.id)
+        //Update state with the new array
+        this.setState({ calendarDays })
+    }
     getNewData = (data, id) => {
         //Getting array
         let arrayCopy = JSON.parse(JSON.stringify(data))
@@ -40,6 +45,9 @@ class Holidays extends Component {
         item.selected = !item.selected
         //Update state with the new array
         return arrayCopy;
+    }
+    onCheckedChange = (e) => {
+        this.setState({ anually: e.currentTarget.checked })
     }
     render() {
         console.log("this is my state", this.state)
@@ -107,16 +115,16 @@ class Holidays extends Component {
                                         Days of Calendar
                                     </h2>
                                     <ul className="CalendarNumbers">
-                                        {this.numbers.map((number) => {
+                                        {this.state.calendarDays.map((item) => {
                                             return (
-                                                <li className="CalendarNumbers-item">{number}</li>
+                                                <li id={item.id} data-selected={item.selected} className="CalendarNumbers-item" onClick={this.calendarDaysSelected}>{item.id}</li>
                                             );
                                         })}
                                     </ul>
                                     <div className="Anually">
                                         <span className="Anually-label">Anually</span>
                                         <label class="check">
-                                            <input type="checkbox" />
+                                            <input type="checkbox" checked={this.state.anually} onChange={this.onCheckedChange} />
                                             <div class="box"></div>
                                         </label>
                                     </div>

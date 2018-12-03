@@ -194,7 +194,7 @@ class MilitaryService extends Component {
     render() {
         // To render the Military Service Section
         let renderMilitaryServiceSection = () => (
-            <div>
+            <div className="card-body">
                 <div className="military-service-form">
                     <div className="row">
                         <div className="col-6">

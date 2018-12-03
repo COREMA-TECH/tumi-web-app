@@ -1,5 +1,13 @@
 .Weeks {
     margin-bottom: 45px;
+    li[data-selected="true"] { 
+        &:after {
+            border-width: 7px;
+            height: 125px;
+            top: 0;
+            width: 125px;
+        }
+    }
     &-list {
         text-align: center;
     }

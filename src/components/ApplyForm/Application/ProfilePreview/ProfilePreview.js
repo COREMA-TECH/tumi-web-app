@@ -76,7 +76,9 @@ class VerticalLinearStepper extends Component {
             applicationId: null,
             loading: false,
             data: [],
-            openModal: false
+            openModal: false,
+            value: 0,
+            username: ''
         }
     }
 
@@ -111,8 +113,10 @@ class VerticalLinearStepper extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    data: data.applications[0]
+                    username: data.applications[0].firstName + ' ' + data.applications[0].lastName
                 }, () => {
+                    console.log(this.state.username);
+
                     this.setState({
                         loading: false
                     })
@@ -147,7 +151,7 @@ class VerticalLinearStepper extends Component {
                     'right'
                 );
             })
-    }
+    };
 
     componentWillMount() {
         // Get id of the application and pass to the components
@@ -190,7 +194,13 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
-                            <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar} updateImage={this.updateImage}></ProfilePicture>
+                            <div className="applicant-card__header header-profile-menu">
+                                <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar} updateImage={this.updateImage} />
+                                <div className="profile-header-info">
+                                    <div className="username">{this.state.username}</div>
+                                    {/*<div className="username-number-code">{this.props.id}</div>*/}
+                                </div>
+                            </div>
                             <div className={"tabs"}>
                                 <AppBar position="static" color="#0092BD">
                                     <Tabs
@@ -203,7 +213,7 @@ class VerticalLinearStepper extends Component {
                                     >
                                         {steps.map((label, index) => {
                                             return (
-                                                <Tab label={label} key={index} />
+                                                <Tab label={label} key={index} classes={{ root: "ProfileTab-item", selected: "selected" }} />
                                             );
                                         })}
                                     </Tabs>
