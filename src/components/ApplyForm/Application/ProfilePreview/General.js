@@ -1353,14 +1353,14 @@ class General extends Component {
                 open={this.state.openModal}
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth="md"
+                maxWidth="lg"
             >
                 <DialogTitle style={{padding: '0px'}}>
                     <div className="modal-header">
                         <h5 class="modal-title">Associate Contact</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600, padding: '0px'}}>
+                <DialogContent style={{minWidth: 600, maxWidth: 600, padding: '0px'}}>
                     <form className="container">
                         <div className="">
                             <div className="row">
