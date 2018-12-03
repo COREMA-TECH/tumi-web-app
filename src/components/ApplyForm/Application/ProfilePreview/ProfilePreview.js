@@ -77,7 +77,7 @@ class VerticalLinearStepper extends Component {
             loading: false,
             data: [],
             openModal: false,
-
+            value: 0,
             username: ''
         }
     }
@@ -195,7 +195,7 @@ class VerticalLinearStepper extends Component {
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header header-profile-menu">
-                                <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar} updateImage={this.updateImage}/>
+                                <ProfilePicture handleOpenSnackbar={this.props.handleOpenSnackbar} updateImage={this.updateImage} />
                                 <div className="profile-header-info">
                                     <div className="username">{this.state.username}</div>
                                     {/*<div className="username-number-code">{this.props.id}</div>*/}
@@ -213,7 +213,7 @@ class VerticalLinearStepper extends Component {
                                     >
                                         {steps.map((label, index) => {
                                             return (
-                                                <Tab label={label} key={index} />
+                                                <Tab label={label} key={index} classes={{ root: "ProfileTab-item", selected: "selected" }} />
                                             );
                                         })}
                                     </Tabs>
