@@ -18,8 +18,8 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_LEAD = gql`
-query getlead {
-	applications(isActive: true , isLead: true) {
+query getlead ( $positionApplyingFor: Int ) {
+	applications(isActive: true , isLead: true, positionApplyingFor: $positionApplyingFor) {
 		id
 	firstName
 	lastName
@@ -27,6 +27,13 @@ query getlead {
 	homePhone
 	car
 	city
+	zipCode
+	applicationPhases   {
+		id
+		StageId
+		ApplicationId
+		WorkOrderId
+	  }
 	cityInfo{
 		DisplayLabel
 	  }
@@ -48,7 +55,16 @@ employments
 }
 	`;
 
+export const GET_COORDENADAS = gql`
+	query coordenadas($Zipcode:String){
+		zipcode(Zipcode:$Zipcode){
+		  Zipcode
+		  Lat
+		  Long
+		}
+	  }
 
+`;
 export const GET_OPENING = gql`
 query workorder ($IdEntity: Int, $status: Int)  {
 	workOrder(IdEntity:$IdEntity, status:$status){
@@ -65,12 +81,14 @@ query workorder ($IdEntity: Int, $status: Int)  {
 		PositionRateId
 		position{
 			Position
+			Id_positionApplying
 		  }
 		comment
 }
 	getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
 		Id
 		Name
+		Zipcode
 	}
 	getusers(Id: null,IsActive: 1) {
 		Id

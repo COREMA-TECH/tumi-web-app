@@ -185,7 +185,7 @@ class Language extends Component {
 							this.setState(
 								(prevState) => ({
 									open: false,
-									languages: [ ...prevState.languages, item ]
+									languages: [...prevState.languages, item]
 								}),
 								() => {
 									document.getElementById('form-language').reset();
@@ -248,87 +248,83 @@ class Language extends Component {
 						</div>
 					</form>
 				) : (
-					''
-				)}
+						''
+					)}
 				<br />
 				<div className="row">
-					<div className="row">
-						<div className="row">
-							{this.state.languages.length > 0 ? (
-								<div className="skills-container skills-container--header">
-									<div className="row">
-										<div className="col-md-1" />
-										<div className="col-md-3">
-											<span>{languagesTable[0].label}</span>
-										</div>
-										<div className="col-md-4">
-											<span>{languagesTable[1].label}</span>
-										</div>
-										<div className="col-md-4">
-											<span>{languagesTable[2].label}</span>
-										</div>
-									</div>
+					{this.state.languages.length > 0 ? (
+						<div className="skills-container skills-container--header">
+							<div className="row">
+								<div className="col-md-1" />
+								<div className="col-md-3">
+									<span>{languagesTable[0].label}</span>
 								</div>
-							) : (
-								''
-							)}
-
-							{this.state.languages.map((languageItem) => (
-								<div key={uuidv4()} className="skills-container">
-									<div className="row">
-										<div className="col-md-1">
-											<span
-												className="delete-school-button"
-												onClick={() => {
-													this.setState(
-														(prevState) => ({
-															languages: this.state.languages.filter((_, i) => {
-																return _.uuid !== languageItem.uuid;
-															})
-														}),
-														() => {
-															if (languageItem.id !== undefined) {
-																this.removeLanguageById(languageItem.id);
-															}
-														}
-													);
-												}}
-											>
-												<i className="fas fa-trash-alt" />
-											</span>
-										</div>
-										<div className="col-md-3">
-											<span>
-												{this.state.languagesLoaded.map((item) => {
-													if (item.Id == languageItem.language) {
-														return item.Name.trim();
-													}
-												})}
-											</span>
-										</div>
-										<div className="col-md-4">
-											<span>
-												{languageLevelsJSON.map((item) => {
-													if (item.Id == languageItem.conversation) {
-														return item.Name;
-													}
-												})}
-											</span>
-										</div>
-										<div className="col-md-4">
-											<span>
-												{languageLevelsJSON.map((item) => {
-													if (item.Id == languageItem.writing) {
-														return item.Name;
-													}
-												})}
-											</span>
-										</div>
-									</div>
+								<div className="col-md-4">
+									<span>{languagesTable[1].label}</span>
 								</div>
-							))}
+								<div className="col-md-4">
+									<span>{languagesTable[2].label}</span>
+								</div>
+							</div>
 						</div>
-					</div>
+					) : (
+							''
+						)}
+
+					{this.state.languages.map((languageItem) => (
+						<div key={uuidv4()} className="skills-container">
+							<div className="row">
+								<div className="col-md-1">
+									<span
+										className="delete-school-button"
+										onClick={() => {
+											this.setState(
+												(prevState) => ({
+													languages: this.state.languages.filter((_, i) => {
+														return _.uuid !== languageItem.uuid;
+													})
+												}),
+												() => {
+													if (languageItem.id !== undefined) {
+														this.removeLanguageById(languageItem.id);
+													}
+												}
+											);
+										}}
+									>
+										<i className="fas fa-trash-alt" />
+									</span>
+								</div>
+								<div className="col-md-3">
+									<span>
+										{this.state.languagesLoaded.map((item) => {
+											if (item.Id == languageItem.language) {
+												return item.Name.trim();
+											}
+										})}
+									</span>
+								</div>
+								<div className="col-md-4">
+									<span>
+										{languageLevelsJSON.map((item) => {
+											if (item.Id == languageItem.conversation) {
+												return item.Name;
+											}
+										})}
+									</span>
+								</div>
+								<div className="col-md-4">
+									<span>
+										{languageLevelsJSON.map((item) => {
+											if (item.Id == languageItem.writing) {
+												return item.Name;
+											}
+										})}
+									</span>
+								</div>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		);
@@ -343,17 +339,17 @@ class Language extends Component {
 								{this.state.editing ? (
 									''
 								) : (
-									<button
-										className="applicant-card__edit-button"
-										onClick={() => {
-											this.setState({
-												editing: true
-											});
-										}}
-									>
-										{spanishActions[0].label} <i className="fas fa-plus" />
-									</button>
-								)}
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												this.setState({
+													editing: true
+												});
+											}}
+										>
+											{spanishActions[0].label} <i className="fas fa-plus" />
+										</button>
+									)}
 							</div>
 							<div className="">
 								{this.state.loading ? (
@@ -361,8 +357,8 @@ class Language extends Component {
 										<CircularProgressLoading />
 									</div>
 								) : (
-									renderlanguagesSection()
-								)}
+										renderlanguagesSection()
+									)}
 							</div>
 							{this.state.editing ? (
 								<div className="applicant-card__footer">
@@ -395,8 +391,8 @@ class Language extends Component {
 									</button>
 								</div>
 							) : (
-								''
-							)}
+									''
+								)}
 						</div>
 					</div>
 				</div>

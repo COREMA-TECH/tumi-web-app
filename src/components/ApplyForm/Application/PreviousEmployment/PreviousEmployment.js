@@ -48,7 +48,7 @@ class PreviousEmployment extends Component {
 		//Remove uuid property in the item
 		delete item.uuid;
 
-		if(isNaN(item.payRate)) {
+		if (isNaN(item.payRate)) {
 			item.payRate = 0;
 		}
 
@@ -177,7 +177,7 @@ class PreviousEmployment extends Component {
 							console.table(item);
 
 							this.insertPreviousEmploymentApplication(item);
-						} catch (e) {}
+						} catch (e) { }
 					}}
 					className="apply-form"
 				>
@@ -320,8 +320,8 @@ class PreviousEmployment extends Component {
 								</div>
 							</div>
 						) : (
-							''
-						)}
+								''
+							)}
 					</DialogContent>
 					<DialogActions>
 						<div className="applicant-card__footer">
@@ -343,7 +343,7 @@ class PreviousEmployment extends Component {
 
 		// To render the Previous Employment Section
 		let renderPreviousEmploymentSection = () => (
-			<div className="">
+			<div className="card-body">
 				<div className="row">
 					{this.state.previousEmployment.map((employmentItem) => (
 						<div className="col-xs-12 col-md-4">
@@ -388,18 +388,18 @@ class PreviousEmployment extends Component {
 								{this.state.editing ? (
 									''
 								) : (
-									<button
-										className="applicant-card__edit-button"
-										onClick={() => {
-											this.setState({
-												open: true,
-												editing: true
-											});
-										}}
-									>
-										{spanishActions[0].label} <i className="fas fa-plus" />
-									</button>
-								)}
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												this.setState({
+													open: true,
+													editing: true
+												});
+											}}
+										>
+											{spanishActions[0].label} <i className="fas fa-plus" />
+										</button>
+									)}
 							</div>
 							<div className="">
 								{this.state.loading ? (
@@ -407,8 +407,8 @@ class PreviousEmployment extends Component {
 										<CircularProgressLoading />
 									</div>
 								) : (
-									renderPreviousEmploymentSection()
-								)}
+										renderPreviousEmploymentSection()
+									)}
 							</div>
 						</div>
 					</div>

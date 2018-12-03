@@ -217,7 +217,7 @@ class Skills extends Component {
 					this.setState(
 						(prevState) => ({
 							open: false,
-							skills: [ ...prevState.skills, item ]
+							skills: [...prevState.skills, item]
 						}),
 						() => {
 							this.insertSkillsApplication();
@@ -273,17 +273,19 @@ class Skills extends Component {
 							<div className="applicant-card__header">
 								<span className="applicant-card__title">{menuSpanish[5].label}</span>
 							</div>
-							<div className="row">
-								{this.state.loading ? (
-									<div className="loading-container">
-										{renderSkillsSection()}
-										<div className="circular-progress-container">
-											<CircularProgressLoading />
+							<div className="card-body">
+								<div className="row">
+									{this.state.loading ? (
+										<div className="loading-container">
+											{renderSkillsSection()}
+											<div className="circular-progress-container">
+												<CircularProgressLoading />
+											</div>
 										</div>
-									</div>
-								) : (
-									<div className="col-md-12">{renderSkillsSection()}</div>
-								)}
+									) : (
+											<div className="col-md-12">{renderSkillsSection()}</div>
+										)}
+								</div>
 							</div>
 						</div>
 					</div>

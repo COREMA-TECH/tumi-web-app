@@ -8419,6 +8419,9 @@ label:not(.custom-file-label):not(.form-check-label) {
 
 .SubCard {
   padding: 0 !important; }
+  .SubCard-body {
+    padding-left: 1rem;
+    padding-right: 1rem; }
 
 @media only screen and (max-width: 480px) {
   div[class*="MuiDialogContent-root-"] {
@@ -8612,11 +8615,11 @@ label:not(.custom-file-label):not(.form-check-label) {
   box-shadow: 0px 8px 7px #dddddd;
   margin: 0 auto;
   margin-bottom: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   padding: 45px;
   padding-top: 5rem;
   position: relative;
-  width: 80%; }
+  width: 90%; }
   .ApplyBlock-subtitle {
     font-size: 1.05rem;
     margin: 1rem 0; }
@@ -8821,7 +8824,8 @@ label:not(.custom-file-label):not(.form-check-label) {
   background: #FFF;
   border-radius: 5px;
   -webkit-box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1);
-  box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1); }
+  box-shadow: 0 3px 5px rgba(112, 112, 112, 0.1);
+  padding: 1rem; }
   .Stepper-wrapper::after {
     clear: both; }
 
@@ -8970,6 +8974,8 @@ div[class*="MuiStepper-root-"] {
 
 .Days {
   margin-bottom: 45px; }
+  .Days li[data-selected="true"] .selected {
+    top: 70%; }
   .Days-list {
     text-align: center; }
   .Days-item {
@@ -9011,6 +9017,11 @@ div[class*="MuiStepper-root-"] {
       -o-transition: top 0.5s;
       transition: top 0.5s; }
 
+.Months li[data-selected="true"] {
+  background: #FFF;
+  border-color: #254151;
+  color: #254151; }
+
 .Months-list {
   text-align: center; }
 
@@ -9042,6 +9053,11 @@ div[class*="MuiStepper-root-"] {
 
 .Weeks {
   margin-bottom: 45px; }
+  .Weeks li[data-selected="true"]:after {
+    border-width: 7px;
+    height: 125px;
+    top: 0;
+    width: 125px; }
   .Weeks-list {
     text-align: center; }
   .Weeks-item {
