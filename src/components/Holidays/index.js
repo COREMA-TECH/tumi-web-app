@@ -5,6 +5,7 @@ class Holidays extends Component {
     state = {
         name: '',
         description: '',
+        anually: false,
         weekDays: [{ id: 1, name: 'MON', selected: false, selected: false }, { id: 2, name: 'TUE', selected: false }, { id: 3, name: 'WED', selected: false }, { id: 4, name: 'TU', selected: false }, { id: 5, name: 'FRY', selected: false }, { id: 6, name: 'SAT', selected: false }, { id: 7, name: 'SUN', selected: false }],
         weekNumbers: [{ id: 1, name: '1st', selected: false }, { id: 2, name: '2nd', selected: false }, { id: 3, name: '3rd', selected: false }, { id: 4, name: '4rt', selected: false }],
         monthNumbers: [{ id: 1, name: 'JAN', selected: false }, { id: 2, name: 'FEB', selected: false }, { id: 3, name: 'MAR', selected: false }, { id: 4, name: 'APR', selected: false }, { id: 5, name: 'MAY', selected: false }, { id: 6, name: 'JUN', selected: false }, { id: 7, name: 'JUL', selected: false }, { id: 8, name: 'AUG', selected: false }, { id: 9, name: 'SEP', selected: false }, { id: 10, name: 'OCT', selected: false }, { id: 11, name: 'NOV', selected: false }, { id: 12, name: 'DIC', selected: false }],
@@ -44,6 +45,9 @@ class Holidays extends Component {
         item.selected = !item.selected
         //Update state with the new array
         return arrayCopy;
+    }
+    onCheckedChange = (e) => {
+        this.setState({ anually: e.currentTarget.checked })
     }
     render() {
         console.log("this is my state", this.state)
@@ -120,7 +124,7 @@ class Holidays extends Component {
                                     <div className="Anually">
                                         <span className="Anually-label">Anually</span>
                                         <label class="check">
-                                            <input type="checkbox" />
+                                            <input type="checkbox" checked={this.state.anually} onChange={this.onCheckedChange} />
                                             <div class="box"></div>
                                         </label>
                                     </div>
