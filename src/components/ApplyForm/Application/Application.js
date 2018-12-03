@@ -649,25 +649,48 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[23].label}
 												</span>
-												<label className="switch">
-													<input
-														onChange={(event) => {
-															this.setState({
-																car: event.target.checked
-															});
-														}}
-														checked={this.state.car}
-														value={this.state.car}
-														name="car"
-														type="checkbox"
-														className="form-control"
-														disabled={!this.state.editing}
-														min="0"
-														maxLength="50"
-														minLength="10"
-													/>
-													<p className="slider round" />
-												</label>
+                                                <div className="onoffswitch">
+                                                    <input
+														id="carInput"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                car: event.target.checked
+                                                            });
+                                                        }}
+                                                        checked={this.state.car}
+                                                        value={this.state.car}
+                                                        name="car"
+                                                        type="checkbox"
+                                                        disabled={!this.state.editing}
+                                                        min="0"
+                                                        maxLength="50"
+                                                        minLength="10"
+                                                        className="onoffswitch-checkbox"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="carInput">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+												{/*<label className="switch">*/}
+													{/*<input*/}
+														{/*onChange={(event) => {*/}
+															{/*this.setState({*/}
+																{/*car: event.target.checked*/}
+															{/*});*/}
+														{/*}}*/}
+														{/*checked={this.state.car}*/}
+														{/*value={this.state.car}*/}
+														{/*name="car"*/}
+														{/*type="checkbox"*/}
+														{/*className="form-control"*/}
+														{/*disabled={!this.state.editing}*/}
+														{/*min="0"*/}
+														{/*maxLength="50"*/}
+														{/*minLength="10"*/}
+													{/*/>*/}
+													{/*<p className="slider round" />*/}
+												{/*</label>*/}
 											</div>
 											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
@@ -824,31 +847,62 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[19].label}
 												</span>
-												<label className="switch">
-													<input
-														onChange={(event) => {
-															this.setState(
-																{
-																	scheduleRestrictions: event.target.checked
-																},
-																() => {
-																	if (!this.state.scheduleRestrictions) {
-																		this.setState({
-																			scheduleExplain: ''
-																		});
-																	}
-																}
-															);
-														}}
-														checked={this.state.scheduleRestrictions}
-														value={this.state.scheduleRestrictions}
-														name="scheduleRestrictions"
-														type="checkbox"
-														className="form-control"
-														disabled={!this.state.editing}
-													/>
-													<p className="slider round" />
-												</label>
+
+                                                <div className="onoffswitch">
+                                                    <input
+														id="scheduleInput"
+                                                        onChange={(event) => {
+                                                            this.setState(
+                                                                {
+                                                                    scheduleRestrictions: event.target.checked
+                                                                },
+                                                                () => {
+                                                                    if (!this.state.scheduleRestrictions) {
+                                                                        this.setState({
+                                                                            scheduleExplain: ''
+                                                                        });
+                                                                    }
+                                                                }
+                                                            );
+                                                        }}
+                                                        checked={this.state.scheduleRestrictions}
+                                                        value={this.state.scheduleRestrictions}
+                                                        name="scheduleRestrictions"
+                                                        type="checkbox"
+                                                        disabled={!this.state.editing}
+                                                        className="onoffswitch-checkbox"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="scheduleInput">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+
+												{/*<label className="switch">*/}
+													{/*<input*/}
+														{/*onChange={(event) => {*/}
+															{/*this.setState(*/}
+																{/*{*/}
+																	{/*scheduleRestrictions: event.target.checked*/}
+																{/*},*/}
+																{/*() => {*/}
+																	{/*if (!this.state.scheduleRestrictions) {*/}
+																		{/*this.setState({*/}
+																			{/*scheduleExplain: ''*/}
+																		{/*});*/}
+																	{/*}*/}
+																{/*}*/}
+															{/*);*/}
+														{/*}}*/}
+														{/*checked={this.state.scheduleRestrictions}*/}
+														{/*value={this.state.scheduleRestrictions}*/}
+														{/*name="scheduleRestrictions"*/}
+														{/*type="checkbox"*/}
+														{/*className="form-control"*/}
+														{/*disabled={!this.state.editing}*/}
+													{/*/>*/}
+													{/*<p className="slider round" />*/}
+												{/*</label>*/}
 											</div>
 											<div className="col-md-6">
 												<span className="primary applicant-card__label skeleton">
@@ -873,31 +927,65 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[20].label}
 												</span>
-												<label className="switch">
-													<input
-														onChange={(event) => {
-															this.setState(
-																{
-																	convicted: event.target.checked
-																},
-																() => {
-																	if (!this.state.convicted) {
-																		this.setState({
-																			convictedExplain: ''
-																		});
-																	}
-																}
-															);
-														}}
-														checked={this.state.convicted}
-														value={this.state.convicted}
-														name="convicted"
-														type="checkbox"
-														className="form-control"
-														disabled={!this.state.editing}
-													/>
-													<p className="slider round" />
-												</label>
+
+                                                <div className="onoffswitch">
+                                                    <input
+														id="convictedSwitch"
+                                                        onChange={(event) => {
+                                                            this.setState(
+                                                                {
+                                                                    convicted: event.target.checked
+                                                                },
+                                                                () => {
+                                                                    if (!this.state.convicted) {
+                                                                        this.setState({
+                                                                            convictedExplain: ''
+                                                                        });
+                                                                    }
+                                                                }
+                                                            );
+                                                        }}
+                                                        checked={this.state.convicted}
+                                                        value={this.state.convicted}
+                                                        name="convicted"
+                                                        type="checkbox"
+                                                        disabled={!this.state.editing}
+                                                        className="onoffswitch-checkbox"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="convictedSwitch">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+
+
+												{/*<label className="switch">*/}
+													{/*<input*/}
+														{/*onChange={(event) => {*/}
+															{/*this.setState(*/}
+																{/*{*/}
+																	{/*convicted: event.target.checked*/}
+																{/*},*/}
+																{/*() => {*/}
+																	{/*if (!this.state.convicted) {*/}
+																		{/*this.setState({*/}
+																			{/*convictedExplain: ''*/}
+																		{/*});*/}
+																	{/*}*/}
+																{/*}*/}
+															{/*);*/}
+														{/*}}*/}
+														{/*checked={this.state.convicted}*/}
+														{/*value={this.state.convicted}*/}
+														{/*name="convicted"*/}
+														{/*type="checkbox"*/}
+														{/*className="form-control"*/}
+														{/*disabled={!this.state.editing}*/}
+													{/*/>*/}
+													{/*<p className="slider round" />*/}
+												{/*</label>*/}
+
+
 											</div>
 											<div className="col-md-6">
 												<span className="primary applicant-card__label skeleton">
