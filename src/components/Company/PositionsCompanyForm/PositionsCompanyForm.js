@@ -929,7 +929,7 @@ query getposition {
 								)}
 						</div>
 					</DialogTitle>
-					<DialogContent style={{ minWidth: 550, padding: '0px', overflowY: 'unset' }}>
+					<DialogContent style={{ minWidth: 550, overflowY: 'unset' }}>
 						<div className="row">
 							<div className="col-md-12 col-lg-6">
 								<label>* Department</label>
