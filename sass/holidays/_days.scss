@@ -1,5 +1,10 @@
 .Days {
     margin-bottom: 45px;
+    li[data-selected="true"] {
+        .selected {
+            top: 70%;
+        }
+    }
     &-list {
         text-align: center;
     }

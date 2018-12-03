@@ -8974,6 +8974,8 @@ div[class*="MuiStepper-root-"] {
 
 .Days {
   margin-bottom: 45px; }
+  .Days li[data-selected="true"] .selected {
+    top: 70%; }
   .Days-list {
     text-align: center; }
   .Days-item {
@@ -9015,6 +9017,11 @@ div[class*="MuiStepper-root-"] {
       -o-transition: top 0.5s;
       transition: top 0.5s; }
 
+.Months li[data-selected="true"] {
+  background: #FFF;
+  border-color: #254151;
+  color: #254151; }
+
 .Months-list {
   text-align: center; }
 
@@ -9046,6 +9053,11 @@ div[class*="MuiStepper-root-"] {
 
 .Weeks {
   margin-bottom: 45px; }
+  .Weeks li[data-selected="true"]:after {
+    border-width: 7px;
+    height: 125px;
+    top: 0;
+    width: 125px; }
   .Weeks-list {
     text-align: center; }
   .Weeks-item {
