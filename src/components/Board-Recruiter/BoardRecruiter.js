@@ -121,7 +121,6 @@ class BoardRecruiter extends Component {
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
         let IdLane;
-        console.log("Card Details", cardDetails)
         switch (targetLaneId) {
             case "Leads":
                 IdLane = 30460
@@ -147,7 +146,7 @@ class BoardRecruiter extends Component {
             case "Matches":
                 IdLane = 30466
             default:
-                IdLane = 1000
+                IdLane = 30460
         }
 
         this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
@@ -351,16 +350,16 @@ class BoardRecruiter extends Component {
                 Intopening: cardId
             })
 
-        console.log("zipcode hotel ", this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
-        this.getLatLong(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+        //console.log("zipcode hotel ", this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+        this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+        //console.log("esta aqui afuera antes de los session");
 
-        console.log("Nuevos filtros ", sessionStorage.getItem('NewFilterLead'));
+        //console.log("Nuevos filtros ", sessionStorage.getItem('NewFilterLead'));
         if (sessionStorage.getItem('NewFilterLead') === 'true') {
             this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         } else {
             this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         }
-
     }
 
     updateApplicationInformation = (id, isLead, Message) => {
@@ -435,27 +434,22 @@ class BoardRecruiter extends Component {
         );
     };
 
+    getLatLongHotel = async (op, zipcode) => {
+        await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
+            this.setState({
+                latitud1: data.zipcode[0].Lat,
+                longitud1: data.zipcode[0].Long
+            });
+        }).catch(error => { })
+    };
+
     getLatLong = async (op, zipcode, fnc = () => { }) => {
         await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
-            if (op === 1) {
-                console.log("entro a la opcion 1 ");
-                this.setState({
-                    latitud1: data.zipcode[0].Lat,
-                    longitud1: data.zipcode[0].Long
-                });
-            }
-            if (op === 2) {
-                console.log("entro a la opcion 2 ");
+            this.setState({
+                latitud2: data.zipcode[0].Lat,
+                longitud2: data.zipcode[0].Long
+            }, fnc);
 
-                this.setState({
-                    latitud2: data.zipcode[0].Lat,
-                    longitud2: data.zipcode[0].Long
-                },
-                    fnc
-                );
-
-
-            }
         }).catch(error => { })
     };
 
@@ -472,43 +466,29 @@ class BoardRecruiter extends Component {
         let Phases = [];
 
 
-        console.log("Comienzan las variables");
-        console.log("language ", language);
-        console.log("experience ", experience);
-        console.log("location ", location);
-
+        /*    console.log("Comienzan las variables");
+            console.log("language ", language);
+            console.log("experience ", experience);
+            console.log("location ", location);
+    */
 
         if (laneId == "lane1") {
             await this.props.client.query({ query: GET_LEAD, variables: { positionApplyingFor: PositionId } }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
-
-                    console.log("Informacion de las pagases ", wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening }))
-                    if (wo.applicationPhases.length != 0) {
-
-                        if (wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening }) === undefined) {
-                            console.log("entro aqui en el undifined");
-                            Phases = [];
-                        } else {
-                            Phases = wo.applicationPhases.slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening }).StageId;
-                        }
+                    const Phases = wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
+                    console.log("id ", wo.id, "fases ", Phases);
 
 
-                    }
-
-                    console.log("get Application phases", Phases);
-
-                    console.log("zipcode ", wo.zipCode.substring(0, 5));
+                    //console.log("zipcode ", wo.zipCode.substring(0, 5));
                     this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
 
-                        console.log("estas son las direcc del hotel ", this.state.latitud1, this.state.longitud1);
-                        console.log("estas son las direcc del matches ", this.state.latitud2, this.state.longitud2);
 
                         const { getDistance } = this.context;
                         const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
 
-                        console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
+                        // console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
 
                         if (language == 'true') {
                             SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
@@ -528,8 +508,30 @@ class BoardRecruiter extends Component {
                             distances = 1;
                         }
 
-                        // console.log("esta es la distancia ", distances)
-                        datas = {
+                        if (Phases != null) {
+                            console.log("entro y este es su primer ", Phases);
+                        }
+                        /* if (wo.applicationPhases.length == 1) {
+                             console.log("esta es la que da clavos ", wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }));
+
+                             Phases = wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }).StageId;
+                         }
+                         if (wo.applicationPhases.length > 1) {
+                             if (wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }) === undefined) {
+                                 console.log("entro aqui en el undifined");
+                                 Phases = 30460;
+                             } else {
+                                 console.log(wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }));
+                                 Phases = wo.applicationPhases.slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }).StageId;
+                             }
+                         }
+                     } else {
+                         Phases = 30460;
+                     }*/
+
+                        //  console.log("get Application phases", Phases);
+
+                        /*datas = {
                             id: wo.id,
                             name: wo.firstName + ' ' + wo.lastName,
                             subTitle: wo.cellPhone,
@@ -537,30 +539,67 @@ class BoardRecruiter extends Component {
                             escalationTextLeftLead: wo.generalComment,
                             escalationTextRightLead: wo.car == true ? " Yes" : " No",
                             cardStyle: { borderRadius: 6, marginBottom: 15 }
-                        };
+                        };*/
 
-                        console.log("Informacion de data ", datas);
-                        console.log("Informacion de Phases ", Phases.length);
+                        /* console.log("Comienzan las variables");
+                         console.log("language ", SpeakEnglish);
+                         console.log("experience ", Employment);
+                         console.log("distances ", distances);
+                         console.log("lead  ", wo.isLead);
+ */
                         if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1) {
-                            if (Phases.length == 0 || Phases == 30460) { getleads.push(datas); }
-                            if (Phases == 30461) { getApplied.push(datas); }
-                            if (Phases == 30462) { getCandidate.push(datas); }
-                            if (Phases == 30463) { getPlacement.push(datas); }
+
+                            if (Phases.length == 0 || Phases == 30460) {
+                                if (wo.isLead === true) {
+                                    getleads.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                }
+                            }
+                            if (Phases == 30461) {
+                                if (wo.isLead === true) {
+                                    getApplied.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                }
+                            }
+                            if (Phases == 30462) {
+                                getCandidate.push({
+                                    id: wo.id,
+                                    name: wo.firstName + ' ' + wo.lastName,
+                                    subTitle: wo.cellPhone,
+                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                    escalationTextLeftLead: wo.generalComment,
+                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                });
+                            }
+                            if (Phases == 30463) {
+                                getPlacement.push({
+                                    id: wo.id,
+                                    name: wo.firstName + ' ' + wo.lastName,
+                                    subTitle: wo.cellPhone,
+                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                    escalationTextLeftLead: wo.generalComment,
+                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                });
+                            }
 
                         }
 
-                        /*this.setState({
-                            leads: getleads,
-                            Applied: getApplied,
-                            Candidate: getCandidate,
-                            Placement: getPlacement
-                        });
-
-                        console.log("Informacion de getleads ", getleads);
-                        console.log("Informacion de getApplied ", getApplied);
-                        console.log("Informacion de getCandidate ", getCandidate);
-                        console.log("Informacion de getPlacement ", getPlacement);
-*/
                         this.setState(
                             {
                                 Opening: this.state.Openings,
@@ -618,13 +657,11 @@ class BoardRecruiter extends Component {
         if (this.state.hotel == 0) {
             await this.props.client.query({ query: GET_OPENING, variables: { status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
-                    console.log("esta es la data del wo ", wo.position);
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
-                    console.log("Hotel california ", Hotel);
                     datas = {
                         id: wo.id,
                         name: 'Title: ' + wo.position.Position,
@@ -650,13 +687,13 @@ class BoardRecruiter extends Component {
         } else {
             await this.props.client.query({ query: GET_OPENING, variables: { IdEntity: this.state.hotel, status: this.state.status } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
-                    console.log("esta es la data del wo ", wo.position);
+                    // console.log("esta es la data del wo ", wo.position);
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
-                    console.log("Hotel california ", Hotel);
+                    // console.log("Hotel california ", Hotel);
                     datas = {
                         id: wo.id,
                         name: 'Title: ' + wo.position.Position,
