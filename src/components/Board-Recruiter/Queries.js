@@ -34,7 +34,8 @@ query getlead ( $positionApplyingFor: Int ) {
 		StageId
 		ApplicationId
 		WorkOrderId
-	  }
+		createdAt
+	  } 
 	cityInfo{
 		DisplayLabel
 	  }

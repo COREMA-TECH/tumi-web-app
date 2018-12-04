@@ -350,14 +350,51 @@ class BoardRecruiter extends Component {
                 Intopening: cardId
             })
 
-        //console.log("zipcode hotel ", this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
         this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
-        //console.log("esta aqui afuera antes de los session");
 
-        //console.log("Nuevos filtros ", sessionStorage.getItem('NewFilterLead'));
+        this.setState(
+            {
+                Opening: this.state.Openings,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Openings',
+                        label: ' ',
+                        cards: this.state.Openings
+                    },
+                    {
+                        id: 'Leads',
+                        title: 'Leads',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Applied',
+                        title: 'Applied',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Candidate',
+                        title: 'Candidate',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Placement',
+                        title: 'Placement',
+                        label: ' ',
+                        cards: []
+                    }
+                ],
+                loading: false
+            });
+
         if (sessionStorage.getItem('NewFilterLead') === 'true') {
+            console.log("Estoy aqui con los nuevos filtros");
             this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         } else {
+            console.log("Estoy aqui con los viejos filtros");
             this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         }
     }
@@ -464,31 +501,18 @@ class BoardRecruiter extends Component {
         let Employment;
         let distances;
         let Phases = [];
-
-
-        /*    console.log("Comienzan las variables");
-            console.log("language ", language);
-            console.log("experience ", experience);
-            console.log("location ", location);
-    */
+        let varphase;
 
         if (laneId == "lane1") {
             await this.props.client.query({ query: GET_LEAD, variables: { positionApplyingFor: PositionId } }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
-                    const Phases = wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
-                    console.log("id ", wo.id, "fases ", Phases);
+                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
 
-
-                    //console.log("zipcode ", wo.zipCode.substring(0, 5));
                     this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-
 
                         const { getDistance } = this.context;
                         const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
-
-
-                        // console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
 
                         if (language == 'true') {
                             SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
@@ -508,9 +532,9 @@ class BoardRecruiter extends Component {
                             distances = 1;
                         }
 
-                        if (Phases != null) {
-                            console.log("entro y este es su primer ", Phases);
-                        }
+
+                        //                        const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }).StageId;
+
                         /* if (wo.applicationPhases.length == 1) {
                              console.log("esta es la que da clavos ", wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }));
 
@@ -541,15 +565,68 @@ class BoardRecruiter extends Component {
                             cardStyle: { borderRadius: 6, marginBottom: 15 }
                         };*/
 
-                        /* console.log("Comienzan las variables");
-                         console.log("language ", SpeakEnglish);
-                         console.log("experience ", Employment);
-                         console.log("distances ", distances);
-                         console.log("lead  ", wo.isLead);
- */
+
                         if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1) {
 
-                            if (Phases.length == 0 || Phases == 30460) {
+                            // console.log("el wo ", wo);
+                            console.log("la phase ", Phases);
+
+                            if (typeof Phases == undefined || Phases == null) {
+                                varphase = 30460;
+                            } else { varphase = Phases.StageId }
+
+                            console.log("la phase ", Phases);
+
+                            switch (varphase) {
+                                case 30460:
+                                    if (wo.isLead === true) {
+                                    getleads.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    }
+                                    break;
+                                case 30461:
+                                    getApplied.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    break
+                                case 30462:
+                                    getCandidate.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    break
+                                case 30463:
+                                    getPlacement.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    break
+                            }
+
+                            /*if (Phases == 30460) {
                                 if (wo.isLead === true) {
                                     getleads.push({
                                         id: wo.id,
@@ -562,7 +639,8 @@ class BoardRecruiter extends Component {
                                     });
                                 }
                             }
-                            if (Phases == 30461) {
+                            if (Phases == 30466) {
+                                console.log("estoy aqui con el", wo.id);
                                 if (wo.isLead === true) {
                                     getApplied.push({
                                         id: wo.id,
@@ -575,7 +653,8 @@ class BoardRecruiter extends Component {
                                     });
                                 }
                             }
-                            if (Phases == 30462) {
+                            if (Phases === 30462) {
+                                // if (Phases == ) {
                                 getCandidate.push({
                                     id: wo.id,
                                     name: wo.firstName + ' ' + wo.lastName,
@@ -586,7 +665,8 @@ class BoardRecruiter extends Component {
                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                 });
                             }
-                            if (Phases == 30463) {
+                            if (Phases === 30463) {
+                                //    if (Phases == 30463) {
                                 getPlacement.push({
                                     id: wo.id,
                                     name: wo.firstName + ' ' + wo.lastName,
@@ -596,7 +676,7 @@ class BoardRecruiter extends Component {
                                     escalationTextRightLead: wo.car == true ? " Yes" : " No",
                                     cardStyle: { borderRadius: 6, marginBottom: 15 }
                                 });
-                            }
+                            }*/
 
                         }
 
