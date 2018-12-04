@@ -161,7 +161,7 @@ class BoardRecruiter extends Component {
                 ApplicationId: cardId,
                 openReason: true
             }, () => {
-                this.onCardClick = (cardId, null, targetLaneId)
+                // this.onCardClick = (cardId, null, targetLaneId)
             });
         }
 
@@ -177,10 +177,51 @@ class BoardRecruiter extends Component {
 
     handleCloseModal = (event) => {
         event.preventDefault();
+
+        /* this.setState(
+             {
+                 Opening: this.state.Openings,
+                 lane: [
+                     {
+                         id: 'lane1',
+                         title: 'Openings',
+                         label: ' ',
+                         cards: this.state.Openings
+                     },
+                     {
+                         id: 'Leads',
+                         title: 'Leads',
+                         label: ' ',
+                         cards: this.state.leads
+                     },
+                     {
+                         id: 'Applied',
+                         title: 'Applied',
+                         label: ' ',
+                         cards: this.state.Applied
+                     },
+                     {
+                         id: 'Candidate',
+                         title: 'Candidate',
+                         label: ' ',
+                         cards: this.state.Candidate
+                     },
+                     {
+                         id: 'Placement',
+                         title: 'Placement',
+                         label: ' ',
+                         cards: this.state.Placement
+                     }
+                 ],
+                 loading: false
+             });
+ */
+
         this.setState({
             openReason: false
 
         });
+
     };
 
     addApplicationPhase = (id, laneId) => {
@@ -345,65 +386,70 @@ class BoardRecruiter extends Component {
     }
 
     onCardClick = (cardId, metadata, laneId) => {
-        let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-        let anotherCards = document.querySelectorAll("article[data-id]");
+        if (laneId == "lane1") {
 
-        anotherCards.forEach((anotherCard) => {
-            anotherCard.classList.remove("CardBoard-selected");
-        });
-        cardSelected[0].classList.add("CardBoard-selected");
 
-        this.setState(
-            {
-                Intopening: cardId
-            })
+            this.setState(
+                {
+                    Opening: this.state.Openings,
+                    lane: [
+                        {
+                            id: 'lane1',
+                            title: 'Openings',
+                            label: ' ',
+                            cards: this.state.Openings
+                        },
+                        {
+                            id: 'Leads',
+                            title: 'Leads',
+                            label: ' ',
+                            cards: this.state.leads
+                        },
+                        {
+                            id: 'Applied',
+                            title: 'Applied',
+                            label: ' ',
+                            cards: this.state.Applied
+                        },
+                        {
+                            id: 'Candidate',
+                            title: 'Candidate',
+                            label: ' ',
+                            cards: this.state.Candidate
+                        },
+                        {
+                            id: 'Placement',
+                            title: 'Placement',
+                            label: ' ',
+                            cards: this.state.Placement
+                        }
+                    ],
+                    loading: false
+                });
 
-        this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+            let anotherCards = document.querySelectorAll("article[data-id]");
 
-        this.setState(
-            {
-                Opening: this.state.Openings,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Openings',
-                        label: ' ',
-                        cards: this.state.Openings
-                    },
-                    {
-                        id: 'Leads',
-                        title: 'Leads',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Applied',
-                        title: 'Applied',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Candidate',
-                        title: 'Candidate',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Placement',
-                        title: 'Placement',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
+            anotherCards.forEach((anotherCard) => {
+                anotherCard.classList.remove("CardBoard-selected");
             });
+            cardSelected[0].classList.add("CardBoard-selected");
 
-        if (sessionStorage.getItem('NewFilterLead') === 'true') {
-            console.log("Estoy aqui con los nuevos filtros");
-            this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
-        } else {
-            console.log("Estoy aqui con los viejos filtros");
-            this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+            this.setState(
+                {
+                    Intopening: cardId
+                })
+
+            this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+
+
+            if (sessionStorage.getItem('NewFilterLead') === 'true') {
+                console.log("Estoy aqui con los nuevos filtros");
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+            } else {
+                console.log("Estoy aqui con los viejos filtros");
+                this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+            }
         }
     }
 
@@ -688,6 +734,13 @@ class BoardRecruiter extends Component {
 
                         }
 
+                        this.setState({
+                            leads: getleads,
+                            Applied: getApplied,
+                            Candidate: getCandidate,
+                            Placement: getPlacement
+                        });
+
                         this.setState(
                             {
                                 Opening: this.state.Openings,
@@ -702,31 +755,29 @@ class BoardRecruiter extends Component {
                                         id: 'Leads',
                                         title: 'Leads',
                                         label: ' ',
-                                        cards: getleads
+                                        cards: this.state.leads
                                     },
                                     {
                                         id: 'Applied',
                                         title: 'Applied',
                                         label: ' ',
-                                        cards: getApplied
+                                        cards: this.state.Applied
                                     },
                                     {
                                         id: 'Candidate',
                                         title: 'Candidate',
                                         label: ' ',
-                                        cards: getCandidate
+                                        cards: this.state.Candidate
                                     },
                                     {
                                         id: 'Placement',
                                         title: 'Placement',
                                         label: ' ',
-                                        cards: getPlacement
+                                        cards: this.state.Placement
                                     }
                                 ],
                                 loading: false
                             });
-
-
                     });
                 });
 
