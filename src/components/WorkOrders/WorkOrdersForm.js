@@ -280,7 +280,7 @@ class WorkOrdersForm extends Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        const comments = '';
+        let comments = '';
 
         // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
