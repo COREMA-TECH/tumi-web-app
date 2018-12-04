@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import withGlobalContent from 'Generic/Global';
+import { timeout } from 'async';
 
 class Holidays extends Component {
     state = {
@@ -17,25 +18,62 @@ class Holidays extends Component {
     }
 
     weekDaysSelected = (e) => {
-        let weekDays = this.getNewData(this.state.weekDays, e.currentTarget.id, true)
+        let data = this.state.weekDays, id = e.currentTarget.id
+        this.unselectComponents("weekDays", data, id)
+        let weekDays = this.getNewData(data, id, true)
         //Update state with the new array
         this.setState({ weekDays })
     }
     monthNumbersSelected = (e) => {
-        let monthNumbers = this.getNewData(this.state.monthNumbers, e.currentTarget.id)
+        let data = this.state.monthNumbers, id = e.currentTarget.id
+        let monthNumbers = this.getNewData(data, id)
         //Update state with the new array
         this.setState({ monthNumbers })
     }
     weekNumbersSelected = (e) => {
-        let weekNumbers = this.getNewData(this.state.weekNumbers, e.currentTarget.id)
+        let data = this.state.weekNumbers, id = e.currentTarget.id
+        this.unselectComponents("weekNumbers", data, id)
+        let weekNumbers = this.getNewData(data, id)
         //Update state with the new array
         this.setState({ weekNumbers })
     }
     calendarDaysSelected = (e) => {
-        let calendarDays = this.getNewData(this.state.calendarDays, e.currentTarget.id)
+        let id = e.currentTarget.id, data = this.state.calendarDays;
+        this.unselectComponents("calendar", data, id)
+        let calendarDays = this.getNewData(data, id, true)
         //Update state with the new array
         this.setState({ calendarDays })
     }
+
+    unselectComponents = (name, data, id) => {
+        //Getting array
+        let arrayCopy = JSON.parse(JSON.stringify(data))
+
+        //Find value in the array
+        let item = arrayCopy[id - 1]
+        if (name == "calendar") {
+            if (!item.selected) {
+                //Unselect elements for Week Numbers and Week Days components when calendar day is selected
+                let wnData = JSON.parse(JSON.stringify(this.state.weekNumbers))
+                let wdData = JSON.parse(JSON.stringify(this.state.weekDays))
+                wnData.map(item => {
+                    item.selected = false//Unselect all items except the clicked element
+                })
+                wdData.map(item => {
+                    item.selected = false//Unselect all items except the clicked element
+                })
+                this.setState({ weekDays: wdData, weekNumbers: wnData })
+            }
+
+        } else {
+            let cData = JSON.parse(JSON.stringify(this.state.calendarDays))
+            cData.map(item => {
+                item.selected = false//Unselect all items except the clicked element
+            })
+            this.setState({ calendarDays: cData })
+        }
+    }
+
     getNewData = (data, id, allowMultiple = false) => {
         //Getting array
         let arrayCopy = JSON.parse(JSON.stringify(data))
@@ -59,11 +97,67 @@ class Holidays extends Component {
     onCheckedChange = (e) => {
         this.setState({ anually: e.currentTarget.checked })
     }
+    onHandleSave = () => {
+        this.validateSelection();
+
+    }
+    validateSelection = () => {
+        let counter = 0, monthSelected = false, weekSelected = false, weekDaysSelected = false, calendarDaysSelected = false, indexSelected = -1;
+        //Validate Month selection
+        this.state.monthNumbers.map(item => { if (item.selected) counter++; })
+        if (counter != 1) {
+            this.props.handleOpenSnackbar('warning', "You need to select a month", 'bottom', 'right');
+            return false;
+        }
+        monthSelected = true, counter = 0;
+        //Validate Week selection
+        this.state.weekNumbers.map(item => { if (item.selected) counter++; })
+        if (counter > 1) {
+            this.props.handleOpenSnackbar('warning', "Only one Week must be selected", 'bottom', 'right');
+            return false;
+        }
+        weekSelected = true, counter = 0;
+        //Validate Day of Week Selection
+        this.state.weekDays.map(item => {
+            if (item.selected) {
+                if (indexSelected != -1) {
+                    let dif = item.id - indexSelected;
+                    if (dif != 1) {
+                        this.props.handleOpenSnackbar('warning', "The days of the week can not be interleaved", 'bottom', 'right');
+                        return false;
+                    }
+                    else { indexSelected = item.id; }
+                } else { indexSelected = item.id; }
+                counter++;
+            }
+        })
+        weekDaysSelected = counter > 0, counter = 0;
+        //Validate Calendar Day Selection
+        this.state.calendarDays.map(item => {
+            if (item.selected) {
+                if (indexSelected != -1) {
+                    let dif = item.id - indexSelected;
+                    if (dif != 1) {
+                        this.props.handleOpenSnackbar('warning', "The days of the caleandar can not be interleaved", 'bottom', 'right');
+                        return false;
+                    }
+                    else { indexSelected = item.id; }
+                } else { indexSelected = item.id; }
+                counter++;
+            }
+        })
+        calendarDaysSelected = counter > 0, counter = 0;
+        //Validate that only Calendar Day and Month can be selected as one combination
+        // if ((monthSelected && calendarDaysSelected) || weekSelected || weekDaysSelected) {
+        //     this.props.handleOpenSnackbar('warning', "Combination can't be done", 'bottom', 'right');
+        //     return false;
+        // }
+    }
     render() {
         return (
             <div className="row Holidays">
                 <div className="col-md-12">
-                    <button className="btn btn-success float-right">
+                    <button className="btn btn-success float-right" onClick={this.onHandleSave}>
                         Save
                         <i class="fas fa-save ml-1"></i>
                     </button>
