@@ -280,6 +280,7 @@ class WorkOrdersForm extends Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+        const comments = '';
 
         // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
@@ -287,8 +288,9 @@ class WorkOrdersForm extends Component {
         });
 
         if (name === 'PositionRateId') {
+            comments = this.state.positions.find((item) => { return item.Id == value })
             this.setState({
-                EspecialComment: this.state.positions.find((item) => { return item.Id == value }).Comment
+                EspecialComment: comments != null ? comments.Comment : ''
             });
         }
 
