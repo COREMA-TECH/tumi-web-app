@@ -8969,6 +8969,8 @@ div[class*="MuiStepper-root-"] {
   position: relative;
   z-index: 2;
   will-change: 100%; }
+  .CalendarNumbers li[data-selected="true"] {
+    background: #7eabc4; }
   .CalendarNumbers-item {
     border-radius: 26px;
     color: #FFF;
