@@ -346,15 +346,21 @@ class BoardRecruiter extends Component {
     }
 
     onCardClick = (cardId, metadata, laneId) => {
+        let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+        let anotherCards = document.querySelectorAll("article[data-id]");
+
+        anotherCards.forEach((anotherCard) => {
+            anotherCard.classList.remove("CardBoard-selected");
+        });
+        cardSelected[0].classList.add("CardBoard-selected");
+
         this.setState(
             {
                 Intopening: cardId
             })
 
-        console.log("zipcode hotel ", this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
         this.getLatLong(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
 
-        console.log("Nuevos filtros ", sessionStorage.getItem('NewFilterLead'));
         if (sessionStorage.getItem('NewFilterLead') === 'true') {
             this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
         } else {

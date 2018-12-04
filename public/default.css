@@ -8414,6 +8414,11 @@ label:not(.custom-file-label):not(.form-check-label) {
     .card-wrapper .select-form-customized {
       width: 100% !important; }
 
+.CardBoard-selected {
+  border: solid 3px #3ca2c8;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+
 .row.CardPermissions {
   margin-left: 0 !important; }
 
