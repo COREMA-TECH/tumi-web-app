@@ -208,7 +208,7 @@ class HotelList extends Component {
                                 <a href="" onClick={this.handleClickOpenEdit(true, hotel.Id, hotel.rate, hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)} className={hotel.Id_Parent == 99999 ? "HotelCard-item bg-gd-danger" : "HotelCard-item"}>
                                     <div className="HotelCard-img">
                                         <figure>
-                                            <img src="http://beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg" alt="" />
+                                            <img src={`${hotel.ImageURL}`} alt="" />
                                         </figure>
                                     </div>
                                     <div className="HotelCard-info">
