@@ -1412,7 +1412,6 @@ class General extends Component {
                                             })
                                         }}
                                         showNone={false}
-                                        //noneName="Employee"
                                         error={this.state.hotelValid}
                                         value={this.state.hotelId}
                                     />
@@ -1433,7 +1432,6 @@ class General extends Component {
                                             })
                                         }}
                                         showNone={false}
-                                        //noneName="Employee"
                                         error={this.state.typeValid}
                                         value={this.state.type}
                                     />
@@ -1455,7 +1453,6 @@ class General extends Component {
                                                 })
                                             })
                                         }}
-                                        // onChange={this.updateDepartmentName}
                                         onSelect={(value) => {
                                             this.setState({
                                                 departmentName: value
@@ -1475,8 +1472,6 @@ class General extends Component {
                                         data={this.state.titles}
                                         error={this.state.titleNameValid}
                                         value={this.state.titleName}
-                                        // onChange={this.updateTitleName}
-                                        // onSelect={this.updateTitleName}
                                         onChange={(value) => {
                                             this.setState({
                                                 titleName: value
@@ -1486,7 +1481,6 @@ class General extends Component {
                                                 })
                                             })
                                         }}
-                                        // onChange={this.updateDepartmentName}
                                         onSelect={(value) => {
                                             this.setState({
                                                 titleName: value
@@ -1507,7 +1501,6 @@ class General extends Component {
                         <div className={classes.wrapper}>
                             <div>
                                 <button
-                                    // disabled={isLoading || !this.Login.AllowEdit || !this.Login.AllowInsert}
                                     variant="fab"
                                     className="btn btn-success"
                                     onClick={this.insertDepartment}
@@ -1522,7 +1515,6 @@ class General extends Component {
                         <div className={classes.wrapper}>
                             <div>
                                 <button
-                                    //disabled={this.state.loading || !this.state.enableCancelButton}
                                     variant="fab"
                                     className="btn btn-danger"
                                     onClick={this.handleCloseModal}
@@ -1582,45 +1574,31 @@ class General extends Component {
                                                     <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
-                                            {/*<label className="switch">*/}
-                                            {/*<input*/}
-                                            {/*id="vehicleReportRequired"*/}
-                                            {/*type="checkbox"*/}
-                                            {/*className="form-control"*/}
-                                            {/*min="0"*/}
-                                            {/*maxLength="50"*/}
-                                            {/*minLength="10"*/}
-                                            {/*form="background-check-form"*/}
-                                            {/*checked={this.state.data.isActive}*/}
-                                            {/*/>*/}
-                                            {/*<p className="slider round"></p>*/}
-                                            {/*</label>*/}
                                         </div>
                                     </div>
                                 </div>
-                                <div className="item col-sm-12  col-md-2">
-                                    <button className="btn btn-outline-info btn-large" onClick={() => {
-                                        this.handleClickOpenModal();
-                                    }}>Add to hotel
-                                    </button>
-                                </div>
-                                {
-                                    userExist || this.state.createdProfile ? (
-                                        ''
-                                    ) : (
-                                        <div className="item col-sm-12 col-md-2">
-                                            {/*<div className="row">*/}
-                                            {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
-                                            {/*<span className="col-sm-12">Text</span>*/}
-                                            {/*</div>*/}
-                                            <button className="btn btn-outline-success btn-large" onClick={() => {
-                                                this.handleClickOpenUserModal();
-                                            }}>Create Profile
+                                <div className="col-md-4">
+                                    <div className="row">
+                                        <div className="item col-sm-12  col-md-12">
+                                            <button className="btn btn-outline-info" onClick={() => {
+                                                this.handleClickOpenModal();
+                                            }}>Add to hotel
                                             </button>
                                         </div>
-                                    )
-                                }
-
+                                        {
+                                            userExist || this.state.createdProfile ? (
+                                                ''
+                                            ) : (
+                                                <div className="item col-sm-12 col-md-12">
+                                                    <button className="btn btn-outline-success" onClick={() => {
+                                                        this.handleClickOpenUserModal();
+                                                    }}>Create Profile
+                                                    </button>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <br/>
