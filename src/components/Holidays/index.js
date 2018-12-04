@@ -109,14 +109,14 @@ class Holidays extends Component {
             this.props.handleOpenSnackbar('warning', "You need to select a month", 'bottom', 'right');
             return false;
         }
-        monthSelected = true, counter = 0;
+        monthSelected = counter > 0, counter = 0;
         //Validate Week selection
         this.state.weekNumbers.map(item => { if (item.selected) counter++; })
         if (counter > 1) {
             this.props.handleOpenSnackbar('warning', "Only one Week must be selected", 'bottom', 'right');
             return false;
         }
-        weekSelected = true, counter = 0;
+        weekSelected = counter > 0, counter = 0;
         //Validate Day of Week Selection
         this.state.weekDays.map(item => {
             if (item.selected) {
@@ -147,11 +147,22 @@ class Holidays extends Component {
             }
         })
         calendarDaysSelected = counter > 0, counter = 0;
+
         //Validate that only Calendar Day and Month can be selected as one combination
-        // if ((monthSelected && calendarDaysSelected) || weekSelected || weekDaysSelected) {
-        //     this.props.handleOpenSnackbar('warning', "Combination can't be done", 'bottom', 'right');
-        //     return false;
-        // }
+        if ((monthSelected && calendarDaysSelected) && (weekSelected || weekDaysSelected)) {
+            this.props.handleOpenSnackbar('warning', "Combination can't be done", 'bottom', 'right');
+            return false;
+        }
+        //Validate that must be selected a Week number when Month and Week Day have been selected
+        if (monthSelected && weekDaysSelected && !weekSelected) {
+            this.props.handleOpenSnackbar('warning', "Number of week need to be selected", 'bottom', 'right');
+            return false;
+        }
+        //Validate that must be selected a combination with a month 
+        if (monthSelected && !weekDaysSelected && !weekSelected && !calendarDaysSelected) {
+            this.props.handleOpenSnackbar('warning', "A combination need to be done", 'bottom', 'right');
+            return false;
+        }
     }
     render() {
         return (
