@@ -216,22 +216,24 @@ class DashboardManager extends React.Component {
                 </div>
                 <div className="col-md-12">
                     <div className="card">
-                        <div className="row stat-header">
-                            <div className="col-md-12">
-                                <h3 className="text-success">Stats</h3>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-2">
-                                <div className="stat-card">
-                                    <div className="stat-description">Not Show</div>
-                                    <div className="stat-number">{this.state.notShow}</div>
+                        <div className="card-body">
+                            <div className="row stat-header">
+                                <div className="col-md-12">
+                                    <h3 className="text-success">Stats</h3>
                                 </div>
                             </div>
-                            <div className="col-md-2">
-                                <div className="stat-card">
-                                    <div className="stat-description">Disqualified</div>
-                                    <div className="stat-number stat-number--secondary">{this.state.disqualified}</div>
+                            <div className="row">
+                                <div className="col-md-2">
+                                    <div className="stat-card">
+                                        <div className="stat-description">Not Show</div>
+                                        <div className="stat-number">{this.state.notShow}</div>
+                                    </div>
+                                </div>
+                                <div className="col-md-2">
+                                    <div className="stat-card">
+                                        <div className="stat-description">Disqualified</div>
+                                        <div className="stat-number stat-number--secondary">{this.state.disqualified}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
