@@ -1357,8 +1357,6 @@ class General extends Component {
                                     onClick={this.addUserHandler}
                                 >
                                     Save
-                                    {/*{!isLoading && <i className="fas fa-save ml-1" />}*/}
-                                    {/*{isLoading && <i className="fas fa-spinner fa-spin ml-1" />}*/}
                                 </button>
                             </div>
                         </div>
