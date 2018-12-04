@@ -9912,3 +9912,6 @@ button.rbc-input::-moz-focus-inner {
   .Weeks-title {
     color: #254151;
     font-weight: 900 !important; }
+
+.smooth-dnd-container.vertical {
+  min-height: 225px; }
