@@ -1182,7 +1182,7 @@ class General extends Component {
                                     />
                                 </div>
                                 <div className="col-md-12 col-lg-6">
-                                    <label>* Rol</label>
+                                    <label>* Role</label>
                                     <select
                                         name="idRol"
                                         className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
@@ -1389,7 +1389,7 @@ class General extends Component {
             >
                 <DialogTitle style={{padding: '0px'}}>
                     <div className="modal-header">
-                        <h5 class="modal-title">Associate to hotel</h5>
+                        <h5 class="modal-title">Add to hotel</h5>
                     </div>
                 </DialogTitle>
                 <DialogContent style={{minWidth: 600, maxWidth: 600, padding: '0px'}}>
@@ -1601,7 +1601,7 @@ class General extends Component {
                                 <div className="item col-sm-12  col-md-2">
                                     <button className="btn btn-outline-info btn-large" onClick={() => {
                                         this.handleClickOpenModal();
-                                    }}>Associate to hotel
+                                    }}>Add to hotel
                                     </button>
                                 </div>
                                 {
