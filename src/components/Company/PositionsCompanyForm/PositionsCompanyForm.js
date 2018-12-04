@@ -104,6 +104,7 @@ class PositionsCompanyForm extends React.Component {
 				Id
 				Id_Department
 				Position
+                Id_positionApplying
 				Bill_Rate
 				Pay_Rate
 				Shift
@@ -490,7 +491,7 @@ query getposition {
 	handleConfirmAlertDialog = () => {
 		this.deletePostion();
 	};
-	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift }) => {
+	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift, Id_positionApplying }) => {
 		this.setState({ showCircularLoading: false }, () => {
 			var department = this.state.departments.find(function (obj) {
 				return obj.Id === Id_Department;
@@ -500,6 +501,7 @@ query getposition {
 					idToEdit: Id,
 					position: Position.trim(),
 					idDepartment: Id_Department,
+                    positionApplyingFor: Id_positionApplying,
 					departmentName: department ? department.Name.trim() : '',
 					billrate: Bill_Rate,
 					payrate: Pay_Rate,
@@ -961,7 +963,6 @@ query getposition {
 													}}
 													value={this.state.positionApplyingFor}
 													className="form-control"
-
 												>
 													<option value="">Select a position</option>
 													{data.getcatalogitem.map((item) => (
