@@ -178,44 +178,44 @@ class BoardRecruiter extends Component {
     handleCloseModal = (event) => {
         event.preventDefault();
 
-        /* this.setState(
-             {
-                 Opening: this.state.Openings,
-                 lane: [
-                     {
-                         id: 'lane1',
-                         title: 'Openings',
-                         label: ' ',
-                         cards: this.state.Openings
-                     },
-                     {
-                         id: 'Leads',
-                         title: 'Leads',
-                         label: ' ',
-                         cards: this.state.leads
-                     },
-                     {
-                         id: 'Applied',
-                         title: 'Applied',
-                         label: ' ',
-                         cards: this.state.Applied
-                     },
-                     {
-                         id: 'Candidate',
-                         title: 'Candidate',
-                         label: ' ',
-                         cards: this.state.Candidate
-                     },
-                     {
-                         id: 'Placement',
-                         title: 'Placement',
-                         label: ' ',
-                         cards: this.state.Placement
-                     }
-                 ],
-                 loading: false
-             });
- */
+        this.setState(
+            {
+                Opening: this.state.Openings,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Openings',
+                        label: ' ',
+                        cards: this.state.Openings
+                    },
+                    {
+                        id: 'Leads',
+                        title: 'Leads',
+                        label: ' ',
+                        cards: this.state.leads
+                    },
+                    {
+                        id: 'Applied',
+                        title: 'Applied',
+                        label: ' ',
+                        cards: this.state.Applied
+                    },
+                    {
+                        id: 'Candidate',
+                        title: 'Candidate',
+                        label: ' ',
+                        cards: this.state.Candidate
+                    },
+                    {
+                        id: 'Placement',
+                        title: 'Placement',
+                        label: ' ',
+                        cards: this.state.Placement
+                    }
+                ],
+                loading: false
+            });
+
 
         this.setState({
             openReason: false
