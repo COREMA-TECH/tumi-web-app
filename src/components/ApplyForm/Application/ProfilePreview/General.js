@@ -255,10 +255,16 @@ class General extends Component {
     `;
 
 
+    /**
+     * To open modal updating the state
+     */
     handleClickOpenModal = () => {
         this.setState({ openModal: true });
     };
 
+    /**
+     * To hide modal and then restart modal state values
+     */
     handleCloseModal = () => {
         this.setState({
             openModal: false
@@ -272,10 +278,16 @@ class General extends Component {
         });
     };
 
+    /**
+     * To open the user modal
+     */
     handleClickOpenUserModal = () => {
         this.setState({ openUserModal: true });
     };
 
+    /**
+     * To hide modal and then restart user modal state
+     */
     handleCloseUserModal = () => {
         this.setState({
             openUserModal: false,
@@ -284,6 +296,9 @@ class General extends Component {
         });
     };
 
+    /**
+     * To reset state user modal
+     */
     resetUserModalState = () => {
         this.setState({
             username: '',
@@ -403,6 +418,9 @@ class General extends Component {
             });
     };
 
+    /**
+     * To fetch a list of roles
+     */
     fetchRoles = () => {
         this.props.client
             .query({
@@ -424,6 +442,9 @@ class General extends Component {
             });
     };
 
+    /**
+     * To fetch a list of languages
+     */
     fetchLanguages = () => {
         this.props.client
             .query({
@@ -477,6 +498,9 @@ class General extends Component {
     };
 
 
+    /**
+     * To insert departments
+     */
     insertDepartment = () => {
         if (
             this.state.hotelId === null
@@ -610,6 +634,11 @@ class General extends Component {
 
     };
 
+    /**
+     * To insert contact objects
+     * @param idDepartment int value
+     * @param idTitle int value
+     */
     insertContacts = (idDepartment, idTitle) => {
         this.props.client
             .mutate({
@@ -661,6 +690,9 @@ class General extends Component {
             });
     };
 
+    /**
+     * Before render fetch user information
+     */
     componentWillMount() {
         this.setState({
             loading: true
@@ -933,6 +965,9 @@ class General extends Component {
         );
     };
 
+    /**
+     * To send email with credentials after user created
+     */
     sendMail = () => {
         this.setState(
             {
@@ -970,6 +1005,9 @@ class General extends Component {
         }
     `;
 
+    /**
+     * Insert a user with general information and permissions
+     */
     insertUser = () => {
         this.setState(
             {
@@ -1030,6 +1068,9 @@ class General extends Component {
         );
     };
 
+    /**
+     * To fetch a list of applicants emails
+     */
     fetchEmails = () => {
         this.props.client
             .query({
@@ -1064,6 +1105,9 @@ class General extends Component {
             return <LinearProgress />
         }
 
+        /**
+         * If the emails match, the user already has a profile created
+         */
         this.state.dataEmail.map(item => {
             if (item.Electronic_Address.trim() === this.state.email.trim()) {
                 userExist = true;
@@ -1347,6 +1391,9 @@ class General extends Component {
             </Dialog>
         );
 
+        /**
+         * To render a dialog to create contacts
+         **/
         let renderDialog = () => (
             <Dialog
                 fullScreen={fullScreen}

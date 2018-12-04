@@ -916,22 +916,22 @@ class VerticalLinearStepper extends Component {
                             </div>
 
                             {/*<label className="switch">*/}
-                                {/*<input*/}
-                                    {/*onChange={(event) => {*/}
-                                        {/*this.setState({*/}
-                                            {/*car: event.target.checked*/}
-                                        {/*});*/}
-                                    {/*}}*/}
-                                    {/*checked={this.state.car}*/}
-                                    {/*value={this.state.car}*/}
-                                    {/*name="car"*/}
-                                    {/*type="checkbox"*/}
-                                    {/*className="form-control"*/}
-                                    {/*min="0"*/}
-                                    {/*maxLength="50"*/}
-                                    {/*minLength="10"*/}
-                                {/*/>*/}
-                                {/*<p className="slider round" />*/}
+                            {/*<input*/}
+                            {/*onChange={(event) => {*/}
+                            {/*this.setState({*/}
+                            {/*car: event.target.checked*/}
+                            {/*});*/}
+                            {/*}}*/}
+                            {/*checked={this.state.car}*/}
+                            {/*value={this.state.car}*/}
+                            {/*name="car"*/}
+                            {/*type="checkbox"*/}
+                            {/*className="form-control"*/}
+                            {/*min="0"*/}
+                            {/*maxLength="50"*/}
+                            {/*minLength="10"*/}
+                            {/*/>*/}
+                            {/*<p className="slider round" />*/}
                             {/*</label>*/}
                         </div>
                     </div>
@@ -1649,19 +1649,19 @@ class VerticalLinearStepper extends Component {
                         </div>
 
                         {/*<label className="switch">*/}
-                            {/*<input*/}
-                                {/*onChange={(e) => {*/}
-                                    {/*this.setState({*/}
-                                        {/*graduated: document.getElementById('graduated').checked*/}
-                                    {/*});*/}
-                                {/*}}*/}
-                                {/*form="education-form"*/}
-                                {/*type="checkbox"*/}
-                                {/*value="graduated"*/}
-                                {/*name="graduated"*/}
-                                {/*id="graduated"*/}
-                            {/*/>*/}
-                            {/*<p className="slider round" />*/}
+                        {/*<input*/}
+                        {/*onChange={(e) => {*/}
+                        {/*this.setState({*/}
+                        {/*graduated: document.getElementById('graduated').checked*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*form="education-form"*/}
+                        {/*type="checkbox"*/}
+                        {/*value="graduated"*/}
+                        {/*name="graduated"*/}
+                        {/*id="graduated"*/}
+                        {/*/>*/}
+                        {/*<p className="slider round" />*/}
                         {/*</label>*/}
                     </div>
                     <div className="col-md-4">
@@ -2495,7 +2495,7 @@ class VerticalLinearStepper extends Component {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-2">
-                            <div className="Stepper-wrapper">
+                            <div className="Stepper-wrapper p-3">
                                 <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav">
                                     {steps.map((label, index) => {
                                         return (

@@ -60,9 +60,14 @@ class Holidays extends Component {
         this.setState({ anually: e.currentTarget.checked })
     }
     render() {
-
         return (
             <div className="row Holidays">
+                <div className="col-md-12">
+                    <button className="btn btn-success float-right">
+                        Save
+                        <i class="fas fa-save ml-1"></i>
+                    </button>
+                </div>
                 <div className="col-md-12">
                     <div className="card">
                         <div className="row pt-0 pb-0">
