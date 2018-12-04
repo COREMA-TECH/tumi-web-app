@@ -297,110 +297,117 @@ class Preferences extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="card">
-                                <div className="card-header">Fiscal Year</div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="card">
+                                        <div className="card-header">Fiscal Year</div>
+                                        <div className="card-body">
                                             <div className="row">
-                                                <div className="col-md-12">
-                                                    <label>
-                                                        Start Month
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-12">
-                                                    <select
-                                                        required
-                                                        value={this.state.startMonth}
-                                                        className="form-control"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                startMonth: event.target.value
-                                                            })
-                                                        }}
-                                                    >
-                                                        <option value="">Select a month</option>
-                                                        {
-                                                            months.map(month => {
-                                                                if (this.state.endMonth != month.id) {
-                                                                    return <option
-                                                                        value={month.id}>{month.description}</option>
+                                                <div className="col-md-6">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label>
+                                                                Start Month
+                                                            </label>
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <select
+                                                                required
+                                                                value={this.state.startMonth}
+                                                                className="form-control"
+                                                                onChange={(event) => {
+                                                                    this.setState({
+                                                                        startMonth: event.target.value
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <option value="">Select a month</option>
+                                                                {
+                                                                    months.map(month => {
+                                                                        if (this.state.endMonth != month.id) {
+                                                                            return <option
+                                                                                value={month.id}>{month.description}</option>
+                                                                        }
+                                                                    })
                                                                 }
-                                                            })
-                                                        }
-                                                    </select>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="row">
-                                                <div className="col-md-12">
-                                                    <label>
-                                                        End Month
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-12">
-                                                    <select
-                                                        required
-                                                        value={this.state.endMonth}
-                                                        className="form-control"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                endMonth: event.target.value
-                                                            })
-                                                        }}
-                                                    >
-                                                        <option value="">Select a month</option>
-                                                        {
-                                                            months.map(month => {
-                                                                if (this.state.startMonth != month.id) {
-                                                                    return <option
-                                                                        value={month.id}>{month.description}</option>
+                                                <div className="col-md-6">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label>
+                                                                End Month
+                                                            </label>
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <select
+                                                                required
+                                                                value={this.state.endMonth}
+                                                                className="form-control"
+                                                                onChange={(event) => {
+                                                                    this.setState({
+                                                                        endMonth: event.target.value
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <option value="">Select a month</option>
+                                                                {
+                                                                    months.map(month => {
+                                                                        if (this.state.startMonth != month.id) {
+                                                                            return <option
+                                                                                value={month.id}>{month.description}</option>
+                                                                        }
+                                                                    })
                                                                 }
-                                                            })
-                                                        }
-                                                    </select>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+
+
                                 </div>
-                            </div>
-
-
-                            {/* Time Zone preferences*/}
-                            <div className="card">
-                                <div className="card-header">Time Zone</div>
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-md-6">
+                                <div className="col-md-6">
+                                    {/* Time Zone preferences*/}
+                                    <div className="card">
+                                        <div className="card-header">Time Zone</div>
+                                        <div className="card-body">
                                             <div className="row">
-                                                <div className="col-md-12">
-                                                    <label>
-                                                        Time Zone
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-12">
-                                                    <select
-                                                        required
-                                                        value={this.state.timeZone}
-                                                        className="form-control"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                timeZone: event.target.value
-                                                            })
-                                                        }}
-                                                    >
-                                                        <option value="">Select an option</option>
-                                                        {
-                                                            timeZones.map(item => {
-                                                                    return (
-                                                                        <option
-                                                                            value={item.id}
-                                                                        >{item.offset + ' ' + item.name}</option>)
-                                                            })
-                                                        }
-                                                    </select>
+                                                <div className="col-md-6">
+                                                    <div className="row">
+                                                        <div className="col-md-12">
+                                                            <label>
+                                                                Time Zone
+                                                            </label>
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <select
+                                                                required
+                                                                value={this.state.timeZone}
+                                                                className="form-control"
+                                                                onChange={(event) => {
+                                                                    this.setState({
+                                                                        timeZone: event.target.value
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <option value="">Select an option</option>
+                                                                {
+                                                                    timeZones.map(item => {
+                                                                        return (
+                                                                            <option
+                                                                                value={item.id}
+                                                                            >{item.offset + ' ' + item.name}</option>)
+                                                                    })
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
