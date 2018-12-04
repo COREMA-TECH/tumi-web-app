@@ -119,7 +119,7 @@
 
     .table {
         box-shadow: none !important;
-        border: 10px solid #cccccc !important;
+        /*border: 10px solid #cccccc !important;*/
     }
 
     .table thead {
