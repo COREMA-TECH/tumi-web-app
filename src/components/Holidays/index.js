@@ -17,7 +17,7 @@ class Holidays extends Component {
     }
 
     weekDaysSelected = (e) => {
-        let weekDays = this.getNewData(this.state.weekDays, e.currentTarget.id)
+        let weekDays = this.getNewData(this.state.weekDays, e.currentTarget.id, true)
         //Update state with the new array
         this.setState({ weekDays })
     }
@@ -36,14 +36,24 @@ class Holidays extends Component {
         //Update state with the new array
         this.setState({ calendarDays })
     }
-    getNewData = (data, id) => {
+    getNewData = (data, id, allowMultiple = false) => {
         //Getting array
         let arrayCopy = JSON.parse(JSON.stringify(data))
-        //Find Day of the week in the array
-        let item = arrayCopy[id - 1]
-        //Change selected value
-        item.selected = !item.selected
-        //Update state with the new array
+        if (!allowMultiple) {
+            arrayCopy.map(item => {
+                if (item.id == id)
+                    item.selected = !item.selected;//Change status checked for clicked element
+                else
+                    item.selected = false//Unselect all items except the clicked element
+            })
+
+        } else {
+            //Find value in the array
+            let item = arrayCopy[id - 1]
+            //Change selected value
+            item.selected = !item.selected
+        }
+
         return arrayCopy;
     }
     onCheckedChange = (e) => {
