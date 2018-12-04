@@ -30,26 +30,22 @@ class Filters extends Component {
     };
 
     CloseWin = () => {
-        // alert("Dejo filtros viejos");
 
         sessionStorage.setItem('NewFilterLead', false);
         sessionStorage.setItem('needExperienceLead', false);
         sessionStorage.setItem('needEnglishLead', false);
         sessionStorage.setItem('distances', 30);
 
-        this.props.handleCloseModal
+        this.props.handleCloseModal()
     }
 
     NewFilters = () => {
-        //  alert("Vamos a poner filtros nuevs");
-        //sessionStorage.removeItem('WindowsFilter');
-
         sessionStorage.setItem('NewFilterLead', true);
         sessionStorage.setItem('needExperienceLead', this.state.needExperience);
         sessionStorage.setItem('needEnglishLead', this.state.needEnglish);
         sessionStorage.setItem('distances', this.state.distance);
 
-        this.props.handleCloseModal
+        this.props.handleCloseModal()
         //  localStorage.setItem('NewFilter', true);
         // localStorage.setItem('needExperience', this.state.needExperience);
         //localStorage.setItem('needEnglish', this.state.needEnglish);
