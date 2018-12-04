@@ -8414,6 +8414,11 @@ label:not(.custom-file-label):not(.form-check-label) {
     .card-wrapper .select-form-customized {
       width: 100% !important; }
 
+.CardBoard-selected {
+  border: solid 3px #3ca2c8;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+
 .row.CardPermissions {
   margin-left: 0 !important; }
 
@@ -8964,6 +8969,8 @@ div[class*="MuiStepper-root-"] {
   position: relative;
   z-index: 2;
   will-change: 100%; }
+  .CalendarNumbers li[data-selected="true"] {
+    background: #7eabc4; }
   .CalendarNumbers-item {
     border-radius: 26px;
     color: #FFF;

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './preview-profile.css';
 import './../index.css';
 import withApollo from "react-apollo/withApollo";
@@ -23,12 +23,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import PropTypes from 'prop-types';
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import {INSERT_CONTACT, INSERT_DEPARTMENT} from "./Mutations";
-import {GET_LANGUAGES_QUERY} from "../../../ApplyForm-Recruiter/Queries";
+import { INSERT_CONTACT, INSERT_DEPARTMENT } from "./Mutations";
+import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 
 
@@ -135,8 +135,8 @@ class General extends Component {
             contactTypes: ContactTypesData,
 
             // Functional states
-            titles: [{Id: 0, Name: 'Nothing', Description: 'Nothing'}],
-            departments: [{Id: 0, Name: 'Nothing', Description: 'Nothing'}],
+            titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
+            departments: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
             hotels: [],
             supervisors: [],
             allSupervisors: [],
@@ -256,7 +256,7 @@ class General extends Component {
 
 
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
 
     handleCloseModal = () => {
@@ -273,7 +273,7 @@ class General extends Component {
     };
 
     handleClickOpenUserModal = () => {
-        this.setState({openUserModal: true});
+        this.setState({ openUserModal: true });
     };
 
     handleCloseUserModal = () => {
@@ -306,7 +306,7 @@ class General extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     data: data.applications[0]
                 }, () => {
@@ -337,7 +337,7 @@ class General extends Component {
             .query({
                 query: GET_HOTELS_QUERY
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -486,25 +486,25 @@ class General extends Component {
         ) {
             this.props.handleOpenSnackbar('warning', 'Complete all the fields');
 
-            if(this.state.hotelId === null) {
+            if (this.state.hotelId === null) {
                 this.setState({
                     hotelValid: true
                 })
             }
 
-            if(this.state.type === null ) {
+            if (this.state.type === null) {
                 this.setState({
                     typeValid: true
                 })
             }
 
-            if(this.state.departmentName.length < 3) {
+            if (this.state.departmentName.length < 3) {
                 this.setState({
                     departmentNameValid: true
                 })
             }
 
-            if(this.state.titleName.length < 3 ) {
+            if (this.state.titleName.length < 3) {
                 this.setState({
                     titleNameValid: true
                 })
@@ -670,7 +670,7 @@ class General extends Component {
     }
 
     handleCheckedChange = (name) => (event) => {
-        if (name == 'IsRecruiter' && !event.target.checked) this.setState({IdRegion: 0, IdRegionValid: true});
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
         if (name == 'isAdmin' && event.target.checked)
             this.setState(
                 {
@@ -682,7 +682,7 @@ class General extends Component {
                 },
                 this.validateForm
             );
-        else this.setState({[name]: event.target.checked}, this.validateForm);
+        else this.setState({ [name]: event.target.checked }, this.validateForm);
     };
 
     updateSelect = (id, name) => {
@@ -733,7 +733,7 @@ class General extends Component {
     };
 
     onChangeHandler(value, name) {
-        this.setState({[name]: value}, this.validateField(name, value));
+        this.setState({ [name]: value }, this.validateField(name, value));
     }
 
     enableCancelButton = () => {
@@ -1013,7 +1013,7 @@ class General extends Component {
                         this.setState({
                             createdProfile: true
                         }, () => {
-                            this.setState({openUserModal: false, showCircularLoading: true, loading: false});
+                            this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
                             this.resetUserModalState();
                         });
 
@@ -1035,7 +1035,7 @@ class General extends Component {
             .query({
                 query: GET_EMAILS_USER
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     dataEmail: data.getusers
                 }, () => {
@@ -1050,18 +1050,18 @@ class General extends Component {
     };
 
     render() {
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
         let userExist = false;
 
 
         if (this.state.loading) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
 
         if (this.state.error) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         this.state.dataEmail.map(item => {
@@ -1082,20 +1082,20 @@ class General extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="md"
             >
-                <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
+                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">
                             {this.state.idToEdit != null &&
-                            this.state.idToEdit != '' &&
-                            this.state.idToEdit != 0 ? (
-                                'Edit  User'
-                            ) : (
-                                'Create User'
-                            )}
+                                this.state.idToEdit != '' &&
+                                this.state.idToEdit != 0 ? (
+                                    'Edit  User'
+                                ) : (
+                                    'Create User'
+                                )}
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600, padding: '0px'}}>
+                <DialogContent style={{ minWidth: 600 }}>
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
@@ -1204,8 +1204,8 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1222,8 +1222,8 @@ class General extends Component {
                                                     id="isAdmin"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1240,8 +1240,8 @@ class General extends Component {
                                                     id="allowInsert"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1258,8 +1258,8 @@ class General extends Component {
                                                     id="allowEdit"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1276,8 +1276,8 @@ class General extends Component {
                                                     id="allowDelete"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1294,8 +1294,8 @@ class General extends Component {
                                                     id="allowExport"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1305,18 +1305,18 @@ class General extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{margin: '16px 10px', borderTop: '1px solid #eee'}}>
+                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <Tooltip
                                 title={
                                     this.state.idToEdit != null &&
-                                    this.state.idToEdit != '' &&
-                                    this.state.idToEdit != 0 ? (
-                                        'Save Changes'
-                                    ) : (
-                                        'Insert Record'
-                                    )
+                                        this.state.idToEdit != '' &&
+                                        this.state.idToEdit != 0 ? (
+                                            'Save Changes'
+                                        ) : (
+                                            'Insert Record'
+                                        )
                                 }
                             >
                                 <div>
@@ -1337,7 +1337,7 @@ class General extends Component {
                             <Tooltip title={'Cancel Operation'}>
                                 <div>
                                     <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
-                                        Cancel <i className="fas fa-ban ml-1"/>
+                                        Cancel <i className="fas fa-ban ml-1" />
                                     </button>
                                 </div>
                             </Tooltip>
@@ -1355,12 +1355,12 @@ class General extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <DialogTitle style={{padding: '0px'}}>
+                <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 class="modal-title">Associate Contact</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600, maxWidth: 600, padding: '0px'}}>
+                <DialogContent style={{ minWidth: 600, maxWidth: 600, padding: '0px' }}>
                     <form className="container">
                         <div className="">
                             <div className="row">
@@ -1470,18 +1470,18 @@ class General extends Component {
                         </div>
                     </form>
                 </DialogContent>
-                <DialogActions style={{margin: '20px 20px'}}>
+                <DialogActions style={{ margin: '20px 20px' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <Tooltip
                                 title={
                                     this.state.idToEdit != null &&
-                                    this.state.idToEdit != '' &&
-                                    this.state.idToEdit != 0 ? (
-                                        'Save Changes'
-                                    ) : (
-                                        'Insert Record'
-                                    )
+                                        this.state.idToEdit != '' &&
+                                        this.state.idToEdit != 0 ? (
+                                            'Save Changes'
+                                        ) : (
+                                            'Insert Record'
+                                        )
                                 }
                             >
                                 <div>
@@ -1491,8 +1491,8 @@ class General extends Component {
                                         className="btn btn-success"
                                         onClick={this.insertDepartment}
                                     >
-                                        Save {!this.state.saving && <i class="fas fa-save"/>}
-                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                        Save {!this.state.saving && <i class="fas fa-save" />}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin" />}
                                     </button>
                                 </div>
                             </Tooltip>
@@ -1508,7 +1508,7 @@ class General extends Component {
                                         className="btn btn-danger"
                                         onClick={this.handleCloseModal}
                                     >
-                                        Cancel <i class="fas fa-ban"/>
+                                        Cancel <i class="fas fa-ban" />
                                     </button>
                                 </div>
                             </Tooltip>
@@ -1560,8 +1560,8 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                             {/*<label className="switch">*/}
@@ -1590,57 +1590,57 @@ class General extends Component {
                                     userExist || this.state.createdProfile ? (
                                         ''
                                     ) : (
-                                        <div className="item col-sm-12 col-md-2">
-                                            {/*<div className="row">*/}
-                                            {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
-                                            {/*<span className="col-sm-12">Text</span>*/}
-                                            {/*</div>*/}
-                                            <button className="btn btn-outline-success btn-large" onClick={() => {
-                                                this.handleClickOpenUserModal();
-                                            }}>Create Profile
+                                            <div className="item col-sm-12 col-md-2">
+                                                {/*<div className="row">*/}
+                                                {/*<span className="col-sm-12 font-weight-bold">Payroll Preference</span>*/}
+                                                {/*<span className="col-sm-12">Text</span>*/}
+                                                {/*</div>*/}
+                                                <button className="btn btn-outline-success btn-large" onClick={() => {
+                                                    this.handleClickOpenUserModal();
+                                                }}>Create Profile
                                             </button>
-                                        </div>
-                                    )
+                                            </div>
+                                        )
                                 }
 
                             </div>
                         </div>
-                        <br/>
+                        <br />
                         <div className="applicant-card general-table-container">
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Handle</th>
-                                    </tr>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">First</th>
+                                            <th scope="col">Last</th>
+                                            <th scope="col">Handle</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>Jacob</td>
+                                            <td>Thornton</td>
+                                            <td>@fat</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td>Larry</td>
+                                            <td>the Bird</td>
+                                            <td>@twitter</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <div className="row">
                                 <div className="col-sm-12">
                                     <h5>Titles</h5>

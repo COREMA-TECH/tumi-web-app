@@ -101,6 +101,9 @@
 }
 
 .CalendarNumbers {
+    li[data-selected="true"] {
+        background: lighten($color: $brand-secondary, $amount: 40%);
+    }
     margin: 0 auto;
     margin-top: 3rem;
     text-align: center;
