@@ -345,6 +345,14 @@ class BoardRecruiter extends Component {
     }
 
     onCardClick = (cardId, metadata, laneId) => {
+        let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+        let anotherCards = document.querySelectorAll("article[data-id]");
+
+        anotherCards.forEach((anotherCard) => {
+            anotherCard.classList.remove("CardBoard-selected");
+        });
+        cardSelected[0].classList.add("CardBoard-selected");
+
         this.setState(
             {
                 Intopening: cardId
@@ -580,15 +588,15 @@ class BoardRecruiter extends Component {
                             switch (varphase) {
                                 case 30460:
                                     if (wo.isLead === true) {
-                                    getleads.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
+                                        getleads.push({
+                                            id: wo.id,
+                                            name: wo.firstName + ' ' + wo.lastName,
+                                            subTitle: wo.cellPhone,
+                                            body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                            escalationTextLeftLead: wo.generalComment,
+                                            escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                            cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                        });
                                     }
                                     break;
                                 case 30461:
