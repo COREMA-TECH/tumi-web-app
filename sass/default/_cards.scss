@@ -92,6 +92,13 @@
     }
 }
 
+.CardBoard {
+    &-selected {
+        border: solid 3px $brand-primary;
+        box-sizing: border-box;
+    }
+}
+
 .row.CardPermissions {
     margin-left: 0 !important;
 }

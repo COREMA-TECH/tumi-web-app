@@ -3,7 +3,6 @@
         background: $white;
         border-radius: $border-radius-standar;
         box-shadow: 0 3px 5px rgba(112, 112, 112, 0.10);
-        padding: 1rem;
         div[class*="col-"] {
             
         }
@@ -21,6 +20,18 @@
     &.selected {
         border-left: solid 2px $brand-primary;
     }
+}
+
+
+.profile-preview-component {
+    .tabs .selected {
+        @include media-breakpoint-down(sm) { 
+            color: $brand-primary;
+        }
+    }
+}
+.ProfileTab-item {
+    outline: 0 !important;
 }
 
 div[class*="MuiStepper-root-"] {

@@ -892,8 +892,10 @@ class VerticalLinearStepper extends Component {
                             <span className="primary"> Do you own transportation?</span>
                         </div>
                         <div className="col-md-12">
-                            <label className="switch">
+                            <div className="onoffswitch">
                                 <input
+                                    id="carSwitch"
+                                    className="onoffswitch-checkbox"
                                     onChange={(event) => {
                                         this.setState({
                                             car: event.target.checked
@@ -903,13 +905,34 @@ class VerticalLinearStepper extends Component {
                                     value={this.state.car}
                                     name="car"
                                     type="checkbox"
-                                    className="form-control"
                                     min="0"
                                     maxLength="50"
                                     minLength="10"
                                 />
-                                <p className="slider round" />
-                            </label>
+                                <label className="onoffswitch-label" htmlFor="carSwitch">
+                                    <span className="onoffswitch-inner" />
+                                    <span className="onoffswitch-switch" />
+                                </label>
+                            </div>
+
+                            {/*<label className="switch">*/}
+                                {/*<input*/}
+                                    {/*onChange={(event) => {*/}
+                                        {/*this.setState({*/}
+                                            {/*car: event.target.checked*/}
+                                        {/*});*/}
+                                    {/*}}*/}
+                                    {/*checked={this.state.car}*/}
+                                    {/*value={this.state.car}*/}
+                                    {/*name="car"*/}
+                                    {/*type="checkbox"*/}
+                                    {/*className="form-control"*/}
+                                    {/*min="0"*/}
+                                    {/*maxLength="50"*/}
+                                    {/*minLength="10"*/}
+                                {/*/>*/}
+                                {/*<p className="slider round" />*/}
+                            {/*</label>*/}
                         </div>
                     </div>
                     <div className="col-md-3">
@@ -1604,8 +1627,10 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-md-2">
                         <label className="primary">Graduated</label> <br />
-                        <label className="switch">
+
+                        <div className="onoffswitch">
                             <input
+                                className="onoffswitch-checkbox"
                                 onChange={(e) => {
                                     this.setState({
                                         graduated: document.getElementById('graduated').checked
@@ -1617,8 +1642,27 @@ class VerticalLinearStepper extends Component {
                                 name="graduated"
                                 id="graduated"
                             />
-                            <p className="slider round" />
-                        </label>
+                            <label className="onoffswitch-label" htmlFor="graduated">
+                                <span className="onoffswitch-inner" />
+                                <span className="onoffswitch-switch" />
+                            </label>
+                        </div>
+
+                        {/*<label className="switch">*/}
+                            {/*<input*/}
+                                {/*onChange={(e) => {*/}
+                                    {/*this.setState({*/}
+                                        {/*graduated: document.getElementById('graduated').checked*/}
+                                    {/*});*/}
+                                {/*}}*/}
+                                {/*form="education-form"*/}
+                                {/*type="checkbox"*/}
+                                {/*value="graduated"*/}
+                                {/*name="graduated"*/}
+                                {/*id="graduated"*/}
+                            {/*/>*/}
+                            {/*<p className="slider round" />*/}
+                        {/*</label>*/}
                     </div>
                     <div className="col-md-4">
                         <label className="primary">Degree</label>

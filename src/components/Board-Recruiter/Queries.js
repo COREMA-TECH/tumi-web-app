@@ -19,7 +19,7 @@ export const GET_POSTIONS_QUERY = gql`
 
 export const GET_LEAD = gql`
 query getlead ( $positionApplyingFor: Int ) {
-	applications(isActive: true , isLead: true, positionApplyingFor: $positionApplyingFor) {
+	applications(isActive: true , positionApplyingFor: $positionApplyingFor) {
 		id
 	firstName
 	lastName
@@ -27,13 +27,15 @@ query getlead ( $positionApplyingFor: Int ) {
 	homePhone
 	car
 	city
+	isLead
 	zipCode
 	applicationPhases   {
 		id
 		StageId
 		ApplicationId
 		WorkOrderId
-	  }
+		createdAt
+	  } 
 	cityInfo{
 		DisplayLabel
 	  }

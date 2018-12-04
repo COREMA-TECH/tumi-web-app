@@ -3,7 +3,7 @@
         overflow: hidden;
     }
 
-    .profile-preview-component .Stepper-wrapper div:last-child{
+    .profile-preview-component .Stepper-wrapper div:last-child {
         flex-direction: row !important;
         overflow-x: auto;
     }
@@ -12,7 +12,7 @@
         display: none !important;
     }
 
-    .profile-preview-component .Stepper-wrapper div:last-child .MenuStep-item{
+    .profile-preview-component .Stepper-wrapper div:last-child .MenuStep-item {
         width: 100% !important;
     }
 
@@ -38,12 +38,13 @@
 
 @media (min-width: 320px) {
     .header-profile-menu {
-        height: 22vh;
+        height: 26vh;
 
         display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-        background:  #FFFFFF;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFFFFF;
     }
 
     .header-profile-menu .user-information {
@@ -138,6 +139,33 @@
         width: 60% !important;
         margin: 0 auto;
     }
+
+    .profile-header-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding-top: 1em;
+    }
+
+    .profile-header-info .username {
+        color: #41afd7;
+        font-size: 1.3em;
+        width: 100%;
+    }
+
+    .profile-header-info .username-number-code {
+        color: #999999;
+        font-size: .8em;
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 920px) {
+    .col-user-info {
+        display: none;
+    }
 }
 
 @media (min-width: 920px) {
@@ -159,5 +187,9 @@
 
     .btn-large {
         width: 100% !important;
+    }
+
+    .profile-header-info {
+        display: none;
     }
 }

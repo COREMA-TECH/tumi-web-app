@@ -21,7 +21,7 @@ class ProfilePicture extends Component {
             this.setState({ url: nextProps.url })
     }
     render() {
-        return <div className="applicant-card__header header-profile-menu">
+        return <div className="">
             <img className="avatar-profile" style={{ cursor: 'pointer' }} onClick={this.onClickPicture} src={this.state.url} />
             <GenericDialog
                 open={this.state.open}

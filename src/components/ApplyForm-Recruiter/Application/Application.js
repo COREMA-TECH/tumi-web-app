@@ -668,8 +668,11 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label ">
                                                     {formSpanish[23].label}
                                                 </span>
-                                                <label className="switch">
+
+                                                <div className="onoffswitch">
                                                     <input
+                                                        id="carSwitch"
+                                                        className="onoffswitch-checkbox"
                                                         onChange={(event) => {
                                                             this.setState({
                                                                 car: event.target.checked
@@ -679,14 +682,36 @@ class Application extends Component {
                                                         value={this.state.car}
                                                         name="car"
                                                         type="checkbox"
-                                                        className="form-control"
                                                         disabled={!this.state.editing}
                                                         min="0"
                                                         maxLength="50"
                                                         minLength="10"
                                                     />
-                                                    <p className="slider round" />
-                                                </label>
+                                                    <label className="onoffswitch-label" htmlFor="carSwitch">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+
+                                                {/*<label className="switch">*/}
+                                                    {/*<input*/}
+                                                        {/*onChange={(event) => {*/}
+                                                            {/*this.setState({*/}
+                                                                {/*car: event.target.checked*/}
+                                                            {/*});*/}
+                                                        {/*}}*/}
+                                                        {/*checked={this.state.car}*/}
+                                                        {/*value={this.state.car}*/}
+                                                        {/*name="car"*/}
+                                                        {/*type="checkbox"*/}
+                                                        {/*className="form-control"*/}
+                                                        {/*disabled={!this.state.editing}*/}
+                                                        {/*min="0"*/}
+                                                        {/*maxLength="50"*/}
+                                                        {/*minLength="10"*/}
+                                                    {/*/>*/}
+                                                    {/*<p className="slider round" />*/}
+                                                {/*</label>*/}
                                             </div>
                                         </div>
                                     </div>
