@@ -148,10 +148,10 @@ class Holidays extends Component {
         })
         calendarDaysSelected = counter > 0, counter = 0;
         //Validate that only Calendar Day and Month can be selected as one combination
-        if ((monthSelected && calendarDaysSelected) || weekNumbersSelected || weekDaysSelected) {
-            this.props.handleOpenSnackbar('warning', "Combination can't be done", 'bottom', 'right');
-            return false;
-        }
+        // if ((monthSelected && calendarDaysSelected) || weekSelected || weekDaysSelected) {
+        //     this.props.handleOpenSnackbar('warning', "Combination can't be done", 'bottom', 'right');
+        //     return false;
+        // }
     }
     render() {
         return (

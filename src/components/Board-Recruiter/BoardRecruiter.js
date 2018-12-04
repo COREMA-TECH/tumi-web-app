@@ -161,7 +161,7 @@ class BoardRecruiter extends Component {
                 ApplicationId: cardId,
                 openReason: true
             }, () => {
-                this.onCardClick = (cardId, null, targetLaneId)
+                // this.onCardClick = (cardId, null, targetLaneId)
             });
         }
 
@@ -177,10 +177,51 @@ class BoardRecruiter extends Component {
 
     handleCloseModal = (event) => {
         event.preventDefault();
+
+        /* this.setState(
+             {
+                 Opening: this.state.Openings,
+                 lane: [
+                     {
+                         id: 'lane1',
+                         title: 'Openings',
+                         label: ' ',
+                         cards: this.state.Openings
+                     },
+                     {
+                         id: 'Leads',
+                         title: 'Leads',
+                         label: ' ',
+                         cards: this.state.leads
+                     },
+                     {
+                         id: 'Applied',
+                         title: 'Applied',
+                         label: ' ',
+                         cards: this.state.Applied
+                     },
+                     {
+                         id: 'Candidate',
+                         title: 'Candidate',
+                         label: ' ',
+                         cards: this.state.Candidate
+                     },
+                     {
+                         id: 'Placement',
+                         title: 'Placement',
+                         label: ' ',
+                         cards: this.state.Placement
+                     }
+                 ],
+                 loading: false
+             });
+ */
+
         this.setState({
             openReason: false
 
         });
+
     };
 
     addApplicationPhase = (id, laneId) => {
@@ -345,65 +386,31 @@ class BoardRecruiter extends Component {
     }
 
     onCardClick = (cardId, metadata, laneId) => {
-        let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-        let anotherCards = document.querySelectorAll("article[data-id]");
+        if (laneId == "lane1") {
 
-        anotherCards.forEach((anotherCard) => {
-            anotherCard.classList.remove("CardBoard-selected");
-        });
-        cardSelected[0].classList.add("CardBoard-selected");
+            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+            let anotherCards = document.querySelectorAll("article[data-id]");
 
-        this.setState(
-            {
-                Intopening: cardId
-            })
-
-        this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
-
-        this.setState(
-            {
-                Opening: this.state.Openings,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Openings',
-                        label: ' ',
-                        cards: this.state.Openings
-                    },
-                    {
-                        id: 'Leads',
-                        title: 'Leads',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Applied',
-                        title: 'Applied',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Candidate',
-                        title: 'Candidate',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Placement',
-                        title: 'Placement',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
+            anotherCards.forEach((anotherCard) => {
+                anotherCard.classList.remove("CardBoard-selected");
             });
+            cardSelected[0].classList.add("CardBoard-selected");
 
-        if (sessionStorage.getItem('NewFilterLead') === 'true') {
-            console.log("Estoy aqui con los nuevos filtros");
-            this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
-        } else {
-            console.log("Estoy aqui con los viejos filtros");
-            this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+            this.setState(
+                {
+                    Intopening: cardId
+                })
+
+            this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+
+
+            if (sessionStorage.getItem('NewFilterLead') === 'true') {
+                console.log("Estoy aqui con los nuevos filtros");
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+            } else {
+                console.log("Estoy aqui con los viejos filtros");
+                this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
+            }
         }
     }
 
@@ -541,49 +548,12 @@ class BoardRecruiter extends Component {
                         }
 
 
-                        //                        const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }).StageId;
-
-                        /* if (wo.applicationPhases.length == 1) {
-                             console.log("esta es la que da clavos ", wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }));
-
-                             Phases = wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }).StageId;
-                         }
-                         if (wo.applicationPhases.length > 1) {
-                             if (wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }) === undefined) {
-                                 console.log("entro aqui en el undifined");
-                                 Phases = 30460;
-                             } else {
-                                 console.log(wo.applicationPhases.find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }));
-                                 Phases = wo.applicationPhases.slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id }).StageId;
-                             }
-                         }
-                     } else {
-                         Phases = 30460;
-                     }*/
-
-                        //  console.log("get Application phases", Phases);
-
-                        /*datas = {
-                            id: wo.id,
-                            name: wo.firstName + ' ' + wo.lastName,
-                            subTitle: wo.cellPhone,
-                            body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                            escalationTextLeftLead: wo.generalComment,
-                            escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                            cardStyle: { borderRadius: 6, marginBottom: 15 }
-                        };*/
-
-
                         if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1) {
-
-                            // console.log("el wo ", wo);
-                            console.log("la phase ", Phases);
 
                             if (typeof Phases == undefined || Phases == null) {
                                 varphase = 30460;
                             } else { varphase = Phases.StageId }
 
-                            console.log("la phase ", Phases);
 
                             switch (varphase) {
                                 case 30460:
@@ -633,60 +603,14 @@ class BoardRecruiter extends Component {
                                     });
                                     break
                             }
-
-                            /*if (Phases == 30460) {
-                                if (wo.isLead === true) {
-                                    getleads.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                }
-                            }
-                            if (Phases == 30466) {
-                                console.log("estoy aqui con el", wo.id);
-                                if (wo.isLead === true) {
-                                    getApplied.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                }
-                            }
-                            if (Phases === 30462) {
-                                // if (Phases == ) {
-                                getCandidate.push({
-                                    id: wo.id,
-                                    name: wo.firstName + ' ' + wo.lastName,
-                                    subTitle: wo.cellPhone,
-                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                    escalationTextLeftLead: wo.generalComment,
-                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                });
-                            }
-                            if (Phases === 30463) {
-                                //    if (Phases == 30463) {
-                                getPlacement.push({
-                                    id: wo.id,
-                                    name: wo.firstName + ' ' + wo.lastName,
-                                    subTitle: wo.cellPhone,
-                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                    escalationTextLeftLead: wo.generalComment,
-                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                });
-                            }*/
-
                         }
+
+                        this.setState({
+                            leads: getleads,
+                            Applied: getApplied,
+                            Candidate: getCandidate,
+                            Placement: getPlacement
+                        });
 
                         this.setState(
                             {
@@ -725,8 +649,6 @@ class BoardRecruiter extends Component {
                                 ],
                                 loading: false
                             });
-
-
                     });
                 });
 
@@ -822,7 +744,7 @@ class BoardRecruiter extends Component {
                         id: 'Leads',
                         title: 'Leads',
                         label: ' ',
-                        cards: this.state.leads
+                        cards: []
                     },
                     {
                         id: 'Applied',

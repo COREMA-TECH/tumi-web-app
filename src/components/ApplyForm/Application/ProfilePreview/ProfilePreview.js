@@ -93,17 +93,28 @@ class VerticalLinearStepper extends Component {
             activeStep: state.activeStep + 1,
         }));
     };
+
+    /**
+     * Go back in stepper
+     */
     handleBack = () => {
         this.setState(state => ({
             activeStep: state.activeStep - 1,
         }));
     };
+
+    /**
+     * To reset the stepper
+     */
     handleReset = () => {
         this.setState({
             activeStep: 0,
         });
     };
 
+    /**
+     * To fetch profile user information
+     **/
     getProfileInformation = () => {
         this.props.client
             .query({
@@ -131,6 +142,8 @@ class VerticalLinearStepper extends Component {
                 })
             })
     };
+
+
     updateImage = (url) => {
         console.log("Calling Update Image")
         this.props.client
