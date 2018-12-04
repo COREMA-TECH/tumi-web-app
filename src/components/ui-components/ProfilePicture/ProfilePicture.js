@@ -9,7 +9,7 @@ class ProfilePicture extends Component {
 
         this.state = {
             open: false,
-            url: ''
+            url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLDHGbmeO_n4BngHukOBOaSZ-ojh1V6iVq1WsUCUuDZKCHs3iZ'
         }
     }
 
@@ -25,9 +25,11 @@ class ProfilePicture extends Component {
     };
 
     componentWillMount() {
-        this.setState({
-            url: this.props.url
-        })
+        if(this.props.url) {
+            this.setState({
+                url: this.props.url
+            })
+        }
     }
 
 
