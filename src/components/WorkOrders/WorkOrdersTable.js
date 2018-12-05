@@ -223,6 +223,7 @@ class WorkOrdersTable extends Component {
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
+
         return (
             <div>
                 <Paper style={{ overflowX: 'auto' }}>
