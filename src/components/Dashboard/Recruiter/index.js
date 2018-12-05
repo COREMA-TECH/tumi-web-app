@@ -9,7 +9,7 @@ const data = {
 		{
 			label: 'Leads',
 			type: 'line',
-			data: [ 51, 65, 40, 49, 60, 37, 40 ],
+			data: [51, 65, 40, 49, 60, 37, 40],
 			fill: false,
 			borderColor: '#EC932F',
 			backgroundColor: '#EC932F',
@@ -22,7 +22,7 @@ const data = {
 		{
 			type: 'bar',
 			label: 'Candidates',
-			data: [ 200, 185, 590, 621, 250, 400, 95 ],
+			data: [200, 185, 590, 621, 250, 400, 95],
 			fill: false,
 			backgroundColor: '#71B37C',
 			borderColor: '#71B37C',
@@ -36,7 +36,7 @@ const data = {
 const options = {
 	responsive: true,
 	maintainAspectRatio: false,
-	labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ],
+	labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
 	tooltips: {
 		mode: 'label'
 	},
@@ -52,7 +52,7 @@ const options = {
 				gridLines: {
 					display: false
 				},
-				labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ]
+				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
 			}
 		],
 		yAxes: [
@@ -121,9 +121,10 @@ class DashboardRecruiter extends React.Component {
 			<div className="row WorkOrder">
 				<div className="col-md-12">
 					<div className="card">
-						<div className="card-body p-0">
+						<div className="card-body">
 							<div className="row">
-								<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2">
+								{/*
+							<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2">
 									<div className="row p-0">
 										<div className="col-12">
 											<div className="border-right">
@@ -150,6 +151,8 @@ class DashboardRecruiter extends React.Component {
 										</div>
 									</div>
 								</div>
+							*/}
+
 								<div className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
 									<div className="row p-0">
 										<div className="col-sm-6 col-xs-12">
@@ -192,6 +195,21 @@ class DashboardRecruiter extends React.Component {
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
 						<div className="row">
+
+							<div className="col-md-2 col-lg-2">
+								<a href="/home/board/recruiter" className="text-center d-block">
+									<img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
+									<span className="d-block">Go to board</span>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				{/*
+				<div className="col-md-12 col-lg-7">
+					<div className="card">
+						<div className="card-header info">Quick Access</div>
+						<div className="row">
 							<div className="col-md-4 col-lg-6">
 								<a href="/home/board/recruiter" className="card bg-gd-info QuickButton">
 									<div className="card-body">
@@ -205,6 +223,8 @@ class DashboardRecruiter extends React.Component {
 						</div>
 					</div>
 				</div>
+				*/}
+
 				<div className="col-md-12 col-lg-5">
 					<div className="card">
 						<div className="card-header danger">Chart</div>

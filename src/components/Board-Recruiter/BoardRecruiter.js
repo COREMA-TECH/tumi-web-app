@@ -825,7 +825,8 @@ class BoardRecruiter extends Component {
                                             >
                                                 <option value={0}>Select a Hotel</option>
                                                 {this.state.hotels.map((hotel) => (
-                                                    <option value={hotel.Id} label={hotel.State}>{hotel.Name}</option>
+
+                                                    <option value={hotel.Id}>{hotel.Name}</option>
 
                                                 ))}
                                             </select>

@@ -15,6 +15,8 @@ import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { DELETE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
+import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import Query from 'react-apollo/Query';
 
 const CustomTableCell = withStyles((theme) => ({
     head: {
@@ -221,6 +223,7 @@ class WorkOrdersTable extends Component {
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
+
         return (
             <div>
                 <Paper style={{ overflowX: 'auto' }}>
@@ -286,7 +289,37 @@ class WorkOrdersTable extends Component {
                                             </Tooltip>
                                         </CustomTableCell>
                                         <CustomTableCell>{row.id}</CustomTableCell>
-                                        <CustomTableCell>{this.state.Hotels.find((item) => { return item.Id == row.IdEntity }).Name}</CustomTableCell>
+                                        <CustomTableCell>{
+                                            <Query query={GET_HOTEL_QUERY} variables={{ id: row.IdEntity }}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>  </p>;
+                                                    if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+                                                        return (
+                                                            <select
+                                                                name="hotel"
+                                                                id="hotel"
+                                                                required
+                                                                className="form-control"
+                                                                disabled={true}
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        state: e.target.value
+                                                                    });
+                                                                }}
+                                                                value={row.IdEntity}
+                                                            >
+                                                                <option value="">Select a hotel</option>
+                                                                {data.getbusinesscompanies.map((item) => (
+                                                                    <option value={item.Id}>{item.Name}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
+                                                }}
+                                            </Query>
+                                        }</CustomTableCell>
                                         <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>

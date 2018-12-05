@@ -1046,7 +1046,7 @@ query getposition {
 								/>
 							</div>
 							<div className="col-md-12 col-lg-12">
-								<label htmlFor="">Especial Comments</label>
+								<label htmlFor="">Special Comments</label>
 								<textarea
 									onChange={this.handleChange}
 									name="Comment"

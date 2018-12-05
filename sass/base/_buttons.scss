@@ -144,3 +144,10 @@
 .QuickButton {
 	color: $white !important;
 }
+
+table[class^="MuiTable-"] {
+	.btn {
+		min-width: 60px;
+    	max-width: 60px;
+	}
+}
