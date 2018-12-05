@@ -137,7 +137,7 @@ class DashboardManager extends React.Component {
             <div className="row WorkOrder">
                 <div className="col-md-12">
                     <div className="card">
-                        <div className="card-body p-0">
+                        <div className="card-body">
                             <div className="row">
                                 <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2">
                                     <div className="row p-0">
@@ -198,14 +198,7 @@ class DashboardManager extends React.Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-12">
-                        <WorkOrdersTable
-                            onEditHandler={this.onEditHandler}
-                            onLifeHandler={this.onLifeHandler}
-                            handleOpenSnackbar={this.props.handleOpenSnackbar}
-                        />
 
-                    </div>
 
                     {/*<div className="col-md-6">*/}
                     {/*<NotShowApplicantsTable*/}
@@ -213,6 +206,14 @@ class DashboardManager extends React.Component {
                     {/*handleOpenSnackbar={this.props.handleOpenSnackbar}*/}
                     {/*/>*/}
                     {/*</div>*/}
+                </div>
+                <div className="col-md-12">
+                    <WorkOrdersTable
+                        onEditHandler={this.onEditHandler}
+                        onLifeHandler={this.onLifeHandler}
+                        handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    />
+
                 </div>
                 <div className="col-md-12">
                     <div className="card">

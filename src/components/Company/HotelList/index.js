@@ -188,7 +188,7 @@ class HotelList extends Component {
                     <div className="col-md-12">
                         <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned</a>
                         <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success mr-1">Assigned</a>
-                        <a href="" onClick={this.handleFindByTag(0)} className="badge badge-info">Alls</a>
+                        <a href="" onClick={this.handleFindByTag(0)} className="badge badge-info">All</a>
                     </div>
                     <AlertDialogSlide
                         handleClose={this.handleCloseAlertDialog}
