@@ -958,34 +958,6 @@ class Application extends Component {
                                                     </label>
                                                 </div>
 
-
-												{/*<label className="switch">*/}
-													{/*<input*/}
-														{/*onChange={(event) => {*/}
-															{/*this.setState(*/}
-																{/*{*/}
-																	{/*convicted: event.target.checked*/}
-																{/*},*/}
-																{/*() => {*/}
-																	{/*if (!this.state.convicted) {*/}
-																		{/*this.setState({*/}
-																			{/*convictedExplain: ''*/}
-																		{/*});*/}
-																	{/*}*/}
-																{/*}*/}
-															{/*);*/}
-														{/*}}*/}
-														{/*checked={this.state.convicted}*/}
-														{/*value={this.state.convicted}*/}
-														{/*name="convicted"*/}
-														{/*type="checkbox"*/}
-														{/*className="form-control"*/}
-														{/*disabled={!this.state.editing}*/}
-													{/*/>*/}
-													{/*<p className="slider round" />*/}
-												{/*</label>*/}
-
-
 											</div>
 											<div className="col-md-6">
 												<span className="primary applicant-card__label skeleton">
