@@ -984,7 +984,7 @@ class General extends Component {
                         }
                     })
                     .then((data) => {
-                        this.props.handleOpenSnackbar('success', 'Email Send with credentials!');
+                        this.props.handleOpenSnackbar('success', 'Email sent with credentials!');
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar('error', 'Error: Sending Email: ' + error);

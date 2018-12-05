@@ -35,7 +35,9 @@ class ProfilePicture extends Component {
 
     render() {
         return <div className="">
-            <img className="avatar-profile" style={{ cursor: 'pointer' }} onClick={this.onClickPicture} src={this.state.url} />
+            <div className="avatar-profile" onClick={this.onClickPicture}>
+                <img className="" style={{ cursor: 'pointer' }} src={this.state.url} />
+            </div>
 
             <GenericDialog
                 open={this.state.open}
