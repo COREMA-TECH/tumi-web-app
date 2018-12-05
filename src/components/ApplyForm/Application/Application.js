@@ -98,7 +98,19 @@ class Application extends Component {
             editing: false,
 
             loading: false,
-            tags: []
+            tags: [],
+
+
+            // React tag input with suggestions
+            tagsInputs: [],
+            suggestions: [
+                { id: 'USA', text: 'USA' },
+                { id: 'Germany', text: 'Germany' },
+                { id: 'Austria', text: 'Austria' },
+                { id: 'Costa Rica', text: 'Costa Rica' },
+                { id: 'Sri Lanka', text: 'Sri Lanka' },
+                { id: 'Thailand', text: 'Thailand' }
+            ]
         };
     }
 
