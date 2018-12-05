@@ -404,26 +404,6 @@ class Application extends Component {
 													minLength="3"
 												/>
 											</div>
-											{/*<div className="col-md-12 ">
-											<span className="primary applicant-card__label skeleton">
-												* {formSpanish[3].label}
-											</span>
-											<input
-												onChange={(event) => {
-													this.setState({
-														date: event.target.value
-													});
-												}}
-												value={this.state.date}
-												name="date"
-												type="date"
-												className="form-control"
-												disabled={!this.state.editing}
-												required
-												min="0"
-												maxLength="50"
-											/>
-										</div> */}
 											<div className="col-md-12 ">
 												<span className="primary applicant-card__label skeleton">
 													* {formSpanish[22].label}
@@ -672,25 +652,6 @@ class Application extends Component {
                                                         <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
-												{/*<label className="switch">*/}
-													{/*<input*/}
-														{/*onChange={(event) => {*/}
-															{/*this.setState({*/}
-																{/*car: event.target.checked*/}
-															{/*});*/}
-														{/*}}*/}
-														{/*checked={this.state.car}*/}
-														{/*value={this.state.car}*/}
-														{/*name="car"*/}
-														{/*type="checkbox"*/}
-														{/*className="form-control"*/}
-														{/*disabled={!this.state.editing}*/}
-														{/*min="0"*/}
-														{/*maxLength="50"*/}
-														{/*minLength="10"*/}
-													{/*/>*/}
-													{/*<p className="slider round" />*/}
-												{/*</label>*/}
 											</div>
 											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
@@ -807,21 +768,7 @@ class Application extends Component {
 													onChange={this.handleChange}
 													disabled={!this.state.editing}
 												/>
-												{/* <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        idealJob: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.idealJob}
-                                                name="idealJob"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                minLength="3"
-                                                maxLength="50"
-                                            /> */}
+
 											</div>
 											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
@@ -877,32 +824,6 @@ class Application extends Component {
                                                         <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
-
-												{/*<label className="switch">*/}
-													{/*<input*/}
-														{/*onChange={(event) => {*/}
-															{/*this.setState(*/}
-																{/*{*/}
-																	{/*scheduleRestrictions: event.target.checked*/}
-																{/*},*/}
-																{/*() => {*/}
-																	{/*if (!this.state.scheduleRestrictions) {*/}
-																		{/*this.setState({*/}
-																			{/*scheduleExplain: ''*/}
-																		{/*});*/}
-																	{/*}*/}
-																{/*}*/}
-															{/*);*/}
-														{/*}}*/}
-														{/*checked={this.state.scheduleRestrictions}*/}
-														{/*value={this.state.scheduleRestrictions}*/}
-														{/*name="scheduleRestrictions"*/}
-														{/*type="checkbox"*/}
-														{/*className="form-control"*/}
-														{/*disabled={!this.state.editing}*/}
-													{/*/>*/}
-													{/*<p className="slider round" />*/}
-												{/*</label>*/}
 											</div>
 											<div className="col-md-6">
 												<span className="primary applicant-card__label skeleton">
