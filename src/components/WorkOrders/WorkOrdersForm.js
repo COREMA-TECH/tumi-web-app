@@ -559,19 +559,20 @@ class WorkOrdersForm extends Component {
                                                 className="form-control"
                                                 id=""
                                                 cols="30"
-                                                rows="5"
+                                                rows="3"
                                                 value={this.state.comment}
                                             />
                                         </div>
                                         <div className="col-md-12">
-                                            <label htmlFor="">Especial Comments</label>
+                                            <label htmlFor="">Special Comments</label>
                                             <textarea
                                                 onChange={this.handleChange}
                                                 name="EspecialComment"
                                                 className="form-control"
                                                 id=""
                                                 cols="30"
-                                                rows="5"
+                                                rows="3"
+                                                disabled={true}
                                                 value={this.state.EspecialComment}
                                             />
                                         </div>
