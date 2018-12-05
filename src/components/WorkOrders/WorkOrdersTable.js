@@ -286,7 +286,7 @@ class WorkOrdersTable extends Component {
                                             </Tooltip>
                                         </CustomTableCell>
                                         <CustomTableCell>{row.id}</CustomTableCell>
-                                        <CustomTableCell>{this.state.Hotels.find((item) => { return item.Id == row.IdEntity }).Name}</CustomTableCell>
+                                        <CustomTableCell>{row.IdEntity}</CustomTableCell>
                                         <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>
