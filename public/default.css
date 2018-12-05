@@ -7663,6 +7663,10 @@ label:not(.custom-file-label):not(.form-check-label) {
 .QuickButton {
   color: #FFF !important; }
 
+table[class^="MuiTable-"] .btn {
+  min-width: 60px;
+  max-width: 60px; }
+
 .inputGroup {
   background-color: #fff;
   display: block;

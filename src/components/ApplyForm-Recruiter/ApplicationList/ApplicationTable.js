@@ -187,10 +187,10 @@ class ApplicationTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-                                    <CustomTableCell padding="none" className={classes.th} />
-                                    <CustomTableCell className={classes.th}>Position Applying For</CustomTableCell>
-                                    <CustomTableCell className={classes.th}>Full Name</CustomTableCell>
-                                    <CustomTableCell className={classes.th}>Email Address</CustomTableCell>
+									<CustomTableCell padding="none" className={'Table-head'} />
+									<CustomTableCell className={'Table-head'}>Position Applying For</CustomTableCell>
+									<CustomTableCell className={'Table-head'}>Full Name</CustomTableCell>
+									<CustomTableCell className={'Table-head'}>Email Address</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -210,7 +210,8 @@ class ApplicationTable extends React.Component {
 											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>
-														<IconButton
+														<button
+															className="btn btn-danger"
 															disabled={this.props.loading}
 															onClick={(e) => {
 																e.stopPropagation();
@@ -218,21 +219,21 @@ class ApplicationTable extends React.Component {
 																return this.props.onDeleteHandler(row.id);
 															}}
 														>
-															<DeleteIcon color="primary" />
-														</IconButton>
+															<i class="fas fa-trash"></i>
+														</button>
 													</div>
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell>
 												{row.position ? row.position.Description : 'Open Position'}
 											</CustomTableCell>
-                                            <CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
+											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>
 									);
 								})}
 
-								
+
 							</TableBody>
 							<TableFooter>
 								<TableRow>
