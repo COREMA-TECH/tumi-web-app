@@ -104,10 +104,12 @@ class PositionsCompanyForm extends React.Component {
 				Id
 				Id_Department
 				Position
+                Id_positionApplying
 				Bill_Rate
 				Pay_Rate
 				Shift
-				IsActive
+				IsActive,
+				Comment
 			}
 		}
 	`;
@@ -117,7 +119,8 @@ query getposition {
         getcatalogitem(Id_Catalog: 6, IsActive: 1) {
             Id
             IsActive
-            Description
+			Description
+		
         }
     }
 `;
@@ -184,7 +187,7 @@ query getposition {
 		billrate: 0,
 		payrate: 0,
 		shift: '',
-
+		Comment: '',
 		idDepartmentValid: true,
 		departmentNameValid: true,
 		positionValid: true,
@@ -242,6 +245,18 @@ query getposition {
 			AllowExport: localStorage.getItem('AllowExport') === 'true'
 		};
 	}
+
+	handleChange = (event) => {
+		const target = event.target;
+		const value = target.type === 'checkbox' ? target.checked : target.value;
+		const name = target.name;
+
+		this.setState({
+			[name]: value
+		});
+
+
+	};
 
 	focusTextInput() {
 		if (document.getElementById('position') != null) {
@@ -490,7 +505,7 @@ query getposition {
 	handleConfirmAlertDialog = () => {
 		this.deletePostion();
 	};
-	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift }) => {
+	onEditHandler = ({ Id, Position, Id_Department, Bill_Rate, Pay_Rate, Shift, Comment, Id_positionApplying }) => {
 		this.setState({ showCircularLoading: false }, () => {
 			var department = this.state.departments.find(function (obj) {
 				return obj.Id === Id_Department;
@@ -500,11 +515,12 @@ query getposition {
 					idToEdit: Id,
 					position: Position.trim(),
 					idDepartment: Id_Department,
+					positionApplyingFor: Id_positionApplying,
 					departmentName: department ? department.Name.trim() : '',
 					billrate: Bill_Rate,
 					payrate: Pay_Rate,
 					shift: Shift,
-
+					Comment: Comment,
 					formValid: true,
 					positionValid: true,
 					idDepartmentValid: true,
@@ -658,6 +674,7 @@ query getposition {
 						Bill_Rate: this.state.billrate,
 						Pay_Rate: this.state.payrate,
 						Shift: `'${this.state.shift}'`,
+						Comment: `'${this.state.Comment}'`,
 						IsActive: 1,
 						User_Created: this.state.userId,
 						User_Updated: this.state.userId,
@@ -961,7 +978,6 @@ query getposition {
 													}}
 													value={this.state.positionApplyingFor}
 													className="form-control"
-
 												>
 													<option value="">Select a position</option>
 													{data.getcatalogitem.map((item) => (
@@ -1027,6 +1043,18 @@ query getposition {
 									showNone={false}
 									error={!this.state.shiftValid}
 									value={this.state.shift}
+								/>
+							</div>
+							<div className="col-md-12 col-lg-12">
+								<label htmlFor="">Especial Comments</label>
+								<textarea
+									onChange={this.handleChange}
+									name="Comment"
+									className="form-control"
+									id=""
+									cols="30"
+									rows="5"
+									value={this.state.Comment}
 								/>
 							</div>
 						</div>
