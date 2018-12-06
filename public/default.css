@@ -9815,19 +9815,22 @@ button.rbc-input::-moz-focus-inner {
       -o-transition: top 0.5s;
       transition: top 0.5s; }
 
-.Months li[data-selected="true"] {
+.Months-selected, .Months li[data-selected="true"], .Months-item:hover {
   background: #FFF;
-  border-color: #254151;
+  border: solid 2px #3ca2c8;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
   color: #254151; }
 
 .Months-list {
   text-align: center; }
 
 .Months-item {
-  background: -webkit-gradient(linear, left top, right top, from(#28a745), to(#5dd879));
-  background: -webkit-linear-gradient(left, #28a745, #5dd879);
-  background: -o-linear-gradient(left, #28a745, #5dd879);
-  background: linear-gradient(to right, #28a745, #5dd879);
+  background: -webkit-gradient(linear, left top, right top, from(var(--cyan)), to(#4cd3e9));
+  background: -webkit-linear-gradient(left, var(--cyan), #4cd3e9);
+  background: -o-linear-gradient(left, var(--cyan), #4cd3e9);
+  background: linear-gradient(to right, var(--cyan), #4cd3e9);
+  border: solid 2px #FFF;
   border-radius: 45px;
   color: #FFF;
   cursor: pointer;
@@ -9844,10 +9847,15 @@ button.rbc-input::-moz-focus-inner {
   -o-transition: all .5s;
   transition: all .5s;
   width: 140px; }
-  .Months-item:hover {
-    background: #FFF;
-    border-color: #254151;
-    color: #254151; }
+
+.Summary-head {
+  color: #FFF;
+  display: block;
+  font-weight: 700; }
+
+.Summary-content {
+  color: #FFF;
+  display: block; }
 
 .Weeks {
   margin-bottom: 45px; }
