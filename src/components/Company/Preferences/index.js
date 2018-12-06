@@ -25,11 +25,19 @@ class Preferences extends React.Component {
             startMonth: null,
             endMonth: null,
             timeZone: null,
+            openCalendarModal: false
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    closeModal = (fnc = () => { }) => {
+        this.setState({
+            openCalendarModal: false,
+            idHoliday: null
+        }, fnc);
+    }
+
 
     componentWillMount() {
         this.setState({
@@ -59,7 +67,6 @@ class Preferences extends React.Component {
                                 loading: false
                             });
 
-                            console.table(this.state);
                         });
                     }
                 })
@@ -239,6 +246,9 @@ class Preferences extends React.Component {
                 <form onSubmit={this.handleSubmit} className="Preferences-form">
                     <div className="row">
                         <div className="col-md-12">
+                            <button type="button" className="btn btn-info edit-company-button float-right ml-1" onClick={(e) => { e.preventDefault(); this.setState({ openCalendarModal: true }) }}>
+                                Add Holiday <i class="fas fa-calendar-alt ml-1" />
+                            </button>
                             <button type="submit" className="btn btn-success edit-company-button float-right">
                                 Save {!this.state.saving && <i class="fas fa-save ml-1" />}
                                 {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
@@ -419,7 +429,7 @@ class Preferences extends React.Component {
                         <div className="col-md-6">
                             <div className="card">
                                 <div className="card-body">
-                                    <Calendar idCompany={this.props.idCompany} handleOpenSnackbar={this.props.handleOpenSnackbar} />
+                                    <Calendar idCompany={this.props.idCompany} handleOpenSnackbar={this.props.handleOpenSnackbar} open={this.state.openCalendarModal} closeModal={this.closeModal} openModal={() => { this.setState({ openCalendarModal: true }) }} idHoliday={this.state.idHoliday} />
                                 </div>
                             </div>
                         </div>

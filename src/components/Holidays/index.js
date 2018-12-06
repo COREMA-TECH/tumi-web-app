@@ -163,7 +163,7 @@ class Holidays extends Component {
                 }
             }
         }).then(({ data }) => {
-            this.setState({ inserting: false })
+            this.setState({ id: data.addHoliday[0].id, inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Inserted", 'bottom', 'right');
             this.props.handleClose();
         }).catch((error) => {
@@ -249,8 +249,7 @@ class Holidays extends Component {
                 break;
         }
         let sDate = this.addHours(startDate, 0, 0, 0), eDate = this.addHours(endDate, 23, 0, 0);
-        console.log(sDate)
-        console.log(eDate)
+
         return {
             startDate: sDate,
             endDate: eDate
@@ -309,19 +308,7 @@ class Holidays extends Component {
             this.props.handleOpenSnackbar('warning', "Only one Week Day must be selected", 'bottom', 'right');
             return { valid: false, type: '' };
         }
-        // this.state.weekDays.map(item => {
-        //     if (item.selected) {
-        //         if (indexSelected != -1) {
-        //             let dif = item.id - indexSelected;
-        //             if (dif != 1) {
-        //                 this.props.handleOpenSnackbar('warning', "The days of the week can not be interleaved", 'bottom', 'right');
-        //                 return { valid: false, type: '' };
-        //             }
-        //             else { indexSelected = item.id; }
-        //         } else { indexSelected = item.id; }
-        //         counter++;
-        //     }
-        // })
+
         weekDaysSelected = counter > 0, counter = 0;
         let breakEach = false;
         //Validate Calendar Day Selection
@@ -378,8 +365,9 @@ class Holidays extends Component {
         this.props.client
             .query({
                 query: GET_HOLIDAYS,
+                fetchPolicy: 'no-cache',
                 variables: {
-                    id: 1
+                    id: this.state.id
                 }
             })
             .then(({ data }) => {
@@ -404,7 +392,6 @@ class Holidays extends Component {
                             })
                         }
                         catch (e) {
-                            console.log(this.state)
                             this.props.handleOpenSnackbar('warning', e.message, 'bottom', 'right');
                         }
                     })
@@ -416,7 +403,42 @@ class Holidays extends Component {
     }
 
     componentWillMount() {
-        this.loadHoliday()
+        let { idHoliday, idCompany } = this.props;
+        this.setState({
+            id: idHoliday,
+            idCompany: idCompany
+        }, () => {
+            if (this.state.id)
+                this.loadHoliday()
+        })
+    }
+    getPrettyDates = () => {
+        let selectedWeekDay = this.state.weekDays.find(item => item.selected == true)
+        let selectedWeekNumber = this.state.weekNumbers.find(item => item.selected == true)
+        let selectedMont = this.state.monthNumbers.find(item => item.selected == true)
+
+        let calendarData = JSON.parse(JSON.stringify(this.state.calendarDays));
+        let firstCalendarDay = calendarData ? this.state.calendarDays.find(item => item.selected == true) : null
+        let lastCalendarDay = calendarData ? calendarData.sort((a, b) => b.id - a.id).find(item => item.selected == true) : null
+        let prettyDate = "";
+
+        //Create summary date based on selected calendar days
+        if (firstCalendarDay)
+            prettyDate += `From ${firstCalendarDay.id} `
+        if (lastCalendarDay)
+            prettyDate += `to ${lastCalendarDay.id} of `
+        if (firstCalendarDay)
+            if (firstCalendarDay.id == lastCalendarDay.id)
+                prettyDate = `${firstCalendarDay.id} `
+        //Create summary date based on selected (Week and Day)
+        if (selectedWeekDay)
+            prettyDate += `${selectedWeekDay.name} of `
+        if (selectedWeekNumber)
+            prettyDate += `${selectedWeekNumber.name} Week of `
+        //Create summary date based on selected month
+        if (selectedMont)
+            prettyDate += selectedMont.name
+        return prettyDate;
     }
 
     render() {
@@ -505,6 +527,38 @@ class Holidays extends Component {
                                                 <div className="box"></div>
                                             </label>
                                         </div>
+                                        <div className="Summary">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <span className="Summary-head">
+                                                        Name
+                                                    </span>
+                                                    <span className="Summary-content">
+                                                        {this.state.name}
+                                                    </span>
+                                                    <span className="Summary-head">
+                                                        Description
+                                                    </span>
+                                                    <span className="Summary-content">
+                                                        {this.state.description}
+                                                    </span>
+                                                </div>
+                                                <div className="col-md-6">
+                                                    <span className="Summary-head">
+                                                        Apply
+                                                    </span>
+                                                    <span className="Summary-content">
+                                                        {this.getPrettyDates()}
+                                                    </span>
+                                                    <span className="Summary-head">
+                                                        Anually
+                                                    </span>
+                                                    <span className="Summary-content">
+                                                        {this.state.anually ? 'Yes' : 'No'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -514,7 +568,6 @@ class Holidays extends Component {
             </form>
         );
     }
-
 }
 
 export default withApollo(Holidays);

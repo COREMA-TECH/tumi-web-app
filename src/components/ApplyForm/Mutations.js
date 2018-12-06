@@ -115,3 +115,14 @@ export const UPDATE_APPLICANT_DOCUMENT = gql`
 		}
 	}
 `;
+
+/**
+ * Mutation to create application with general information
+ */
+export const ADD_IDEAL_JOB = gql`
+    mutation addApplicantIdealJob($application:  [inputInsertApplicantIdealJob]) {
+        addApplicantIdealJob(applicantIdealJob: $application) {
+            id
+        }
+    }
+`;
