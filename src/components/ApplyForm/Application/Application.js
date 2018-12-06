@@ -11,7 +11,6 @@ import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
-import {WithContext as ReactTags} from 'react-tag-input';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -20,6 +19,8 @@ if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
+
+const ReactTags = require('react-tag-autocomplete');
 
 const KeyCodes = {
     comma: 188,
@@ -127,31 +128,18 @@ class Application extends Component {
      * Method to magage react tag input
      *
      */
-    handleDelete = (i) => {
-        const {tags} = this.state;
-        this.setState({
-            tags: tags.filter((tag, index) => index !== i),
-        });
-    };
+    handleDelete (i) {
+        const tags = this.state.tags.slice(0);
+        tags.splice(i, 1);
 
-    handleAddition = (tag) => {
-        console.log(tag);
+        this.setState({ tags });
+    }
 
-        this.setState(prevState => ({
-            tags: [...prevState.tags, tag]
-        }));
-    };
+    handleAddition (tag) {
+        const tags = [].concat(this.state.tags, tag);
 
-    handleDrag = (tag, currPos, newPos) => {
-        const tags = [...this.state.tags];
-        const newTags = tags.slice();
-
-        newTags.splice(currPos, 1);
-        newTags.splice(newPos, 0, tag);
-
-        // re-render
-        this.setState({tags: newTags});
-    };
+        this.setState({ tags });
+    }
 
     /*********************************************************/
 
@@ -810,20 +798,30 @@ class Application extends Component {
                                                         return <SelectNothingToDisplay/>;
                                                     }}
                                                 </Query>
-                                            </div>
-
-                                            <div className="col-md-12">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[16].label}
-												</span>
-                                                <ReactTags tags={tags}
-                                                           suggestions={suggestions}
-                                                           handleDelete={this.handleDelete}
-                                                           handleAddition={this.handleAddition}
-                                                           handleDrag={this.handleDrag}
-                                                           delimiters={delimiters}
+                                                <TagsInput
+                                                    inputProps={{placeholder: 'Ideal Jobs'}}
+                                                    className={`form-control react-tagsinput ${!this.state.editing
+                                                        ? 'disabled'
+                                                        : ''}`}
+                                                    value={this.state.tags}
+                                                    onChange={this.handleChange}
+                                                    disabled={!this.state.editing}
+                                                    suggestions={this.state.suggestions}
                                                 />
                                             </div>
+
+                                            {/*<div className="col-md-12">*/}
+												{/*<span className="primary applicant-card__label skeleton">*/}
+													{/*{formSpanish[16].label}*/}
+												{/*</span>*/}
+                                                {/*<ReactTags tags={tags}*/}
+                                                           {/*suggestions={suggestions}*/}
+                                                           {/*handleDelete={this.handleDelete}*/}
+                                                           {/*handleAddition={this.handleAddition}*/}
+                                                           {/*handleDrag={this.handleDrag}*/}
+                                                           {/*delimiters={delimiters}*/}
+                                                {/*/>*/}
+                                            {/*</div>*/}
 
                                             <div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
@@ -837,8 +835,38 @@ class Application extends Component {
                                                     value={this.state.tags}
                                                     onChange={this.handleChange}
                                                     disabled={!this.state.editing}
+                                                    suggestions={this.state.suggestions}
                                                 />
-
+                                                <Query query={GET_POSITIONS_QUERY}>
+                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                            return (
+                                                                <select
+                                                                    name="positionApply"
+                                                                    id="positionApply"
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            positionApplyingFor: event.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.positionApplyingFor}
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                >
+                                                                    <option value="">Select a position</option>
+                                                                    <option value="0">Open Position</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option
+                                                                            value={item.Id}>{item.Description}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay/>;
+                                                    }}
+                                                </Query>
                                             </div>
                                             <div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
