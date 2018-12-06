@@ -10,12 +10,13 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Tooltip from '@material-ui/core/Tooltip';
 import { withApollo } from 'react-apollo';
-import { GET_WORKORDERS_QUERY } from './queries';
+import { GET_WORKORDERS_QUERY, GET_HOTEL_QUERY } from './queries';
 import TablePaginationActionsWrapped from '../ui-components/TablePagination';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 import { REJECT_WORKORDER } from './mutations';
 import ShiftsData from '../../data/shitfs.json';
-
+import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import Query from 'react-apollo/Query';
 const CustomTableCell = withStyles((theme) => ({
 	head: {
 		backgroundColor: theme.palette.common.black,
@@ -81,7 +82,9 @@ class WorkOrdersPositionTable extends Component {
 					<Table>
 						<TableHead>
 							<TableRow>
-								<CustomTableCell className={'Table-head'} />
+								<CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>No.</CustomTableCell>
+								<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
 								<CustomTableCell className={'Table-head'}>Position</CustomTableCell>
 								<CustomTableCell className={'Table-head'}>Quantity</CustomTableCell>
 								<CustomTableCell className={'Table-head'}>Shift</CustomTableCell>
@@ -119,6 +122,38 @@ class WorkOrdersPositionTable extends Component {
 												</button>
 											</Tooltip>
 										</CustomTableCell>
+										<CustomTableCell>{row.id}</CustomTableCell>
+										<CustomTableCell>{
+											<Query query={GET_HOTEL_QUERY} variables={{ id: row.IdEntity }}>
+												{({ loading, error, data, refetch, networkStatus }) => {
+													//if (networkStatus === 4) return <LinearProgress />;
+													if (error) return <p>  </p>;
+													if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+														return (
+															<select
+																name="hotel"
+																id="hotel"
+																required
+																className="form-control"
+																disabled={true}
+																onChange={(e) => {
+																	this.setState({
+																		state: e.target.value
+																	});
+																}}
+																value={row.IdEntity}
+															>
+																<option value="">Select a hotel</option>
+																{data.getbusinesscompanies.map((item) => (
+																	<option value={item.Id}>{item.Name}</option>
+																))}
+															</select>
+														);
+													}
+													return <SelectNothingToDisplay />;
+												}}
+											</Query>
+										}</CustomTableCell>
 										<CustomTableCell>{row.position.Position}</CustomTableCell>
 										<CustomTableCell>{row.quantity}</CustomTableCell>
 										<CustomTableCell>

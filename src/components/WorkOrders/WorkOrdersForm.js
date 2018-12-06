@@ -28,6 +28,7 @@ class WorkOrdersForm extends Component {
         needExperience: false,
         needEnglish: false,
         comment: '',
+        EspecialComment: '',
         position: 0,
         PositionRateId: null,
         RecruiterId: null,
@@ -70,7 +71,8 @@ class WorkOrdersForm extends Component {
                     needEnglish: nextProps.item.needEnglish,
                     comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
-                    openModal: nextProps.openModal
+                    openModal: nextProps.openModal,
+                    EspecialComment: nextProps.item.EspecialComment
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
@@ -93,6 +95,7 @@ class WorkOrdersForm extends Component {
                 needExperience: false,
                 needEnglish: false,
                 comment: '',
+                EspecialComment: '',
                 PositionRateId: 0,
                 contactId: 0,
                 userId: localStorage.getItem('LoginId'),
@@ -163,6 +166,7 @@ class WorkOrdersForm extends Component {
                         needExperience: this.state.needExperience,
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
+                        EspecialComment: this.state.EspecialComment,
                         PositionRateId: this.state.PositionRateId,
                         contactId: this.state.contactId,
                         userId: this.state.userId
@@ -197,6 +201,7 @@ class WorkOrdersForm extends Component {
                         needExperience: this.state.needExperience,
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
+                        EspecialComment: this.state.EspecialComment,
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId
@@ -271,13 +276,23 @@ class WorkOrdersForm extends Component {
     };
 
     handleChange = (event) => {
+        console.log("veamos el evento ", event);
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
+        let comments = '';
 
+        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
+
+        if (name === 'PositionRateId') {
+            comments = this.state.positions.find((item) => { return item.Id == value })
+            this.setState({
+                EspecialComment: comments != null ? comments.Comment : ''
+            });
+        }
 
         if (name === 'IdEntity') {
             this.getPositions(value);
@@ -292,9 +307,11 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
+                console.log("positions ", data.getposition)
                 this.setState({
                     positions: data.getposition,
                     PositionRateId: PositionId
+                    //EspecialComment: data.getposition[0].Comment
                 });
             })
             .catch();
@@ -542,8 +559,21 @@ class WorkOrdersForm extends Component {
                                                 className="form-control"
                                                 id=""
                                                 cols="30"
-                                                rows="10"
+                                                rows="3"
                                                 value={this.state.comment}
+                                            />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Special Comments</label>
+                                            <textarea
+                                                onChange={this.handleChange}
+                                                name="EspecialComment"
+                                                className="form-control"
+                                                id=""
+                                                cols="30"
+                                                rows="3"
+                                                disabled={true}
+                                                value={this.state.EspecialComment}
                                             />
                                         </div>
                                     </div>

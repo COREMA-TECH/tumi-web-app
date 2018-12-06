@@ -231,8 +231,8 @@ class ContactcontactForm extends React.Component {
 		this.state = {
 			data: [],
 			idCompany: this.props.idCompany,
-			titles: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
-			departments: [ { Id: 0, Name: 'Nothing', Description: 'Nothing' } ],
+			titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
+			departments: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
 			supervisors: [],
 			allSupervisors: [],
 			inputEnabled: true,
@@ -275,7 +275,7 @@ class ContactcontactForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => {}) => {
+	resetState = (func = () => { }) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -489,7 +489,7 @@ class ContactcontactForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -541,10 +541,10 @@ class ContactcontactForm extends React.Component {
 		type
 	}) => {
 		this.setState({ showCircularLoading: false }, () => {
-			var department = this.state.departments.find(function(obj) {
+			var department = this.state.departments.find(function (obj) {
 				return obj.Id === idDepartment;
 			});
-			var titleRecord = this.state.titles.find(function(obj) {
+			var titleRecord = this.state.titles.find(function (obj) {
 				return obj.Id === title;
 			});
 
@@ -627,7 +627,7 @@ class ContactcontactForm extends React.Component {
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	loadContacts = (func = () => {}) => {
+	loadContacts = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -663,7 +663,7 @@ class ContactcontactForm extends React.Component {
 				});
 		});
 	};
-	loadSupervisors = (idContact = 0, func = () => {}) => {
+	loadSupervisors = (idContact = 0, func = () => { }) => {
 		this.setState({ loadingSupervisor: true }, () => {
 			this.props.client
 				.query({
@@ -700,7 +700,7 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	loadAllSupervisors = (func = () => {}) => {
+	loadAllSupervisors = (func = () => { }) => {
 		this.setState({ loadingAllSupervisors: true }, () => {
 			this.props.client
 				.query({
@@ -737,7 +737,7 @@ class ContactcontactForm extends React.Component {
 		});
 	};
 
-	loadTitles = (func = () => {}) => {
+	loadTitles = (func = () => { }) => {
 		this.setState({ loadingTitles: true }, () => {
 			this.props.client
 				.query({
@@ -772,7 +772,7 @@ class ContactcontactForm extends React.Component {
 				});
 		});
 	};
-	loadDepartments = (func = () => {}) => {
+	loadDepartments = (func = () => { }) => {
 		this.setState({ loadingDepartments: true }, () => {
 			this.props.client
 				.query({
@@ -1147,11 +1147,11 @@ class ContactcontactForm extends React.Component {
 					</div>
 				</div>
 				{/*{*/}
-					{/*this.state.openModal ? (*/}
-						{/*<ContactModal/>*/}
-					{/*) : (*/}
-						{/*''*/}
-					{/*)*/}
+				{/*this.state.openModal ? (*/}
+				{/*<ContactModal/>*/}
+				{/*) : (*/}
+				{/*''*/}
+				{/*)*/}
 				{/*}*/}
 				<Dialog
 					fullScreen={fullScreen}
@@ -1165,12 +1165,12 @@ class ContactcontactForm extends React.Component {
 							<h5 class="modal-title">
 								{' '}
 								{this.state.idToEdit != null &&
-								this.state.idToEdit != '' &&
-								this.state.idToEdit != 0 ? (
-									'Edit  Contact'
-								) : (
-									'Create Contact'
-								)}
+									this.state.idToEdit != '' &&
+									this.state.idToEdit != 0 ? (
+										'Edit  Contact'
+									) : (
+										'Create Contact'
+									)}
 							</h5>
 						</div>
 					</DialogTitle>
@@ -1178,7 +1178,7 @@ class ContactcontactForm extends React.Component {
 						<div className="container">
 							<div className="">
 								<div className="row">
-									<div className="col-md-12 col-lg-6">
+									<div className="col-md-12 col-lg-4">
 										<label>* Contact Type</label>
 										<SelectForm
 											id="type"
@@ -1191,7 +1191,7 @@ class ContactcontactForm extends React.Component {
 											value={this.state.type}
 										/>
 									</div>
-									<div className="col-md-12 col-lg-6">
+									<div className="col-md-12 col-lg-4">
 										<label>* Department</label>
 										<AutosuggestInput
 											id="department"
@@ -1287,12 +1287,12 @@ class ContactcontactForm extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+												'Save Changes'
+											) : (
+												'Insert Record'
+											)
 									}
 								>
 									<div>
@@ -1363,8 +1363,8 @@ class ContactcontactForm extends React.Component {
 						</span>
 					</div>
 				) : (
-					''
-				)}
+						''
+					)}
 			</div>
 		);
 	}

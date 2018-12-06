@@ -2495,7 +2495,7 @@ class VerticalLinearStepper extends Component {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-2">
-                            <div className="Stepper-wrapper p-3">
+                            <div className="Stepper-wrapper p-3 ">
                                 <Stepper activeStep={activeStep} orientation="vertical" className="main-stepper-nav">
                                     {steps.map((label, index) => {
                                         return (

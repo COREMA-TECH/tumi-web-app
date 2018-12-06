@@ -1475,7 +1475,7 @@ class GeneralInformation extends Component {
 										/>
 									</div>
 									<div className="col-md-5">
-										<label>* Countries</label>
+										<label>* Country</label>
 										<select
 											name="country"
 											className={'form-control'}
