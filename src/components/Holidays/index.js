@@ -163,7 +163,7 @@ class Holidays extends Component {
                 }
             }
         }).then(({ data }) => {
-            this.setState({ inserting: false })
+            this.setState({ id: data.addHoliday[0].id, inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Inserted", 'bottom', 'right');
         }).catch((error) => {
             this.setState({ inserting: false })
@@ -378,7 +378,7 @@ class Holidays extends Component {
             .query({
                 query: GET_HOLIDAYS,
                 variables: {
-                    id: 1
+                    id: this.state.id
                 }
             })
             .then(({ data }) => {
@@ -415,7 +415,8 @@ class Holidays extends Component {
     }
 
     componentWillMount() {
-        this.loadHoliday()
+        if (this.state.id)
+            this.loadHoliday()
     }
 
     render() {
