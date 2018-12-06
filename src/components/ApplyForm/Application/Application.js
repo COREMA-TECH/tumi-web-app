@@ -11,6 +11,8 @@ import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'es');
@@ -111,17 +113,14 @@ class Application extends Component {
 
 
 			// React tag input with suggestions
-			tagsInputs: [],
-			suggestions: [
-				{ id: 'USA', text: 'USA' },
-				{ id: 'Germany', text: 'Germany' },
-				{ id: 'Austria', text: 'Austria' },
-				{ id: 'Costa Rica', text: 'Costa Rica' },
-				{ id: 'Sri Lanka', text: 'Sri Lanka' },
-				{ id: 'Thailand', text: 'Thailand' }
-			]
+			positionsTags: [],
 		};
 	}
+
+    handleChangePositionTag = (positionsTags) => {
+        this.setState({ positionsTags });
+        console.log(`Option selected:`, positionsTags);
+    };
 
 	handleChange = (tags) => {
 		this.setState({ tags });
@@ -175,7 +174,18 @@ class Application extends Component {
                     .then(({data}) => {
                         this.setState({
                             editing: false
-                        });
+                        }, () => {
+                        	let object = [];
+                        	this.state.positionsTags.map(item => {
+								object.push({
+                                    ApplicationId: this.props.applicationId,
+                                    idPosition: item.value,
+									description: item.label
+								})
+							});
+
+							this.addApplicantJobs(object);
+						});
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
@@ -196,14 +206,14 @@ class Application extends Component {
             .mutate({
                 mutation: ADD_IDEAL_JOB,
                 variables: {
-
+					application: idealJobArrayObject
                 }
             })
             .then(({data}) => {
-
+            	console.log("DEBUG");
             })
             .catch(error => {
-
+            	console.log("DEBUG ERROR");
             })
     };
 
@@ -787,75 +797,42 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[16].label}
 												</span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                    {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-                                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                        {/*if (error) return <p>Error </p>;*/}
-                                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                                            {/*return (*/}
-                                                                {/*<select*/}
-                                                                    {/*name="positionApply"*/}
-                                                                    {/*id="positionApply"*/}
-                                                                    {/*onChange={(event) => {*/}
-                                                                        {/*this.setState({*/}
-                                                                            {/*positionApplyingFor: event.target.value*/}
-                                                                        {/*});*/}
-                                                                    {/*}}*/}
-                                                                    {/*value={this.state.positionApplyingFor}*/}
-                                                                    {/*className="form-control"*/}
-                                                                    {/*disabled={!this.state.editing}*/}
-                                                                {/*>*/}
-                                                                    {/*<option value="">Select a position</option>*/}
-                                                                    {/*<option value="0">Open Position</option>*/}
-                                                                    {/*{data.getcatalogitem.map((item) => (*/}
-                                                                        {/*<option*/}
-                                                                            {/*value={item.Id}>{item.Description}</option>*/}
-                                                                    {/*))}*/}
-                                                                {/*</select>*/}
-                                                            {/*);*/}
-                                                        {/*}*/}
-                                                        {/*return <SelectNothingToDisplay/>;*/}
-                                                    {/*}}*/}
-                                                {/*</Query>*/}
-                                                <TagsInput
-                                                    inputProps={{placeholder: 'Position'}}
-                                                    className={`form-control react-tagsinput ${!this.state.editing
-                                                        ? 'disabled'
-                                                        : ''}`}
-                                                    value={this.state.tags}
-                                                    onChange={this.handleChange}
-                                                    disabled={!this.state.editing}
-                                                    suggestions={this.state.suggestions}
-                                                />
-                                            </div>
+                                                <Query query={GET_POSITIONS_QUERY}>
+                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        	let options = [];
+                                                        	data.getcatalogitem.map((item) => (
+																options.push({ value: item.Id, label: item.Description })
+                                                            ));
 
-                                            {/*<div className="col-md-12">*/}
-												{/*<span className="primary applicant-card__label skeleton">*/}
-													{/*{formSpanish[16].label}*/}
-												{/*</span>*/}
-                                                {/*<ReactTags tags={tags}*/}
-                                                           {/*suggestions={suggestions}*/}
-                                                           {/*handleDelete={this.handleDelete}*/}
-                                                           {/*handleAddition={this.handleAddition}*/}
-                                                           {/*handleDrag={this.handleDrag}*/}
-                                                           {/*delimiters={delimiters}*/}
-                                                {/*/>*/}
-                                            {/*</div>*/}
+                                                            return (
+                                                            	<div style={{
+                                                            		paddingTop: '10px',
+                                                            		paddingBottom: '10px',
+																}}>
+                                                                    <Select
+                                                                        disabled={!this.state.editing}
+                                                                        options={options}
+																		value={this.state.positionsTags}
+																		onChange={this.handleChangePositionTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                        isMulti
+                                                                    />
+																</div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay/>;
+                                                    }}
+                                                </Query>
+                                            </div>
 
                                             <div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[17].label}
 												</span>
-                                                {/*<TagsInput*/}
-                                                    {/*inputProps={{placeholder: 'Ideal Jobs'}}*/}
-                                                    {/*className={`form-control react-tagsinput ${!this.state.editing*/}
-                                                        {/*? 'disabled'*/}
-                                                        {/*: ''}`}*/}
-                                                    {/*value={this.state.tags}*/}
-                                                    {/*onChange={this.handleChange}*/}
-                                                    {/*disabled={!this.state.editing}*/}
-                                                    {/*suggestions={this.state.suggestions}*/}
-                                                {/*/>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
