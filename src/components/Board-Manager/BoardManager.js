@@ -22,7 +22,7 @@ import Filters from './Filters';
 
 const CustomCard = props => {
     return (
-        <div style={{ padding: '6px', background: '#f6f9ff' }}>
+        <div>
             <header
                 style={{
                     borderBottom: '1px solid #eee',
@@ -35,11 +35,10 @@ const CustomCard = props => {
                 }}>
                 <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{props.name}</div>
                 <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{props.dueOn}</div>
-                {props.dueOn && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }} ><i class="fas fa-cogs"></i></div>}
             </header>
-            <div style={{ fontSize: 14, color: '#4C4C4C' }}>
+            <div style={{ fontSize: 12, color: '#4C4C4C' }}>
                 <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{props.subTitle}</div>
-                <div style={{ margin: 2, padding: '0px 0px' }}><i>{props.body}</i>
+                <div style={{ margin: 5, padding: '0px 0px' }}><i>{props.body}</i>
                 </div>
                 <header
                     style={{
@@ -63,12 +62,11 @@ const CustomCard = props => {
                         justifyContent: 'space-between',
                         color: props.cardColor
                     }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftMatch}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterMatch}</div>
-                    {props.escalationTextRightMatch && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightMatch}  </div>}
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
+                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
+                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                 </header>
             </div>
-
         </div>
     )
 }
@@ -99,7 +97,7 @@ class BoardManager extends Component {
             state: 0,
             city: 0,
             region: 0,
-            status: 1,
+            status: null,
             loadingCountries: false,
             loadingCities: false,
             loadingStates: false,
@@ -123,11 +121,80 @@ class BoardManager extends Component {
         //console.log(`laneId: ${laneId}`);
     };
 
-    handleDragEnd = (cardId, sourceLaneId, targetLaneId) => {
-        //console.log('drag ended')
-        //console.log(`cardId: ${cardId}`)
-        //console.log(`sourceLaneId: ${sourceLaneId}`)
-        //console.log(`targetLaneId: ${targetLaneId}`)
+    handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
+        let IdLane;
+        switch (targetLaneId) {
+            case "Leads":
+                IdLane = 30460
+                break;
+            case "Applied":
+                IdLane = 30461
+                break;
+            case "Candidate":
+                IdLane = 30462
+                break;
+            case "Placement":
+                IdLane = 30463
+                break;
+            case "Notify":
+                IdLane = 30464
+                break;
+            case "Accepted":
+                IdLane = 30465
+                break;
+            case "Add to Schedule":
+                IdLane = 30466
+                break;
+            case "Matches":
+                IdLane = 30466
+            default:
+                IdLane = 30460
+        }
+
+        if (targetLaneId != sourceLaneId) {
+
+            this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+
+            this.setState(
+                {
+                    Opening: this.state.Openings,
+                    lane: [
+                        {
+                            id: 'lane1',
+                            title: 'Openings',
+                            label: ' ',
+                            cards: this.state.Openings
+                        },
+                        {
+                            id: 'Leads',
+                            title: 'Leads',
+                            label: ' ',
+                            cards: this.state.leads
+                        },
+                        {
+                            id: 'Applied',
+                            title: 'Sent to Interview',
+                            label: ' ',
+                            cards: this.state.Applied
+                        },
+                        {
+                            id: 'Candidate',
+                            title: 'Candidate',
+                            label: ' ',
+                            cards: this.state.Candidate
+                        },
+                        {
+                            id: 'Placement',
+                            title: 'Placement',
+                            label: ' ',
+                            cards: this.state.Placement
+                        }
+                    ],
+                    loading: false
+                });
+
+        }
+
     }
 
 
@@ -280,12 +347,22 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
-        //console.log("esto es mio ", this.state.workOrders)
-        alert("doy clic en ", cardId);
-        if (sessionStorage.getItem('NewFilter') === false) {
-            this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
-        } else {
-            this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), sessionStorage.getItem('NewDistances'), laneId);
+        if (laneId == "lane1") {
+            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+            let anotherCards = document.querySelectorAll("article[data-id]");
+
+            anotherCards.forEach((anotherCard) => {
+                anotherCard.classList.remove("CardBoard-selected");
+            });
+            cardSelected[0].classList.add("CardBoard-selected");
+
+
+            alert("doy clic en ", cardId);
+            if (sessionStorage.getItem('NewFilter') === false) {
+                this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
+            } else {
+                this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), sessionStorage.getItem('NewDistances'), laneId);
+            }
         }
 
     }
