@@ -123,6 +123,8 @@ class Application extends Component {
         };
     }
 
+    // ADD_IDEAL_JOB_MUTATION = addApplicantIdealJob()
+
 
     /***
      * Method to magage react tag input
@@ -188,7 +190,7 @@ class Application extends Component {
                                 convicted: this.state.convicted,
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
-                                idealJob: this.state.tags.toString(),
+                                idealJob: this.state.idealJob,
                                 isLead: false
                             }
                         }
@@ -272,7 +274,8 @@ class Application extends Component {
                                 editing: false,
                                 tags: applicantData.idealJob
                                     ? applicantData.idealJob.split(',').map((d) => d.trim())
-                                    : []
+                                    : [],
+                                idealJob: applicantData.idealJob
                             },
                             () => {
                                 this.removeSkeletonAnimation();
@@ -768,36 +771,36 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[16].label}
 												</span>
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="positionApply"
-                                                                    id="positionApply"
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            positionApplyingFor: event.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.positionApplyingFor}
-                                                                    className="form-control"
-                                                                    disabled={!this.state.editing}
-                                                                >
-                                                                    <option value="">Select a position</option>
-                                                                    <option value="0">Open Position</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option
-                                                                            value={item.Id}>{item.Description}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay/>;
-                                                    }}
-                                                </Query>
+                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
+                                                    {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                                        {/*if (error) return <p>Error </p>;*/}
+                                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+                                                            {/*return (*/}
+                                                                {/*<select*/}
+                                                                    {/*name="positionApply"*/}
+                                                                    {/*id="positionApply"*/}
+                                                                    {/*onChange={(event) => {*/}
+                                                                        {/*this.setState({*/}
+                                                                            {/*positionApplyingFor: event.target.value*/}
+                                                                        {/*});*/}
+                                                                    {/*}}*/}
+                                                                    {/*value={this.state.positionApplyingFor}*/}
+                                                                    {/*className="form-control"*/}
+                                                                    {/*disabled={!this.state.editing}*/}
+                                                                {/*>*/}
+                                                                    {/*<option value="">Select a position</option>*/}
+                                                                    {/*<option value="0">Open Position</option>*/}
+                                                                    {/*{data.getcatalogitem.map((item) => (*/}
+                                                                        {/*<option*/}
+                                                                            {/*value={item.Id}>{item.Description}</option>*/}
+                                                                    {/*))}*/}
+                                                                {/*</select>*/}
+                                                            {/*);*/}
+                                                        {/*}*/}
+                                                        {/*return <SelectNothingToDisplay/>;*/}
+                                                    {/*}}*/}
+                                                {/*</Query>*/}
                                                 <TagsInput
                                                     inputProps={{placeholder: 'Ideal Jobs'}}
                                                     className={`form-control react-tagsinput ${!this.state.editing
@@ -827,16 +830,16 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[17].label}
 												</span>
-                                                <TagsInput
-                                                    inputProps={{placeholder: 'Ideal Jobs'}}
-                                                    className={`form-control react-tagsinput ${!this.state.editing
-                                                        ? 'disabled'
-                                                        : ''}`}
-                                                    value={this.state.tags}
-                                                    onChange={this.handleChange}
-                                                    disabled={!this.state.editing}
-                                                    suggestions={this.state.suggestions}
-                                                />
+                                                {/*<TagsInput*/}
+                                                    {/*inputProps={{placeholder: 'Ideal Jobs'}}*/}
+                                                    {/*className={`form-control react-tagsinput ${!this.state.editing*/}
+                                                        {/*? 'disabled'*/}
+                                                        {/*: ''}`}*/}
+                                                    {/*value={this.state.tags}*/}
+                                                    {/*onChange={this.handleChange}*/}
+                                                    {/*disabled={!this.state.editing}*/}
+                                                    {/*suggestions={this.state.suggestions}*/}
+                                                {/*/>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
@@ -848,10 +851,10 @@ class Application extends Component {
                                                                     id="positionApply"
                                                                     onChange={(event) => {
                                                                         this.setState({
-                                                                            positionApplyingFor: event.target.value
+                                                                            idealJob: event.target.value
                                                                         });
                                                                     }}
-                                                                    value={this.state.positionApplyingFor}
+                                                                    value={this.state.idealJob}
                                                                     className="form-control"
                                                                     disabled={!this.state.editing}
                                                                 >
