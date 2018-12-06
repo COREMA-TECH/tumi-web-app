@@ -149,28 +149,68 @@ class BoardRecruiter extends Component {
                 IdLane = 30460
         }
 
-        this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
+        if (targetLaneId != sourceLaneId) {
+            // this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
 
-        if (targetLaneId != "Leads") {
-            this.addApplicationPhase(cardId, IdLane);
-        }
+            if (targetLaneId != "Leads") {
+                //this.addApplicationPhase(cardId, IdLane);
+                this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+            }
 
+            if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
+                this.setState({
+                    ApplicationId: cardId,
+                    openReason: true
+                }, () => {
+                });
 
-        if (targetLaneId == "Leads" && sourceLaneId == "Applied") {
-            this.setState({
-                ApplicationId: cardId,
-                openReason: true
-            }, () => {
-                // this.onCardClick = (cardId, null, targetLaneId)
-            });
-        }
+                this.setState(
+                    {
+                        Opening: this.state.Openings,
+                        lane: [
+                            {
+                                id: 'lane1',
+                                title: 'Openings',
+                                label: ' ',
+                                cards: this.state.Openings
+                            },
+                            {
+                                id: 'Leads',
+                                title: 'Leads',
+                                label: ' ',
+                                cards: this.state.leads
+                            },
+                            {
+                                id: 'Applied',
+                                title: 'Sent to Interview',
+                                label: ' ',
+                                cards: this.state.Applied
+                            },
+                            {
+                                id: 'Candidate',
+                                title: 'Candidate',
+                                label: ' ',
+                                cards: this.state.Candidate
+                            },
+                            {
+                                id: 'Placement',
+                                title: 'Placement',
+                                label: ' ',
+                                cards: this.state.Placement
+                            }
+                        ],
+                        loading: false
+                    });
+            }
 
-        if (targetLaneId == "Candidate") {
-            this.updateApplicationInformation(cardId, false, 'Lead now is a Candidate');
+            // if (targetLaneId == "Applied") {
+
             // this.addApplicationPhase(cardId, IdLane);
-        }
-        if ((sourceLaneId == "Candidate" && targetLaneId == "Applied") || (sourceLaneId == "Candidate" && targetLaneId == "Leads")) {
-            this.updateApplicationInformation(cardId, true, 'Candidate now is a Lead ');
+            // }
+            // if ((sourceLaneId == "Candidate" && targetLaneId == "Applied") || (sourceLaneId == "Candidate" && targetLaneId == "Leads")) {
+            /*  if (targetLaneId == "Leads") {
+                  this.updateApplicationInformation(cardId, true, 'Candidate now is a Lead ');
+              }*/
         }
 
     }
@@ -196,7 +236,7 @@ class BoardRecruiter extends Component {
                     },
                     {
                         id: 'Applied',
-                        title: 'Applied',
+                        title: 'Sent to Interview',
                         label: ' ',
                         cards: this.state.Applied
                     },
@@ -630,7 +670,7 @@ class BoardRecruiter extends Component {
                                     },
                                     {
                                         id: 'Applied',
-                                        title: 'Applied',
+                                        title: 'Sent to Interview',
                                         label: ' ',
                                         cards: getApplied
                                     },
@@ -748,7 +788,7 @@ class BoardRecruiter extends Component {
                     },
                     {
                         id: 'Applied',
-                        title: 'Applied',
+                        title: 'Sent to Interview',
                         label: ' ',
                         cards: []
                     },
