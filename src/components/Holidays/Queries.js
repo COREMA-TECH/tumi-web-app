@@ -9,8 +9,8 @@ export const GET_HOLIDAYS = gql`
         id
         title
         description
-        startDate
-        endDate
+        start:startDate
+        end:endDate
         CompanyId
         weekDays
         weekNumbers
