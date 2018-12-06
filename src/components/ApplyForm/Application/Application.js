@@ -3,7 +3,13 @@ import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 //import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
-import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
+import {
+    GET_APPLICANT_IDEAL_JOBS,
+    GET_APPLICATION_BY_ID,
+    GET_CITIES_QUERY,
+    GET_POSITIONS_QUERY,
+    GET_STATES_QUERY
+} from '../Queries';
 import { updateApplicationInformation } from '../utils';
 import {ADD_IDEAL_JOB, UPDATE_APPLICATION} from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
@@ -282,10 +288,8 @@ class Application extends Component {
                                 idealJob: applicantData.idealJob
                             },
                             () => {
+                            	this.getIdealJobsByApplicationId();
                                 this.removeSkeletonAnimation();
-                                this.setState({
-                                    loading: false
-                                });
                             }
                         );
                     })
@@ -303,6 +307,45 @@ class Application extends Component {
             }
         );
     };
+
+    // get ideal jobs
+	getIdealJobsByApplicationId = () => {
+		this.props.client
+			.query({
+				query: GET_APPLICANT_IDEAL_JOBS,
+				variables: {
+                    ApplicationId: this.props.applicationId
+				}
+			})
+			.then(({data}) => {
+				console.log("DATA: " + data.applicantIdealJob);
+				let dataAPI = data.applicantIdealJob;
+
+				console.log("DATA API: " + dataAPI.description);
+                let object = [];
+                dataAPI.map(item => {
+                    object.push({
+                        value: item.id,
+                        label: item.description
+                    })
+                });
+
+                console.log("Object: " + object);
+
+                this.setState({
+					positionTags: object
+				}, () => {
+                    this.setState({
+                        loading: false
+                    }, () => {
+                    	console.log(this.state.positionsTags);
+					});
+				})
+			})
+			.catch(error => {
+
+			})
+	};
 
     // To validate all the inputs and set a red border when the input is invalid
     validateInvalidInput = () => {

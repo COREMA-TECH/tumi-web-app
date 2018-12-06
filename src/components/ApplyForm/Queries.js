@@ -186,9 +186,10 @@ export const GET_DOCUMENTS_AND_TEMPLATES = gql`
 `;
 
 export const GET_APPLICANT_IDEAL_JOBS = gql`
-	query applicantIdealJob($applicationId: Int) {
-        applicantIdealJob(ApplicationId: $applicationId) {
-			
+	query applicantIdealJob($ApplicationId: Int) {
+        applicantIdealJob(ApplicationId: $ApplicationId) {
+            id
+            description
 		}
 	}
 `;
