@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { ADD_APPLICATION_PHASES } from "./Mutations";
+import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT } from "./Mutations";
 
 class ApplicationPhasesForm extends Component {
 
@@ -31,7 +31,39 @@ class ApplicationPhasesForm extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         this.addApplicationPhase(event);
+        this.updateApplicationInformation(event);
     }
+
+    updateApplicationInformation = (event) => {
+        this.setState(
+            {
+                insertDialogLoading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_APPLICANT,
+                        variables: {
+                            id: this.props.ApplicationId,
+                            isLead: true,
+                            idRecruiter: localStorage.getItem('LoginId'),
+                            idWorkOrder: this.props.WorkOrderId
+                        }
+                    })
+                    .then(({ data }) => {
+                        this.setState({ editing: false });
+                        //this.props.handleOpenSnackbar('success', Message, 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            });
+    };
 
     addApplicationPhase = (event) => {
         this.props.client.mutate({

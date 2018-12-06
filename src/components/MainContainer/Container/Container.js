@@ -125,7 +125,7 @@ class Container extends Component {
 				<Route exact path="/home/contract/add" component={Contract} />
 				<Route exact path="/home/contracts" component={MainContract} />
 				<Route exact path="/home/company" component={CompanyList} />
-				<Route exact path="/home/hotels" component={HotelList} />
+				<Route exact path="/home/Properties" component={HotelList} />
 				<Route exact path="/home/company/edit" component={CreateCompany} />
 				<Route exact path="/home/company/add" component={CreateCompany} />
 				<Route exact path="/home/application" component={ApplicationList} />
