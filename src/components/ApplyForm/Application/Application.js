@@ -174,7 +174,18 @@ class Application extends Component {
                     .then(({data}) => {
                         this.setState({
                             editing: false
-                        });
+                        }, () => {
+                        	let object = [];
+                        	this.state.positionsTags.map(item => {
+								object.push({
+                                    ApplicationId: this.props.applicationId,
+                                    idPosition: item.value,
+									description: item.label
+								})
+							});
+
+							this.addApplicantJobs(object);
+						});
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
                     })
@@ -195,14 +206,14 @@ class Application extends Component {
             .mutate({
                 mutation: ADD_IDEAL_JOB,
                 variables: {
-
+					application: idealJobArrayObject
                 }
             })
             .then(({data}) => {
-
+            	console.log("DEBUG");
             })
             .catch(error => {
-
+            	console.log("DEBUG ERROR");
             })
     };
 
@@ -802,6 +813,7 @@ class Application extends Component {
                                                             		paddingBottom: '10px',
 																}}>
                                                                     <Select
+                                                                        disabled={!this.state.editing}
                                                                         options={options}
 																		value={this.state.positionsTags}
 																		onChange={this.handleChangePositionTag}
