@@ -5,7 +5,7 @@ import withApollo from 'react-apollo/withApollo';
 //import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
 import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
 import { updateApplicationInformation } from '../utils';
-import {ADD_IDEAL_JOB, UPDATE_APPLICATION} from '../Mutations';
+import { ADD_IDEAL_JOB, UPDATE_APPLICATION } from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
@@ -25,8 +25,8 @@ const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageFor
 const ReactTags = require('react-tag-autocomplete');
 
 const KeyCodes = {
-    comma: 188,
-    enter: 13,
+	comma: 188,
+	enter: 13,
 };
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
@@ -117,10 +117,10 @@ class Application extends Component {
 		};
 	}
 
-    handleChangePositionTag = (positionsTags) => {
-        this.setState({ positionsTags });
-        console.log(`Option selected:`, positionsTags);
-    };
+	handleChangePositionTag = (positionsTags) => {
+		this.setState({ positionsTags });
+		console.log(`Option selected:`, positionsTags);
+	};
 
 	handleChange = (tags) => {
 		this.setState({ tags });
@@ -129,57 +129,57 @@ class Application extends Component {
     /**<
      * To update a application by id
      */
-    updateApplicationInformation = (id) => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: UPDATE_APPLICATION,
-                        variables: {
-                            application: {
-                                id: id,
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                streetAddress: this.state.streetAddress,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                socialSecurityNumber: this.state.socialSecurityNumber,
-                                birthDay: this.state.birthDay,
-                                car: this.state.car,
-                                typeOfId: parseInt(this.state.typeOfId),
-                                expireDateId: this.state.expireDateId,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                dateAvailable: this.state.dateAvailable,
-                                scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment,
-                                idealJob: this.state.idealJob,
-                                isLead: false
-                            }
-                        }
-                    })
-                    .then(({data}) => {
-                        this.setState({
-                            editing: false
-                        }, () => {
-                        	let object = [];
-                        	this.state.positionsTags.map(item => {
+	updateApplicationInformation = (id) => {
+		this.setState(
+			{
+				insertDialogLoading: true
+			},
+			() => {
+				this.props.client
+					.mutate({
+						mutation: UPDATE_APPLICATION,
+						variables: {
+							application: {
+								id: id,
+								firstName: this.state.firstName,
+								middleName: this.state.middleName,
+								lastName: this.state.lastName,
+								lastName2: this.state.lastName2,
+								date: this.state.date,
+								streetAddress: this.state.streetAddress,
+								aptNumber: this.state.aptNumber,
+								city: this.state.city,
+								state: this.state.state,
+								zipCode: this.state.zipCode,
+								homePhone: this.state.homePhone,
+								cellPhone: this.state.cellPhone,
+								socialSecurityNumber: this.state.socialSecurityNumber,
+								birthDay: this.state.birthDay,
+								car: this.state.car,
+								typeOfId: parseInt(this.state.typeOfId),
+								expireDateId: this.state.expireDateId,
+								emailAddress: this.state.emailAddress,
+								positionApplyingFor: parseInt(this.state.positionApplyingFor),
+								dateAvailable: this.state.dateAvailable,
+								scheduleRestrictions: this.state.scheduleRestrictions,
+								scheduleExplain: this.state.scheduleExplain,
+								convicted: this.state.convicted,
+								convictedExplain: this.state.convictedExplain,
+								comment: this.state.comment,
+								idealJob: this.state.idealJob,
+								isLead: false
+							}
+						}
+					})
+					.then(({ data }) => {
+						this.setState({
+							editing: false
+						}, () => {
+							let object = [];
+							this.state.positionsTags.map(item => {
 								object.push({
-                                    ApplicationId: this.props.applicationId,
-                                    idPosition: item.value,
+									ApplicationId: this.props.applicationId,
+									idPosition: item.value,
 									description: item.label
 								})
 							});
@@ -187,190 +187,208 @@ class Application extends Component {
 							this.addApplicantJobs(object);
 						});
 
-                        this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Errorn to update aaplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
-    };
+						this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar(
+							'error',
+							'Errorn to update aaplicant information. Please, try again!',
+							'bottom',
+							'right'
+						);
+					});
+			}
+		);
+	};
 
-    addApplicantJobs = (idealJobArrayObject) => {
-        this.props.client
-            .mutate({
-                mutation: ADD_IDEAL_JOB,
-                variables: {
+	addApplicantJobs = (idealJobArrayObject) => {
+		this.props.client
+			.mutate({
+				mutation: ADD_IDEAL_JOB,
+				variables: {
 					application: idealJobArrayObject
-                }
-            })
-            .then(({data}) => {
-            	console.log("DEBUG");
-            })
-            .catch(error => {
-            	console.log("DEBUG ERROR");
-            })
-    };
+				}
+			})
+			.then(({ data }) => {
+				console.log("DEBUG");
+			})
+			.catch(error => {
+				console.log("DEBUG ERROR");
+			})
+	};
 
     /**
      * To get applications by id
      */
-    getApplicationById = (id) => {
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                this.props.client
-                    .query({
-                        query: GET_APPLICATION_BY_ID,
-                        variables: {
-                            id: id
-                        },
-                        fetchPolicy: 'no-cache'
-                    })
-                    .then(({data}) => {
-                        let applicantData = data.applications[0];
-                        console.log("applicantData ", applicantData);
-                        this.setState(
-                            {
-                                firstName: applicantData.firstName,
-                                middleName: applicantData.middleName,
-                                lastName: applicantData.lastName,
-                                lastName2: applicantData.lastName2,
-                                date:
-                                    applicantData.date !== null
-                                        ? applicantData.date.substring(0, 10)
-                                        : applicantData.date,
-                                streetAddress: applicantData.streetAddress,
-                                emailAddress: applicantData.emailAddress,
-                                aptNumber: applicantData.aptNumber,
-                                city: applicantData.city,
-                                state: applicantData.state,
-                                zipCode: applicantData.zipCode,
-                                homePhone: applicantData.homePhone,
-                                cellPhone: applicantData.cellPhone,
-                                birthDay:
-                                    applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
-                                socialSecurityNumber: applicantData.socialSecurityNumber,
-                                positionApplyingFor: applicantData.positionApplyingFor,
-                                car: applicantData.car,
-                                typeOfId: applicantData.typeOfId,
-                                expireDateId:
-                                    applicantData.expireDateId !== null
-                                        ? applicantData.expireDateId.substring(0, 10)
-                                        : applicantData.expireDateId,
-                                dateAvailable:
-                                    applicantData.dateAvailable !== null
-                                        ? applicantData.dateAvailable.substring(0, 10)
-                                        : applicantData.dateAvailable,
-                                scheduleRestrictions: applicantData.scheduleRestrictions,
-                                scheduleExplain: applicantData.scheduleExplain,
-                                convicted: applicantData.convicted,
-                                convictedExplain: applicantData.convictedExplain,
-                                comment: applicantData.comment,
-                                editing: false,
-                                tags: applicantData.idealJob
-                                    ? applicantData.idealJob.split(',').map((d) => d.trim())
-                                    : [],
-                                idealJob: applicantData.idealJob
-                            },
-                            () => {
-                                this.removeSkeletonAnimation();
-                                this.setState({
-                                    loading: false
-                                });
-                            }
-                        );
-                    })
-                    .catch((error) => {
-                        // TODO: replace alert with snackbar error message
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to show applicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
+	getApplicationById = (id) => {
+		this.setState(
+			{
+				loading: true
+			},
+			() => {
+				this.props.client
+					.query({
+						query: GET_APPLICATION_BY_ID,
+						variables: {
+							id: id
+						},
+						fetchPolicy: 'no-cache'
+					})
+					.then(({ data }) => {
+						let applicantData = data.applications[0];
+						console.log("applicantData ", applicantData);
+						this.setState(
+							{
+								firstName: applicantData.firstName,
+								middleName: applicantData.middleName,
+								lastName: applicantData.lastName,
+								lastName2: applicantData.lastName2,
+								date:
+									applicantData.date !== null
+										? applicantData.date.substring(0, 10)
+										: applicantData.date,
+								streetAddress: applicantData.streetAddress,
+								emailAddress: applicantData.emailAddress,
+								aptNumber: applicantData.aptNumber,
+								city: applicantData.city,
+								state: applicantData.state,
+								zipCode: applicantData.zipCode,
+								homePhone: applicantData.homePhone,
+								cellPhone: applicantData.cellPhone,
+								birthDay:
+									applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
+								socialSecurityNumber: applicantData.socialSecurityNumber,
+								positionApplyingFor: applicantData.positionApplyingFor,
+								car: applicantData.car,
+								typeOfId: applicantData.typeOfId,
+								expireDateId:
+									applicantData.expireDateId !== null
+										? applicantData.expireDateId.substring(0, 10)
+										: applicantData.expireDateId,
+								dateAvailable:
+									applicantData.dateAvailable !== null
+										? applicantData.dateAvailable.substring(0, 10)
+										: applicantData.dateAvailable,
+								scheduleRestrictions: applicantData.scheduleRestrictions,
+								scheduleExplain: applicantData.scheduleExplain,
+								convicted: applicantData.convicted,
+								convictedExplain: applicantData.convictedExplain,
+								comment: applicantData.comment,
+								editing: false,
+								tags: applicantData.idealJob
+									? applicantData.idealJob.split(',').map((d) => d.trim())
+									: [],
+								idealJob: applicantData.idealJob
+							},
+							() => {
+								this.removeSkeletonAnimation();
+								this.setState({
+									loading: false
+								});
+							}
+						);
+					})
+					.catch((error) => {
+						// TODO: replace alert with snackbar error message
+						this.props.handleOpenSnackbar(
+							'error',
+							'Error to show applicant information. Please, try again!',
+							'bottom',
+							'right'
+						);
 
-                        console.log(error);
-                    });
-            }
-        );
-    };
+						console.log(error);
+					});
+			}
+		);
+	};
 
-    // To validate all the inputs and set a red border when the input is invalid
-    validateInvalidInput = () => {
-        if (document.addEventListener) {
-            document.addEventListener(
-                'invalid',
-                (e) => {
-                    e.target.className += ' invalid-apply-form';
-                },
-                true
-            );
-        }
-    };
+	// To validate all the inputs and set a red border when the input is invalid
+	validateInvalidInput = () => {
+		if (document.addEventListener) {
+			document.addEventListener(
+				'invalid',
+				(e) => {
+					e.target.className += ' invalid-apply-form';
+				},
+				true
+			);
+		}
+	};
 
-    // To show skeleton animation in css
-    removeSkeletonAnimation = () => {
-        let inputs, index;
+	// To show skeleton animation in css
+	removeSkeletonAnimation = () => {
+		let inputs, index;
 
-        inputs = document.getElementsByTagName('span');
-        for (index = 0; index < inputs.length; ++index) {
-            inputs[index].classList.remove('skeleton');
-        }
-    };
+		inputs = document.getElementsByTagName('span');
+		for (index = 0; index < inputs.length; ++index) {
+			inputs[index].classList.remove('skeleton');
+		}
+	};
 
-    componentWillMount() {
-        this.getApplicationById(this.props.applicationId);
-    }
+	componentWillMount() {
+		this.getApplicationById(this.props.applicationId);
+	}
 
-    render() {
-        //this.validateInvalidInput();
-        const {tags, suggestions} = this.state;
+	findByZipCode = (zipCode = null, cityFinal = null) => {
+		if (!zipCode) {
+			return false;
+		}
 
-        return (
-            <div className="Apply-container--application">
-                <form
-                    className="general-info-apply-form"
-                    id="general-info-form"
-                    autoComplete="off"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.updateApplicationInformation(this.props.applicationId);
-                    }}
-                >
-                    <div className="">
-                        <div className="applicant-card">
-                            <div className="applicant-card__header">
-                                <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                                {this.state.editing ? (
-                                    ''
-                                ) : (
-                                    <button
-                                        className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
-                                    >
-                                        {spanishActions[1].label} <i className="far fa-edit"/>
-                                    </button>
-                                )}
-                            </div>
-                            <br/>
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-md-12 col-lg-6 form-section-1">
-                                        <div className="row">
-                                            <div className="col-md-6">
+		this.props.client.query({
+			query: GET_STATES_QUERY,
+			variables: { parent: -1, value: `'${zipCode}'` },
+			fetchPolicy: 'no-cache'
+		}).then((data) => {
+			this.setState({
+				state: data.data.getcatalogitem[0].Id,
+				cityFinal: cityFinal
+			});
+		});
+
+	}
+
+	render() {
+		//this.validateInvalidInput();
+		const { tags, suggestions } = this.state;
+
+		return (
+			<div className="Apply-container--application">
+				<form
+					className="general-info-apply-form"
+					id="general-info-form"
+					autoComplete="off"
+					onSubmit={(e) => {
+						e.preventDefault();
+						e.stopPropagation();
+						this.updateApplicationInformation(this.props.applicationId);
+					}}
+				>
+					<div className="">
+						<div className="applicant-card">
+							<div className="applicant-card__header">
+								<span className="applicant-card__title">{menuSpanish[0].label}</span>
+								{this.state.editing ? (
+									''
+								) : (
+										<button
+											className="applicant-card__edit-button"
+											onClick={() => {
+												this.setState({
+													editing: true
+												});
+											}}
+										>
+											{spanishActions[1].label} <i className="far fa-edit" />
+										</button>
+									)}
+							</div>
+							<br />
+							<div className="card-body">
+								<div className="row">
+									<div className="col-md-12 col-lg-6 form-section-1">
+										<div className="row">
+											<div className="col-md-6">
 												<span className="primary applicant-card__label skeleton">
 													* {formSpanish[0].label}
 												</span>
@@ -797,74 +815,74 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[16].label}
 												</span>
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                        	let options = [];
-                                                        	data.getcatalogitem.map((item) => (
+												<Query query={GET_POSITIONS_QUERY}>
+													{({ loading, error, data, refetch, networkStatus }) => {
+														//if (networkStatus === 4) return <LinearProgress />;
+														if (error) return <p>Error </p>;
+														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+															let options = [];
+															data.getcatalogitem.map((item) => (
 																options.push({ value: item.Id, label: item.Description })
-                                                            ));
+															));
 
-                                                            return (
-                                                            	<div style={{
-                                                            		paddingTop: '10px',
-                                                            		paddingBottom: '10px',
+															return (
+																<div style={{
+																	paddingTop: '10px',
+																	paddingBottom: '10px',
 																}}>
-                                                                    <Select
-                                                                        disabled={!this.state.editing}
-                                                                        options={options}
+																	<Select
+																		disabled={!this.state.editing}
+																		options={options}
 																		value={this.state.positionsTags}
 																		onChange={this.handleChangePositionTag}
-                                                                        closeMenuOnSelect={false}
-                                                                        components={makeAnimated()}
-                                                                        isMulti
-                                                                    />
+																		closeMenuOnSelect={false}
+																		components={makeAnimated()}
+																		isMulti
+																	/>
 																</div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay/>;
-                                                    }}
-                                                </Query>
-                                            </div>
+															);
+														}
+														return <SelectNothingToDisplay />;
+													}}
+												</Query>
+											</div>
 
-                                            <div className="col-md-12">
+											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[17].label}
 												</span>
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="positionApply"
-                                                                    id="positionApply"
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            idealJob: event.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.idealJob}
-                                                                    className="form-control"
-                                                                    disabled={!this.state.editing}
-                                                                >
-                                                                    <option value="">Select a position</option>
-                                                                    <option value="0">Open Position</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option
-                                                                            value={item.Id}>{item.Description}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay/>;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-12">
+												<Query query={GET_POSITIONS_QUERY}>
+													{({ loading, error, data, refetch, networkStatus }) => {
+														//if (networkStatus === 4) return <LinearProgress />;
+														if (error) return <p>Error </p>;
+														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+															return (
+																<select
+																	name="positionApply"
+																	id="positionApply"
+																	onChange={(event) => {
+																		this.setState({
+																			idealJob: event.target.value
+																		});
+																	}}
+																	value={this.state.idealJob}
+																	className="form-control"
+																	disabled={!this.state.editing}
+																>
+																	<option value="">Select a position</option>
+																	<option value="0">Open Position</option>
+																	{data.getcatalogitem.map((item) => (
+																		<option
+																			value={item.Id}>{item.Description}</option>
+																	))}
+																</select>
+															);
+														}
+														return <SelectNothingToDisplay />;
+													}}
+												</Query>
+											</div>
+											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
 													* {formSpanish[18].label}
 												</span>
