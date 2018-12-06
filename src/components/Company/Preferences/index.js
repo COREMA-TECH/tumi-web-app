@@ -239,6 +239,9 @@ class Preferences extends React.Component {
                 <form onSubmit={this.handleSubmit} className="Preferences-form">
                     <div className="row">
                         <div className="col-md-12">
+                            <button type="button" className="btn btn-info edit-company-button float-right ml-1" onClick={(e) => { e.preventDefault(); }}>
+                                Add Holiday <i class="fas fa-calendar-alt ml-1" />
+                            </button>
                             <button type="submit" className="btn btn-success edit-company-button float-right">
                                 Save {!this.state.saving && <i class="fas fa-save ml-1" />}
                                 {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}

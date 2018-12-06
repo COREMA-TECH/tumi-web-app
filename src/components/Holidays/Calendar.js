@@ -71,10 +71,12 @@ class Calendar extends Component {
                             events={this.state.events}
                             startAccessor="start"
                             endAccessor="end"
-                            onSelectEvent={event => this.setState({
-                                idHoliday: event.id,
-                                open: true
-                            })}
+                            onSelectEvent={event => {
+                                this.setState({
+                                    idHoliday: event.id,
+                                    open: true
+                                }, event.stopPropagation)
+                            }}
                         //  components={components}
                         />
                     </div>
