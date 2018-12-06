@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import BigCalendar from 'react-big-calendar';
 import events from './events';
 import moment from 'moment';
-import { GET_HOLIDAYS } from './queries';
+import { GET_HOLIDAYS } from './Queries';
 import { withApollo } from 'react-apollo';
 import Query from 'react-apollo/Query';
+import Holidays from './index';
+import { GenericDialog } from 'ui-components/ProfilePicture/Dialog';
 
 let allViews = Object.keys(BigCalendar.Views).map(k => BigCalendar.Views[k])
 
@@ -16,11 +18,17 @@ class Calendar extends Component {
     constructor() {
         super();
         this.state = {
-            events: []
+            events: [],
+            idHoliday: 0,
+            open: false
         }
     }
 
     UNSAFE_componentWillMount() {
+        this.getHolidays();
+    }
+
+    getHolidays = () => {
         this.props.client
             .query({
                 query: GET_HOLIDAYS
@@ -28,7 +36,7 @@ class Calendar extends Component {
             .then(({ data }) => {
                 this.setState({
                     events: data.holidays
-                }, () => { console.log(this.state.events) });
+                });
             })
             .catch((err) => {
                 console.log(err);
@@ -41,6 +49,12 @@ class Calendar extends Component {
 
     handleSelect = ({ start, end }) => {
 
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        }, this.getHolidays);
     }
 
 
@@ -57,13 +71,23 @@ class Calendar extends Component {
                             events={this.state.events}
                             startAccessor="start"
                             endAccessor="end"
-                            onSelectEvent={event => alert(event.resource)}
+                            onSelectEvent={event => this.setState({
+                                idHoliday: event.id,
+                                open: true
+                            })}
                         //  components={components}
                         />
                     </div>
                 </div>
+                <GenericDialog
+                    open={this.state.open}
+                    handleClose={this.handleClose}
+                    title=""
+                    maxWidth={'lg'}
+                >
+                    <Holidays idCompany={this.props.idCompany} idHoliday={this.state.idHoliday} handleOpenSnackbar={this.props.handleOpenSnackbar} handleClose={this.handleClose} />
+                </GenericDialog>
             </div>
-
         );
 
     }
