@@ -198,4 +198,4 @@ class WorkOrdersPositionTable extends Component {
 	}
 }
 
-export default withStyles()(withApollo(WorkOrdersPositionTable));
+export default (withApollo(WorkOrdersPositionTable));

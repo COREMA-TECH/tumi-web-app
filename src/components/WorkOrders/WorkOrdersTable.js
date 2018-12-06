@@ -398,4 +398,4 @@ class WorkOrdersTable extends Component {
 
 }
 
-export default withStyles()(withApollo(WorkOrdersTable));
+export default (withApollo(WorkOrdersTable));

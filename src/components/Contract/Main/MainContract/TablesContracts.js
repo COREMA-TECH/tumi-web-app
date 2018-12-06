@@ -189,12 +189,12 @@ class DepartmentsTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell padding="none" className={classes.th} />
-									<CustomTableCell padding="none" className={classes.th} />
-									<CustomTableCell className={classes.th}>Contract Name</CustomTableCell>
-									<CustomTableCell className={classes.th}>Contract Owner</CustomTableCell>
-									<CustomTableCell className={classes.th}>Contract Status</CustomTableCell>
-									<CustomTableCell className={classes.th}>Contract Expiration Date</CustomTableCell>
+									<CustomTableCell padding="none" className={"Table-head"} />
+									<CustomTableCell padding="none" className={"Table-head"} />
+									<CustomTableCell className={"Table-head"}>Contract Name</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Contract Owner</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Contract Status</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Contract Expiration Date</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -215,7 +215,8 @@ class DepartmentsTable extends React.Component {
 												{' '}
 												<Tooltip title="Edit">
 													<div>
-														<IconButton
+														<button
+															className="btn btn-danger ml-1"
 															disabled={this.props.loading}
 															onClick={() => {
 																history.push({
@@ -224,15 +225,16 @@ class DepartmentsTable extends React.Component {
 																});
 															}}
 														>
-															<EditIcon color="primary" />
-														</IconButton>
+															<i class="fas fa-pen"></i>
+														</button>
 													</div>
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>
-														<IconButton
+														<button
+															className="btn btn-success ml-1"
 															disabled={this.props.loading}
 															onClick={(e) => {
 																//console.log(this.props);
@@ -240,8 +242,8 @@ class DepartmentsTable extends React.Component {
 																return this.props.delete(row.Id);
 															}}
 														>
-															<DeleteIcon color="primary" />
-														</IconButton>
+															<i class="fas fa-trash"></i>
+														</button>
 													</div>
 												</Tooltip>
 											</CustomTableCell>

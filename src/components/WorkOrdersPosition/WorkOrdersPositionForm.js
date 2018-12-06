@@ -414,4 +414,4 @@ class WorkOrdersPositionForm extends Component {
 	}
 }
 
-export default withStyles()(withMobileDialog()(withApollo(WorkOrdersPositionForm)));
+export default (withMobileDialog()(withApollo(WorkOrdersPositionForm)));
