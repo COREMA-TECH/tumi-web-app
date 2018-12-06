@@ -308,19 +308,7 @@ class Holidays extends Component {
             this.props.handleOpenSnackbar('warning', "Only one Week Day must be selected", 'bottom', 'right');
             return { valid: false, type: '' };
         }
-        // this.state.weekDays.map(item => {
-        //     if (item.selected) {
-        //         if (indexSelected != -1) {
-        //             let dif = item.id - indexSelected;
-        //             if (dif != 1) {
-        //                 this.props.handleOpenSnackbar('warning', "The days of the week can not be interleaved", 'bottom', 'right');
-        //                 return { valid: false, type: '' };
-        //             }
-        //             else { indexSelected = item.id; }
-        //         } else { indexSelected = item.id; }
-        //         counter++;
-        //     }
-        // })
+
         weekDaysSelected = counter > 0, counter = 0;
         let breakEach = false;
         //Validate Calendar Day Selection
@@ -415,7 +403,6 @@ class Holidays extends Component {
     }
 
     componentWillMount() {
-        console.log("will mount")
         let { idHoliday, idCompany } = this.props;
         this.setState({
             id: idHoliday,
@@ -435,8 +422,7 @@ class Holidays extends Component {
         let lastCalendarDay = calendarData ? calendarData.sort((a, b) => b.id - a.id).find(item => item.selected == true) : null
         let prettyDate = "";
 
-
-
+        //Create summary date based on selected calendar days
         if (firstCalendarDay)
             prettyDate += `From ${firstCalendarDay.id} `
         if (lastCalendarDay)
@@ -444,18 +430,15 @@ class Holidays extends Component {
         if (firstCalendarDay)
             if (firstCalendarDay.id == lastCalendarDay.id)
                 prettyDate = `${firstCalendarDay.id} `
-
-
+        //Create summary date based on selected (Week and Day)
         if (selectedWeekDay)
             prettyDate += `${selectedWeekDay.name} of `
         if (selectedWeekNumber)
             prettyDate += `${selectedWeekNumber.name} Week of `
+        //Create summary date based on selected month
         if (selectedMont)
             prettyDate += selectedMont.name
-
-
         return prettyDate;
-
     }
 
     render() {
@@ -585,7 +568,6 @@ class Holidays extends Component {
             </form>
         );
     }
-
 }
 
 export default withApollo(Holidays);
