@@ -25,7 +25,7 @@ class ProfilePicture extends Component {
     };
 
     componentWillMount() {
-        if(this.props.url) {
+        if (this.props.url) {
             this.setState({
                 url: this.props.url
             })
@@ -42,7 +42,9 @@ class ProfilePicture extends Component {
             <GenericDialog
                 open={this.state.open}
                 handleClose={this.handleClose}
-                title="Please select an option" >
+                title="Please select an option"
+                fullScreen={this.props.fullScreen}
+                maxWidth={this.props.maxWidth} >
                 <ImageSelection
                     returnImage={this.updateImage}
                     handleOpenSnackbar={this.props.handleOpenSnackbar} />

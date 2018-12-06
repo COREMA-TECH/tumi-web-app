@@ -1,11 +1,12 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import {withApollo} from 'react-apollo';
+import { withApollo } from 'react-apollo';
 import CatalogItem from 'Generic/CatalogItem';
-import {select} from 'async';
+import { select } from 'async';
 import months from './months.json';
 import timeZones from './timezones.json';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import Calendar from "../../Holidays/Calendar"
 
 class Preferences extends React.Component {
 
@@ -37,7 +38,7 @@ class Preferences extends React.Component {
             this.props.client
                 .query({
                     query: this.GET_QUERY,
-                    variables: {id: this.state.idCompany},
+                    variables: { id: this.state.idCompany },
                     fetchPolicy: 'no-cache'
                 })
                 .then((result) => {
@@ -102,7 +103,7 @@ class Preferences extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.setState({saving: true}, () => {
+        this.setState({ saving: true }, () => {
             if (this.state.disabled && (this.props.idCompany == "" || this.state.period == undefined || this.state.amount == undefined || this.state.amount < 0)) {
                 this.props.handleOpenSnackbar(
                     'error',
@@ -139,10 +140,10 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Inserted!'
                 );
-                this.setState({saving: false})
+                this.setState({ saving: false })
             })
             .catch((error) => {
-                this.setState({saving: false})
+                this.setState({ saving: false })
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
@@ -172,14 +173,14 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Updated!'
                 );
-                this.setState({saving: false})
+                this.setState({ saving: false })
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
                 );
-                this.setState({saving: false})
+                this.setState({ saving: false })
             });
     }
 
@@ -230,7 +231,7 @@ class Preferences extends React.Component {
 
     render() {
         if (this.state.loading) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         return (
@@ -239,13 +240,13 @@ class Preferences extends React.Component {
                     <div className="row">
                         <div className="col-md-12">
                             <button type="submit" className="btn btn-success edit-company-button float-right">
-                                Save {!this.state.saving && <i class="fas fa-save ml-1"/>}
-                                {this.state.saving && <i class="fas fa-spinner fa-spin ml-1"/>}
+                                Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+                                {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
                             </button>
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-12">
+                        <div className="col-md-6">
                             <div class="card">
                                 <div class="card-header">Lunch Preferences</div>
                                 <div class="card-body">
@@ -257,8 +258,8 @@ class Preferences extends React.Component {
 
                                             <div class="onoffswitch">
                                                 <input type="checkbox" checked={this.state.charge} name="charge"
-                                                       onClick={this.toggleState} onChange={this.handleChange}
-                                                       className="onoffswitch-checkbox" id="myonoffswitch"/>
+                                                    onClick={this.toggleState} onChange={this.handleChange}
+                                                    className="onoffswitch-checkbox" id="myonoffswitch" />
                                                 <label class="onoffswitch-label" for="myonoffswitch">
                                                     <span class="onoffswitch-inner"></span>
                                                     <span class="onoffswitch-switch"></span>
@@ -273,7 +274,7 @@ class Preferences extends React.Component {
                                                 (!this.state.disabled) ?
                                                     <CatalogItem
                                                         update={(id) => {
-                                                            this.setState({period: id})
+                                                            this.setState({ period: id })
                                                         }}
                                                         PeriodId={11}
                                                         name="period"
@@ -290,9 +291,9 @@ class Preferences extends React.Component {
                                                 Amount
                                             </label>
                                             <input type="number" min="0" name="amount" step=".01"
-                                                   disabled={(this.state.disabled) ? "disabled" : ""}
-                                                   value={this.state.amount} className="form-control"
-                                                   onChange={this.handleChange}/>
+                                                disabled={(this.state.disabled) ? "disabled" : ""}
+                                                value={this.state.amount} className="form-control"
+                                                onChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -412,6 +413,13 @@ class Preferences extends React.Component {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <div className="card">
+                                <div className="card-body">
+                                    <Calendar idCompany={this.props.idCompany} handleOpenSnackbar={this.props.handleOpenSnackbar} />
                                 </div>
                             </div>
                         </div>

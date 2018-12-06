@@ -15,6 +15,7 @@ class CustomDialog extends Component {
             fullScreen={fullScreen}
             open={this.props.open}
             aria-labelledby="responsive-dialog-title"
+            maxWidth={this.props.maxWidth}
         >
             <DialogTitle id="responsive-dialog-title">{this.props.title}</DialogTitle>
             <DialogContent>

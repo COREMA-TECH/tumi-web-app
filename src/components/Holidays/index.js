@@ -130,8 +130,8 @@ class Holidays extends Component {
     }
     onHandleSave = (e) => {
         e.preventDefault();
+        e.stopPropagation();
         const { valid, type } = this.validateSelection();
-        console.log({ valid, type })
         //D = Day of Week , C= Day of the calendar, W = Number of Week
         if (valid) {
             let startDate, endDate, result;
@@ -165,6 +165,7 @@ class Holidays extends Component {
         }).then(({ data }) => {
             this.setState({ id: data.addHoliday[0].id, inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Inserted", 'bottom', 'right');
+            this.props.handleClose();
         }).catch((error) => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar(
@@ -177,7 +178,6 @@ class Holidays extends Component {
     }
 
     updateHoliday(startDate, endDate) {
-        console.log("Updating", this.state)
         this.props.client.mutate({
             mutation: UPDATE_HOLIDAY,
             variables: {
@@ -198,6 +198,7 @@ class Holidays extends Component {
         }).then(({ data }) => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar('success', "Holiday Updated", 'bottom', 'right');
+            this.props.handleClose();
         }).catch((error) => {
             this.setState({ inserting: false })
             this.props.handleOpenSnackbar(
@@ -517,4 +518,4 @@ class Holidays extends Component {
 
 }
 
-export default withApollo(withGlobalContent(Holidays));
+export default withApollo(Holidays);
