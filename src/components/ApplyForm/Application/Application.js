@@ -822,69 +822,17 @@ class Application extends Component {
                                                                         isMulti
                                                                     />
 																</div>
-                                                                // <select
-                                                                //     name="positionApply"
-                                                                //     id="positionApply"
-                                                                //     onChange={(event) => {
-                                                                //         this.setState({
-                                                                //             positionApplyingFor: event.target.value
-                                                                //         });
-                                                                //     }}
-                                                                //     value={this.state.positionApplyingFor}
-                                                                //     className="form-control"
-                                                                //     disabled={!this.state.editing}
-                                                                // >
-                                                                //     <option value="">Select a position</option>
-                                                                //     <option value="0">Open Position</option>
-                                                                //     {data.getcatalogitem.map((item) => (
-                                                                //         <option
-                                                                //             value={item.Id}>{item.Description}</option>
-                                                                //     ))}
-                                                                // </select>
                                                             );
                                                         }
                                                         return <SelectNothingToDisplay/>;
                                                     }}
                                                 </Query>
-                                                {/*<TagsInput*/}
-                                                    {/*inputProps={{placeholder: 'Position'}}*/}
-                                                    {/*className={`form-control react-tagsinput ${!this.state.editing*/}
-                                                        {/*? 'disabled'*/}
-                                                        {/*: ''}`}*/}
-                                                    {/*value={this.state.tags}*/}
-                                                    {/*onChange={this.handleChange}*/}
-                                                    {/*disabled={!this.state.editing}*/}
-                                                    {/*suggestions={this.state.suggestions}*/}
-                                                {/*/>*/}
                                             </div>
-
-                                            {/*<div className="col-md-12">*/}
-												{/*<span className="primary applicant-card__label skeleton">*/}
-													{/*{formSpanish[16].label}*/}
-												{/*</span>*/}
-                                                {/*<ReactTags tags={tags}*/}
-                                                           {/*suggestions={suggestions}*/}
-                                                           {/*handleDelete={this.handleDelete}*/}
-                                                           {/*handleAddition={this.handleAddition}*/}
-                                                           {/*handleDrag={this.handleDrag}*/}
-                                                           {/*delimiters={delimiters}*/}
-                                                {/*/>*/}
-                                            {/*</div>*/}
 
                                             <div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[17].label}
 												</span>
-                                                {/*<TagsInput*/}
-                                                    {/*inputProps={{placeholder: 'Ideal Jobs'}}*/}
-                                                    {/*className={`form-control react-tagsinput ${!this.state.editing*/}
-                                                        {/*? 'disabled'*/}
-                                                        {/*: ''}`}*/}
-                                                    {/*value={this.state.tags}*/}
-                                                    {/*onChange={this.handleChange}*/}
-                                                    {/*disabled={!this.state.editing}*/}
-                                                    {/*suggestions={this.state.suggestions}*/}
-                                                {/*/>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
