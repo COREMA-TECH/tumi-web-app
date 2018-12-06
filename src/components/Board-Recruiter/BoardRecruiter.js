@@ -555,14 +555,17 @@ class BoardRecruiter extends Component {
         let SpeakEnglish;
         let Employment;
         let distances;
+        let position;
         let Phases = [];
         let varphase;
 
         if (laneId == "lane1") {
-            await this.props.client.query({ query: GET_LEAD, variables: { positionApplyingFor: PositionId } }).then(({ data }) => {
+            /*positionApplyingFor: PositionId  */
+            await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
                     const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
+                    const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
 
                     this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
 
@@ -586,9 +589,13 @@ class BoardRecruiter extends Component {
                         } else {
                             distances = 1;
                         }
+                        if (typeof IdealJob == undefined || IdealJob == null) {
+                            position = 0;
+                        } else { position = 1 }
 
 
-                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1) {
+
+                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
 
                             if (typeof Phases == undefined || Phases == null) {
                                 varphase = 30460;
