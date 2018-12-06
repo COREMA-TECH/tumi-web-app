@@ -590,6 +590,24 @@ class VerticalLinearStepper extends Component {
         this.getLanguagesList();
     }
 
+    findByZipCode = (zipCode = null, cityFinal = null) => {
+        if (!zipCode) {
+            return false;
+        }
+
+        this.props.client.query({
+            query: GET_STATES_QUERY,
+            variables: { parent: -1, value: `'${zipCode}'` },
+            fetchPolicy: 'no-cache'
+        }).then((data) => {
+            this.setState({
+                state: data.data.getcatalogitem[0].Id,
+                cityFinal: cityFinal
+            });
+        });
+
+    }
+
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -740,6 +758,37 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-3">
+                        <span className="primary">* Zip Code</span>
+                        <div className="input-container--validated">
+                            <InputMask
+                                id="zipCode"
+                                name="zipCode"
+                                mask="99999-99999"
+                                maskChar=" "
+                                className="form-control"
+                                onChange={(event) => {
+                                    this.setState({
+                                        zipCode: event.target.value
+                                    });
+                                    let zip_code = '';
+                                    zip_code = event.target.value.substring(0, 5);
+                                    fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
+                                        return response.json()
+                                    }).then((cities) => {
+                                        if (!cities.error) {
+                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                        }
+                                    });
+                                }}
+                                value={this.state.zipCode}
+                                placeholder="99999-99999"
+                                required
+                                minLength="15"
+                            />
+
+                        </div>
+                    </div>
+                    <div className="col-md-3">
                         <span className="primary">* State</span>
                         <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
                             {({ loading, error, data, refetch, networkStatus }) => {
@@ -778,6 +827,17 @@ class VerticalLinearStepper extends Component {
                                 //if (networkStatus === 4) return <LinearProgress />;
                                 if (error) return <p>Nothing To Display </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    var citySelected = null;
+                                    citySelected = data.getcatalogitem.filter(city => {
+                                        return city.Name.toLowerCase().includes(this.state.cityFinal);
+                                    });
+                                    if (citySelected.length != 0) {
+                                        if ((citySelected[0].Id != this.state.city)) {
+                                            this.setState({
+                                                city: citySelected[0].Id
+                                            });
+                                        }
+                                    }
                                     return (
                                         <select
                                             name="city"
@@ -801,28 +861,7 @@ class VerticalLinearStepper extends Component {
                             }}
                         </Query>
                     </div>
-                    <div className="col-md-3">
-                        <span className="primary">* Zip Code</span>
-                        <div className="input-container--validated">
-                            <InputMask
-                                id="zipCode"
-                                name="zipCode"
-                                mask="99999-99999"
-                                maskChar=" "
-                                className="form-control"
-                                onChange={(event) => {
-                                    this.setState({
-                                        zipCode: event.target.value
-                                    });
-                                }}
-                                value={this.state.zipCode}
-                                placeholder="99999-99999"
-                                required
-                                minLength="15"
-                            />
 
-                        </div>
-                    </div>
                     <div className="col-md-3">
                         <span className="primary"> Home Phone</span>
                         <InputMask

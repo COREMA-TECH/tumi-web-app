@@ -282,6 +282,23 @@ class Application extends Component {
 		this.getApplicationById(this.props.applicationId);
 	}
 
+	findByZipCode = (zipCode = null, cityFinal = null) => {
+		if (!zipCode) {
+			return false;
+		}
+		this.props.client.query({
+			query: GET_STATES_QUERY,
+			variables: { parent: -1, value: `'${zipCode}'` },
+			fetchPolicy: 'no-cache'
+		}).then((data) => {
+			this.setState({
+				state: data.data.getcatalogitem[0].Id,
+				cityFinal: cityFinal
+			});
+		});
+
+	}
+
 	render() {
 		//this.validateInvalidInput();
 
@@ -480,6 +497,15 @@ class Application extends Component {
 														this.setState({
 															zipCode: event.target.value
 														});
+														let zip_code = '';
+														zip_code = event.target.value.substring(0, 5);
+														fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
+															return response.json()
+														}).then((cities) => {
+															if (!cities.error) {
+																this.findByZipCode(cities.state, cities.city.toLowerCase());
+															}
+														});
 													}}
 													value={this.state.zipCode}
 													placeholder="99999-99999"
@@ -530,6 +556,17 @@ class Application extends Component {
 														//if (networkStatus === 4) return <LinearProgress />;
 														if (error) return <p>Error </p>;
 														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+															var citySelected = null;
+															citySelected = data.getcatalogitem.filter(city => {
+																return city.Name.toLowerCase().includes(this.state.cityFinal);
+															});
+															if (citySelected.length != 0) {
+																if ((citySelected[0].Id != this.state.city)) {
+																	this.setState({
+																		city: citySelected[0].Id
+																	});
+																}
+															}
 															return (
 																<select
 																	name="city"
@@ -609,6 +646,9 @@ class Application extends Component {
 													maskChar=" "
 													className="form-control"
 													disabled={!this.state.editing}
+													onClick={(event) => {
+														event.target.setSelectionRange(0, 0);
+													}}
 													onChange={(event) => {
 														this.setState({
 															socialSecurityNumber: event.target.value
@@ -649,47 +689,47 @@ class Application extends Component {
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[23].label}
 												</span>
-                                                <div className="onoffswitch">
-                                                    <input
+												<div className="onoffswitch">
+													<input
 														id="carInput"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                car: event.target.checked
-                                                            });
-                                                        }}
-                                                        checked={this.state.car}
-                                                        value={this.state.car}
-                                                        name="car"
-                                                        type="checkbox"
-                                                        disabled={!this.state.editing}
-                                                        min="0"
-                                                        maxLength="50"
-                                                        minLength="10"
-                                                        className="onoffswitch-checkbox"
-                                                    />
-                                                    <label className="onoffswitch-label" htmlFor="carInput">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
-                                                    </label>
-                                                </div>
+														onChange={(event) => {
+															this.setState({
+																car: event.target.checked
+															});
+														}}
+														checked={this.state.car}
+														value={this.state.car}
+														name="car"
+														type="checkbox"
+														disabled={!this.state.editing}
+														min="0"
+														maxLength="50"
+														minLength="10"
+														className="onoffswitch-checkbox"
+													/>
+													<label className="onoffswitch-label" htmlFor="carInput">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
 												{/*<label className="switch">*/}
-													{/*<input*/}
-														{/*onChange={(event) => {*/}
-															{/*this.setState({*/}
-																{/*car: event.target.checked*/}
-															{/*});*/}
-														{/*}}*/}
-														{/*checked={this.state.car}*/}
-														{/*value={this.state.car}*/}
-														{/*name="car"*/}
-														{/*type="checkbox"*/}
-														{/*className="form-control"*/}
-														{/*disabled={!this.state.editing}*/}
-														{/*min="0"*/}
-														{/*maxLength="50"*/}
-														{/*minLength="10"*/}
-													{/*/>*/}
-													{/*<p className="slider round" />*/}
+												{/*<input*/}
+												{/*onChange={(event) => {*/}
+												{/*this.setState({*/}
+												{/*car: event.target.checked*/}
+												{/*});*/}
+												{/*}}*/}
+												{/*checked={this.state.car}*/}
+												{/*value={this.state.car}*/}
+												{/*name="car"*/}
+												{/*type="checkbox"*/}
+												{/*className="form-control"*/}
+												{/*disabled={!this.state.editing}*/}
+												{/*min="0"*/}
+												{/*maxLength="50"*/}
+												{/*minLength="10"*/}
+												{/*/>*/}
+												{/*<p className="slider round" />*/}
 												{/*</label>*/}
 											</div>
 											<div className="col-md-12">
@@ -848,60 +888,60 @@ class Application extends Component {
 													{formSpanish[19].label}
 												</span>
 
-                                                <div className="onoffswitch">
-                                                    <input
+												<div className="onoffswitch">
+													<input
 														id="scheduleInput"
-                                                        onChange={(event) => {
-                                                            this.setState(
-                                                                {
-                                                                    scheduleRestrictions: event.target.checked
-                                                                },
-                                                                () => {
-                                                                    if (!this.state.scheduleRestrictions) {
-                                                                        this.setState({
-                                                                            scheduleExplain: ''
-                                                                        });
-                                                                    }
-                                                                }
-                                                            );
-                                                        }}
-                                                        checked={this.state.scheduleRestrictions}
-                                                        value={this.state.scheduleRestrictions}
-                                                        name="scheduleRestrictions"
-                                                        type="checkbox"
-                                                        disabled={!this.state.editing}
-                                                        className="onoffswitch-checkbox"
-                                                    />
-                                                    <label className="onoffswitch-label" htmlFor="scheduleInput">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
-                                                    </label>
-                                                </div>
+														onChange={(event) => {
+															this.setState(
+																{
+																	scheduleRestrictions: event.target.checked
+																},
+																() => {
+																	if (!this.state.scheduleRestrictions) {
+																		this.setState({
+																			scheduleExplain: ''
+																		});
+																	}
+																}
+															);
+														}}
+														checked={this.state.scheduleRestrictions}
+														value={this.state.scheduleRestrictions}
+														name="scheduleRestrictions"
+														type="checkbox"
+														disabled={!this.state.editing}
+														className="onoffswitch-checkbox"
+													/>
+													<label className="onoffswitch-label" htmlFor="scheduleInput">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
 
 												{/*<label className="switch">*/}
-													{/*<input*/}
-														{/*onChange={(event) => {*/}
-															{/*this.setState(*/}
-																{/*{*/}
-																	{/*scheduleRestrictions: event.target.checked*/}
-																{/*},*/}
-																{/*() => {*/}
-																	{/*if (!this.state.scheduleRestrictions) {*/}
-																		{/*this.setState({*/}
-																			{/*scheduleExplain: ''*/}
-																		{/*});*/}
-																	{/*}*/}
-																{/*}*/}
-															{/*);*/}
-														{/*}}*/}
-														{/*checked={this.state.scheduleRestrictions}*/}
-														{/*value={this.state.scheduleRestrictions}*/}
-														{/*name="scheduleRestrictions"*/}
-														{/*type="checkbox"*/}
-														{/*className="form-control"*/}
-														{/*disabled={!this.state.editing}*/}
-													{/*/>*/}
-													{/*<p className="slider round" />*/}
+												{/*<input*/}
+												{/*onChange={(event) => {*/}
+												{/*this.setState(*/}
+												{/*{*/}
+												{/*scheduleRestrictions: event.target.checked*/}
+												{/*},*/}
+												{/*() => {*/}
+												{/*if (!this.state.scheduleRestrictions) {*/}
+												{/*this.setState({*/}
+												{/*scheduleExplain: ''*/}
+												{/*});*/}
+												{/*}*/}
+												{/*}*/}
+												{/*);*/}
+												{/*}}*/}
+												{/*checked={this.state.scheduleRestrictions}*/}
+												{/*value={this.state.scheduleRestrictions}*/}
+												{/*name="scheduleRestrictions"*/}
+												{/*type="checkbox"*/}
+												{/*className="form-control"*/}
+												{/*disabled={!this.state.editing}*/}
+												{/*/>*/}
+												{/*<p className="slider round" />*/}
 												{/*</label>*/}
 											</div>
 											<div className="col-md-6">
@@ -928,61 +968,61 @@ class Application extends Component {
 													{formSpanish[20].label}
 												</span>
 
-                                                <div className="onoffswitch">
-                                                    <input
+												<div className="onoffswitch">
+													<input
 														id="convictedSwitch"
-                                                        onChange={(event) => {
-                                                            this.setState(
-                                                                {
-                                                                    convicted: event.target.checked
-                                                                },
-                                                                () => {
-                                                                    if (!this.state.convicted) {
-                                                                        this.setState({
-                                                                            convictedExplain: ''
-                                                                        });
-                                                                    }
-                                                                }
-                                                            );
-                                                        }}
-                                                        checked={this.state.convicted}
-                                                        value={this.state.convicted}
-                                                        name="convicted"
-                                                        type="checkbox"
-                                                        disabled={!this.state.editing}
-                                                        className="onoffswitch-checkbox"
-                                                    />
-                                                    <label className="onoffswitch-label" htmlFor="convictedSwitch">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
-                                                    </label>
-                                                </div>
+														onChange={(event) => {
+															this.setState(
+																{
+																	convicted: event.target.checked
+																},
+																() => {
+																	if (!this.state.convicted) {
+																		this.setState({
+																			convictedExplain: ''
+																		});
+																	}
+																}
+															);
+														}}
+														checked={this.state.convicted}
+														value={this.state.convicted}
+														name="convicted"
+														type="checkbox"
+														disabled={!this.state.editing}
+														className="onoffswitch-checkbox"
+													/>
+													<label className="onoffswitch-label" htmlFor="convictedSwitch">
+														<span className="onoffswitch-inner" />
+														<span className="onoffswitch-switch" />
+													</label>
+												</div>
 
 
 												{/*<label className="switch">*/}
-													{/*<input*/}
-														{/*onChange={(event) => {*/}
-															{/*this.setState(*/}
-																{/*{*/}
-																	{/*convicted: event.target.checked*/}
-																{/*},*/}
-																{/*() => {*/}
-																	{/*if (!this.state.convicted) {*/}
-																		{/*this.setState({*/}
-																			{/*convictedExplain: ''*/}
-																		{/*});*/}
-																	{/*}*/}
-																{/*}*/}
-															{/*);*/}
-														{/*}}*/}
-														{/*checked={this.state.convicted}*/}
-														{/*value={this.state.convicted}*/}
-														{/*name="convicted"*/}
-														{/*type="checkbox"*/}
-														{/*className="form-control"*/}
-														{/*disabled={!this.state.editing}*/}
-													{/*/>*/}
-													{/*<p className="slider round" />*/}
+												{/*<input*/}
+												{/*onChange={(event) => {*/}
+												{/*this.setState(*/}
+												{/*{*/}
+												{/*convicted: event.target.checked*/}
+												{/*},*/}
+												{/*() => {*/}
+												{/*if (!this.state.convicted) {*/}
+												{/*this.setState({*/}
+												{/*convictedExplain: ''*/}
+												{/*});*/}
+												{/*}*/}
+												{/*}*/}
+												{/*);*/}
+												{/*}}*/}
+												{/*checked={this.state.convicted}*/}
+												{/*value={this.state.convicted}*/}
+												{/*name="convicted"*/}
+												{/*type="checkbox"*/}
+												{/*className="form-control"*/}
+												{/*disabled={!this.state.editing}*/}
+												{/*/>*/}
+												{/*<p className="slider round" />*/}
 												{/*</label>*/}
 
 
