@@ -196,7 +196,7 @@ class Application extends Component {
             .mutate({
                 mutation: ADD_IDEAL_JOB,
                 variables: {
-                    
+
                 }
             })
             .then(({data}) => {
