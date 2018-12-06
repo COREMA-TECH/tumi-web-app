@@ -11,6 +11,7 @@ import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
 import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
+import {WithContext as ReactTags} from 'react-tag-input';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -19,6 +20,13 @@ if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
 const spanishActions = require(`./languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const formSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/formSpanish`);
+
+const KeyCodes = {
+    comma: 188,
+    enter: 13,
+};
+
+const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 class Application extends Component {
     constructor(props) {
@@ -104,21 +112,55 @@ class Application extends Component {
             // React tag input with suggestions
             tagsInputs: [],
             suggestions: [
-                { id: 'USA', text: 'USA' },
-                { id: 'Germany', text: 'Germany' },
-                { id: 'Austria', text: 'Austria' },
-                { id: 'Costa Rica', text: 'Costa Rica' },
-                { id: 'Sri Lanka', text: 'Sri Lanka' },
-                { id: 'Thailand', text: 'Thailand' }
+                {id: 'USA', text: 'USA'},
+                {id: 'Germany', text: 'Germany'},
+                {id: 'Austria', text: 'Austria'},
+                {id: 'Costa Rica', text: 'Costa Rica'},
+                {id: 'Sri Lanka', text: 'Sri Lanka'},
+                {id: 'Thailand', text: 'Thailand'}
             ]
         };
     }
+
+
+    /***
+     * Method to magage react tag input
+     *
+     */
+    handleDelete = (i) => {
+        const {tags} = this.state;
+        this.setState({
+            tags: tags.filter((tag, index) => index !== i),
+        });
+    };
+
+    handleAddition = (tag) => {
+        console.log(tag);
+
+        this.setState(prevState => ({
+            tags: [...prevState.tags, tag]
+        }));
+    };
+
+    handleDrag = (tag, currPos, newPos) => {
+        const tags = [...this.state.tags];
+        const newTags = tags.slice();
+
+        newTags.splice(currPos, 1);
+        newTags.splice(newPos, 0, tag);
+
+        // re-render
+        this.setState({tags: newTags});
+    };
+
+    /*********************************************************/
+
 
     handleChange = (tags) => {
         this.setState({tags});
     };
 
-    /**
+    /**<
      * To update a application by id
      */
     updateApplicationInformation = (id) => {
@@ -296,6 +338,7 @@ class Application extends Component {
 
     render() {
         //this.validateInvalidInput();
+        const {tags, suggestions} = this.state;
 
         return (
             <div className="Apply-container--application">
@@ -768,6 +811,20 @@ class Application extends Component {
                                                     }}
                                                 </Query>
                                             </div>
+
+                                            <div className="col-md-12">
+												<span className="primary applicant-card__label skeleton">
+													{formSpanish[16].label}
+												</span>
+                                                <ReactTags tags={tags}
+                                                           suggestions={suggestions}
+                                                           handleDelete={this.handleDelete}
+                                                           handleAddition={this.handleAddition}
+                                                           handleDrag={this.handleDrag}
+                                                           delimiters={delimiters}
+                                                />
+                                            </div>
+
                                             <div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
 													{formSpanish[17].label}

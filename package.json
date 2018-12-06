@@ -40,6 +40,7 @@
 		"react-select": "^2.0.0",
 		"react-signature-canvas": "^1.0.0-alpha.1",
 		"react-swipeable-views": "^0.12.16",
+		"react-tag-autocomplete": "^5.8.0",
 		"react-tag-input": "^6.1.0",
 		"react-tagsinput": "^3.19.0",
 		"react-text-mask": "^5.4.3",
