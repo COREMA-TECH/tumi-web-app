@@ -116,7 +116,7 @@ class Application extends Component {
 			positionsTags: [],
 		};
 	}
-	
+
 
     handleChangePositionTag = (positionsTags) => {
         this.setState({ positionsTags });
