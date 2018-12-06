@@ -3,7 +3,7 @@ import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 //import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
-import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY } from '../Queries';
+import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
 import { updateApplicationInformation } from '../utils';
 import { UPDATE_APPLICATION } from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
@@ -98,7 +98,19 @@ class Application extends Component {
 			editing: false,
 
 			loading: false,
-			tags: []
+			tags: [],
+
+
+			// React tag input with suggestions
+			tagsInputs: [],
+			suggestions: [
+				{ id: 'USA', text: 'USA' },
+				{ id: 'Germany', text: 'Germany' },
+				{ id: 'Austria', text: 'Austria' },
+				{ id: 'Costa Rica', text: 'Costa Rica' },
+				{ id: 'Sri Lanka', text: 'Sri Lanka' },
+				{ id: 'Thailand', text: 'Thailand' }
+			]
 		};
 	}
 
@@ -106,7 +118,7 @@ class Application extends Component {
 		this.setState({ tags });
 	};
 
-	/**
+    /**
      * To update a application by id
      */
 	updateApplicationInformation = (id) => {
@@ -170,7 +182,7 @@ class Application extends Component {
 		);
 	};
 
-	/**
+    /**
      * To get applications by id
      */
 	getApplicationById = (id) => {
@@ -421,26 +433,6 @@ class Application extends Component {
 													minLength="3"
 												/>
 											</div>
-											{/*<div className="col-md-12 ">
-											<span className="primary applicant-card__label skeleton">
-												* {formSpanish[3].label}
-											</span>
-											<input
-												onChange={(event) => {
-													this.setState({
-														date: event.target.value
-													});
-												}}
-												value={this.state.date}
-												name="date"
-												type="date"
-												className="form-control"
-												disabled={!this.state.editing}
-												required
-												min="0"
-												maxLength="50"
-											/>
-										</div> */}
 											<div className="col-md-12 ">
 												<span className="primary applicant-card__label skeleton">
 													* {formSpanish[22].label}
@@ -712,25 +704,6 @@ class Application extends Component {
 														<span className="onoffswitch-switch" />
 													</label>
 												</div>
-												{/*<label className="switch">*/}
-												{/*<input*/}
-												{/*onChange={(event) => {*/}
-												{/*this.setState({*/}
-												{/*car: event.target.checked*/}
-												{/*});*/}
-												{/*}}*/}
-												{/*checked={this.state.car}*/}
-												{/*value={this.state.car}*/}
-												{/*name="car"*/}
-												{/*type="checkbox"*/}
-												{/*className="form-control"*/}
-												{/*disabled={!this.state.editing}*/}
-												{/*min="0"*/}
-												{/*maxLength="50"*/}
-												{/*minLength="10"*/}
-												{/*/>*/}
-												{/*<p className="slider round" />*/}
-												{/*</label>*/}
 											</div>
 											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
@@ -825,7 +798,8 @@ class Application extends Component {
 																	<option value="">Select a position</option>
 																	<option value="0">Open Position</option>
 																	{data.getcatalogitem.map((item) => (
-																		<option value={item.Id}>{item.Description}</option>
+																		<option
+																			value={item.Id}>{item.Description}</option>
 																	))}
 																</select>
 															);
@@ -847,21 +821,7 @@ class Application extends Component {
 													onChange={this.handleChange}
 													disabled={!this.state.editing}
 												/>
-												{/* <input
-                                                onChange={(event) => {
-                                                    this.setState({
-                                                        idealJob: event.target.value
-                                                    });
-                                                }}
-                                                value={this.state.idealJob}
-                                                name="idealJob"
-                                                type="text"
-                                                className="form-control"
-                                                disabled={!this.state.editing}
-                                                min="0"
-                                                minLength="3"
-                                                maxLength="50"
-                                            /> */}
+
 											</div>
 											<div className="col-md-12">
 												<span className="primary applicant-card__label skeleton">
@@ -917,32 +877,6 @@ class Application extends Component {
 														<span className="onoffswitch-switch" />
 													</label>
 												</div>
-
-												{/*<label className="switch">*/}
-												{/*<input*/}
-												{/*onChange={(event) => {*/}
-												{/*this.setState(*/}
-												{/*{*/}
-												{/*scheduleRestrictions: event.target.checked*/}
-												{/*},*/}
-												{/*() => {*/}
-												{/*if (!this.state.scheduleRestrictions) {*/}
-												{/*this.setState({*/}
-												{/*scheduleExplain: ''*/}
-												{/*});*/}
-												{/*}*/}
-												{/*}*/}
-												{/*);*/}
-												{/*}}*/}
-												{/*checked={this.state.scheduleRestrictions}*/}
-												{/*value={this.state.scheduleRestrictions}*/}
-												{/*name="scheduleRestrictions"*/}
-												{/*type="checkbox"*/}
-												{/*className="form-control"*/}
-												{/*disabled={!this.state.editing}*/}
-												{/*/>*/}
-												{/*<p className="slider round" />*/}
-												{/*</label>*/}
 											</div>
 											<div className="col-md-6">
 												<span className="primary applicant-card__label skeleton">
@@ -997,34 +931,6 @@ class Application extends Component {
 														<span className="onoffswitch-switch" />
 													</label>
 												</div>
-
-
-												{/*<label className="switch">*/}
-												{/*<input*/}
-												{/*onChange={(event) => {*/}
-												{/*this.setState(*/}
-												{/*{*/}
-												{/*convicted: event.target.checked*/}
-												{/*},*/}
-												{/*() => {*/}
-												{/*if (!this.state.convicted) {*/}
-												{/*this.setState({*/}
-												{/*convictedExplain: ''*/}
-												{/*});*/}
-												{/*}*/}
-												{/*}*/}
-												{/*);*/}
-												{/*}}*/}
-												{/*checked={this.state.convicted}*/}
-												{/*value={this.state.convicted}*/}
-												{/*name="convicted"*/}
-												{/*type="checkbox"*/}
-												{/*className="form-control"*/}
-												{/*disabled={!this.state.editing}*/}
-												{/*/>*/}
-												{/*<p className="slider round" />*/}
-												{/*</label>*/}
-
 
 											</div>
 											<div className="col-md-6">

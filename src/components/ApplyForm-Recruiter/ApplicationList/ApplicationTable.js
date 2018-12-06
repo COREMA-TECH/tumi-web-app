@@ -211,7 +211,7 @@ class ApplicationTable extends React.Component {
 												<Tooltip title="Delete">
 													<div>
 														<button
-															className="btn btn-danger"
+															className="btn btn-danger ml-1"
 															disabled={this.props.loading}
 															onClick={(e) => {
 																e.stopPropagation();
