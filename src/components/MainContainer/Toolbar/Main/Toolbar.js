@@ -72,26 +72,26 @@ class Toolbar extends Component {
 						</a>
 					</li>
 					<li className="RightMenu-item">
-						<div class="dropdown">
+						<div className="dropdown">
 							<button
 								onClick={this.handleDropDown}
-								class="btn btn-link btn-empty"
+								className="btn btn-link btn-empty"
 								type="button"
 								id="dropdownMenuButton"
 								data-toggle="dropdown"
 								aria-haspopup="true"
 								aria-expanded="false"
 							>
-								<i class="fas fa-ellipsis-v" />
+								<i className="fas fa-ellipsis-v" />
 							</button>
-							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+							<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<div className="row app-shortcuts">
-									<a class="col-4 app-shortcuts__item" href="/home/work-orders">
-										<i class="fas fa-briefcase" />
+									<a className="col-4 app-shortcuts__item" href="/home/work-orders">
+										<i className="fas fa-briefcase" />
 										<small>Work Orders</small>
-										<span class="app-shortcuts__helper bg-gd-danger" />
+										<span className="app-shortcuts__helper bg-gd-danger" />
 									</a>
-									<a class="col-4 app-shortcuts__item" href="" onClick={(e) => {
+									<a className="col-4 app-shortcuts__item" href="" onClick={(e) => {
 										e.preventDefault();
 										document.getElementById('dropdownMenuButton').click();
 										this.props.history.push({
@@ -100,17 +100,17 @@ class Toolbar extends Component {
 										});
 									}}
 									>
-										<i class="fas fa-warehouse" />
+										<i className="fas fa-warehouse" />
 										<small>Add Management</small>
-										<span class="app-shortcuts__helper bg-gd-primary" />
+										<span className="app-shortcuts__helper bg-gd-primary" />
 									</a>
-									<a class="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
-										<i class="fas fa-building" />
+									<a className="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
+										<i className="fas fa-building" />
 										<small>Add Hotel</small>
-										<span class="app-shortcuts__helper bg-gd-primary" />
+										<span className="app-shortcuts__helper bg-gd-primary" />
 									</a>
 									<a
-										class="col-4 app-shortcuts__item"
+										className="col-4 app-shortcuts__item"
 										href=""
 										onClick={(e) => {
 											e.preventDefault();
@@ -121,19 +121,19 @@ class Toolbar extends Component {
 											});
 										}}
 									>
-										<i class="far fa-handshake" />
+										<i className="far fa-handshake" />
 										<small>Add Contract</small>
-										<span class="app-shortcuts__helper bg-gd-info" />
+										<span className="app-shortcuts__helper bg-gd-info" />
 									</a>
-									<a class="col-4 app-shortcuts__item" href="" onClick={this.handleLogout}>
-										<i class="fas fa-sign-out-alt" />
+									<a className="col-4 app-shortcuts__item" href="" onClick={this.handleLogout}>
+										<i className="fas fa-sign-out-alt" />
 										<small>LogOut</small>
-										<span class="app-shortcuts__helper bg-gd-info" />
+										<span className="app-shortcuts__helper bg-gd-info" />
 									</a>
-									<a class="col-4 app-shortcuts__item" href="/reset">
-										<i class="fas fa-retweet" />
+									<a className="col-4 app-shortcuts__item" href="/reset">
+										<i className="fas fa-retweet" />
 										<small>Reset Password</small>
-										<span class="app-shortcuts__helper bg-gd-danger" />
+										<span className="app-shortcuts__helper bg-gd-danger" />
 									</a>
 								</div>
 							</div>

@@ -145,7 +145,6 @@ class Container extends Component {
 				<Route exact path="/home/dashboard/recruiter" component={DashboardRecruiter} />
 				<Route exact path="/home/openings" component={WorkOrdersPosition} />
 
-				<Route exact path="/home/holidays" component={Holidays} />
 				<Route exact path="/home/calendar" component={Calendar} />
 			</div>
 		);

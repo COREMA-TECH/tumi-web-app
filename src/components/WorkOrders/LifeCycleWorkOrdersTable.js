@@ -228,4 +228,4 @@ class LifeCycleWorkOrdersTable extends Component {
     }
 }
 
-export default withStyles()(withMobileDialog()(withApollo(LifeCycleWorkOrdersTable)));
+export default (withMobileDialog()(withApollo(LifeCycleWorkOrdersTable)));
