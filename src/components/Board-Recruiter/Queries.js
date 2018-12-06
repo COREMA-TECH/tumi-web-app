@@ -29,6 +29,12 @@ query getlead ( $positionApplyingFor: Int ) {
 	city
 	isLead
 	zipCode
+	idealJobs
+    {
+      id
+	  description
+	  idPosition 
+    }
 	applicationPhases   {
 		id
 		StageId
