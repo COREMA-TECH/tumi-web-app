@@ -19,8 +19,7 @@ class Calendar extends Component {
         super();
         this.state = {
             events: [],
-            idHoliday: 0,
-            open: false
+            idHoliday: 0
         }
     }
 
@@ -57,11 +56,16 @@ class Calendar extends Component {
         }, this.getHolidays);
     }
 
+    closeModal = () => {
+        this.getHolidays();
+        this.setState({ idHoliday: null })
+    }
 
     render() {
         let components = {
             event: this.MyEvent // used by each view (Month, Day, Week)
         };
+
         return (
             <div className="row">
                 <div className="col-md-12">
@@ -71,23 +75,27 @@ class Calendar extends Component {
                             events={this.state.events}
                             startAccessor="start"
                             endAccessor="end"
-                            onSelectEvent={event => {
+                            onSelectEvent={(event, e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
                                 this.setState({
                                     idHoliday: event.id,
-                                    open: true
-                                }, event.stopPropagation)
+                                }, () => {
+
+                                    this.props.openModal();
+                                })
                             }}
                         //  components={components}
                         />
                     </div>
                 </div>
                 <GenericDialog
-                    open={this.state.open}
-                    handleClose={this.handleClose}
+                    open={this.props.open}
+                    handleClose={() => this.props.closeModal(this.closeModal)}
                     title=""
                     maxWidth={'lg'}
                 >
-                    <Holidays idCompany={this.props.idCompany} idHoliday={this.state.idHoliday} handleOpenSnackbar={this.props.handleOpenSnackbar} handleClose={this.handleClose} />
+                    <Holidays idCompany={this.props.idCompany} idHoliday={this.state.idHoliday} handleOpenSnackbar={this.props.handleOpenSnackbar} handleClose={() => this.props.closeModal(this.closeModal)} />
                 </GenericDialog>
             </div>
         );

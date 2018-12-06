@@ -116,6 +116,7 @@ class Application extends Component {
 			positionsTags: [],
 		};
 	}
+	
 
     handleChangePositionTag = (positionsTags) => {
         this.setState({ positionsTags });
@@ -813,7 +814,7 @@ class Application extends Component {
                                                             		paddingBottom: '10px',
 																}}>
                                                                     <Select
-                                                                        disabled={!this.state.editing}
+                                                                        isDisabled={!this.state.editing}
                                                                         options={options}
 																		value={this.state.positionsTags}
 																		onChange={this.handleChangePositionTag}
