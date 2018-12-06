@@ -357,7 +357,6 @@ class BoardManager extends Component {
             cardSelected[0].classList.add("CardBoard-selected");
 
 
-            alert("doy clic en ", cardId);
             if (sessionStorage.getItem('NewFilter') === false) {
                 this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
             } else {
@@ -493,7 +492,7 @@ class BoardManager extends Component {
         //console.log("Este es el hotel ", this.state.hotel);
 
         if (this.state.hotel == 0) {
-            await this.props.client.query({ query: GET_WORK_ORDERS, variables: { status: this.state.status } }).then(({ data }) => {
+            await this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
 
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
@@ -526,7 +525,7 @@ class BoardManager extends Component {
                 });
             }).catch(error => { })
         } else {
-            await this.props.client.query({ query: GET_WORK_ORDERS, variables: { IdEntity: this.state.hotel, status: this.state.status } }).then(({ data }) => {
+            await this.props.client.query({ query: GET_WORK_ORDERS, variables: { IdEntity: this.state.hotel } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
 
                     const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });

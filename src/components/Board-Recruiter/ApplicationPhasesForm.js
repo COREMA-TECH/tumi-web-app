@@ -14,7 +14,8 @@ class ApplicationPhasesForm extends Component {
         super();
         this.state = {
             ReasonId: 0,
-            Comment: ""
+            Comment: "",
+            CommentDisabled: true
         }
     }
 
@@ -26,6 +27,16 @@ class ApplicationPhasesForm extends Component {
         this.setState({
             [name]: value
         });
+
+        if (name == "ReasonId" && value != 30458) {
+            this.setState((prevState, props) => {
+                return { CommentDisabled: false }
+            });
+        } else {
+            this.setState((prevState, props) => {
+                return { CommentDisabled: true }
+            });
+        }
     };
 
     handleSubmit = (event) => {
@@ -70,7 +81,7 @@ class ApplicationPhasesForm extends Component {
             mutation: ADD_APPLICATION_PHASES,
             variables: {
                 applicationPhases: {
-                    Comment: this.state.Comment,
+                    Comment: this.state.ReasonId == 30458 ? " " : this.state.Comment,
                     UserId: localStorage.getItem('LoginId'),
                     WorkOrderId: this.props.WorkOrderId,
                     ReasonId: this.state.ReasonId,
@@ -106,21 +117,27 @@ class ApplicationPhasesForm extends Component {
                 <DialogContent>
                     <form action="" onSubmit={this.handleSubmit}>
                         <div className="row">
-                            <div className="col-md-6">
+                            <div className="col-md-3 offset-md-3">
                                 <div class="inputGroup">
                                     <input id="radio1" name="ReasonId" type="radio" value="30458" onChange={this.handleChange} />
                                     <label for="radio1">No Show</label>
                                 </div>
                             </div>
-                            <div className="col-md-6">
+                            <div className="col-md-3">
                                 <div class="inputGroup">
                                     <input id="radio2" name="ReasonId" type="radio" value="30459" onChange={this.handleChange} />
                                     <label for="radio2">Disqualify</label>
                                 </div>
                             </div>
+                            <div className="col-md-3">
+                                <div class="inputGroup">
+                                    <input id="radio3" name="ReasonId" type="radio" value="30492" onChange={this.handleChange} />
+                                    <label for="radio3">Others</label>
+                                </div>
+                            </div>
                             <div className="col-md-12">
                                 <label htmlFor="">Comment</label>
-                                <textarea onChange={this.handleChange} name="Comment" className="form-control" id="" cols="30" rows="10"></textarea>
+                                <textarea disabled={this.state.CommentDisabled ? true : false} onChange={this.handleChange} name="Comment" className="form-control" id="" cols="30" rows="10"></textarea>
                             </div>
                             <div className="col-md-12 mt-2">
                                 <button className="btn btn-danger float-right" onClick={this.props.handleCloseModal}>
