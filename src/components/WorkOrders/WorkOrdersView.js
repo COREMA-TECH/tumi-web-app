@@ -32,4 +32,4 @@ class WorkOrdersView extends Component {
 }
 
 
-export default withStyles()(withMobileDialog()(withApollo(WorkOrdersView)));
+export default (withMobileDialog()(withApollo(WorkOrdersView)));

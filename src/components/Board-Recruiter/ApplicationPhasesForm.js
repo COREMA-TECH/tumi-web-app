@@ -110,4 +110,4 @@ class ApplicationPhasesForm extends Component {
 
 }
 
-export default withStyles()(withMobileDialog()(withApollo(ApplicationPhasesForm)));
+export default (withMobileDialog()(withApollo(ApplicationPhasesForm)));

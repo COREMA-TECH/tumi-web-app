@@ -27,4 +27,4 @@ class WorkOrdersPositionView extends Component {
 	}
 }
 
-export default withStyles()(withMobileDialog()(withApollo(WorkOrdersPositionView)));
+export default (withMobileDialog()(withApollo(WorkOrdersPositionView)));
