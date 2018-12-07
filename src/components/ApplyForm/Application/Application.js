@@ -199,7 +199,7 @@ class Application extends Component {
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
 							'error',
-							'Errorn to update aaplicant information. Please, try again!',
+							'Error to update aaplicant information. Please, try again!',
 							'bottom',
 							'right'
 						);
@@ -318,29 +318,27 @@ class Application extends Component {
 				}
 			})
 			.then(({data}) => {
-				console.log("DATA: " + data.applicantIdealJob);
 				let dataAPI = data.applicantIdealJob;
+                let object;
 
-				console.log("DATA API: " + dataAPI.description);
-                let object = [];
                 dataAPI.map(item => {
-                    object.push({
-                        value: item.id,
-                        label: item.description
-                    })
+                    // object = {
+                    //
+                    // };
+					//
+                    // console.log({object});
+                    // console.log("-");
+
+					this.setState(prevState => ({
+                        positionsTags: [...prevState.positionsTags, {
+                            value: item.id,
+                            label: item.description
+						}]
+					}))
                 });
 
-                console.log("Object: " + object);
-
-                this.setState({
-					positionTags: object
-				}, () => {
-                    this.setState({
-                        loading: false
-                    }, () => {
-                    	console.log(this.state.positionsTags);
-					});
-				})
+                console.log("Error message");
+                console.log(this.state.positionsTags);
 			})
 			.catch(error => {
 
