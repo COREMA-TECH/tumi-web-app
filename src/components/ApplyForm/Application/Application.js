@@ -322,13 +322,6 @@ class Application extends Component {
                 let object;
 
                 dataAPI.map(item => {
-                    // object = {
-                    //
-                    // };
-					//
-                    // console.log({object});
-                    // console.log("-");
-
 					this.setState(prevState => ({
                         positionsTags: [...prevState.positionsTags, {
                             value: item.id,
@@ -336,9 +329,6 @@ class Application extends Component {
 						}]
 					}))
                 });
-
-                console.log("Error message");
-                console.log(this.state.positionsTags);
 			})
 			.catch(error => {
 
