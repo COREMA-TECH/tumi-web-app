@@ -328,7 +328,11 @@ class Application extends Component {
                             label: item.description
 						}]
 					}))
-                });
+                }, () => {
+                	this.setState({
+						loading: false
+					})
+				});
 			})
 			.catch(error => {
 
