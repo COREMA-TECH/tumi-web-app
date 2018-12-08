@@ -3,7 +3,13 @@ import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 //import { GET_APPLICATION_BY_ID, GET_POSITIONS_QUERY, GET_STATES_QUERY } from "../Queries";
-import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
+import {
+    GET_APPLICANT_IDEAL_JOBS,
+    GET_APPLICATION_BY_ID,
+    GET_CITIES_QUERY,
+    GET_POSITIONS_QUERY,
+    GET_STATES_QUERY
+} from '../Queries';
 import { updateApplicationInformation } from '../utils';
 import { ADD_IDEAL_JOB, UPDATE_APPLICATION } from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
@@ -193,7 +199,7 @@ class Application extends Component {
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
 							'error',
-							'Errorn to update aaplicant information. Please, try again!',
+							'Error to update aaplicant information. Please, try again!',
 							'bottom',
 							'right'
 						);
@@ -221,82 +227,80 @@ class Application extends Component {
     /**
      * To get applications by id
      */
-	getApplicationById = (id) => {
-		this.setState(
-			{
-				loading: true
-			},
-			() => {
-				this.props.client
-					.query({
-						query: GET_APPLICATION_BY_ID,
-						variables: {
-							id: id
-						},
-						fetchPolicy: 'no-cache'
-					})
-					.then(({ data }) => {
-						let applicantData = data.applications[0];
-						console.log("applicantData ", applicantData);
-						this.setState(
-							{
-								firstName: applicantData.firstName,
-								middleName: applicantData.middleName,
-								lastName: applicantData.lastName,
-								lastName2: applicantData.lastName2,
-								date:
-									applicantData.date !== null
-										? applicantData.date.substring(0, 10)
-										: applicantData.date,
-								streetAddress: applicantData.streetAddress,
-								emailAddress: applicantData.emailAddress,
-								aptNumber: applicantData.aptNumber,
-								city: applicantData.city,
-								state: applicantData.state,
-								zipCode: applicantData.zipCode,
-								homePhone: applicantData.homePhone,
-								cellPhone: applicantData.cellPhone,
-								birthDay:
-									applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
-								socialSecurityNumber: applicantData.socialSecurityNumber,
-								positionApplyingFor: applicantData.positionApplyingFor,
-								car: applicantData.car,
-								typeOfId: applicantData.typeOfId,
-								expireDateId:
-									applicantData.expireDateId !== null
-										? applicantData.expireDateId.substring(0, 10)
-										: applicantData.expireDateId,
-								dateAvailable:
-									applicantData.dateAvailable !== null
-										? applicantData.dateAvailable.substring(0, 10)
-										: applicantData.dateAvailable,
-								scheduleRestrictions: applicantData.scheduleRestrictions,
-								scheduleExplain: applicantData.scheduleExplain,
-								convicted: applicantData.convicted,
-								convictedExplain: applicantData.convictedExplain,
-								comment: applicantData.comment,
-								editing: false,
-								tags: applicantData.idealJob
-									? applicantData.idealJob.split(',').map((d) => d.trim())
-									: [],
-								idealJob: applicantData.idealJob
-							},
-							() => {
-								this.removeSkeletonAnimation();
-								this.setState({
-									loading: false
-								});
-							}
-						);
-					})
-					.catch((error) => {
-						// TODO: replace alert with snackbar error message
-						this.props.handleOpenSnackbar(
-							'error',
-							'Error to show applicant information. Please, try again!',
-							'bottom',
-							'right'
-						);
+    getApplicationById = (id) => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .query({
+                        query: GET_APPLICATION_BY_ID,
+                        variables: {
+                            id: id
+                        },
+                        fetchPolicy: 'no-cache'
+                    })
+                    .then(({data}) => {
+                        let applicantData = data.applications[0];
+                        console.log("applicantData ", applicantData);
+                        this.setState(
+                            {
+                                firstName: applicantData.firstName,
+                                middleName: applicantData.middleName,
+                                lastName: applicantData.lastName,
+                                lastName2: applicantData.lastName2,
+                                date:
+                                    applicantData.date !== null
+                                        ? applicantData.date.substring(0, 10)
+                                        : applicantData.date,
+                                streetAddress: applicantData.streetAddress,
+                                emailAddress: applicantData.emailAddress,
+                                aptNumber: applicantData.aptNumber,
+                                city: applicantData.city,
+                                state: applicantData.state,
+                                zipCode: applicantData.zipCode,
+                                homePhone: applicantData.homePhone,
+                                cellPhone: applicantData.cellPhone,
+                                birthDay:
+                                    applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
+                                socialSecurityNumber: applicantData.socialSecurityNumber,
+                                positionApplyingFor: applicantData.positionApplyingFor,
+                                car: applicantData.car,
+                                typeOfId: applicantData.typeOfId,
+                                expireDateId:
+                                    applicantData.expireDateId !== null
+                                        ? applicantData.expireDateId.substring(0, 10)
+                                        : applicantData.expireDateId,
+                                dateAvailable:
+                                    applicantData.dateAvailable !== null
+                                        ? applicantData.dateAvailable.substring(0, 10)
+                                        : applicantData.dateAvailable,
+                                scheduleRestrictions: applicantData.scheduleRestrictions,
+                                scheduleExplain: applicantData.scheduleExplain,
+                                convicted: applicantData.convicted,
+                                convictedExplain: applicantData.convictedExplain,
+                                comment: applicantData.comment,
+                                editing: false,
+                                tags: applicantData.idealJob
+                                    ? applicantData.idealJob.split(',').map((d) => d.trim())
+                                    : [],
+                                idealJob: applicantData.idealJob
+                            },
+                            () => {
+                            	this.getIdealJobsByApplicationId();
+                                this.removeSkeletonAnimation();
+                            }
+                        );
+                    })
+                    .catch((error) => {
+                        // TODO: replace alert with snackbar error message
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to show applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
 
 						console.log(error);
 					});
@@ -304,18 +308,49 @@ class Application extends Component {
 		);
 	};
 
-	// To validate all the inputs and set a red border when the input is invalid
-	validateInvalidInput = () => {
-		if (document.addEventListener) {
-			document.addEventListener(
-				'invalid',
-				(e) => {
-					e.target.className += ' invalid-apply-form';
-				},
-				true
-			);
-		}
+    // get ideal jobs
+	getIdealJobsByApplicationId = () => {
+		this.props.client
+			.query({
+				query: GET_APPLICANT_IDEAL_JOBS,
+				variables: {
+                    ApplicationId: this.props.applicationId
+				}
+			})
+			.then(({data}) => {
+				let dataAPI = data.applicantIdealJob;
+                let object;
+
+                dataAPI.map(item => {
+					this.setState(prevState => ({
+                        positionsTags: [...prevState.positionsTags, {
+                            value: item.id,
+                            label: item.description
+						}]
+					}))
+                }, () => {
+                	this.setState({
+						loading: false
+					})
+				});
+			})
+			.catch(error => {
+
+			})
 	};
+
+    // To validate all the inputs and set a red border when the input is invalid
+    validateInvalidInput = () => {
+        if (document.addEventListener) {
+            document.addEventListener(
+                'invalid',
+                (e) => {
+                    e.target.className += ' invalid-apply-form';
+                },
+                true
+            );
+        }
+    };
 
 	// To show skeleton animation in css
 	removeSkeletonAnimation = () => {
@@ -347,7 +382,7 @@ class Application extends Component {
 			});
 		});
 
-	}
+	};
 
 	render() {
 		//this.validateInvalidInput();
