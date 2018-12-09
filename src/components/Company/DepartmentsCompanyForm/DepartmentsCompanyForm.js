@@ -171,7 +171,7 @@ class DepartmentsCompanyForm extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => {}) => {
+	resetState = (func = () => { }) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -258,7 +258,7 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid: this.state.codeValid && this.state.descriptionValid,
@@ -305,7 +305,7 @@ class DepartmentsCompanyForm extends React.Component {
 		this.loadDepartments();
 	}
 
-	loadDepartments = (func = () => {}) => {
+	loadDepartments = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -373,11 +373,11 @@ class DepartmentsCompanyForm extends React.Component {
 								Name: `'${this.state.code}'`,
 								DisplayLabel: `'${this.state.description}'`,
 								Description: `'${this.state.description}'`,
-								Value: null,
-								Value01: null,
-								Value02: null,
-								Value03: null,
-								Value04: null,
+								Value: `' '`,
+								Value01: `' '`,
+								Value02: `' '`,
+								Value03: `' '`,
+								Value04: `' '`,
 								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
@@ -569,8 +569,8 @@ class DepartmentsCompanyForm extends React.Component {
 						</span>
 					</div>
 				) : (
-					''
-				)}
+						''
+					)}
 			</div>
 		);
 	}
