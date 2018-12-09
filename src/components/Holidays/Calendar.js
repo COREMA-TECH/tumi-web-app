@@ -30,6 +30,7 @@ class Calendar extends Component {
     getHolidays = () => {
         this.props.client
             .query({
+                fetchPolicy: 'no-cache',
                 query: GET_HOLIDAYS
             })
             .then(({ data }) => {

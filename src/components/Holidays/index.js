@@ -61,12 +61,13 @@ class Holidays extends Component {
 
         let month = JSON.parse(JSON.stringify(this.state.monthNumbers)).find(item => item.selected == true)
         let now = new Date()
-        let date = new Date(now.getFullYear(), month.id, 0);
+        if (month) {
+            let date = new Date(now.getFullYear(), month.id, 0);
 
-        if (!selected.selected && selected.id > date.getDate()) {
-            return false;
+            if (!selected.selected && selected.id > date.getDate()) {
+                return false;
+            }
         }
-
         this.unselectComponents("calendar", data, id)
         let calendarDays = this.getNewData(data, id, true)
         //Update state with the new array
@@ -140,12 +141,14 @@ class Holidays extends Component {
             endDate = result.endDate;
 
             this.setState({ inserting: true })
-
+            console.log(`This is my start date ${startDate} and enddate ${endDate}`)
             if (this.state.id) this.updateHoliday(startDate, endDate)
             else this.createHoliday(startDate, endDate)
         }
     }
     createHoliday(startDate, endDate) {
+        console.log("Inside the function", startDate)
+        console.log("Fecha fin", endDate)
         this.props.client.mutate({
             mutation: CREATE_HOLIDAY,
             variables: {
@@ -178,6 +181,7 @@ class Holidays extends Component {
     }
 
     updateHoliday(startDate, endDate) {
+        console.log("Inside the function", startDate, endDate)
         this.props.client.mutate({
             mutation: UPDATE_HOLIDAY,
             variables: {
@@ -248,7 +252,7 @@ class Holidays extends Component {
                 endDate = now;
                 break;
         }
-        let sDate = this.addHours(startDate, 0, 0, 0), eDate = this.addHours(endDate, 23, 0, 0);
+        let sDate = this.addHours(startDate, 0, 0, 0), eDate = this.addHours(endDate, 17, 0, 0);
 
         return {
             startDate: sDate,
