@@ -11,7 +11,7 @@ import {
     GET_STATES_QUERY
 } from '../Queries';
 import { updateApplicationInformation } from '../utils';
-import { ADD_IDEAL_JOB, UPDATE_APPLICATION } from '../Mutations';
+import {ADD_IDEAL_JOB, UPDATE_APPLICATION, UPDATE_IDEAL_JOB} from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
@@ -221,6 +221,22 @@ class Application extends Component {
 			})
 			.catch(error => {
 				console.log("DEBUG ERROR");
+			})
+	};
+
+	updateApplicantIdealJob = (object) => {
+		this.props.client
+			.mutate({
+				mutation: UPDATE_IDEAL_JOB,
+				variables: {
+                    application: object
+				}
+			})
+			.then(({data}) => {
+
+			})
+			.catch(error => {
+
 			})
 	};
 
