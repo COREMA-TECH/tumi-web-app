@@ -298,7 +298,7 @@ query getposition {
 		var payrateHasValue = this.state.payrateHasValue;
 		var billrateHasValue = this.state.billrateHasValue;
 
-		if (value == '') return;
+		//if (value == '') return;
 		switch (name) {
 			case 'payrate':
 				secondName = 'billrate';
@@ -1012,7 +1012,7 @@ query getposition {
 										error={!this.state.payrateValid}
 										value={this.state.payrate}
 										type="number"
-										allowZero={false}
+										allowZero={true}
 										change={(text) => this.onNumberChangeHandler(text, 'payrate')}
 									/>
 								</div>
@@ -1026,7 +1026,7 @@ query getposition {
 									error={!this.state.billrateValid}
 									value={this.state.billrate}
 									type="number"
-									allowZero={false}
+									allowZero={true}
 									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 								/>
 							</div>
