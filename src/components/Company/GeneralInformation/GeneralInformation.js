@@ -386,7 +386,7 @@ class GeneralInformation extends Component {
 				if (!this.state.formValid) {
 					this.props.handleOpenSnackbar(
 						'warning',
-						'Error: Saving Information: You must fill all the required fields'
+						this.state.message
 					);
 					this.setState({ loadingUpdate: false });
 					return true;
@@ -492,7 +492,7 @@ class GeneralInformation extends Component {
 				if (!this.state.formValid) {
 					this.props.handleOpenSnackbar(
 						'warning',
-						'Error: Saving Information: You must fill all the required fields'
+						this.state.message
 					);
 					this.setState({ loadingUpdate: false });
 					return true;
@@ -1044,7 +1044,6 @@ class GeneralInformation extends Component {
 			{
 				codeValid,
 				nameValid,
-				//descriptionValid,
 				addressValid,
 				startWeekValid,
 				endWeekValid,
@@ -1052,14 +1051,34 @@ class GeneralInformation extends Component {
 				zipCodeValid,
 				countryValid,
 				stateValid,
-				// regionValid,
-				//cityValid,
-				//suiteValid,
 				phoneNumberValid,
 				faxValid
-				//startDateValid
 			},
 			() => {
+				let message = ""
+				if (!rateValid)
+					message = "You need to specify a valid Company Markup"
+				else if (!codeValid)
+					message = "You need to specify a valid Company Code"
+				else if (!nameValid)
+					message = "You need to specify a valid Company Name"
+				else if (!addressValid)
+					message = "You need to specify a valid Address"
+				else if (!countryValid)
+					message = "You need to specify a valid Country"
+				else if (!stateValid)
+					message = "You need to specify a valid State"
+				else if (!zipCodeValid)
+					message = "You need to specify a valid Zip Code"
+				else if (!phoneNumberValid)
+					message = "You need to specify a valid Phone Number"
+				else if (!faxValid)
+					message = "You need to specify a valid Fax Number"
+				else if (!startWeekValid)
+					message = "You need to specify a valid Start Week value"
+				else if (!endWeekValid)
+					message = "You need to specify a valid End Week value"
+				this.setState((prevState, props) => ({ message }))
 				this.validateForm(fun);
 			}
 		);
