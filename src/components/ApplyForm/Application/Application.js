@@ -224,6 +224,7 @@ class Application extends Component {
 			})
 	};
 
+	// TODO
 	updateApplicantIdealJob = (object) => {
 		this.props.client
 			.mutate({
@@ -351,7 +352,7 @@ class Application extends Component {
 				});
 			})
 			.catch(error => {
-
+				
 			})
 	};
 
@@ -879,8 +880,8 @@ class Application extends Component {
 
 															return (
 																<div style={{
-																	paddingTop: '10px',
-																	paddingBottom: '10px',
+																	paddingTop: '0px',
+																	paddingBottom: '2px',
 																}}>
 																	<Select
 																		isDisabled={!this.state.editing}
