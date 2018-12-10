@@ -262,7 +262,7 @@ class Preferences extends React.Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-5">
                             <div class="card">
                                 <div class="card-header">Lunch Preferences</div>
                                 <div class="card-body">
@@ -467,7 +467,7 @@ class Preferences extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-7">
                             <div className="card">
                                 <div className="card-body">
                                     <Calendar idCompany={this.props.idCompany}
