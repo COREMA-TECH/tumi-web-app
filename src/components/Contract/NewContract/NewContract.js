@@ -1092,7 +1092,27 @@ class NewContract extends Component {
             <div className="TabSelected-container">
                 <div className="row">
                     <div className="col-md-12">
+
                         <button
+                            style={{
+                                margin: '5px'
+                            }}
+                            className={'btn btn-danger float-right'}
+                            onClick={() => {
+                                if(this.props.href === undefined){
+                                    window.location.href = "/home/Contracts";
+                                } else {
+                                    window.location.href = this.props.href;
+                                }
+                            }}
+                        >
+                            Cancel <i className="fas fa-ban" />
+                        </button>
+
+                        <button
+                            style={{
+                                margin: '5px'
+                            }}
                             //className="contract-next-button"
                             className={'btn btn-success float-right'}
                             onClick={() => {
@@ -1106,6 +1126,8 @@ class NewContract extends Component {
                         >
                             Save <i className="fas fa-save" />
                         </button>
+
+
 
                         {parseInt(this.state.Contract_Status) == 2 ? (
                             <Button

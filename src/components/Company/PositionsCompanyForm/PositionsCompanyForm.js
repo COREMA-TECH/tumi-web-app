@@ -903,7 +903,12 @@ query getposition {
 													// When the user click Next button, open second tab
 													history.push({
 														pathname: '/home/contract/add',
-														state: { contract: 0, Id_Entity: this.state.idCompany, Id_Parent: this.state.idManagement }
+														state: {
+															contract: 0,
+															Id_Entity: this.state.idCompany,
+															Id_Parent: this.state.idManagement,
+															href: '/home/company/edit'
+														}
 													});
 													//console.log(this.state);
 												}}
