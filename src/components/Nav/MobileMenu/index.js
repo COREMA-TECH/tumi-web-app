@@ -27,7 +27,7 @@ const MobileMenu = (props) => {
 				<li className="MainMenu-option">
 					<Link to={`/home/Company`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
 						<i className={'fas fa-warehouse MenuMobile-icon'} title={'Companies'} />
-						<span>Management</span>
+						<span>Management Company</span>
 					</Link>
 				</li>
 				<li className="MainMenu-option">

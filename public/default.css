@@ -7823,6 +7823,15 @@ table[class^="MuiTable-"] .btn {
   .input-search-contract:focus {
     width: 100% !important; }
 
+.GeneralInformation-wrapper {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%; }
+
 .radio-label {
   margin-right: 10px; }
 
@@ -8512,9 +8521,12 @@ table[class^="MuiTable-"] .btn {
     padding-right: 5px; }
 
 .HotelCard-img {
+  background: url(https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png) center center;
+  background-size: contain;
   border-radius: 50px;
   height: 50px;
   margin-right: .5rem;
+  min-width: 50px;
   overflow: hidden;
   position: relative;
   width: 50px; }
@@ -9913,9 +9925,9 @@ button.rbc-input::-moz-focus-inner {
       display: none; }
     .Weeks-item:first-child span {
       color: #254151;
-      font-size: 3rem; }
+      font-size: 2rem; }
     .Weeks-item span {
-      font-size: 4rem;
+      font-size: 3rem;
       font-weight: 700;
       line-height: 1.5;
       position: relative;
