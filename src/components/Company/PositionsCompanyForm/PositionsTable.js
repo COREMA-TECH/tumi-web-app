@@ -256,10 +256,10 @@ class PositionsTable extends React.Component {
 							<CustomTableCell className={classes.th}>Department</CustomTableCell>
 							<CustomTableCell className={classes.th}>Title</CustomTableCell>
 
-							<CustomTableCell className={classes.th + " cell-align-right"}>Bill Rate</CustomTableCell>
+							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
 
 							{this.props.showPayRate && (
-								<CustomTableCell className={classes.th + " cell-align-right"}>Pay Rate</CustomTableCell>
+								<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
 							)}
 							<CustomTableCell padding="none" className={classes.th}>
 								Shift
@@ -310,12 +310,11 @@ class PositionsTable extends React.Component {
 											</div>
 										</Tooltip>
 									</CustomTableCell>
-									<CustomTableCell style={{ width: '200px' }}>
+									<CustomTableCell>
 										<Select
 											id="department"
 											name="department"
 											value={row.Id_Department}
-											style={{ width: '100%' }}
 											disableUnderline={true}
 											disabled
 											IconComponent="div"
@@ -328,31 +327,31 @@ class PositionsTable extends React.Component {
 										</Select>
 									</CustomTableCell>
 									<CustomTableCell>{row.Position}</CustomTableCell>
-									<CustomTableCell style={{ width: '180px' }}>
-										<TextField
-											className={classes.formControl}
-											value={row.Bill_Rate}
-											id="billrate"
-											readOnly
-											InputProps={{
-												inputComponent: NumberFormatCustom,
-												disableUnderline: true
-											}}
-										/>
+									<CustomTableCell>
+										{/*<TextField*/}
+											{/*value={row.Bill_Rate}*/}
+											{/*id="billrate"*/}
+											{/*readOnly*/}
+											{/*InputProps={{*/}
+												{/*inputComponent: NumberFormatCustom,*/}
+												{/*disableUnderline: true*/}
+											{/*}}*/}
+										{/*/>*/}
+                                        {row.Bill_Rate}
 									</CustomTableCell>
 
 									{this.props.showPayRate && (
-										<CustomTableCell style={{ width: '180px' }}>
-											<TextField
-												className={classes.formControl}
-												value={row.Pay_Rate}
-												id="payrate"
-												readOnly
-												InputProps={{
-													inputComponent: NumberFormatCustom,
-													disableUnderline: true
-												}}
-											/>
+										<CustomTableCell>
+											{/*<TextField*/}
+												{/*value={row.Pay_Rate}*/}
+												{/*id="payrate"*/}
+												{/*readOnly*/}
+												{/*InputProps={{*/}
+													{/*inputComponent: NumberFormatCustom,*/}
+													{/*disableUnderline: true*/}
+												{/*}}*/}
+											{/*/>*/}
+                                            {row.Pay_Rate}
 										</CustomTableCell>
 									)}
 									<CustomTableCell padding="none" style={{ width: '100px' }}>
