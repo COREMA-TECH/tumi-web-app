@@ -346,13 +346,18 @@ class Application extends Component {
 						}]
 					}))
                 }, () => {
-                	this.setState({
-						loading: false
-					})
+                    this.setState({
+                        loading: false
+                    })
 				});
 			})
 			.catch(error => {
-				
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
 			})
 	};
 
