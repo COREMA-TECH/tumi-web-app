@@ -18,7 +18,7 @@ class CreateCompany extends Component {
 		try {
 			return this.props.location.state.idCompany;
 		} catch (error) {
-			this.props.history.push('/home/');
+			this.props.history.push('/home/Company');
 			return false;
 		}
 	}

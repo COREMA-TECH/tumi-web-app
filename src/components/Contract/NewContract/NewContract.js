@@ -19,6 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import {Route} from "react-router-dom";
 
 const styles = (theme) => ({
     wrapper: {
@@ -1092,22 +1093,29 @@ class NewContract extends Component {
             <div className="TabSelected-container">
                 <div className="row">
                     <div className="col-md-12">
-
-                        <button
-                            style={{
-                                margin: '5px'
-                            }}
-                            className={'btn btn-danger float-right'}
-                            onClick={() => {
-                                if(this.props.href === undefined){
-                                    window.location.href = "/home/Contracts";
-                                } else {
-                                    window.location.href = this.props.href;
-                                }
-                            }}
-                        >
-                            Cancel <i className="fas fa-ban" />
-                        </button>
+                        <Route
+                            render={({ history }) => (
+                                <button
+                                    style={{
+                                        margin: '5px'
+                                    }}
+                                    className={'btn btn-danger float-right'}
+                                    onClick={() => {
+                                        if(this.props.href === undefined){
+                                            window.location.href = "/home/Contracts";
+                                        } else if(this.props.href == '/home/company/edit') {
+                                            alert("alert");
+                                            history.push({
+                                                pathname: '/home/company/edit',
+                                                state: { idCompany: this.props.Id_Entity, idContract: this.props.contractId}
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Cancel <i className="fas fa-ban" />
+                                </button>
+                            )}
+                        />
 
                         <button
                             style={{

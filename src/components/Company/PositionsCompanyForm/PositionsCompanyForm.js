@@ -907,6 +907,7 @@ query getposition {
 															contract: 0,
 															Id_Entity: this.state.idCompany,
 															Id_Parent: this.state.idManagement,
+															idContract: this.props.idContract,
 															href: '/home/company/edit'
 														}
 													});
