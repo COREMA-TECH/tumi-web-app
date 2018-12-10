@@ -838,7 +838,7 @@ class GeneralInformation extends Component {
 			fax: '',
 			zipCode: '',
 
-			phonePrefix: '505',
+			phonePrefix: '',
 			email: '',
 			Code: '',
 			Code01: '',
@@ -1022,7 +1022,7 @@ class GeneralInformation extends Component {
 		let zipCodeValid = this.state.zipCode.toString().trim().length >= 2;
 		let countryValid = this.state.country !== null && this.state.country !== 0 && this.state.country !== '';
 		let stateValid = this.state.state !== null && this.state.state !== 0 && this.state.state !== '';
-		let regionValid = this.state.region !== null && this.state.region !== 0 && this.state.region !== '';
+		// let regionValid = this.state.region !== null && this.state.region !== 0 && this.state.region !== '';
 
 		//let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
 		//let suiteValid = parseInt(this.state.suite) >= 0;
@@ -1052,7 +1052,7 @@ class GeneralInformation extends Component {
 				zipCodeValid,
 				countryValid,
 				stateValid,
-				regionValid,
+				// regionValid,
 				//cityValid,
 				//suiteValid,
 				phoneNumberValid,
@@ -1077,7 +1077,7 @@ class GeneralInformation extends Component {
 		let zipCodeValid = this.state.zipCodeValid;
 		let countryValid = this.state.countryValid;
 		let stateValid = this.state.stateValid;
-		let regionValid = this.state.regionValid;
+		// let regionValid = this.state.regionValid;
 
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
@@ -1126,8 +1126,8 @@ class GeneralInformation extends Component {
 			case 'state':
 				stateValid = value !== null && value !== 0 && value !== '';
 
-			case 'region':
-				regionValid = value !== null && value !== 0 && value !== '';
+				// case 'region':
+				// 	regionValid = value !== null && value !== 0 && value !== '';
 
 				break;
 			case 'city':
@@ -1166,7 +1166,7 @@ class GeneralInformation extends Component {
 				countryValid,
 				stateValid,
 				cityValid,
-				regionValid,
+				// regionValid,
 				//	suiteValid,
 				phoneNumberValid,
 				faxValid,
@@ -1190,7 +1190,7 @@ class GeneralInformation extends Component {
 					this.state.zipCodeValid &&
 					this.state.countryValid &&
 					this.state.stateValid &&
-					this.state.regionValid &&
+					// this.state.regionValid &&
 					//this.state.suiteValid &&
 					this.state.phoneNumberValid &&
 					this.state.faxValid
@@ -1265,7 +1265,7 @@ class GeneralInformation extends Component {
 			this.state.loadingCities ||
 			this.state.loadingCountries ||
 			this.state.loadingStates ||
-			this.state.loadingRegions ||
+			// this.state.loadingRegions ||
 			this.state.loadingCompanyProperties ||
 			this.state.firstLoad;
 
@@ -1426,7 +1426,7 @@ class GeneralInformation extends Component {
 												this.updateInput(text, 'name');
 											}}
 											error={!this.state.nameValid}
-											maxLength="35"
+											maxLength="80"
 											disabled={!this.props.showStepper}
 										/>
 									</div>
@@ -1438,7 +1438,7 @@ class GeneralInformation extends Component {
 							<div class="card-header info">General Information</div>
 							<div class="card-body">
 								<div className="row">
-									<div className="col-md-5">
+									<div className="col-md-6 col-lg-4">
 										<label className="">* Address</label>
 										<InputForm
 											value={this.state.address}
@@ -1450,7 +1450,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-5">
+									<div className="col-md-6 col-lg-4">
 										<label className="">Address 2</label>
 										<InputForm
 											value={this.state.optionalAddress}
@@ -1461,7 +1461,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-2">
+									<div className="col-md-6 col-lg-4">
 										<label>Suite</label>
 										<input
 											value={this.state.suite}
@@ -1474,7 +1474,7 @@ class GeneralInformation extends Component {
 											className={'form-control'}
 										/>
 									</div>
-									<div className="col-md-5">
+									{/* <div className="col-md-5">
 										<label>* Country</label>
 										<select
 											name="country"
@@ -1492,8 +1492,8 @@ class GeneralInformation extends Component {
 												<option value={item.Id}>{item.Name}</option>
 											))}
 										</select>
-									</div>
-									<div className="col-md-5">
+									</div> */}
+									{/* <div className="col-md-6 col-lg-4">
 										<label>* Region</label>
 										<select
 											name="region"
@@ -1512,8 +1512,50 @@ class GeneralInformation extends Component {
 												<option value={item.Id}>{item.Name}</option>
 											))}
 										</select>
+									</div> */}
+									<div className="col-md-6 col-lg-4">
+										<label>* City</label>
+										<select
+											name="city"
+											className={'form-control'}
+											disabled={this.state.loadingCities}
+											onChange={(event) => {
+												this.updateCity(event.target.value);
+											}}
+											error={!this.state.cityValid}
+											value={this.state.city}
+											//	disabled={!this.props.showStepper}
+											disabled={true}
+											showNone={false}
+										>
+											<option value="">Select a city</option>
+											{this.state.cities.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
 									</div>
-									<div className="col-md-3 col-lg-2">
+									<div className="col-md-6 col-lg-4">
+										<label>* State</label>
+										<select
+											name="state"
+											className={'form-control'}
+											disabled={this.state.loadingStates}
+											onChange={(event) => {
+												this.updateState(event.target.value);
+											}}
+											error={!this.state.stateValid}
+											value={this.state.state}
+											//disabled={!this.props.showStepper}
+											disabled={true}
+											showNone={false}
+										>
+											<option value="">Select a state</option>
+											{this.state.states.map((item) => (
+												<option value={item.Id}>{item.Name}</option>
+											))}
+										</select>
+									</div>
+									<div className="col-md-6 col-lg-4">
 										<label>* Zip Code</label>
 										<InputForm
 											value={this.state.zipCode}
@@ -1527,48 +1569,8 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-5">
-										<label>* State</label>
-										<select
-											name="state"
-											className={'form-control'}
-											disabled={this.state.loadingStates}
-											onChange={(event) => {
-												this.updateState(event.target.value);
-											}}
-											error={!this.state.stateValid}
-											value={this.state.state}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										>
-											<option value="">Select a state</option>
-											{this.state.states.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
-											))}
-										</select>
-									</div>
-									<div className="col-md-5">
-										<label>* City</label>
-										<select
-											name="city"
-											className={'form-control'}
-											disabled={this.state.loadingCities}
-											onChange={(event) => {
-												this.updateCity(event.target.value);
-											}}
-											error={!this.state.cityValid}
-											value={this.state.city}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										>
-											<option value="">Select a city</option>
-											{this.state.cities.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
-											))}
-										</select>
-									</div>
 
-									<div className="col-md-3 col-lg-2">
+									<div className="col-md-6 col-lg-4">
 										<label>* Phone Number</label>
 										<InputMask
 											id="number"
@@ -1586,7 +1588,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-5">
+									<div className="col-md-6 col-lg-4">
 										<label>Secondary Phone Number</label>
 										<InputMask
 											id="number"
@@ -1602,7 +1604,7 @@ class GeneralInformation extends Component {
 											disabled={!this.props.showStepper}
 										/>
 									</div>
-									<div className="col-md-4 col-lg-5">
+									<div className="col-md-6 col-lg-4">
 										<label>Fax</label>
 										<InputMask
 											id="fax"
