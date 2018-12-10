@@ -35,10 +35,18 @@ class CreateCompany extends Component {
 		}
 	}
 
+	checkTabSelected(){
+		if(this.props.location.state.tabSelected == undefined) {
+			return 0;
+		} else {
+            return this.props.location.state.tabSelected;
+		}
+	}
+
 	render() {
 		return (
 			<div className="create-company-container">
-				<FullWithTabs idCompany={this.checkId()} idContract={this.checkIdContract()} {...this.props} />
+				<FullWithTabs idCompany={this.checkId()} idContract={this.checkIdContract()} {...this.props} tabSelected={this.checkTabSelected()}/>
 			</div>
 		);
 	}

@@ -1103,11 +1103,10 @@ class NewContract extends Component {
                                     onClick={() => {
                                         if(this.props.href === undefined){
                                             window.location.href = "/home/Contracts";
-                                        } else if(this.props.href == '/home/company/edit') {
-                                            alert("alert");
+                                        } else if(this.props.href == '/home/company/edit') {2
                                             history.push({
                                                 pathname: '/home/company/edit',
-                                                state: { idCompany: this.props.Id_Entity, idContract: this.props.contractId}
+                                                state: { idCompany: this.props.Id_Entity, idContract: this.props.contractId, tabSelected: 3}
                                             });
                                         }
                                     }}

@@ -74,6 +74,12 @@ class CustomizedTabs extends React.Component {
 		});
 	};
 
+	componentWillMount(){
+		this.setState({
+			value: this.props.tabSelected
+		});
+	}
+
 	showSelectedTab = (value) => {
 		switch (value) {
 			case 0:
