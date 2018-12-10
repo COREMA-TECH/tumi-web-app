@@ -1004,7 +1004,6 @@ query getposition {
 							{this.props.showPayRate && (
 								<div className="col-md-12 col-lg-6">
 									<label>* Pay Rate</label>
-
 									<InputForm
 										id="payrate"
 										name="payrate"

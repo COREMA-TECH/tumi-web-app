@@ -26,3 +26,12 @@ export const UPDATE_HOLIDAY = gql`
         }
     }
 `;
+
+/**
+ * Mutation to update a holiday
+ */
+export const DELETE_HOLIDAY = gql`
+    mutation deleteHoliday($id: [Int]) {
+        deleteHoliday(id:$id)
+    }
+`;

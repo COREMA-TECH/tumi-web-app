@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import withGlobalContent from 'Generic/Global';
-import { CREATE_HOLIDAY, UPDATE_HOLIDAY } from "./Mutations";
+import { CREATE_HOLIDAY, UPDATE_HOLIDAY, DELETE_HOLIDAY } from "./Mutations";
 import { GET_HOLIDAYS } from './Queries';
-
+import ConfirmDialog from 'material-ui/ConfirmDialog';
 import withApollo from "react-apollo/withApollo";
+
+const dialogMessages = require(`../ApplyForm/Application/languagesJSON/${localStorage.getItem('languageForm')}/dialogMessages`);
 
 class Holidays extends Component {
     state = {
@@ -141,14 +143,11 @@ class Holidays extends Component {
             endDate = result.endDate;
 
             this.setState({ inserting: true })
-            console.log(`This is my start date ${startDate} and enddate ${endDate}`)
             if (this.state.id) this.updateHoliday(startDate, endDate)
             else this.createHoliday(startDate, endDate)
         }
     }
     createHoliday(startDate, endDate) {
-        console.log("Inside the function", startDate)
-        console.log("Fecha fin", endDate)
         this.props.client.mutate({
             mutation: CREATE_HOLIDAY,
             variables: {
@@ -181,7 +180,6 @@ class Holidays extends Component {
     }
 
     updateHoliday(startDate, endDate) {
-        console.log("Inside the function", startDate, endDate)
         this.props.client.mutate({
             mutation: UPDATE_HOLIDAY,
             variables: {
@@ -444,12 +442,52 @@ class Holidays extends Component {
             prettyDate += selectedMont.name
         return prettyDate;
     }
-
+    onDeleteHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.setState({ openConfirm: true })
+    }
+    renderDeleteButton = () => {
+        if (this.state.id)
+            return <button class="btn btn-danger float-right ml-2" onClick={this.onDeleteHandler}>Delete<i class="fas fa-trash ml-1"></i></button>
+    }
+    deleteHoliday = () => {
+        this.props.client.mutate({
+            mutation: DELETE_HOLIDAY,
+            variables: {
+                id: this.state.id,
+            }
+        }).then(({ data }) => {
+            this.setState({ inserting: false })
+            this.props.handleOpenSnackbar('success', "Holiday Deleted", 'bottom', 'right');
+            this.props.handleClose();
+        }).catch((error) => {
+            this.setState({ inserting: false })
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error deleting Holiday!',
+                'bottom',
+                'right'
+            );
+        });
+    }
     render() {
         return (
             <form autoComplete="off" id="holiday-form" onSubmit={this.onHandleSave}>
+                <ConfirmDialog
+                    open={this.state.openConfirm}
+                    closeAction={() => {
+                        this.setState({ openConfirm: false });
+                    }}
+                    confirmAction={() => {
+                        this.deleteHoliday();
+                    }}
+                    title={dialogMessages[0].label}
+                    loading={this.state.loading}
+                />
                 <div className="row Holidays">
                     <div className="col-md-12">
+                        {this.renderDeleteButton()}
                         <button className="btn btn-success float-right" type="submit">
                             Save
                              {!this.state.inserting && <i className="fas fa-save ml-1"></i>}
