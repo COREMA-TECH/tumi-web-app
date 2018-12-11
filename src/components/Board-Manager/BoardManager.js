@@ -362,9 +362,9 @@ class BoardManager extends Component {
             console.log("esta es la info del work ordeer ", this.state.workOrders);
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
 
-                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).PositionApplyfor);
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
             } else {
-                this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).PositionApplyfor);
+                this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
             }
             /*let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -409,12 +409,12 @@ class BoardManager extends Component {
                     const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
                     console.log("Phases ", Phases);
 
-                    const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
+                    const IdealJob = wo.idealJobs.find((item) => { return item.description.includes(PositionId) });
                     console.log("IdealJob ", IdealJob);
 
                     this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
 
-                        console.log("entro y saco las lat  ", this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2);
+                        console.log("entro y saco las lat  ", wo.id, this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2);
 
                         const { getDistance } = this.context;
                         const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
@@ -636,6 +636,7 @@ class BoardManager extends Component {
                         needExperience: wo.needExperience,
                         needEnglish: wo.needEnglish,
                         PositionApplyfor: wo.position.Id_positionApplying,
+                        Position: wo.position.Position,
                         Zipcode: Hotel.Zipcode
                     };
                     /* datas = {
@@ -692,6 +693,7 @@ class BoardManager extends Component {
                         needExperience: wo.needExperience,
                         needEnglish: wo.needEnglish,
                         PositionApplyfor: wo.position.Id_positionApplying,
+                        Position: wo.position.Position,
                         Zipcode: Hotel.Zipcode
                     };
                     getworkOrders.push(datas);

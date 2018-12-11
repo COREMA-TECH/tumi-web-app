@@ -64,7 +64,7 @@ class GeneralInfoProperty extends Component {
 			validCity: '',
 			validStartWeek: '',
 			validEndWeek: '',
-
+			zipCodeValid: true,
 			contractURL: '',
 			contractFile: '',
 
@@ -84,7 +84,7 @@ class GeneralInfoProperty extends Component {
 			cityFinal: '',
 			loadingData: false,
 
-            nextButton: false
+			nextButton: false
 		};
 	}
 	/**
@@ -341,7 +341,7 @@ class GeneralInfoProperty extends Component {
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
-									Zipcode: parseInt(this.state.zipCode),
+									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -539,7 +539,7 @@ class GeneralInfoProperty extends Component {
 									State: parseInt(this.state.state),
 									// Rate: parseFloat(this.state.rate),
 									Rate: parseFloat(companyId),
-									Zipcode: parseInt(this.state.zipCode),
+									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -576,9 +576,9 @@ class GeneralInfoProperty extends Component {
 						})
 						.then((data) => {
 							// this.props.next();
-                            this.setState({
-                                nextButton: true
-                            });
+							this.setState({
+								nextButton: true
+							});
 
 							this.props.handleOpenSnackbar('success', 'Success: Property updated');
 
@@ -602,6 +602,11 @@ class GeneralInfoProperty extends Component {
 			{
 				[name]: text
 			}, () => {
+
+				this.setState(
+					{
+						zipCodeValid: true
+					})
 				this.validateField(name, text);
 				if (name == "zipCode") {
 					fetch('https://ziptasticapi.com/' + text).then((response) => {
@@ -1072,16 +1077,16 @@ class GeneralInfoProperty extends Component {
 
 									{
 										!this.state.nextButton ? (
-                                            <button type="submit" className="btn btn-success">
-                                                Save<i className="fas fa-save ml-2"/>
-                                            </button>
+											<button type="submit" className="btn btn-success">
+												Save<i className="fas fa-save ml-2" />
+											</button>
 										) : (
-                                            <button type="button" onClick={() => {
-                                            	this.props.next();
-											}} className="btn btn-success">
-                                                Next <i className="fas fa-chevron-right"></i>
-                                            </button>
-										)
+												<button type="button" onClick={() => {
+													this.props.next();
+												}} className="btn btn-success">
+													Next <i className="fas fa-chevron-right"></i>
+												</button>
+											)
 									}
 								</div>
 							</div>
@@ -1239,7 +1244,7 @@ class GeneralInfoProperty extends Component {
 															error={!this.state.zipCodeValid}
 															maxLength="10"
 															min={0}
-															type="number"
+															type="text"
 															disabled={!this.props.showStepper}
 														/>
 
