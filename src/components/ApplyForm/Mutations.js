@@ -136,9 +136,11 @@ export const UPDATE_IDEAL_JOB = gql`
  * Mutation to create application with general information
  */
 export const RECREATE_IDEAL_JOB_LIST = gql`
-    mutation recreateIdealJobs($id: Int, $application:  [inputInsertApplicantIdealJob]) {
-        recreateIdealJobs(ApplicationId: $id, applicantIdealJob: $application) {
+    mutation reacreateIdealJob($ApplicationId: Int, $applicationIdealJob: [inputInsertApplicantIdealJob]) {
+        recreateIdealJobs(ApplicationId: $ApplicationId, applicantIdealJob: $applicationIdealJob) {
             id
+            ApplicationId
+            description
         }
     }
 `;

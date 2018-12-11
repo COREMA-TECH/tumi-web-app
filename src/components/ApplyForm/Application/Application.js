@@ -211,9 +211,10 @@ class Application extends Component {
 	addApplicantJobs = (idealJobArrayObject) => {
 		this.props.client
 			.mutate({
-				mutation: ADD_IDEAL_JOB,
+				mutation: RECREATE_IDEAL_JOB_LIST,
 				variables: {
-					application: idealJobArrayObject
+                    ApplicationId: this.props.applicationId,
+                    applicationIdealJob: idealJobArrayObject
 				}
 			})
 			.then(({ data }) => {
@@ -221,23 +222,6 @@ class Application extends Component {
 			})
 			.catch(error => {
 				console.log("DEBUG ERROR");
-			})
-	};
-
-	// TODO
-	updateApplicantIdealJob = (object) => {
-		this.props.client
-			.mutate({
-				mutation: RECREATE_IDEAL_JOB_LIST,
-				variables: {
-                    application: object
-				}
-			})
-			.then(({data}) => {
-
-			})
-			.catch(error => {
-
 			})
 	};
 
@@ -332,7 +316,8 @@ class Application extends Component {
 				query: GET_APPLICANT_IDEAL_JOBS,
 				variables: {
                     ApplicationId: this.props.applicationId
-				}
+				},
+                fetchPolicy: 'no-cache'
 			})
 			.then(({data}) => {
 				let dataAPI = data.applicantIdealJob;
