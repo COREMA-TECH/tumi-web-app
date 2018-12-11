@@ -901,16 +901,23 @@ query getposition {
 												className="btn btn-info float-right"
 												onClick={() => {
 													// When the user click Next button, open second tab
-													history.push({
-														pathname: '/home/contract/add',
-														state: {
-															contract: 0,
-															Id_Entity: this.state.idCompany,
-															Id_Parent: this.state.idManagement,
-															idContract: this.props.idContract,
-															href: '/home/company/edit'
-														}
-													});
+													let hrefValue = '/home/company/edit';
+
+													if(this.props.href !== null) {
+                                                        hrefValue = this.props.href;
+													}
+
+                                                    history.push({
+                                                        pathname: '/home/contract/add',
+                                                        state: {
+                                                            contract: 0,
+                                                            Id_Entity: this.state.idCompany,
+                                                            Id_Parent: this.state.idManagement,
+                                                            idContract: this.props.idContract,
+                                                            href: hrefValue
+                                                        }
+                                                    });
+
 													//console.log(this.state);
 												}}
 											>

@@ -181,6 +181,7 @@ class CustomizedTabs extends Component {
 					)}
 					{value === 3 && (
 						<PositionsCompanyForm
+                            href="/home/Properties"
 							idCompany={this.state.idProperty}
 							idManagement={this.state.idManagement}
 							idContract={1}

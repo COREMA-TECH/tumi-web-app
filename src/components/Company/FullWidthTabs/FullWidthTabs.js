@@ -127,6 +127,7 @@ class CustomizedTabs extends React.Component {
 			case 3:
 				return (
 					<PositionsCompanyForm
+						href={null}
 						idCompany={this.state.idCompany}
 						idManagement={this.state.idManagement}
 						idContract={this.props.idContract}
