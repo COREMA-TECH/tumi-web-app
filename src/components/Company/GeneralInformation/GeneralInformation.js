@@ -1816,7 +1816,7 @@ class GeneralInformation extends Component {
 								<CloseIcon />
 							</IconButton>
 							<Typography variant="title" color="inherit">
-								Management Company
+								Property
 							</Typography>
 						</Toolbar>
 					</AppBar>
