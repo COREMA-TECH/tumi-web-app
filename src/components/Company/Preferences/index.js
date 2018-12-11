@@ -127,7 +127,6 @@ class Preferences extends React.Component {
         })
     }
 
-
     add() {
         this.props.client.mutate({
             mutation: this.INSERT_QUERY,
@@ -289,23 +288,27 @@ class Preferences extends React.Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label>
-                                                Period
+                                                Time
                                             </label>
-                                            {
-                                                (!this.state.disabled) ?
-                                                    <CatalogItem
-                                                        update={(id) => {
-                                                            this.setState({period: id})
-                                                        }}
-                                                        PeriodId={11}
-                                                        name="period"
-                                                        value={this.state.period}
-                                                        disabled={(this.state.disabled)}
-                                                    >
-                                                    </CatalogItem>
-                                                    :
-                                                    <select className="form-control" disabled></select>
-                                            }
+                                            <input type="text" min="0" name="amount"
+                                                   disabled={(this.state.disabled) ? "disabled" : ""}
+                                                   value={this.state.time} className="form-control"
+                                                   onChange={this.handleChange}/>
+                                            {/*{*/}
+                                                {/*(!this.state.disabled) ?*/}
+                                                    {/*<CatalogItem*/}
+                                                        {/*update={(id) => {*/}
+                                                            {/*this.setState({period: id})*/}
+                                                        {/*}}*/}
+                                                        {/*PeriodId={11}*/}
+                                                        {/*name="period"*/}
+                                                        {/*value={this.state.period}*/}
+                                                        {/*disabled={(this.state.disabled)}*/}
+                                                    {/*>*/}
+                                                    {/*</CatalogItem>*/}
+                                                    {/*:*/}
+                                                    {/*<select className="form-control" disabled></select>*/}
+                                            {/*}*/}
                                         </div>
                                         <div className="col-md-6">
                                             <label>
