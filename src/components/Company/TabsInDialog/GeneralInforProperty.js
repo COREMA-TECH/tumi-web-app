@@ -1052,6 +1052,7 @@ class GeneralInfoProperty extends Component {
 											onClick={() => {
 												this.deleteCompany(this.props.idProperty);
 											}}
+											type="button"
 										>
 											Delete Property<i class="fas fa-ban ml-1" />
 										</button>
