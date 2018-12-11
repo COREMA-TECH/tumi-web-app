@@ -181,7 +181,7 @@ class HotelList extends Component {
                     <div className="col-md-6">
                         <div className="float-right">
                             <button className="btn btn-success" onClick={this.handleClickOpen}>
-                                Add Existing Property
+                                Add New Property
                             </button>
                         </div>
                     </div>
