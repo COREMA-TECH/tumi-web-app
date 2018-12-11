@@ -18,9 +18,12 @@
         }
     }
     &-img {
+        background: url(https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png) center center;
+        background-size: contain;
         border-radius: 50px;
         height: 50px;
         margin-right: .5rem;
+        min-width: 50px;
         overflow: hidden;
         position: relative;
         width: 50px;

@@ -27,7 +27,7 @@ const MobileMenu = (props) => {
 				<li className="MainMenu-option">
 					<Link to={`/home/Company`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
 						<i className={'fas fa-warehouse MenuMobile-icon'} title={'Companies'} />
-						<span>Management</span>
+						<span>Management Company</span>
 					</Link>
 				</li>
 				<li className="MainMenu-option">
@@ -56,8 +56,8 @@ const MobileMenu = (props) => {
 						onClick={handleItemMenuAction}
 						data-submenu="1"
 					>
-						<i className="fas fa-user-cog MenuMobile-icon" title={'Operation Manager'} />
-						<span>Operation Manager</span>
+						<i className="fas fa-user-cog MenuMobile-icon" title={'Operations'} />
+						<span>Operations</span>
 					</Link>
 					<ul className="SubMenu" id="1">
 						<li className="SubMenu-item">

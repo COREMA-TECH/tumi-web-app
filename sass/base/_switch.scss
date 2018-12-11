@@ -19,12 +19,12 @@
     box-sizing: border-box;
 }
 .onoffswitch-inner:before {
-    content: "ON";
+    content: "YES";
     padding-left: 10px;
     background-color: $brand-primary; color: $white;
 }
 .onoffswitch-inner:after {
-    content: "OFF";
+    content: "NO";
     padding-right: 10px;
     background-color: #EEEEEE; color: #999999;
     text-align: right;

@@ -14,7 +14,7 @@ import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
 import PropTypes from 'prop-types';
 import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
-
+import InputForm from 'ui-components/InputForm/InputForm';
 class GeneralInfoProperty extends Component {
 	constructor(props) {
 		super(props);
@@ -589,6 +589,24 @@ class GeneralInfoProperty extends Component {
 
 	};
 
+	updateInput = (text, name) => {
+		this.setState(
+			{
+				[name]: text
+			}, () => {
+				this.validateField(name, text);
+				if (name == "zipCode") {
+					fetch('https://ziptasticapi.com/' + text).then((response) => {
+						return response.json()
+					}).then((cities) => {
+						if (!cities.error)
+							this.findByZipCode(cities.state, cities.city.toLowerCase());
+					});
+				}
+			}
+		);
+	};
+
 	handleFormSubmit = (event) => {
 		event.preventDefault();
 		let invalidInputs = document.querySelectorAll('input[required]'),
@@ -884,6 +902,117 @@ class GeneralInfoProperty extends Component {
 		);
 	};
 
+	validateField(fieldName, value) {
+		let codeValid = this.state.codeValid;
+		let nameValid = this.state.nameValid;
+		//let descriptionValid = this.state.descriptionValid;
+		let addressValid = this.state.addressValid;
+
+		let startWeekValid = this.state.startWeekValid;
+		let endWeekValid = this.state.endWeekValid;
+		let rateValid = this.state.rateValid;
+		let zipCodeValid = this.state.zipCodeValid;
+		let countryValid = this.state.countryValid;
+		let stateValid = this.state.stateValid;
+		// let regionValid = this.state.regionValid;
+
+		let cityValid = this.state.cityValid;
+		let suiteValid = this.state.suiteValid;
+		let phoneNumberValid = this.state.phoneNumberValid;
+		let phoneNumber2Valid = this.state.phoneNumber2Valid;
+		let faxValid = this.state.faxValid;
+		let startDateValid = this.state.startDateValid;
+
+		switch (fieldName) {
+			case 'Code':
+				codeValid = value.trim().length >= 2;
+
+				break;
+			case 'name':
+				nameValid = value.trim().length >= 5;
+
+				break;
+			//	case 'description':
+			//	descriptionValid = value.trim().length >= 10;
+
+			//	break;
+			case 'address':
+				addressValid = value.trim().length >= 5;
+
+				break;
+			case 'startWeek':
+				startWeekValid = value !== null && value !== 0 && value !== '';
+
+				break;
+			case 'endWeek':
+				endWeekValid = value !== null && value !== 0 && value !== '';
+
+				break;
+			case 'rate':
+				rateValid = parseInt(value) >= 0;
+
+				break;
+			case 'zipCode':
+				zipCodeValid = value.trim().length >= 2;
+
+				break;
+			case 'country':
+				countryValid = value !== null && value !== 0 && value !== '';
+
+				break;
+			case 'state':
+				stateValid = value !== null && value !== 0 && value !== '';
+
+				// case 'region':
+				// 	regionValid = value !== null && value !== 0 && value !== '';
+
+				break;
+			case 'city':
+				cityValid = value !== null && value !== 0 && value !== '';
+
+				break;
+			//case 'suite':
+			//suiteValid = value.trim()!='';
+
+			//	break;
+			case 'phoneNumber':
+				phoneNumberValid =
+					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+						.length == 10;
+				break;
+			case 'fax':
+				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+				faxValid = fax.length == 10 || fax.length == 0;
+				break;
+			case 'startDate':
+				startDateValid = value.trim().length == 10;
+				break;
+			default:
+				break;
+		}
+		this.setState(
+			{
+				codeValid,
+				nameValid,
+				//descriptionValid,
+				addressValid,
+				startWeekValid,
+				endWeekValid,
+				rateValid,
+				zipCodeValid,
+				countryValid,
+				stateValid,
+				cityValid,
+				// regionValid,
+				//	suiteValid,
+				phoneNumberValid,
+				faxValid,
+				startDateValid
+			},
+			this.validateForm
+		);
+	}
+
 	findByZipCode = (zipCode = null, cityFinal = null) => {
 		if (!zipCode) {
 			return false;
@@ -941,103 +1070,108 @@ class GeneralInfoProperty extends Component {
 									<div class="card-header">General Information</div>
 									<div class="card-body">
 										<div className="row">
-											<div className="col-md-6 col-lg-2">
-												<ImageUpload
-													id="avatarFilePI"
-													updateAvatar={(url) => {
-														this.setState({
-															avatar: url
-														});
-													}}
-													fileURL={this.state.avatar}
-													disabled={false}
-													handleOpenSnackbar={this.props.handleOpenSnackbar}
-												/>
+											<div className="col-md-12 col-lg-1">
+												<div className="GeneralInformation-wrapper">
+													<ImageUpload
+														id="avatarFilePI"
+														updateAvatar={(url) => {
+															this.setState({
+																avatar: url
+															});
+														}}
+														fileURL={this.state.avatar}
+														disabled={false}
+														handleOpenSnackbar={this.props.handleOpenSnackbar}
+													/>
+												</div>
 											</div>
-											<div className="col-md-6 col-lg-1">
-												<label>* Markup</label>
-												<InputValid
-													type="number"
-													value={this.state.rate}
-													change={(text) => {
-														this.setState({
-															rate: text
-														});
-													}}
-													error={!this.state.rateValid}
-													maxLength="10"
-												//disabled={!this.props.showStepper}
-												/>
-											</div>
-											<div className="col-md-6 col-lg-2">
-												<label>* Hotel Name</label>
-												<InputValid
-													change={(text) => {
-														this.setState({
-															name: text
-														});
-													}}
-													value={this.state.name}
-													type="text"
-													maxLength="35"
-													required
-												/>
-											</div>
-											<div className="col-md-6 col-lg-3">
-												<label>* Address</label>
-												<InputValid
-													change={(text) => {
-														this.setState({
-															address: text
-														});
-													}}
-													value={this.state.address}
-													type="text"
-													maxLength="50"
-													required
-												/>
-											</div>
-											<div className="col-md-6 col-lg-3">
-												<label>Address 2</label>
-												<input
-													className={'form-control'}
-													onChange={(e) => {
-														this.setState({
-															optionalAddress: e.target.value
-														});
-													}}
-													value={this.state.optionalAddress}
-													type="text"
-													maxLength="50"
-												/>
-											</div>
-											<div className="col-md-6 col-lg-1">
-												<label>Suite</label>
-												<input
-													onChange={(e) => {
-														this.setState({
-															suite: e.target.value
-														});
-													}}
-													value={this.state.suite}
-													type="text"
-													maxLength="10"
-													className={'form-control'}
-												/>
-											</div>
-											<div className="col-md-12 col-lg-4">
-												<label>* Region</label>
-												<AutosuggestInput
-													id="Region"
-													name="Region"
-													data={this.state.regions}
-													error={this.state.validRegion === '' ? false : true}
-													value={this.state.RegionName}
-													onChange={this.updateRegionName}
-													onSelect={this.updateRegionName}
-												/>
-											</div>
-											{/*	<div className="col-md-6 col-lg-3">
+											<div className="col-md-12 col-lg-11">
+												<div className="row">
+
+													<div className="col-md-6 col-lg-1">
+														<label>* Markup</label>
+														<InputValid
+															type="number"
+															value={this.state.rate}
+															change={(text) => {
+																this.setState({
+																	rate: text
+																});
+															}}
+															error={!this.state.rateValid}
+															maxLength="10"
+														//disabled={!this.props.showStepper}
+														/>
+													</div>
+													<div className="col-md-6 col-lg-2">
+														<label>* Hotel Name</label>
+														<InputValid
+															change={(text) => {
+																this.setState({
+																	name: text
+																});
+															}}
+															value={this.state.name}
+															type="text"
+															maxLength="35"
+															required
+														/>
+													</div>
+													<div className="col-md-6 col-lg-4">
+														<label>* Address</label>
+														<InputValid
+															change={(text) => {
+																this.setState({
+																	address: text
+																});
+															}}
+															value={this.state.address}
+															type="text"
+															maxLength="50"
+															required
+														/>
+													</div>
+													<div className="col-md-6 col-lg-3">
+														<label>Address 2</label>
+														<input
+															className={'form-control'}
+															onChange={(e) => {
+																this.setState({
+																	optionalAddress: e.target.value
+																});
+															}}
+															value={this.state.optionalAddress}
+															type="text"
+															maxLength="50"
+														/>
+													</div>
+													<div className="col-md-6 col-lg-2">
+														<label>Suite</label>
+														<input
+															onChange={(e) => {
+																this.setState({
+																	suite: e.target.value
+																});
+															}}
+															value={this.state.suite}
+															type="text"
+															maxLength="10"
+															className={'form-control'}
+														/>
+													</div>
+													<div className="col-md-12 col-lg-4">
+														<label>* Region</label>
+														<AutosuggestInput
+															id="Region"
+															name="Region"
+															data={this.state.regions}
+															error={this.state.validRegion === '' ? false : true}
+															value={this.state.RegionName}
+															onChange={this.updateRegionName}
+															onSelect={this.updateRegionName}
+														/>
+													</div>
+													{/*	<div className="col-md-6 col-lg-3">
 												<label>* Region</label>
 												<Query query={this.getRegionsQuery} >
 													{({ loading, error, data, refetch, networkStatus }) => {
@@ -1054,8 +1188,7 @@ class GeneralInfoProperty extends Component {
 																	className={'form-control'}
 																	onChange={(event) => {
 																		this.setState({
-																			region: event.target.value,
-																			validRegion: ''
+																			city: citySelected[0].Id
 																		});
 																	}}
 																	error={this.state.validRegion === '' ? false : true}
@@ -1073,162 +1206,159 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div> */}
-											<div className="col-md-6 col-lg-2">
-												<label>* Zip Code</label>
-												<InputValid
-													change={(text) => {
-														this.setState({
-															zipCode: text
-														});
-														fetch('https://ziptasticapi.com/' + text).then((response) => {
-															return response.json()
-														}).then((cities) => {
-															if (!cities.error) {
-																this.findByZipCode(cities.state, cities.city.toLowerCase());
-															}
-														});
-													}}
-													value={this.state.zipCode}
-													maxLength="10"
-													type="number"
-													required
-												/>
-											</div>
-											<div className="col-md-6 col-lg-3">
-												<label>* States</label>
-												<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
-													{({ loading, error, data, refetch, networkStatus }) => {
-														//if (networkStatus === 4) return <LinearProgress />;
-														if (loading) return <LinearProgress />;
-														if (error) return <p>Error </p>;
-														if (
-															data.getcatalogitem != null &&
-															data.getcatalogitem.length > 0
-														) {
-															return (
-																<select
-																	name="state"
-																	className={'form-control'}
-																	onChange={(event) => {
-																		this.setState({
-																			state: event.target.value,
-																			validState: ''
-																		});
-																	}}
-																	error={this.state.validState === '' ? false : true}
-																	value={this.state.state}
-																	showNone={false}
-																>
-																	<option value="">Select a state</option>
-																	{data.getcatalogitem.map((item) => (
-																		<option value={item.Id}>{item.Name}</option>
-																	))}
-																</select>
-															);
-														}
-														return <SelectNothingToDisplay />;
-													}}
-												</Query>
-											</div>
-											<div className="col-md-6 col-lg-3">
-												<label>City</label>
-												<Query
-													query={this.getCitiesQuery}
-													variables={{ parent: this.state.state }}
-												>
-													{({ loading, error, data, refetch, networkStatus }) => {
-														//if (networkStatus === 4) return <LinearProgress />;
-														if (loading) return <LinearProgress />;
-														if (error) return <p>Error </p>;
-														if (
-															data.getcatalogitem != null &&
-															data.getcatalogitem.length > 0
-														) {
-															var citySelected = 0;
-															citySelected = data.getcatalogitem.filter(city => {
-																return city.Name.toLowerCase().includes(this.state.cityFinal);
-															});
-															if (citySelected[0].Id != this.state.city) {
-																this.setState({
-																	city: citySelected[0].Id
-																});
-															}
+													<div className="col-md-6 col-lg-2">
 
-															return (
-																<select
-																	name="city"
-																	className={'form-control'}
-																	onChange={(event) => {
+														<label>* Zip Code</label>
+														<InputForm
+															value={this.state.zipCode}
+															change={(text) => {
+																this.updateInput(text, 'zipCode');
+															}}
+															error={!this.state.zipCodeValid}
+															maxLength="10"
+															min={0}
+															type="number"
+															disabled={!this.props.showStepper}
+														/>
+
+													</div>
+													<div className="col-md-6 col-lg-2">
+														<label>* States</label>
+														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+															{({ loading, error, data, refetch, networkStatus }) => {
+																//if (networkStatus === 4) return <LinearProgress />;
+																if (loading) return <LinearProgress />;
+																if (error) return <p>Error </p>;
+																if (
+																	data.getcatalogitem != null &&
+																	data.getcatalogitem.length > 0
+																) {
+																	return (
+																		<select
+																			name="state"
+																			className={'form-control'}
+																			onChange={(event) => {
+																				this.setState({
+																					state: event.target.value,
+																					validState: ''
+																				});
+																			}}
+																			error={this.state.validState === '' ? false : true}
+																			value={this.state.state}
+																			showNone={false}
+																		>
+																			<option value="">Select a state</option>
+																			{data.getcatalogitem.map((item) => (
+																				<option value={item.Id}>{item.Name}</option>
+																			))}
+																		</select>
+																	);
+																}
+																return <SelectNothingToDisplay />;
+															}}
+														</Query>
+													</div>
+													<div className="col-md-6 col-lg-3">
+														<label>City</label>
+														<Query
+															query={this.getCitiesQuery}
+															variables={{ parent: this.state.state }}
+														>
+															{({ loading, error, data, refetch, networkStatus }) => {
+																//if (networkStatus === 4) return <LinearProgress />;
+																if (loading) return <LinearProgress />;
+																if (error) return <p>Error </p>;
+																if (
+																	data.getcatalogitem != null &&
+																	data.getcatalogitem.length > 0
+																) {
+																	var citySelected = 0;
+																	citySelected = data.getcatalogitem.filter(city => {
+																		return city.Name.toLowerCase().includes(this.state.cityFinal);
+																	});
+																	if (citySelected[0].Id != this.state.city) {
 																		this.setState({
-																			city: event.target.value,
-																			validCity: ''
+																			city: citySelected[0].Id
 																		});
-																	}}
-																	error={this.state.validCity === '' ? false : true}
-																	value={this.state.city}
-																	showNone={false}
-																>
-																	<option value="">Select a city</option>
-																	{data.getcatalogitem.map((item) => (
-																		<option value={item.Id}>{item.Name}</option>
-																	))}
-																</select>
-															);
-														}
-														return <SelectNothingToDisplay />;
-													}}
-												</Query>
-											</div>
-											<div className="col-md-6 col-lg-1">
-												<label>* Phone Number</label>
-												<InputMask
-													id="prop-number"
-													name="number"
-													mask="+(999) 999-9999"
-													maskChar=" "
-													value={this.state.phoneNumber}
-													className={
-														this.state.phoneNumberValid ? (
-															'form-control'
-														) : (
-																'input-form _invalid'
-															)
-													}
-													onChange={(e) => {
-														this.setState({
-															phoneNumber: e.target.value,
-															phoneNumberValid: true
-														});
-													}}
-													placeholder="+(999) 999-9999"
-													required
-													minLength="15"
-												/>
-											</div>
-											<div className="col-md-6 col-lg-2">
-												<label>Fax</label>
-												<InputMask
-													id="prop-fax"
-													name="number"
-													mask="+(999) 999-9999"
-													maskChar=" "
-													value={this.state.fax}
-													className={
-														this.state.faxNumberValid ? (
-															'form-control'
-														) : (
-																'input-form _invalid'
-															)
-													}
-													onChange={(e) => {
-														this.setState({
-															fax: e.target.value,
-															faxNumberValid: true
-														});
-													}}
-													placeholder="+(999) 999-9999"
-													minLength="15"
-												/>
+																	}
+
+																	return (
+																		<select
+																			name="city"
+																			className={'form-control'}
+																			onChange={(event) => {
+																				this.setState({
+																					city: event.target.value,
+																					validCity: ''
+																				});
+																			}}
+																			error={this.state.validCity === '' ? false : true}
+																			value={this.state.city}
+																			showNone={false}
+																		>
+																			<option value="">Select a city</option>
+																			{data.getcatalogitem.map((item) => (
+																				<option value={item.Id}>{item.Name}</option>
+																			))}
+																		</select>
+																	);
+																}
+																return <SelectNothingToDisplay />;
+															}}
+														</Query>
+													</div>
+													<div className="col-md-6 col-lg-2">
+														<label>* Phone Number</label>
+														<InputMask
+															id="prop-number"
+															name="number"
+															mask="+(999) 999-9999"
+															maskChar=" "
+															value={this.state.phoneNumber}
+															className={
+																this.state.phoneNumberValid ? (
+																	'form-control'
+																) : (
+																		'input-form _invalid'
+																	)
+															}
+															onChange={(e) => {
+																this.setState({
+																	phoneNumber: e.target.value,
+																	phoneNumberValid: true
+																});
+															}}
+															placeholder="+(999) 999-9999"
+															required
+															minLength="15"
+														/>
+													</div>
+													<div className="col-md-6 col-lg-2">
+														<label>Fax</label>
+														<InputMask
+															id="prop-fax"
+															name="number"
+															mask="+(999) 999-9999"
+															maskChar=" "
+															value={this.state.fax}
+															className={
+																this.state.faxNumberValid ? (
+																	'form-control'
+																) : (
+																		'input-form _invalid'
+																	)
+															}
+															onChange={(e) => {
+																this.setState({
+																	fax: e.target.value,
+																	faxNumberValid: true
+																});
+															}}
+															placeholder="+(999) 999-9999"
+															minLength="15"
+														/>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -1407,8 +1537,9 @@ class GeneralInfoProperty extends Component {
 								</div>
 							</div>
 						</div>
-					</form>
-				)}
+					</ form>
+				)
+				}
 			/>
 		);
 	}

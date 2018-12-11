@@ -74,6 +74,12 @@ class CustomizedTabs extends React.Component {
 		});
 	};
 
+	componentWillMount(){
+		this.setState({
+			value: this.props.tabSelected
+		});
+	}
+
 	showSelectedTab = (value) => {
 		switch (value) {
 			case 0:
@@ -121,6 +127,7 @@ class CustomizedTabs extends React.Component {
 			case 3:
 				return (
 					<PositionsCompanyForm
+						href={null}
 						idCompany={this.state.idCompany}
 						idManagement={this.state.idManagement}
 						idContract={this.props.idContract}
