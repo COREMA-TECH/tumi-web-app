@@ -14,7 +14,6 @@ firebase.initializeApp({
     messagingSenderId: '79324693031'
 });
 
-
 if (localStorage.getItem("languageForm") === undefined || localStorage.getItem("languageForm") == null) {
     localStorage.setItem('languageForm', 'en');
 }
