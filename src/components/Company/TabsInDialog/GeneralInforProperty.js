@@ -1159,7 +1159,7 @@ class GeneralInfoProperty extends Component {
 															className={'form-control'}
 														/>
 													</div>
-													<div className="col-md-12 col-lg-4">
+													<div className="col-md-12 col-lg-3">
 														<label>* Region</label>
 														<AutosuggestInput
 															id="Region"

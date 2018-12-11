@@ -1204,6 +1204,18 @@ class ContactcontactForm extends React.Component {
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">
+										<label>* Contact Title</label>
+										<AutosuggestInput
+											id="title"
+											name="title"
+											data={this.state.titles}
+											error={!this.state.titleNameValid}
+											value={this.state.titleName}
+											onChange={this.updateTitleName}
+											onSelect={this.updateTitleName}
+										/>
+									</div>
+									<div className="col-md-12 col-lg-4">
 										<label>* First Name</label>
 										<InputForm
 											id="firstname"
@@ -1236,18 +1248,6 @@ class ContactcontactForm extends React.Component {
 											change={(value) => this.onLastNameChangeHandler(value)}
 										/>
 									</div>
-
-									<div className="col-md-12 col-lg-4">
-										<label>* Email</label>
-										<InputForm
-											id="email"
-											name="email"
-											maxLength="50"
-											error={!this.state.emailValid}
-											value={this.state.email}
-											change={(value) => this.onEmailChangeHandler(value)}
-										/>
-									</div>
 									<div className="col-md-12 col-lg-4">
 										<label>* Phone Number</label>
 										<InputMask
@@ -1266,17 +1266,18 @@ class ContactcontactForm extends React.Component {
 										/>
 									</div>
 									<div className="col-md-12 col-lg-4">
-										<label>* Contact Title</label>
-										<AutosuggestInput
-											id="title"
-											name="title"
-											data={this.state.titles}
-											error={!this.state.titleNameValid}
-											value={this.state.titleName}
-											onChange={this.updateTitleName}
-											onSelect={this.updateTitleName}
+										<label>* Email</label>
+										<InputForm
+											id="email"
+											name="email"
+											maxLength="50"
+											error={!this.state.emailValid}
+											value={this.state.email}
+											change={(value) => this.onEmailChangeHandler(value)}
 										/>
 									</div>
+
+
 								</div>
 							</div>
 						</div>

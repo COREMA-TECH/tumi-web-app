@@ -39,7 +39,7 @@ class HotelDialog extends Component {
                                 <CloseIcon />
                             </IconButton>
                             <Typography variant="title" color="inherit">
-                                Management Hotel
+                                Property
                             </Typography>
                         </Toolbar>
                     </AppBar>

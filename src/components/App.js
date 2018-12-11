@@ -100,7 +100,7 @@ class App extends Component {
 	componentWillMount() {
 		window.removeEventListener('scroll', this.handleScroll);
 
-        localStorage.setItem('languageForm', 'en');
+		localStorage.setItem('languageForm', 'en');
 	}
 
 	render() {
