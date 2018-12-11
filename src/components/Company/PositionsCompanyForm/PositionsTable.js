@@ -253,15 +253,17 @@ class PositionsTable extends React.Component {
 						<TableRow>
 							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell className={classes.th}>Department</CustomTableCell>
-							<CustomTableCell className={classes.th}>Title</CustomTableCell>
+							<CustomTableCell style={{
+                                width: '25px'
+							}} className={'Table-head'}>Department</CustomTableCell>
+							<CustomTableCell className={'Table-head'}>Title</CustomTableCell>
 
-							<CustomTableCell className={classes.th}>Bill Rate</CustomTableCell>
+							<CustomTableCell className={'Table-head'}>Bill Rate</CustomTableCell>
 
 							{this.props.showPayRate && (
-								<CustomTableCell className={classes.th}>Pay Rate</CustomTableCell>
+								<CustomTableCell className={'Table-head'}>Pay Rate</CustomTableCell>
 							)}
-							<CustomTableCell padding="none" className={classes.th}>
+							<CustomTableCell padding="none" className={'Table-head'}>
 								Shift
 							</CustomTableCell>
 						</TableRow>
@@ -354,7 +356,7 @@ class PositionsTable extends React.Component {
                                             {row.Pay_Rate}
 										</CustomTableCell>
 									)}
-									<CustomTableCell padding="none" style={{ width: '100px' }}>
+									<CustomTableCell padding="none">
 										<Select
 											id="shift"
 											name="shift"
