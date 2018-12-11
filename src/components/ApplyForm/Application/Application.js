@@ -199,7 +199,7 @@ class Application extends Component {
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
 							'error',
-							'Error to update aaplicant information. Please, try again!',
+							'Error to update applicant information. Please, try again!',
 							'bottom',
 							'right'
 						);
