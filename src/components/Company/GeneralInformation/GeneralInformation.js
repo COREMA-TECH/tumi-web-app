@@ -1771,7 +1771,7 @@ class GeneralInformation extends Component {
 													onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
 												>
 													<CustomTableCell>{item.Code}</CustomTableCell>
-													<CustomTableCell>{item.Code}</CustomTableCell>
+													<CustomTableCell>{item.Name}</CustomTableCell>
 												</TableRow>
 											);
 										})}
@@ -1779,7 +1779,7 @@ class GeneralInformation extends Component {
 								</Table>
 								<div className="card-form-footer">
 									<button className="btn btn-success mr-1" onClick={this.handleOpenHotels}>
-										Add Hotel <i class="fas fa-plus" />
+										Add Existing Property <i class="fas fa-plus" />
 									</button>
 									<button
 										className={
@@ -1792,7 +1792,7 @@ class GeneralInformation extends Component {
 										disabled={this.props.idCompany == 0}
 										onClick={this.handleClickOpen('paper', false, 0, 0)}
 									>
-										Add Property <i class="fas fa-plus" />
+										Add New Property <i class="fas fa-plus" />
 									</button>
 								</div>
 							</div>
