@@ -960,7 +960,8 @@ query getposition {
 									onSelect={this.updateDepartmentName}
 								/>
 							</div>
-							<div className="col-md-12 col-lg-6">
+
+							{/*<div className="col-md-12 col-lg-6">
 								<label>* Positions</label>
 								<Query query={this.GET_POSITIONS_QUERY}>
 									{({ loading, error, data, refetch, networkStatus }) => {
@@ -989,7 +990,7 @@ query getposition {
 										return <SelectNothingToDisplay />;
 									}}
 								</Query>
-							</div>
+							</div> */}
 							<div className="col-md-12 col-lg-6">
 								<label>* Title</label>
 								<InputForm

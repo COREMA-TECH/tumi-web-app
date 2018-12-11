@@ -13,6 +13,7 @@ import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectN
 import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
 import PropTypes from 'prop-types';
 import './valid.css';
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 class GeneralInfoProperty extends Component {
 	constructor(props) {
@@ -31,9 +32,12 @@ class GeneralInfoProperty extends Component {
 			address: '',
 			optionalAddress: '',
 			businessType: '',
+			RegionName: '',
+			IdRegion: 0,
 			country: 6,
 			state: 0,
 			region: 0,
+			regions: [],
 			city: 0,
 			management: '',
 			phoneNumber: '',
@@ -77,7 +81,8 @@ class GeneralInfoProperty extends Component {
 
 			phoneNumberValid: true,
 			faxNumberValid: true,
-			cityFinal: ''
+			cityFinal: '',
+			loadingData: false
 		};
 	}
 	/**
@@ -190,86 +195,202 @@ class GeneralInfoProperty extends Component {
 		}
 	`;
 
-	insertCompany = (id) => {
-		// Show a Circular progress
-		this.setState(
-			{
-				linearProgress: true
+	GET_TYPES_QUERY = gql`
+	{
+		getcatalogitem(IsActive: 1, Id_Catalog: 4) {
+			Id
+			Name
+			IsActive
+		}
+	}
+`;
+
+	INSERT_DEPARTMENTS_QUERY = gql`
+		mutation inscatalogitem($input: iParamCI!) {
+			inscatalogitem(input: $input) {
+				Id
+			}
+		}
+	`;
+
+	/*loadRegion = (func = () => { }) => {
+		this.props.client.query({ query: this.getRegionsQuery, variables: {} }).then(({ data }) => {
+			this.setState({
+				regions: data.data.getcatalogitem
 			},
-			() => {
-				//Create the mutation using apollo global client
-				this.props.client
+				func);
+		}).catch(error => { })
+	};*/
+
+	loadRegion = (func = () => { }) => {
+		this.setState({ loadingData: true }, () => {
+			this.props.client
+				.query({
+					query: this.getRegionsQuery,
+					variables: {},
+					fetchPolicy: 'no-cache'
+				})
+				.then((data) => {
+					console.log(" data.data.getcontacts ", data.data);
+					if (data.data.getcatalogitem != null) {
+						console.log(" data.data.getcontacts ", data.data.getcatalogitem);
+						this.setState(
+							{
+								regions: data.data.getcatalogitem,
+								loadingData: false
+							},
+							func
+						);
+					} else {
+						this.setState({
+							loadingData: false,
+							firstLoad: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading contacts: getcontacts not exists in query data'
+						});
+					}
+				})
+				.catch((error) => {
+					this.setState({
+						loadingData: false,
+						firstLoad: false,
+						indexView: 2,
+						errorMessage: 'Error: Loading contacts: ' + error
+					});
+				});
+		});
+	};
+
+	insertCompany = (id) => {
+		var NewIdRegion = 0;
+		// Show a Circular progress
+
+		var vRegion = this.state.regions.find((obj) => {
+			return obj.Name.trim().toLowerCase() === this.state.RegionName.trim().toLowerCase();
+		});
+		let insregionAsync = async () => {
+			if (vRegion) {
+				NewIdRegion = vRegion.Id;
+				console.log("Este es el nuevo ID ", NewIdRegion);
+			} else {
+				//const InsertDepartmentNew =
+				await this.props.client
 					.mutate({
-						// Pass the mutation structure
-						mutation: this.ADD_COMPANY,
+						mutation: this.INSERT_DEPARTMENTS_QUERY,
 						variables: {
 							input: {
-								Id: 150,
-								Code: `'${this.state.Code}'`,
-								Code01: `'${this.state.Code01}'`,
-								Id_Contract: 1,
-								Id_Company: 1,
-								BusinessType: 1,
-								Location: `'${this.state.address}'`,
-								Location01: `'${this.state.optionalAddress}'`,
-								Name: `'${this.state.name}'`,
-								Description: `'${this.state.description}'`,
-								Start_Week: this.state.startWeek,
-								End_Week: this.state.endWeek,
-								Legal_Name: "''",
-								Region: parseInt(this.state.region),
-								Country: parseInt(this.state.country),
-								State: parseInt(this.state.state),
-								Rate: parseFloat(this.state.rate),
-								Zipcode: parseInt(this.state.zipCode),
-								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'email'`,
-								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: `'${this.state.phonePrefix}'`,
-								City: parseInt(this.state.city),
-								Id_Parent: !id ? 99999 : parseInt(id),
-								IsActive: parseInt(this.state.active),
+								Id: 0,
+								Id_Catalog: 4,
+								Id_Parent: 0,
+								Name: `'${this.state.RegionName}'`,
+								DisplayLabel: `'${this.state.RegionName}'`,
+								Description: `'${this.state.RegionName}'`,
+								Value: `' '`,
+								Value01: `' '`,
+								Value02: `' '`,
+								Value03: `' '`,
+								Value04: `' '`,
+								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
-								Date_Created: "'2018-08-14'",
-								Date_Updated: "'2018-08-14'",
-								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: "'2018-08-14'",
-
-								Contract_URL: `'${this.state.contractURL}'`,
-								Contract_File: `'${this.state.contractFile}'`,
-
-								Insurance_URL: `'${this.state.insuranceURL}'`,
-								Insurance_File: `'${this.state.insuranceFile}'`,
-
-								Other_URL: `'${this.state.otherURL}'`,
-								Other_Name: `'${this.state.otherName}'`,
-								Other_File: `'${this.state.otherFile}'`,
-
-								Other01_URL: `'${this.state.other01URL}'`,
-								Other01_Name: `'${this.state.other01Name}'`,
-								Other01_File: `'${this.state.other01File}'`,
-
-								Rooms: parseInt(this.state.room),
-								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'"
+								Date_Created: "'2018-09-20 08:10:25+00'",
+								Date_Updated: "'2018-09-20 08:10:25+00'"
 							}
 						}
 					})
-					.then(({ data }) => {
-						this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id));
-
-						this.setState({
-							linearProgress: false
-						});
-
-						this.props.next();
-
-						this.props.handleOpenSnackbar('success', 'Success: Property created');
+					.then((data) => {
+						NewIdRegion = data.data.inscatalogitem.Id;
 					})
-					.catch((err) => this.props.handleOpenSnackbar('error', 'The error is: ' + err));
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+						this.setState({
+							saving: false
+						});
+						return false;
+					});
 			}
-		);
+			this.setState(
+				{
+					linearProgress: true
+				},
+				() => {
+					//Create the mutation using apollo global client
+					console.log("arrastro el nuevo ID ", NewIdRegion);
+					this.props.client
+						.mutate({
+							// Pass the mutation structure
+							mutation: this.ADD_COMPANY,
+							variables: {
+								input: {
+									Id: 150,
+									Code: `'${this.state.Code}'`,
+									Code01: `'${this.state.Code01}'`,
+									Id_Contract: 1,
+									Id_Company: 1,
+									BusinessType: 1,
+									Location: `'${this.state.address}'`,
+									Location01: `'${this.state.optionalAddress}'`,
+									Name: `'${this.state.name}'`,
+									Description: `'${this.state.description}'`,
+									Start_Week: this.state.startWeek,
+									End_Week: this.state.endWeek,
+									Legal_Name: "''",
+									Region: parseInt(NewIdRegion),
+									Country: parseInt(this.state.country),
+									State: parseInt(this.state.state),
+									Rate: parseFloat(this.state.rate),
+									Zipcode: parseInt(this.state.zipCode),
+									Fax: `'${this.state.fax}'`,
+									Primary_Email: `'email'`,
+									Phone_Number: `'${this.state.phoneNumber}'`,
+									Phone_Prefix: `'${this.state.phonePrefix}'`,
+									City: parseInt(this.state.city),
+									Id_Parent: !id ? 99999 : parseInt(id),
+									IsActive: parseInt(this.state.active),
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-08-14'",
+									Date_Updated: "'2018-08-14'",
+									ImageURL: `'${this.state.avatar}'`,
+									Start_Date: "'2018-08-14'",
+
+									Contract_URL: `'${this.state.contractURL}'`,
+									Contract_File: `'${this.state.contractFile}'`,
+
+									Insurance_URL: `'${this.state.insuranceURL}'`,
+									Insurance_File: `'${this.state.insuranceFile}'`,
+
+									Other_URL: `'${this.state.otherURL}'`,
+									Other_Name: `'${this.state.otherName}'`,
+									Other_File: `'${this.state.otherFile}'`,
+
+									Other01_URL: `'${this.state.other01URL}'`,
+									Other01_Name: `'${this.state.other01Name}'`,
+									Other01_File: `'${this.state.other01File}'`,
+
+									Rooms: parseInt(this.state.room),
+									Suite: `'${this.state.suite}'`,
+									Contract_Status: "'C'"
+								}
+							}
+						})
+						.then(({ data }) => {
+							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id));
+
+							this.setState({
+								linearProgress: false
+							});
+
+							this.props.next();
+
+							this.props.handleOpenSnackbar('success', 'Success: Property created');
+						})
+						.catch((err) => this.props.handleOpenSnackbar('error', 'The error is: ' + err));
+				}
+			);
+		};
+
+		insregionAsync();
 	};
 	/**********************************************************
      *  MUTATION TO DELETE COMPANIES WITH GENERAL INFORMATION  *
@@ -331,86 +452,141 @@ class GeneralInfoProperty extends Component {
 	`;
 
 	updateCompany = (companyId, updatedId) => {
-		//Create the mutation using apollo global client
-		this.setState(
-			{
-				linearProgress: true
-			},
-			() => {
-				this.props.client
+
+		var NewIdRegion = 0;
+		// Show a Circular progress
+
+		var vRegion = this.state.regions.find((obj) => {
+			return obj.Name.trim().toLowerCase() === this.state.RegionName.trim().toLowerCase();
+		});
+		let updateRegionAsync = async () => {
+			if (vRegion) {
+				NewIdRegion = vRegion.Id;
+				console.log("Este es el nuevo ID ", NewIdRegion);
+			} else {
+				//const InsertDepartmentNew =
+				await this.props.client
 					.mutate({
-						// Pass the mutation structure
-						mutation: this.UPDATE_COMPANY,
+						mutation: this.INSERT_DEPARTMENTS_QUERY,
 						variables: {
 							input: {
-								Id: parseInt(updatedId),
-								Code: `'${this.state.Code}'`,
-								Code01: `'${this.state.Code01}'`,
-								Id_Contract: 1,
-								Id_Company: 1,
-								BusinessType: 1,
-								Location: `'${this.state.address}'`,
-								Location01: `'${this.state.optionalAddress}'`,
-								Name: `'${this.state.name}'`,
-								Description: `'${this.state.description}'`,
-								Start_Week: this.state.startWeek,
-								End_Week: this.state.endWeek,
-								Legal_Name: "''",
-								Region: parseInt(this.state.region),
-								Country: parseInt(this.state.country),
-								State: parseInt(this.state.state),
-								// Rate: parseFloat(this.state.rate),
-								Rate: parseFloat(companyId),
-								Zipcode: parseInt(this.state.zipCode),
-								Fax: `'${this.state.fax}'`,
-								Primary_Email: `'email'`,
-								Phone_Number: `'${this.state.phoneNumber}'`,
-								Phone_Prefix: `'${this.state.phonePrefix}'`,
-								City: parseInt(this.state.city),
-								Id_Parent: parseInt(companyId),
-								IsActive: parseInt(this.state.active),
+								Id: 0,
+								Id_Catalog: 4,
+								Id_Parent: 0,
+								Name: `'${this.state.RegionName}'`,
+								DisplayLabel: `'${this.state.RegionName}'`,
+								Description: `'${this.state.RegionName}'`,
+								Value: `' '`,
+								Value01: `' '`,
+								Value02: `' '`,
+								Value03: `' '`,
+								Value04: `' '`,
+								IsActive: 1,
 								User_Created: 1,
 								User_Updated: 1,
-								Date_Created: "'2018-08-14'",
-								Date_Updated: "'2018-08-14'",
-								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: "'2018-08-14'",
-
-								Contract_URL: `'${this.state.contractURL}'`,
-								Contract_File: `'${this.state.contractFile}'`,
-
-								Insurance_URL: `'${this.state.insuranceURL}'`,
-								Insurance_File: `'${this.state.insuranceFile}'`,
-
-								Other_URL: `'${this.state.otherURL}'`,
-								Other_Name: `'${this.state.otherName}'`,
-								Other_File: `'${this.state.otherFile}'`,
-
-								Other01_URL: `'${this.state.other01URL}'`,
-								Other01_Name: `'${this.state.other01Name}'`,
-								Other01_File: `'${this.state.other01File}'`,
-
-								Rooms: parseInt(this.state.room),
-								Suite: `'${this.state.suite}'`,
-								Contract_Status: "'C'"
+								Date_Created: "'2018-09-20 08:10:25+00'",
+								Date_Updated: "'2018-09-20 08:10:25+00'"
 							}
 						}
 					})
 					.then((data) => {
-						this.props.next();
-
-						this.props.handleOpenSnackbar('success', 'Success: Property updated');
-
-						this.setState({
-							linearProgress: false
-						});
+						NewIdRegion = data.data.inscatalogitem.Id;
 					})
-					.catch((err) => {
-						//Capture error and show a specific message
-						this.props.handleOpenSnackbar('error', 'The error is: ' + err);
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+						this.setState({
+							saving: false
+						});
+						return false;
 					});
 			}
-		);
+			this.setState(
+				{
+					linearProgress: true
+				},
+				() => {
+					//Create the mutation using apollo global client
+					console.log("arrastro el nuevo ID ", NewIdRegion);
+
+					//Create the mutation using apollo global client
+
+					this.props.client
+						.mutate({
+							// Pass the mutation structure
+							mutation: this.UPDATE_COMPANY,
+							variables: {
+								input: {
+									Id: parseInt(updatedId),
+									Code: `'${this.state.Code}'`,
+									Code01: `'${this.state.Code01}'`,
+									Id_Contract: 1,
+									Id_Company: 1,
+									BusinessType: 1,
+									Location: `'${this.state.address}'`,
+									Location01: `'${this.state.optionalAddress}'`,
+									Name: `'${this.state.name}'`,
+									Description: `'${this.state.description}'`,
+									Start_Week: this.state.startWeek,
+									End_Week: this.state.endWeek,
+									Legal_Name: "''",
+									Region: parseInt(NewIdRegion),
+									Country: parseInt(this.state.country),
+									State: parseInt(this.state.state),
+									// Rate: parseFloat(this.state.rate),
+									Rate: parseFloat(companyId),
+									Zipcode: parseInt(this.state.zipCode),
+									Fax: `'${this.state.fax}'`,
+									Primary_Email: `'email'`,
+									Phone_Number: `'${this.state.phoneNumber}'`,
+									Phone_Prefix: `'${this.state.phonePrefix}'`,
+									City: parseInt(this.state.city),
+									Id_Parent: parseInt(companyId),
+									IsActive: parseInt(this.state.active),
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-08-14'",
+									Date_Updated: "'2018-08-14'",
+									ImageURL: `'${this.state.avatar}'`,
+									Start_Date: "'2018-08-14'",
+
+									Contract_URL: `'${this.state.contractURL}'`,
+									Contract_File: `'${this.state.contractFile}'`,
+
+									Insurance_URL: `'${this.state.insuranceURL}'`,
+									Insurance_File: `'${this.state.insuranceFile}'`,
+
+									Other_URL: `'${this.state.otherURL}'`,
+									Other_Name: `'${this.state.otherName}'`,
+									Other_File: `'${this.state.otherFile}'`,
+
+									Other01_URL: `'${this.state.other01URL}'`,
+									Other01_Name: `'${this.state.other01Name}'`,
+									Other01_File: `'${this.state.other01File}'`,
+
+									Rooms: parseInt(this.state.room),
+									Suite: `'${this.state.suite}'`,
+									Contract_Status: "'C'"
+								}
+							}
+						})
+						.then((data) => {
+							this.props.next();
+
+							this.props.handleOpenSnackbar('success', 'Success: Property updated');
+
+							this.setState({
+								linearProgress: false
+							});
+						})
+						.catch((err) => {
+							//Capture error and show a specific message
+							this.props.handleOpenSnackbar('error', 'The error is: ' + err);
+						});
+				}
+			);
+		};
+		updateRegionAsync();
+
 	};
 
 	handleFormSubmit = (event) => {
@@ -528,9 +704,11 @@ class GeneralInfoProperty extends Component {
 	};
 
 	/**
-     * Get data from property
-     */
+	 * Get data from property
+	 */
 	getPropertyData = (idProperty, idParent) => {
+		console.log("Entro al property");
+
 		this.setState(
 			{
 				linearProgress: true
@@ -548,7 +726,13 @@ class GeneralInfoProperty extends Component {
 					.then(({ data }) => {
 						if (data.getbusinesscompanies !== null) {
 							let item = data.getbusinesscompanies[0];
+							var Region = this.state.regions.find(function (obj) {
+								return obj.Id === item.Region;
+							});
+							//	console.log("esta es la informacion del porperty ", item.Region);
+							console.log("esta es la regios ", Region);
 							this.setState({
+								RegionName: Region ? Region.Name.trim() : '',
 								name: item.Name.trim(),
 								legalName: item.Legal_Name.trim(),
 								description: item.Description.trim(),
@@ -604,9 +788,15 @@ class GeneralInfoProperty extends Component {
 	};
 
 	componentWillMount() {
+
 		this.setState({ avatar: this.context.avatarURL });
 		if (this.props.idProperty !== null) {
-			this.getPropertyData(this.props.idProperty, this.props.idCompany);
+			console.log("esta aqui s");
+			this.loadRegion(() => {
+				console.log("esta aqui");
+				this.getPropertyData(this.props.idProperty, this.props.idCompany);
+			});
+
 		} else {
 			// Show Snackbar
 		}
@@ -678,6 +868,20 @@ class GeneralInfoProperty extends Component {
 				</div>
 			);
 		}
+	};
+
+	updateRegionName = (value) => {
+		console.log("Valores de la region ", value);
+		this.setState(
+			{
+				RegionName: value
+
+			},
+			() => {
+				let validRegion = true;
+				//this.validateField('RegionName', value);
+			}
+		);
 	};
 
 	findByZipCode = (zipCode = null, cityFinal = null) => {
@@ -821,7 +1025,19 @@ class GeneralInfoProperty extends Component {
 													className={'form-control'}
 												/>
 											</div>
-											<div className="col-md-6 col-lg-3">
+											<div className="col-md-12 col-lg-4">
+												<label>* Region</label>
+												<AutosuggestInput
+													id="Region"
+													name="Region"
+													data={this.state.regions}
+													error={this.state.validRegion === '' ? false : true}
+													value={this.state.RegionName}
+													onChange={this.updateRegionName}
+													onSelect={this.updateRegionName}
+												/>
+											</div>
+											{/*	<div className="col-md-6 col-lg-3">
 												<label>* Region</label>
 												<Query query={this.getRegionsQuery} >
 													{({ loading, error, data, refetch, networkStatus }) => {
@@ -856,7 +1072,7 @@ class GeneralInfoProperty extends Component {
 														return <SelectNothingToDisplay />;
 													}}
 												</Query>
-											</div>
+											</div> */}
 											<div className="col-md-6 col-lg-2">
 												<label>* Zip Code</label>
 												<InputValid

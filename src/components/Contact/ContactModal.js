@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import InputMask from "react-input-mask";
 import green from "@material-ui/core/colors/green";
 import Tooltip from '@material-ui/core/Tooltip';
@@ -12,10 +12,10 @@ import 'ui-components/InputForm/index.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import './index.css';
 import PropTypes from 'prop-types';
-import {withStyles} from "@material-ui/core";
-import {withApollo} from "react-apollo";
+import { withStyles } from "@material-ui/core";
+import { withApollo } from "react-apollo";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
-import {INSERT_CONTACT} from "./Mutations";
+import { INSERT_CONTACT } from "./Mutations";
 import ContactTypesData from '../../data/contactTypes';
 import withGlobalContent from "../Generic/Global";
 
@@ -119,11 +119,11 @@ class ContactModal extends Component {
     }
 
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
 
     handleCloseModal = () => {
-        this.setState({openModal: false});
+        this.setState({ openModal: false });
     };
 
     /**
@@ -193,8 +193,8 @@ class ContactModal extends Component {
     }
 
     render() {
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
 
         return (
             <Dialog
@@ -209,12 +209,12 @@ class ContactModal extends Component {
                         <h5 class="modal-title">
                             {' '}
                             {this.state.idToEdit != null &&
-                            this.state.idToEdit != '' &&
-                            this.state.idToEdit != 0 ? (
-                                'Edit  Contact'
-                            ) : (
-                                'Create Contact'
-                            )}
+                                this.state.idToEdit != '' &&
+                                this.state.idToEdit != 0 ? (
+                                    'Edit  Contact'
+                                ) : (
+                                    'Create Contact'
+                                )}
                         </h5>
                     </div>
                 </DialogTitle>
@@ -238,13 +238,13 @@ class ContactModal extends Component {
                                 <div className="col-md-12 col-lg-6">
                                     <label>* Department</label>
                                     {/*<AutosuggestInput*/}
-                                        {/*id="department"*/}
-                                        {/*name="department"*/}
-                                        {/*data={this.state.departments}*/}
-                                        {/*error={!this.state.departmentNameValid}*/}
-                                        {/*value={this.state.departmentName}*/}
-                                        {/*onChange={this.updateDepartmentName}*/}
-                                        {/*onSelect={this.updateDepartmentName}*/}
+                                    {/*id="department"*/}
+                                    {/*name="department"*/}
+                                    {/*data={this.state.departments}*/}
+                                    {/*error={!this.state.departmentNameValid}*/}
+                                    {/*value={this.state.departmentName}*/}
+                                    {/*onChange={this.updateDepartmentName}*/}
+                                    {/*onSelect={this.updateDepartmentName}*/}
                                     {/*/>*/}
                                 </div>
                                 <div className="col-md-12 col-lg-4">
@@ -311,13 +311,13 @@ class ContactModal extends Component {
                                 <div className="col-md-12 col-lg-4">
                                     <label>* Contact Title</label>
                                     {/*<AutosuggestInput*/}
-                                        {/*id="title"*/}
-                                        {/*name="title"*/}
-                                        {/*data={this.state.titles}*/}
-                                        {/*error={!this.state.titleNameValid}*/}
-                                        {/*value={this.state.titleName}*/}
-                                        {/*onChange={this.updateTitleName}*/}
-                                        {/*onSelect={this.updateTitleName}*/}
+                                    {/*id="title"*/}
+                                    {/*name="title"*/}
+                                    {/*data={this.state.titles}*/}
+                                    {/*error={!this.state.titleNameValid}*/}
+                                    {/*value={this.state.titleName}*/}
+                                    {/*onChange={this.updateTitleName}*/}
+                                    {/*onSelect={this.updateTitleName}*/}
                                     {/*/>*/}
                                 </div>
                             </div>
@@ -330,12 +330,12 @@ class ContactModal extends Component {
                             <Tooltip
                                 title={
                                     this.state.idToEdit != null &&
-                                    this.state.idToEdit != '' &&
-                                    this.state.idToEdit != 0 ? (
-                                        'Save Changes'
-                                    ) : (
-                                        'Insert Record'
-                                    )
+                                        this.state.idToEdit != '' &&
+                                        this.state.idToEdit != 0 ? (
+                                            'Save Changes'
+                                        ) : (
+                                            'Insert Record'
+                                        )
                                 }
                             >
                                 <div>

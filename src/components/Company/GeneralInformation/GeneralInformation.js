@@ -29,7 +29,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
-
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -274,6 +274,17 @@ class GeneralInformation extends Component {
 			}
 		);
 	};
+
+	/*updateRegionName = (value) => {
+		this.setState(
+			{
+				regionName: value
+			},
+			() => {
+				this.validateField('regionName', value);
+			}
+		);
+	};*/
 
 	handleOpenHotels = () => {
 		this.setState({
@@ -818,7 +829,8 @@ class GeneralInformation extends Component {
 			completedInput: false,
 			loading: false,
 			name: '',
-
+			idregion: 0,
+			regionName: '',
 			legalName: '',
 			description: '',
 			location: '',
@@ -1493,7 +1505,8 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
-									<div className="col-md-5">
+
+									{/*<div className="col-md-5">
 										<label>* Region</label>
 										<select
 											name="region"
@@ -1513,6 +1526,18 @@ class GeneralInformation extends Component {
 											))}
 										</select>
 									</div>
+									<div className="col-md-12 col-lg-6">
+										<label>* Region</label>
+										<AutosuggestInput
+											id="idregion"
+											name="region"
+											data={this.state.region}
+											error={!this.state.regionValid}
+											value={this.state.idregion}
+										//	onChange={this.updateRegionName}
+										//	onSelect={this.updateRegionName}
+										/>
+									</div> */}
 									<div className="col-md-3 col-lg-2">
 										<label>* Zip Code</label>
 										<InputForm

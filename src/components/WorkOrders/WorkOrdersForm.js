@@ -431,7 +431,7 @@ class WorkOrdersForm extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 name="date"
-                                                disabled={!isAdmin}
+                                                disabled={true}
                                                 onChange={this.handleChange}
                                                 value={this.state.date.substring(0, 10)}
                                                 onBlur={this.handleValidate}
@@ -571,7 +571,7 @@ class WorkOrdersForm extends Component {
                                                 className="form-control"
                                                 id=""
                                                 cols="30"
-                                                rows="3"
+                                                rows="3 "
                                                 disabled={true}
                                                 value={this.state.EspecialComment}
                                             />
