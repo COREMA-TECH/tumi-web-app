@@ -56,8 +56,8 @@ const MobileMenu = (props) => {
 						onClick={handleItemMenuAction}
 						data-submenu="1"
 					>
-						<i className="fas fa-user-cog MenuMobile-icon" title={'Operation Manager'} />
-						<span>Operation Manager</span>
+						<i className="fas fa-user-cog MenuMobile-icon" title={'Operations'} />
+						<span>Operations</span>
 					</Link>
 					<ul className="SubMenu" id="1">
 						<li className="SubMenu-item">

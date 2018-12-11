@@ -29,7 +29,7 @@ export const GET_CITIES_QUERY = gql`
 /**
  * Query to get positions
  */
-export const GET_POSITIONS_QUERY = gql`
+/*export const GET_POSITIONS_QUERY = gql`
 query getposition {
         getcatalogitem(Id_Catalog: 6, IsActive: 1) {
             Id
@@ -37,8 +37,39 @@ query getposition {
             Description
         }
     }
+`;*/
+export const GET_POSITIONS_QUERY = gql`
+    query getposition {
+        getposition(IsActive: 1) {
+            Id
+            Id_Department
+            Position
+            Id_positionApplying
+            Bill_Rate
+            Pay_Rate
+            Shift
+            IsActive,
+            Comment,
+            Id_Entity
+        }
+    }
 `;
 
+export const getCompaniesQuery = gql`
+query getbusinesscompanies($Id_Parent: Int) {
+    getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: $Id_Parent) {
+        Id
+        Id_Contract
+        Id_Company
+        Code
+        Name
+        Description
+        ImageURL
+        Address
+        Id_Parent
+    }
+}
+`;
 
 /**
  * Query to get languages

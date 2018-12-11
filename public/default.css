@@ -8011,13 +8011,13 @@ table[class^="MuiTable-"] .btn {
   box-sizing: border-box; }
 
 .onoffswitch-inner:before {
-  content: "ON";
+  content: "YES";
   padding-left: 10px;
   background-color: #3ca2c8;
   color: #FFF; }
 
 .onoffswitch-inner:after {
-  content: "OFF";
+  content: "NO";
   padding-right: 10px;
   background-color: #EEEEEE;
   color: #999999;
