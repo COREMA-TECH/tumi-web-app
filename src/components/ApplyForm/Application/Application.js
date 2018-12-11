@@ -11,7 +11,7 @@ import {
     GET_STATES_QUERY
 } from '../Queries';
 import { updateApplicationInformation } from '../utils';
-import {ADD_IDEAL_JOB, UPDATE_APPLICATION, UPDATE_IDEAL_JOB} from '../Mutations';
+import {ADD_IDEAL_JOB, RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION, UPDATE_IDEAL_JOB} from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
@@ -199,7 +199,7 @@ class Application extends Component {
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
 							'error',
-							'Error to update aaplicant information. Please, try again!',
+							'Error to update applicant information. Please, try again!',
 							'bottom',
 							'right'
 						);
@@ -211,9 +211,10 @@ class Application extends Component {
 	addApplicantJobs = (idealJobArrayObject) => {
 		this.props.client
 			.mutate({
-				mutation: ADD_IDEAL_JOB,
+				mutation: RECREATE_IDEAL_JOB_LIST,
 				variables: {
-					application: idealJobArrayObject
+                    ApplicationId: this.props.applicationId,
+                    applicationIdealJob: idealJobArrayObject
 				}
 			})
 			.then(({ data }) => {
@@ -221,23 +222,6 @@ class Application extends Component {
 			})
 			.catch(error => {
 				console.log("DEBUG ERROR");
-			})
-	};
-
-	// TODO
-	updateApplicantIdealJob = (object) => {
-		this.props.client
-			.mutate({
-				mutation: UPDATE_IDEAL_JOB,
-				variables: {
-                    application: object
-				}
-			})
-			.then(({data}) => {
-
-			})
-			.catch(error => {
-
 			})
 	};
 
@@ -332,7 +316,8 @@ class Application extends Component {
 				query: GET_APPLICANT_IDEAL_JOBS,
 				variables: {
                     ApplicationId: this.props.applicationId
-				}
+				},
+                fetchPolicy: 'no-cache'
 			})
 			.then(({data}) => {
 				let dataAPI = data.applicantIdealJob;

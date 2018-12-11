@@ -116,9 +116,6 @@ export const UPDATE_APPLICANT_DOCUMENT = gql`
 	}
 `;
 
-/**
- * Mutation to create application with general information
- */
 export const ADD_IDEAL_JOB = gql`
     mutation addApplicantIdealJob($application:  [inputInsertApplicantIdealJob]) {
         addApplicantIdealJob(applicantIdealJob: $application) {
@@ -127,13 +124,23 @@ export const ADD_IDEAL_JOB = gql`
     }
 `;
 
-/**
- * Mutation to create application with general information
- */
 export const UPDATE_IDEAL_JOB = gql`
     mutation updateApplicantIdealJob($application:  inputUpdateApplicantIdealJob) {
         updateApplicantIdealJob(applicantIdealJob: $application) {
             id
+        }
+    }
+`;
+
+/**
+ * Mutation to create application with general information
+ */
+export const RECREATE_IDEAL_JOB_LIST = gql`
+    mutation reacreateIdealJob($ApplicationId: Int, $applicationIdealJob: [inputInsertApplicantIdealJob]) {
+        recreateIdealJobs(ApplicationId: $ApplicationId, applicantIdealJob: $applicationIdealJob) {
+            id
+            ApplicationId
+            description
         }
     }
 `;
