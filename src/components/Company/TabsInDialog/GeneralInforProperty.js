@@ -82,7 +82,9 @@ class GeneralInfoProperty extends Component {
 			phoneNumberValid: true,
 			faxNumberValid: true,
 			cityFinal: '',
-			loadingData: false
+			loadingData: false,
+
+            nextButton: false
 		};
 	}
 	/**
@@ -381,7 +383,10 @@ class GeneralInfoProperty extends Component {
 								linearProgress: false
 							});
 
-							this.props.next();
+							// this.props.next();
+							this.setState({
+								nextButton: true
+							});
 
 							this.props.handleOpenSnackbar('success', 'Success: Property created');
 						})
@@ -570,7 +575,10 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then((data) => {
-							this.props.next();
+							// this.props.next();
+                            this.setState({
+                                nextButton: true
+                            });
 
 							this.props.handleOpenSnackbar('success', 'Success: Property updated');
 
@@ -1053,15 +1061,28 @@ class GeneralInfoProperty extends Component {
 											onClick={() => {
 												this.deleteCompany(this.props.idProperty);
 											}}
+											type="button"
 										>
 											Delete Property<i class="fas fa-ban ml-1" />
 										</button>
 									) : (
 											''
 										)}
-									<button type="submit" className="btn btn-success">
-										Next<i class="fas fa-save ml-2" />
-									</button>
+
+
+									{
+										!this.state.nextButton ? (
+                                            <button type="submit" className="btn btn-success">
+                                                Save<i className="fas fa-save ml-2"/>
+                                            </button>
+										) : (
+                                            <button type="button" onClick={() => {
+                                            	this.props.next();
+											}} className="btn btn-success">
+                                                Next <i className="fas fa-chevron-right"></i>
+                                            </button>
+										)
+									}
 								</div>
 							</div>
 						</div>
