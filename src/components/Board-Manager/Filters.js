@@ -12,7 +12,8 @@ class Filters extends Component {
         super();
         this.state = {
             needExperience: false,
-            needEnglish: false
+            needEnglish: false,
+            distance: 0
         }
     }
 
@@ -29,22 +30,22 @@ class Filters extends Component {
     };
 
     CloseWin = () => {
-        sessionStorage.setItem('NewFilter', false);
-        sessionStorage.setItem('needExperience', false);
-        sessionStorage.setItem('needEnglish', false);
 
-        this.props.handleCloseModal
+        sessionStorage.setItem('NewFilterLead', false);
+        sessionStorage.setItem('needExperienceLead', false);
+        sessionStorage.setItem('needEnglishLead', false);
+        sessionStorage.setItem('distances', 30);
+
+        this.props.handleCloseModal()
     }
 
     NewFilters = () => {
-        //sessionStorage.removeItem('WindowsFilter');
+        sessionStorage.setItem('NewFilterLead', true);
+        sessionStorage.setItem('needExperienceLead', this.state.needExperience);
+        sessionStorage.setItem('needEnglishLead', this.state.needEnglish);
+        sessionStorage.setItem('distances', this.state.distance);
 
-        sessionStorage.setItem('NewFilter', true);
-        sessionStorage.setItem('needExperience', this.state.needExperience);
-        sessionStorage.setItem('needEnglish', this.state.needEnglish);
-
-
-        this.props.handleCloseModal
+        this.props.handleCloseModal()
         //  localStorage.setItem('NewFilter', true);
         // localStorage.setItem('needExperience', this.state.needExperience);
         //localStorage.setItem('needEnglish', this.state.needEnglish);
@@ -100,13 +101,26 @@ class Filters extends Component {
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Distance</label>
-                                    <input type="number" name="distance" className="form-control" />
+                                    <input
+                                        onChange={(event) => {
+                                            this.setState({
+                                                distance: event.target.value
+                                            });
+                                        }}
+                                        value={this.state.distance}
+                                        name="distance"
+                                        type="number"
+                                        className="form-control"
+                                        min="0"
+                                        maxLength="50"
+                                    />
+
                                 </div>
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
                                             <button className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
-                                                Cancel<i class="fas fa-ban ml-2" />
+                                                Reset Filters<i class="fas fa-ban ml-2" />
                                             </button>
                                             <button className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
                                                 New Filter {!this.state.saving && <i class="fas fa-filter ml2" />}
