@@ -1072,13 +1072,13 @@ class GeneralInfoProperty extends Component {
 									{
 										!this.state.nextButton ? (
                                             <button type="submit" className="btn btn-success">
-                                                Save <i className="fas fa-chevron-right"></i>
+                                                Save<i className="fas fa-save ml-2"/>
                                             </button>
 										) : (
                                             <button type="button" onClick={() => {
                                             	this.props.next();
 											}} className="btn btn-success">
-                                                Next <i className="fas fa-save ml-2"/>
+                                                Next <i className="fas fa-chevron-right"></i>
                                             </button>
 										)
 									}
