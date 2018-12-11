@@ -297,6 +297,7 @@ class SimpleDialogDemo extends React.Component {
             <div>
                 <div className="form-control">
                     <input
+                        onClick={this.handleClickOpen}
                         defaultValue={this.state.selectedValue}
                         type="text"
                         className={
