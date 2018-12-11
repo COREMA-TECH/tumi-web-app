@@ -596,7 +596,7 @@ class ComposedTextField extends React.Component {
 
                         </div>
                         <div className="card-form-footer">
-                            <span className="add-property"><span>+</span>  Add Property</span>
+                            <span className="add-property"><span>+</span>  Add New Property</span>
                         </div>
                     </div>
                 </div>

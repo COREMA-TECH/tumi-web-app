@@ -173,14 +173,14 @@ class hotels extends Component {
                     aria-labelledby="scroll-dialog-title"
                     fullScreen
                 >
-                    <DialogTitle id="alert-dialog-title dialog-header">{'Hotels without assign'}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title dialog-header">{'Properties without assign'}</DialogTitle>
                     <AppBar style={{ background: '#0092BD' }}>
                         <Toolbar>
                             <IconButton color="inherit" onClick={this.props.handleClose} aria-label="Close">
                                 <CloseIcon />
                             </IconButton>
                             <Typography variant="title" color="inherit">
-                                Hotels without assign
+                                Properties without assign
                             </Typography>
                         </Toolbar>
                     </AppBar>

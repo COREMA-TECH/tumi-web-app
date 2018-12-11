@@ -816,6 +816,7 @@ class GeneralInfoProperty extends Component {
 	componentWillMount() {
 
 		this.setState({ avatar: this.context.avatarURL });
+		this.loadRegion(() => { });
 		if (this.props.idProperty !== null) {
 			console.log("esta aqui s");
 			this.loadRegion(() => {
@@ -824,7 +825,7 @@ class GeneralInfoProperty extends Component {
 			});
 
 		} else {
-			// Show Snackbar
+			this.loadRegion(() => { });
 		}
 	}
 	renderFileNameControls = (property, enableEdit) => {
