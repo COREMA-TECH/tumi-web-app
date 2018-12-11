@@ -19,6 +19,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import { Route } from "react-router-dom";
 
 const styles = (theme) => ({
     wrapper: {
@@ -1092,7 +1093,38 @@ class NewContract extends Component {
             <div className="TabSelected-container">
                 <div className="row">
                     <div className="col-md-12">
+                        <Route
+                            render={({ history }) => (
+                                <button
+                                    style={{
+                                        margin: '5px'
+                                    }}
+                                    className={'btn btn-danger float-right'}
+                                    onClick={() => {
+                                        if (this.props.href === undefined) {
+                                            window.location.href = "/home/Contracts";
+                                        } else if (this.props.href == '/home/company/edit') {
+                                            history.push({
+                                                pathname: '/home/company/edit',
+                                                state: { idCompany: this.props.Id_Entity, idContract: this.props.contractId, tabSelected: 3 }
+                                            });
+                                        } else if (this.props.href == '/home/Properties') {
+                                            history.push({
+                                                pathname: '/home/Properties',
+                                                state: { idCompany: this.props.Id_Entity, idContract: this.props.contractId, tabSelected: 2 }
+                                            });
+                                        }
+                                    }}
+                                >
+                                    Cancel <i className="fas fa-ban" />
+                                </button>
+                            )}
+                        />
+
                         <button
+                            style={{
+                                margin: '5px'
+                            }}
                             //className="contract-next-button"
                             className={'btn btn-success float-right'}
                             onClick={() => {
@@ -1106,6 +1138,8 @@ class NewContract extends Component {
                         >
                             Save <i className="fas fa-save" />
                         </button>
+
+
 
                         {parseInt(this.state.Contract_Status) == 2 ? (
                             <Button
@@ -1262,7 +1296,8 @@ class NewContract extends Component {
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         // if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Nothing To Display</p>;
+                                                        if (loading) return <LinearProgress />;
+                                                        if (error) return <p> Select a Hotel </p>;
                                                         if (
                                                             data.getbusinesscompanies != null &&
                                                             data.getbusinesscompanies.length > 0
@@ -1637,7 +1672,7 @@ class NewContract extends Component {
                                             {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (loading) return <LinearProgress />;
-                                                if (error) return <p>Error </p>;
+                                                if (error) return <p>Select a City </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     var citySelected = null;
                                                     citySelected = data.getcatalogitem.filter(city => {

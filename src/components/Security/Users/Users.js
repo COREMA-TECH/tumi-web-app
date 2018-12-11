@@ -550,37 +550,37 @@ class Catalogs extends React.Component {
 		);
 	}
 
-    validateForm(func = () => { }) {
-        this.setState(
-            {
-                formValid:
-                    this.state.idContactValid &&
-                    this.state.usernameValid &&
-                    //this.state.fullnameValid &&
-                    this.state.emailValid &&
-                    this.state.numberValid &&
-                    this.state.passwordValid &&
-                    this.state.idRolValid &&
-                    this.state.idLanguageValid &&
-                    this.state.IdRegionValid,
-                enableCancelButton:
-                    this.state.idContactHasValue ||
-                    this.state.usernameHasValue ||
-                    //this.state.fullnameHasValue ||
-                    this.state.emailHasValue ||
-                    this.state.numberHasValue ||
-                    this.state.passwordHasValue ||
-                    this.state.idRolHasValue ||
-                    this.state.idLanguageHasValue ||
-                    this.state.isAdmin ||
-                    this.state.allowInsert ||
-                    this.state.allowEdit ||
-                    this.state.allowDelete ||
-                    this.state.allowExport
-            },
-            func
-        );
-    }
+	validateForm(func = () => { }) {
+		this.setState(
+			{
+				formValid:
+					this.state.idContactValid &&
+					this.state.usernameValid &&
+					//this.state.fullnameValid &&
+					this.state.emailValid &&
+					this.state.numberValid &&
+					this.state.passwordValid &&
+					this.state.idRolValid &&
+					this.state.idLanguageValid &&
+					this.state.IdRegionValid,
+				enableCancelButton:
+					this.state.idContactHasValue ||
+					this.state.usernameHasValue ||
+					//this.state.fullnameHasValue ||
+					this.state.emailHasValue ||
+					this.state.numberHasValue ||
+					this.state.passwordHasValue ||
+					this.state.idRolHasValue ||
+					this.state.idLanguageHasValue ||
+					this.state.isAdmin ||
+					this.state.allowInsert ||
+					this.state.allowEdit ||
+					this.state.allowDelete ||
+					this.state.allowExport
+			},
+			func
+		);
+	}
 
 	handleCloseAlertDialog = () => {
 		this.setState({ opendialog: false });
@@ -718,7 +718,7 @@ class Catalogs extends React.Component {
 				})
 				.then((data) => {
 					if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-						console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
+
 						this.setState(
 							{
 								contacts: data.data.getsupervisor,

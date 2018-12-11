@@ -29,7 +29,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
-
+import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -274,6 +274,17 @@ class GeneralInformation extends Component {
 			}
 		);
 	};
+
+	/*updateRegionName = (value) => {
+		this.setState(
+			{
+				regionName: value
+			},
+			() => {
+				this.validateField('regionName', value);
+			}
+		);
+	};*/
 
 	handleOpenHotels = () => {
 		this.setState({
@@ -818,7 +829,8 @@ class GeneralInformation extends Component {
 			completedInput: false,
 			loading: false,
 			name: '',
-
+			idregion: 0,
+			regionName: '',
 			legalName: '',
 			description: '',
 			location: '',
@@ -1804,7 +1816,7 @@ class GeneralInformation extends Component {
 								<CloseIcon />
 							</IconButton>
 							<Typography variant="title" color="inherit">
-								Management Company
+								Property
 							</Typography>
 						</Toolbar>
 					</AppBar>

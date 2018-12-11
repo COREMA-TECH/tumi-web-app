@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
-import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
+import { GET_APPLICATION_BY_ID, GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_STATES_QUERY, getCompaniesQuery } from '../Queries';
 
 import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
 
@@ -63,6 +63,9 @@ class Application extends Component {
             // Schools array
             schools: [],
 
+            //Hotel array
+            hotels: [],
+
             // Military Service state fields
             branch: '',
             startDateMilitaryService: '',
@@ -118,6 +121,9 @@ class Application extends Component {
         });
     };
 
+    UNSAFE_componentWillMount() {
+
+    }
     /**
      * To update and insert a application by id
      */
@@ -245,11 +251,24 @@ class Application extends Component {
             }
         );
     };
-
+    getHotels = (func = () => { }) => {
+        // getHotels = (idParent) => {
+        this.props.client.query({
+            query: getCompaniesQuery, //this.getCompaniesQuery,
+            variables: { Id_Parent: -1 },
+            fetchPolicy: 'no-cache'
+        }).then(({ data }) => {
+            this.setState({
+                hotels: data.getbusinesscompanies
+            },
+                func);
+        }).catch();
+    };
     /**
      * To get applications by id
      */
     getApplicationById = (id) => {
+        console.log("Ya sali del hotel ahora estoy en application ", this.state.hotels);
         this.setState(
             {
                 loading: true
@@ -343,7 +362,11 @@ class Application extends Component {
 
     componentWillMount() {
         if (this.props.applicationId > 0) {
-            this.getApplicationById(this.props.applicationId);
+            //this.getHotels(-1);
+            this.getHotels(() => {
+                console.log("esta aqui");
+                this.getApplicationById(this.props.applicationId);
+            });
         }
         this.removeSkeletonAnimation();
 
@@ -420,9 +443,10 @@ class Application extends Component {
                                                 </span>
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({ loading, error, data, refetch, networkStatus }) => {
+
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Nothing To Display </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        if (data.getposition != null && data.getposition.length > 0) {
                                                             return (
                                                                 <select
                                                                     name="positionApply"
@@ -437,8 +461,11 @@ class Application extends Component {
                                                                     disabled={!this.state.editing}
                                                                 >
                                                                     <option value="">Select a position</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Description}</option>
+                                                                    {data.getposition.map((item) => (
+                                                                        //  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),
+                                                                        //    console.log("Info del hotel ", ),
+
+                                                                        < option value={item.Id} > {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }) ? this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code : '') + ')'}</option>
                                                                     ))}
                                                                 </select>
                                                             );
@@ -694,23 +721,23 @@ class Application extends Component {
                                                 </div>
 
                                                 {/*<label className="switch">*/}
-                                                    {/*<input*/}
-                                                        {/*onChange={(event) => {*/}
-                                                            {/*this.setState({*/}
-                                                                {/*car: event.target.checked*/}
-                                                            {/*});*/}
-                                                        {/*}}*/}
-                                                        {/*checked={this.state.car}*/}
-                                                        {/*value={this.state.car}*/}
-                                                        {/*name="car"*/}
-                                                        {/*type="checkbox"*/}
-                                                        {/*className="form-control"*/}
-                                                        {/*disabled={!this.state.editing}*/}
-                                                        {/*min="0"*/}
-                                                        {/*maxLength="50"*/}
-                                                        {/*minLength="10"*/}
-                                                    {/*/>*/}
-                                                    {/*<p className="slider round" />*/}
+                                                {/*<input*/}
+                                                {/*onChange={(event) => {*/}
+                                                {/*this.setState({*/}
+                                                {/*car: event.target.checked*/}
+                                                {/*});*/}
+                                                {/*}}*/}
+                                                {/*checked={this.state.car}*/}
+                                                {/*value={this.state.car}*/}
+                                                {/*name="car"*/}
+                                                {/*type="checkbox"*/}
+                                                {/*className="form-control"*/}
+                                                {/*disabled={!this.state.editing}*/}
+                                                {/*min="0"*/}
+                                                {/*maxLength="50"*/}
+                                                {/*minLength="10"*/}
+                                                {/*/>*/}
+                                                {/*<p className="slider round" />*/}
                                                 {/*</label>*/}
                                             </div>
                                         </div>

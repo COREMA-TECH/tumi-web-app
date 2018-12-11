@@ -123,7 +123,7 @@ class Contract extends React.Component {
 							{
 								contractId: this.props.location.state.contract,
 								Id_Entity: this.props.location.state.Id_Entity,
-								Id_Parent: this.props.location.state.Id_Parent
+								Id_Parent: this.props.location.state.Id_Parent,
 							},
 							() => {
 								this.setState({
@@ -169,6 +169,8 @@ class Contract extends React.Component {
 			return <LinearProgress />;
 		}
 
+		console.log("HREF: " + this.props.location.state.href);
+
 		return (
 			<div>
 				<MuiThemeProvider theme={theme}>
@@ -191,6 +193,7 @@ class Contract extends React.Component {
 					</Tabs>
 					{value === 0 && (
 						<NewContract
+							href={this.props.location.state.href}
 							contractId={this.state.contractId}
 							Id_Entity={this.state.Id_Entity}
 							Id_Parent={this.state.Id_Parent}

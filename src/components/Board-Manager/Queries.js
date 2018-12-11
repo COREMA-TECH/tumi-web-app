@@ -18,8 +18,8 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-query getlead {
-	applications(isActive: true , isLead: false) {
+query getlead ( $positionApplyingFor: Int ) {
+	applications(isActive: true , positionApplyingFor: $positionApplyingFor) {
 		id
 	firstName
 	lastName
@@ -27,6 +27,21 @@ query getlead {
 	homePhone
 	car
 	city
+	isLead
+	zipCode
+	idealJobs
+    {
+      id
+	  description
+	  idPosition 
+    }
+	applicationPhases   {
+		id
+		StageId
+		ApplicationId
+		WorkOrderId
+		createdAt
+	  } 
 	cityInfo{
 		DisplayLabel
 	  }
@@ -46,43 +61,55 @@ employments
 	}
 
 }
-`;
-
-export const GET_WORK_ORDERS = gql`
-    query workorder ($IdEntity: Int, $status: Int)  {
-        workOrder(IdEntity:$IdEntity, status:$status){
-            id
-            IdEntity
-            userId
-            date
-            quantity
-            shift
-            startDate
-            endDate
-            needExperience
-            needEnglish
-            PositionRateId
-            position{
-                Position
-              }
-            comment
-    }
-        getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
-            Id
-			Name
-			Zipcode
-        }
-        getusers(Id: null,IsActive: 1) {
-            Id
-            Id_Contact
-        }
-        getcontacts(Id: null,IsActive: 1) {
-            Id
-            First_Name
-            Last_Name
-        }
-    }
 	`;
+
+export const GET_COORDENADAS = gql`
+	query coordenadas($Zipcode:String){
+		zipcode(Zipcode:$Zipcode){
+		  Zipcode
+		  Lat
+		  Long
+		}
+	  }
+
+`;
+export const GET_WORK_ORDERS = gql`
+query workorder ($IdEntity: Int, $status: Int)  {
+	workOrder(IdEntity:$IdEntity, status:$status){
+		id
+		IdEntity
+		userId
+		date
+		quantity
+		shift
+		startDate
+		endDate
+		needExperience
+		needEnglish
+		PositionRateId
+		position{
+			Position
+			Id_positionApplying
+		  }
+		comment
+}
+	getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
+		Id
+		Name
+		Zipcode
+	}
+	getusers(Id: null,IsActive: 1) {
+		Id
+		Id_Contact
+	}
+	getcontacts(Id: null,IsActive: 1) {
+		Id
+		First_Name
+		Last_Name
+	}
+}
+    `;
+
 
 export const GET_HOTEL_QUERY = gql`
 	query hotels($id: Int) {
@@ -94,17 +121,6 @@ export const GET_HOTEL_QUERY = gql`
 			City
 		}
 	}
-`;
-
-export const GET_COORDENADAS = gql`
-		query coordenadas($Zipcode:String){
-			zipcode(Zipcode:$Zipcode){
-			  Zipcode
-			  Lat
-			  Long
-			}
-		  }
-	
 `;
 
 export const GET_STATES_QUERY = gql`

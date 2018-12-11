@@ -4,6 +4,10 @@ import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions/DialogActions';
 
+if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
+    localStorage.setItem('languageForm', 'en');
+}
+
 const spanishActions = require(`ApplyForm/Application/languagesJSON/${localStorage.getItem(
 	'languageForm'
 )}/spanishActions`);
