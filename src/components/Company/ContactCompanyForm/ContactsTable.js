@@ -200,7 +200,7 @@ class ContactsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
+							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
 							<CustomTableCell className={classes.th + " Table-head"} width="60px">Contact
                                 Type</CustomTableCell>

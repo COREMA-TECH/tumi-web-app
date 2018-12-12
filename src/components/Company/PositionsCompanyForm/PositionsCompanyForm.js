@@ -184,8 +184,8 @@ query getposition {
 		idDepartment: '',
 		departmentName: '',
 		position: '',
-		billrate: 0,
-		payrate: 0,
+		billrate: '',
+		payrate: '',
 		shift: '',
 		Comment: '',
 		idDepartmentValid: true,
@@ -903,20 +903,20 @@ query getposition {
 													// When the user click Next button, open second tab
 													let hrefValue = '/home/company/edit';
 
-													if(this.props.href !== null) {
-                                                        hrefValue = this.props.href;
+													if (this.props.href !== null) {
+														hrefValue = this.props.href;
 													}
 
-                                                    history.push({
-                                                        pathname: '/home/contract/add',
-                                                        state: {
-                                                            contract: 0,
-                                                            Id_Entity: this.state.idCompany,
-                                                            Id_Parent: this.state.idManagement,
-                                                            idContract: this.props.idContract,
-                                                            href: hrefValue
-                                                        }
-                                                    });
+													history.push({
+														pathname: '/home/contract/add',
+														state: {
+															contract: 0,
+															Id_Entity: this.state.idCompany,
+															Id_Parent: this.state.idManagement,
+															idContract: this.props.idContract,
+															href: hrefValue
+														}
+													});
 
 													//console.log(this.state);
 												}}
@@ -1024,6 +1024,7 @@ query getposition {
 										maxLength="10"
 										error={!this.state.payrateValid}
 										value={this.state.payrate}
+										placeholder={"$"}
 										type="number"
 										allowZero={true}
 										change={(text) => this.onNumberChangeHandler(text, 'payrate')}
@@ -1039,6 +1040,7 @@ query getposition {
 									error={!this.state.billrateValid}
 									value={this.state.billrate}
 									type="number"
+									placeholder={"$"}
 									allowZero={true}
 									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 								/>

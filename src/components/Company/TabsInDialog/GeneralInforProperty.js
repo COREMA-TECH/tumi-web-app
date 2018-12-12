@@ -114,7 +114,7 @@ class GeneralInfoProperty extends Component {
 	query Regions {
 		getcatalogitem(Id: null, IsActive: 1, Id_Catalog:4) {
 			Id
-			Name
+			Name: DisplayLabel
 			IsActive
 		}
 	}
