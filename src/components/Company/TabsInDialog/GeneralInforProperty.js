@@ -64,7 +64,7 @@ class GeneralInfoProperty extends Component {
 			validCity: '',
 			validStartWeek: '',
 			validEndWeek: '',
-
+			zipCodeValid: true,
 			contractURL: '',
 			contractFile: '',
 
@@ -264,6 +264,7 @@ class GeneralInfoProperty extends Component {
 	};
 
 	insertCompany = (id) => {
+		console.log("estoy en el insert");
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -341,7 +342,7 @@ class GeneralInfoProperty extends Component {
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
-									Zipcode: parseInt(this.state.zipCode),
+									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -539,7 +540,7 @@ class GeneralInfoProperty extends Component {
 									State: parseInt(this.state.state),
 									// Rate: parseFloat(this.state.rate),
 									Rate: parseFloat(companyId),
-									Zipcode: parseInt(this.state.zipCode),
+									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -602,6 +603,11 @@ class GeneralInfoProperty extends Component {
 			{
 				[name]: text
 			}, () => {
+
+				this.setState(
+					{
+						zipCodeValid: true
+					})
 				this.validateField(name, text);
 				if (name == "zipCode") {
 					fetch('https://ziptasticapi.com/' + text).then((response) => {
@@ -651,13 +657,13 @@ class GeneralInfoProperty extends Component {
 
 				console.log(this.state)
 				//To set errors in selects
-				if (this.state.region === 0) {
+				/*if (this.state.region === 0) {
 					this.setState({
 						validRegion: 'valid'
 					});
 
 					validated = false;
-				}
+				}*/
 
 				if (this.state.city === 0) {
 					this.setState({
@@ -902,11 +908,12 @@ class GeneralInfoProperty extends Component {
 		this.setState(
 			{
 				RegionName: value
-
+				//validRegion: false
 			},
 			() => {
-				let validRegion = true;
-				//this.validateField('RegionName', value);
+
+				//			let validRegion = true;
+				//	this.validateField('RegionName', value);
 			}
 		);
 	};
@@ -923,7 +930,7 @@ class GeneralInfoProperty extends Component {
 		let zipCodeValid = this.state.zipCodeValid;
 		let countryValid = this.state.countryValid;
 		let stateValid = this.state.stateValid;
-		// let regionValid = this.state.regionValid;
+		//let regionValid = this.state.regionValid;
 
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
@@ -1139,7 +1146,7 @@ class GeneralInfoProperty extends Component {
 															required
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-3">
 														<label>* Address</label>
 														<InputValid
 															change={(text) => {
@@ -1153,7 +1160,7 @@ class GeneralInfoProperty extends Component {
 															required
 														/>
 													</div>
-													<div className="col-md-6 col-lg-3">
+													<div className="col-md-6 col-lg-4">
 														<label>Address 2</label>
 														<input
 															className={'form-control'}
@@ -1182,12 +1189,12 @@ class GeneralInfoProperty extends Component {
 														/>
 													</div>
 													<div className="col-md-12 col-lg-3">
-														<label>* Region</label>
+														<label> Region</label>
 														<AutosuggestInput
 															id="Region"
 															name="Region"
 															data={this.state.regions}
-															error={this.state.validRegion === '' ? false : true}
+															//error={this.state.validRegion === '' ? false : true}
 															value={this.state.RegionName}
 															onChange={this.updateRegionName}
 															onSelect={this.updateRegionName}
