@@ -24,26 +24,6 @@ const styles = (theme) => ({
         margin: theme.spacing.unit
         //width: '100px'
     },
-    numberControl: {
-        //width: '200px'
-    },
-    nameControl: {
-        //width: '100px'
-    },
-    emailControl: {
-        //width: '200px'
-    },
-    comboControl: {
-        //width: '200px'
-    },
-    resize: {
-        //width: '200px'
-    },
-    divStyle: {
-        width: '95%',
-        display: 'flex',
-        justifyContent: 'space-around'
-    },
     button: {
         margin: theme.spacing.unit
     },
@@ -51,7 +31,6 @@ const styles = (theme) => ({
         display: 'none'
     },
     wrapper: {
-        margin: theme.spacing.unit,
         position: 'relative'
     },
     buttonSuccess: {
@@ -82,7 +61,8 @@ class Employees extends Component {
         super(props);
 
         this.state = {
-            openModal: false
+            openModal: false,
+            employeesRegisters: []
         }
     }
 
@@ -133,6 +113,23 @@ class Employees extends Component {
             </div>
         );
 
+        let renderRowInputs = () => (
+            <div className="row">
+                <div className="col-md-3">
+                    <input type="text" className="form-control" required/>
+                </div>
+                <div className="col-md-3">
+                    <input type="text" className="form-control" required/>
+                </div>
+                <div className="col-md-3">
+                    <input type="text" className="form-control" required/>
+                </div>
+                <div className="col-md-3">
+                    <input type="text" className="form-control" required/>
+                </div>
+            </div>
+        );
+
         let renderNewEmployeeDialog = () => (
             <Dialog
                 fullScreen={fullScreen}
@@ -141,41 +138,71 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <DialogTitle style={{padding: '0px'}}>
-                    <div className="modal-header">
-                        <h5 class="modal-title">New Employees</h5>
-                    </div>
-                </DialogTitle>
-                <DialogContent>
-                    <form className="container">
+                <form>
+                    <DialogTitle style={{padding: '0px'}}>
+                        <div className="modal-header">
+                            <h5 class="modal-title">New Employees</h5>
+                        </div>
+                    </DialogTitle>
+                    <DialogContent>
+                        <div className="container">
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <label htmlFor="">* First Name</label>
+                                </div>
+                                <div className="col-md-3">
+                                    <label htmlFor="">* Last Name</label>
+                                </div>
+                                <div className="col-md-3">
+                                    <label htmlFor="">* Email Address</label>
+                                </div>
+                                <div className="col-md-3">
+                                    <label htmlFor="">* Phone Number</label>
+                                </div>
+                            </div>
+                            {
+                                renderRowInputs()
+                            }
 
-                    </form>
-                </DialogContent>
-                <DialogActions style={{margin: '20px 20px'}}>
-                    <div className={classes.root}>
-                        <div className={classes.wrapper}>
-                            <button
-                                variant="fab"
-                                className="btn btn-success"
-                                onClick={this.insertDepartment}
-                            >
-                                Save {!this.state.saving && <i class="fas fa-save"/>}
-                                {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
-                            </button>
+                            {
+                                renderRowInputs()
+                            }
+                            {
+                                renderRowInputs()
+                            }
+
+                            {
+                                renderRowInputs()
+                            }
                         </div>
-                    </div>
-                    <div className={classes.root}>
-                        <div className={classes.wrapper}>
-                            <button
-                                variant="fab"
-                                className="btn btn-danger"
-                                onClick={this.handleCloseModal}
-                            >
-                                Cancel <i class="fas fa-ban"/>
-                            </button>
+                    </DialogContent>
+                    <DialogActions style={{margin: '20px 20px'}}>
+                        <div className={[classes.root]}>
+                            <div className={classes.wrapper}>
+                                <button
+                                    type="submit"
+                                    variant="fab"
+                                    className="btn btn-success"
+                                    onClick={this.insertDepartment}
+                                >
+                                    Save {!this.state.saving && <i class="fas fa-save"/>}
+                                    {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </DialogActions>
+                        <div className={classes.root}>
+                            <div className={classes.wrapper}>
+                                <button
+                                    variant="fab"
+                                    className="btn btn-danger"
+                                    onClick={this.handleCloseModal}
+                                >
+                                    Cancel <i class="fas fa-ban"/>
+                                </button>
+                            </div>
+                        </div>
+                    </DialogActions>
+                </form>
             </Dialog>
         );
 
