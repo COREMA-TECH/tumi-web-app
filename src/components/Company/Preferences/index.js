@@ -20,6 +20,7 @@ class Preferences extends React.Component {
             idCompany: this.props.idCompany,
             Entityid: this.props.idCompany,
             disabled: true,
+            time: '',
 
 
             startMonth: null,
@@ -64,6 +65,7 @@ class Preferences extends React.Component {
                             startMonth: data.companyPreferences[0].FiscalMonth1,
                             endMonth: data.companyPreferences[0].FiscalMonth2,
                             timeZone: data.companyPreferences[0].Timezone,
+                            time: data.companyPreferences[0].time,
                         }, () => {
                             this.setState({
                                 loading: false
@@ -82,16 +84,13 @@ class Preferences extends React.Component {
                     })
                 });
         });
-
     }
 
     toggleState = (event) => {
-
         this.setState({
             disabled: !this.state.disabled
         });
-
-    }
+    };
 
     handleChange(event) {
         const target = event.target;
@@ -138,8 +137,8 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
-                    Timezone: parseInt(this.state.timeZone)
-                    // TODO: add timezones
+                    Timezone: parseInt(this.state.timeZone),
+                    time: this.state.time
                 }
             }
         })
@@ -171,8 +170,8 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
-                    Timezone: parseInt(this.state.timeZone)
-                    // TODO: add timezones
+                    Timezone: parseInt(this.state.timeZone),
+                    time: this.state.time
                 }
             }
         })
@@ -203,6 +202,7 @@ class Preferences extends React.Component {
                 FiscalMonth1
                 FiscalMonth2
                 Timezone
+                time
             }
         }
     `;
@@ -218,6 +218,7 @@ class Preferences extends React.Component {
                 FiscalMonth1
                 FiscalMonth2
                 Timezone
+                time
             }
         }
     `;
@@ -233,6 +234,7 @@ class Preferences extends React.Component {
                 FiscalMonth1
                 FiscalMonth2
                 Timezone
+                time
             }
         }
     `;
@@ -293,22 +295,11 @@ class Preferences extends React.Component {
                                             <input type="text" min="0" name="amount"
                                                    disabled={(this.state.disabled) ? "disabled" : ""}
                                                    value={this.state.time} className="form-control"
-                                                   onChange={this.handleChange}/>
-                                            {/*{*/}
-                                                {/*(!this.state.disabled) ?*/}
-                                                    {/*<CatalogItem*/}
-                                                        {/*update={(id) => {*/}
-                                                            {/*this.setState({period: id})*/}
-                                                        {/*}}*/}
-                                                        {/*PeriodId={11}*/}
-                                                        {/*name="period"*/}
-                                                        {/*value={this.state.period}*/}
-                                                        {/*disabled={(this.state.disabled)}*/}
-                                                    {/*>*/}
-                                                    {/*</CatalogItem>*/}
-                                                    {/*:*/}
-                                                    {/*<select className="form-control" disabled></select>*/}
-                                            {/*}*/}
+                                                   onChange={(e) => {
+                                                       this.setState({
+                                                           time: e.target.value
+                                                       })
+                                                   }}/>
                                         </div>
                                         <div className="col-md-6">
                                             <label>
@@ -321,32 +312,27 @@ class Preferences extends React.Component {
                                         </div>
                                         <br/>
                                         <br/>
-                                        <br/>
-                                        <br/>
                                         <div className="col-md-12">
                                             <div className="row">
                                                 <label className="col-md-12">
                                                     Frequency
                                                 </label>
-                                                <br/><br/>
-                                                <div className="col-md-1"></div>
-                                                <div className="col-md-2">
-                                                    <input name="frequency" className="form-check-input" type="radio" value="weekly"/>
-                                                    <label className="form-check-label" htmlFor="defaultCheck1">
-                                                        Weekly
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <input name="frequency" className="form-check-input" type="radio" value="monthly"/>
-                                                    <label className="form-check-label" htmlFor="defaultCheck1">
-                                                        Monthly
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <input name="frequency" className="form-check-input" type="radio" value="yearly"/>
-                                                    <label className="form-check-label" htmlFor="defaultCheck1">
-                                                        Yearly
-                                                    </label>
+                                                <div className="col-md-6">
+                                                    {
+                                                        (!this.state.disabled) ?
+                                                            <CatalogItem
+                                                                update={(id) => {
+                                                                    this.setState({period: id})
+                                                                }}
+                                                                PeriodId={11}
+                                                                name="period"
+                                                                value={this.state.period}
+                                                                disabled={(this.state.disabled)}
+                                                            >
+                                                            </CatalogItem>
+                                                            :
+                                                            <select className="form-control" disabled></select>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
