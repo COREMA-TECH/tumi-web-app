@@ -129,8 +129,8 @@ class Application extends Component {
 		console.log(`Option selected:`, positionsTags);
 	};
 
-	handleChange = (tags) => {
-		this.setState({ tags });
+	handleChange = (positionsTags) => {
+		this.setState({ positionsTags });
 	};
 
     /**<
