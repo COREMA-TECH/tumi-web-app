@@ -899,7 +899,7 @@ class Catalogs extends React.Component {
 								<InputForm
 									id="displayLabel"
 									name="displayLabel"
-									maxLength="15"
+									maxLength="150"
 									error={!this.state.displayLabelValid}
 									value={this.state.displayLabel}
 									change={(value) => this.onChangeHandler(value, 'displayLabel')}
@@ -910,7 +910,7 @@ class Catalogs extends React.Component {
 								<InputForm
 									id="description"
 									name="description"
-									maxLength="25"
+									maxLength="150"
 									error={!this.state.descriptionValid}
 									value={this.state.description}
 									change={(value) => this.onChangeHandler(value, 'description')}
