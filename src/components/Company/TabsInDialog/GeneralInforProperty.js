@@ -64,7 +64,7 @@ class GeneralInfoProperty extends Component {
 			validCity: '',
 			validStartWeek: '',
 			validEndWeek: '',
-
+			zipCodeValid: true,
 			contractURL: '',
 			contractFile: '',
 
@@ -82,7 +82,9 @@ class GeneralInfoProperty extends Component {
 			phoneNumberValid: true,
 			faxNumberValid: true,
 			cityFinal: '',
-			loadingData: false
+			loadingData: false,
+
+			nextButton: false
 		};
 	}
 	/**
@@ -262,6 +264,7 @@ class GeneralInfoProperty extends Component {
 	};
 
 	insertCompany = (id) => {
+		console.log("estoy en el insert");
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -339,7 +342,7 @@ class GeneralInfoProperty extends Component {
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
-									Zipcode: parseInt(this.state.zipCode),
+									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -381,7 +384,10 @@ class GeneralInfoProperty extends Component {
 								linearProgress: false
 							});
 
-							this.props.next();
+							// this.props.next();
+							this.setState({
+								nextButton: true
+							});
 
 							this.props.handleOpenSnackbar('success', 'Success: Property created');
 						})
@@ -534,7 +540,7 @@ class GeneralInfoProperty extends Component {
 									State: parseInt(this.state.state),
 									// Rate: parseFloat(this.state.rate),
 									Rate: parseFloat(companyId),
-									Zipcode: parseInt(this.state.zipCode),
+									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -570,7 +576,10 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then((data) => {
-							this.props.next();
+							// this.props.next();
+							this.setState({
+								nextButton: true
+							});
 
 							this.props.handleOpenSnackbar('success', 'Success: Property updated');
 
@@ -594,6 +603,11 @@ class GeneralInfoProperty extends Component {
 			{
 				[name]: text
 			}, () => {
+
+				this.setState(
+					{
+						zipCodeValid: true
+					})
 				this.validateField(name, text);
 				if (name == "zipCode") {
 					fetch('https://ziptasticapi.com/' + text).then((response) => {
@@ -643,13 +657,13 @@ class GeneralInfoProperty extends Component {
 
 				console.log(this.state)
 				//To set errors in selects
-				if (this.state.region === 0) {
+				/*if (this.state.region === 0) {
 					this.setState({
 						validRegion: 'valid'
 					});
 
 					validated = false;
-				}
+				}*/
 
 				if (this.state.city === 0) {
 					this.setState({
@@ -808,6 +822,7 @@ class GeneralInfoProperty extends Component {
 	componentWillMount() {
 
 		this.setState({ avatar: this.context.avatarURL });
+		this.loadRegion(() => { });
 		if (this.props.idProperty !== null) {
 			console.log("esta aqui s");
 			this.loadRegion(() => {
@@ -816,7 +831,7 @@ class GeneralInfoProperty extends Component {
 			});
 
 		} else {
-			// Show Snackbar
+			this.loadRegion(() => { });
 		}
 	}
 	renderFileNameControls = (property, enableEdit) => {
@@ -893,11 +908,12 @@ class GeneralInfoProperty extends Component {
 		this.setState(
 			{
 				RegionName: value
-
+				//validRegion: false
 			},
 			() => {
-				let validRegion = true;
-				//this.validateField('RegionName', value);
+
+				//			let validRegion = true;
+				//	this.validateField('RegionName', value);
 			}
 		);
 	};
@@ -914,7 +930,7 @@ class GeneralInfoProperty extends Component {
 		let zipCodeValid = this.state.zipCodeValid;
 		let countryValid = this.state.countryValid;
 		let stateValid = this.state.stateValid;
-		// let regionValid = this.state.regionValid;
+		//let regionValid = this.state.regionValid;
 
 		let cityValid = this.state.cityValid;
 		let suiteValid = this.state.suiteValid;
@@ -1052,15 +1068,28 @@ class GeneralInfoProperty extends Component {
 											onClick={() => {
 												this.deleteCompany(this.props.idProperty);
 											}}
+											type="button"
 										>
 											Delete Property<i class="fas fa-ban ml-1" />
 										</button>
 									) : (
 											''
 										)}
-									<button type="submit" className="btn btn-success">
-										Next<i class="fas fa-save ml-2" />
-									</button>
+
+
+									{
+										!this.state.nextButton ? (
+											<button type="submit" className="btn btn-success">
+												Save<i className="fas fa-save ml-2" />
+											</button>
+										) : (
+												<button type="button" onClick={() => {
+													this.props.next();
+												}} className="btn btn-success">
+													Next <i className="fas fa-chevron-right"></i>
+												</button>
+											)
+									}
 								</div>
 							</div>
 						</div>
@@ -1117,7 +1146,7 @@ class GeneralInfoProperty extends Component {
 															required
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-3">
 														<label>* Address</label>
 														<InputValid
 															change={(text) => {
@@ -1131,7 +1160,7 @@ class GeneralInfoProperty extends Component {
 															required
 														/>
 													</div>
-													<div className="col-md-6 col-lg-3">
+													<div className="col-md-6 col-lg-4">
 														<label>Address 2</label>
 														<input
 															className={'form-control'}
@@ -1160,12 +1189,12 @@ class GeneralInfoProperty extends Component {
 														/>
 													</div>
 													<div className="col-md-12 col-lg-3">
-														<label>* Region</label>
+														<label> Region</label>
 														<AutosuggestInput
 															id="Region"
 															name="Region"
 															data={this.state.regions}
-															error={this.state.validRegion === '' ? false : true}
+															//error={this.state.validRegion === '' ? false : true}
 															value={this.state.RegionName}
 															onChange={this.updateRegionName}
 															onSelect={this.updateRegionName}
@@ -1206,58 +1235,7 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div> */}
-													<div className="col-md-6 col-lg-2">
 
-														<label>* Zip Code</label>
-														<InputForm
-															value={this.state.zipCode}
-															change={(text) => {
-																this.updateInput(text, 'zipCode');
-															}}
-															error={!this.state.zipCodeValid}
-															maxLength="10"
-															min={0}
-															type="number"
-															disabled={!this.props.showStepper}
-														/>
-
-													</div>
-													<div className="col-md-6 col-lg-2">
-														<label>* States</label>
-														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
-															{({ loading, error, data, refetch, networkStatus }) => {
-																//if (networkStatus === 4) return <LinearProgress />;
-																if (loading) return <LinearProgress />;
-																if (error) return <p>Error </p>;
-																if (
-																	data.getcatalogitem != null &&
-																	data.getcatalogitem.length > 0
-																) {
-																	return (
-																		<select
-																			name="state"
-																			className={'form-control'}
-																			onChange={(event) => {
-																				this.setState({
-																					state: event.target.value,
-																					validState: ''
-																				});
-																			}}
-																			error={this.state.validState === '' ? false : true}
-																			value={this.state.state}
-																			showNone={false}
-																		>
-																			<option value="">Select a state</option>
-																			{data.getcatalogitem.map((item) => (
-																				<option value={item.Id}>{item.Name}</option>
-																			))}
-																		</select>
-																	);
-																}
-																return <SelectNothingToDisplay />;
-															}}
-														</Query>
-													</div>
 													<div className="col-md-6 col-lg-3">
 														<label>City</label>
 														<Query
@@ -1306,6 +1284,59 @@ class GeneralInfoProperty extends Component {
 																return <SelectNothingToDisplay />;
 															}}
 														</Query>
+													</div>
+
+													<div className="col-md-6 col-lg-2">
+														<label>* States</label>
+														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+															{({ loading, error, data, refetch, networkStatus }) => {
+																//if (networkStatus === 4) return <LinearProgress />;
+																if (loading) return <LinearProgress />;
+																if (error) return <p>Error </p>;
+																if (
+																	data.getcatalogitem != null &&
+																	data.getcatalogitem.length > 0
+																) {
+																	return (
+																		<select
+																			name="state"
+																			className={'form-control'}
+																			onChange={(event) => {
+																				this.setState({
+																					state: event.target.value,
+																					validState: ''
+																				});
+																			}}
+																			error={this.state.validState === '' ? false : true}
+																			value={this.state.state}
+																			showNone={false}
+																		>
+																			<option value="">Select a state</option>
+																			{data.getcatalogitem.map((item) => (
+																				<option value={item.Id}>{item.Name}</option>
+																			))}
+																		</select>
+																	);
+																}
+																return <SelectNothingToDisplay />;
+															}}
+														</Query>
+													</div>
+													<div className="col-md-6 col-lg-2">
+
+														<label>* Zip Code</label>
+														<InputForm
+															value={this.state.zipCode}
+															change={(text) => {
+																this.updateInput(text, 'zipCode');
+															}}
+															error={!this.state.zipCodeValid}
+															maxLength="10"
+															min={0}
+															type="number"
+															disabled={!this.props.showStepper}
+														/>
+
 													</div>
 													<div className="col-md-6 col-lg-2">
 														<label>* Phone Number</label>
@@ -1409,7 +1440,7 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-4">
-												<label>* Room</label>
+												<label>* Rooms</label>
 												<InputValid
 													change={(text) => {
 														this.setState({

@@ -173,14 +173,14 @@ class hotels extends Component {
                     aria-labelledby="scroll-dialog-title"
                     fullScreen
                 >
-                    <DialogTitle id="alert-dialog-title dialog-header">{'Hotels without assign'}</DialogTitle>
+                    <DialogTitle id="alert-dialog-title dialog-header">{'Properties without assign'}</DialogTitle>
                     <AppBar style={{ background: '#0092BD' }}>
                         <Toolbar>
                             <IconButton color="inherit" onClick={this.props.handleClose} aria-label="Close">
                                 <CloseIcon />
                             </IconButton>
                             <Typography variant="title" color="inherit">
-                                Hotels without assign
+                                Properties without assign
                             </Typography>
                         </Toolbar>
                     </AppBar>
@@ -194,12 +194,12 @@ class hotels extends Component {
                                                 <i className="fas fa-trash"></i>
                                             </button> */}
                                         </div>
-                                        <a href="" className="HotelCard-item"
+                                        <a href="" className="HotelCard-item bg-gd-danger"
                                             onClick={(e) => { e.preventDefault(); this.assignHotel(hotel) }}
                                         >
                                             <div className="HotelCard-img">
                                                 <figure>
-                                                    <img src="http://beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg" alt="" />
+                                                    <img src={`${hotel.ImageURL}`} alt="" />
                                                 </figure>
                                             </div>
                                             <div className="HotelCard-info">

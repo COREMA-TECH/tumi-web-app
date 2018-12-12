@@ -37,7 +37,7 @@ class DashboardManager extends React.Component {
 
     handleClickOpenModal = (event) => {
         event.preventDefault();
-        this.setState({ openModal: true, openLife: true, item: null });
+        this.setState({ openModal: true, openLife: false, item: null });
     };
     handleCloseModal = (e) => {
         e.preventDefault();
