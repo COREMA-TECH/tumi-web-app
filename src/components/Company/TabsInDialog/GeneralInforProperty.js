@@ -84,7 +84,7 @@ class GeneralInfoProperty extends Component {
 			cityFinal: '',
 			loadingData: false,
 
-            nextButton: false
+			nextButton: false
 		};
 	}
 	/**
@@ -576,9 +576,9 @@ class GeneralInfoProperty extends Component {
 						})
 						.then((data) => {
 							// this.props.next();
-                            this.setState({
-                                nextButton: true
-                            });
+							this.setState({
+								nextButton: true
+							});
 
 							this.props.handleOpenSnackbar('success', 'Success: Property updated');
 
@@ -1072,16 +1072,16 @@ class GeneralInfoProperty extends Component {
 
 									{
 										!this.state.nextButton ? (
-                                            <button type="submit" className="btn btn-success">
-                                                Save<i className="fas fa-save ml-2"/>
-                                            </button>
+											<button type="submit" className="btn btn-success">
+												Save<i className="fas fa-save ml-2" />
+											</button>
 										) : (
-                                            <button type="button" onClick={() => {
-                                            	this.props.next();
-											}} className="btn btn-success">
-                                                Next <i className="fas fa-chevron-right"></i>
-                                            </button>
-										)
+												<button type="button" onClick={() => {
+													this.props.next();
+												}} className="btn btn-success">
+													Next <i className="fas fa-chevron-right"></i>
+												</button>
+											)
 									}
 								</div>
 							</div>
@@ -1228,58 +1228,7 @@ class GeneralInfoProperty extends Component {
 													}}
 												</Query>
 											</div> */}
-													<div className="col-md-6 col-lg-2">
 
-														<label>* Zip Code</label>
-														<InputForm
-															value={this.state.zipCode}
-															change={(text) => {
-																this.updateInput(text, 'zipCode');
-															}}
-															error={!this.state.zipCodeValid}
-															maxLength="10"
-															min={0}
-															type="number"
-															disabled={!this.props.showStepper}
-														/>
-
-													</div>
-													<div className="col-md-6 col-lg-2">
-														<label>* States</label>
-														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
-															{({ loading, error, data, refetch, networkStatus }) => {
-																//if (networkStatus === 4) return <LinearProgress />;
-																if (loading) return <LinearProgress />;
-																if (error) return <p>Error </p>;
-																if (
-																	data.getcatalogitem != null &&
-																	data.getcatalogitem.length > 0
-																) {
-																	return (
-																		<select
-																			name="state"
-																			className={'form-control'}
-																			onChange={(event) => {
-																				this.setState({
-																					state: event.target.value,
-																					validState: ''
-																				});
-																			}}
-																			error={this.state.validState === '' ? false : true}
-																			value={this.state.state}
-																			showNone={false}
-																		>
-																			<option value="">Select a state</option>
-																			{data.getcatalogitem.map((item) => (
-																				<option value={item.Id}>{item.Name}</option>
-																			))}
-																		</select>
-																	);
-																}
-																return <SelectNothingToDisplay />;
-															}}
-														</Query>
-													</div>
 													<div className="col-md-6 col-lg-3">
 														<label>City</label>
 														<Query
@@ -1328,6 +1277,59 @@ class GeneralInfoProperty extends Component {
 																return <SelectNothingToDisplay />;
 															}}
 														</Query>
+													</div>
+
+													<div className="col-md-6 col-lg-2">
+														<label>* States</label>
+														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
+															{({ loading, error, data, refetch, networkStatus }) => {
+																//if (networkStatus === 4) return <LinearProgress />;
+																if (loading) return <LinearProgress />;
+																if (error) return <p>Error </p>;
+																if (
+																	data.getcatalogitem != null &&
+																	data.getcatalogitem.length > 0
+																) {
+																	return (
+																		<select
+																			name="state"
+																			className={'form-control'}
+																			onChange={(event) => {
+																				this.setState({
+																					state: event.target.value,
+																					validState: ''
+																				});
+																			}}
+																			error={this.state.validState === '' ? false : true}
+																			value={this.state.state}
+																			showNone={false}
+																		>
+																			<option value="">Select a state</option>
+																			{data.getcatalogitem.map((item) => (
+																				<option value={item.Id}>{item.Name}</option>
+																			))}
+																		</select>
+																	);
+																}
+																return <SelectNothingToDisplay />;
+															}}
+														</Query>
+													</div>
+													<div className="col-md-6 col-lg-2">
+
+														<label>* Zip Code</label>
+														<InputForm
+															value={this.state.zipCode}
+															change={(text) => {
+																this.updateInput(text, 'zipCode');
+															}}
+															error={!this.state.zipCodeValid}
+															maxLength="10"
+															min={0}
+															type="number"
+															disabled={!this.props.showStepper}
+														/>
+
 													</div>
 													<div className="col-md-6 col-lg-2">
 														<label>* Phone Number</label>
@@ -1431,7 +1433,7 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-4">
-												<label>* Room</label>
+												<label>* Rooms</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
