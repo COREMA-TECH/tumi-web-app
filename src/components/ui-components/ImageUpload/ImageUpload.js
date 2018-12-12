@@ -25,7 +25,7 @@ class ImageUpload extends Component {
 	handleUpload(event) {
 		// Get the file selected
 		const file = event.target.files[0];
-		var _validFileExtensions = [ ...this.context.extImage ];
+		var _validFileExtensions = [...this.context.extImage];
 		if (
 			!_validFileExtensions.find((value) => {
 				if (!file) return null;
@@ -99,25 +99,25 @@ class ImageUpload extends Component {
 							/>
 						</div>
 					) : (
-						<React.Fragment>
-							<div className="avatarImage-wrapper">
-								<img className="avatar-uploaded" src={this.props.fileURL} alt="Company Avatar" />
-							</div>
-							<div className="upload-btn-wrapper">
-								<button onClick={this.triggerFileClick} className="btn-up">
-									<i class="fas fa-cloud-upload-alt" />
-								</button>
-								<input
-									type="file"
-									id={this.props.id}
-									name="myfile"
-									accept=" image/*"
-									onChange={this.handleUpload}
-									disabled={this.props.disabled}
-								/>
-							</div>
-						</React.Fragment>
-					)}
+							<React.Fragment>
+								<div className="avatarImage-wrapper">
+									<img className="avatar-uploaded" src={this.props.fileURL} alt="Company Avatar" />
+								</div>
+								<div className="upload-btn-wrapper">
+									<button type="button" onClick={this.triggerFileClick} className="btn-up">
+										<i class="fas fa-cloud-upload-alt" />
+									</button>
+									<input
+										type="file"
+										id={this.props.id}
+										name="myfile"
+										accept=" image/*"
+										onChange={this.handleUpload}
+										disabled={this.props.disabled}
+									/>
+								</div>
+							</React.Fragment>
+						)}
 				</div>
 			</div>
 		);
