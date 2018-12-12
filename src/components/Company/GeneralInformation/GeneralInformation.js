@@ -837,7 +837,7 @@ class GeneralInformation extends Component {
 			address: '',
 			optionalAddress: '',
 			businessType: '',
-			Id_Parent: 0,
+			Id_Parent: 99999,
 			management: '',
 			phoneNumber: '',
 			startDate: '',

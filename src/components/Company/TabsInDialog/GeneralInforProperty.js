@@ -538,8 +538,8 @@ class GeneralInfoProperty extends Component {
 									Region: parseInt(NewIdRegion),
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
-									// Rate: parseFloat(this.state.rate),
-									Rate: parseFloat(companyId),
+									Rate: parseFloat(this.state.rate),
+									//Rate: parseFloat(companyId),
 									Zipcode: `'${this.state.zipCode}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
@@ -1129,7 +1129,7 @@ class GeneralInfoProperty extends Component {
 															}}
 															error={!this.state.rateValid}
 															maxLength="10"
-														//disabled={!this.props.showStepper}
+														//disabled={this.props.idProperty !== null ? true : false}
 														/>
 													</div>
 													<div className="col-md-6 col-lg-2">
@@ -1333,7 +1333,7 @@ class GeneralInfoProperty extends Component {
 															error={!this.state.zipCodeValid}
 															maxLength="10"
 															min={0}
-															type="number"
+															type="text"
 															disabled={!this.props.showStepper}
 														/>
 
