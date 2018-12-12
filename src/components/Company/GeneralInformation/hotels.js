@@ -194,12 +194,12 @@ class hotels extends Component {
                                                 <i className="fas fa-trash"></i>
                                             </button> */}
                                         </div>
-                                        <a href="" className="HotelCard-item"
+                                        <a href="" className="HotelCard-item bg-gd-danger"
                                             onClick={(e) => { e.preventDefault(); this.assignHotel(hotel) }}
                                         >
                                             <div className="HotelCard-img">
                                                 <figure>
-                                                    <img src="http://beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg" alt="" />
+                                                    <img src={`${hotel.ImageURL}`} alt="" />
                                                 </figure>
                                             </div>
                                             <div className="HotelCard-info">

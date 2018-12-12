@@ -5,6 +5,7 @@
         background-color: $brand-primary !important;
         font-size: $font-size-base !important;
         font-weight: 300 !important;
+        min-width: 200px;
         &:first-child {
             border-radius: $border-radius-standar 0 0 0;
         }

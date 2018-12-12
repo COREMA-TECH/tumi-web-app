@@ -190,7 +190,7 @@ class DepartmentsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
+							<CustomTableCell padding="none" className={classes.th} />
 							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
 							<CustomTableCell className={classes.th + " company-th Table-head"}>Department Code</CustomTableCell>
 							<CustomTableCell className={classes.th + " company-th Table-head"}>Department Name</CustomTableCell>

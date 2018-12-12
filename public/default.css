@@ -8050,7 +8050,8 @@ table[class^="MuiTable-"] .btn {
   .Table-head {
     background-color: #3ca2c8 !important;
     font-size: 0.9rem !important;
-    font-weight: 300 !important; }
+    font-weight: 300 !important;
+    min-width: 200px; }
     .Table-head:first-child {
       border-radius: 5px 0 0 0; }
     .Table-head:last-child {

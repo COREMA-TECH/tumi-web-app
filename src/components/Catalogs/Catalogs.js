@@ -219,7 +219,7 @@ class Catalogs extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			catalogs: [ { Id: 0, Code: 'Nothing', Description: 'Nothing' } ],
+			catalogs: [{ Id: 0, Code: 'Nothing', Description: 'Nothing' }],
 			idCatalogFilter: 0,
 			idCatalogHasValue: true,
 			idCatalogValid: true,
@@ -250,7 +250,7 @@ class Catalogs extends React.Component {
 	GENERATE_ID = () => {
 		return '_' + Math.random().toString(36).substr(2, 9);
 	};
-	resetState = (func = () => {}) => {
+	resetState = (func = () => { }) => {
 		this.setState(
 			{
 				...this.DEFAULT_STATE
@@ -295,7 +295,7 @@ class Catalogs extends React.Component {
 		}
 	};
 
-	onSelectChangeHandler(e) {}
+	onSelectChangeHandler(e) { }
 	enableCancelButton = () => {
 		let idCatalogHasValue = this.state.idCatalog !== null && this.state.idCatalog !== '';
 		let nameHasValue = this.state.name != '';
@@ -393,7 +393,7 @@ class Catalogs extends React.Component {
 		);
 	}
 
-	validateForm(func = () => {}) {
+	validateForm(func = () => { }) {
 		this.setState(
 			{
 				formValid:
@@ -480,7 +480,7 @@ class Catalogs extends React.Component {
 		});
 	}
 
-	loadCatalogs = (func = () => {}) => {
+	loadCatalogs = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
@@ -539,7 +539,7 @@ class Catalogs extends React.Component {
 		});
 	};
 
-	loadCatalogsItems = (idCatalog = 0, func = () => {}) => {
+	loadCatalogsItems = (idCatalog = 0, func = () => { }) => {
 		this.setState({ loadingCatalogs: true });
 		this.props.client
 			.query({
@@ -575,7 +575,7 @@ class Catalogs extends React.Component {
 				});
 			});
 	};
-	loadParents = (idCatalog = -1, id = 0, idParent = -1, func = () => {}) => {
+	loadParents = (idCatalog = -1, id = 0, idParent = -1, func = () => { }) => {
 		this.setState({ loadingParents: true });
 		this.props.client
 			.query({
@@ -615,7 +615,7 @@ class Catalogs extends React.Component {
 			});
 	};
 
-	loadAllParents = (func = () => {}) => {
+	loadAllParents = (func = () => { }) => {
 		this.setState({ loadingAllParents: true });
 		this.props.client
 			.query({
@@ -861,8 +861,8 @@ class Catalogs extends React.Component {
 							{this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0 ? (
 								'Edit  Catalog'
 							) : (
-								'Create Catalog'
-							)}
+									'Create Catalog'
+								)}
 						</div>
 					</DialogTitle>
 
@@ -888,7 +888,7 @@ class Catalogs extends React.Component {
 								<InputForm
 									id="name"
 									name="name"
-									maxLength="15"
+									maxLength="150"
 									error={!this.state.nameValid}
 									value={this.state.name}
 									change={(value) => this.onChangeHandler(value, 'name')}
@@ -899,7 +899,7 @@ class Catalogs extends React.Component {
 								<InputForm
 									id="displayLabel"
 									name="displayLabel"
-									maxLength="15"
+									maxLength="150"
 									error={!this.state.displayLabelValid}
 									value={this.state.displayLabel}
 									change={(value) => this.onChangeHandler(value, 'displayLabel')}
@@ -910,7 +910,7 @@ class Catalogs extends React.Component {
 								<InputForm
 									id="description"
 									name="description"
-									maxLength="25"
+									maxLength="150"
 									error={!this.state.descriptionValid}
 									value={this.state.description}
 									change={(value) => this.onChangeHandler(value, 'description')}
@@ -949,12 +949,12 @@ class Catalogs extends React.Component {
 								<Tooltip
 									title={
 										this.state.idToEdit != null &&
-										this.state.idToEdit != '' &&
-										this.state.idToEdit != 0 ? (
-											'Save Changes'
-										) : (
-											'Insert Record'
-										)
+											this.state.idToEdit != '' &&
+											this.state.idToEdit != 0 ? (
+												'Save Changes'
+											) : (
+												'Insert Record'
+											)
 									}
 								>
 									<div>
