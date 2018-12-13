@@ -1440,7 +1440,7 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-4">
-												<label>* Rooms</label>
+												<label>* Number of Rooms</label>
 												<InputValid
 													change={(text) => {
 														this.setState({
