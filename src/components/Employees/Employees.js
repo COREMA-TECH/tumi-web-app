@@ -6,6 +6,7 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import green from "@material-ui/core/colors/green";
 import PropTypes from 'prop-types';
 import {withStyles} from "@material-ui/core";
+import withApollo from "react-apollo/withApollo";
 
 const styles = (theme) => ({
     container: {
@@ -62,7 +63,13 @@ class Employees extends Component {
 
         this.state = {
             openModal: false,
-            employeesRegisters: []
+            employeesRegisters: [],
+            rowsInput: 1,
+            
+            firstName: '',
+            lastName: '',
+            emailAddress: '',
+            phoneNumber: '',
         }
     }
 
@@ -80,6 +87,22 @@ class Employees extends Component {
         this.setState({
             openModal: false
         });
+    };
+
+    /**
+     * Manage submit form
+     * @param e - event submit of the form
+     */
+    handleSubmit = (e) => {
+        // Stop submit propagation and prevent even default
+        e.preventDefault();
+        e.stopPropagation();
+
+
+    };
+
+    insertEmployees = () => {
+
     };
 
     render() {
@@ -116,7 +139,16 @@ class Employees extends Component {
         let renderRowInputs = () => (
             <div className="row">
                 <div className="col-md-3">
-                    <input type="text" className="form-control" required/>
+                    <input
+                        onChange={(e) => {
+                            this.setState({
+
+                            })
+                        }}
+                        type="text"
+                        className="form-control"
+                        required
+                    />
                 </div>
                 <div className="col-md-3">
                     <input type="text" className="form-control" required/>
@@ -138,7 +170,7 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <DialogTitle style={{padding: '0px'}}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
@@ -163,14 +195,6 @@ class Employees extends Component {
                             {
                                 renderRowInputs()
                             }
-
-                            {
-                                renderRowInputs()
-                            }
-                            {
-                                renderRowInputs()
-                            }
-
                             {
                                 renderRowInputs()
                             }
@@ -225,4 +249,4 @@ Employees.propTypes = {
     fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(Employees);
+export default withStyles(styles)(withApollo(Employees));
