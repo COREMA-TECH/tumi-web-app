@@ -7,6 +7,8 @@ import green from "@material-ui/core/colors/green";
 import PropTypes from 'prop-types';
 import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
+import {ADD_EMPLOYEES} from "./Mutations";
+import EmployeeInputRow from "./EmployeeInputRow";
 
 const styles = (theme) => ({
     container: {
@@ -64,12 +66,8 @@ class Employees extends Component {
         this.state = {
             openModal: false,
             employeesRegisters: [],
-            rowsInput: 1,
-            
-            firstName: '',
-            lastName: '',
-            emailAddress: '',
-            phoneNumber: '',
+            rowsInput: [1],
+            inputs: 1
         }
     }
 
@@ -86,6 +84,10 @@ class Employees extends Component {
     handleCloseModal = () => {
         this.setState({
             openModal: false
+        }, () => {
+            this.setState({
+                rowsInput: [1]
+            })
         });
     };
 
@@ -98,11 +100,72 @@ class Employees extends Component {
         e.preventDefault();
         e.stopPropagation();
 
+        let form = document.getElementById('employee-form');
 
+        let array = [];
+        let object = {};
+
+        for (let i = 1; i <= form.elements.length - 2; i++) {
+            if (form.elements.item(i).name == "firstName") {
+                console.log(form.elements.item(i).value);
+                object.firstName = form.elements.item(i).value;
+            } else if (form.elements.item(i).name == "lastName") {
+                object.lastName = form.elements.item(i).value;
+            } else if (form.elements.item(i).name == "email") {
+                object.electronicAddress = form.elements.item(i).value;
+            } else if (form.elements.item(i).name == "number") {
+                object.mobileNumber = form.elements.item(i).value;
+            }
+
+
+            console.log(i % 4);
+            if (i % 4 === 0) {
+                console.log(object);
+                alert(object);
+                array.push(object);
+                console.log(array);
+                alert(array);
+            }
+
+        }
+
+
+
+        //this.insertEmployees([]);
     };
 
-    insertEmployees = () => {
+    insertEmployees = (employeesArrays) => {
+        this.props.client
+            .mutate({
+                mutation: ADD_EMPLOYEES,
+                variables: {
+                    Employees: employeesArrays
+                }
+            })
+            .then(({data}) => {
 
+                // Hide dialog
+                this.handleCloseModal();
+            })
+            .catch(error => {
+                // Hide dialog
+                this.handleCloseModal();
+            })
+    };
+
+    /**
+     * To create a new row form
+     */
+    addNewRow = () => {
+        this.setState(prevState => ({
+            rowsInput: [...prevState.rowsInput, 1]
+        }))
+    };
+
+    handleChange = (name, value) => {
+        this.setState({
+            [name]: value
+        })
     };
 
     render() {
@@ -136,32 +199,6 @@ class Employees extends Component {
             </div>
         );
 
-        let renderRowInputs = () => (
-            <div className="row">
-                <div className="col-md-3">
-                    <input
-                        onChange={(e) => {
-                            this.setState({
-
-                            })
-                        }}
-                        type="text"
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="col-md-3">
-                    <input type="text" className="form-control" required/>
-                </div>
-                <div className="col-md-3">
-                    <input type="email" className="form-control" required/>
-                </div>
-                <div className="col-md-3">
-                    <input type="number" className="form-control" required/>
-                </div>
-            </div>
-        );
-
         let renderNewEmployeeDialog = () => (
             <Dialog
                 fullScreen={fullScreen}
@@ -170,7 +207,7 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <form onSubmit={this.handleSubmit}>
+                <form id="employee-form" onSubmit={this.handleSubmit}>
                     <DialogTitle style={{padding: '0px'}}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
@@ -193,10 +230,13 @@ class Employees extends Component {
                                 </div>
                             </div>
                             {
-                                renderRowInputs()
-                            }
-                            {
-                                renderRowInputs()
+                                this.state.rowsInput.map((index, item) => (
+                                    <EmployeeInputRow
+                                        newRow={this.addNewRow}
+                                        index={index}
+                                        onchange={this.handleChange}
+                                    />
+                                ))
                             }
                         </div>
                     </DialogContent>
