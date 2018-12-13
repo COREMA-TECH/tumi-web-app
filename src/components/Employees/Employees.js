@@ -122,10 +122,10 @@ class Employees extends Component {
                     <input type="text" className="form-control" required/>
                 </div>
                 <div className="col-md-3">
-                    <input type="text" className="form-control" required/>
+                    <input type="email" className="form-control" required/>
                 </div>
                 <div className="col-md-3">
-                    <input type="text" className="form-control" required/>
+                    <input type="number" className="form-control" required/>
                 </div>
             </div>
         );
