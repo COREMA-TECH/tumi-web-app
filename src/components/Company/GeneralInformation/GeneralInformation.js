@@ -440,7 +440,8 @@ class GeneralInformation extends Component {
 								Date_Created: "'2018-08-14'",
 								Date_Updated: "'2018-08-14'",
 								ImageURL: `'${this.state.avatar}'`,
-								Start_Date: `'${this.state.startDate}'`,
+								Start_Date: `'2018-08-14'`,
+								//Start_Date: `'${this.state.startDate}'`,
 								Contract_URL: `'${this.state.contractURL}'`,
 								Contract_File: `'${this.state.contractFile}'`,
 
