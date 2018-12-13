@@ -201,7 +201,6 @@ class ContactcontactForm extends React.Component {
 		departmentNameValid: true,
 		titleNameValid: true,
 		idSupervisorValid: true,
-
 		firstnameHasValue: false,
 		middlenameHasValue: false,
 		lastnameHasValue: false,
