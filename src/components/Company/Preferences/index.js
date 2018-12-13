@@ -20,6 +20,7 @@ class Preferences extends React.Component {
             idCompany: this.props.idCompany,
             Entityid: this.props.idCompany,
             disabled: true,
+            time: '',
 
 
             startMonth: null,
@@ -64,6 +65,7 @@ class Preferences extends React.Component {
                             startMonth: data.companyPreferences[0].FiscalMonth1,
                             endMonth: data.companyPreferences[0].FiscalMonth2,
                             timeZone: data.companyPreferences[0].Timezone,
+                            time: data.companyPreferences[0].time,
                         }, () => {
                             this.setState({
                                 loading: false
@@ -82,16 +84,13 @@ class Preferences extends React.Component {
                     })
                 });
         });
-
     }
 
     toggleState = (event) => {
-
         this.setState({
             disabled: !this.state.disabled
         });
-
-    }
+    };
 
     handleChange(event) {
         const target = event.target;
@@ -127,7 +126,6 @@ class Preferences extends React.Component {
         })
     }
 
-
     add() {
         this.props.client.mutate({
             mutation: this.INSERT_QUERY,
@@ -139,8 +137,8 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
-                    Timezone: parseInt(this.state.timeZone)
-                    // TODO: add timezones
+                    Timezone: parseInt(this.state.timeZone),
+                    time: this.state.time
                 }
             }
         })
@@ -172,8 +170,8 @@ class Preferences extends React.Component {
                     charge: this.state.charge,
                     FiscalMonth1: this.state.startMonth,
                     FiscalMonth2: this.state.endMonth,
-                    Timezone: parseInt(this.state.timeZone)
-                    // TODO: add timezones
+                    Timezone: parseInt(this.state.timeZone),
+                    time: this.state.time
                 }
             }
         })
@@ -204,6 +202,7 @@ class Preferences extends React.Component {
                 FiscalMonth1
                 FiscalMonth2
                 Timezone
+                time
             }
         }
     `;
@@ -219,6 +218,7 @@ class Preferences extends React.Component {
                 FiscalMonth1
                 FiscalMonth2
                 Timezone
+                time
             }
         }
     `;
@@ -234,6 +234,7 @@ class Preferences extends React.Component {
                 FiscalMonth1
                 FiscalMonth2
                 Timezone
+                time
             }
         }
     `;
@@ -268,28 +269,46 @@ class Preferences extends React.Component {
                                 <div class="card-body">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <div className="row">
-                                                <div className="col-md-2">
-                                                    <div className="onoffswitch">
-                                                        <input type="checkbox" checked={this.state.charge} name="charge"
-                                                               onClick={this.toggleState} onChange={this.handleChange}
-                                                               className="onoffswitch-checkbox" id="myonoffswitch"/>
-                                                        <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                            <span className="onoffswitch-inner"></span>
-                                                            <span className="onoffswitch-switch"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-10">
-                                                    <label>
-                                                        Do You Have Any Lunch Period Deductions?
-                                                    </label>
-                                                </div>
+                                            <label>
+                                                Do You Have Any Lunch Period Deductions?
+                                            </label>
+                                            <div className="onoffswitch">
+                                                <input type="checkbox" checked={this.state.charge} name="charge"
+                                                       onClick={this.toggleState} onChange={this.handleChange}
+                                                       className="onoffswitch-checkbox" id="myonoffswitch"/>
+                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
+                                                    <span className="onoffswitch-inner"></span>
+                                                    <span className="onoffswitch-switch"></span>
+                                                </label>
                                             </div>
                                         </div>
                                         <div className="col-md-6">
                                             <label>
-                                                Period
+                                                Time
+                                            </label>
+                                            <input type="text" min="0" name="amount"
+                                                   disabled={(this.state.disabled) ? "disabled" : ""}
+                                                   value={this.state.time} className="form-control"
+                                                   onChange={(e) => {
+                                                       this.setState({
+                                                           time: e.target.value
+                                                       })
+                                                   }}/>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label>
+                                                Amount
+                                            </label>
+                                            <input type="number" min="0" name="amount" step=".01"
+                                                   disabled={(this.state.disabled) ? "disabled" : ""}
+                                                   value={this.state.amount} className="form-control"
+                                                   onChange={this.handleChange}/>
+                                        </div>
+                                        <br/>
+                                        <br/>
+                                        <div className="col-md-6">
+                                            <label>
+                                                Frequency
                                             </label>
                                             {
                                                 (!this.state.disabled) ?
@@ -307,46 +326,6 @@ class Preferences extends React.Component {
                                                     <select className="form-control" disabled></select>
                                             }
                                         </div>
-                                        <div className="col-md-6">
-                                            <label>
-                                                Amount
-                                            </label>
-                                            <input type="number" min="0" name="amount" step=".01"
-                                                   disabled={(this.state.disabled) ? "disabled" : ""}
-                                                   value={this.state.amount} className="form-control"
-                                                   onChange={this.handleChange}/>
-                                        </div>
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <br/>
-                                        <div className="col-md-12">
-                                            <div className="row">
-                                                <label className="col-md-12">
-                                                    Frequency
-                                                </label>
-                                                <br/><br/>
-                                                <div className="col-md-1"></div>
-                                                <div className="col-md-2">
-                                                    <input name="frequency" className="form-check-input" type="radio" value="weekly"/>
-                                                    <label className="form-check-label" htmlFor="defaultCheck1">
-                                                        Weekly
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <input name="frequency" className="form-check-input" type="radio" value="monthly"/>
-                                                    <label className="form-check-label" htmlFor="defaultCheck1">
-                                                        Monthly
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-2">
-                                                    <input name="frequency" className="form-check-input" type="radio" value="yearly"/>
-                                                    <label className="form-check-label" htmlFor="defaultCheck1">
-                                                        Yearly
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -356,67 +335,61 @@ class Preferences extends React.Component {
                                         <div className="card-header">Fiscal Year</div>
                                         <div className="card-body">
                                             <div className="row">
-                                                <div className="col-md-6">
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label>
-                                                                Start Month
-                                                            </label>
-                                                        </div>
-                                                        <div className="col-md-12">
-                                                            <select
-                                                                required
-                                                                value={this.state.startMonth}
-                                                                className="form-control"
-                                                                onChange={(event) => {
-                                                                    this.setState({
-                                                                        startMonth: event.target.value
-                                                                    })
-                                                                }}
-                                                            >
-                                                                <option value="">Select a month</option>
-                                                                {
-                                                                    months.map(month => {
-                                                                        if (this.state.endMonth != month.id) {
-                                                                            return <option
-                                                                                value={month.id}>{month.description}</option>
-                                                                        }
-                                                                    })
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                <div className="col-md-12">
+                                                    <label>
+                                                        Start Month
+                                                    </label>
                                                 </div>
-                                                <div className="col-md-6">
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label>
-                                                                End Month
-                                                            </label>
-                                                        </div>
-                                                        <div className="col-md-12">
-                                                            <select
-                                                                required
-                                                                value={this.state.endMonth}
-                                                                className="form-control"
-                                                                onChange={(event) => {
-                                                                    this.setState({
-                                                                        endMonth: event.target.value
-                                                                    })
-                                                                }}
-                                                            >
-                                                                <option value="">Select a month</option>
-                                                                {
-                                                                    months.map(month => {
-                                                                        if (this.state.startMonth != month.id) {
-                                                                            return <option
-                                                                                value={month.id}>{month.description}</option>
-                                                                        }
-                                                                    })
+                                                <div className="col-md-12">
+                                                    <select
+                                                        required
+                                                        value={this.state.startMonth}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                startMonth: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select a month</option>
+                                                        {
+                                                            months.map(month => {
+                                                                if (this.state.endMonth != month.id) {
+                                                                    return <option
+                                                                        value={month.id}>{month.description}</option>
                                                                 }
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                            })
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <label>
+                                                        End Month
+                                                    </label>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <select
+                                                        required
+                                                        value={this.state.endMonth}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                endMonth: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select a month</option>
+                                                        {
+                                                            months.map(month => {
+                                                                if (this.state.startMonth != month.id) {
+                                                                    return <option
+                                                                        value={month.id}>{month.description}</option>
+                                                                }
+                                                            })
+                                                        }
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -431,35 +404,31 @@ class Preferences extends React.Component {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col-md-12">
-                                                    <div className="row">
-                                                        <div className="col-md-12">
-                                                            <label>
-                                                                Time Zone
-                                                            </label>
-                                                        </div>
-                                                        <div className="col-md-12">
-                                                            <select
-                                                                required
-                                                                value={this.state.timeZone}
-                                                                className="form-control"
-                                                                onChange={(event) => {
-                                                                    this.setState({
-                                                                        timeZone: event.target.value
-                                                                    })
-                                                                }}
-                                                            >
-                                                                <option value="">Select an option</option>
-                                                                {
-                                                                    timeZones.map(item => {
-                                                                        return (
-                                                                            <option
-                                                                                value={item.id}
-                                                                            >{item.offset + ' ' + item.name}</option>)
-                                                                    })
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                    <label>
+                                                        Time Zone
+                                                    </label>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <select
+                                                        required
+                                                        value={this.state.timeZone}
+                                                        className="form-control"
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                timeZone: event.target.value
+                                                            })
+                                                        }}
+                                                    >
+                                                        <option value="">Select an option</option>
+                                                        {
+                                                            timeZones.map(item => {
+                                                                return (
+                                                                    <option
+                                                                        value={item.id}
+                                                                    >{item.offset + ' ' + item.name}</option>)
+                                                            })
+                                                        }
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>

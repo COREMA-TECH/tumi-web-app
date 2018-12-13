@@ -39,18 +39,11 @@ query getposition {
     }
 `;*/
 export const GET_POSITIONS_QUERY = gql`
-    query getposition {
-        getposition(IsActive: 1) {
+    {
+        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
             Id
-            Id_Department
-            Position
-            Id_positionApplying
-            Bill_Rate
-            Pay_Rate
-            Shift
-            IsActive,
-            Comment,
-            Id_Entity
+            IsActive
+            Description
         }
     }
 `;
