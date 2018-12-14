@@ -21,10 +21,6 @@ export const GET_WORKORDERS_QUERY = gql`
 				Position
 			}
 		}
-		getbusinesscompanies(IsActive: 1) {
-			Id
-			Name
-		}
 	}
 `;
 
