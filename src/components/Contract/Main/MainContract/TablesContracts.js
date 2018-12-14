@@ -189,12 +189,12 @@ class DepartmentsTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell padding="none" className={"Table-head"} />
+									<CustomTableCell padding="none" className={classes.th} />
 									<CustomTableCell padding="none" className={"Table-head"} />
 									<CustomTableCell className={"Table-head"}>Contract Name</CustomTableCell>
-									<CustomTableCell style={{textAlign: 'center'}} className={"Table-head"}>Contract Owner</CustomTableCell>
-									<CustomTableCell style={{textAlign: 'center'}} className={"Table-head"}>Contract Status</CustomTableCell>
-									<CustomTableCell style={{textAlign: 'center'}} className={"Table-head"}>Contract Expiration Date</CustomTableCell>
+									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Owner</CustomTableCell>
+									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Status</CustomTableCell>
+									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Expiration Date</CustomTableCell>
 								</TableRow>
 							</TableHead>
 							<TableBody>
@@ -248,11 +248,11 @@ class DepartmentsTable extends React.Component {
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell>{row.Contract_Name}</CustomTableCell>
-											<CustomTableCell style={{textAlign: 'center'}}>{row.Contrat_Owner}</CustomTableCell>
-											<CustomTableCell style={{textAlign: 'center', width: '250px' }}>
+											<CustomTableCell style={{ textAlign: 'center' }}>{row.Contrat_Owner}</CustomTableCell>
+											<CustomTableCell style={{ textAlign: 'center', width: '250px' }}>
 												{row.Contract_Status == 0 ? 'Draft' : (row.Contract_Status == 1 ? 'Completed' : 'Expired')}
 											</CustomTableCell>
-											<CustomTableCell style={{textAlign: 'center', width: '250px' }}>
+											<CustomTableCell style={{ textAlign: 'center', width: '250px' }}>
 												{row.Contract_Expiration_Date}
 											</CustomTableCell>
 										</TableRow>
