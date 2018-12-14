@@ -9,6 +9,15 @@ import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
 import {ADD_EMPLOYEES} from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
+import EmployeesTable from "./EmployeesTable";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+import TablesContracts from "../Contract/Main/MainContract/TablesContracts";
+import {Query} from "react-apollo";
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import {
+    LIST_EMPLOYEES
+} from './Queries'
 
 const styles = (theme) => ({
     container: {
@@ -67,7 +76,8 @@ class Employees extends Component {
             openModal: false,
             employeesRegisters: [],
             rowsInput: [1],
-            inputs: 1
+            inputs: 1,
+            filterText: '',
         }
     }
 
@@ -153,6 +163,10 @@ class Employees extends Component {
             })
     };
 
+    deleteEmployeeById = (id) => {
+
+    };
+
     /**
      * To create a new row form
      */
@@ -182,6 +196,12 @@ class Employees extends Component {
 							</span>
                         </div>
                         <input
+                            onChange={(text) => {
+                                this.setState({
+                                    filterText: text.target.value
+                                });
+                            }}
+                            value={this.state.filterText}
                             type="text"
                             placeholder="Search employees"
                             className="form-control"
@@ -279,6 +299,63 @@ class Employees extends Component {
                 {
                     renderNewEmployeeDialog()
                 }
+                <Query query={LIST_EMPLOYEES}>
+                    {({ loading, error, data, refetch, networkStatus }) => {
+                        if (this.state.filterText === '') {
+                            if (loading) return <LinearProgress />;
+                        }
+
+                        if (error)
+                            return (
+                                <ErrorMessageComponent
+                                    title="Oops!"
+                                    message={'Error loading contracts'}
+                                    type="Error-danger"
+                                    icon="danger"
+                                />
+                            );
+                        if (data.employees != null && data.employees.length > 0) {
+                            let dataEmployees = data.employees.filter((_, i) => {
+                                if (this.state.filterText === '') {
+                                    return true;
+                                }
+
+                                if (
+                                    _.firstName.indexOf(this.state.filterText) > -1 ||
+                                    _.firstName.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
+                                    _.firstName.toLocaleUpperCase().indexOf(this.state.filterText) > -1
+                                ) {
+                                    return true;
+                                }
+                            });
+
+                            return (
+                                <div className="">
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <div className="">
+                                                <EmployeesTable
+                                                    data={dataEmployees}
+                                                    delete={(id) => {
+                                                        this.deleteEmployeeById(id);
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+                        return (
+                            <NothingToDisplay
+                                title="Oops!"
+                                message={'There are no contracts'}
+                                type="Error-success"
+                                icon="wow"
+                            />
+                        );
+                    }}
+                </Query>
             </div>
         );
     }
