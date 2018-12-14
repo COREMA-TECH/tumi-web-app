@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
 class EmployeeInputRow extends Component {
     constructor(props) {
@@ -15,25 +15,28 @@ class EmployeeInputRow extends Component {
     }
 
     render() {
+        const firstName = `firstName${this.props.index}`
+        const lastName = `lastName${this.props.index}`
+        const email = `email${this.props.index}`
+        const phoneNumber = `phoneNumber${this.props.index}`
         return (
             <div className="row">
                 <div className="col-md-3">
                     <input
                         onChange={(e) => {
-                            this.props.onchange('firstName'+this.props.index, e.target.value);
-                            this.setState({
-                                firstName: e.target.value
-                            }, () => {
-                                if(this.state.lastRow){
-                                    if (this.state.firstName.length > 2) {
-                                        this.props.newRow();
-                                        this.setState({
-                                            lastRow: false
-                                        })
-                                    }
+                            const value = e.target.value;
+                            this.props.onchange(firstName, value);
+
+                            if (this.state.lastRow) {
+                                if (value.length > 2) {
+                                    this.props.newRow();
+                                    this.setState({
+                                        lastRow: false
+                                    })
                                 }
-                            })
+                            }
                         }}
+                        value={this.props[firstName]}
                         type="text"
                         name="firstName"
                         className="form-control"
@@ -43,11 +46,10 @@ class EmployeeInputRow extends Component {
                 <div className="col-md-3">
                     <input
                         onChange={(e) => {
-                            this.setState({
-                                lastName: e.target.value
-                            })
+                            this.props.onchange(lastName, e.target.value);
                         }}
                         type="text"
+                        value={this.props[lastName]}
                         name="lastName"
                         className="form-control"
                         required={!this.state.lastRow}
@@ -56,10 +58,9 @@ class EmployeeInputRow extends Component {
                 <div className="col-md-3">
                     <input
                         onChange={(e) => {
-                            this.setState({
-                                emailAddress: e.target.value
-                            })
+                            this.props.onchange(email, e.target.value);
                         }}
+                        value={this.props[email]}
                         type="email"
                         name="email"
                         className="form-control"
@@ -69,10 +70,9 @@ class EmployeeInputRow extends Component {
                 <div className="col-md-3">
                     <input
                         onChange={(e) => {
-                            this.setState({
-                                phoneNumber: e.target.value
-                            })
+                            this.props.onchange(phoneNumber, e.target.value);
                         }}
+                        value={this.props[phoneNumber]}
                         type="number"
                         name="number"
                         className="form-control"
