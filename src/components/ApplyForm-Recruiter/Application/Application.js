@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
@@ -10,7 +10,7 @@ import {
     getCompaniesQuery
 } from '../Queries';
 
-import {CREATE_APPLICATION, UPDATE_APPLICATION} from '../Mutations';
+import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
 
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -118,12 +118,12 @@ class Application extends Component {
 
 
     handleChangePositionTag = (positionsTags) => {
-        this.setState({positionsTags});
+        this.setState({ positionsTags });
         console.log(`Option selected:`, positionsTags);
     };
 
     handleChange = (positionsTags) => {
-        this.setState({positionsTags});
+        this.setState({ positionsTags });
     };
 
     // To handle the stepper
@@ -192,7 +192,7 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         localStorage.setItem('idApplication', data.addApplication.id);
                         this.setState({
                             editing: false
@@ -256,7 +256,7 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             editing: false
                         });
@@ -279,12 +279,12 @@ class Application extends Component {
         // getHotels = (idParent) => {
         this.props.client.query({
             query: getCompaniesQuery, //this.getCompaniesQuery,
-            variables: {Id_Parent: -1},
+            variables: { Id_Parent: -1 },
             fetchPolicy: 'no-cache'
-        }).then(({data}) => {
+        }).then(({ data }) => {
             this.setState({
-                    hotels: data.getbusinesscompanies
-                },
+                hotels: data.getbusinesscompanies
+            },
                 func);
         }).catch();
     };
@@ -305,7 +305,7 @@ class Application extends Component {
                             id: id
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         if (data.applications != null && data.applications.length > 0) {
                             let applicantData = data.applications[0];
                             this.setState(
@@ -408,7 +408,7 @@ class Application extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: {parent: -1, value: `'${zipCode}'`},
+            variables: { parent: -1, value: `'${zipCode}'` },
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({
@@ -443,20 +443,20 @@ class Application extends Component {
                                 {this.state.editing ? (
                                     ''
                                 ) : (
-                                    <button
-                                        className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            //alert(this.props.applicationId);
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
-                                    >
-                                        {spanishActions[1].label} <i className="far fa-edit"/>
-                                    </button>
-                                )}
+                                        <button
+                                            className="applicant-card__edit-button"
+                                            onClick={() => {
+                                                //alert(this.props.applicationId);
+                                                this.setState({
+                                                    editing: true
+                                                });
+                                            }}
+                                        >
+                                            {spanishActions[1].label} <i className="far fa-edit" />
+                                        </button>
+                                    )}
                             </div>
-                            <br/>
+                            <br />
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-md-12 col-lg-6 form-section-1">
@@ -498,13 +498,13 @@ class Application extends Component {
                                                 {/*}}*/}
                                                 {/*</Query>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                             let options = [];
                                                             data.getcatalogitem.map((item) => (
-                                                                options.push({value: item.Id, label: item.Description})
+                                                                options.push({ value: item.Id, label: item.Description })
                                                             ));
 
                                                             return (
@@ -524,7 +524,7 @@ class Application extends Component {
                                                                 </div>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
@@ -533,41 +533,41 @@ class Application extends Component {
                                                     {formSpanish[17].label}
                                                 </span>
                                                 {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                    {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+                                                {/*{({loading, error, data, refetch, networkStatus}) => {*/}
 
-                                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                        {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                                            {/*return (*/}
-                                                                {/*<select*/}
-                                                                    {/*name="positionApply"*/}
-                                                                    {/*id="positionApply"*/}
-                                                                    {/*onChange={(event) => {*/}
-                                                                        {/*this.setState({*/}
-                                                                            {/*positionApplyingFor: event.target.value*/}
-                                                                        {/*});*/}
-                                                                    {/*}}*/}
-                                                                    {/*value={this.state.positionApplyingFor}*/}
-                                                                    {/*className="form-control"*/}
-                                                                    {/*disabled={!this.state.editing}*/}
-                                                                {/*>*/}
-                                                                    {/*<option value="">Select a position</option>*/}
-                                                                    {/*{data.getcatalogitem.map((item) => (*/}
-                                                                        {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                                        {/*//    console.log("Info del hotel ", ),*/}
+                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                                {/*if (error) return <p>Nothing To Display </p>;*/}
+                                                {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+                                                {/*return (*/}
+                                                {/*<select*/}
+                                                {/*name="positionApply"*/}
+                                                {/*id="positionApply"*/}
+                                                {/*onChange={(event) => {*/}
+                                                {/*this.setState({*/}
+                                                {/*positionApplyingFor: event.target.value*/}
+                                                {/*});*/}
+                                                {/*}}*/}
+                                                {/*value={this.state.positionApplyingFor}*/}
+                                                {/*className="form-control"*/}
+                                                {/*disabled={!this.state.editing}*/}
+                                                {/*>*/}
+                                                {/*<option value="">Select a position</option>*/}
+                                                {/*{data.getcatalogitem.map((item) => (*/}
+                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
+                                                {/*//    console.log("Info del hotel ", ),*/}
 
-                                                                        {/*< option*/}
-                                                                            {/*value={item.Id}> {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => {*/}
-                                                                            {/*return obj.Id === item.Id_Entity*/}
-                                                                        {/*}) ? this.state.hotels.find((obj) => {*/}
-                                                                            {/*return obj.Id === item.Id_Entity*/}
-                                                                        {/*}).Code : '') + ')'}</option>*/}
-                                                                    {/*))}*/}
-                                                                {/*</select>*/}
-                                                            {/*);*/}
-                                                        {/*}*/}
-                                                        {/*return <SelectNothingToDisplay/>;*/}
-                                                    {/*}}*/}
+                                                {/*< option*/}
+                                                {/*value={item.Id}> {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => {*/}
+                                                {/*return obj.Id === item.Id_Entity*/}
+                                                {/*}) ? this.state.hotels.find((obj) => {*/}
+                                                {/*return obj.Id === item.Id_Entity*/}
+                                                {/*}).Code : '') + ')'}</option>*/}
+                                                {/*))}*/}
+                                                {/*</select>*/}
+                                                {/*);*/}
+                                                {/*}*/}
+                                                {/*return <SelectNothingToDisplay/>;*/}
+                                                {/*}}*/}
                                                 {/*</Query>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({ loading, error, data, refetch, networkStatus }) => {
@@ -720,15 +720,14 @@ class Application extends Component {
                                                     onChange={(event) => {
                                                         this.setState({
                                                             zipCode: event.target.value
-                                                        });
-                                                        let zip_code = '';
-                                                        zip_code = event.target.value.substring(0, 5);
-                                                        fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                                            return response.json()
-                                                        }).then((cities) => {
-                                                            if (!cities.error) {
-                                                                this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                            }
+                                                        }, () => {
+                                                            fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
+                                                                return response.json()
+                                                            }).then((cities) => {
+                                                                if (!cities.error) {
+                                                                    this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                                }
+                                                            });
                                                         });
                                                     }}
                                                     value={this.state.zipCode}
@@ -741,8 +740,8 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label ">
                                                     * {formSpanish[6].label}
                                                 </span>
-                                                <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -767,7 +766,7 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
@@ -775,8 +774,8 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label ">
                                                     * {formSpanish[7].label}
                                                 </span>
-                                                <Query query={GET_CITIES_QUERY} variables={{parent: this.state.state}}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -812,7 +811,7 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
@@ -841,8 +840,8 @@ class Application extends Component {
                                                         minLength="10"
                                                     />
                                                     <label className="onoffswitch-label" htmlFor="carSwitch">
-                                                        <span className="onoffswitch-inner"/>
-                                                        <span className="onoffswitch-switch"/>
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
 
@@ -979,24 +978,24 @@ class Application extends Component {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="applicant-card__footer">
-                                    <button
-                                        className="applicant-card__cancel-button"
-                                        onClick={() => {
-                                            window.location.href = '/home/Recruiter'
-                                        }}
-                                    >
-                                        {spanishActions[9].label}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            this.props.handleNext();
-                                        }}
-                                        className="applicant-card__save-button">
-                                        {spanishActions[8].label}
-                                    </button>
-                                </div>
-                            )}
+                                    <div className="applicant-card__footer">
+                                        <button
+                                            className="applicant-card__cancel-button"
+                                            onClick={() => {
+                                                window.location.href = '/home/Recruiter'
+                                            }}
+                                        >
+                                            {spanishActions[9].label}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                this.props.handleNext();
+                                            }}
+                                            className="applicant-card__save-button">
+                                            {spanishActions[8].label}
+                                        </button>
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </form>
