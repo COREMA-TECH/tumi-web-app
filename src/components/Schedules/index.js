@@ -7,7 +7,7 @@ class Schedules extends Component {
         return (
             <div className="MasterShift">
                 <div className="row">
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
                             <div className="MasterShift-options">
 

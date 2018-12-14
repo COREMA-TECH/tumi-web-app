@@ -4,8 +4,9 @@
     padding: 1rem;
     &-hour {
         display: flex;
-        height: 100%;
         flex-direction: column-reverse;
+        height: 100%;
+        margin-left: -15px;
         &:before {
             background: $danger;
             border-radius: $border-radius-standar;

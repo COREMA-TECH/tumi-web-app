@@ -9950,11 +9950,12 @@ button.rbc-input::-moz-focus-inner {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    height: 100%;
     -webkit-box-orient: vertical;
     -webkit-box-direction: reverse;
     -ms-flex-direction: column-reverse;
-    flex-direction: column-reverse; }
+    flex-direction: column-reverse;
+    height: 100%;
+    margin-left: -15px; }
     .MasterShiftForm-hour:before {
       background: #f50057;
       border-radius: 5px;
