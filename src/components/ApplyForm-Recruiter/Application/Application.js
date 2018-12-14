@@ -208,7 +208,7 @@ class Application extends Component {
                                 })
                             });
 
-                            this.addApplicantJobs(object);
+                            this.addApplicantJobs(object, parseInt(data.addApplication.id));
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
@@ -282,7 +282,7 @@ class Application extends Component {
                                 })
                             });
 
-                            this.addApplicantJobs(object);
+                            this.addApplicantJobs(object, this.props.applicationId);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -300,12 +300,12 @@ class Application extends Component {
     };
 
 
-    addApplicantJobs = (idealJobArrayObject) => {
+    addApplicantJobs = (idealJobArrayObject, applicationId) => {
         this.props.client
             .mutate({
                 mutation: RECREATE_IDEAL_JOB_LIST,
                 variables: {
-                    ApplicationId: this.props.applicationId,
+                    ApplicationId: applicationId,
                     applicationIdealJob: idealJobArrayObject
                 }
             })
@@ -384,7 +384,6 @@ class Application extends Component {
                                 () => {
                                     this.removeSkeletonAnimation();
                                     this.getIdealJobsByApplicationId();
-
                                 }
                             );
                         }

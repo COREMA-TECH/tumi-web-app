@@ -141,11 +141,16 @@ class Employees extends Component {
             return {
                 firstName: this.state[`firstName${index}`],
                 lastName: this.state[`lastName${index}`],
-                email: this.state[`email${index}`],
-                phoneNumber: this.state[`phoneNumber${index}`]
+                electronicAddress: this.state[`email${index}`],
+                mobileNumber: this.state[`phoneNumber${index}`],
+                idRole: 1,
+                isActive: true,
+                userCreated: 1,
+                userUpdated: 1,
             }
-        })
-        console.log("Estos son mis datos en JSON", datos)
+        });
+
+        console.log("Estos son mis datos en JSON", datos);
 
         // let form = document.getElementById('employee-form');
 
@@ -185,7 +190,9 @@ class Employees extends Component {
 
 
 
-        //this.insertEmployees([]);
+
+        datos.pop();
+        this.insertEmployees(datos);
     };
 
     handleSubmitEmployeeEdit = (e) => {
@@ -230,12 +237,13 @@ class Employees extends Component {
                 }
             })
             .then(({ data }) => {
-
+                this.props.handleOpenSnackbar('success', 'Employees Saved!');
                 // Hide dialog
                 this.handleCloseModal();
             })
             .catch(error => {
                 // Hide dialog
+                this.props.handleOpenSnackbar('error', 'Error to save Employees!');
                 this.handleCloseModal();
             })
     };
@@ -324,7 +332,7 @@ class Employees extends Component {
         }, () => {
             this.handleClickOpenModalEdit();
         })
-    }
+    };
 
     // shouldComponentUpdate(nextProps, nextState) {
     //     console.log(this.state)
@@ -560,7 +568,7 @@ class Employees extends Component {
                 {
                     renderNewEmployeeDialog()
                 }
-                <Query query={LIST_EMPLOYEES} pollInterval={500}>
+                <Query query={LIST_EMPLOYEES}>
                     {({ loading, error, data, refetch, networkStatus }) => {
                         if (this.state.filterText === '') {
                             if (loading) return <LinearProgress />;
