@@ -184,6 +184,8 @@ class Employees extends Component {
                         mobileNumber: form.elements[3].value,
                         idRole: 1,
                         isActive: true,
+                        userCreated: 1,
+                        userUpdated: 1
                     }
                 }
             })
@@ -515,7 +517,7 @@ class Employees extends Component {
                 {
                     renderNewEmployeeDialog()
                 }
-                <Query query={LIST_EMPLOYEES}>
+                <Query query={LIST_EMPLOYEES} pollInterval={500}>
                     {({ loading, error, data, refetch, networkStatus }) => {
                         if (this.state.filterText === '') {
                             if (loading) return <LinearProgress />;
@@ -568,7 +570,7 @@ class Employees extends Component {
                         return (
                             <NothingToDisplay
                                 title="Oops!"
-                                message={'There are no contracts'}
+                                message={'There are no employees'}
                                 type="Error-success"
                                 icon="wow"
                             />

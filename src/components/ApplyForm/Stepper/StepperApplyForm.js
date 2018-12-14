@@ -293,7 +293,7 @@ class VerticalLinearStepper extends Component {
             .mutate({
                 mutation: RECREATE_IDEAL_JOB_LIST,
                 variables: {
-                    ApplicationId: this.props.applicationId,
+                    ApplicationId: this.state.applicationId,
                     applicationIdealJob: idealJobArrayObject
                 }
             })
