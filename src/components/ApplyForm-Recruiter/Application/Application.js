@@ -384,7 +384,7 @@ class Application extends Component {
                                 () => {
                                     this.removeSkeletonAnimation();
                                     this.getIdealJobsByApplicationId();
-                                    
+
                                 }
                             );
                         }
