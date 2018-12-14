@@ -468,7 +468,7 @@ class WorkOrdersForm extends Component {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Date Needed By</label>
+                                            <label htmlFor="">From Date</label>
                                             <input
                                                 required
                                                 type="date"
@@ -480,7 +480,7 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">To</label>
+                                            <label htmlFor="">To Date</label>
                                             <input
                                                 required
                                                 type="date"
