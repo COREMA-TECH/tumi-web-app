@@ -41,6 +41,8 @@ import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import axios from 'axios';
+
 
 const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -825,17 +827,16 @@ class VerticalLinearStepper extends Component {
                                     this.setState({
                                         zipCode: event.target.value
                                     }, () => {
-                                        fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
-                                            return response.json()
-                                        }).then((cities) => {
-                                            console.log(cities)
-                                            if (!cities.error) {
-                                                this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                            }
-                                        });
-
+                                        const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5)
+                                        if (zipCode)
+                                            axios.get(`https://ziptasticapi.com/${zipCode}`)
+                                                .then(res => {
+                                                    const cities = res.data;
+                                                    if (!cities.error) {
+                                                        this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                    }
+                                                })
                                     });
-
                                 }}
                                 value={this.state.zipCode}
                                 placeholder="99999-99999"
