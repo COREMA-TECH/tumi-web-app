@@ -33,6 +33,7 @@ import DashboardRecruiter from '../../Dashboard/Recruiter';
 import Holidays from '../../Holidays';
 import Calendar from '../../Holidays/Calendar';
 import Employees from "../../Employees/Employees";
+import Schedules from '../../Schedules';
 
 class Container extends Component {
 	constructor(props) {
@@ -151,6 +152,7 @@ class Container extends Component {
 				<Route exact path="/home/openings" component={WorkOrdersPosition} />
 
 				<Route exact path="/home/calendar" component={Calendar} />
+				<Route exact path="/home/schedules" component={Schedules} />
 			</div>
 		);
 	}
