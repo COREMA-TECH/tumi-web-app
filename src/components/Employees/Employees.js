@@ -6,6 +6,20 @@ import Dialog from "@material-ui/core/Dialog/Dialog";
 import green from "@material-ui/core/colors/green";
 import PropTypes from 'prop-types';
 import {withStyles} from "@material-ui/core";
+import withApollo from "react-apollo/withApollo";
+import {ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE} from "./Mutations";
+import EmployeeInputRow from "./EmployeeInputRow";
+import EmployeesTable from "./EmployeesTable";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
+import TablesContracts from "../Contract/Main/MainContract/TablesContracts";
+import {Query} from "react-apollo";
+import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
+import {
+    LIST_EMPLOYEES
+} from './Queries';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
+import withGlobalContent from 'Generic/Global';
 
 const styles = (theme) => ({
     container: {
@@ -62,7 +76,11 @@ class Employees extends Component {
 
         this.state = {
             openModal: false,
-            employeesRegisters: []
+            openModalEdit: false,
+            employeesRegisters: [],
+            rowsInput: [1],
+            inputs: 1,
+            filterText: '',
         }
     }
 
@@ -79,8 +97,209 @@ class Employees extends Component {
     handleCloseModal = () => {
         this.setState({
             openModal: false
+        }, () => {
+            this.setState({
+                rowsInput: [1]
+            })
         });
     };
+
+    /**
+     * To open modal updating the state
+     */
+    handleClickOpenModalEdit = () => {
+        this.setState({openModalEdit: true});
+    };
+
+    /**
+     * To hide modal and then restart modal state values
+     */
+    handleCloseModalEdit = () => {
+        this.setState({
+            openModalEdit: false
+        });
+    };
+
+
+
+    /**
+     * Manage submit form
+     * @param e - event submit of the form
+     */
+    handleSubmit = (e) => {
+        // Stop submit propagation and prevent even default
+        e.preventDefault();
+        e.stopPropagation();
+
+        let form = document.getElementById('employee-form');
+
+        let array = [];
+        let object = {};
+
+        for (let i = 1; i <= form.elements.length - 2; i++) {
+            if (form.elements.item(i).name == "firstName") {
+                console.log(form.elements.item(i).value);
+                object.firstName = form.elements.item(i).value;
+            } else if (form.elements.item(i).name == "lastName") {
+                object.lastName = form.elements.item(i).value;
+            } else if (form.elements.item(i).name == "email") {
+                object.electronicAddress = form.elements.item(i).value;
+            } else if (form.elements.item(i).name == "number") {
+                object.mobileNumber = form.elements.item(i).value;
+            }
+
+
+            console.log(i % 4);
+            if (i % 4 === 0) {
+                console.log(object);
+                alert(object);
+                array.push(object);
+                console.log(array);
+                alert(array);
+            }
+
+        }
+
+
+
+        //this.insertEmployees([]);
+    };
+
+    handleSubmitEmployeeEdit = (e) => {
+        // Stop submit propagation and prevent even default
+        e.preventDefault();
+        e.stopPropagation();
+
+        let form = document.getElementById('employee-edit-form');
+
+        this.props.client
+            .mutate({
+                mutation: UPDATE_EMPLOYEE,
+                variables: {
+                    employees: {
+                        id: this.state.idToEdit,
+                        firstName: form.elements[0].value,
+                        lastName: form.elements[1].value,
+                        electronicAddress: form.elements[2].value,
+                        mobileNumber: form.elements[3].value,
+                        idRole: 1,
+                        isActive: true,
+                    }
+                }
+            })
+            .then(() => {
+                this.props.handleOpenSnackbar('success', 'Employee Updated!');
+
+                this.handleCloseModalEdit();
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar('error', 'Error updating Employee!');
+            })
+    }
+
+    insertEmployees = (employeesArrays) => {
+        this.props.client
+            .mutate({
+                mutation: ADD_EMPLOYEES,
+                variables: {
+                    Employees: employeesArrays
+                }
+            })
+            .then(({data}) => {
+
+                // Hide dialog
+                this.handleCloseModal();
+            })
+            .catch(error => {
+                // Hide dialog
+                this.handleCloseModal();
+            })
+    };
+
+    deleteEmployeeById = (id) => {
+        this.setState({
+            idToDelete: id
+        }, () => {
+            this.setState({
+                opendialog: true, loadingRemoving: false, loadingContracts: false
+            })
+        });
+    };
+
+    deleteEmployee = () => {
+        this.setState(
+            {
+                loadingRemoving: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: DELETE_EMPLOYEE,
+                        variables: {
+                            id: this.state.idToDelete
+                        }
+                    })
+                    .then((data) => {
+                        this.setState(
+                            {
+                                opendialog: false,
+                                loadingRemoving: false
+                            },
+                            () => {
+                                this.props.handleOpenSnackbar('success', 'Employee Deleted!');
+                            }
+                        );
+                    })
+                    .catch((error) => {
+                        this.setState(
+                            {
+                                opendialog: false,
+                                loadingRemoving: false
+                            },
+                            () => {
+                                this.props.handleOpenSnackbar('error', 'Error: Deleting Employee: ' + error);
+                            }
+                        );
+                    });
+            }
+        );
+    };
+
+    /**
+     * To create a new row form
+     */
+    addNewRow = () => {
+        this.setState(prevState => ({
+            rowsInput: [...prevState.rowsInput, 1]
+        }), () => {
+            // this.setState(prevState => ({
+            //     employeesRegisters: [...prevState.employeesRegisters, {
+            //         firstName:
+            //     }]
+            // }));
+        })
+    };
+
+    handleChange = (name, value) => {
+        this.setState({
+            [name]: value
+        })
+    };
+
+    handleCloseAlertDialog = () => {
+        this.setState({ opendialog: false });
+    };
+    handleConfirmAlertDialog = () => {
+        this.deleteEmployee()
+    };
+
+    updateEmployeeById = (id) => {
+        this.setState({
+            idToEdit: id
+        }, () => {
+            this.handleClickOpenModalEdit();
+        })
+    }
 
     render() {
         const {classes} = this.props;
@@ -96,6 +315,12 @@ class Employees extends Component {
 							</span>
                         </div>
                         <input
+                            onChange={(text) => {
+                                this.setState({
+                                    filterText: text.target.value
+                                });
+                            }}
+                            value={this.state.filterText}
                             type="text"
                             placeholder="Search employees"
                             className="form-control"
@@ -113,23 +338,6 @@ class Employees extends Component {
             </div>
         );
 
-        let renderRowInputs = () => (
-            <div className="row">
-                <div className="col-md-3">
-                    <input type="text" className="form-control" required/>
-                </div>
-                <div className="col-md-3">
-                    <input type="text" className="form-control" required/>
-                </div>
-                <div className="col-md-3">
-                    <input type="email" className="form-control" required/>
-                </div>
-                <div className="col-md-3">
-                    <input type="number" className="form-control" required/>
-                </div>
-            </div>
-        );
-
         let renderNewEmployeeDialog = () => (
             <Dialog
                 fullScreen={fullScreen}
@@ -138,7 +346,7 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <form>
+                <form id="employee-form" onSubmit={this.handleSubmit}>
                     <DialogTitle style={{padding: '0px'}}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
@@ -161,18 +369,13 @@ class Employees extends Component {
                                 </div>
                             </div>
                             {
-                                renderRowInputs()
-                            }
-
-                            {
-                                renderRowInputs()
-                            }
-                            {
-                                renderRowInputs()
-                            }
-
-                            {
-                                renderRowInputs()
+                                this.state.rowsInput.map((index, item) => (
+                                    <EmployeeInputRow
+                                        newRow={this.addNewRow}
+                                        index={index}
+                                        onchange={this.handleChange}
+                                    />
+                                ))
                             }
                         </div>
                     </DialogContent>
@@ -208,13 +411,170 @@ class Employees extends Component {
 
         return (
             <div>
+                <AlertDialogSlide
+                    handleClose={this.handleCloseAlertDialog}
+                    handleConfirm={this.handleConfirmAlertDialog}
+                    open={this.state.opendialog}
+                    loadingConfirm={this.state.loadingRemoving}
+                    content="Do you really want to continue whit this operation?"
+                />
                 {
                     renderHeaderContent()
                 }
-
+                <Dialog
+                    open={this.state.openModalEdit}
+                    onClose={this.handleCloseModalEdit}
+                    aria-labelledby="responsive-dialog-title"
+                    maxWidth="lg"
+                >
+                    <form id="employee-edit-form" onSubmit={this.handleSubmitEmployeeEdit}>
+                        <DialogTitle style={{padding: '0px'}}>
+                            <div className="modal-header">
+                                <h5 class="modal-title">Edit Employee</h5>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent>
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* First Name</label>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* Last Name</label>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* Email Address</label>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* Phone Number</label>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="number"
+                                            name="number"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </DialogContent>
+                        <DialogActions style={{margin: '20px 20px'}}>
+                            <div className={[classes.root]}>
+                                <div className={classes.wrapper}>
+                                    <button
+                                        type="submit"
+                                        variant="fab"
+                                        className="btn btn-success"
+                                    >
+                                        Save {!this.state.saving && <i class="fas fa-save"/>}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className={classes.root}>
+                                <div className={classes.wrapper}>
+                                    <button
+                                        variant="fab"
+                                        className="btn btn-danger"
+                                        onClick={this.handleCloseModalEdit}
+                                    >
+                                        Cancel <i class="fas fa-ban"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </DialogActions>
+                    </form>
+                </Dialog>
                 {
                     renderNewEmployeeDialog()
                 }
+                <Query query={LIST_EMPLOYEES}>
+                    {({ loading, error, data, refetch, networkStatus }) => {
+                        if (this.state.filterText === '') {
+                            if (loading) return <LinearProgress />;
+                        }
+
+                        if (error)
+                            return (
+                                <ErrorMessageComponent
+                                    title="Oops!"
+                                    message={'Error loading contracts'}
+                                    type="Error-danger"
+                                    icon="danger"
+                                />
+                            );
+                        if (data.employees != null && data.employees.length > 0) {
+                            let dataEmployees = data.employees.filter((_, i) => {
+                                if (this.state.filterText === '') {
+                                    return true;
+                                }
+
+                                if (
+                                    _.firstName.indexOf(this.state.filterText) > -1 ||
+                                    _.firstName.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
+                                    _.firstName.toLocaleUpperCase().indexOf(this.state.filterText) > -1
+                                ) {
+                                    return true;
+                                }
+                            });
+
+                            return (
+                                <div className="">
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <div className="">
+                                                <EmployeesTable
+                                                    data={dataEmployees}
+                                                    delete={(id) => {
+                                                        this.deleteEmployeeById(id);
+                                                    }}
+                                                    update={(id) => {
+                                                        this.updateEmployeeById(id)
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+                        return (
+                            <NothingToDisplay
+                                title="Oops!"
+                                message={'There are no contracts'}
+                                type="Error-success"
+                                icon="wow"
+                            />
+                        );
+                    }}
+                </Query>
             </div>
         );
     }
@@ -225,4 +585,4 @@ Employees.propTypes = {
     fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(Employees);
+export default withStyles(styles)(withApollo(withGlobalContent(Employees)));
