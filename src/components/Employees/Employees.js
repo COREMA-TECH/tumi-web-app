@@ -1,19 +1,19 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import green from "@material-ui/core/colors/green";
 import PropTypes from 'prop-types';
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import {ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE} from "./Mutations";
+import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE } from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import TablesContracts from "../Contract/Main/MainContract/TablesContracts";
-import {Query} from "react-apollo";
+import { Query } from "react-apollo";
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import {
     LIST_EMPLOYEES
@@ -93,7 +93,7 @@ class Employees extends Component {
      * To open modal updating the state
      */
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
 
     /**
@@ -113,7 +113,7 @@ class Employees extends Component {
      * To open modal updating the state
      */
     handleClickOpenModalEdit = () => {
-        this.setState({openModalEdit: true});
+        this.setState({ openModalEdit: true });
     };
 
     /**
@@ -136,41 +136,52 @@ class Employees extends Component {
         e.preventDefault();
         e.stopPropagation();
 
-        let form = document.getElementById('employee-form');
 
-        let array = [];
-        let object = {};
-
-        for (let i = 0; i < form.elements.length - 2; i++) {
-            if (form.elements.item(i).name == "firstName") {
-                console.log("First name: " + form.elements.item(i).value);
-                object.firstName = form.elements.item(i).value;
-            } else if (form.elements.item(i).name == "lastName") {
-                object.lastName = form.elements.item(i).value;
-            } else if (form.elements.item(i).name == "email") {
-                object.electronicAddress = form.elements.item(i).value;
-            } else if (form.elements.item(i).name == "number") {
-                object.mobileNumber = form.elements.item(i).value;
+        const datos = this.state.rowsInput.map((item, index) => {
+            return {
+                firstName: this.state[`firstName${index}`],
+                lastName: this.state[`lastName${index}`],
+                email: this.state[`email${index}`],
+                phoneNumber: this.state[`phoneNumber${index}`]
             }
+        })
+        console.log("Estos son mis datos en JSON", datos)
+
+        // let form = document.getElementById('employee-form');
+
+        // let array = [];
+        // let object = {};
+
+        // for (let i = 0; i < form.elements.length - 2; i++) {
+        //     if (form.elements.item(i).name == "firstName") {
+        //         console.log("First name: " + form.elements.item(i).value);
+        //         object.firstName = form.elements.item(i).value;
+        //     } else if (form.elements.item(i).name == "lastName") {
+        //         object.lastName = form.elements.item(i).value;
+        //     } else if (form.elements.item(i).name == "email") {
+        //         object.electronicAddress = form.elements.item(i).value;
+        //     } else if (form.elements.item(i).name == "number") {
+        //         object.mobileNumber = form.elements.item(i).value;
+        //     }
 
 
-            if(i !== 0 ) {
-                let value = 1 + i;
-                if (value % 4 === 0) {
-                    console.log("**-------**");
-                    console.log(object); // Object with 4 form elements
-                    console.log("****");
+        //     if (i !== 0) {
+        //         let value = 1 + i;
+        //         if (value % 4 === 0) {
+        //             console.log("**-------**");
+        //             console.log(object); // Object with 4 form elements
+        //             console.log("****");
 
-                    this.setState(prevState => ({
-                        employeesRegisters: [...prevState.employeesRegisters, Object.assign({}, object)]
-                    }), () => {
-                        console.table(this.state.employeesRegisters)
-                    });
+        //             this.setState(prevState => ({
+        //                 employeesRegisters: [...prevState.employeesRegisters, Object.assign({}, object)]
+        //             }), () => {
+        //                 console.table(this.state.employeesRegisters)
+        //             });
 
-                    //array.push(object);
-                }
-            }
-        }
+        //             //array.push(object);
+        //         }
+        //     }
+        // }
 
 
 
@@ -183,7 +194,6 @@ class Employees extends Component {
         e.stopPropagation();
 
         let form = document.getElementById('employee-edit-form');
-
         this.props.client
             .mutate({
                 mutation: UPDATE_EMPLOYEE,
@@ -219,7 +229,7 @@ class Employees extends Component {
                     Employees: employeesArrays
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
 
                 // Hide dialog
                 this.handleCloseModal();
@@ -295,6 +305,7 @@ class Employees extends Component {
     };
 
     handleChange = (name, value) => {
+        console.log("This is my change", name, value)
         this.setState({
             [name]: value
         })
@@ -315,18 +326,34 @@ class Employees extends Component {
         })
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log(this.state)
+        console.log(nextState)
+        if (this.state.filterText !== nextState.filterText ||
+            this.state.data !== nextState.data ||
+            this.state.openModal !== nextState.openModal ||
+            this.state.openModalEdit !== nextState.openModalEdit ||
+            this.state.employeesRegisters !== nextState.employeesRegisters ||
+            this.state.rowsInput !== nextState.rowsInput ||
+            this.state.inputs !== nextState.inputs) {
+            return true;
+        }
+        return false;
+    }
+
     render() {
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        console.log(this.state)
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
 
         let renderHeaderContent = () => (
             <div className="row">
                 <div className="col-md-6">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-							<span class="input-group-text" id="basic-addon1">
-								<i className="fa fa-search icon"/>
-							</span>
+                            <span class="input-group-text" id="basic-addon1">
+                                <i className="fa fa-search icon" />
+                            </span>
                         </div>
                         <input
                             onChange={(text) => {
@@ -361,7 +388,7 @@ class Employees extends Component {
                 maxWidth="lg"
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
-                    <DialogTitle style={{padding: '0px'}}>
+                    <DialogTitle style={{ padding: '0px' }}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
                         </div>
@@ -383,17 +410,17 @@ class Employees extends Component {
                                 </div>
                             </div>
                             {
-                                this.state.rowsInput.map((index, item) => (
-                                    <EmployeeInputRow
+                                this.state.rowsInput.map((item, index) => {
+                                    return <EmployeeInputRow
                                         newRow={this.addNewRow}
                                         index={index}
                                         onchange={this.handleChange}
                                     />
-                                ))
+                                })
                             }
                         </div>
                     </DialogContent>
-                    <DialogActions style={{margin: '20px 20px'}}>
+                    <DialogActions style={{ margin: '20px 20px' }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
                                 <button
@@ -402,8 +429,8 @@ class Employees extends Component {
                                     className="btn btn-success"
                                     onClick={this.insertDepartment}
                                 >
-                                    Save {!this.state.saving && <i class="fas fa-save"/>}
-                                    {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                    Save {!this.state.saving && <i class="fas fa-save" />}
+                                    {this.state.saving && <i class="fas fa-spinner fa-spin" />}
                                 </button>
                             </div>
                         </div>
@@ -414,7 +441,7 @@ class Employees extends Component {
                                     className="btn btn-danger"
                                     onClick={this.handleCloseModal}
                                 >
-                                    Cancel <i class="fas fa-ban"/>
+                                    Cancel <i class="fas fa-ban" />
                                 </button>
                             </div>
                         </div>
@@ -442,7 +469,7 @@ class Employees extends Component {
                     maxWidth="lg"
                 >
                     <form id="employee-edit-form" onSubmit={this.handleSubmitEmployeeEdit}>
-                        <DialogTitle style={{padding: '0px'}}>
+                        <DialogTitle style={{ padding: '0px' }}>
                             <div className="modal-header">
                                 <h5 class="modal-title">Edit Employee</h5>
                             </div>
@@ -503,7 +530,7 @@ class Employees extends Component {
                                 </div>
                             </div>
                         </DialogContent>
-                        <DialogActions style={{margin: '20px 20px'}}>
+                        <DialogActions style={{ margin: '20px 20px' }}>
                             <div className={[classes.root]}>
                                 <div className={classes.wrapper}>
                                     <button
@@ -511,8 +538,8 @@ class Employees extends Component {
                                         variant="fab"
                                         className="btn btn-success"
                                     >
-                                        Save {!this.state.saving && <i class="fas fa-save"/>}
-                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                        Save {!this.state.saving && <i class="fas fa-save" />}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin" />}
                                     </button>
                                 </div>
                             </div>
@@ -523,7 +550,7 @@ class Employees extends Component {
                                         className="btn btn-danger"
                                         onClick={this.handleCloseModalEdit}
                                     >
-                                        Cancel <i class="fas fa-ban"/>
+                                        Cancel <i class="fas fa-ban" />
                                     </button>
                                 </div>
                             </div>
@@ -549,6 +576,7 @@ class Employees extends Component {
                                 />
                             );
                         if (data.employees != null && data.employees.length > 0) {
+                            this.setState({ data: data.employees })
                             let dataEmployees = data.employees.filter((_, i) => {
                                 if (this.state.filterText === '') {
                                     return true;
