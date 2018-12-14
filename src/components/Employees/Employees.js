@@ -271,7 +271,13 @@ class Employees extends Component {
     addNewRow = () => {
         this.setState(prevState => ({
             rowsInput: [...prevState.rowsInput, 1]
-        }))
+        }), () => {
+            // this.setState(prevState => ({
+            //     employeesRegisters: [...prevState.employeesRegisters, {
+            //         firstName:
+            //     }]
+            // }));
+        })
     };
 
     handleChange = (name, value) => {
