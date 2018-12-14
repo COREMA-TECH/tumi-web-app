@@ -20,6 +20,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
 import EditIcon from '@material-ui/icons/Edit';
+import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent/DialogContent";
+import EmployeeInputRow from "./EmployeeInputRow";
+import DialogActions from "@material-ui/core/DialogActions/DialogActions";
+import Dialog from "@material-ui/core/Dialog/Dialog";
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -147,7 +152,7 @@ class EmployeesTable extends React.Component {
     state = {
         page: 0,
         rowsPerPage: 7,
-        loadingRemoving: false
+        loadingRemoving: false,
     };
     handleChangePage = (event, page) => {
         this.setState({ page });
@@ -171,6 +176,11 @@ class EmployeesTable extends React.Component {
         }
         return false;
     }
+
+    updateEmployee = (id) => {
+
+    }
+
 
     render() {
         const { classes } = this.props;
@@ -205,7 +215,7 @@ class EmployeesTable extends React.Component {
                                             className={classes.row}
                                             key={uuidv4()}
                                             onClick={() => {
-
+                                                this.props.update(row.id)
                                             }}
                                         >
                                             <CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
@@ -215,8 +225,8 @@ class EmployeesTable extends React.Component {
                                                         <button
                                                             className="btn btn-danger ml-1"
                                                             disabled={this.props.loading}
-                                                            onClick={() => {
-
+                                                            onClick={(e) => {
+                                                                this.props.update(row.id)
                                                             }}
                                                         >
                                                             <i class="fas fa-pen"></i>

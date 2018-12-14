@@ -13,11 +13,23 @@ export const ADD_EMPLOYEES = gql`
 
 
 /**
- * Mutation to create employees
+ * Mutation to delete employees
  */
 export const DELETE_EMPLOYEE = gql`
     mutation deleteEmployees($id: Int) {
         deleteEmployees(id: $id) {
+            id
+        }
+    }
+`;
+
+
+/**
+ * Mutation to update employees
+ */
+export const UPDATE_EMPLOYEE = gql`
+    mutation updateEmployees($employees: inputUpdateEmployees) {
+        updateEmployees(employees: inputUpdateEmployees) {
             id
         }
     }

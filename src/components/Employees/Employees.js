@@ -7,7 +7,7 @@ import green from "@material-ui/core/colors/green";
 import PropTypes from 'prop-types';
 import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import {ADD_EMPLOYEES, DELETE_EMPLOYEE} from "./Mutations";
+import {ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE} from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -76,6 +76,7 @@ class Employees extends Component {
 
         this.state = {
             openModal: false,
+            openModalEdit: false,
             employeesRegisters: [],
             rowsInput: [1],
             inputs: 1,
@@ -102,6 +103,24 @@ class Employees extends Component {
             })
         });
     };
+
+    /**
+     * To open modal updating the state
+     */
+    handleClickOpenModalEdit = () => {
+        this.setState({openModalEdit: true});
+    };
+
+    /**
+     * To hide modal and then restart modal state values
+     */
+    handleCloseModalEdit = () => {
+        this.setState({
+            openModalEdit: false
+        });
+    };
+
+
 
     /**
      * Manage submit form
@@ -146,6 +165,38 @@ class Employees extends Component {
         //this.insertEmployees([]);
     };
 
+    handleSubmitEmployeeEdit = (e) => {
+        // Stop submit propagation and prevent even default
+        e.preventDefault();
+        e.stopPropagation();
+
+        let form = document.getElementById('employee-edit-form');
+
+        this.props.client
+            .mutate({
+                mutation: UPDATE_EMPLOYEE,
+                variables: {
+                    employees: {
+                        id: this.state.idToEdit,
+                        firstName: form.elements[0].value,
+                        lastName: form.elements[1].value,
+                        electronicAddress: form.elements[2].value,
+                        mobileNumber: form.elements[3].value,
+                        idRole: 1,
+                        isActive: true,
+                    }
+                }
+            })
+            .then(() => {
+                this.props.handleOpenSnackbar('success', 'Employee Updated!');
+
+                this.handleCloseModalEdit();
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar('error', 'Error updating Employee!');
+            })
+    }
+
     insertEmployees = (employeesArrays) => {
         this.props.client
             .mutate({
@@ -176,7 +227,6 @@ class Employees extends Component {
     };
 
     deleteEmployee = () => {
-        alert(this.state.idToDelete);
         this.setState(
             {
                 loadingRemoving: true
@@ -236,6 +286,14 @@ class Employees extends Component {
     handleConfirmAlertDialog = () => {
         this.deleteEmployee()
     };
+
+    updateEmployeeById = (id) => {
+        this.setState({
+            idToEdit: id
+        }, () => {
+            this.handleClickOpenModalEdit();
+        })
+    }
 
     render() {
         const {classes} = this.props;
@@ -357,7 +415,97 @@ class Employees extends Component {
                 {
                     renderHeaderContent()
                 }
-
+                <Dialog
+                    open={this.state.openModalEdit}
+                    onClose={this.handleCloseModalEdit}
+                    aria-labelledby="responsive-dialog-title"
+                    maxWidth="lg"
+                >
+                    <form id="employee-edit-form" onSubmit={this.handleSubmitEmployeeEdit}>
+                        <DialogTitle style={{padding: '0px'}}>
+                            <div className="modal-header">
+                                <h5 class="modal-title">Edit Employee</h5>
+                            </div>
+                        </DialogTitle>
+                        <DialogContent>
+                            <div className="container">
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* First Name</label>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* Last Name</label>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* Email Address</label>
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label htmlFor="">* Phone Number</label>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-3">
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="number"
+                                            name="number"
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </DialogContent>
+                        <DialogActions style={{margin: '20px 20px'}}>
+                            <div className={[classes.root]}>
+                                <div className={classes.wrapper}>
+                                    <button
+                                        type="submit"
+                                        variant="fab"
+                                        className="btn btn-success"
+                                    >
+                                        Save {!this.state.saving && <i class="fas fa-save"/>}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                    </button>
+                                </div>
+                            </div>
+                            <div className={classes.root}>
+                                <div className={classes.wrapper}>
+                                    <button
+                                        variant="fab"
+                                        className="btn btn-danger"
+                                        onClick={this.handleCloseModalEdit}
+                                    >
+                                        Cancel <i class="fas fa-ban"/>
+                                    </button>
+                                </div>
+                            </div>
+                        </DialogActions>
+                    </form>
+                </Dialog>
                 {
                     renderNewEmployeeDialog()
                 }
@@ -400,6 +548,9 @@ class Employees extends Component {
                                                     data={dataEmployees}
                                                     delete={(id) => {
                                                         this.deleteEmployeeById(id);
+                                                    }}
+                                                    update={(id) => {
+                                                        this.updateEmployeeById(id)
                                                     }}
                                                 />
                                             </div>
