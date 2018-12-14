@@ -141,7 +141,7 @@ class Employees extends Component {
         let array = [];
         let object = {};
 
-        for (let i = 1; i <= form.elements.length - 2; i++) {
+        for (let i = 0; i < form.elements.length - 2; i++) {
             if (form.elements.item(i).name == "firstName") {
                 console.log("First name: " + form.elements.item(i).value);
                 object.firstName = form.elements.item(i).value;
@@ -154,17 +154,21 @@ class Employees extends Component {
             }
 
 
-            if (i % 4 === 0) {
-                console.log(object);
-                console.log("****");
+            if(i !== 0 ) {
+                let value = 1 + i;
+                if (value % 4 === 0) {
+                    console.log("**-------**");
+                    console.log(object); // Object with 4 form elements
+                    console.log("****");
 
-                this.setState(prevState => ({
-                    employeesRegisters: [...prevState.employeesRegisters, object]
-                }), () => {
-                    console.table(this.state.employeesRegisters)
-                });
+                    this.setState(prevState => ({
+                        employeesRegisters: [...prevState.employeesRegisters, Object.assign({}, object)]
+                    }), () => {
+                        console.table(this.state.employeesRegisters)
+                    });
 
-                //array.push(object);
+                    //array.push(object);
+                }
             }
         }
 
