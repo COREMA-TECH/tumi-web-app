@@ -1127,7 +1127,7 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-6">
-                        <span className="primary"> Ideal Job</span>
+                        <span className="primary"> * Position Applying For</span>
                         {/*<Query query={GET_POSITIONS_QUERY}>*/}
                         {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
                         {/*//if (networkStatus === 4) return <LinearProgress />;*/}
@@ -1173,6 +1173,7 @@ class VerticalLinearStepper extends Component {
                                             }}
                                             value={this.state.idealJob}
                                             className="form-control"
+                                            required
                                         >
                                             <option value="">Select a position</option>
                                             <option value="0">Open Position</option>
