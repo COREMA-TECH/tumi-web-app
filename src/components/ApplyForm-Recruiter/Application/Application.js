@@ -18,6 +18,8 @@ import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import {RECREATE_IDEAL_JOB_LIST} from "../../ApplyForm/Mutations";
+import {GET_APPLICANT_IDEAL_JOBS} from "../../ApplyForm/Queries";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -196,6 +198,17 @@ class Application extends Component {
                         localStorage.setItem('idApplication', data.addApplication.id);
                         this.setState({
                             editing: false
+                        }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: parseInt(data.addApplication.id),
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
@@ -259,6 +272,17 @@ class Application extends Component {
                     .then(({ data }) => {
                         this.setState({
                             editing: false
+                        }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: this.props.applicationId,
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -274,6 +298,26 @@ class Application extends Component {
             }
         );
     };
+
+
+    addApplicantJobs = (idealJobArrayObject) => {
+        this.props.client
+            .mutate({
+                mutation: RECREATE_IDEAL_JOB_LIST,
+                variables: {
+                    ApplicationId: this.props.applicationId,
+                    applicationIdealJob: idealJobArrayObject
+                }
+            })
+            .then(({ data }) => {
+                console.log("DEBUG");
+            })
+            .catch(error => {
+                console.log("DEBUG ERROR");
+            })
+    };
+
+
     getHotels = (func = () => {
     }) => {
         // getHotels = (idParent) => {
@@ -339,9 +383,8 @@ class Application extends Component {
                                 },
                                 () => {
                                     this.removeSkeletonAnimation();
-                                    this.setState({
-                                        loading: false
-                                    });
+                                    this.getIdealJobsByApplicationId();
+
                                 }
                             );
                         }
@@ -359,6 +402,44 @@ class Application extends Component {
                     });
             }
         );
+    };
+
+
+    // get ideal jobs
+    getIdealJobsByApplicationId = () => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_IDEAL_JOBS,
+                variables: {
+                    ApplicationId: this.props.applicationId
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                let dataAPI = data.applicantIdealJob;
+                let object;
+
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        positionsTags: [...prevState.positionsTags, {
+                            value: item.id,
+                            label: item.description
+                        }]
+                    }))
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -466,6 +547,78 @@ class Application extends Component {
                                                     {formSpanish[16].label}
                                                 </span>
                                                 {/*<Query query={GET_POSITIONS_QUERY}>*/}
+                                                {/*{({loading, error, data, refetch, networkStatus}) => {*/}
+
+                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                                {/*if (error) return <p>Nothing To Display </p>;*/}
+                                                {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+                                                {/*return (*/}
+                                                {/*<select*/}
+                                                {/*name="positionApply"*/}
+                                                {/*id="positionApply"*/}
+                                                {/*onChange={(event) => {*/}
+                                                {/*this.setState({*/}
+                                                {/*positionApplyingFor: event.target.value*/}
+                                                {/*});*/}
+                                                {/*}}*/}
+                                                {/*value={this.state.positionApplyingFor}*/}
+                                                {/*className="form-control"*/}
+                                                {/*disabled={!this.state.editing}*/}
+                                                {/*>*/}
+                                                {/*<option value="">Select a position</option>*/}
+                                                {/*{data.getcatalogitem.map((item) => (*/}
+                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
+                                                {/*//    console.log("Info del hotel ", ),*/}
+
+                                                {/*< option*/}
+                                                {/*value={item.Id}> {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => {*/}
+                                                {/*return obj.Id === item.Id_Entity*/}
+                                                {/*}) ? this.state.hotels.find((obj) => {*/}
+                                                {/*return obj.Id === item.Id_Entity*/}
+                                                {/*}).Code : '') + ')'}</option>*/}
+                                                {/*))}*/}
+                                                {/*</select>*/}
+                                                {/*);*/}
+                                                {/*}*/}
+                                                {/*return <SelectNothingToDisplay/>;*/}
+                                                {/*}}*/}
+                                                {/*</Query>*/}
+                                                <Query query={GET_POSITIONS_QUERY}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                            return (
+                                                                <select
+                                                                    name="positionApply"
+                                                                    id="positionApply"
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            positionApplyingFor: event.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.positionApplyingFor}
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                >
+                                                                    <option value="">Select a position</option>
+                                                                    <option value="0">Open Position</option>
+                                                                    {data.getcatalogitem.map((item) => (
+                                                                        <option
+                                                                            value={item.Id}>{item.Description}</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label">
+                                                    {formSpanish[17].label}
+                                                </span>
+                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
                                                 {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
 
                                                 {/*//if (networkStatus === 4) return <LinearProgress />;*/}
@@ -522,78 +675,6 @@ class Application extends Component {
                                                                         isMulti
                                                                     />
                                                                 </div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label">
-                                                    {formSpanish[17].label}
-                                                </span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-
-                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                                {/*return (*/}
-                                                {/*<select*/}
-                                                {/*name="positionApply"*/}
-                                                {/*id="positionApply"*/}
-                                                {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*positionApplyingFor: event.target.value*/}
-                                                {/*});*/}
-                                                {/*}}*/}
-                                                {/*value={this.state.positionApplyingFor}*/}
-                                                {/*className="form-control"*/}
-                                                {/*disabled={!this.state.editing}*/}
-                                                {/*>*/}
-                                                {/*<option value="">Select a position</option>*/}
-                                                {/*{data.getcatalogitem.map((item) => (*/}
-                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                {/*//    console.log("Info del hotel ", ),*/}
-
-                                                {/*< option*/}
-                                                {/*value={item.Id}> {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => {*/}
-                                                {/*return obj.Id === item.Id_Entity*/}
-                                                {/*}) ? this.state.hotels.find((obj) => {*/}
-                                                {/*return obj.Id === item.Id_Entity*/}
-                                                {/*}).Code : '') + ')'}</option>*/}
-                                                {/*))}*/}
-                                                {/*</select>*/}
-                                                {/*);*/}
-                                                {/*}*/}
-                                                {/*return <SelectNothingToDisplay/>;*/}
-                                                {/*}}*/}
-                                                {/*</Query>*/}
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="positionApply"
-                                                                    id="positionApply"
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            idealJob: event.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.idealJob}
-                                                                    className="form-control"
-                                                                    disabled={!this.state.editing}
-                                                                >
-                                                                    <option value="">Select a position</option>
-                                                                    <option value="0">Open Position</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option
-                                                                            value={item.Id}>{item.Description}</option>
-                                                                    ))}
-                                                                </select>
                                                             );
                                                         }
                                                         return <SelectNothingToDisplay />;
