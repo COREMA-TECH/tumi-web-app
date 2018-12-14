@@ -28,8 +28,8 @@ export const DELETE_EMPLOYEE = gql`
  * Mutation to update employees
  */
 export const UPDATE_EMPLOYEE = gql`
-    mutation updateEmployees($employees: inputUpdateEmployees) {
-        updateEmployees(employees: inputUpdateEmployees) {
+    mutation updemployees($employees: inputUpdateEmployees) {
+        updateEmployees(employees: $employees) {
             id
         }
     }

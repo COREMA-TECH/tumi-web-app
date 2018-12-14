@@ -42,6 +42,13 @@ const MobileMenu = (props) => {
 						<span>Contracts</span>
 					</Link>
 				</li>
+				<li className="MainMenu-option">
+					<Link to={`/home/employees`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
+						<i className={'far fa-handshake MenuMobile-icon'} title={'Employees'} />
+						<span>Employees</span>
+					</Link>
+				</li>
+
 				{/* <li className="MainMenu-option">
 					<Link to={`/home/Recruiter`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
 						<i className={'fas fa-clipboard MenuMobile-icon'} title={'Recruiter'} />

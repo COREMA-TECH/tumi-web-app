@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
  */
 export const LIST_EMPLOYEES = gql`
 {
-      employees {
+      employees(isActive: true) {
         id
         firstName
         lastName
