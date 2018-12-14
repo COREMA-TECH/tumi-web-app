@@ -150,47 +150,6 @@ class Employees extends Component {
             }
         });
 
-        console.log("Estos son mis datos en JSON", datos);
-
-        // let form = document.getElementById('employee-form');
-
-        // let array = [];
-        // let object = {};
-
-        // for (let i = 0; i < form.elements.length - 2; i++) {
-        //     if (form.elements.item(i).name == "firstName") {
-        //         console.log("First name: " + form.elements.item(i).value);
-        //         object.firstName = form.elements.item(i).value;
-        //     } else if (form.elements.item(i).name == "lastName") {
-        //         object.lastName = form.elements.item(i).value;
-        //     } else if (form.elements.item(i).name == "email") {
-        //         object.electronicAddress = form.elements.item(i).value;
-        //     } else if (form.elements.item(i).name == "number") {
-        //         object.mobileNumber = form.elements.item(i).value;
-        //     }
-
-
-        //     if (i !== 0) {
-        //         let value = 1 + i;
-        //         if (value % 4 === 0) {
-        //             console.log("**-------**");
-        //             console.log(object); // Object with 4 form elements
-        //             console.log("****");
-
-        //             this.setState(prevState => ({
-        //                 employeesRegisters: [...prevState.employeesRegisters, Object.assign({}, object)]
-        //             }), () => {
-        //                 console.table(this.state.employeesRegisters)
-        //             });
-
-        //             //array.push(object);
-        //         }
-        //     }
-        // }
-
-
-
-
         datos.pop();
         this.insertEmployees(datos);
     };
