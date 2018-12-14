@@ -81,6 +81,11 @@ class Employees extends Component {
             rowsInput: [1],
             inputs: 1,
             filterText: '',
+
+            firstNameEdit: '',
+            lastNameEdit: '',
+            emailEdit: '',
+            numberEdit: '',
         }
     }
 
@@ -138,7 +143,7 @@ class Employees extends Component {
 
         for (let i = 1; i <= form.elements.length - 2; i++) {
             if (form.elements.item(i).name == "firstName") {
-                console.log(form.elements.item(i).value);
+                console.log("First name: " + form.elements.item(i).value);
                 object.firstName = form.elements.item(i).value;
             } else if (form.elements.item(i).name == "lastName") {
                 object.lastName = form.elements.item(i).value;
@@ -149,15 +154,18 @@ class Employees extends Component {
             }
 
 
-            console.log(i % 4);
             if (i % 4 === 0) {
                 console.log(object);
-                alert(object);
-                array.push(object);
-                console.log(array);
-                alert(array);
-            }
+                console.log("****");
 
+                this.setState(prevState => ({
+                    employeesRegisters: [...prevState.employeesRegisters, object]
+                }), () => {
+                    console.table(this.state.employeesRegisters)
+                });
+
+                //array.push(object);
+            }
         }
 
 
@@ -457,6 +465,7 @@ class Employees extends Component {
                                             type="text"
                                             name="firstName"
                                             className="form-control"
+                                            value={this.state.firstNameEdit}
                                             required
                                         />
                                     </div>
@@ -465,6 +474,7 @@ class Employees extends Component {
                                             type="text"
                                             name="lastName"
                                             className="form-control"
+                                            value={this.state.lastNameEdit}
                                             required
                                         />
                                     </div>
@@ -473,6 +483,7 @@ class Employees extends Component {
                                             type="email"
                                             name="email"
                                             className="form-control"
+                                            value={this.state.emailEdit}
                                             required
                                         />
                                     </div>
@@ -481,6 +492,7 @@ class Employees extends Component {
                                             type="number"
                                             name="number"
                                             className="form-control"
+                                            value={this.state.numberEdit}
                                             required
                                         />
                                     </div>
