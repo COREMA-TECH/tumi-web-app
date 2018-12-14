@@ -357,6 +357,8 @@ class NewContract extends Component {
                         loaded: false
                     },
                     () => {
+                        this.getBusinessCompaniesbyId(this.state.Id_Entity);
+                        console.log("aqui tenemos el idmanagement ", this.state.idManagement);
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
                             {
@@ -631,7 +633,7 @@ class NewContract extends Component {
     `;
 
     getbusinesscompaniesQuery = gql`
-        query getbusinesscompanies($Id_Parent: Int!) {
+        query getbusinesscompanies($Id_Parent: Int) {
             getbusinesscompanies(Id_Parent: $Id_Parent, IsActive: 1, Contract_Status: "'C'") {
                 Id
                 Name
@@ -651,6 +653,17 @@ class NewContract extends Component {
             }
         }
     `;
+
+    getbusinesscompaniesbyIdQuery = gql`
+    query getbusinesscompanies($Id: Int) {
+        getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
+            Id
+            Name
+            Id_Parent
+            Parent
+        }
+    }
+`;
 
     getNewDate = () => {
         var today = new Date();
@@ -744,6 +757,7 @@ class NewContract extends Component {
     };
 
     getBusinessCompanies = (id) => {
+        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesQuery,
@@ -752,6 +766,7 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
+
                 this.setState({
                     idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
@@ -760,6 +775,29 @@ class NewContract extends Component {
             .catch((error) => {
                 console.log(error);
             });
+    };
+
+    getBusinessCompaniesbyId = (id) => {
+        console.log("valido el id ", id);
+        this.props.client
+            .query({
+                query: this.getbusinesscompaniesbyIdQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(({ data }) => {
+                console.log("esta al by ID::::;", data);
+                this.setState({
+                    idManagement: (data.getbusinesscompanies[0].Id_Parent),
+                    Management: this.getString(data.getbusinesscompanies[0].Parent)
+                }, () => { console.log("este es el idmanaghemente ", this.state.idManagement) });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+
     };
 
     getManagementCompanies = () => {
@@ -837,7 +875,9 @@ class NewContract extends Component {
     };
 
     componentWillMount() {
+        console.log(this.props)
         if (this.props.contractId !== 0) {
+            this.setState({ idManagement: this.props.Id_Parent })
             this.getContractData(this.props.contractId);
         }
 
@@ -1082,7 +1122,8 @@ class NewContract extends Component {
 
     render() {
         const { classes } = this.props;
-
+        console.log("Render:::::", this.props)
+        console.log("Render:::::", this.state)
         if (this.state.loadingCompanies) {
             return <LinearProgress />;
         }
