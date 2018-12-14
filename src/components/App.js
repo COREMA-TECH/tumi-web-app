@@ -24,6 +24,7 @@ const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
 //const baseEndpointURL = 'http://localhost:4000';
 // const baseEndpointURL = 'http://192.168.0.107:4000';
 
+
 const token =
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7IklkIjoxMCwiQ29kZV9Vc2VyIjoiYWRtaW4gICAgICJ9LCJpYXQiOjE1Mzg2NjI4ODgsImV4cCI6MTg1NDIzODg4OH0.3p2Hej6LhKeiNvONYNsJ2S7-5NSeeC-gcKgYyJvc8F0';
 // Endpoint URL
