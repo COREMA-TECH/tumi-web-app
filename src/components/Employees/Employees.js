@@ -7,7 +7,7 @@ import green from "@material-ui/core/colors/green";
 import PropTypes from 'prop-types';
 import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import {ADD_EMPLOYEES} from "./Mutations";
+import {ADD_EMPLOYEES, DELETE_EMPLOYEE} from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -17,7 +17,9 @@ import {Query} from "react-apollo";
 import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
 import {
     LIST_EMPLOYEES
-} from './Queries'
+} from './Queries';
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
+import withGlobalContent from 'Generic/Global';
 
 const styles = (theme) => ({
     container: {
@@ -164,7 +166,53 @@ class Employees extends Component {
     };
 
     deleteEmployeeById = (id) => {
+        this.setState({
+            idToDelete: id
+        }, () => {
+            this.setState({
+                opendialog: true, loadingRemoving: false, loadingContracts: false
+            })
+        });
+    };
 
+    deleteEmployee = () => {
+        alert(this.state.idToDelete);
+        this.setState(
+            {
+                loadingRemoving: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: DELETE_EMPLOYEE,
+                        variables: {
+                            id: this.state.idToDelete
+                        }
+                    })
+                    .then((data) => {
+                        this.setState(
+                            {
+                                opendialog: false,
+                                loadingRemoving: false
+                            },
+                            () => {
+                                this.props.handleOpenSnackbar('success', 'Employee Deleted!');
+                            }
+                        );
+                    })
+                    .catch((error) => {
+                        this.setState(
+                            {
+                                opendialog: false,
+                                loadingRemoving: false
+                            },
+                            () => {
+                                this.props.handleOpenSnackbar('error', 'Error: Deleting Employee: ' + error);
+                            }
+                        );
+                    });
+            }
+        );
     };
 
     /**
@@ -180,6 +228,13 @@ class Employees extends Component {
         this.setState({
             [name]: value
         })
+    };
+
+    handleCloseAlertDialog = () => {
+        this.setState({ opendialog: false });
+    };
+    handleConfirmAlertDialog = () => {
+        this.deleteEmployee()
     };
 
     render() {
@@ -292,6 +347,13 @@ class Employees extends Component {
 
         return (
             <div>
+                <AlertDialogSlide
+                    handleClose={this.handleCloseAlertDialog}
+                    handleConfirm={this.handleConfirmAlertDialog}
+                    open={this.state.opendialog}
+                    loadingConfirm={this.state.loadingRemoving}
+                    content="Do you really want to continue whit this operation?"
+                />
                 {
                     renderHeaderContent()
                 }
@@ -299,7 +361,7 @@ class Employees extends Component {
                 {
                     renderNewEmployeeDialog()
                 }
-                <Query query={LIST_EMPLOYEES}>
+                <Query query={LIST_EMPLOYEES} pollInterval={500}>
                     {({ loading, error, data, refetch, networkStatus }) => {
                         if (this.state.filterText === '') {
                             if (loading) return <LinearProgress />;
@@ -366,4 +428,4 @@ Employees.propTypes = {
     fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withApollo(Employees));
+export default withStyles(styles)(withApollo(withGlobalContent(Employees)));

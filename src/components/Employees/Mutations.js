@@ -10,3 +10,17 @@ export const ADD_EMPLOYEES = gql`
         }
     }
 `;
+
+
+/**
+ * Mutation to create employees
+ */
+export const DELETE_EMPLOYEE = gql`
+    mutation deleteEmployees($id: Int) {
+        deleteEmployees(id: $id) {
+            id
+        }
+    }
+`;
+
+

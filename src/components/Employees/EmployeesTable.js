@@ -233,7 +233,7 @@ class EmployeesTable extends React.Component {
                                                             onClick={(e) => {
                                                                 //console.log(this.props);
                                                                 e.stopPropagation();
-                                                                return this.props.delete(row.Id);
+                                                                return this.props.delete(row.id);
                                                             }}
                                                         >
                                                             <i class="fas fa-trash"></i>
