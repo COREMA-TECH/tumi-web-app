@@ -219,7 +219,7 @@ class Employees extends Component {
             .catch(error => {
                 this.props.handleOpenSnackbar('error', 'Error updating Employee!');
             })
-    }
+    };
 
     insertEmployees = (employeesArrays) => {
         this.props.client
@@ -326,23 +326,23 @@ class Employees extends Component {
         })
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log(this.state)
-        console.log(nextState)
-        if (this.state.filterText !== nextState.filterText ||
-            this.state.data !== nextState.data ||
-            this.state.openModal !== nextState.openModal ||
-            this.state.openModalEdit !== nextState.openModalEdit ||
-            this.state.employeesRegisters !== nextState.employeesRegisters ||
-            this.state.rowsInput !== nextState.rowsInput ||
-            this.state.inputs !== nextState.inputs) {
-            return true;
-        }
-        return false;
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log(this.state)
+    //     console.log(nextState)
+    //     if (this.state.filterText !== nextState.filterText ||
+    //         this.state.data !== nextState.data ||
+    //         this.state.openModal !== nextState.openModal ||
+    //         this.state.openModalEdit !== nextState.openModalEdit ||
+    //         this.state.employeesRegisters !== nextState.employeesRegisters ||
+    //         this.state.rowsInput !== nextState.rowsInput ||
+    //         this.state.inputs !== nextState.inputs) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     render() {
-        console.log(this.state)
+        console.log(this.state);
         const { classes } = this.props;
         const { fullScreen } = this.props;
 
@@ -576,7 +576,7 @@ class Employees extends Component {
                                 />
                             );
                         if (data.employees != null && data.employees.length > 0) {
-                            this.setState({ data: data.employees })
+                            // this.setState({ data: data.employees });
                             let dataEmployees = data.employees.filter((_, i) => {
                                 if (this.state.filterText === '') {
                                     return true;
