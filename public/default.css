@@ -9940,3 +9940,28 @@ button.rbc-input::-moz-focus-inner {
 
 .smooth-dnd-container.vertical {
   min-height: 225px; }
+
+.MasterShiftForm {
+  background: #eee;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 1rem; }
+  .MasterShiftForm-hour {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse; }
+    .MasterShiftForm-hour:before {
+      background: #f50057;
+      border-radius: 5px;
+      color: #FFF;
+      content: attr(data-hour);
+      display: block;
+      height: calc(2.1rem + 2px);
+      line-height: calc(2.1rem + 2px);
+      text-align: center;
+      width: 100%; }

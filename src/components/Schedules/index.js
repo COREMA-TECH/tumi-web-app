@@ -1,3 +1,4 @@
+import Form from './Form.js';
 import React, { Component } from 'react';
 
 class Schedules extends Component {
@@ -6,11 +7,12 @@ class Schedules extends Component {
         return (
             <div className="MasterShift">
                 <div className="row">
-                    <div className="col-3">
+                    <div className="col-md-3">
                         <div className="MasterShift-formWrapper">
                             <div className="MasterShift-options">
 
                             </div>
+                            <Form />
                         </div>
                     </div>
                 </div>
