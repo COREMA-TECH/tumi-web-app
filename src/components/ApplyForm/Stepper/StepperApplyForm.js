@@ -824,16 +824,18 @@ class VerticalLinearStepper extends Component {
                                 onChange={(event) => {
                                     this.setState({
                                         zipCode: event.target.value
+                                    }, () => {
+                                        fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
+                                            return response.json()
+                                        }).then((cities) => {
+                                            console.log(cities)
+                                            if (!cities.error) {
+                                                this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                            }
+                                        });
+
                                     });
-                                    let zip_code = '';
-                                    zip_code = event.target.value.substring(0, 5);
-                                    fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                        return response.json()
-                                    }).then((cities) => {
-                                        if (!cities.error) {
-                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                        }
-                                    });
+
                                 }}
                                 value={this.state.zipCode}
                                 placeholder="99999-99999"
@@ -1126,33 +1128,33 @@ class VerticalLinearStepper extends Component {
                     <div className="col-md-6">
                         <span className="primary"> Ideal Job</span>
                         {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                            {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                {/*if (loading) return <LinearProgress />;*/}
-                                {/*if (error) return <p>Error </p>;*/}
-                                {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                    {/*return (*/}
-                                        {/*<select*/}
-                                            {/*name="city"*/}
-                                            {/*id="city"*/}
-                                            {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                    {/*positionApplyingFor: event.target.value*/}
-                                                {/*});*/}
-                                            {/*}}*/}
-                                            {/*value={this.state.positionApplyingFor}*/}
-                                            {/*className="form-control"*/}
-                                        {/*>*/}
-                                            {/*<option value="">Select a position</option>*/}
+                        {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
+                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                        {/*if (loading) return <LinearProgress />;*/}
+                        {/*if (error) return <p>Error </p>;*/}
+                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+                        {/*return (*/}
+                        {/*<select*/}
+                        {/*name="city"*/}
+                        {/*id="city"*/}
+                        {/*onChange={(event) => {*/}
+                        {/*this.setState({*/}
+                        {/*positionApplyingFor: event.target.value*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*value={this.state.positionApplyingFor}*/}
+                        {/*className="form-control"*/}
+                        {/*>*/}
+                        {/*<option value="">Select a position</option>*/}
 
-                                            {/*{data.getcatalogitem.map((item) => (*/}
-                                                {/*<option value={item.Id}>{item.Description}</option>*/}
-                                            {/*))}*/}
-                                        {/*</select>*/}
-                                    {/*);*/}
-                                {/*}*/}
-                                {/*return <SelectNothingToDisplay />;*/}
-                            {/*}}*/}
+                        {/*{data.getcatalogitem.map((item) => (*/}
+                        {/*<option value={item.Id}>{item.Description}</option>*/}
+                        {/*))}*/}
+                        {/*</select>*/}
+                        {/*);*/}
+                        {/*}*/}
+                        {/*return <SelectNothingToDisplay />;*/}
+                        {/*}}*/}
                         {/*</Query>*/}
                         <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {

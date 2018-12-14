@@ -422,7 +422,7 @@ class ExhibitContract extends Component {
                                     className={'btn btn-danger pull-right'}
                                     onClick={this.cancelContractHandler}
                                 >
-                                    Clear <i class="fas fa-times"></i>
+                                    Close <i class="fas fa-times"></i>
                                 </button>
                                 <button
                                     //	disabled={this.state.loading || !this.state.enableCancelButton}
@@ -448,11 +448,6 @@ class ExhibitContract extends Component {
                     </DialogActions>
                 </Dialog>
 
-                <div className="roiw">
-                    <div className="col-md-12">
-                        <h5>Exhibit A (Rates & Positions)</h5>
-                    </div>
-                </div>
                 <PositionsCompanyForm
                     idCompany={this.props.companyId}
                     idContract={this.props.contractId}
@@ -461,121 +456,6 @@ class ExhibitContract extends Component {
                 />
                 <div className="">
                     <div className="">
-                        {/*<div className="contract-body-row">
-                            <div className="contract-body-row__content">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle"></span>
-                                </div>
-                                <div className="contract-body-row__form contract-body-row__form--lg">
-                                </div>
-                            </div>
-
-                            <div className="contract-body-row__content hidden">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Exhibit B</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm
-                                                value={this.state.exhibitB}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        exhibitB: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="contract-body-row__content hidden">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Exhibit C</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm
-                                                value={this.state.exhibitC}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        exhibitC: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="contract-body-row__content hidden">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Exhibit D</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm
-                                                value={this.state.exhibitD}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        exhibitD: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="contract-body-row__content hidden">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Exhibit E</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm
-                                                value={this.state.exhibitE}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        exhibitE: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="contract-body-row__content hidden">
-                                <div className="contract-body-row__header">
-                                    <span className="contract-body__subtitle">Exhibit F</span>
-                                </div>
-                                <div className="contract-body-row__form">
-                                    <div className="card-form-body">
-                                        <div className="card-form-row">
-                                            <span className="input-label primary">Contract Terms</span>
-                                            <TextAreaForm
-                                                value={this.state.exhibitF}
-                                                change={(text) => {
-                                                    this.setState({
-                                                        exhibitF: text
-                                                    });
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*/}
-
                         <div className="row">
                             {/*<div
 								className="contract-next-button"

@@ -325,8 +325,10 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
+                console.log("este es la data del contrato ", data);
                 this.setState(
                     {
+
                         Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
                         Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
                         Id_Entity: data.getcontracts[0].Id_Entity,
@@ -351,7 +353,7 @@ class NewContract extends Component {
                         IsActive: data.getcontracts[0].IsActive,
                         Date_Created: data.getcontracts[0].Date_Created,
                         Date_Updated: data.getcontracts[0].Date_Updated,
-                        CompanySignedName: this.getString(data.getcontracts[0].CompanySignedName),
+                        CompanySignedName: this.getString(data.getcontracts[0].Company_Signed),
                         loaded: false
                     },
                     () => {
@@ -1239,17 +1241,6 @@ class NewContract extends Component {
                                                     }}
                                                 </Query>
                                             </div>
-                                            {/* 
-                                            <div className="col-md-6 col-lg-6">
-                                                <label>* Management Company</label>
-                                                <InputForm
-                                                    value={this.state.Management}
-                                                    change={(text) => {
-                                                    }}
-                                                //error={!this.state.CompanySignedNameValid}
-                                                />
-                                            </div>
-                                            */}
                                             <div className="col-md-6">
                                                 <label>* Management Company</label>
                                                 <Query
@@ -1327,30 +1318,6 @@ class NewContract extends Component {
                                                     }}
                                                 </Query>
                                             </div>
-                                            {/*
-                                            <div className="col-md-6 col-lg-6">
-                                                <label>* Hotel</label>
-                                                <AccountDialog
-                                                    valueSelected={this.state.Id_Entity}
-                                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                                    error={!this.state.Id_EntityValid}
-                                                    update={this.updateIdCompany}
-                                                    updateCompanySignedBy={(value) => {
-                                                        this.setState(
-                                                            {
-                                                                Company_Signed: value
-                                                            },
-                                                            () => {
-                                                                this.validateField('Company_Signed', value);
-                                                                this.getCompanies(this.state.Company_Signed);
-                                                                this.getBusinessCompanies(this.state.Id_Entity);
-                                                                this.getManagementCompanies(this.state.Id_Entity);
-                                                            }
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                            */ }
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Customer Signed By</label>
 
@@ -1537,6 +1504,11 @@ class NewContract extends Component {
                                                         <InputForm
                                                             value={this.state.CompanySignedName}
                                                             change={(text) => {
+                                                                this.setState({
+                                                                    CompanySignedName: text
+                                                                }, () => {
+                                                                    this.validateField('CompanySignedName', text);
+                                                                });
                                                             }}
                                                             error={!this.state.CompanySignedNameValid}
                                                         />
