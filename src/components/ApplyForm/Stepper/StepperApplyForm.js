@@ -752,27 +752,6 @@ class VerticalLinearStepper extends Component {
                             />
                         </div>
                     </div>
-                    {/* <div className="col-md-3">
-                        <span className="primary">* Date</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        date: event.target.value
-                                    });
-                                }}
-                                value={this.state.date}
-                                name="date"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>*/}
-
                 </div>
                 <div className="row form-section">
                     <div className="col-md-9">
@@ -1011,25 +990,6 @@ class VerticalLinearStepper extends Component {
                                     <span className="onoffswitch-switch" />
                                 </label>
                             </div>
-
-                            {/*<label className="switch">*/}
-                            {/*<input*/}
-                            {/*onChange={(event) => {*/}
-                            {/*this.setState({*/}
-                            {/*car: event.target.checked*/}
-                            {/*});*/}
-                            {/*}}*/}
-                            {/*checked={this.state.car}*/}
-                            {/*value={this.state.car}*/}
-                            {/*name="car"*/}
-                            {/*type="checkbox"*/}
-                            {/*className="form-control"*/}
-                            {/*min="0"*/}
-                            {/*maxLength="50"*/}
-                            {/*minLength="10"*/}
-                            {/*/>*/}
-                            {/*<p className="slider round" />*/}
-                            {/*</label>*/}
                         </div>
                     </div>
                     <div className="col-md-3">
@@ -1058,29 +1018,6 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    {/*<div className="col-md-6">*/}
-                    {/*<span className="primary"> Birth Day</span>*/}
-                    {/*<div className="input-container--validated">*/}
-                    {/*<input*/}
-                    {/*onChange={(event) => {*/}
-                    {/*this.setState({*/}
-                    {/*birthDay: event.target.value*/}
-                    {/*});*/}
-                    {/*}}*/}
-                    {/*value={this.state.birthDay}*/}
-                    {/*name="birthDay"*/}
-                    {/*type="date"*/}
-                    {/*className="form-control"*/}
-                    {/*required*/}
-                    {/*min="0"*/}
-                    {/*maxLength="50"*/}
-                    {/*minLength="10"*/}
-                    {/*/>*/}
-                    {/*<span className="check-icon"/>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-
-
                 </div>
                 <div className="row">
                     <div className="col-md-6">
@@ -1128,35 +1065,6 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-6">
                         <span className="primary"> * Position Applying For</span>
-                        {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                        {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                        {/*if (loading) return <LinearProgress />;*/}
-                        {/*if (error) return <p>Error </p>;*/}
-                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                        {/*return (*/}
-                        {/*<select*/}
-                        {/*name="city"*/}
-                        {/*id="city"*/}
-                        {/*onChange={(event) => {*/}
-                        {/*this.setState({*/}
-                        {/*positionApplyingFor: event.target.value*/}
-                        {/*});*/}
-                        {/*}}*/}
-                        {/*value={this.state.positionApplyingFor}*/}
-                        {/*className="form-control"*/}
-                        {/*>*/}
-                        {/*<option value="">Select a position</option>*/}
-
-                        {/*{data.getcatalogitem.map((item) => (*/}
-                        {/*<option value={item.Id}>{item.Description}</option>*/}
-                        {/*))}*/}
-                        {/*</select>*/}
-                        {/*);*/}
-                        {/*}*/}
-                        {/*return <SelectNothingToDisplay />;*/}
-                        {/*}}*/}
-                        {/*</Query>*/}
                         <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;

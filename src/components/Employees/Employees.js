@@ -141,51 +141,17 @@ class Employees extends Component {
             return {
                 firstName: this.state[`firstName${index}`],
                 lastName: this.state[`lastName${index}`],
-                email: this.state[`email${index}`],
-                phoneNumber: this.state[`phoneNumber${index}`]
+                electronicAddress: this.state[`email${index}`],
+                mobileNumber: this.state[`phoneNumber${index}`],
+                idRole: 1,
+                isActive: true,
+                userCreated: 1,
+                userUpdated: 1,
             }
-        })
-        console.log("Estos son mis datos en JSON", datos)
+        });
 
-        // let form = document.getElementById('employee-form');
-
-        // let array = [];
-        // let object = {};
-
-        // for (let i = 0; i < form.elements.length - 2; i++) {
-        //     if (form.elements.item(i).name == "firstName") {
-        //         console.log("First name: " + form.elements.item(i).value);
-        //         object.firstName = form.elements.item(i).value;
-        //     } else if (form.elements.item(i).name == "lastName") {
-        //         object.lastName = form.elements.item(i).value;
-        //     } else if (form.elements.item(i).name == "email") {
-        //         object.electronicAddress = form.elements.item(i).value;
-        //     } else if (form.elements.item(i).name == "number") {
-        //         object.mobileNumber = form.elements.item(i).value;
-        //     }
-
-
-        //     if (i !== 0) {
-        //         let value = 1 + i;
-        //         if (value % 4 === 0) {
-        //             console.log("**-------**");
-        //             console.log(object); // Object with 4 form elements
-        //             console.log("****");
-
-        //             this.setState(prevState => ({
-        //                 employeesRegisters: [...prevState.employeesRegisters, Object.assign({}, object)]
-        //             }), () => {
-        //                 console.table(this.state.employeesRegisters)
-        //             });
-
-        //             //array.push(object);
-        //         }
-        //     }
-        // }
-
-
-
-        //this.insertEmployees([]);
+        datos.pop();
+        this.insertEmployees(datos);
     };
 
     handleSubmitEmployeeEdit = (e) => {
@@ -219,7 +185,7 @@ class Employees extends Component {
             .catch(error => {
                 this.props.handleOpenSnackbar('error', 'Error updating Employee!');
             })
-    }
+    };
 
     insertEmployees = (employeesArrays) => {
         this.props.client
@@ -230,12 +196,13 @@ class Employees extends Component {
                 }
             })
             .then(({ data }) => {
-
+                this.props.handleOpenSnackbar('success', 'Employees Saved!');
                 // Hide dialog
                 this.handleCloseModal();
             })
             .catch(error => {
                 // Hide dialog
+                this.props.handleOpenSnackbar('error', 'Error to save Employees!');
                 this.handleCloseModal();
             })
     };
@@ -324,25 +291,25 @@ class Employees extends Component {
         }, () => {
             this.handleClickOpenModalEdit();
         })
-    }
+    };
 
-    shouldComponentUpdate(nextProps, nextState) {
-        console.log(this.state)
-        console.log(nextState)
-        if (this.state.filterText !== nextState.filterText ||
-            this.state.data !== nextState.data ||
-            this.state.openModal !== nextState.openModal ||
-            this.state.openModalEdit !== nextState.openModalEdit ||
-            this.state.employeesRegisters !== nextState.employeesRegisters ||
-            this.state.rowsInput !== nextState.rowsInput ||
-            this.state.inputs !== nextState.inputs) {
-            return true;
-        }
-        return false;
-    }
+    // shouldComponentUpdate(nextProps, nextState) {
+    //     console.log(this.state)
+    //     console.log(nextState)
+    //     if (this.state.filterText !== nextState.filterText ||
+    //         this.state.data !== nextState.data ||
+    //         this.state.openModal !== nextState.openModal ||
+    //         this.state.openModalEdit !== nextState.openModalEdit ||
+    //         this.state.employeesRegisters !== nextState.employeesRegisters ||
+    //         this.state.rowsInput !== nextState.rowsInput ||
+    //         this.state.inputs !== nextState.inputs) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     render() {
-        console.log(this.state)
+        console.log(this.state);
         const { classes } = this.props;
         const { fullScreen } = this.props;
 
@@ -560,7 +527,7 @@ class Employees extends Component {
                 {
                     renderNewEmployeeDialog()
                 }
-                <Query query={LIST_EMPLOYEES} pollInterval={500}>
+                <Query query={LIST_EMPLOYEES}>
                     {({ loading, error, data, refetch, networkStatus }) => {
                         if (this.state.filterText === '') {
                             if (loading) return <LinearProgress />;
@@ -576,7 +543,7 @@ class Employees extends Component {
                                 />
                             );
                         if (data.employees != null && data.employees.length > 0) {
-                            this.setState({ data: data.employees })
+                            // this.setState({ data: data.employees });
                             let dataEmployees = data.employees.filter((_, i) => {
                                 if (this.state.filterText === '') {
                                     return true;
