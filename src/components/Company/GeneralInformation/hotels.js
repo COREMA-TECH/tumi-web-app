@@ -83,7 +83,11 @@ class hotels extends Component {
 		}
 	`;
 
-    UNSAFE_componentWillMount() {
+    /*    UNSAFE_componentWillMount() {
+            this.getHotels();
+        }*/
+
+    componentWillMount() {
         this.getHotels();
     }
 
