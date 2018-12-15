@@ -14,3 +14,20 @@
         }
     }
 }
+
+tbody[class^="MuiTableBody-"] .btn {
+    align-items: center;
+    border-radius: 25px;
+    display: flex;
+    height: 25px;
+    justify-content: center;
+    line-height: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    text-align: center;
+    width: 25px;
+    .fa, .fas {
+        font-weight: 900;
+        font-size: 10px;
+    }
+}
