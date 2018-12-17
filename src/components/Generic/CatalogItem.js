@@ -27,25 +27,7 @@ class CatalogItem extends React.Component {
     }
 
     componentWillMount() {
-        this.props.client
-            .query({
-                query: this.GET_QUERY,
-                variables: { id: this.state.period },
-                fetchPolicy: 'no-cache'
-            })
-            .then((result) => {
-                let data = result.data;
-                if (data.getcatalogitem != null) {
-                    this.setState({
-                        options: data.getcatalogitem
-                    });
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    errorMessage: 'Error: Loading departments: ' + error
-                });
-            });
+
     }
 
     GET_QUERY = gql`
