@@ -181,7 +181,7 @@ class ExhibitContract extends Component {
     `;
 
     sleep() {
-        return new Promise((resolve) => setTimeout(resolve, 20000));
+        return new Promise((resolve) => setTimeout(resolve, 8000));
     }
 
     writePDF = () => {
