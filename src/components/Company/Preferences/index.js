@@ -319,10 +319,11 @@ class Preferences extends React.Component {
                                             </label>
                                         </div>
                                         <br/><br/>
+                                        <div className="col-md-12 mb-2"></div>
                                         {/*<div className="col-md-6">*/}
                                             <div className="col-md-2">
                                                 <label className="font-weight-bold d-lg-block text-lg-right">
-                                                    Time
+                                                    Time (min)
                                                 </label>
                                             </div>
                                             <div className="col-md-3">
@@ -365,7 +366,7 @@ class Preferences extends React.Component {
                                                     this.state.options.map((item) => {
                                                             //return <option value={item.Id} key={item.Id} > {item.Name}</option>
                                                             return (
-                                                                <div className="col-3 col-md-2">
+                                                                <div className="col-3 col-md-3">
                                                                     <div>
                                                                         <div className="col-md-12">
                                                                             <label>{item.Name}</label>
@@ -387,21 +388,6 @@ class Preferences extends React.Component {
                                                         }
                                                     )
                                                 }
-                                            {/*{*/}
-                                                {/*(!this.state.disabled) ?*/}
-                                                    {/*<CatalogItem*/}
-                                                        {/*update={(id) => {*/}
-                                                            {/*this.setState({period: id})*/}
-                                                        {/*}}*/}
-                                                        {/*PeriodId={11}*/}
-                                                        {/*name="period"*/}
-                                                        {/*value={this.state.period}*/}
-                                                        {/*disabled={(this.state.disabled)}*/}
-                                                    {/*>*/}
-                                                    {/*</CatalogItem>*/}
-                                                    {/*:*/}
-                                                    {/*<select className="form-control" disabled></select>*/}
-                                            {/*}*/}
                                     </div>
                                 </div>
                             </div>
