@@ -40,28 +40,33 @@ query getposition {
 `;*/
 export const GET_POSITIONS_QUERY = gql`
     {
-        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
-            Id
-            IsActive
-            Description
+        workOrder(status: 2) {
+            id
+            position {
+                Position
+            }
+            BusinessCompany {
+                Id
+                Code
+            }
         }
     }
 `;
 
 export const getCompaniesQuery = gql`
-query getbusinesscompanies($Id_Parent: Int) {
-    getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: $Id_Parent) {
-        Id
-        Id_Contract
-        Id_Company
-        Code
-        Name
-        Description
-        ImageURL
-        Address
-        Id_Parent
+    query getbusinesscompanies($Id_Parent: Int) {
+        getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: $Id_Parent) {
+            Id
+            Id_Contract
+            Id_Company
+            Code
+            Name
+            Description
+            ImageURL
+            Address
+            Id_Parent
+        }
     }
-}
 `;
 
 /**
