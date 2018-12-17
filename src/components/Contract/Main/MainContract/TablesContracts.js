@@ -189,8 +189,7 @@ class DepartmentsTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell padding="none" className={classes.th} />
-									<CustomTableCell padding="none" className={"Table-head"} />
+									<CustomTableCell padding="none" className={"Table-head text-center"} >Actions</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Contract Name</CustomTableCell>
 									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Owner</CustomTableCell>
 									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Status</CustomTableCell>
@@ -211,12 +210,11 @@ class DepartmentsTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-												{' '}
+											<CustomTableCell component="th" style={{ width: '50px' }}>
 												<Tooltip title="Edit">
 													<div>
 														<button
-															className="btn btn-danger ml-1"
+															className="btn btn-danger ml-1 float-left"
 															disabled={this.props.loading}
 															onClick={() => {
 																history.push({
@@ -229,12 +227,10 @@ class DepartmentsTable extends React.Component {
 														</button>
 													</div>
 												</Tooltip>
-											</CustomTableCell>
-											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 												<Tooltip title="Delete">
 													<div>
 														<button
-															className="btn btn-success ml-1"
+															className="btn btn-success ml-1 float-left"
 															disabled={this.props.loading}
 															onClick={(e) => {
 																//console.log(this.props);

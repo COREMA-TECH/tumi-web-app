@@ -82,6 +82,7 @@ class NewContract extends Component {
     };
 
     constructor(props) {
+        console.log("aqui esta todos los props", props);
         super(props);
         this.state = {
             Id: '',
@@ -875,9 +876,9 @@ class NewContract extends Component {
     };
 
     componentWillMount() {
-        console.log(this.props)
+
         if (this.props.contractId !== 0) {
-            this.setState({ idManagement: this.props.Id_Parent })
+            // this.setState({ idManagement: this.props.Id_Parent })
             this.getContractData(this.props.contractId);
         }
 
@@ -888,6 +889,7 @@ class NewContract extends Component {
             this.state.editing = true;
         }
     }
+
 
     validateField(fieldName, value) {
         let Contract_NameValid = this.state.Contract_NameValid;
@@ -1301,13 +1303,13 @@ class NewContract extends Component {
                                                                     id="management"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    //disabled={!this.state.editing}
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             idManagement: e.target.value
                                                                         });
                                                                     }}
-                                                                    value={this.state.idManagement}
+                                                                    value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.idManagement}
                                                                 >
                                                                     <option value="">Select a Management</option>
                                                                     {data.getbusinesscompanies.map((item) => (
