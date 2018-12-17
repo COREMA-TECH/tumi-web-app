@@ -296,7 +296,7 @@ class Employees extends Component {
             this.handleClickOpenModalEdit();
         })
     };
-    
+
 
     render() {
         console.log(this.state);

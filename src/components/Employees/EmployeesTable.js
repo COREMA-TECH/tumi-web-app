@@ -170,11 +170,6 @@ class EmployeesTable extends React.Component {
         return false;
     }
 
-    updateEmployee = (id) => {
-
-    }
-
-
     render() {
         const {classes} = this.props;
         let items = this.props.data;
