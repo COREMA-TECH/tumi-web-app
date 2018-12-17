@@ -320,12 +320,12 @@ class Preferences extends React.Component {
                                         </div>
                                         <br/><br/>
                                         {/*<div className="col-md-6">*/}
-                                            <div className="col-md-2 mt-1">
-                                                <label className="font-weight-bold d-block text-right">
+                                            <div className="col-md-2">
+                                                <label className="font-weight-bold d-lg-block text-lg-right">
                                                     Time
                                                 </label>
                                             </div>
-                                            <div className="col-md-3 mt-2">
+                                            <div className="col-md-3">
                                                 <input type="number" min="0" name="amount"
                                                        disabled={(this.state.disabled) ? "disabled" : ""}
                                                        value={this.state.time} className="form-control"
@@ -337,12 +337,12 @@ class Preferences extends React.Component {
                                             </div>
                                         {/*</div>*/}
                                         {/*<div className="col-md-6">*/}
-                                            <div className="col-md-2 mt-1">
-                                                <label className="font-weight-bold d-block text-right">
+                                            <div className="col-md-2">
+                                                <label className="font-weight-bold d-lg-block text-lg-right">
                                                     Amount
                                                 </label>
                                             </div>
-                                            <div className="col-md-3 mt-2">
+                                            <div className="col-md-3">
                                                 <input
                                                     type="number"
                                                     min="0"
