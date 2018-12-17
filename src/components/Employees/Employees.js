@@ -455,6 +455,7 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.firstNameEdit}
+                                            minLength="3"
                                             required
                                         />
                                     </div>
@@ -469,6 +470,7 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.lastNameEdit}
+                                            minLength="3"
                                             required
                                         />
                                     </div>
@@ -483,6 +485,7 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.emailEdit}
+                                            minLength="3"
                                             required
                                         />
                                     </div>
