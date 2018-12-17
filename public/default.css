@@ -9983,3 +9983,19 @@ button.rbc-input::-moz-focus-inner {
       line-height: calc(2.1rem + 2px);
       text-align: center;
       width: 100%; }
+
+.MasterShift-schedules {
+  background: #FFF;
+  border-radius: 5px;
+  overflow: hidden; }
+  .MasterShift-schedulesBody {
+    background: #FFF;
+    padding: 1rem;
+    width: 100%; }
+    @media (max-width: 1199.98px) {
+      .MasterShift-schedulesBody {
+        overflow-x: scroll; } }
+  .MasterShift-schedulesHeader {
+    background: #ebf5fc;
+    padding-left: 1rem;
+    padding-right: 1rem; }
