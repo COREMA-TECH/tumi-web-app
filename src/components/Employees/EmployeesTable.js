@@ -208,7 +208,7 @@ class EmployeesTable extends React.Component {
                                             className={classes.row}
                                             key={uuidv4()}
                                             onClick={() => {
-                                                this.props.update(row.id)
+                                                this.props.update(row.id, row)
                                             }}
                                         >
                                             <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
@@ -219,7 +219,7 @@ class EmployeesTable extends React.Component {
                                                             className="btn btn-danger ml-1"
                                                             disabled={this.props.loading}
                                                             onClick={(e) => {
-                                                                this.props.update(row.id)
+                                                                this.props.update(row.id, row);
                                                             }}
                                                         >
                                                             <i class="fas fa-pen"></i>

@@ -121,7 +121,11 @@ class Employees extends Component {
      */
     handleCloseModalEdit = () => {
         this.setState({
-            openModalEdit: false
+            openModalEdit: false,
+            firstNameEdit: '',
+            lastNameEdit: '',
+            emailEdit: '',
+            numberEdit: '',
         });
     };
 
@@ -463,6 +467,11 @@ class Employees extends Component {
                                             type="text"
                                             name="firstName"
                                             className="form-control"
+                                            onChange={e => {
+                                                this.setState({
+                                                    firstNameEdit: e.target.value
+                                                })
+                                            }}
                                             value={this.state.firstNameEdit}
                                             required
                                         />
@@ -472,6 +481,11 @@ class Employees extends Component {
                                             type="text"
                                             name="lastName"
                                             className="form-control"
+                                            onChange={e => {
+                                                this.setState({
+                                                    lastNameEdit: e.target.value
+                                                })
+                                            }}
                                             value={this.state.lastNameEdit}
                                             required
                                         />
@@ -481,6 +495,11 @@ class Employees extends Component {
                                             type="email"
                                             name="email"
                                             className="form-control"
+                                            onChange={e => {
+                                                this.setState({
+                                                    emailEdit: e.target.value
+                                                })
+                                            }}
                                             value={this.state.emailEdit}
                                             required
                                         />
@@ -490,6 +509,11 @@ class Employees extends Component {
                                             type="number"
                                             name="number"
                                             className="form-control"
+                                            onChange={e => {
+                                                this.setState({
+                                                    numberEdit: e.target.value
+                                                })
+                                            }}
                                             value={this.state.numberEdit}
                                             required
                                         />
@@ -527,7 +551,7 @@ class Employees extends Component {
                 {
                     renderNewEmployeeDialog()
                 }
-                <Query query={LIST_EMPLOYEES}>
+                <Query query={LIST_EMPLOYEES} pollInterval={500}>
                     {({ loading, error, data, refetch, networkStatus }) => {
                         if (this.state.filterText === '') {
                             if (loading) return <LinearProgress />;
@@ -568,8 +592,14 @@ class Employees extends Component {
                                                     delete={(id) => {
                                                         this.deleteEmployeeById(id);
                                                     }}
-                                                    update={(id) => {
-                                                        this.updateEmployeeById(id)
+                                                    update={(id, row) => {
+                                                        this.updateEmployeeById(id);
+                                                        this.setState({
+                                                            firstNameEdit: row.firstName,
+                                                            lastNameEdit: row.lastName,
+                                                            emailEdit: row.electronicAddress,
+                                                            numberEdit: row.mobileNumber,
+                                                        })
                                                     }}
                                                 />
                                             </div>
