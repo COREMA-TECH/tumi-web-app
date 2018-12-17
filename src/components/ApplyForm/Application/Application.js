@@ -859,35 +859,35 @@ class Application extends Component {
 													{formSpanish[16].label}
 												</span>
 												<Query query={GET_POSITIONS_QUERY}>
-													{({ loading, error, data, refetch, networkStatus }) => {
-														//if (networkStatus === 4) return <LinearProgress />;
-														if (error) return <p>Error </p>;
-														if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-															let options = [];
-															data.getcatalogitem.map((item) => (
-																options.push({ value: item.Id, label: item.Description })
-															));
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        let options = [];
+                                                        data.getcatalogitem.map((item) => (
+                                                            options.push({ value: item.Id, label: item.Description })
+                                                        ));
 
-															return (
-																<div style={{
-																	paddingTop: '0px',
-																	paddingBottom: '2px',
-																}}>
-																	<Select
-																		isDisabled={!this.state.editing}
-																		options={options}
-																		value={this.state.positionsTags}
-																		onChange={this.handleChangePositionTag}
-																		closeMenuOnSelect={false}
-																		components={makeAnimated()}
-																		isMulti
-																	/>
-																</div>
-															);
-														}
-														return <SelectNothingToDisplay />;
-													}}
-												</Query>
+                                                        return (
+                                                            <div style={{
+                                                                paddingTop: '0px',
+                                                                paddingBottom: '2px',
+                                                            }}>
+                                                                <Select
+                                                                    isDisabled={!this.state.editing}
+                                                                    options={options}
+                                                                    value={this.state.positionsTags}
+                                                                    onChange={this.handleChangePositionTag}
+                                                                    closeMenuOnSelect={false}
+                                                                    components={makeAnimated()}
+                                                                    isMulti
+                                                                />
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
+                                                }}
+                                            </Query>
 											</div>
 
 											<div className="col-md-12">

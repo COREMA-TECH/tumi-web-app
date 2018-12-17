@@ -325,8 +325,10 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
+                console.log("este es la data del contrato ", data);
                 this.setState(
                     {
+
                         Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
                         Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
                         Id_Entity: data.getcontracts[0].Id_Entity,
@@ -351,10 +353,12 @@ class NewContract extends Component {
                         IsActive: data.getcontracts[0].IsActive,
                         Date_Created: data.getcontracts[0].Date_Created,
                         Date_Updated: data.getcontracts[0].Date_Updated,
-                        CompanySignedName: this.getString(data.getcontracts[0].CompanySignedName),
+                        CompanySignedName: this.getString(data.getcontracts[0].Company_Signed),
                         loaded: false
                     },
                     () => {
+                        this.getBusinessCompaniesbyId(this.state.Id_Entity);
+                        console.log("aqui tenemos el idmanagement ", this.state.idManagement);
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
                             {
@@ -629,7 +633,7 @@ class NewContract extends Component {
     `;
 
     getbusinesscompaniesQuery = gql`
-        query getbusinesscompanies($Id_Parent: Int!) {
+        query getbusinesscompanies($Id_Parent: Int) {
             getbusinesscompanies(Id_Parent: $Id_Parent, IsActive: 1, Contract_Status: "'C'") {
                 Id
                 Name
@@ -649,6 +653,17 @@ class NewContract extends Component {
             }
         }
     `;
+
+    getbusinesscompaniesbyIdQuery = gql`
+    query getbusinesscompanies($Id: Int) {
+        getbusinesscompanies(Id: $Id, IsActive: 1, Contract_Status: "'C'") {
+            Id
+            Name
+            Id_Parent
+            Parent
+        }
+    }
+`;
 
     getNewDate = () => {
         var today = new Date();
@@ -742,6 +757,7 @@ class NewContract extends Component {
     };
 
     getBusinessCompanies = (id) => {
+        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesQuery,
@@ -750,6 +766,7 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
+
                 this.setState({
                     idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
@@ -758,6 +775,29 @@ class NewContract extends Component {
             .catch((error) => {
                 console.log(error);
             });
+    };
+
+    getBusinessCompaniesbyId = (id) => {
+        console.log("valido el id ", id);
+        this.props.client
+            .query({
+                query: this.getbusinesscompaniesbyIdQuery,
+                variables: {
+                    Id: id
+                }
+            })
+            .then(({ data }) => {
+                console.log("esta al by ID::::;", data);
+                this.setState({
+                    idManagement: (data.getbusinesscompanies[0].Id_Parent),
+                    Management: this.getString(data.getbusinesscompanies[0].Parent)
+                }, () => { console.log("este es el idmanaghemente ", this.state.idManagement) });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+
     };
 
     getManagementCompanies = () => {
@@ -835,7 +875,9 @@ class NewContract extends Component {
     };
 
     componentWillMount() {
+        console.log(this.props)
         if (this.props.contractId !== 0) {
+            this.setState({ idManagement: this.props.Id_Parent })
             this.getContractData(this.props.contractId);
         }
 
@@ -1080,7 +1122,8 @@ class NewContract extends Component {
 
     render() {
         const { classes } = this.props;
-
+        console.log("Render:::::", this.props)
+        console.log("Render:::::", this.state)
         if (this.state.loadingCompanies) {
             return <LinearProgress />;
         }
@@ -1239,17 +1282,6 @@ class NewContract extends Component {
                                                     }}
                                                 </Query>
                                             </div>
-                                            {/* 
-                                            <div className="col-md-6 col-lg-6">
-                                                <label>* Management Company</label>
-                                                <InputForm
-                                                    value={this.state.Management}
-                                                    change={(text) => {
-                                                    }}
-                                                //error={!this.state.CompanySignedNameValid}
-                                                />
-                                            </div>
-                                            */}
                                             <div className="col-md-6">
                                                 <label>* Management Company</label>
                                                 <Query
@@ -1327,30 +1359,6 @@ class NewContract extends Component {
                                                     }}
                                                 </Query>
                                             </div>
-                                            {/*
-                                            <div className="col-md-6 col-lg-6">
-                                                <label>* Hotel</label>
-                                                <AccountDialog
-                                                    valueSelected={this.state.Id_Entity}
-                                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                                    error={!this.state.Id_EntityValid}
-                                                    update={this.updateIdCompany}
-                                                    updateCompanySignedBy={(value) => {
-                                                        this.setState(
-                                                            {
-                                                                Company_Signed: value
-                                                            },
-                                                            () => {
-                                                                this.validateField('Company_Signed', value);
-                                                                this.getCompanies(this.state.Company_Signed);
-                                                                this.getBusinessCompanies(this.state.Id_Entity);
-                                                                this.getManagementCompanies(this.state.Id_Entity);
-                                                            }
-                                                        );
-                                                    }}
-                                                />
-                                            </div>
-                                            */ }
                                             <div className="col-md-6 col-lg-6">
                                                 <label>* Customer Signed By</label>
 
@@ -1537,6 +1545,11 @@ class NewContract extends Component {
                                                         <InputForm
                                                             value={this.state.CompanySignedName}
                                                             change={(text) => {
+                                                                this.setState({
+                                                                    CompanySignedName: text
+                                                                }, () => {
+                                                                    this.validateField('CompanySignedName', text);
+                                                                });
                                                             }}
                                                             error={!this.state.CompanySignedNameValid}
                                                         />

@@ -7663,10 +7663,6 @@ label:not(.custom-file-label):not(.form-check-label) {
 .QuickButton {
   color: #FFF !important; }
 
-table[class^="MuiTable-"] .btn {
-  min-width: 60px;
-  max-width: 60px; }
-
 .inputGroup {
   background-color: #fff;
   display: block;
@@ -8056,6 +8052,27 @@ table[class^="MuiTable-"] .btn {
       border-radius: 5px 0 0 0; }
     .Table-head:last-child {
       border-radius: 0 5px 0 0; }
+
+tbody[class^="MuiTableBody-"] .btn {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-radius: 25px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 25px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center;
+  width: 25px; }
+  tbody[class^="MuiTableBody-"] .btn .fa, tbody[class^="MuiTableBody-"] .btn .fas {
+    font-weight: 900;
+    font-size: 10px; }
 
 .login-form {
   width: 350px;

@@ -31,12 +31,18 @@ import {
     ADD_LANGUAGES,
     ADD_MILITARY_SERVICES,
     ADD_SKILL,
-    CREATE_APPLICATION,
+    CREATE_APPLICATION, RECREATE_IDEAL_JOB_LIST,
     UPDATE_APPLICATION
 } from '../Mutations';
 import Route from 'react-router-dom/es/Route';
 import withGlobalContent from "../../Generic/Global";
 import SignatureForm from "../SignatureForm/SignatureForm";
+import TagsInput from 'react-tagsinput';
+import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
+import axios from 'axios';
+
 
 const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -104,7 +110,7 @@ class VerticalLinearStepper extends Component {
             typeOfId: '',
             expireDateId: '',
             emailAddress: '',
-            positionApplyingFor: 1,
+            positionApplyingFor: 30442,
             idealJob: '',
             idealJobs: [],
             dateAvailable: '',
@@ -156,9 +162,21 @@ class VerticalLinearStepper extends Component {
 
             openSnackbar: true,
             aceptedDisclaimer: false,
-            openSignature: false
+            openSignature: false,
+
+            // React tag input with suggestions
+            positionsTags: [],
         };
     }
+
+    handleChangePositionTag = (positionsTags) => {
+        this.setState({ positionsTags });
+        console.log(`Option selected:`, positionsTags);
+    };
+
+    handleChange = (positionsTags) => {
+        this.setState({ positionsTags });
+    };
 
     // To handle the stepper
     handleNext = () => {
@@ -216,14 +234,15 @@ class VerticalLinearStepper extends Component {
                                 typeOfId: parseInt(this.state.typeOfId),
                                 expireDateId: this.state.expireDateId,
                                 emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                positionApplyingFor: parseInt(this.state.idealJob),
                                 dateAvailable: this.state.dateAvailable,
                                 scheduleRestrictions: this.state.scheduleRestrictions,
                                 scheduleExplain: this.state.scheduleExplain,
                                 convicted: this.state.convicted,
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
-                                isLead: true
+                                isLead: true,
+                                idealJob: this.state.idealJob
                             }
                         }
                     })
@@ -231,15 +250,25 @@ class VerticalLinearStepper extends Component {
                         let idApplication = data.addApplication.id;
                         this.setState({
                             applicationId: idApplication
+                        }, () => {
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                'Successfully created',
+                                'bottom',
+                                'right'
+                            );
+
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: this.state.applicationId,
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object);
                         });
-
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            'Successfully created',
-                            'bottom',
-                            'right'
-                        );
-
                         this.handleNext();
                     })
                     .catch(() => {
@@ -259,6 +288,23 @@ class VerticalLinearStepper extends Component {
                     });
             }
         );
+    };
+
+    addApplicantJobs = (idealJobArrayObject) => {
+        this.props.client
+            .mutate({
+                mutation: RECREATE_IDEAL_JOB_LIST,
+                variables: {
+                    ApplicationId: this.state.applicationId,
+                    applicationIdealJob: idealJobArrayObject
+                }
+            })
+            .then(({ data }) => {
+                console.log("DEBUG");
+            })
+            .catch(error => {
+                console.log("DEBUG ERROR");
+            })
     };
 
     updateApplicationInformation = () => {
@@ -297,18 +343,29 @@ class VerticalLinearStepper extends Component {
                                 convicted: this.state.convicted,
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
-                                isLead: true
+                                isLead: true,
+                                idealJob: this.state.idealJob
                             }
                         }
                     })
                     .then(({ data }) => {
-
                         this.props.handleOpenSnackbar(
                             'success',
                             'Successfully updated',
                             'bottom',
                             'right'
                         );
+
+                        let object = [];
+                        this.state.positionsTags.map(item => {
+                            object.push({
+                                ApplicationId: this.state.applicationId,
+                                idPosition: item.value,
+                                description: item.label
+                            })
+                        });
+
+                        this.addApplicantJobs(object);
 
                         this.handleNext();
                     })
@@ -695,27 +752,6 @@ class VerticalLinearStepper extends Component {
                             />
                         </div>
                     </div>
-                    {/* <div className="col-md-3">
-                        <span className="primary">* Date</span>
-                        <div className="input-container--validated">
-                            <input
-                                onChange={(event) => {
-                                    this.setState({
-                                        date: event.target.value
-                                    });
-                                }}
-                                value={this.state.date}
-                                name="date"
-                                type="date"
-                                className="form-control"
-                                required
-                                min="0"
-                                maxLength="50"
-                            />
-                            <span className="check-icon" />
-                        </div>
-                    </div>*/}
-
                 </div>
                 <div className="row form-section">
                     <div className="col-md-9">
@@ -769,15 +805,16 @@ class VerticalLinearStepper extends Component {
                                 onChange={(event) => {
                                     this.setState({
                                         zipCode: event.target.value
-                                    });
-                                    let zip_code = '';
-                                    zip_code = event.target.value.substring(0, 5);
-                                    fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                        return response.json()
-                                    }).then((cities) => {
-                                        if (!cities.error) {
-                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                        }
+                                    }, () => {
+                                        const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5)
+                                        if (zipCode)
+                                            axios.get(`https://ziptasticapi.com/${zipCode}`)
+                                                .then(res => {
+                                                    const cities = res.data;
+                                                    if (!cities.error) {
+                                                        this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                    }
+                                                })
                                     });
                                 }}
                                 value={this.state.zipCode}
@@ -953,25 +990,6 @@ class VerticalLinearStepper extends Component {
                                     <span className="onoffswitch-switch" />
                                 </label>
                             </div>
-
-                            {/*<label className="switch">*/}
-                            {/*<input*/}
-                            {/*onChange={(event) => {*/}
-                            {/*this.setState({*/}
-                            {/*car: event.target.checked*/}
-                            {/*});*/}
-                            {/*}}*/}
-                            {/*checked={this.state.car}*/}
-                            {/*value={this.state.car}*/}
-                            {/*name="car"*/}
-                            {/*type="checkbox"*/}
-                            {/*className="form-control"*/}
-                            {/*min="0"*/}
-                            {/*maxLength="50"*/}
-                            {/*minLength="10"*/}
-                            {/*/>*/}
-                            {/*<p className="slider round" />*/}
-                            {/*</label>*/}
                         </div>
                     </div>
                     <div className="col-md-3">
@@ -1000,29 +1018,6 @@ class VerticalLinearStepper extends Component {
                     </div>
                 </div>
                 <div className="row">
-                    {/*<div className="col-md-6">*/}
-                    {/*<span className="primary"> Birth Day</span>*/}
-                    {/*<div className="input-container--validated">*/}
-                    {/*<input*/}
-                    {/*onChange={(event) => {*/}
-                    {/*this.setState({*/}
-                    {/*birthDay: event.target.value*/}
-                    {/*});*/}
-                    {/*}}*/}
-                    {/*value={this.state.birthDay}*/}
-                    {/*name="birthDay"*/}
-                    {/*type="date"*/}
-                    {/*className="form-control"*/}
-                    {/*required*/}
-                    {/*min="0"*/}
-                    {/*maxLength="50"*/}
-                    {/*minLength="10"*/}
-                    {/*/>*/}
-                    {/*<span className="check-icon"/>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-
-
                 </div>
                 <div className="row">
                     <div className="col-md-6">
@@ -1069,31 +1064,64 @@ class VerticalLinearStepper extends Component {
                 </div>
                 <div className="row">
                     <div className="col-md-6">
-                        <span className="primary"> Position Applying for</span>
+                        <span className="primary"> * Position Applying For</span>
                         <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress />;
                                 if (error) return <p>Error </p>;
                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                     return (
                                         <select
-                                            name="city"
-                                            id="city"
+                                            name="positionApply"
+                                            id="positionApply"
                                             onChange={(event) => {
                                                 this.setState({
-                                                    positionApplyingFor: event.target.value
+                                                    idealJob: event.target.value
                                                 });
                                             }}
-                                            value={this.state.positionApplyingFor}
+                                            value={this.state.idealJob}
                                             className="form-control"
+                                            required
                                         >
                                             <option value="">Select a position</option>
-
+                                            <option value="0">Open Position</option>
                                             {data.getcatalogitem.map((item) => (
-                                                <option value={item.Id}>{item.Description}</option>
+                                                <option
+                                                    value={item.Id}>{item.Description}</option>
                                             ))}
                                         </select>
+                                    );
+                                }
+                                return <SelectNothingToDisplay />;
+                            }}
+                        </Query>
+                    </div>
+                    <div className="col-md-6">
+                        <span className="primary">Willing to work as</span>
+                        <Query query={GET_POSITIONS_QUERY}>
+                            {({ loading, error, data, refetch, networkStatus }) => {
+                                //if (networkStatus === 4) return <LinearProgress />;
+                                if (error) return <p>Error </p>;
+                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                    let options = [];
+                                    data.getcatalogitem.map((item) => (
+                                        options.push({ value: item.Id, label: item.Description })
+                                    ));
+
+                                    return (
+                                        <div style={{
+                                            paddingTop: '0px',
+                                            paddingBottom: '2px',
+                                        }}>
+                                            <Select
+                                                options={options}
+                                                value={this.state.positionsTags}
+                                                onChange={this.handleChangePositionTag}
+                                                closeMenuOnSelect={false}
+                                                components={makeAnimated()}
+                                                isMulti
+                                            />
+                                        </div>
                                     );
                                 }
                                 return <SelectNothingToDisplay />;
