@@ -96,11 +96,12 @@ class HotelList extends Component {
         }).catch();
     }
 
-    handleClickOpen = (event) => {
+    handleClickOpen = (idCompany) => (event) => {
         event.preventDefault();
         this.setState({
             open: true,
-            idProperty: null
+            idProperty: null,
+            idCompany: idCompany
         });
     };
 
@@ -178,13 +179,15 @@ class HotelList extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6">
-                        <div className="float-right">
-                            <button className="btn btn-success" onClick={this.handleClickOpen}>
-                                Add New Property
+                    {this.state.hotels.map((hotel) => (
+                        <div className="col-md-6">
+                            <div className="float-right">
+                                <button className="btn btn-success" onClick={this.handleClickOpen(hotel.Id_Parent == 99999 ? 99999 : hotel.Id_Parent)}>
+                                    Add New Property
                             </button>
+                            </div>
                         </div>
-                    </div>
+                    ))}
                     <div className="col-md-12">
                         <a href="" onClick={this.handleFindByTag(false)} className="badge badge-danger mr-1">Not Assigned</a>
                         <a href="" onClick={this.handleFindByTag(true)} className="badge badge-success mr-1">Assigned</a>

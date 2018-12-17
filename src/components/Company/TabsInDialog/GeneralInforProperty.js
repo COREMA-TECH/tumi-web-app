@@ -264,7 +264,6 @@ class GeneralInfoProperty extends Component {
 	};
 
 	insertCompany = (id) => {
-		console.log("estoy en el insert");
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -274,7 +273,6 @@ class GeneralInfoProperty extends Component {
 		let insregionAsync = async () => {
 			if (vRegion) {
 				NewIdRegion = vRegion.Id;
-				console.log("Este es el nuevo ID ", NewIdRegion);
 			} else {
 				//const InsertDepartmentNew =
 				await this.props.client
@@ -317,8 +315,6 @@ class GeneralInfoProperty extends Component {
 					linearProgress: true
 				},
 				() => {
-					//Create the mutation using apollo global client
-					console.log("arrastro el nuevo ID ", NewIdRegion);
 					this.props.client
 						.mutate({
 							// Pass the mutation structure
@@ -378,7 +374,7 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then(({ data }) => {
-							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id));
+							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(id));
 
 							this.setState({
 								linearProgress: false
