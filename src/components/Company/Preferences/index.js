@@ -321,7 +321,7 @@ class Preferences extends React.Component {
                                         <br/><br/>
                                         <div className="col-md-12 mb-2"></div>
                                         {/*<div className="col-md-6">*/}
-                                            <div className="col-md-2">
+                                            <div className="col-md-3">
                                                 <label className="font-weight-bold d-lg-block text-lg-right">
                                                     Time (min)
                                                 </label>
