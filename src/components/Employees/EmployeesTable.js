@@ -229,7 +229,6 @@ class EmployeesTable extends React.Component {
                                                             className="btn btn-success ml-1"
                                                             disabled={this.props.loading}
                                                             onClick={(e) => {
-                                                                //console.log(this.props);
                                                                 e.stopPropagation();
                                                                 return this.props.delete(row.id);
                                                             }}

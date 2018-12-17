@@ -20,6 +20,7 @@ import {
 } from './Queries';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import withGlobalContent from 'Generic/Global';
+import InputMask from "react-input-mask";
 
 const styles = (theme) => ({
     container: {
@@ -273,7 +274,6 @@ class Employees extends Component {
     };
 
     handleChange = (name, value) => {
-        console.log("This is my change", name, value)
         this.setState({
             [name]: value
         })
@@ -296,7 +296,6 @@ class Employees extends Component {
 
 
     render() {
-        console.log(this.state);
         const { classes } = this.props;
         const { fullScreen } = this.props;
 
@@ -488,9 +487,22 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col-md-3">
-                                        <input
-                                            type="number"
+                                        {/*<input*/}
+                                            {/*type="number"*/}
+                                            {/*name="number"*/}
+                                            {/*className="form-control"*/}
+                                            {/*onChange={e => {*/}
+                                                {/*this.setState({*/}
+                                                    {/*numberEdit: e.target.value*/}
+                                                {/*})*/}
+                                            {/*}}*/}
+                                            {/*value={this.state.numberEdit}*/}
+                                            {/*required*/}
+                                        {/*/>*/}
+                                        <InputMask
                                             name="number"
+                                            mask="+(999) 999-9999"
+                                            maskChar=" "
                                             className="form-control"
                                             onChange={e => {
                                                 this.setState({
@@ -498,7 +510,7 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.numberEdit}
-                                            required
+                                            placeholder="+(999) 999-9999"
                                         />
                                     </div>
                                 </div>
@@ -577,6 +589,7 @@ class Employees extends Component {
                                                     }}
                                                     update={(id, row) => {
                                                         this.updateEmployeeById(id);
+                                                        console.log(row.mobileNumber);
                                                         this.setState({
                                                             firstNameEdit: row.firstName,
                                                             lastNameEdit: row.lastName,
