@@ -1,4 +1,4 @@
-import Form from './Form.js';
+import Form from './FilterForm.js';
 import React, { Component } from 'react';
 
 class Schedules extends Component {
