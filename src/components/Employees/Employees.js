@@ -140,7 +140,7 @@ class Employees extends Component {
         e.preventDefault();
         e.stopPropagation();
 
-
+        // Build the employee object
         const datos = this.state.rowsInput.map((item, index) => {
             return {
                 firstName: this.state[`firstName${index}`],
@@ -154,7 +154,10 @@ class Employees extends Component {
             }
         });
 
+        // Remove undefined last element
         datos.pop();
+
+        // Insert employees with array of employees
         this.insertEmployees(datos);
     };
 
