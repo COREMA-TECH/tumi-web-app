@@ -1,4 +1,4 @@
-import Form from './Form.js';
+import FilterForm from './FilterForm.js';
 import React, { Component } from 'react';
 import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
@@ -14,9 +14,21 @@ class Schedules extends Component {
                     <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
                             <div className="MasterShift-options">
-
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <div className="onoffswitch">
+                                            <input type="checkbox" checked="" name="charge"
+                                                onClick="" onChange={this.handleChange}
+                                                className="onoffswitch-checkbox" id="myonoffswitch" />
+                                            <label className="onoffswitch-label" htmlFor="myonoffswitch">
+                                                <span className="onoffswitch-inner"></span>
+                                                <span className="onoffswitch-switch"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <Form />
+                            <FilterForm />
                         </div>
                     </div>
                     <div className="col-md-10">
