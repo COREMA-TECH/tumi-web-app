@@ -206,7 +206,7 @@ class EmployeesTable extends React.Component {
                                                 this.props.update(row.id, row)
                                             }}
                                         >
-                                            <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
+                                            <CustomTableCell component="th" padding="none">
                                                 {' '}
                                                 <Tooltip title="Edit">
                                                     <div>
@@ -222,7 +222,7 @@ class EmployeesTable extends React.Component {
                                                     </div>
                                                 </Tooltip>
                                             </CustomTableCell>
-                                            <CustomTableCell component="th" padding="none" style={{width: '50px'}}>
+                                            <CustomTableCell component="th" padding="none">
                                                 <Tooltip title="Delete">
                                                     <div>
                                                         <button
