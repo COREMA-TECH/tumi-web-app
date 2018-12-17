@@ -31,7 +31,10 @@ class Calendar extends Component {
         this.props.client
             .query({
                 fetchPolicy: 'no-cache',
-                query: GET_HOLIDAYS
+                query: GET_HOLIDAYS,
+                variables: {
+                    CompanyId: this.props.idCompany
+                }
             })
             .then(({ data }) => {
                 this.setState({
