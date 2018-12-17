@@ -404,7 +404,6 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
-                                                        required
                                                         value={this.state.startMonth}
                                                         className="form-control"
                                                         onChange={(event) => {
@@ -433,7 +432,6 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
-                                                        required
                                                         value={this.state.endMonth}
                                                         className="form-control"
                                                         onChange={(event) => {
@@ -472,7 +470,6 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
-                                                        required
                                                         value={this.state.timeZone}
                                                         className="form-control"
                                                         onChange={(event) => {
