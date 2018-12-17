@@ -302,70 +302,61 @@ class Preferences extends React.Component {
                                 <div class="card-header">Lunch Preferences</div>
                                 <div class="card-body">
                                     <div className="row">
-                                        <div className="col-md-12">
-                                            <div className="row">
-                                                <div className="col-md-2">
-                                                    <div className="onoffswitch">
-                                                        <input type="checkbox" checked={this.state.charge} name="charge"
-                                                               onClick={this.toggleState} onChange={this.handleChange}
-                                                               className="onoffswitch-checkbox" id="myonoffswitch"/>
-                                                        <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                            <span className="onoffswitch-inner"></span>
-                                                            <span className="onoffswitch-switch"></span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div className="col-md-9">
-                                                    <label className="font-weight-bold">
-                                                        Do You Have Any Lunch Period Deductions?
-                                                    </label>
-                                                </div>
+                                        <div className="col-md-2">
+                                            <div className="onoffswitch">
+                                                <input type="checkbox" checked={this.state.charge} name="charge"
+                                                       onClick={this.toggleState} onChange={this.handleChange}
+                                                       className="onoffswitch-checkbox" id="myonoffswitch"/>
+                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
+                                                    <span className="onoffswitch-inner"></span>
+                                                    <span className="onoffswitch-switch"></span>
+                                                </label>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="row">
-                                                <div className="col-md-3">
-                                                    <label className="font-weight-bold">
-                                                        Time
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-9">
-                                                    <input type="number" min="0" name="amount"
-                                                           disabled={(this.state.disabled) ? "disabled" : ""}
-                                                           value={this.state.time} className="form-control"
-                                                           onChange={(e) => {
-                                                               this.setState({
-                                                                   time: e.target.value
-                                                               })
-                                                           }}/>
-                                                </div>
-                                            </div>
+                                        <div className="col-md-10">
+                                            <label className="font-weight-bold">
+                                                Do You Have Any Lunch Period Deductions?
+                                            </label>
                                         </div>
-                                        <div className="col-md-6">
-                                            <div className="row">
-                                                <div className="col-md-3">
-                                                    <label className="font-weight-bold">
-                                                        Amount
-                                                    </label>
-                                                </div>
-                                                <div className="col-md-9">
-                                                    <input
-                                                        type="number"
-                                                        min="0"
-                                                        name="amount"
-                                                        step=".01"
-                                                        disabled={(this.state.disabled) ? "disabled" : ""}
-                                                        value={this.state.amount} className="form-control"
-                                                        onChange={this.handleChange}
-                                                        placeholder="$"
-                                                    />
-                                                </div>
+                                        <br/><br/>
+                                        <div className="col-md-12 mb-2"></div>
+                                        {/*<div className="col-md-6">*/}
+                                            <div className="col-md-3">
+                                                <label className="font-weight-bold d-lg-block text-lg-right">
+                                                    Time (min)
+                                                </label>
                                             </div>
-                                        </div>
-                                        <br/>
-                                        <br/>
-                                        <div className="col-md-12">
-                                            <div className="row">
+                                            <div className="col-md-3">
+                                                <input type="number" min="0" name="amount"
+                                                       disabled={(this.state.disabled) ? "disabled" : ""}
+                                                       value={this.state.time} className="form-control"
+                                                       onChange={(e) => {
+                                                           this.setState({
+                                                               time: e.target.value
+                                                           })
+                                                       }}/>
+                                            </div>
+                                        {/*</div>*/}
+                                        {/*<div className="col-md-6">*/}
+                                            <div className="col-md-2">
+                                                <label className="font-weight-bold d-lg-block text-lg-right">
+                                                    Amount
+                                                </label>
+                                            </div>
+                                            <div className="col-md-3">
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    name="amount"
+                                                    step=".01"
+                                                    disabled={(this.state.disabled) ? "disabled" : ""}
+                                                    value={this.state.amount} className="form-control"
+                                                    onChange={this.handleChange}
+                                                    placeholder="$"
+                                                />
+                                            </div>
+                                        <div className="col-12 col-md-12 mb-4"></div>
+                                        {/*</div>*/}
                                                 <div className="col-md-2">
                                                     <label className="font-weight-bold">
                                                         Frequency
@@ -375,7 +366,7 @@ class Preferences extends React.Component {
                                                     this.state.options.map((item) => {
                                                             //return <option value={item.Id} key={item.Id} > {item.Name}</option>
                                                             return (
-                                                                <div className="col-md-2">
+                                                                <div className="col-3 col-md-3">
                                                                     <div>
                                                                         <div className="col-md-12">
                                                                             <label>{item.Name}</label>
@@ -397,23 +388,6 @@ class Preferences extends React.Component {
                                                         }
                                                     )
                                                 }
-                                            </div>
-                                            {/*{*/}
-                                                {/*(!this.state.disabled) ?*/}
-                                                    {/*<CatalogItem*/}
-                                                        {/*update={(id) => {*/}
-                                                            {/*this.setState({period: id})*/}
-                                                        {/*}}*/}
-                                                        {/*PeriodId={11}*/}
-                                                        {/*name="period"*/}
-                                                        {/*value={this.state.period}*/}
-                                                        {/*disabled={(this.state.disabled)}*/}
-                                                    {/*>*/}
-                                                    {/*</CatalogItem>*/}
-                                                    {/*:*/}
-                                                    {/*<select className="form-control" disabled></select>*/}
-                                            {/*}*/}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
