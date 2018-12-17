@@ -296,21 +296,7 @@ class Employees extends Component {
             this.handleClickOpenModalEdit();
         })
     };
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     console.log(this.state)
-    //     console.log(nextState)
-    //     if (this.state.filterText !== nextState.filterText ||
-    //         this.state.data !== nextState.data ||
-    //         this.state.openModal !== nextState.openModal ||
-    //         this.state.openModalEdit !== nextState.openModalEdit ||
-    //         this.state.employeesRegisters !== nextState.employeesRegisters ||
-    //         this.state.rowsInput !== nextState.rowsInput ||
-    //         this.state.inputs !== nextState.inputs) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    
 
     render() {
         console.log(this.state);
