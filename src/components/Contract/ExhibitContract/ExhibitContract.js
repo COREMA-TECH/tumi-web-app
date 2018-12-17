@@ -181,7 +181,7 @@ class ExhibitContract extends Component {
     `;
 
     sleep() {
-        return new Promise((resolve) => setTimeout(resolve, 8000));
+        return new Promise((resolve) => setTimeout(resolve, 20000));
     }
 
     writePDF = () => {
@@ -236,18 +236,18 @@ class ExhibitContract extends Component {
             })
             .then((data) => {
                 if (data.data.createcontracts != null) {
-                    //this.sleep().then(() => {
-                    this.setState({
-                        openModal: true,
-                        loadingContract: false,
-                        PdfUrl:
-                            '<iframe src="' +
-                            this.context.baseUrl +
-                            '/public/Contract_' +
-                            this.props.contractname +
-                            '.pdf"  width="100%" height="100%" />'
+                    this.sleep().then(() => {
+                        this.setState({
+                            openModal: true,
+                            loadingContract: false,
+                            PdfUrl:
+                                '<iframe src="' +
+                                this.context.baseUrl +
+                                '/public/Contract_' +
+                                this.props.contractname +
+                                '.pdf"  width="100%" height="100%" />'
+                        });
                     });
-                    // });
                 } else {
                     this.props.handleOpenSnackbar(
                         'error',
