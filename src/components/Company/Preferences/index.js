@@ -334,7 +334,7 @@ class Preferences extends React.Component {
                                                 </label>
                                             </div>
                                             <div className="col-md-3">
-                                                <input type="number" min="0" name="amount"
+                                                <input type="number" name="amount"
                                                        disabled={(this.state.disabled) ? "disabled" : ""}
                                                        value={this.state.time} className="form-control"
                                                        onChange={(e) => {

@@ -526,7 +526,6 @@ class Application extends Component {
                                     <button
                                         className="applicant-card__edit-button"
                                         onClick={() => {
-                                            //alert(this.props.applicationId);
                                             this.setState({
                                                 editing: true
                                             });
@@ -545,43 +544,6 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label">
                                                     {formSpanish[16].label}
                                                 </span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                    {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-
-                                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                        {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                                            {/*return (*/}
-                                                                {/*<select*/}
-                                                                    {/*name="positionApply"*/}
-                                                                    {/*id="positionApply"*/}
-                                                                    {/*onChange={(event) => {*/}
-                                                                        {/*this.setState({*/}
-                                                                            {/*positionApplyingFor: event.target.value*/}
-                                                                        {/*});*/}
-                                                                    {/*}}*/}
-                                                                    {/*value={this.state.positionApplyingFor}*/}
-                                                                    {/*className="form-control"*/}
-                                                                    {/*disabled={!this.state.editing}*/}
-                                                                {/*>*/}
-                                                                    {/*<option value="">Select a position</option>*/}
-                                                                    {/*{data.getcatalogitem.map((item) => (*/}
-                                                                        {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                                        {/*//    console.log("Info del hotel ", ),*/}
-
-                                                                        {/*< option*/}
-                                                                            {/*value={item.Id}> {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => {*/}
-                                                                            {/*return obj.Id === item.Id_Entity*/}
-                                                                        {/*}) ? this.state.hotels.find((obj) => {*/}
-                                                                            {/*return obj.Id === item.Id_Entity*/}
-                                                                        {/*}).Code : '') + ')'}</option>*/}
-                                                                    {/*))}*/}
-                                                                {/*</select>*/}
-                                                            {/*);*/}
-                                                        {/*}*/}
-                                                        {/*return <SelectNothingToDisplay/>;*/}
-                                                    {/*}}*/}
-                                                {/*</Query>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
@@ -617,38 +579,6 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label">
                                                     {formSpanish[17].label}
                                                 </span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-
-                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                {/*if (data.getposition != null && data.getposition.length > 0) {*/}
-                                                {/*return (*/}
-                                                {/*<select*/}
-                                                {/*name="positionApply"*/}
-                                                {/*id="positionApply"*/}
-                                                {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*positionApplyingFor: event.target.value*/}
-                                                {/*});*/}
-                                                {/*}}*/}
-                                                {/*value={this.state.positionApplyingFor}*/}
-                                                {/*className="form-control"*/}
-                                                {/*disabled={!this.state.editing}*/}
-                                                {/*>*/}
-                                                {/*<option value="">Select a position</option>*/}
-                                                {/*{data.getposition.map((item) => (*/}
-                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                {/*//    console.log("Info del hotel ", ),*/}
-
-                                                {/*< option value={item.Id} > {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }) ? this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code : '') + ')'}</option>*/}
-                                                {/*))}*/}
-                                                {/*</select>*/}
-                                                {/*);*/}
-                                                {/*}*/}
-                                                {/*return <SelectNothingToDisplay />;*/}
-                                                {/*}}*/}
-                                                {/*</Query>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
@@ -765,27 +695,6 @@ class Application extends Component {
                                                     minLength="3"
                                                 />
                                             </div>
-                                            {/*
-                                            <div className="col-md-12 ">
-                                                <span
-                                                    className="primary applicant-card__label ">{formSpanish[22].label}</span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            streetAddress: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.streetAddress}
-                                                    name="streetAddress"
-                                                    type="text"
-                                                    className="form-control"
-                                                    required
-                                                    disabled={!this.state.editing}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="5"
-                                                />
-												</div>*/}
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label ">
                                                     * {formSpanish[5].label}
@@ -924,26 +833,6 @@ class Application extends Component {
                                                         <span className="onoffswitch-switch"/>
                                                     </label>
                                                 </div>
-
-                                                {/*<label className="switch">*/}
-                                                {/*<input*/}
-                                                {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*car: event.target.checked*/}
-                                                {/*});*/}
-                                                {/*}}*/}
-                                                {/*checked={this.state.car}*/}
-                                                {/*value={this.state.car}*/}
-                                                {/*name="car"*/}
-                                                {/*type="checkbox"*/}
-                                                {/*className="form-control"*/}
-                                                {/*disabled={!this.state.editing}*/}
-                                                {/*min="0"*/}
-                                                {/*maxLength="50"*/}
-                                                {/*minLength="10"*/}
-                                                {/*/>*/}
-                                                {/*<p className="slider round" />*/}
-                                                {/*</label>*/}
                                             </div>
                                         </div>
                                     </div>
@@ -988,7 +877,6 @@ class Application extends Component {
                                                         });
                                                     }}
                                                     placeholder="+(999) 999-9999"
-                                                    required
                                                     minLength="15"
                                                 />
                                             </div>
