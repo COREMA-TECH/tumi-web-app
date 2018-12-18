@@ -165,8 +165,8 @@ class Preferences extends React.Component {
                     PeriodId: this.state.period,
                     amount: parseFloat(this.state.amount),
                     charge: this.state.charge,
-                    FiscalMonth1: this.state.startMonth,
-                    FiscalMonth2: this.state.endMonth,
+                    FiscalMonth1: this.state.startMonth == "" ? null : this.state.startMonth,
+                    FiscalMonth2: this.state.endMonth == "" ? null : this.state.endMonth,
                     Timezone: parseInt(this.state.timeZone),
                     time: this.state.time
                 }
@@ -419,7 +419,7 @@ class Preferences extends React.Component {
                                                             })
                                                         }}
                                                     >
-                                                        <option value="">Select a month</option>
+                                                        <option value="12">Select a month</option>
                                                         {
                                                             months.map(month => {
                                                                 if (this.state.endMonth != month.id) {
@@ -447,7 +447,7 @@ class Preferences extends React.Component {
                                                             })
                                                         }}
                                                     >
-                                                        <option value="">Select a month</option>
+                                                        <option value="12">Select a month</option>
                                                         {
                                                             months.map(month => {
                                                                 if (this.state.startMonth != month.id) {
