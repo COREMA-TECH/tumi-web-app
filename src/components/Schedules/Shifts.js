@@ -28,7 +28,6 @@ class Shifts extends Component {
     render() {
         const { viewModel } = this.state;
         return (
-
             <Scheduler schedulerData={viewModel}
                 prevClick={this.prevClick}
                 nextClick={this.nextClick}

@@ -497,7 +497,7 @@ class Application extends Component {
             });
         });
 
-    }
+    };
 
     render() {
         return (
