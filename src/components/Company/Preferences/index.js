@@ -68,33 +68,7 @@ class Preferences extends React.Component {
                             timeZone: data.companyPreferences[0].Timezone,
                             time: data.companyPreferences[0].time,
                         }, () => {
-                            this.props.client
-                                .query({
-                                    query: this.GET_QUERY_CATALOGS,
-                                    variables: { id: 11 },
-                                    fetchPolicy: 'no-cache'
-                                })
-                                .then((result) => {
-                                    let data = result.data;
-                                    if (data.getcatalogitem != null) {
-                                        this.setState({
-                                            options: data.getcatalogitem
-                                        }, () => {
-                                            this.setState({
-                                                loading: false
-                                            });
-                                        });
-                                    } else {
-                                        this.setState({
-                                            loading: false
-                                        });
-                                    }
-                                })
-                                .catch((error) => {
-                                    this.setState({
-                                        errorMessage: 'Error: Loading departments: ' + error
-                                    });
-                                });
+
                         });
                     }
                 })
@@ -106,6 +80,38 @@ class Preferences extends React.Component {
                     this.setState({
                         loading: false
                     })
+                });
+        });
+
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: this.GET_QUERY_CATALOGS,
+                    variables: { id: 11 },
+                    fetchPolicy: 'no-cache'
+                })
+                .then((result) => {
+                    let data = result.data;
+                    if (data.getcatalogitem != null) {
+                        this.setState({
+                            options: data.getcatalogitem
+                        }, () => {
+                            this.setState({
+                                loading: false
+                            });
+                        });
+                    } else {
+                        this.setState({
+                            loading: false
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.setState({
+                        errorMessage: 'Error: Loading positions: ' + error
+                    });
                 });
         });
     }
