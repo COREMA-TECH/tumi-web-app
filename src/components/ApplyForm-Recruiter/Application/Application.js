@@ -604,7 +604,7 @@ class Application extends Component {
                                                                     <option value="0">Open Position</option>
                                                                     {data.workOrder.map((item) => (
                                                                         <option
-                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code})</option>
+                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
                                                                     ))}
                                                                 </select>
                                                             );
@@ -653,10 +653,10 @@ class Application extends Component {
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.data.workOrder != null && data.data.workOrder.length > 0) {
+                                                        if (data.workOrder != null && data.workOrder.length > 0) {
                                                             let options = [];
-                                                            data.data.workOrder.map((item) => (
-                                                                options.push({value: item.Id, label: item.position.Position + (item.BusinessCompany.Code)})
+                                                            data.workOrder.map((item) => (
+                                                                options.push({value: item.id, label: item.position.Position + "(" + item.BusinessCompany.Code.trim()+ ")"})
                                                             ));
 
                                                             return (
