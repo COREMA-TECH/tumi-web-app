@@ -4,7 +4,7 @@ import makeAnimated from 'react-select/lib/animated';
 import withApollo from 'react-apollo/withApollo';
 import TimeField from 'react-simple-timefield';
 import withGlobalContent from 'Generic/Global';
-import { GET_INITIAL_DATA } from './Queries';
+import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
 
 class FilterForm extends Component {
 
@@ -13,6 +13,8 @@ class FilterForm extends Component {
         selectedEmployees: [],
         locations: [],
         location: 0,
+        positions: [],
+        position: 0,
         color: '',
         startHour: '00:00',
         endHour: '00:00',
@@ -55,6 +57,30 @@ class FilterForm extends Component {
                 );
             });
     }
+    getPosition = () => {
+        this.props.client
+            .query({
+                query: GET_POSITION,
+                variables: {
+                    Id_Entity: this.state.location
+                }
+            })
+            .then(({ data }) => {
+                console.log(data)
+                //Save Positions into state
+                this.setState((prevState) => {
+                    return { positions: data.getposition, position: 0 }
+                })
+
+            }).catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error loading position list',
+                    'bottom',
+                    'right'
+                );
+            });
+    }
 
     renderLocationList = () => {
         return this.state.locations.map((item) => {
@@ -63,17 +89,29 @@ class FilterForm extends Component {
 
     }
 
+    renderPositionList = () => {
+        return this.state.positions.map((item) => {
+            return <option key={item.Id} value={item.Id}>{item.Position}</option>
+        })
+
+    }
+
     validateControls = () => {
-        console.log("This is my location", this.state.location, typeof (this.state.location))
         if (this.state.selectedEmployees.length == 0)
             return { valid: false, message: 'You need to select at least one employee' };
         if (this.state.endDate < this.state.startDate)
             return { valid: false, message: 'End Date can not be less than Start Date' };
-        if (this.state.endDate < this.state.startDate)
-            return { valid: false, message: 'End Hour can not be less than Start Date' };
+
+        let startHour = this.state.startHour.replace(':', ''), endHour = this.state.endHour.replace(':', '');
+        if (parseInt(endHour) < parseInt(startHour))
+            return { valid: false, message: 'End Time can not be less than Start Time' };
+
         if (parseInt(this.state.location) == 0)
             return { valid: false, message: 'You need to select a location' };
-        return { valid: true, message: 'Everything is ok' };;
+        if (parseInt(this.state.position) == 0)
+            return { valid: false, message: 'You need to select a position' };
+
+        return { valid: true, message: 'Everything is ok' };
     }
 
     handleChangeEmployeeTag = (selectedEmployees) => {
@@ -82,7 +120,10 @@ class FilterForm extends Component {
 
     handleValueChange = (event) => {
         const element = event.target;
-        this.setState({ [element.name]: element.value })
+        this.setState({ [element.name]: element.value }, () => {
+            if (element.name == 'location')
+                this.getPosition();
+        })
     }
 
     handleTimeChange = (name) => (text) => {
@@ -129,7 +170,7 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">Start Time</label>
-                        <TimeField name="startHour" style={{ width: '100%' }} className="form-control" value={this.state.startDate} onChange={this.handleTimeChange('startHour')} />
+                        <TimeField name="startHour" style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">End Time</label>
@@ -150,6 +191,20 @@ class FilterForm extends Component {
                         >
                             <option value={0}>Select a location</option>
                             {this.renderLocationList()}
+                        </select>
+                    </div>
+                    <div className="col-md-12">
+                        < label htmlFor="">Position</label>
+                        <select
+                            name="position"
+                            id="position"
+                            onChange={this.handleValueChange}
+                            value={this.state.position}
+                            className="form-control"
+                            required
+                        >
+                            <option value={0}>Select a position</option>
+                            {this.renderPositionList()}
                         </select>
                     </div>
                     <div className="col-md-12">
