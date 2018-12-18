@@ -988,7 +988,6 @@ class Application extends Component {
                                                         });
                                                     }}
                                                     placeholder="+(999) 999-9999"
-                                                    required
                                                     minLength="15"
                                                 />
                                             </div>
