@@ -18,6 +18,8 @@ import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import {RECREATE_IDEAL_JOB_LIST} from "../../ApplyForm/Mutations";
+import {GET_APPLICANT_IDEAL_JOBS} from "../../ApplyForm/Queries";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -196,6 +198,17 @@ class Application extends Component {
                         localStorage.setItem('idApplication', data.addApplication.id);
                         this.setState({
                             editing: false
+                        }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: parseInt(data.addApplication.id),
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object, parseInt(data.addApplication.id));
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
@@ -259,6 +272,17 @@ class Application extends Component {
                     .then(({data}) => {
                         this.setState({
                             editing: false
+                        }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: this.props.applicationId,
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object, this.props.applicationId);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -274,6 +298,26 @@ class Application extends Component {
             }
         );
     };
+
+
+    addApplicantJobs = (idealJobArrayObject, applicationId) => {
+        this.props.client
+            .mutate({
+                mutation: RECREATE_IDEAL_JOB_LIST,
+                variables: {
+                    ApplicationId: applicationId,
+                    applicationIdealJob: idealJobArrayObject
+                }
+            })
+            .then(({data}) => {
+                console.log("DEBUG");
+            })
+            .catch(error => {
+                console.log("DEBUG ERROR");
+            })
+    };
+
+
     getHotels = (func = () => {
     }) => {
         // getHotels = (idParent) => {
@@ -339,9 +383,7 @@ class Application extends Component {
                                 },
                                 () => {
                                     this.removeSkeletonAnimation();
-                                    this.setState({
-                                        loading: false
-                                    });
+                                    this.getIdealJobsByApplicationId();
                                 }
                             );
                         }
@@ -359,6 +401,44 @@ class Application extends Component {
                     });
             }
         );
+    };
+
+
+    // get ideal jobs
+    getIdealJobsByApplicationId = () => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_IDEAL_JOBS,
+                variables: {
+                    ApplicationId: this.props.applicationId
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({data}) => {
+                let dataAPI = data.applicantIdealJob;
+                let object;
+
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        positionsTags: [...prevState.positionsTags, {
+                            value: item.id,
+                            label: item.description
+                        }]
+                    }))
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -466,73 +546,6 @@ class Application extends Component {
                                                     {formSpanish[16].label}
                                                 </span>
                                                 {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-
-                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                {/*if (data.getposition != null && data.getposition.length > 0) {*/}
-                                                {/*return (*/}
-                                                {/*<select*/}
-                                                {/*name="positionApply"*/}
-                                                {/*id="positionApply"*/}
-                                                {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*positionApplyingFor: event.target.value*/}
-                                                {/*});*/}
-                                                {/*}}*/}
-                                                {/*value={this.state.positionApplyingFor}*/}
-                                                {/*className="form-control"*/}
-                                                {/*disabled={!this.state.editing}*/}
-                                                {/*>*/}
-                                                {/*<option value="">Select a position</option>*/}
-                                                {/*{data.getposition.map((item) => (*/}
-                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                {/*//    console.log("Info del hotel ", ),*/}
-
-                                                {/*< option value={item.Id} > {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }) ? this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code : '') + ')'}</option>*/}
-                                                {/*))}*/}
-                                                {/*</select>*/}
-                                                {/*);*/}
-                                                {/*}*/}
-                                                {/*return <SelectNothingToDisplay />;*/}
-                                                {/*}}*/}
-                                                {/*</Query>*/}
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            let options = [];
-                                                            data.getcatalogitem.map((item) => (
-                                                                options.push({value: item.Id, label: item.Description})
-                                                            ));
-
-                                                            return (
-                                                                <div style={{
-                                                                    paddingTop: '0px',
-                                                                    paddingBottom: '2px',
-                                                                }}>
-                                                                    <Select
-                                                                        isDisabled={!this.state.editing}
-                                                                        options={options}
-                                                                        value={this.state.positionsTags}
-                                                                        onChange={this.handleChangePositionTag}
-                                                                        closeMenuOnSelect={false}
-                                                                        components={makeAnimated()}
-                                                                        isMulti
-                                                                    />
-                                                                </div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay/>;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label">
-                                                    {formSpanish[17].label}
-                                                </span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
                                                     {/*{({loading, error, data, refetch, networkStatus}) => {*/}
 
                                                         {/*//if (networkStatus === 4) return <LinearProgress />;*/}
@@ -570,33 +583,100 @@ class Application extends Component {
                                                     {/*}}*/}
                                                 {/*</Query>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                    {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        if (data.workOrder != null && data.workOrder.length > 0) {
                                                             return (
                                                                 <select
                                                                     name="positionApply"
                                                                     id="positionApply"
                                                                     onChange={(event) => {
                                                                         this.setState({
-                                                                            idealJob: event.target.value
+                                                                            positionApplyingFor: event.target.value
                                                                         });
                                                                     }}
-                                                                    value={this.state.idealJob}
+                                                                    value={this.state.positionApplyingFor}
                                                                     className="form-control"
                                                                     disabled={!this.state.editing}
                                                                 >
                                                                     <option value="">Select a position</option>
                                                                     <option value="0">Open Position</option>
-                                                                    {data.getcatalogitem.map((item) => (
+                                                                    {data.workOrder.map((item) => (
                                                                         <option
-                                                                            value={item.Id}>{item.Description}</option>
+                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
                                                                     ))}
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay />;
+                                                        return <SelectNothingToDisplay/>;
+                                                    }}
+                                                </Query>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label">
+                                                    {formSpanish[17].label}
+                                                </span>
+                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
+                                                {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
+
+                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                                                {/*if (error) return <p>Nothing To Display </p>;*/}
+                                                {/*if (data.getposition != null && data.getposition.length > 0) {*/}
+                                                {/*return (*/}
+                                                {/*<select*/}
+                                                {/*name="positionApply"*/}
+                                                {/*id="positionApply"*/}
+                                                {/*onChange={(event) => {*/}
+                                                {/*this.setState({*/}
+                                                {/*positionApplyingFor: event.target.value*/}
+                                                {/*});*/}
+                                                {/*}}*/}
+                                                {/*value={this.state.positionApplyingFor}*/}
+                                                {/*className="form-control"*/}
+                                                {/*disabled={!this.state.editing}*/}
+                                                {/*>*/}
+                                                {/*<option value="">Select a position</option>*/}
+                                                {/*{data.getposition.map((item) => (*/}
+                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
+                                                {/*//    console.log("Info del hotel ", ),*/}
+
+                                                {/*< option value={item.Id} > {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }) ? this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code : '') + ')'}</option>*/}
+                                                {/*))}*/}
+                                                {/*</select>*/}
+                                                {/*);*/}
+                                                {/*}*/}
+                                                {/*return <SelectNothingToDisplay />;*/}
+                                                {/*}}*/}
+                                                {/*</Query>*/}
+                                                <Query query={GET_POSITIONS_QUERY}>
+                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.workOrder != null && data.workOrder.length > 0) {
+                                                            let options = [];
+                                                            data.workOrder.map((item) => (
+                                                                options.push({value: item.id, label: item.position.Position + "(" + item.BusinessCompany.Code.trim()+ ")"})
+                                                            ));
+
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        isDisabled={!this.state.editing}
+                                                                        options={options}
+                                                                        value={this.state.positionsTags}
+                                                                        onChange={this.handleChangePositionTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                        isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay/>;
                                                     }}
                                                 </Query>
                                             </div>
@@ -720,15 +800,14 @@ class Application extends Component {
                                                     onChange={(event) => {
                                                         this.setState({
                                                             zipCode: event.target.value
-                                                        });
-                                                        let zip_code = '';
-                                                        zip_code = event.target.value.substring(0, 5);
-                                                        fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                                            return response.json()
-                                                        }).then((cities) => {
-                                                            if (!cities.error) {
-                                                                this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                            }
+                                                        }, () => {
+                                                            fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
+                                                                return response.json()
+                                                            }).then((cities) => {
+                                                                if (!cities.error) {
+                                                                    this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                                }
+                                                            });
                                                         });
                                                     }}
                                                     value={this.state.zipCode}

@@ -264,7 +264,6 @@ class GeneralInfoProperty extends Component {
 	};
 
 	insertCompany = (id) => {
-		console.log("estoy en el insert");
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -274,7 +273,6 @@ class GeneralInfoProperty extends Component {
 		let insregionAsync = async () => {
 			if (vRegion) {
 				NewIdRegion = vRegion.Id;
-				console.log("Este es el nuevo ID ", NewIdRegion);
 			} else {
 				//const InsertDepartmentNew =
 				await this.props.client
@@ -317,8 +315,6 @@ class GeneralInfoProperty extends Component {
 					linearProgress: true
 				},
 				() => {
-					//Create the mutation using apollo global client
-					console.log("arrastro el nuevo ID ", NewIdRegion);
 					this.props.client
 						.mutate({
 							// Pass the mutation structure
@@ -378,7 +374,7 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then(({ data }) => {
-							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id));
+							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(id));
 
 							this.setState({
 								linearProgress: false
@@ -863,6 +859,7 @@ class GeneralInfoProperty extends Component {
 			return (
 				<div className="input-group-append">
 					<button
+						type="button"
 						id={`${property}_edit`}
 						className="btn btn-default"
 						onClick={() => {
@@ -1146,7 +1143,7 @@ class GeneralInfoProperty extends Component {
 															required
 														/>
 													</div>
-													<div className="col-md-6 col-lg-3">
+													<div className="col-md-6 col-lg-4">
 														<label>* Address</label>
 														<InputValid
 															change={(text) => {
@@ -1160,7 +1157,7 @@ class GeneralInfoProperty extends Component {
 															required
 														/>
 													</div>
-													<div className="col-md-6 col-lg-4">
+													<div className="col-md-6 col-lg-3">
 														<label>Address 2</label>
 														<input
 															className={'form-control'}
@@ -1188,53 +1185,6 @@ class GeneralInfoProperty extends Component {
 															className={'form-control'}
 														/>
 													</div>
-													<div className="col-md-12 col-lg-3">
-														<label> Region</label>
-														<AutosuggestInput
-															id="Region"
-															name="Region"
-															data={this.state.regions}
-															//error={this.state.validRegion === '' ? false : true}
-															value={this.state.RegionName}
-															onChange={this.updateRegionName}
-															onSelect={this.updateRegionName}
-														/>
-													</div>
-													{/*	<div className="col-md-6 col-lg-3">
-												<label>* Region</label>
-												<Query query={this.getRegionsQuery} >
-													{({ loading, error, data, refetch, networkStatus }) => {
-														//if (networkStatus === 4) return <LinearProgress />;
-														if (loading) return <LinearProgress />;
-														if (error) return <p>Nothing To Display </p>;
-														if (
-															data.getcatalogitem != null &&
-															data.getcatalogitem.length > 0
-														) {
-															return (
-																<select
-																	name="region"
-																	className={'form-control'}
-																	onChange={(event) => {
-																		this.setState({
-																			city: citySelected[0].Id
-																		});
-																	}}
-																	error={this.state.validRegion === '' ? false : true}
-																	value={this.state.region}
-																	showNone={false}
-																>
-																	<option value="">Select a region</option>
-																	{data.getcatalogitem.map((item) => (
-																		<option value={item.Id}>{item.Name}</option>
-																	))}
-																</select>
-															);
-														}
-														return <SelectNothingToDisplay />;
-													}}
-												</Query>
-											</div> */}
 
 													<div className="col-md-6 col-lg-3">
 														<label>City</label>
@@ -1337,6 +1287,18 @@ class GeneralInfoProperty extends Component {
 															disabled={!this.props.showStepper}
 														/>
 
+													</div>
+													<div className="col-md-12 col-lg-3">
+														<label> Region</label>
+														<AutosuggestInput
+															id="Region"
+															name="Region"
+															data={this.state.regions}
+															//error={this.state.validRegion === '' ? false : true}
+															value={this.state.RegionName}
+															onChange={this.updateRegionName}
+															onSelect={this.updateRegionName}
+														/>
 													</div>
 													<div className="col-md-6 col-lg-2">
 														<label>* Phone Number</label>

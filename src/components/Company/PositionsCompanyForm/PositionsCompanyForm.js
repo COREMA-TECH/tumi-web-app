@@ -912,7 +912,7 @@ query getposition {
 														state: {
 															contract: 0,
 															Id_Entity: this.state.idCompany,
-															Id_Parent: this.state.idManagement,
+															Id_Parent: this.props.idManagement,
 															idContract: this.props.idContract,
 															href: hrefValue
 														}

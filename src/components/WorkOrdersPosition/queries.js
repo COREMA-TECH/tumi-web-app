@@ -18,6 +18,11 @@ export const GET_WORKORDERS_QUERY = gql`
 			position {
 				Position
 			}
+			BusinessCompany
+			{
+				Id
+				Name
+			}
 		}
 	}
 `;

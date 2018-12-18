@@ -42,13 +42,12 @@ const MobileMenu = (props) => {
 						<span>Contracts</span>
 					</Link>
 				</li>
-				{/* <li className="MainMenu-option">
-					<Link to={`/home/Recruiter`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'fas fa-clipboard MenuMobile-icon'} title={'Recruiter'} />
-						<span>Recruiter</span>
+				<li className="MainMenu-option">
+					<Link to={`/home/employees`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
+						<i className={'far fa-handshake MenuMobile-icon'} title={'Employees'} />
+						<span>Employees</span>
 					</Link>
-				</li>*/}
-
+				</li>
 				<li className="MainMenu-option">
 					<Link
 						to={`/home/application`}
@@ -78,6 +77,11 @@ const MobileMenu = (props) => {
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/employment-application">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Public Application
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/work-orders">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
 							</a>
 						</li>
 					</ul>
@@ -129,6 +133,11 @@ const MobileMenu = (props) => {
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/home/Recruiter">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> New Lead
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/work-orders">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
 							</a>
 						</li>
 					</ul>

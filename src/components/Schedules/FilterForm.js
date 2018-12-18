@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import Options from './Options';
 
 class Form extends Component {
 
     render() {
         return (
             <div className="MasterShiftForm">
+                <Options />
                 <form action="">
                     <div className="row">
                         <div className="col-md-12">

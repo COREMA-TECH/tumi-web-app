@@ -13,21 +13,6 @@ class Schedules extends Component {
                 <div className="row">
                     <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
-                            <div className="MasterShift-options">
-                                <div className="row">
-                                    <div className="col-md-4">
-                                        <div className="onoffswitch">
-                                            <input type="checkbox" checked="" name="charge"
-                                                onClick="" onChange={this.handleChange}
-                                                className="onoffswitch-checkbox" id="myonoffswitch" />
-                                            <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                <span className="onoffswitch-inner"></span>
-                                                <span className="onoffswitch-switch"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <FilterForm />
                         </div>
                     </div>
