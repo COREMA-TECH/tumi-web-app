@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import InputMask from "react-input-mask";
 
 class EmployeeInputRow extends Component {
     constructor(props) {
@@ -68,15 +69,27 @@ class EmployeeInputRow extends Component {
                     />
                 </div>
                 <div className="col-md-3">
-                    <input
+                    {/*<input*/}
+                        {/*onChange={(e) => {*/}
+                            {/*this.props.onchange(phoneNumber, e.target.value);*/}
+                        {/*}}*/}
+                        {/*value={this.props[phoneNumber]}*/}
+                        {/*type="number"*/}
+                        {/*name="number"*/}
+                        {/*className="form-control"*/}
+                        {/*required={!this.state.lastRow}*/}
+                    {/*/>*/}
+                    <InputMask
+                        id="number"
+                        name="number"
+                        mask="+(999) 999-9999"
+                        maskChar=" "
+                        value={this.props[phoneNumber]}
+                        className="form-control"
                         onChange={(e) => {
                             this.props.onchange(phoneNumber, e.target.value);
                         }}
-                        value={this.props[phoneNumber]}
-                        type="number"
-                        name="number"
-                        className="form-control"
-                        required={!this.state.lastRow}
+                        placeholder="+(999) 999-9999"
                     />
                 </div>
             </div>

@@ -497,7 +497,7 @@ class Application extends Component {
             });
         });
 
-    }
+    };
 
     render() {
         return (
@@ -586,7 +586,7 @@ class Application extends Component {
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        if (data.workOrder != null && data.workOrder.length > 0) {
                                                             return (
                                                                 <select
                                                                     name="positionApply"
@@ -602,9 +602,9 @@ class Application extends Component {
                                                                 >
                                                                     <option value="">Select a position</option>
                                                                     <option value="0">Open Position</option>
-                                                                    {data.getcatalogitem.map((item) => (
+                                                                    {data.workOrder.map((item) => (
                                                                         <option
-                                                                            value={item.Id}>{item.Description}</option>
+                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
                                                                     ))}
                                                                 </select>
                                                             );
@@ -653,10 +653,10 @@ class Application extends Component {
                                                     {({loading, error, data, refetch, networkStatus}) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                        if (data.workOrder != null && data.workOrder.length > 0) {
                                                             let options = [];
-                                                            data.getcatalogitem.map((item) => (
-                                                                options.push({value: item.Id, label: item.Description})
+                                                            data.workOrder.map((item) => (
+                                                                options.push({value: item.id, label: item.position.Position + "(" + item.BusinessCompany.Code.trim()+ ")"})
                                                             ));
 
                                                             return (

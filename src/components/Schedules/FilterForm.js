@@ -5,6 +5,7 @@ import withApollo from 'react-apollo/withApollo';
 import TimeField from 'react-simple-timefield';
 import withGlobalContent from 'Generic/Global';
 import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
+import Options from './Options';
 
 class FilterForm extends Component {
 
@@ -148,6 +149,9 @@ class FilterForm extends Component {
         return <div className="MasterShiftForm">
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
+                    <div className="col-md-12">
+                        <Options />
+                    </div>
                     <div className="col-md-12">
                         <label htmlFor="">Employess</label>
                         <Select

@@ -145,9 +145,10 @@ class CustomizedTabs extends Component {
 							idManagement={this.props.idManagement}
 							idProperty={this.state.idProperty}
 							Markup={this.props.Markup}
-							updateIdProperty={(id) => {
+							updateIdProperty={(id, idmanagement) => {
 								this.setState({
-									idProperty: id
+									idProperty: id,
+									idManagement: idmanagement
 								});
 							}}
 							handleClose={this.props.handleClose}
@@ -181,7 +182,7 @@ class CustomizedTabs extends Component {
 					)}
 					{value === 3 && (
 						<PositionsCompanyForm
-                            href="/home/Properties"
+							href="/home/Properties"
 							idCompany={this.state.idProperty}
 							idManagement={this.state.idManagement}
 							idContract={1}

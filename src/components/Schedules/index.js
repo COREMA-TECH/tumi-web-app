@@ -1,4 +1,4 @@
-import Form from './FilterForm.js';
+import FilterForm from './FilterForm.js';
 import React, { Component } from 'react';
 import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
@@ -13,10 +13,7 @@ class Schedules extends Component {
                 <div className="row">
                     <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
-                            <div className="MasterShift-options">
-
-                            </div>
-                            <Form />
+                            <FilterForm />
                         </div>
                     </div>
                     <div className="col-md-10">
@@ -42,7 +39,7 @@ class Schedules extends Component {
                                     </div>
                                 </form>
                             </div>
-                            <div className="MasterShift-schedulesBody">
+                            <div className="MasterShift-schedulesBody" id="divToPrint">
                                 <Shifts />
                             </div>
                         </div>

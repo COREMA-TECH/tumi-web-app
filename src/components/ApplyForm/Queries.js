@@ -31,12 +31,17 @@ export const GET_CITIES_QUERY = gql`
  */
 export const GET_POSITIONS_QUERY = gql`
 	{
-		getcatalogitem(Id_Catalog: 6, IsActive: 1) {
-			Id
-			IsActive
-			Description
-		}
-	}
+        workOrder(status: 2) {
+            id
+            position {
+                Position
+            }
+            BusinessCompany {
+                Id
+                Code
+            }
+        }
+    }
 `;
 
 /**

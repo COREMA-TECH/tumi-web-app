@@ -1,12 +1,12 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import {withApollo} from 'react-apollo';
-import CatalogItem from 'Generic/CatalogItem';
 import {select} from 'async';
 import months from './months.json';
 import timeZones from './timezones.json';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import Calendar from "../../Holidays/Calendar"
+import CatalogItem from "../../Generic/CatalogItem";
 
 class Preferences extends React.Component {
 
@@ -16,17 +16,18 @@ class Preferences extends React.Component {
             Id: null,
             period: 1,
             charge: false,
-            amount: 0,
+            amount: '',
             idCompany: this.props.idCompany,
             Entityid: this.props.idCompany,
             disabled: true,
             time: '',
-
+            options: [],
 
             startMonth: null,
             endMonth: null,
             timeZone: null,
-            openCalendarModal: false
+            openCalendarModal: false,
+
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
@@ -67,9 +68,6 @@ class Preferences extends React.Component {
                             timeZone: data.companyPreferences[0].Timezone,
                             time: data.companyPreferences[0].time,
                         }, () => {
-                            this.setState({
-                                loading: false
-                            });
 
                         });
                     }
@@ -82,6 +80,38 @@ class Preferences extends React.Component {
                     this.setState({
                         loading: false
                     })
+                });
+        });
+
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client
+                .query({
+                    query: this.GET_QUERY_CATALOGS,
+                    variables: { id: 11 },
+                    fetchPolicy: 'no-cache'
+                })
+                .then((result) => {
+                    let data = result.data;
+                    if (data.getcatalogitem != null) {
+                        this.setState({
+                            options: data.getcatalogitem
+                        }, () => {
+                            this.setState({
+                                loading: false
+                            });
+                        });
+                    } else {
+                        this.setState({
+                            loading: false
+                        });
+                    }
+                })
+                .catch((error) => {
+                    this.setState({
+                        errorMessage: 'Error: Loading positions: ' + error
+                    });
                 });
         });
     }
@@ -103,7 +133,7 @@ class Preferences extends React.Component {
 
         if (name === "charge") {
             this.setState({
-                amount: !value ? 0 : this.state.amount
+                amount: !value ? '' : this.state.amount
             });
         }
 
@@ -135,8 +165,8 @@ class Preferences extends React.Component {
                     PeriodId: this.state.period,
                     amount: parseFloat(this.state.amount),
                     charge: this.state.charge,
-                    FiscalMonth1: this.state.startMonth,
-                    FiscalMonth2: this.state.endMonth,
+                    FiscalMonth1: this.state.startMonth == "" ? null : this.state.startMonth,
+                    FiscalMonth2: this.state.endMonth == "" ? null : this.state.endMonth,
                     Timezone: parseInt(this.state.timeZone),
                     time: this.state.time
                 }
@@ -207,6 +237,17 @@ class Preferences extends React.Component {
         }
     `;
 
+    GET_QUERY_CATALOGS = gql`
+        query getcatalogitem($id:Int) {
+            getcatalogitem(IsActive: 1, Id_Catalog: $id) {
+                Id
+                Code: Name
+                Name: Description
+                IsActive
+            }
+        }
+    `;
+
     INSERT_QUERY = gql`
         mutation addCompanyPreference($input: [inputInsertCompanyPreference]) {
             addCompanyPreference(companyPreference: $input) {
@@ -268,10 +309,7 @@ class Preferences extends React.Component {
                                 <div class="card-header">Lunch Preferences</div>
                                 <div class="card-body">
                                     <div className="row">
-                                        <div className="col-md-12">
-                                            <label>
-                                                Do You Have Any Lunch Period Deductions?
-                                            </label>
+                                        <div className="col-md-2">
                                             <div className="onoffswitch">
                                                 <input type="checkbox" checked={this.state.charge} name="charge"
                                                        onClick={this.toggleState} onChange={this.handleChange}
@@ -282,50 +320,81 @@ class Preferences extends React.Component {
                                                 </label>
                                             </div>
                                         </div>
-                                        <div className="col-md-6">
-                                            <label>
-                                                Time
+                                        <div className="col-md-10">
+                                            <label className="font-weight-bold">
+                                                Do You Have Any Lunch Period Deductions?
                                             </label>
-                                            <input type="text" min="0" name="amount"
-                                                   disabled={(this.state.disabled) ? "disabled" : ""}
-                                                   value={this.state.time} className="form-control"
-                                                   onChange={(e) => {
-                                                       this.setState({
-                                                           time: e.target.value
-                                                       })
-                                                   }}/>
                                         </div>
-                                        <div className="col-md-6">
-                                            <label>
-                                                Amount
-                                            </label>
-                                            <input type="number" min="0" name="amount" step=".01"
-                                                   disabled={(this.state.disabled) ? "disabled" : ""}
-                                                   value={this.state.amount} className="form-control"
-                                                   onChange={this.handleChange}/>
-                                        </div>
-                                        <br/>
-                                        <br/>
-                                        <div className="col-md-6">
-                                            <label>
-                                                Frequency
-                                            </label>
-                                            {
-                                                (!this.state.disabled) ?
-                                                    <CatalogItem
-                                                        update={(id) => {
-                                                            this.setState({period: id})
-                                                        }}
-                                                        PeriodId={11}
-                                                        name="period"
-                                                        value={this.state.period}
-                                                        disabled={(this.state.disabled)}
-                                                    >
-                                                    </CatalogItem>
-                                                    :
-                                                    <select className="form-control" disabled></select>
-                                            }
-                                        </div>
+                                        <br/><br/>
+                                        <div className="col-md-12 mb-2"></div>
+                                        {/*<div className="col-md-6">*/}
+                                            <div className="col-md-3">
+                                                <label className="font-weight-bold d-lg-block text-lg-right">
+                                                    Time (min)
+                                                </label>
+                                            </div>
+                                            <div className="col-md-3">
+                                                <input type="number" min="0" name="amount"
+                                                       disabled={(this.state.disabled) ? "disabled" : ""}
+                                                       value={this.state.time} className="form-control"
+                                                       onChange={(e) => {
+                                                           this.setState({
+                                                               time: e.target.value
+                                                           })
+                                                       }}/>
+                                            </div>
+                                        {/*</div>*/}
+                                        {/*<div className="col-md-6">*/}
+                                            <div className="col-md-2">
+                                                <label className="font-weight-bold d-lg-block text-lg-right">
+                                                    Amount
+                                                </label>
+                                            </div>
+                                            <div className="col-md-3">
+                                                <input
+                                                    type="number"
+                                                    min="0"
+                                                    name="amount"
+                                                    step=".01"
+                                                    disabled={(this.state.disabled) ? "disabled" : ""}
+                                                    value={this.state.amount} className="form-control"
+                                                    onChange={this.handleChange}
+                                                    placeholder="$"
+                                                />
+                                            </div>
+                                        <div className="col-12 col-md-12 mb-4"></div>
+                                        {/*</div>*/}
+                                                <div className="col-md-2">
+                                                    <label className="font-weight-bold">
+                                                        Frequency
+                                                    </label>
+                                                </div>
+                                                {
+                                                    this.state.options.map((item) => {
+                                                            //return <option value={item.Id} key={item.Id} > {item.Name}</option>
+                                                            return (
+                                                                <div className="col-3 col-md-3">
+                                                                    <div>
+                                                                        <div className="col-md-12">
+                                                                            <label>{item.Name}</label>
+                                                                        </div>
+                                                                        <div className="col-md-12">
+                                                                            <input
+                                                                                value={item.Id}
+                                                                                checked={this.state.period == item.Id ? true : false}
+                                                                                onChange={(event) => {
+                                                                                    this.setState({period: parseInt(event.target.value)}, () => {console.log(this.state.period)})
+                                                                                }}
+                                                                                type="radio"
+                                                                                name="frequency"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    )
+                                                }
                                     </div>
                                 </div>
                             </div>
@@ -342,7 +411,6 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
-                                                        required
                                                         value={this.state.startMonth}
                                                         className="form-control"
                                                         onChange={(event) => {
@@ -351,7 +419,7 @@ class Preferences extends React.Component {
                                                             })
                                                         }}
                                                     >
-                                                        <option value="">Select a month</option>
+                                                        <option value="12">Select a month</option>
                                                         {
                                                             months.map(month => {
                                                                 if (this.state.endMonth != month.id) {
@@ -371,7 +439,6 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
-                                                        required
                                                         value={this.state.endMonth}
                                                         className="form-control"
                                                         onChange={(event) => {
@@ -380,7 +447,7 @@ class Preferences extends React.Component {
                                                             })
                                                         }}
                                                     >
-                                                        <option value="">Select a month</option>
+                                                        <option value="12">Select a month</option>
                                                         {
                                                             months.map(month => {
                                                                 if (this.state.startMonth != month.id) {
@@ -410,7 +477,6 @@ class Preferences extends React.Component {
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
-                                                        required
                                                         value={this.state.timeZone}
                                                         className="form-control"
                                                         onChange={(event) => {

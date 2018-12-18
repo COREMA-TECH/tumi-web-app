@@ -1,4 +1,16 @@
 .MasterShift {
+    &-btn {
+        i {
+            color: $text-color;
+            line-height: 36px;
+            font-size: 2rem;
+        }
+        &:hover {
+            i {
+                color: $info;
+            }
+        }
+    }
     &-schedules {
         background: $white;
         border-radius: $border-radius-standar;
