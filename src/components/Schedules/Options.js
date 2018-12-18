@@ -49,7 +49,6 @@ class Options extends Component {
                     </div>
                 </div>
             </div>
-
         );
     }
 
