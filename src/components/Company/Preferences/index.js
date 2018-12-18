@@ -21,12 +21,13 @@ class Preferences extends React.Component {
             Entityid: this.props.idCompany,
             disabled: true,
             time: '',
-
+            options: [],
 
             startMonth: null,
             endMonth: null,
             timeZone: null,
-            openCalendarModal: false
+            openCalendarModal: false,
+
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
