@@ -15,7 +15,11 @@ class Options extends Component {
         html2canvas(input)
             .then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF();
+                const pdf = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'in',
+                    format: [13, 10]
+                });
 
                 pdf.addImage(imgData, 'JPEG', 0, 0);
                 pdf.save("download.pdf");
