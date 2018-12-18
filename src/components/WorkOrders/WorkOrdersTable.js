@@ -245,7 +245,7 @@ class WorkOrdersTable extends Component {
                             {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                 return (
                                     <TableRow>
-                                        <CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>
                                             <Tooltip title="Life Cycle">
                                                 <button
                                                     className="btn btn-success mr-1 float-left"

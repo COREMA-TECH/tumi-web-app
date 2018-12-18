@@ -210,7 +210,7 @@ class DepartmentsTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell component="th" style={{ width: '50px' }}>
+											<CustomTableCell component="th" style={{ textAlign: 'center', width: '50px' }}>
 												<Tooltip title="Edit">
 													<div>
 														<button
@@ -243,7 +243,7 @@ class DepartmentsTable extends React.Component {
 													</div>
 												</Tooltip>
 											</CustomTableCell>
-											<CustomTableCell>{row.Contract_Name}</CustomTableCell>
+											<CustomTableCell>{row.Contract_Name.trim()}</CustomTableCell>
 											<CustomTableCell style={{ textAlign: 'center' }}>{row.Contrat_Owner}</CustomTableCell>
 											<CustomTableCell style={{ textAlign: 'center', width: '250px' }}>
 												{row.Contract_Status == 0 ? 'Draft' : (row.Contract_Status == 1 ? 'Completed' : 'Expired')}
