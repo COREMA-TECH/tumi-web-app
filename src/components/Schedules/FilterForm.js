@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Options from './Options';
+import ReactDOM from 'react-dom';
+import ShiftColorPicker from './ShiftColorPicker';
 
 class Form extends Component {
 
@@ -38,7 +40,7 @@ class Form extends Component {
                         </div>
                         <div className="col-md-12">
                             <label htmlFor="">Color</label>
-                            <input type="text" className="form-control" name="location" />
+                            <ShiftColorPicker />
                         </div>
                     </div>
                     <div className="row">
