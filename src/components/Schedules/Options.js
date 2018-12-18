@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 class Options extends Component {
+
+    /**
+     * Function to create a canvas element based
+     * on the capture of a specific html element
+     * and then pass it to .pgn to establish it
+     * within a pdf document.
+     */
+    printSchedule() {
+        const input = document.getElementById('divToPrint');
+        html2canvas(input)
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                pdf.save("download.pdf");
+            });
+    }
 
     render() {
         return (
@@ -15,7 +35,11 @@ class Options extends Component {
                         </div>
                     </div>
                     <div className="col-md-5">
-                        <button type="button" className="btn btn-link MasterShift-btn">
+                        <button
+                            type="button"
+                            className="btn btn-link MasterShift-btn"
+                            onClick={this.printSchedule}
+                        >
                             <i class="fas fa-print"></i>
                         </button>
                     </div>

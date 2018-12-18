@@ -39,7 +39,7 @@ class Schedules extends Component {
                                     </div>
                                 </form>
                             </div>
-                            <div className="MasterShift-schedulesBody">
+                            <div className="MasterShift-schedulesBody" id="divToPrint">
                                 <Shifts />
                             </div>
                         </div>
