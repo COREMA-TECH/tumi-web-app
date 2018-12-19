@@ -62,7 +62,7 @@ class HotelList extends Component {
                     loadingRemoving: false
                 }, () => {
                     this.props.handleOpenSnackbar('success', 'Company Deleted!');
-                    this.getHotels();
+                    this.getHotels(-1);
                 });
             }).catch((error) => {
                 this.setState({
