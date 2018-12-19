@@ -210,40 +210,36 @@ class DepartmentsTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell component="th" style={{ width: '50px' }}>
+											<CustomTableCell component="th" style={{ textAlign: 'center', width: '50px' }}>
 												<Tooltip title="Edit">
-													<div>
-														<button
-															className="btn btn-danger ml-1 float-left"
-															disabled={this.props.loading}
-															onClick={() => {
-																history.push({
-																	pathname: '/home/contract/add',
-																	state: { contract: row.Id }
-																});
-															}}
-														>
-															<i class="fas fa-pen"></i>
-														</button>
-													</div>
+													<button
+														className="btn btn-danger ml-1 float-left"
+														disabled={this.props.loading}
+														onClick={() => {
+															history.push({
+																pathname: '/home/contract/add',
+																state: { contract: row.Id }
+															});
+														}}
+													>
+														<i class="fas fa-pen"></i>
+													</button>
 												</Tooltip>
 												<Tooltip title="Delete">
-													<div>
-														<button
-															className="btn btn-success ml-1 float-left"
-															disabled={this.props.loading}
-															onClick={(e) => {
-																//console.log(this.props);
-																e.stopPropagation();
-																return this.props.delete(row.Id);
-															}}
-														>
-															<i class="fas fa-trash"></i>
-														</button>
-													</div>
+													<button
+														className="btn btn-success ml-1 float-left"
+														disabled={this.props.loading}
+														onClick={(e) => {
+															//console.log(this.props);
+															e.stopPropagation();
+															return this.props.delete(row.Id);
+														}}
+													>
+														<i class="fas fa-trash"></i>
+													</button>
 												</Tooltip>
 											</CustomTableCell>
-											<CustomTableCell>{row.Contract_Name}</CustomTableCell>
+											<CustomTableCell>{row.Contract_Name.trim()}</CustomTableCell>
 											<CustomTableCell style={{ textAlign: 'center' }}>{row.Contrat_Owner}</CustomTableCell>
 											<CustomTableCell style={{ textAlign: 'center', width: '250px' }}>
 												{row.Contract_Status == 0 ? 'Draft' : (row.Contract_Status == 1 ? 'Completed' : 'Expired')}

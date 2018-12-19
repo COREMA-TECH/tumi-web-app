@@ -9,6 +9,8 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import TimeField from 'react-simple-timefield';
 import Options from './Options';
+import ReactDOM from 'react-dom';
+import ShiftColorPicker from './ShiftColorPicker';
 
 class FilterForm extends Component {
 
@@ -251,6 +253,7 @@ class FilterForm extends Component {
                     <div className="col-md-12">
                         < label htmlFor="">Color</label>
                         <input type="text" className="form-control" name="color" value={this.state.color} onChange={this.handleValueChange} />
+                        <ShiftColorPicker />
                     </div>
                 </div  >
                 <div className="row">
