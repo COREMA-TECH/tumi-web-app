@@ -779,7 +779,7 @@ class GeneralInfoProperty extends Component {
 
 								Code: item.Code.trim(),
 								Code01: item.Code01.trim(),
-								zipCode: item.Zipcode,
+								zipCode: item.Zipcode.trim(),
 								fax: item.Fax,
 								startDate: item.Start_Date.trim(),
 								active: item.IsActive,
@@ -1276,7 +1276,7 @@ class GeneralInfoProperty extends Component {
 
 														<label>* Zip Code</label>
 														<InputForm
-															value={this.state.zipCode}
+															value={this.state.zipCode.trim()}
 															change={(text) => {
 																this.updateInput(text, 'zipCode');
 															}}
