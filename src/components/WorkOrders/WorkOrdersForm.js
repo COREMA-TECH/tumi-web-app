@@ -13,6 +13,7 @@ import ShiftsData from '../../data/shitfsWorkOrder.json';
 import { parse } from 'path';
 import { bool } from 'prop-types';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import TimeField from 'react-simple-timefield';
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -353,6 +354,10 @@ class WorkOrdersForm extends Component {
         }
     };
 
+    handleTimeChange = (name) => (text) => {
+        this.setState({ [name]: text })
+    }
+
     handleValidate = (event) => {
         let selfHtml = event.currentTarget;
         if (selfHtml.value == "" || selfHtml.value == 0)
@@ -448,6 +453,8 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
+                                            <TimeField name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onChange={this.handleTimeChange('shift')} />
+                                            {/* 
                                             <select
                                                 required
                                                 className="form-control"
@@ -461,10 +468,14 @@ class WorkOrdersForm extends Component {
                                                     <option value={shift.Id}>{shift.Name}</option>
                                                 ))}
                                             </select>
+                                            */}
+
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift End</label>
-                                            <select
+                                            <TimeField name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onChange={this.handleTimeChange('endShift')} />
+                                            {/*
+                                        <select
                                                 required
                                                 className="form-control"
                                                 name="endShift"
@@ -477,6 +488,8 @@ class WorkOrdersForm extends Component {
                                                     <option value={shift.Id}>{shift.Name}</option>
                                                 ))}
                                             </select>
+                                        */}
+
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">From Date</label>
