@@ -262,7 +262,7 @@ class Catalogs extends React.Component {
 
 		idContactValid: true,
 		usernameValid: true,
-		//fullnameValid: false,
+		fullnameValid: true,
 		passwordValid: true,
 		emailValid: true,
 		numberValid: true,
@@ -434,7 +434,7 @@ class Catalogs extends React.Component {
 	validateAllFields(func) {
 		let idContactValid = this.state.idContact !== -1 && this.state.idContact !== '';
 		let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
-		//let fullnameValid = this.state.fullname.trim().length >= 10;
+		let fullnameValid = this.state.fullname.trim().length >= 5;
 		let emailValid = this.state.email.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 		let numberValid =
 			this.state.number.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
@@ -450,7 +450,7 @@ class Catalogs extends React.Component {
 			{
 				idContactValid,
 				usernameValid,
-				//fullnameValid,
+				fullnameValid,
 				emailValid,
 				numberValid,
 				passwordValid,
@@ -466,7 +466,7 @@ class Catalogs extends React.Component {
 	validateField(fieldName, value) {
 		let idContactValid = this.state.idContactValid;
 		let usernameValid = this.state.usernameValid;
-		//let fullnameValid = this.state.fullnameValid;
+		let fullnameValid = this.state.fullnameValid;
 		let emailValid = this.state.emailValid;
 		let numberValid = this.state.numberValid;
 		let passwordValid = this.state.passwordValid;
@@ -475,7 +475,7 @@ class Catalogs extends React.Component {
 
 		let idContactHasValue = this.state.idContactHasValue;
 		let usernameHasValue = this.state.usernameHasValue;
-		//let fullnameHasValue = this.state.fullnameHasValue;
+		let fullnameHasValue = this.state.fullnameHasValue;
 		let emailHasValue = this.state.emailHasValue;
 		let numberHasValue = this.state.numberHasValue;
 		let passwordHasValue = this.state.passwordHasValue;
@@ -492,10 +492,10 @@ class Catalogs extends React.Component {
 				usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
 				usernameHasValue = value != '';
 				break;
-			//case 'fullname':
-			//	fullnameValid = value.trim().length >= 10;
-			//	fullnameHasValue = value != '';
-			//	break;
+			case 'fullname':
+				fullnameValid = value.trim().length >= 10;
+				fullnameHasValue = value != '';
+				break;
 			case 'email':
 				emailValid = value.trim().match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
 				emailHasValue = value != '';
@@ -529,7 +529,7 @@ class Catalogs extends React.Component {
 			{
 				idContactValid,
 				usernameValid,
-				//fullnameValid,
+				fullnameValid,
 				emailValid,
 				numberValid,
 				passwordValid,
@@ -556,7 +556,7 @@ class Catalogs extends React.Component {
 				formValid:
 					this.state.idContactValid &&
 					this.state.usernameValid &&
-					//this.state.fullnameValid &&
+					this.state.fullnameValid &&
 					this.state.emailValid &&
 					this.state.numberValid &&
 					this.state.passwordValid &&
@@ -566,7 +566,7 @@ class Catalogs extends React.Component {
 				enableCancelButton:
 					this.state.idContactHasValue ||
 					this.state.usernameHasValue ||
-					//this.state.fullnameHasValue ||
+					this.state.fullnameHasValue ||
 					this.state.emailHasValue ||
 					this.state.numberHasValue ||
 					this.state.passwordHasValue ||
@@ -632,7 +632,7 @@ class Catalogs extends React.Component {
 					idContactValid: true,
 					idRolValid: true,
 					usernameValid: true,
-					//fullnameValid: true,
+					fullnameValid: true,
 					emailValid: true,
 					numberValid: true,
 					passwordValid: true,
@@ -642,7 +642,7 @@ class Catalogs extends React.Component {
 					idContactHasValue: true,
 					idRolHasValue: true,
 					usernameHasValue: true,
-					//fullnameHasValue: true,
+					fullnameHasValue: true,
 					emailHasValue: true,
 					numberHasValue: true,
 					passwordHasValue: true,
@@ -1082,7 +1082,7 @@ class Catalogs extends React.Component {
 								<div className="col-lg-8">
 									<div className="row">
 										<div className="col-md-12 col-lg-6">
-											<label>* Contact</label>
+											<label>Contact</label>
 											<select
 												name="idContact"
 												className={[
@@ -1106,7 +1106,7 @@ class Catalogs extends React.Component {
 											</select>
 										</div>
 										<div className="col-md-12 col-lg-6">
-											<label>* Username</label>
+											<label>* User Code</label>
 											<InputForm
 												id="username"
 												name="username"
@@ -1114,6 +1114,17 @@ class Catalogs extends React.Component {
 												value={this.state.username}
 												error={!this.state.usernameValid}
 												change={(value) => this.onChangeHandler(value, 'username')}
+											/>
+										</div>
+										<div className="col-md-12 col-lg-6">
+											<label>* User Name</label>
+											<InputForm
+												id="fullname"
+												name="fullname"
+												maxLength="120"
+												value={this.state.fullname}
+												error={!this.state.fullnameValid}
+												change={(value) => this.onChangeHandler(value, 'fullname')}
 											/>
 										</div>
 										<div className="col-md-12 col-lg-6">
@@ -1145,7 +1156,7 @@ class Catalogs extends React.Component {
 											/>
 										</div>
 										<div className="col-md-12 col-lg-6">
-											<label>* Rol</label>
+											<label>* Role</label>
 											<select
 												name="idRol"
 												className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
@@ -1157,7 +1168,7 @@ class Catalogs extends React.Component {
 												}}
 												value={this.state.idRol}
 											>
-												<option value="">Select a rol</option>
+												<option value="">Select a role</option>
 												{this.state.roles.map((item) => (
 													<option key={item.Id} value={item.Id}>
 														{item.Name}
