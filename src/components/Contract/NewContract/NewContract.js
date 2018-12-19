@@ -272,6 +272,7 @@ class NewContract extends Component {
                 Id_Company
                 Contract_Name
                 Contrat_Owner
+                IdManagement
                 Id_Entity
                 Id_User_Signed
                 User_Signed_Title
@@ -332,6 +333,7 @@ class NewContract extends Component {
 
                         Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
                         Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
+                        idManagement: data.getcontracts[0].IdManagement,
                         Id_Entity: data.getcontracts[0].Id_Entity,
                         Id_User_Signed: data.getcontracts[0].Id_User_Signed,
                         Contract_Status: data.getcontracts[0].Contract_Status,
@@ -358,7 +360,7 @@ class NewContract extends Component {
                         loaded: false
                     },
                     () => {
-                        this.getBusinessCompaniesbyId(this.state.Id_Entity);
+                        //this.getBusinessCompaniesbyId(this.state.Id_Entity);
                         console.log("aqui tenemos el idmanagement ", this.state.idManagement);
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
@@ -403,6 +405,7 @@ class NewContract extends Component {
                                     Id_Company: 1,
                                     Contract_Name: `'${this.state.Contract_Name}'`,
                                     Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+                                    IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
                                     User_Signed_Title: `'${this.state.User_Signed_Title}'`,
@@ -1252,7 +1255,7 @@ class NewContract extends Component {
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (loading) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
+                                                        if (error) return <p> </p>;
                                                         if (
                                                             data.getcontracttemplate != null &&
                                                             data.getcontracttemplate.length > 0
@@ -1332,10 +1335,11 @@ class NewContract extends Component {
                                                         // if (networkStatus === 4) return <LinearProgress />;
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
-                                                        if (
-                                                            data.getbusinesscompanies != null &&
-                                                            data.getbusinesscompanies.length > 0
-                                                        ) {
+                                                        //if (
+                                                          //  data.getbusinesscompanies != null &&
+                                                           // data.getbusinesscompanies.length > 0
+                                                        //) 
+                                                      //  {
                                                             return (
                                                                 <select
                                                                     name="hotel"
@@ -1356,8 +1360,8 @@ class NewContract extends Component {
                                                                     ))}
                                                                 </select>
                                                             );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
+                                                        //}
+                                                       // return  <option value="">Select a Hotel</option>;
                                                     }}
                                                 </Query>
                                             </div>
@@ -1473,7 +1477,7 @@ class NewContract extends Component {
                                                             {({ loading, error, data, refetch, networkStatus }) => {
                                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                                 if (loading) return <LinearProgress />;
-                                                                if (error) return <p>Error </p>;
+                                                                if (error) return <p> </p>;
                                                                 if (
                                                                     data.getcatalogitem != null &&
                                                                     data.getcatalogitem.length > 0
@@ -1629,7 +1633,7 @@ class NewContract extends Component {
                                         />
                                     </div>
                                     <div className="col-md-6 col-lg-4">
-                                        <label>* Billing Zip Code / Postal Code</label>
+                                        <label>* Billing Zip Code</label>
                                         <InputForm
                                             value={this.state.Billing_Zip_Code}
                                             change={(text) => {
@@ -1662,7 +1666,7 @@ class NewContract extends Component {
                                             {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (loading) return <LinearProgress />;
-                                                if (error) return <p>Error </p>;
+                                                if (error) return <p> </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return (
                                                         <SelectForm
