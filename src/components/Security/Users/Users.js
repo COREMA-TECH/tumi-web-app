@@ -444,8 +444,8 @@ class Catalogs extends React.Component {
 		let idLanguageValid =
 			this.state.idLanguage !== null && this.state.idLanguage !== 0 && this.state.idLanguage !== '';
 		let IdRegionValid = true;
-		if (this.state.IsRecruiter)
-			IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
+		//if (this.state.IsRecruiter)
+		//	IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
 		this.setState(
 			{
 				idContactValid,
@@ -1214,7 +1214,7 @@ class Catalogs extends React.Component {
 												id="IdRegion"
 												name="IdRegion"
 												data={this.state.regions}
-												error={!this.state.IdRegionValid}
+												//error={!this.state.IdRegionValid}
 												disabled={!this.state.IsRecruiter}
 												value={this.state.RegionName}
 												onChange={(value) => {
