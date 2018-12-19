@@ -444,8 +444,8 @@ class Catalogs extends React.Component {
 		let idLanguageValid =
 			this.state.idLanguage !== null && this.state.idLanguage !== 0 && this.state.idLanguage !== '';
 		let IdRegionValid = true;
-		if (this.state.IsRecruiter)
-			IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
+		//if (this.state.IsRecruiter)
+		//	IdRegionValid = this.state.IdRegion !== null && this.state.IdRegion !== 0 && this.state.IdRegion !== '';
 		this.setState(
 			{
 				idContactValid,
@@ -1077,153 +1077,154 @@ class Catalogs extends React.Component {
 						</div>
 					</DialogTitle>
 					<DialogContent style={{ minWidth: 600, padding: '0px' }}>
-						<div className="row">
-							<div className="col-lg-8">
-								<div className="row">
-									<div className="col-md-12 col-lg-6">
-										<label>* Contact</label>
-										<select
-											name="idContact"
-											className={[
-												'form-control',
-												this.state.idContactValid ? '' : '_invalid'
-											].join(' ')}
-											disabled={this.state.loadingContacts}
-											onChange={(event) => {
-												this.updateSelect(event.target.value, 'idContact');
-												this.SelectContac(event.target.value);
-											}}
-											value={this.state.idContact}
+						<div className="card-body">
+							<div className="row">
+								<div className="col-lg-8">
+									<div className="row">
+										<div className="col-md-12 col-lg-6">
+											<label>* Contact</label>
+											<select
+												name="idContact"
+												className={[
+													'form-control',
+													this.state.idContactValid ? '' : '_invalid'
+												].join(' ')}
+												disabled={this.state.loadingContacts}
+												onChange={(event) => {
+													this.updateSelect(event.target.value, 'idContact');
+													this.SelectContac(event.target.value);
+												}}
+												value={this.state.idContact}
 
-										>
-											<option value={undefined}>Select a contact</option>
-											{this.state.contacts.map((item) => (
-												<option key={item.Id} value={item.Id}>
-													{item.Name}
-												</option>
-											))}
-										</select>
-									</div>
-									<div className="col-md-12 col-lg-6">
-										<label>* Username</label>
-										<InputForm
-											id="username"
-											name="username"
-											maxLength="15"
-											value={this.state.username}
-											error={!this.state.usernameValid}
-											change={(value) => this.onChangeHandler(value, 'username')}
-										/>
-									</div>
-									<div className="col-md-12 col-lg-6">
-										<label>* Email</label>
-										<InputForm
-											id="email"
-											name="email"
-											maxLength="50"
-											value={this.state.email}
-											error={!this.state.emailValid}
-											change={(value) => this.onChangeHandler(value, 'email')}
-										/>
-									</div>
-									<div className="col-md-12 col-lg-6">
-										<label>* Phone Number</label>
-										<InputMask
-											id="number"
-											name="number"
-											mask="+(999) 999-9999"
-											maskChar=" "
-											value={this.state.number}
-											className={
-												this.state.numberValid ? 'form-control' : 'form-control _invalid'
-											}
-											onChange={(e) => {
-												this.onChangeHandler(e.target.value, 'number');
-											}}
-											placeholder="+(999) 999-9999"
-										/>
-									</div>
-									<div className="col-md-12 col-lg-6">
-										<label>* Rol</label>
-										<select
-											name="idRol"
-											className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
-												' '
-											)}
-											disabled={this.state.loadingRoles}
-											onChange={(event) => {
-												this.updateSelect(event.target.value, 'idRol');
-											}}
-											value={this.state.idRol}
-										>
-											<option value="">Select a rol</option>
-											{this.state.roles.map((item) => (
-												<option key={item.Id} value={item.Id}>
-													{item.Name}
-												</option>
-											))}
-										</select>
-									</div>
-									<div className="col-md-12 col-lg-6">
-										<label>* Language</label>
-
-										<select
-											name="idLanguage"
-											className={[
-												'form-control',
-												this.state.idLanguageValid ? '' : '_invalid'
-											].join(' ')}
-											disabled={this.state.loadingLanguages}
-											onChange={(event) => {
-												this.updateSelect(event.target.value, 'idLanguage');
-											}}
-											value={this.state.idLanguage}
-										>
-											<option value="">Select a language</option>
-											{this.state.languages.map((item) => (
-												<option key={item.Id} value={item.Id}>
-													{item.Name}
-												</option>
-											))}
-										</select>
-									</div>
-
-									<div className="col-md-3 col-lg-3">
-										<label>Recruiter?</label>
-
-										<div className="onoffswitch">
-											<input
-												type="checkbox"
-												checked={this.state.IsRecruiter}
-												name="IsRecruiter"
-												onChange={this.handleCheckedChange('IsRecruiter')}
-												className="onoffswitch-checkbox"
-												id="IsRecruiter"
-											/>
-											<label className="onoffswitch-label" htmlFor="IsRecruiter">
-												<span className="onoffswitch-inner" />
-												<span className="onoffswitch-switch" />
-											</label>
+											>
+												<option value={undefined}>Select a contact</option>
+												{this.state.contacts.map((item) => (
+													<option key={item.Id} value={item.Id}>
+														{item.Name}
+													</option>
+												))}
+											</select>
 										</div>
-									</div>
+										<div className="col-md-12 col-lg-6">
+											<label>* Username</label>
+											<InputForm
+												id="username"
+												name="username"
+												maxLength="15"
+												value={this.state.username}
+												error={!this.state.usernameValid}
+												change={(value) => this.onChangeHandler(value, 'username')}
+											/>
+										</div>
+										<div className="col-md-12 col-lg-6">
+											<label>* Email</label>
+											<InputForm
+												id="email"
+												name="email"
+												maxLength="50"
+												value={this.state.email}
+												error={!this.state.emailValid}
+												change={(value) => this.onChangeHandler(value, 'email')}
+											/>
+										</div>
+										<div className="col-md-12 col-lg-6">
+											<label>* Phone Number</label>
+											<InputMask
+												id="number"
+												name="number"
+												mask="+(999) 999-9999"
+												maskChar=" "
+												value={this.state.number}
+												className={
+													this.state.numberValid ? 'form-control' : 'form-control _invalid'
+												}
+												onChange={(e) => {
+													this.onChangeHandler(e.target.value, 'number');
+												}}
+												placeholder="+(999) 999-9999"
+											/>
+										</div>
+										<div className="col-md-12 col-lg-6">
+											<label>* Rol</label>
+											<select
+												name="idRol"
+												className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
+													' '
+												)}
+												disabled={this.state.loadingRoles}
+												onChange={(event) => {
+													this.updateSelect(event.target.value, 'idRol');
+												}}
+												value={this.state.idRol}
+											>
+												<option value="">Select a rol</option>
+												{this.state.roles.map((item) => (
+													<option key={item.Id} value={item.Id}>
+														{item.Name}
+													</option>
+												))}
+											</select>
+										</div>
+										<div className="col-md-12 col-lg-6">
+											<label>* Language</label>
 
-									<div className="col-md-9 col-lg-9">
-										<label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
-										<AutosuggestInput
-											id="IdRegion"
-											name="IdRegion"
-											data={this.state.regions}
-											error={!this.state.IdRegionValid}
-											disabled={!this.state.IsRecruiter}
-											value={this.state.RegionName}
-											onChange={(value) => {
-												this.updateSelect(value, 'RegionName');
-											}}
-											onSelect={(value) => {
-												this.updateSelect(value, 'RegionName');
-											}}
-										/>
-										{/*
+											<select
+												name="idLanguage"
+												className={[
+													'form-control',
+													this.state.idLanguageValid ? '' : '_invalid'
+												].join(' ')}
+												disabled={this.state.loadingLanguages}
+												onChange={(event) => {
+													this.updateSelect(event.target.value, 'idLanguage');
+												}}
+												value={this.state.idLanguage}
+											>
+												<option value="">Select a language</option>
+												{this.state.languages.map((item) => (
+													<option key={item.Id} value={item.Id}>
+														{item.Name}
+													</option>
+												))}
+											</select>
+										</div>
+
+										<div className="col-md-3 col-lg-3">
+											<label>Recruiter?</label>
+
+											<div className="onoffswitch">
+												<input
+													type="checkbox"
+													checked={this.state.IsRecruiter}
+													name="IsRecruiter"
+													onChange={this.handleCheckedChange('IsRecruiter')}
+													className="onoffswitch-checkbox"
+													id="IsRecruiter"
+												/>
+												<label className="onoffswitch-label" htmlFor="IsRecruiter">
+													<span className="onoffswitch-inner" />
+													<span className="onoffswitch-switch" />
+												</label>
+											</div>
+										</div>
+
+										<div className="col-md-9 col-lg-9">
+											<label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
+											<AutosuggestInput
+												id="IdRegion"
+												name="IdRegion"
+												data={this.state.regions}
+												//error={!this.state.IdRegionValid}
+												disabled={!this.state.IsRecruiter}
+												value={this.state.RegionName}
+												onChange={(value) => {
+													this.updateSelect(value, 'RegionName');
+												}}
+												onSelect={(value) => {
+													this.updateSelect(value, 'RegionName');
+												}}
+											/>
+											{/*
 										<select
 											name="IdRegion"
 											className={[
@@ -1244,123 +1245,124 @@ class Catalogs extends React.Component {
 											))}
 										</select>
 										*/}
+										</div>
 									</div>
 								</div>
-							</div>
-							<div className="col-lg-4">
-								<div className="card">
-									<div className="card-header info">Permissions</div>
-									<div className="card-body p-0">
-										<ul className="row w-100 bg-light CardPermissions">
-											<li className="col-md-4 col-sm-4 col-lg-6">
-												<label>Active?</label>
+								<div className="col-lg-4">
+									<div className="card">
+										<div className="card-header info">Permissions</div>
+										<div className="card-body p-0">
+											<ul className="row w-100 bg-light CardPermissions">
+												<li className="col-md-4 col-sm-4 col-lg-6">
+													<label>Active?</label>
 
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														checked={this.state.IsActive}
-														name="IsActive"
-														onChange={this.handleCheckedChange('IsActive')}
-														className="onoffswitch-checkbox"
-														id="IsActive"
-													/>
-													<label className="onoffswitch-label" htmlFor="IsActive">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</li>
-											<li className="col-md-4 col-sm-4 col-lg-6">
-												<label>Admin?</label>
+													<div className="onoffswitch">
+														<input
+															type="checkbox"
+															checked={this.state.IsActive}
+															name="IsActive"
+															onChange={this.handleCheckedChange('IsActive')}
+															className="onoffswitch-checkbox"
+															id="IsActive"
+														/>
+														<label className="onoffswitch-label" htmlFor="IsActive">
+															<span className="onoffswitch-inner" />
+															<span className="onoffswitch-switch" />
+														</label>
+													</div>
+												</li>
+												<li className="col-md-4 col-sm-4 col-lg-6">
+													<label>Admin?</label>
 
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														checked={this.state.isAdmin}
-														name="isAdmin"
-														onChange={this.handleCheckedChange('isAdmin')}
-														className="onoffswitch-checkbox"
-														id="isAdmin"
-													/>
-													<label className="onoffswitch-label" htmlFor="isAdmin">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</li>
-											<li className="col-md-4 col-sm-4 col-lg-6">
-												<label>Insert?</label>
+													<div className="onoffswitch">
+														<input
+															type="checkbox"
+															checked={this.state.isAdmin}
+															name="isAdmin"
+															onChange={this.handleCheckedChange('isAdmin')}
+															className="onoffswitch-checkbox"
+															id="isAdmin"
+														/>
+														<label className="onoffswitch-label" htmlFor="isAdmin">
+															<span className="onoffswitch-inner" />
+															<span className="onoffswitch-switch" />
+														</label>
+													</div>
+												</li>
+												<li className="col-md-4 col-sm-4 col-lg-6">
+													<label>Insert?</label>
 
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														checked={this.state.allowInsert}
-														name="allowInsert"
-														onChange={this.handleCheckedChange('allowInsert')}
-														className="onoffswitch-checkbox"
-														id="allowInsert"
-													/>
-													<label className="onoffswitch-label" htmlFor="allowInsert">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</li>
-											<li className="col-md-4 col-sm-4 col-lg-6">
-												<label>Edit?</label>
+													<div className="onoffswitch">
+														<input
+															type="checkbox"
+															checked={this.state.allowInsert}
+															name="allowInsert"
+															onChange={this.handleCheckedChange('allowInsert')}
+															className="onoffswitch-checkbox"
+															id="allowInsert"
+														/>
+														<label className="onoffswitch-label" htmlFor="allowInsert">
+															<span className="onoffswitch-inner" />
+															<span className="onoffswitch-switch" />
+														</label>
+													</div>
+												</li>
+												<li className="col-md-4 col-sm-4 col-lg-6">
+													<label>Edit?</label>
 
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														checked={this.state.allowEdit}
-														name="allowEdit"
-														onChange={this.handleCheckedChange('allowEdit')}
-														className="onoffswitch-checkbox"
-														id="allowEdit"
-													/>
-													<label className="onoffswitch-label" htmlFor="allowEdit">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</li>
-											<li className="col-md-4 col-sm-4 col-lg-6">
-												<label>Delete?</label>
+													<div className="onoffswitch">
+														<input
+															type="checkbox"
+															checked={this.state.allowEdit}
+															name="allowEdit"
+															onChange={this.handleCheckedChange('allowEdit')}
+															className="onoffswitch-checkbox"
+															id="allowEdit"
+														/>
+														<label className="onoffswitch-label" htmlFor="allowEdit">
+															<span className="onoffswitch-inner" />
+															<span className="onoffswitch-switch" />
+														</label>
+													</div>
+												</li>
+												<li className="col-md-4 col-sm-4 col-lg-6">
+													<label>Delete?</label>
 
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														checked={this.state.allowDelete}
-														name="allowDelete"
-														onChange={this.handleCheckedChange('allowDelete')}
-														className="onoffswitch-checkbox"
-														id="allowDelete"
-													/>
-													<label className="onoffswitch-label" htmlFor="allowDelete">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</li>
-											<li className="col-md-4 col-sm-4 col-lg-6">
-												<label>Export?</label>
+													<div className="onoffswitch">
+														<input
+															type="checkbox"
+															checked={this.state.allowDelete}
+															name="allowDelete"
+															onChange={this.handleCheckedChange('allowDelete')}
+															className="onoffswitch-checkbox"
+															id="allowDelete"
+														/>
+														<label className="onoffswitch-label" htmlFor="allowDelete">
+															<span className="onoffswitch-inner" />
+															<span className="onoffswitch-switch" />
+														</label>
+													</div>
+												</li>
+												<li className="col-md-4 col-sm-4 col-lg-6">
+													<label>Export?</label>
 
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														checked={this.state.allowExport}
-														name="allowExport"
-														onChange={this.handleCheckedChange('allowExport')}
-														className="onoffswitch-checkbox"
-														id="allowExport"
-													/>
-													<label className="onoffswitch-label" htmlFor="allowExport">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</li>
-										</ul>
+													<div className="onoffswitch">
+														<input
+															type="checkbox"
+															checked={this.state.allowExport}
+															name="allowExport"
+															onChange={this.handleCheckedChange('allowExport')}
+															className="onoffswitch-checkbox"
+															id="allowExport"
+														/>
+														<label className="onoffswitch-label" htmlFor="allowExport">
+															<span className="onoffswitch-inner" />
+															<span className="onoffswitch-switch" />
+														</label>
+													</div>
+												</li>
+											</ul>
+										</div>
 									</div>
 								</div>
 							</div>

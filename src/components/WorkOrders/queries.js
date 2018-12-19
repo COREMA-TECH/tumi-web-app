@@ -6,6 +6,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			id
 			quantity
 			shift
+			endShift
 			needExperience
 			needEnglish
 			startDate
