@@ -18,7 +18,6 @@ query data {
   }
 `;
 
-
 export const GET_POSITION = gql`
   query positions($Id_Entity: Int){
     getposition(Id_Entity: $Id_Entity){
