@@ -6,6 +6,7 @@ import {
     GET_APPLICATION_BY_ID,
     GET_CITIES_QUERY,
     GET_POSITIONS_QUERY,
+    GET_POSITIONS_CATALOG,
     GET_STATES_QUERY,
     getCompaniesQuery
 } from '../Queries';
@@ -580,14 +581,14 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label">
                                                     {formSpanish[17].label}
                                                 </span>
-                                                <Query query={GET_POSITIONS_QUERY}>
+                                                <Query query={GET_POSITIONS_CATALOG}>
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
-                                                        if (data.workOrder != null && data.workOrder.length > 0) {
+                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                             let options = [];
-                                                            data.workOrder.map((item) => (
-                                                                options.push({ value: item.id, label: item.position.Position + "(" + item.BusinessCompany.Code.trim() + ")" })
+                                                            data.getcatalogitem.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Description })
                                                             ));
 
                                                             return (

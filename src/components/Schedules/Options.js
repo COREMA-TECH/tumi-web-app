@@ -61,8 +61,6 @@ class Options extends Component {
     }
 
     render() {
-
-
         return (
             <div className="MasterShift-options">
                 <div className="row">

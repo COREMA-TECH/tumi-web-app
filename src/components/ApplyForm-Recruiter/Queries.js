@@ -53,6 +53,19 @@ export const GET_POSITIONS_QUERY = gql`
     }
 `;
 
+export const GET_POSITIONS_CATALOG = gql`
+    {
+        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
+            Id
+            IsActive
+            Description
+        }
+    }
+`;
+
+
+
+
 export const getCompaniesQuery = gql`
     query getbusinesscompanies($Id_Parent: Int) {
         getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: $Id_Parent) {
