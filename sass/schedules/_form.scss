@@ -1,0 +1,22 @@
+.MasterShiftForm {
+    background: map-get($gray-shades, soft-gray);
+    box-sizing: border-box;
+    padding: 1rem;
+    &-hour {
+        display: flex;
+        flex-direction: column-reverse;
+        height: 100%;
+        margin-left: -15px;
+        &:before {
+            background: $danger;
+            border-radius: $border-radius-standar;
+            color: $white;
+            content: attr(data-hour);
+            display: block;
+            height: calc(2.1rem + 2px);
+            line-height: calc(2.1rem + 2px);
+            text-align: center;
+            width: 100%;
+        }
+    }
+}

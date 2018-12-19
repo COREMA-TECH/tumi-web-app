@@ -23,6 +23,7 @@ class WorkOrdersForm extends Component {
         quantity: 0,
         status: 1,
         shift: '',
+        endShift: '',
         startDate: '',
         endDate: '',
         needExperience: false,
@@ -65,6 +66,7 @@ class WorkOrdersForm extends Component {
                     quantity: nextProps.item.quantity,
                     status: nextProps.item.status,
                     shift: nextProps.item.shift,
+                    endShift: nextProps.item.endShift,
                     startDate: nextProps.item.startDate,
                     endDate: nextProps.item.endDate,
                     needExperience: nextProps.item.needExperience,
@@ -90,6 +92,7 @@ class WorkOrdersForm extends Component {
                 quantity: 0,
                 status: 0,
                 shift: '',
+                endShift: '',
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -138,6 +141,8 @@ class WorkOrdersForm extends Component {
             this.state.endDate == '' ||
             this.state.shift == '' ||
             this.state.shift == 0 ||
+            this.state.endShift == '' ||
+            this.state.endShift == 0 ||
             this.state.contactId == ''
         ) {
 
@@ -161,6 +166,7 @@ class WorkOrdersForm extends Component {
                         quantity: this.state.quantity,
                         status: 1,
                         shift: this.state.shift,
+                        endShift: this.state.endShift,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         needExperience: this.state.needExperience,
@@ -196,6 +202,7 @@ class WorkOrdersForm extends Component {
                         quantity: this.state.quantity,
                         status: status,
                         shift: this.state.shift,
+                        endShift: this.state.endShift,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         needExperience: this.state.needExperience,
@@ -245,7 +252,9 @@ class WorkOrdersForm extends Component {
             this.state.startDate == '' ||
             this.state.endDate == '' ||
             this.state.shift == '' ||
-            this.state.shift == 0
+            this.state.shift == 0 ||
+            this.state.endShift == '' ||
+            this.state.endShift == 0
         ) {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
@@ -438,20 +447,6 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Quantity</label>
-                                            <input
-                                                required
-                                                type="number"
-                                                maxLength="10"
-                                                min={0}
-                                                className="form-control"
-                                                name="quantity"
-                                                onChange={this.handleChange}
-                                                value={this.state.quantity}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
                                             <select
                                                 required
@@ -462,6 +457,22 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             >
                                                 <option value="0">Select a Shift</option>
+                                                {this.state.ShiftsData.map((shift) => (
+                                                    <option value={shift.Id}>{shift.Name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">Shift End</label>
+                                            <select
+                                                required
+                                                className="form-control"
+                                                name="endShift"
+                                                onChange={this.handleChange}
+                                                value={this.state.endShift}
+                                                onBlur={this.handleValidate}
+                                            >
+                                                <option value="0">Select a Shift End</option>
                                                 {this.state.ShiftsData.map((shift) => (
                                                     <option value={shift.Id}>{shift.Name}</option>
                                                 ))}
@@ -488,6 +499,20 @@ class WorkOrdersForm extends Component {
                                                 name="endDate"
                                                 onChange={this.handleChange}
                                                 value={this.state.endDate.substring(0, 10)}
+                                                onBlur={this.handleValidate}
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">Quantity</label>
+                                            <input
+                                                required
+                                                type="number"
+                                                maxLength="10"
+                                                min={0}
+                                                className="form-control"
+                                                name="quantity"
+                                                onChange={this.handleChange}
+                                                value={this.state.quantity}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>

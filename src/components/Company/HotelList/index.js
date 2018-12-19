@@ -96,7 +96,6 @@ class HotelList extends Component {
         }).catch();
     }
 
-
     handleClickOpen = (event) => {
         event.preventDefault();
         this.setState({
