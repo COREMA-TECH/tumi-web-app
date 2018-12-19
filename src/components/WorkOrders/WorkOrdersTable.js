@@ -105,7 +105,7 @@ class WorkOrdersTable extends Component {
                 date: data.IdEntity,
                 quantity: data.quantity,
                 status: 2,
-                shift: data.shift,
+                shift: data.shift + '-' + data.endShift,
                 startDate: data.startDate,
                 endDate: data.endDate,
                 needExperience: data.needExperience,
@@ -292,11 +292,7 @@ class WorkOrdersTable extends Component {
                                         <CustomTableCell>{row.BusinessCompany.Name}</CustomTableCell>
                                         <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
-                                        <CustomTableCell className={'text-center'}>
-                                            {this.state.ShiftsData.map((shift) => (
-                                                shift.Id == row.shift ? shift.Name : ''
-                                            ))}
-                                        </CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
 

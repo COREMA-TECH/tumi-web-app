@@ -121,7 +121,7 @@ class NewContract extends Component {
             Exhibit_E: '',
             Exhibit_F: '',
             IsActive: 1,
-            idManagement: props.Id_Parent,
+            IdManagement: props.Id_Parent,
             Management: '',
             User_Created: '',
             User_Updated: '',
@@ -272,6 +272,7 @@ class NewContract extends Component {
                 Id_Company
                 Contract_Name
                 Contrat_Owner
+                IdManagement
                 Id_Entity
                 Id_User_Signed
                 User_Signed_Title
@@ -332,6 +333,7 @@ class NewContract extends Component {
 
                         Contract_Name: this.getString(data.getcontracts[0].Contract_Name),
                         Contrat_Owner: this.getString(data.getcontracts[0].Contrat_Owner),
+                        IdManagement: data.getcontracts[0].IdManagement,
                         Id_Entity: data.getcontracts[0].Id_Entity,
                         Id_User_Signed: data.getcontracts[0].Id_User_Signed,
                         Contract_Status: data.getcontracts[0].Contract_Status,
@@ -358,8 +360,8 @@ class NewContract extends Component {
                         loaded: false
                     },
                     () => {
-                        this.getBusinessCompaniesbyId(this.state.Id_Entity);
-                        console.log("aqui tenemos el idmanagement ", this.state.idManagement);
+                        // this.getBusinessCompaniesbyId(this.state.Id_Entity);
+                        console.log("aqui tenemos el idmanagement ", this.state.IdManagement);
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
                             {
@@ -403,6 +405,7 @@ class NewContract extends Component {
                                     Id_Company: 1,
                                     Contract_Name: `'${this.state.Contract_Name}'`,
                                     Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+                                    IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
                                     User_Signed_Title: `'${this.state.User_Signed_Title}'`,
@@ -769,7 +772,7 @@ class NewContract extends Component {
             .then(({ data }) => {
 
                 this.setState({
-                    idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
+                    IdManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
                 });
             })
@@ -790,9 +793,9 @@ class NewContract extends Component {
             .then(({ data }) => {
                 console.log("esta al by ID::::;", data);
                 this.setState({
-                    idManagement: (data.getbusinesscompanies[0].Id_Parent),
+                    IdManagement: (data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
-                }, () => { console.log("este es el idmanaghemente ", this.state.idManagement) });
+                }, () => { console.log("este es el idmanaghemente ", this.state.IdManagement) });
             })
             .catch((error) => {
                 console.log(error);
@@ -811,7 +814,7 @@ class NewContract extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    idManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
+                    IdManagement: this.getString(data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
                 });
             })
@@ -1252,7 +1255,7 @@ class NewContract extends Component {
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (loading) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
+                                                        if (error) return <p> </p>;
                                                         if (
                                                             data.getcontracttemplate != null &&
                                                             data.getcontracttemplate.length > 0
@@ -1306,10 +1309,10 @@ class NewContract extends Component {
                                                                     //disabled={!this.state.editing}
                                                                     onChange={(e) => {
                                                                         this.setState({
-                                                                            idManagement: e.target.value
+                                                                            IdManagement: e.target.value
                                                                         });
                                                                     }}
-                                                                    value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.idManagement}
+                                                                    value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement}
                                                                 >
                                                                     <option value="">Select a Management</option>
                                                                     {data.getbusinesscompanies.map((item) => (
@@ -1326,38 +1329,39 @@ class NewContract extends Component {
                                                 <label>* Hotel</label>
                                                 <Query
                                                     query={this.getbusinesscompaniesQuery}
-                                                    variables={{ Id_Parent: this.state.idManagement }}
+                                                    variables={{ Id_Parent: this.state.IdManagement }}
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         // if (networkStatus === 4) return <LinearProgress />;
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
-                                                        if (
-                                                            data.getbusinesscompanies != null &&
-                                                            data.getbusinesscompanies.length > 0
-                                                        ) {
-                                                            return (
-                                                                <select
-                                                                    name="hotel"
-                                                                    id="hotel"
-                                                                    required
-                                                                    className="form-control"
-                                                                    //disabled={!this.state.editing}
-                                                                    onChange={(e) => {
-                                                                        this.setState({
-                                                                            Id_Entity: e.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.Id_Entity}
-                                                                >
-                                                                    <option value="">Select a Hotel</option>
-                                                                    {data.getbusinesscompanies.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
+                                                        //if (
+                                                        //  data.getbusinesscompanies != null &&
+                                                        // data.getbusinesscompanies.length > 0
+                                                        //) 
+                                                        //  {
+                                                        return (
+                                                            <select
+                                                                name="hotel"
+                                                                id="hotel"
+                                                                required
+                                                                className="form-control"
+                                                                //disabled={!this.state.editing}
+                                                                onChange={(e) => {
+                                                                    this.setState({
+                                                                        Id_Entity: e.target.value
+                                                                    });
+                                                                }}
+                                                                value={this.state.Id_Entity}
+                                                            >
+                                                                <option value="">Select a Hotel</option>
+                                                                {data.getbusinesscompanies.map((item) => (
+                                                                    <option value={item.Id}>{item.Name}</option>
+                                                                ))}
+                                                            </select>
+                                                        );
+                                                        //}
+                                                        // return  <option value="">Select a Hotel</option>;
                                                     }}
                                                 </Query>
                                             </div>
@@ -1473,7 +1477,7 @@ class NewContract extends Component {
                                                             {({ loading, error, data, refetch, networkStatus }) => {
                                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                                 if (loading) return <LinearProgress />;
-                                                                if (error) return <p>Error </p>;
+                                                                if (error) return <p> </p>;
                                                                 if (
                                                                     data.getcatalogitem != null &&
                                                                     data.getcatalogitem.length > 0
@@ -1629,7 +1633,7 @@ class NewContract extends Component {
                                         />
                                     </div>
                                     <div className="col-md-6 col-lg-4">
-                                        <label>* Billing Zip Code / Postal Code</label>
+                                        <label>* Billing Zip Code</label>
                                         <InputForm
                                             value={this.state.Billing_Zip_Code}
                                             change={(text) => {
@@ -1662,7 +1666,7 @@ class NewContract extends Component {
                                             {({ loading, error, data, refetch, networkStatus }) => {
                                                 //if (networkStatus === 4) return <LinearProgress />;
                                                 if (loading) return <LinearProgress />;
-                                                if (error) return <p>Error </p>;
+                                                if (error) return <p> </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     return (
                                                         <SelectForm
