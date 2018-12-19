@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
+import withApollo from 'react-apollo/withApollo';
+import withGlobalContent from 'Generic/Global';
+
+import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
+import { INSERT_SHIFT } from './Mutations';
+
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-import withApollo from 'react-apollo/withApollo';
 import TimeField from 'react-simple-timefield';
-import withGlobalContent from 'Generic/Global';
-import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
 import Options from './Options';
 
 class FilterForm extends Component {
@@ -83,6 +86,33 @@ class FilterForm extends Component {
             });
     }
 
+    insertShift = (status = 1) => {
+        this.props.client
+            .mutate({
+                startDate: this.state.startDate,
+                endDate: this.state.endDate,
+                startHour: this.state.startHour,
+                endHour: this.state.endHour,
+                shift: {
+                    entityId: this.state.location,
+                    title: this.state.positionText,
+                    color: this.state.color,
+                    status: 1,
+                    idPosition: this.state.position
+                },
+                employees: this.state.selectedEmployees.map(item => { return item.value })
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Record Updated!');
+                this.setState({ openModal: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: false });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            });
+    };
+
     renderLocationList = () => {
         return this.state.locations.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
@@ -120,8 +150,15 @@ class FilterForm extends Component {
     }
 
     handleValueChange = (event) => {
+        var index = event.nativeEvent.target.selectedIndex;
+        var text = event.nativeEvent.target[index].text;
+
         const element = event.target;
-        this.setState({ [element.name]: element.value }, () => {
+        this.setState({
+            [element.name]: element.value,
+            [`${element.name}Text`]: text
+        }, () => {
+            console.log("This is my state", this.state)
             if (element.name == 'location')
                 this.getPosition();
         })
@@ -153,7 +190,7 @@ class FilterForm extends Component {
                         <Options />
                     </div>
                     <div className="col-md-12">
-                        <label htmlFor="">Employess</label>
+                        <label htmlFor="">Employes</label>
                         <Select
                             name="employees"
                             options={this.state.employees}
