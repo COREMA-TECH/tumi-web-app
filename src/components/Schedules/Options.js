@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import {withStyles} from "@material-ui/core";
 import green from "@material-ui/core/colors/green";
+import './index.css';
 
 const styles = (theme) => ({
     container: {
@@ -82,7 +83,7 @@ class Options extends Component {
     printSchedule() {
         let title = "Banquet Server";
 
-        const input = document.querySelector('.scheduler-view');
+        const input = document.getElementById('printPreview');
 
         if (input !== null) {
             html2canvas(input)
@@ -131,18 +132,14 @@ class Options extends Component {
                 <form id="employee-form">
                     <DialogTitle style={{padding: '0px'}}>
                         <div className="modal-header">
-                            <h5 class="modal-title">Print Schedule</h5>
+                            <h5 className="modal-title text-success">Print Schedule</h5>
                         </div>
                     </DialogTitle>
                     <DialogContent>
                         {/**
                          * TODO: Schedule structure
                          **/}
-                        <div id="printPreview" style={{
-                            width: '900px',
-                            height: '60vh',
-                            background: '#ddd',
-                        }}>
+                        <div id="printPreview">
                             <table>
                                 <thead>
                                 <tr>
@@ -486,15 +483,25 @@ class Options extends Component {
                             </table>
                         </div>
                     </DialogContent>
-                    <DialogActions style={{margin: '20px 20px'}}>
+                    <DialogActions
+                        style={{
+                            background: '#FFF',
+                            position: 'sticky',
+                            bottom: 0,
+                            right: 0,
+                            boxShadow: '1px -1px 10px #ddd',
+                            margin: 0,
+                            padding: '.5em'
+                        }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
                                 <button
                                     type="submit"
                                     variant="fab"
                                     className="btn btn-success"
+                                    onClick={this.printSchedule}
                                 >
-                                    Save {!this.state.saving && <i class="fas fa-save"/>}
+                                    Print {!this.state.saving && <i className="fas fa-print"></i>}
                                     {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
                                 </button>
                             </div>
