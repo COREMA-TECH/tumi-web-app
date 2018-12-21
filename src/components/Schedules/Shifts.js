@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Scheduler, {DATE_FORMAT, SchedulerData, ViewTypes} from 'react-big-scheduler';
+import Scheduler, {DATE_FORMAT, SchedulerData, ViewTypes, DemoData} from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
 import moment from 'moment';
 
@@ -9,75 +9,75 @@ class Shifts extends Component {
         super(props);
 
 
-        // let schedulerData = new SchedulerData('2018-12-17 09:30:00', ViewTypes.Day, false, false, {
-        //     views: [
-        //         { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
-        //         { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
-        //         { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
-        //         { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
-        //     ],
-        //     schedulerWidth: '1500',
-        // });
-        let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week);
+        let schedulerData = new SchedulerData('2017-12-18 09:30:00', ViewTypes.Week, false, false, {
+            views: [
+                { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
+                { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
+                { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
+                { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
+            ],
+            schedulerWidth: '1500',
+        });
+        //let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week);
 
 
-        moment.locale('zh-cn');
+        moment.locale('en');
         schedulerData.setLocaleMoment(moment);
 
 
         //set resources here or later
-        let resources = [
-            {
-                id: 'r1',
-                name: 'Resource1'
-            },
-            {
-                id: 'r2',
-                name: 'Resource2'
-            },
-            {
-                id: 'r3',
-                name: 'Resource 5'
-            }
-        ];
-        schedulerData.setResources(resources);
+        // let resources = [
+        //     {
+        //         id: 'r1',
+        //         name: 'Resource1'
+        //     },
+        //     {
+        //         id: 'r2',
+        //         name: 'Resource2'
+        //     },
+        //     {
+        //         id: 'r3',
+        //         name: 'Resource 5'
+        //     }
+        // ];
+        //schedulerData.setResources(resources);
         //set events here or later,
         //the event array should be sorted in ascending order by event.start property, otherwise there will be some rendering errors
-        let events = [
-            {
-                id: 1,
-                start: '2018-12-17 09:30:00',
-                end: '2018-12-17 23:30:00',
-                resourceId: 'r1',
-                title: 'I am finished',
-                bgColor: '#cd0000'
-            },
-            {
-                id: 2,
-                start: '2018-12-18 12:30:00',
-                end: '2018-12-18 23:30:00',
-                resourceId: 'r2',
-                title: 'I am not resizable',
-                bgColor: '#269c1c',
-                resizable: true
-            },
-            {
-                id: 3,
-                start: '2018-12-19 12:30:00',
-                end: '2018-12-19 23:30:00',
-                resourceId: 'r3',
-                title: 'I am not movable',
-                bgColor: '#0087ff',
-                movable: false,
-                resizable: true
-            }
-        ];
-        schedulerData.setEvents(events);
+        // let events = [
+        //     {
+        //         id: 1,
+        //         start: '2018-12-17 09:30:00',
+        //         end: '2018-12-17 23:30:00',
+        //         resourceId: 'r1',
+        //         title: 'I am finished',
+        //         bgColor: '#cd0000'
+        //     },
+        //     {
+        //         id: 2,
+        //         start: '2018-12-18 12:30:00',
+        //         end: '2018-12-18 23:30:00',
+        //         resourceId: 'r2',
+        //         title: 'I am not resizable',
+        //         bgColor: '#269c1c',
+        //         resizable: true
+        //     },
+        //     {
+        //         id: 3,
+        //         start: '2018-12-19 12:30:00',
+        //         end: '2018-12-19 23:30:00',
+        //         resourceId: 'r3',
+        //         title: 'I am not movable',
+        //         bgColor: '#0087ff',
+        //         movable: false,
+        //         resizable: true
+        //     }
+        // ];
+        // schedulerData.setEvents(events);
 
 
         // schedulerData.localeMoment.locale('en');
-        // schedulerData.setResources(DemoData.resources);
-        // schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setResources(DemoData.resources);
+        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
         // schedulerData.setEvents(events);
         this.state = {
             viewModel: schedulerData,
