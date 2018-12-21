@@ -906,6 +906,7 @@ class Application extends Component {
 																	id="positionApply"
 																	onChange={(event) => {
 																		this.setState({
+																			// Fixme: repair this
 																			idealJob: event.target.value
 																		});
 																	}}
