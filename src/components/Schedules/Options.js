@@ -95,14 +95,14 @@ class Options extends Component {
                         format: [13, 10]
                     });
 
-                    let textWidth = pdf.getStringUnitWidth("Banquet Server | Schedule") * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                    let textOffset = (pdf.internal.pageSize.width - textWidth) / 2;
+                    // let textWidth = pdf.getStringUnitWidth("Banquet Server | Schedule") * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+                    // let textOffset = (pdf.internal.pageSize.width - textWidth) / 2;
 
-                    pdf.addImage(imgData, 'JPEG', .0, .8);
+                    pdf.addImage(imgData, 'JPEG', .0, .5);
 
-                    pdf.setTextColor(72, 174, 225);
-                    pdf.setFontSize(13);
-                    pdf.text(title, .2, .3);
+                    // pdf.setTextColor(72, 174, 225);
+                    // pdf.setFontSize(13);
+                    // pdf.text(title, .2, .3);
 
                     // pdf.setLineDash(3,3);
                     // pdf.setLineWidth(.01);
@@ -140,6 +140,13 @@ class Options extends Component {
                          * TODO: Schedule structure
                          **/}
                         <div id="printPreview">
+                            <div className="header-print">
+                                <div className="header--title">
+                                    <div className="department-hotel text-info">Housekeeping | Hilton Princess</div>
+                                    <span className="date-schedule">20/12/2018</span>
+                                </div>
+                                <div className="header--logo">TUMI</div>
+                            </div>
                             <table>
                                 <thead>
                                 <tr>
@@ -156,7 +163,7 @@ class Options extends Component {
                                     </th>
                                     <th>
                                         <span className="day">3</span>
-                                        <span className="long">Wendsday</span>
+                                        <span className="long">Wenesday</span>
                                         <span className="short">We</span>
                                     </th>
                                     <th>
