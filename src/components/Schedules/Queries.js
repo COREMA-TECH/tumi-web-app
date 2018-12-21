@@ -18,7 +18,6 @@ query data {
   }
 `;
 
-
 export const GET_POSITION = gql`
   query positions($Id_Entity: Int){
     getposition(Id_Entity: $Id_Entity){
@@ -26,4 +25,14 @@ export const GET_POSITION = gql`
       Position      
     }
   }
+`;
+
+export const GET_CITIES_QUERY = gql`
+query Cities($id: Int) {
+	getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 5) {
+		Id
+		Name
+		IsActive
+	}
+}
 `;

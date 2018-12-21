@@ -487,6 +487,7 @@ class NewContract extends Component {
                                     Id_Company: 1,
                                     Contract_Name: `'${this.state.Contract_Name}'`,
                                     Contrat_Owner: `'${this.state.Contrat_Owner}'`,
+                                    IdManagement: parseInt(this.state.IdManagement),
                                     Id_Entity: parseInt(this.state.Id_Entity),
                                     Id_User_Signed: parseInt(this.state.Id_User_Signed),
                                     User_Signed_Title: `'${this.state.User_Signed_Title}'`,

@@ -8,6 +8,7 @@
 
 # production
 /build
+/src/components/connection.js
 
 # misc
 .DS_Store
