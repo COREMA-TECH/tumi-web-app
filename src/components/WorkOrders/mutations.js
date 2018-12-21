@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const CREATE_WORKORDER = gql`
-	mutation addWorkOrder($workOrder: [inputInsertWorkOrder]) {
-		addWorkOrder(workOrder: $workOrder) {
+	mutation addWorkOrder($quantity:Int!, $startshift: String!,$endshift: String!,$startDate: Date!,$endDate: Date!,$workOrder: [inputInsertWorkOrder],$shift: [inputInsertShift]) {
+		addWorkOrder(quantity:$quantity,startshift: $startshift,endshift: $endshift,startDate: $startDate,endDate:$endDate,workOrder: $workOrder, shift:$shift) {
 			id
 		}
 	}

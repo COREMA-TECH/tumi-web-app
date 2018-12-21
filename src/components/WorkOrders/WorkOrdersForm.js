@@ -33,6 +33,7 @@ class WorkOrdersForm extends Component {
         EspecialComment: '',
         position: 0,
         PositionRateId: null,
+        PositionName: '',
         RecruiterId: null,
         contactId: null,
         userId: localStorage.getItem('LoginId'),
@@ -151,7 +152,9 @@ class WorkOrdersForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) this.add();
-            else this.update();
+            else {
+                this.update();
+            }
         }
     };
 
@@ -160,6 +163,11 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
+                    startshift: this.state.shift,
+                    endshift: this.state.endShift,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    quantity: this.state.quantity,
                     workOrder: {
                         IdEntity: this.state.IdEntity,
                         //contactId: this.state.contactId
@@ -177,6 +185,13 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         contactId: this.state.contactId,
                         userId: this.state.userId
+                    },
+                    shift: {
+                        entityId: this.state.IdEntity,
+                        title: this.state.PositionName,
+                        color: "#96989A",
+                        status: 1,
+                        idPosition: this.state.PositionRateId,
                     }
                 }
             })
@@ -196,6 +211,11 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: UPDATE_WORKORDER,
                 variables: {
+                    startshift: this.state.shift,
+                    endshift: this.state.endShift,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    quantity: this.state.quantity,
                     workOrder: {
                         id: this.state.id,
                         IdEntity: this.state.IdEntity,
@@ -213,6 +233,13 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId
+                    },
+                    shift: {
+                        entityId: this.state.IdEntity,
+                        title: this.state.PositionName,
+                        color: "#96989A",
+                        status: 1,
+                        idPosition: this.state.PositionRateId,
                     }
                 }
             })
@@ -300,7 +327,8 @@ class WorkOrdersForm extends Component {
         if (name === 'PositionRateId') {
             comments = this.state.positions.find((item) => { return item.Id == value })
             this.setState({
-                EspecialComment: comments != null ? comments.Comment : ''
+                EspecialComment: comments != null ? comments.Comment : '',
+                PositionName: comments != null ? comments.Position : ''
             });
         }
 

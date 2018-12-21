@@ -196,6 +196,11 @@ class WorkOrdersPositionForm extends Component {
 			.mutate({
 				mutation: UPDATE_WORKORDER,
 				variables: {
+					startshift: this.state.shift,
+					endshift: this.state.endShift,
+					startDate: this.state.startDate,
+					endDate: this.state.endDate,
+					quantity: this.state.quantity,
 					workOrder: {
 						id: this.state.id,
 						IdEntity: this.state.IdEntity,
@@ -213,6 +218,13 @@ class WorkOrdersPositionForm extends Component {
 						PositionRateId: this.state.PositionRateId,
 						userId: this.state.userId,
 						contactId: this.state.contactId
+					},
+					shift: {
+						entityId: this.state.IdEntity,
+						title: this.state.PositionName,
+						color: "#96989A",
+						status: 1,
+						idPosition: this.state.PositionRateId,
 					}
 				}
 			})
