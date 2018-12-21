@@ -52,7 +52,6 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-	{ id: 'Edit', numeric: false, disablePadding: true, label: '' },
 	{ id: 'Delete', numeric: false, disablePadding: true, label: '' },
 	{ id: 'Id_Contact', numeric: false, disablePadding: false, label: 'Contact' },
 	{ id: 'Code_User', numeric: false, disablePadding: false, label: 'User Name' },
@@ -158,13 +157,13 @@ const toolbarStyles = (theme) => ({
 	highlight:
 		theme.palette.type === 'light'
 			? {
-					color: theme.palette.secondary.main,
-					backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-				}
+				color: theme.palette.secondary.main,
+				backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+			}
 			: {
-					color: theme.palette.text.primary,
-					backgroundColor: theme.palette.secondary.dark
-				},
+				color: theme.palette.text.primary,
+				backgroundColor: theme.palette.secondary.dark
+			},
 	spacer: {
 		flex: '1 1 100%'
 	},
@@ -191,10 +190,10 @@ let EnhancedTableToolbar = (props) => {
 						{numSelected} selected
 					</Typography>
 				) : (
-					<Typography variant="title" id="tableTitle">
-						Nutrition
+						<Typography variant="title" id="tableTitle">
+							Nutrition
 					</Typography>
-				)}
+					)}
 			</div>
 			<div className={classes.spacer} />
 			<div className={classes.actions}>
@@ -205,12 +204,12 @@ let EnhancedTableToolbar = (props) => {
 						</IconButton>
 					</Tooltip>
 				) : (
-					<Tooltip title="Filter list">
-						<IconButton aria-label="Filter list">
-							<FilterListIcon />
-						</IconButton>
-					</Tooltip>
-				)}
+						<Tooltip title="Filter list">
+							<IconButton aria-label="Filter list">
+								<FilterListIcon />
+							</IconButton>
+						</Tooltip>
+					)}
 			</div>
 		</Toolbar>
 	);
@@ -373,7 +372,7 @@ class UsersTable extends React.Component {
 		this.setState({ order, orderBy });
 	};
 	getSortedItems = (items, order, orderBy) => {
-		if (items.length > 0) return [ ...items ].sort(getSorting(order, orderBy));
+		if (items.length > 0) return [...items].sort(getSorting(order, orderBy));
 		else return items;
 	};
 	shouldComponentUpdate(nextProps, nextState) {
@@ -440,36 +439,29 @@ class UsersTable extends React.Component {
 										}}
 									>
 										<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-											{' '}
 											<Tooltip title="Edit">
-												<div>
-													<button
-														className="btn btn-success ml-1"
-														disabled={this.props.loading}
-														onClick={(e) => {
-															e.stopPropagation();
-															return this.props.onEditHandler({ ...row });
-														}}
-													>
-														<i className="fas fa-pen" />
-													</button>
-												</div>
+												<button
+													className="btn btn-success ml-1 float-left"
+													disabled={this.props.loading}
+													onClick={(e) => {
+														e.stopPropagation();
+														return this.props.onEditHandler({ ...row });
+													}}
+												>
+													<i className="fas fa-pen" />
+												</button>
 											</Tooltip>
-										</CustomTableCell>
-										<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 											<Tooltip title="Delete">
-												<div>
-													<button
-														className="btn btn-danger"
-														disabled={this.props.loading}
-														onClick={(e) => {
-															e.stopPropagation();
-															return this.props.onDeleteHandler(row.Id);
-														}}
-													>
-														<i className="fas fa-trash" />
-													</button>
-												</div>
+												<button
+													className="btn btn-danger float-left ml-1"
+													disabled={this.props.loading}
+													onClick={(e) => {
+														e.stopPropagation();
+														return this.props.onDeleteHandler(row.Id);
+													}}
+												>
+													<i className="fas fa-trash" />
+												</button>
 											</Tooltip>
 										</CustomTableCell>
 										<CustomTableCell>
