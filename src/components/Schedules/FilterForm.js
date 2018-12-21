@@ -88,7 +88,7 @@ class FilterForm extends Component {
             });
     }
 
-    insertShift = (status = 1) => {
+    insertShift = () => {
         this.props.client
             .mutate({
                 startDate: this.state.startDate,
@@ -105,13 +105,10 @@ class FilterForm extends Component {
                 employees: this.state.selectedEmployees.map(item => { return item.value })
             })
             .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Record Updated!');
-                this.setState({ openModal: false });
-                window.location.reload();
+                this.props.handleOpenSnackbar('success', 'Shift created successfully!');
             })
             .catch((error) => {
-                this.setState({ saving: false });
-                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+                this.props.handleOpenSnackbar('error', 'Error creating Shift');
             });
     };
 
