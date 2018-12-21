@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import {withStyles} from "@material-ui/core";
 import green from "@material-ui/core/colors/green";
+import './index.css';
 
 const styles = (theme) => ({
     container: {
@@ -82,7 +83,7 @@ class Options extends Component {
     printSchedule() {
         let title = "Banquet Server";
 
-        const input = document.querySelector('.scheduler-view');
+        const input = document.getElementById('printPreview');
 
         if (input !== null) {
             html2canvas(input)
@@ -94,14 +95,14 @@ class Options extends Component {
                         format: [13, 10]
                     });
 
-                    let textWidth = pdf.getStringUnitWidth("Banquet Server | Schedule") * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                    let textOffset = (pdf.internal.pageSize.width - textWidth) / 2;
+                    // let textWidth = pdf.getStringUnitWidth("Banquet Server | Schedule") * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+                    // let textOffset = (pdf.internal.pageSize.width - textWidth) / 2;
 
-                    pdf.addImage(imgData, 'JPEG', .0, .8);
+                    pdf.addImage(imgData, 'JPEG', .0, .5);
 
-                    pdf.setTextColor(72, 174, 225);
-                    pdf.setFontSize(13);
-                    pdf.text(title, .2, .3);
+                    // pdf.setTextColor(72, 174, 225);
+                    // pdf.setFontSize(13);
+                    // pdf.text(title, .2, .3);
 
                     // pdf.setLineDash(3,3);
                     // pdf.setLineWidth(.01);
@@ -124,28 +125,390 @@ class Options extends Component {
             <Dialog
                 fullScreen={fullScreen}
                 open={this.state.openModal}
-                onClose={this.handleCloseModal}
+                onClose={this.handleClose}
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <form id="employee-form" onSubmit={this.handleSubmit}>
+                <form id="employee-form">
                     <DialogTitle style={{padding: '0px'}}>
                         <div className="modal-header">
-                            <h5 class="modal-title">Print Schedule</h5>
+                            <h5 className="modal-title text-success">Print Schedule</h5>
                         </div>
                     </DialogTitle>
                     <DialogContent>
+                        {/**
+                         * TODO: Schedule structure
+                         **/}
+                        <div id="printPreview">
+                            <div className="header-print">
+                                <div className="header--title">
+                                    <div className="department-hotel text-info">Housekeeping | Hilton Princess</div>
+                                    <span className="date-schedule">20/12/2018</span>
+                                </div>
+                                <div className="header--logo">TUMI</div>
+                            </div>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        <span className="day">1</span>
+                                        <span className="long">Monday</span>
+                                        <span className="short">Mon</span>
+                                    </th>
+                                    <th>
+                                        <span className="day">2</span>
+                                        <span className="long">Tuesday</span>
+                                        <span className="short">Tue</span>
+                                    </th>
+                                    <th>
+                                        <span className="day">3</span>
+                                        <span className="long">Wenesday</span>
+                                        <span className="short">We</span>
+                                    </th>
+                                    <th>
+                                        <span className="day">4</span>
+                                        <span className="long">Thursday</span>
+                                        <span className="short">Thur</span>
+                                    </th>
+                                    <th>
+                                        <span className="day ">5</span>
+                                        <span className="long">Friday</span>
+                                        <span className="short">Fri</span>
+                                    </th>
+                                    <th>
+                                        <span className="day">6</span>
+                                        <span className="long">Saturday</span>
+                                        <span className="short">Sat</span>
+                                    </th>
+                                    <th>
+                                        <span className="day">7</span>
+                                        <span className="long">Sunday</span>
+                                        <span className="short">Sun</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>1:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>2:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
 
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>3:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>4:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>5:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>6:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>7:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td className="hour" rowSpan="4"><span>8:00</span></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </DialogContent>
-                    <DialogActions style={{margin: '20px 20px'}}>
+                    <DialogActions
+                        style={{
+                            background: '#FFF',
+                            position: 'sticky',
+                            bottom: 0,
+                            right: 0,
+                            boxShadow: '1px -1px 10px #ddd',
+                            margin: 0,
+                            padding: '.5em'
+                        }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
                                 <button
                                     type="submit"
                                     variant="fab"
                                     className="btn btn-success"
+                                    onClick={this.printSchedule}
                                 >
-                                    Save {!this.state.saving && <i class="fas fa-save"/>}
+                                    Print {!this.state.saving && <i className="fas fa-print"></i>}
                                     {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
                                 </button>
                             </div>
