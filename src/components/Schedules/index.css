@@ -112,7 +112,7 @@
     vertical-align: middle;
     border-left: 1px solid #626E7E;
     position: relative;
-    height: 15px;
+    height: 10px;
     cursor: pointer;
 }
 
@@ -124,7 +124,7 @@
     font-size: 1em;
     padding: 0;
     color: #626E7E;
-    background: #fff;
+    background: #efffff;
     border-bottom: 1px solid #626E7E;
     border-collapse: separate;
     min-width: 100px;
