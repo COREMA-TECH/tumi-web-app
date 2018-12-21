@@ -27,3 +27,13 @@ export const GET_POSITION = gql`
     }
   }
 `;
+
+export const GET_CITIES_QUERY = gql`
+query Cities($id: Int) {
+	getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 5) {
+		Id
+		Name
+		IsActive
+	}
+}
+`;
