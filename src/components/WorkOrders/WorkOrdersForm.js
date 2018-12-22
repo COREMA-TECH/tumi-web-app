@@ -189,7 +189,7 @@ class WorkOrdersForm extends Component {
                     shift: {
                         entityId: this.state.IdEntity,
                         title: this.state.PositionName,
-                        color: "#96989A",
+                        color: '#96989A',
                         status: 1,
                         idPosition: this.state.PositionRateId,
                     }
