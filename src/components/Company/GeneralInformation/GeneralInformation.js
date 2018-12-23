@@ -85,6 +85,7 @@ class GeneralInformation extends Component {
 		phoneNumberValid: true,
 
 		faxValid: true,
+		phonePrefixValid: true,
 		startDateValid: true,
 		otherNameEdit: false,
 		other01NameEdit: false,
@@ -1049,6 +1050,9 @@ class GeneralInformation extends Component {
 		let fax = this.state.fax.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
 		let faxValid = fax.length == 10 || fax.length == 0;
 
+		let phonePrefix = this.state.phonePrefix.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+		let phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
+
 		let startDateValid = this.state.startDate.trim().length == 10;
 
 		this.setState(
@@ -1063,7 +1067,8 @@ class GeneralInformation extends Component {
 				countryValid,
 				stateValid,
 				phoneNumberValid,
-				faxValid
+				faxValid,
+				phonePrefixValid
 			},
 			() => {
 				let message = ""
@@ -1083,6 +1088,8 @@ class GeneralInformation extends Component {
 					message = "You need to specify a valid Zip Code"
 				else if (!phoneNumberValid)
 					message = "You need to specify a valid Phone Number"
+				else if (!phonePrefixValid)
+					message = "You need to specify a valid Secondary Phone Number"
 				else if (!faxValid)
 					message = "You need to specify a valid Fax Number"
 				else if (!startWeekValid)
@@ -1115,6 +1122,7 @@ class GeneralInformation extends Component {
 		let phoneNumber2Valid = this.state.phoneNumber2Valid;
 		let faxValid = this.state.faxValid;
 		let startDateValid = this.state.startDateValid;
+		let phonePrefixValid = this.state.phonePrefixValid;
 
 		switch (fieldName) {
 			case 'Code':
@@ -1173,6 +1181,10 @@ class GeneralInformation extends Component {
 					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 						.length == 10;
 				break;
+			case 'phonePrefix':
+				let phonePrefix = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+				phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
+				break;
 			case 'fax':
 				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
 				faxValid = fax.length == 10 || fax.length == 0;
@@ -1200,7 +1212,8 @@ class GeneralInformation extends Component {
 				//	suiteValid,
 				phoneNumberValid,
 				faxValid,
-				startDateValid
+				startDateValid,
+				phonePrefixValid
 			},
 			this.validateForm
 		);
@@ -1223,7 +1236,8 @@ class GeneralInformation extends Component {
 					// this.state.regionValid &&
 					//this.state.suiteValid &&
 					this.state.phoneNumberValid &&
-					this.state.faxValid
+					this.state.faxValid &&
+					this.state.phonePrefixValid
 				//this.state.startDateValid
 			},
 			func
@@ -1626,7 +1640,9 @@ class GeneralInformation extends Component {
 											mask="+(999) 999-9999"
 											maskChar=" "
 											value={this.state.phonePrefix}
-											className={'form-control'}
+											className={
+												this.state.phonePrefixValid ? 'form-control' : 'form-control _invalid'
+											}
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'phonePrefix');
 											}}
