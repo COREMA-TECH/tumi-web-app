@@ -44,6 +44,16 @@ export const GET_POSITIONS_QUERY = gql`
     }
 `;
 
+export const GET_POSITIONS_CATALOG = gql`
+    {
+        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
+            Id
+            IsActive
+            Description
+        }
+    }
+`;
+
 /**
  * Query to get languages
  */

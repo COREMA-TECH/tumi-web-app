@@ -21,7 +21,12 @@ class FilterForm extends Component {
         location: 0,
         positions: [],
         position: 0,
-        color: '',
+        color: {
+            r: '241',
+            g: '112',
+            b: '19',
+            a: '1',
+        },
         startHour: '00:00',
         endHour: '00:00',
         startDate: '',
@@ -91,18 +96,21 @@ class FilterForm extends Component {
     insertShift = () => {
         this.props.client
             .mutate({
-                startDate: this.state.startDate,
-                endDate: this.state.endDate,
-                startHour: this.state.startHour,
-                endHour: this.state.endHour,
-                shift: {
-                    entityId: this.state.location,
-                    title: this.state.positionText,
-                    color: this.state.color,
-                    status: 1,
-                    idPosition: this.state.position
-                },
-                employees: this.state.selectedEmployees.map(item => { return item.value })
+                mutation: INSERT_SHIFT,
+                variables: {
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    startHour: this.state.startHour,
+                    endHour: this.state.endHour,
+                    shift: {
+                        entityId: this.state.location,
+                        title: this.state.title,
+                        color: this.state.color,
+                        status: 1,
+                        idPosition: this.state.position
+                    },
+                    employees: this.state.selectedEmployees.map(item => { return item.value })
+                }
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Shift created successfully!');
@@ -140,6 +148,9 @@ class FilterForm extends Component {
             return { valid: false, message: 'You need to select a location' };
         if (parseInt(this.state.position) == 0)
             return { valid: false, message: 'You need to select a position' };
+        if (!this.state.title.trim())
+            return { valid: false, message: 'You need to set a title' };
+
 
         return { valid: true, message: 'Everything is ok' };
     }
@@ -148,7 +159,7 @@ class FilterForm extends Component {
         this.setState({ selectedEmployees });
     }
 
-    handleValueChange = (event) => {
+    handleSelectValueChange = (event) => {
         var index = event.nativeEvent.target.selectedIndex;
         var text = event.nativeEvent.target[index].text;
 
@@ -157,15 +168,27 @@ class FilterForm extends Component {
             [element.name]: element.value,
             [`${element.name}Text`]: text
         }, () => {
-            console.log("This is my state", this.state)
             if (element.name == 'location')
                 this.getPosition();
+            else if (element.name == "position")
+                this.setState({ title: this.state.positionText })
+        })
+    }
+
+    handleInputValueChange = (event) => {
+        const element = event.target;
+        this.setState({
+            [element.name]: element.value,
         })
     }
 
     handleTimeChange = (name) => (text) => {
         this.setState({ [name]: text })
     }
+
+    handleColorChange = (color) => {
+        this.setState({ color: color.rgb })
+    };
 
     onSubmit = (event) => {
         event.preventDefault();
@@ -174,7 +197,7 @@ class FilterForm extends Component {
         let { valid, message } = result;
 
         if (valid) {
-
+            this.insertShift();
         } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
     }
 
@@ -182,6 +205,7 @@ class FilterForm extends Component {
         this.getEmployees()
     }
     render() {
+        console.log(this.state)
         return <div className="MasterShiftForm">
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
@@ -202,11 +226,11 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">Start Date</label>
-                        <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleValueChange} required />
+                        <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">End Date</label>
-                        <input type="date" name="endDate" className="form-control" value={this.state.endDate} onChange={this.handleValueChange} required />
+                        <input type="date" name="endDate" className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">Start Time</label>
@@ -224,7 +248,7 @@ class FilterForm extends Component {
                         <select
                             name="location"
                             id="location"
-                            onChange={this.handleValueChange}
+                            onChange={this.handleSelectValueChange}
                             value={this.state.location}
                             className="form-control"
                             required
@@ -238,7 +262,7 @@ class FilterForm extends Component {
                         <select
                             name="position"
                             id="position"
-                            onChange={this.handleValueChange}
+                            onChange={this.handleSelectValueChange}
                             value={this.state.position}
                             className="form-control"
                             required
@@ -247,16 +271,19 @@ class FilterForm extends Component {
                             {this.renderPositionList()}
                         </select>
                     </div>
-                    <div className="col-md-12">
-                        < label htmlFor="">Color</label>
-                        <input type="text" className="form-control" name="color" value={this.state.color} onChange={this.handleValueChange} />
-                        <ShiftColorPicker />
+                    <div className="col-md-9">
+                        < label htmlFor="">Title</label>
+                        <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
+                    </div>
+                    <div className="col-md-3">
+                        <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
                     </div>
                 </div  >
                 <div className="row">
                     <div className="col-md-12">
                         <button className="btn btn-success float-right" type="submit">Publish</button>
                     </div>
+
                 </div>
             </form>
         </div>

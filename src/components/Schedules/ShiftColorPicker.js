@@ -6,13 +6,7 @@ import { SketchPicker } from 'react-color'
 
 class ShiftColorPicker extends React.Component {
     state = {
-        displayColorPicker: false,
-        color: {
-            r: '241',
-            g: '112',
-            b: '19',
-            a: '1',
-        },
+        displayColorPicker: false
     };
 
     handleClick = () => {
@@ -23,19 +17,17 @@ class ShiftColorPicker extends React.Component {
         this.setState({ displayColorPicker: false })
     };
 
-    handleChange = (color) => {
-        this.setState({ color: color.rgb })
-    };
+
 
     render() {
-
+        console.log("This is my color", this.props)
         const styles = reactCSS({
             'default': {
                 color: {
                     width: '100%',
                     height: '14px',
                     borderRadius: '2px',
-                    background: `rgba(${this.state.color.r}, ${this.state.color.g}, ${this.state.color.b}, ${this.state.color.a})`,
+                    background: `rgba(${this.props.color.r}, ${this.props.color.g}, ${this.props.color.b}, ${this.props.color.a})`,
                 },
                 swatch: {
                     padding: '5px',
@@ -62,12 +54,13 @@ class ShiftColorPicker extends React.Component {
 
         return (
             <div>
+                <label htmlFor="">Color</label>
                 <div style={styles.swatch} onClick={this.handleClick}>
                     <div style={styles.color} />
                 </div>
                 {this.state.displayColorPicker ? <div style={styles.popover}>
                     <div style={styles.cover} onClick={this.handleClose} />
-                    <SketchPicker color={this.state.color} onChange={this.handleChange} />
+                    <SketchPicker color={this.props.color} onChange={this.props.onChange} />
                 </div> : null}
 
             </div>
