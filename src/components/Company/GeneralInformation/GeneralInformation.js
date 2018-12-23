@@ -959,7 +959,8 @@ class GeneralInformation extends Component {
 		this.setState(
 			{
 				startWeek: id,
-				endWeek: idEndWeek
+				endWeek: idEndWeek,
+				endWeekValid: true
 			},
 			() => {
 				this.validateField('startWeek', id);
@@ -975,7 +976,8 @@ class GeneralInformation extends Component {
 		this.setState(
 			{
 				endWeek: id,
-				startWeek: idStartWeek
+				startWeek: idStartWeek,
+				startWeekValid:true
 			},
 			() => {
 				this.validateField('endWeek', id);

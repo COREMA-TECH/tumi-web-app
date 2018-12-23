@@ -1070,6 +1070,7 @@ query getposition {
 									cols="30"
 									rows="5"
 									value={this.state.Comment}
+									maxLength="255"
 								/>
 							</div>
 						</div>
