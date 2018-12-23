@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import { GET_CITIES_QUERY } from './Queries';
+import withApollo from 'react-apollo/withApollo';
 
 class Filters extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            cities: []
+        };
+    }
 
     handleChange = () => {
 
@@ -11,10 +20,6 @@ class Filters extends Component {
         this.props.client
             .query({
                 query: GET_CITIES_QUERY,
-                variables: {
-                    id: this.state.city,
-                    parent: this.state.state
-                },
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
@@ -25,6 +30,10 @@ class Filters extends Component {
             .catch();
     }
 
+    UNSAFE_componentWillMount() {
+        this.getCities();
+    }
+
     render() {
         return (
             <form action="">
@@ -32,7 +41,12 @@ class Filters extends Component {
                     <div className="col-md-3">
                         <label htmlFor="">City</label>
                         <select name="state" id="" className="form-control">
-                            <option value="">Select a Option</option>
+                            <option value="0">Select a Option</option>
+                            {
+                                this.state.cities.map((city) => {
+                                    <option value={`${city.Id}`}>{city.Name}</option>
+                                })
+                            }
                         </select>
                     </div>
                     <div className="col-md-3">
@@ -55,4 +69,4 @@ class Filters extends Component {
 
 }
 
-export default Filters;
+export default withApollo(Filters);

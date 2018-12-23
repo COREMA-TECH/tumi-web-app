@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
+import React, {Component} from 'react';
+import Scheduler, {DATE_FORMAT, SchedulerData, ViewTypes, DemoData} from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
 import moment from 'moment';
 
@@ -8,41 +8,129 @@ class Shifts extends Component {
     constructor(props) {
         super(props);
 
-        let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
+
+        let schedulerData = new SchedulerData('2017-12-18 09:30:00', ViewTypes.Week, false, false, {
             views: [
-                { viewName: 'Day(Agenda)', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
+                { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
                 { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
-                { viewName: 'Month(TaskView)', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
+                { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
                 { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
             ],
             schedulerWidth: '1500',
         });
-        schedulerData.localeMoment.locale('en');
+        //let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week);
+
+
+        moment.locale('en');
+        schedulerData.setLocaleMoment(moment);
+
+
+        //set resources here or later
+        // let resources = [
+        //     {
+        //         id: 'r1',
+        //         name: 'Resource1'
+        //     },
+        //     {
+        //         id: 'r2',
+        //         name: 'Resource2'
+        //     },
+        //     {
+        //         id: 'r3',
+        //         name: 'Resource 5'
+        //     }
+        // ];
+        //schedulerData.setResources(resources);
+        //set events here or later,
+        //the event array should be sorted in ascending order by event.start property, otherwise there will be some rendering errors
+        // let events = [
+        //     {
+        //         id: 1,
+        //         start: '2018-12-17 09:30:00',
+        //         end: '2018-12-17 23:30:00',
+        //         resourceId: 'r1',
+        //         title: 'I am finished',
+        //         bgColor: '#cd0000'
+        //     },
+        //     {
+        //         id: 2,
+        //         start: '2018-12-18 12:30:00',
+        //         end: '2018-12-18 23:30:00',
+        //         resourceId: 'r2',
+        //         title: 'I am not resizable',
+        //         bgColor: '#269c1c',
+        //         resizable: true
+        //     },
+        //     {
+        //         id: 3,
+        //         start: '2018-12-19 12:30:00',
+        //         end: '2018-12-19 23:30:00',
+        //         resourceId: 'r3',
+        //         title: 'I am not movable',
+        //         bgColor: '#0087ff',
+        //         movable: false,
+        //         resizable: true
+        //     }
+        // ];
+        // schedulerData.setEvents(events);
+
+
+        // schedulerData.localeMoment.locale('en');
         schedulerData.setResources(DemoData.resources);
         schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        // schedulerData.setEvents(events);
         this.state = {
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            events: [
+                {
+                    id: 1,
+                    start: '2018-12-17 09:30:00',
+                    end: '2018-12-17 23:30:00',
+                    resourceId: 'r1',
+                    title: 'I am finished',
+                    bgColor: '#cd0000'
+                },
+                {
+                    id: 2,
+                    start: '2018-12-18 12:30:00',
+                    end: '2018-12-18 23:30:00',
+                    resourceId: 'r2',
+                    title: 'I am not resizable',
+                    bgColor: '#269c1c',
+                    resizable: false
+                },
+                {
+                    id: 3,
+                    start: '2018-12-19 12:30:00',
+                    end: '2018-12-19 23:30:00',
+                    resourceId: 'r3',
+                    title: 'I am not movable',
+                    bgColor: '#0087ff',
+                    movable: false
+                }
+            ]
         }
     }
 
     render() {
-        const { viewModel } = this.state;
+        const {viewModel} = this.state;
+
         return (
             <Scheduler schedulerData={viewModel}
-                prevClick={this.prevClick}
-                nextClick={this.nextClick}
-                onSelectDate={this.onSelectDate}
-                onViewChange={this.onViewChange}
-                eventItemClick={this.eventClicked}
-                viewEventClick={this.ops1}
-                viewEventText="Ops 1"
-                viewEvent2Text="Ops 2"
-                viewEvent2Click={this.ops2}
-                updateEventStart={this.updateEventStart}
-                updateEventEnd={this.updateEventEnd}
-                moveEvent={this.moveEvent}
-                newEvent={this.newEvent}
-                eventItemTemplateResolver={this.eventItemTemplateResolver}
+                       prevClick={this.prevClick}
+                       nextClick={this.nextClick}
+                       onSelectDate={this.onSelectDate}
+                       onViewChange={this.onViewChange}
+                       eventItemClick={this.eventClicked}
+                       viewEventClick={this.ops1}
+                       viewEventText="Ops 1"
+                       viewEvent2Text="Ops 2"
+                       viewEvent2Click={this.ops2}
+                       updateEventStart={this.updateEventStart}
+                       updateEventEnd={this.updateEventEnd}
+                       moveEvent={this.moveEvent}
+                       newEvent={this.newEvent}
+                       eventItemTemplateResolver={this.eventItemTemplateResolver}
             />
 
         );
@@ -50,7 +138,7 @@ class Shifts extends Component {
 
     prevClick = (schedulerData) => {
         schedulerData.prev();
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(this.state.events);
         this.setState({
             viewModel: schedulerData
         })
@@ -58,7 +146,7 @@ class Shifts extends Component {
 
     nextClick = (schedulerData) => {
         schedulerData.next();
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(this.state.events);
         this.setState({
             viewModel: schedulerData
         })
@@ -66,19 +154,19 @@ class Shifts extends Component {
 
     onViewChange = (schedulerData, view) => {
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(this.state.events);
         this.setState({
             viewModel: schedulerData
         })
-    }
+    };
 
     onSelectDate = (schedulerData, date) => {
         schedulerData.setDate(date);
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(this.state.events);
         this.setState({
             viewModel: schedulerData
         })
-    }
+    };
 
     eventClicked = (schedulerData, event) => {
         alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
@@ -108,11 +196,12 @@ class Shifts extends Component {
             end: end,
             resourceId: slotId,
             bgColor: 'purple'
-        }
+        };
+
         schedulerData.addEvent(newEvent);
         this.setState({
             viewModel: schedulerData
-        })
+        });
         //  }
     }
 
@@ -151,12 +240,16 @@ class Shifts extends Component {
             borderColor = event.type == 1 ? 'rgba(0,139,236,1)' : (event.type == 3 ? 'rgba(245,60,43,1)' : '#999');
             backgroundColor = event.type == 1 ? '#80C5F6' : (event.type == 3 ? '#FA9E95' : '#D9D9D9');
         }
-        let divStyle = { borderLeft: borderWidth + 'px solid ' + borderColor, backgroundColor: backgroundColor, height: mustBeHeight };
+        let divStyle = {
+            borderLeft: borderWidth + 'px solid ' + borderColor,
+            backgroundColor: backgroundColor,
+            height: mustBeHeight
+        };
         if (!!agendaMaxEventWidth)
-            divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
+            divStyle = {...divStyle, maxWidth: agendaMaxEventWidth};
 
         return <div key={event.id} className={mustAddCssClass} style={divStyle}>
-            <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
+            <span style={{marginLeft: '4px', lineHeight: `${mustBeHeight}px`}}>{titleText}</span>
         </div>;
     }
 }

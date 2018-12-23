@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import {withStyles} from "@material-ui/core";
 import green from "@material-ui/core/colors/green";
-import './index.css';
 
 const styles = (theme) => ({
     container: {
@@ -80,42 +79,42 @@ class Options extends Component {
      * and then pass it to .pgn to establish it
      * within a pdf document.
      */
-    printSchedule() {
-        let title = "Banquet Server";
-
-        const input = document.getElementById('printPreview');
-
-        if (input !== null) {
-            html2canvas(input)
-                .then((canvas) => {
-                    const imgData = canvas.toDataURL('image/png');
-                    let pdf = new jsPDF({
-                        orientation: 'landscape',
-                        unit: 'in',
-                        format: [13, 10]
-                    });
-
-                    // let textWidth = pdf.getStringUnitWidth("Banquet Server | Schedule") * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
-                    // let textOffset = (pdf.internal.pageSize.width - textWidth) / 2;
-
-                    pdf.addImage(imgData, 'JPEG', .0, .5);
-
-                    // pdf.setTextColor(72, 174, 225);
-                    // pdf.setFontSize(13);
-                    // pdf.text(title, .2, .3);
-
-                    // pdf.setLineDash(3,3);
-                    // pdf.setLineWidth(.01);
-                    // pdf.line(3, 0, 120, 3);
-                    // pdf.circle(140, 120, 15, 'FD');
-
-
-                    alert("alert");
-                    pdf.save("download.pdf");
-                });
-        }
-
-    }
+    // printSchedule() {
+    //     let title = "Banquet Server";
+    //
+    //     // const input = document.getElementById('printPreview');
+    //     const input = document.getElementById('divToPrint');
+    //
+    //     if (input !== null) {
+    //         html2canvas(input)
+    //             .then((canvas) => {
+    //                 const imgData = canvas.toDataURL('image/png');
+    //                 let pdf = new jsPDF({
+    //                     orientation: 'landscape',
+    //                     unit: 'in',
+    //                     format: [13, 10]
+    //                 });
+    //
+    //                 // let textWidth = pdf.getStringUnitWidth("Banquet Server | Schedule") * pdf.internal.getFontSize() / pdf.internal.scaleFactor;
+    //                 // let textOffset = (pdf.internal.pageSize.width - textWidth) / 2;
+    //
+    //                 pdf.addImage(imgData, 'JPEG', 0, 0);
+    //
+    //                 // pdf.setTextColor(72, 174, 225);
+    //                 // pdf.setFontSize(13);
+    //                 // pdf.text(title, .2, .3);
+    //
+    //                 // pdf.setLineDash(3,3);
+    //                 // pdf.setLineWidth(.01);
+    //                 // pdf.line(3, 0, 120, 3);
+    //                 // pdf.circle(140, 120, 15, 'FD');
+    //
+    //
+    //                 alert(new Date());
+    //                 pdf.save("download.pdf");
+    //             });
+    //     }
+    // }
 
     render() {
         const {classes} = this.props;
@@ -143,7 +142,7 @@ class Options extends Component {
                             <div className="header-print">
                                 <div className="header--title">
                                     <div className="department-hotel text-info">Housekeeping | Hilton Princess</div>
-                                    <span className="date-schedule">20/12/2018</span>
+                                    <span className="date-schedule">{}</span>
                                 </div>
                                 <div className="header--logo">TUMI</div>
                             </div>
@@ -498,7 +497,7 @@ class Options extends Component {
                             right: 0,
                             boxShadow: '1px -1px 10px #ddd',
                             margin: 0,
-                            padding: '.5em'
+                            padding: '1em'
                         }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
@@ -545,9 +544,9 @@ class Options extends Component {
                             type="button"
                             className="btn btn-link MasterShift-btn"
                             onClick={() => {
-                                this.setState({
-                                    openModal: true
-                                })
+                                // this.setState({
+                                //     openModal: true
+                                // })
                             }}
                         >
                             <i class="fas fa-print"></i>
