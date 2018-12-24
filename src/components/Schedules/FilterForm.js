@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from 'Generic/Global';
+import moment from 'moment';
 
 import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
 import { INSERT_SHIFT } from './Mutations';
@@ -15,18 +16,13 @@ import ShiftColorPicker from './ShiftColorPicker';
 class FilterForm extends Component {
 
     DEFAULT_STATE = {
-        employees: [],
         selectedEmployees: [],
         locations: [],
         location: 0,
         positions: [],
         position: 0,
-        color: {
-            r: '241',
-            g: '112',
-            b: '19',
-            a: '1',
-        },
+        color: '#867979',
+        title: '',
         startHour: '00:00',
         endHour: '00:00',
         startDate: '',
@@ -36,6 +32,7 @@ class FilterForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            employees: [],
             ...this.DEFAULT_STATE
         }
     }
@@ -69,28 +66,32 @@ class FilterForm extends Component {
             });
     }
     getPosition = () => {
-        this.props.client
-            .query({
-                query: GET_POSITION,
-                variables: {
-                    Id_Entity: this.state.location
-                }
-            })
-            .then(({ data }) => {
-                console.log(data)
-                //Save Positions into state
-                this.setState((prevState) => {
-                    return { positions: data.getposition, position: 0 }
+        this.setState({ loadingPosition: true }, () => {
+            this.props.client
+                .query({
+                    query: GET_POSITION,
+                    variables: {
+                        Id_Entity: this.state.location
+                    }
                 })
+                .then(({ data }) => {
+                    //Save Positions into state
+                    this.setState((prevState) => {
+                        return { positions: data.getposition, position: 0, loadingPosition: false }
+                    })
 
-            }).catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error loading position list',
-                    'bottom',
-                    'right'
-                );
-            });
+                }).catch(error => {
+                    this.setState({ loadingPosition: false })
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error loading position list',
+                        'bottom',
+                        'right'
+                    );
+                });
+
+        })
+
     }
 
     insertShift = () => {
@@ -113,6 +114,7 @@ class FilterForm extends Component {
                 }
             })
             .then((data) => {
+                this.setState({ ...this.DEFAULT_STATE })
                 this.props.handleOpenSnackbar('success', 'Shift created successfully!');
             })
             .catch((error) => {
@@ -155,7 +157,14 @@ class FilterForm extends Component {
         return { valid: true, message: 'Everything is ok' };
     }
 
-    handleChangeEmployeeTag = (selectedEmployees) => {
+    calculateHours = () => {
+        let startDate = new Date(`01-01-2000 ${this.state.startHour}`)
+        let endDate = new Date(`01-01-2000 ${this.state.endHour}`)
+
+        return moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
+
+    }
+    handleChangeEmployee = (selectedEmployees) => {
         this.setState({ selectedEmployees });
     }
 
@@ -187,7 +196,7 @@ class FilterForm extends Component {
     }
 
     handleColorChange = (color) => {
-        this.setState({ color: color.rgb })
+        this.setState({ color: color.hex })
     };
 
     onSubmit = (event) => {
@@ -205,7 +214,7 @@ class FilterForm extends Component {
         this.getEmployees()
     }
     render() {
-        console.log(this.state)
+        console.log("this is my range of hours", this.state.endHour - this.state.startHour)
         return <div className="MasterShiftForm">
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
@@ -213,38 +222,38 @@ class FilterForm extends Component {
                         <Options />
                     </div>
                     <div className="col-md-12">
-                        <label htmlFor="">Employes</label>
+                        <label htmlFor="">* Employes</label>
                         <Select
                             name="employees"
                             options={this.state.employees}
-                            value={this.state.employeesTags}
-                            onChange={this.handleChangeEmployeeTag}
+                            value={this.state.selectedEmployees}
+                            onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
                             components={makeAnimated()}
                             isMulti
                         />
                     </div>
                     <div className="col-md-12">
-                        <label htmlFor="">Start Date</label>
+                        <label htmlFor="">* Start Date</label>
                         <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-12">
-                        <label htmlFor="">End Date</label>
+                        <label htmlFor="">* End Date</label>
                         <input type="date" name="endDate" className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-5">
-                        < label htmlFor="">Start Time</label>
+                        < label htmlFor="">* Start Time</label>
                         <TimeField name="startHour" style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
                     <div className="col-md-5">
-                        < label htmlFor="">End Time</label>
+                        < label htmlFor="">* End Time</label>
                         <TimeField name="endHour" style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
                     </div>
                     <div className="col-md-2">
-                        <span className="MasterShiftForm-hour" data-hour="4h"></span>
+                        <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
                     </div>
                     <div className="col-md-12">
-                        < label htmlFor="">Location</label>
+                        < label htmlFor="">* Location</label>
                         <select
                             name="location"
                             id="location"
@@ -258,13 +267,14 @@ class FilterForm extends Component {
                         </select>
                     </div>
                     <div className="col-md-12">
-                        < label htmlFor="">Position</label>
+                        < label htmlFor="">* Position</label>
                         <select
                             name="position"
                             id="position"
                             onChange={this.handleSelectValueChange}
                             value={this.state.position}
                             className="form-control"
+                            disabled={this.state.loadingPosition}
                             required
                         >
                             <option value={0}>Select a position</option>
@@ -272,7 +282,7 @@ class FilterForm extends Component {
                         </select>
                     </div>
                     <div className="col-md-9">
-                        < label htmlFor="">Title</label>
+                        < label htmlFor="">* Title</label>
                         <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
                     </div>
                     <div className="col-md-3">

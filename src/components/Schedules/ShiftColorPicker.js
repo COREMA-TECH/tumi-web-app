@@ -20,14 +20,13 @@ class ShiftColorPicker extends React.Component {
 
 
     render() {
-        console.log("This is my color", this.props)
         const styles = reactCSS({
             'default': {
                 color: {
                     width: '100%',
                     height: '14px',
                     borderRadius: '2px',
-                    background: `rgba(${this.props.color.r}, ${this.props.color.g}, ${this.props.color.b}, ${this.props.color.a})`,
+                    background: this.props.color,
                 },
                 swatch: {
                     padding: '5px',

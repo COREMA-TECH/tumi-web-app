@@ -508,7 +508,7 @@ class Options extends Component {
                                     onClick={this.printSchedule}
                                 >
                                     Print {!this.state.saving && <i className="fas fa-print"></i>}
-                                    {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                    {this.state.saving && <i className="fas fa-spinner fa-spin"/>}
                                 </button>
                             </div>
                         </div>
@@ -519,7 +519,7 @@ class Options extends Component {
                                     className="btn btn-danger"
                                     onClick={this.handleClose}
                                 >
-                                    Cancel <i class="fas fa-ban"/>
+                                    Cancel <i className="fas fa-ban"/>
                                 </button>
                             </div>
                         </div>
@@ -532,10 +532,10 @@ class Options extends Component {
             <div className="MasterShift-options">
                 <div className="row">
                     <div className="col-md-7">
-                        <div class="can-toggle">
+                        <div className="can-toggle">
                             <input id="my-full" type="checkbox"/>
-                            <label for="my-full">
-                                <div class="can-toggle__switch" data-checked="MY" data-unchecked="FULL"></div>
+                            <label htmlFor="my-full">
+                                <div className="can-toggle__switch" data-checked="MY" data-unchecked="FULL"></div>
                             </label>
                         </div>
                     </div>
@@ -549,7 +549,7 @@ class Options extends Component {
                                 // })
                             }}
                         >
-                            <i class="fas fa-print"></i>
+                            <i className="fas fa-print"></i>
                         </button>
                     </div>
                 </div>
