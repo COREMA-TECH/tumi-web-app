@@ -169,7 +169,7 @@ class Shifts extends Component {
 
     newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
         let newFreshId = 0;
-        schedulerData.eventsForCustomEventStyle.forEach((item) => {
+        schedulerData.events.forEach((item) => {
             if (item.id >= newFreshId)
                 newFreshId = item.id + 1;
         });
