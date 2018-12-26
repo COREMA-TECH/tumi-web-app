@@ -5,25 +5,28 @@ import moment from 'moment';
 import withApollo from "react-apollo/withApollo";
 import {GET_SHIFTS} from "./Queries";
 import withGlobalContent from "../Generic/Global";
+import withDnDContext from "./withDnDContext";
+import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+
+let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false, {
+    views: [
+        { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
+        { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
+        { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
+        { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
+    ],
+    schedulerWidth: '1500',
+});
+
+let allEvents;
 
 class Shifts extends Component {
-
     constructor(props) {
         super(props);
 
-        let schedulerData = new SchedulerData('2017-12-18', ViewTypes.Week, false, false, {
-            views: [
-                { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
-                { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
-                { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
-                { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
-            ],
-            schedulerWidth: '1500',
-        });
         schedulerData.localeMoment.locale('en');
-        //schedulerData.setResources(DemoData.resources);
+        schedulerData.setResources(DemoData.resources);
         schedulerData.setEvents(DemoData.events);
-
 
         this.state = {
             viewModel: schedulerData,
@@ -33,20 +36,41 @@ class Shifts extends Component {
     }
 
     fetchShifts = () => {
-        this.props.client
+         this.props.client
             .query({
                 query: GET_SHIFTS
             })
-            .then(({data}) => {
+            .then( ({data}) => {
                 this.setState({
                     shift: data.shift,
                     shiftDetail: data.ShiftDetail,
                 }, () => {
+                    console.log(this.state.shift);
+                    console.log(this.state.shiftDetail);
+
+                    allEvents = [];
+                    this.state.shift.map(shiftItem => {
+                        this.state.shiftDetail.map(shiftDetailItem => {
+                            if(shiftItem.id === shiftDetailItem.ShiftId) {
+                                allEvents.push({
+                                    id: shiftDetailItem.id,
+                                    start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
+                                    end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
+                                    title: shiftItem.title,
+                                    resourceId: 'r2',
+                                    bgColor: shiftItem.bgColor
+                                })
+                            }
+                        })
+                    });
+
+                    schedulerData.setEvents(allEvents);
                     this.setState({
-                        loading: false
+                        viewModel: schedulerData
                     }, () => {
-                        console.log(this.state.shift);
-                        console.log(this.state.shiftDetail);
+                        this.setState({
+                            loading: false
+                        });
                     })
                 })
             })
@@ -58,16 +82,28 @@ class Shifts extends Component {
             })
     };
 
-    componentDidMount(){
+    componentWillMount(){
+        this.loadShifts();
+    }
+
+    loadShifts = () => {
         this.setState({
             loading: true
         }, () => {
             this.fetchShifts()
         });
-    }
+    };
 
     render() {
         const { viewModel } = this.state;
+
+        console.log("******************");
+        console.log(schedulerData.events);
+
+        if(this.state.loading) {
+            return <LinearProgress />
+        }
+
         return (
             <Scheduler schedulerData={viewModel}
                        prevClick={this.prevClick}
@@ -90,7 +126,7 @@ class Shifts extends Component {
 
     prevClick = (schedulerData) => {
         schedulerData.prev();
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(allEvents);
         this.setState({
             viewModel: schedulerData
         })
@@ -98,7 +134,7 @@ class Shifts extends Component {
 
     nextClick = (schedulerData) => {
         schedulerData.next();
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(allEvents);
         this.setState({
             viewModel: schedulerData
         })
@@ -106,7 +142,7 @@ class Shifts extends Component {
 
     onViewChange = (schedulerData, view) => {
         schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(allEvents);
         this.setState({
             viewModel: schedulerData
         })
@@ -114,7 +150,7 @@ class Shifts extends Component {
 
     onSelectDate = (schedulerData, date) => {
         schedulerData.setDate(date);
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(allEvents);
         this.setState({
             viewModel: schedulerData
         })
@@ -199,4 +235,4 @@ class Shifts extends Component {
     }
 }
 
-export default withApollo(withGlobalContent(Shifts));
+export default withApollo(withGlobalContent(withDnDContext(Shifts)));
