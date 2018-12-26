@@ -98,7 +98,7 @@ const MobileMenu = (props) => {
 					</Link>
 					<ul className="SubMenu" id="1">
 						<li className="SubMenu-item">
-							<a className="SubMenu-link" href="/home/dashboard/manager">
+							<a className="SubMenu-link" href="/home/dashboard/hotel">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
 							</a>
 						</li>

@@ -148,6 +148,7 @@ class Container extends Component {
 				<Route exact path="/home/board/manager" component={Board} />
 				<Route exact path="/home/board/recruiter" component={BoardRecruiter} />
 				<Route exact path="/home/dashboard/manager" component={DashboardManager} />
+				<Route exact path="/home/dashboard/hotel" component={DashboardManager} />
 				<Route exact path="/home/dashboard/recruiter" component={DashboardRecruiter} />
 				<Route exact path="/home/openings" component={WorkOrdersPosition} />
 

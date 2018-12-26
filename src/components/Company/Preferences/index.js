@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import {withApollo} from 'react-apollo';
-import {select} from 'async';
+import { withApollo } from 'react-apollo';
+import { select } from 'async';
 import months from './months.json';
 import timeZones from './timezones.json';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -50,7 +50,7 @@ class Preferences extends React.Component {
             this.props.client
                 .query({
                     query: this.GET_QUERY,
-                    variables: {id: this.state.idCompany},
+                    variables: { id: this.state.idCompany },
                     fetchPolicy: 'no-cache'
                 })
                 .then((result) => {
@@ -141,7 +141,7 @@ class Preferences extends React.Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        this.setState({saving: true}, () => {
+        this.setState({ saving: true }, () => {
             if (this.state.disabled && (this.props.idCompany == "" || this.state.period == undefined || this.state.amount == undefined || this.state.amount < 0)) {
                 this.props.handleOpenSnackbar(
                     'error',
@@ -177,10 +177,10 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Inserted!'
                 );
-                this.setState({saving: false})
+                this.setState({ saving: false })
             })
             .catch((error) => {
-                this.setState({saving: false})
+                this.setState({ saving: false })
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
@@ -210,14 +210,14 @@ class Preferences extends React.Component {
                     'success',
                     'Preference Updated!'
                 );
-                this.setState({saving: false})
+                this.setState({ saving: false })
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error Preferences: ' + error
                 );
-                this.setState({saving: false})
+                this.setState({ saving: false })
             });
     }
 
@@ -282,7 +282,7 @@ class Preferences extends React.Component {
 
     render() {
         if (this.state.loading) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         return (
@@ -291,15 +291,15 @@ class Preferences extends React.Component {
                     <div className="row">
                         <div className="col-md-12">
                             <button type="button" className="btn btn-info edit-company-button float-right ml-1"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        this.setState({openCalendarModal: true})
-                                    }}>
-                                Add Holiday <i class="fas fa-calendar-alt ml-1"/>
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    this.setState({ openCalendarModal: true })
+                                }}>
+                                Add Holiday <i class="fas fa-calendar-alt ml-1" />
                             </button>
                             <button type="submit" className="btn btn-success edit-company-button float-right">
-                                Save {!this.state.saving && <i class="fas fa-save ml-1"/>}
-                                {this.state.saving && <i class="fas fa-spinner fa-spin ml-1"/>}
+                                Save {!this.state.saving && <i class="fas fa-save ml-1" />}
+                                {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
                             </button>
                         </div>
                     </div>
@@ -312,8 +312,8 @@ class Preferences extends React.Component {
                                         <div className="col-md-2">
                                             <div className="onoffswitch">
                                                 <input type="checkbox" checked={this.state.charge} name="charge"
-                                                       onClick={this.toggleState} onChange={this.handleChange}
-                                                       className="onoffswitch-checkbox" id="myonoffswitch"/>
+                                                    onClick={this.toggleState} onChange={this.handleChange}
+                                                    className="onoffswitch-checkbox" id="myonoffswitch" />
                                                 <label className="onoffswitch-label" htmlFor="myonoffswitch">
                                                     <span className="onoffswitch-inner"></span>
                                                     <span className="onoffswitch-switch"></span>
@@ -325,76 +325,76 @@ class Preferences extends React.Component {
                                                 Do You Have Any Lunch Period Deductions?
                                             </label>
                                         </div>
-                                        <br/><br/>
+                                        <br /><br />
                                         <div className="col-md-12 mb-2"></div>
                                         {/*<div className="col-md-6">*/}
-                                            <div className="col-md-3">
-                                                <label className="font-weight-bold d-lg-block text-lg-right">
-                                                    Time (min)
+                                        <div className="col-md-3">
+                                            <label className="font-weight-bold d-lg-block text-lg-right">
+                                                Time (min)
                                                 </label>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <input type="number" name="amount"
-                                                       disabled={(this.state.disabled) ? "disabled" : ""}
-                                                       value={this.state.time} className="form-control"
-                                                       onChange={(e) => {
-                                                           this.setState({
-                                                               time: e.target.value
-                                                           })
-                                                       }}/>
-                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <input type="number" name="amount"
+                                                disabled={(this.state.disabled) ? "disabled" : ""}
+                                                value={this.state.time} className="form-control"
+                                                onChange={(e) => {
+                                                    this.setState({
+                                                        time: e.target.value
+                                                    })
+                                                }} />
+                                        </div>
                                         {/*</div>*/}
                                         {/*<div className="col-md-6">*/}
-                                            <div className="col-md-2">
-                                                <label className="font-weight-bold d-lg-block text-lg-right">
-                                                    Amount
+                                        <div className="col-md-2">
+                                            <label className="font-weight-bold d-lg-block text-lg-right">
+                                                Amount
                                                 </label>
-                                            </div>
-                                            <div className="col-md-3">
-                                                <input
-                                                    type="number"
-                                                    min="0"
-                                                    name="amount"
-                                                    step=".01"
-                                                    disabled={(this.state.disabled) ? "disabled" : ""}
-                                                    value={this.state.amount} className="form-control"
-                                                    onChange={this.handleChange}
-                                                    placeholder="$"
-                                                />
-                                            </div>
+                                        </div>
+                                        <div className="col-md-3">
+                                            <input
+                                                type="number"
+                                                min="0"
+                                                name="amount"
+                                                step=".01"
+                                                disabled={(this.state.disabled) ? "disabled" : ""}
+                                                value={this.state.amount} className="form-control"
+                                                onChange={this.handleChange}
+                                                placeholder="$"
+                                            />
+                                        </div>
                                         <div className="col-12 col-md-12 mb-4"></div>
                                         {/*</div>*/}
-                                                <div className="col-md-2">
-                                                    <label className="font-weight-bold">
-                                                        Frequency
+                                        <div className="col-md-2">
+                                            <label className="font-weight-bold">
+                                                Frequency
                                                     </label>
-                                                </div>
-                                                {
-                                                    this.state.options.map((item) => {
-                                                            //return <option value={item.Id} key={item.Id} > {item.Name}</option>
-                                                            return (
-                                                                <div className="col-3 col-md-3">
-                                                                    <div>
-                                                                        <div className="col-md-12">
-                                                                            <label>{item.Name}</label>
-                                                                        </div>
-                                                                        <div className="col-md-12">
-                                                                            <input
-                                                                                value={item.Id}
-                                                                                checked={this.state.period == item.Id ? true : false}
-                                                                                onChange={(event) => {
-                                                                                    this.setState({period: parseInt(event.target.value)}, () => {console.log(this.state.period)})
-                                                                                }}
-                                                                                type="radio"
-                                                                                name="frequency"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        }
-                                                    )
-                                                }
+                                        </div>
+                                        {
+                                            this.state.options.map((item) => {
+                                                //return <option value={item.Id} key={item.Id} > {item.Name}</option>
+                                                return (
+                                                    <div className="col-3 col-md-3">
+                                                        <div>
+                                                            <div className="col-md-12">
+                                                                <label>{item.Name}</label>
+                                                            </div>
+                                                            <div className="col-md-12">
+                                                                <input
+                                                                    value={item.Id}
+                                                                    checked={this.state.period == item.Id ? true : false}
+                                                                    onChange={(event) => {
+                                                                        this.setState({ period: parseInt(event.target.value) }, () => { console.log(this.state.period) })
+                                                                    }}
+                                                                    type="radio"
+                                                                    name="frequency"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                            )
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -504,14 +504,12 @@ class Preferences extends React.Component {
                         </div>
                         <div className="col-md-7">
                             <div className="card">
-                                <div className="card-body">
-                                    <Calendar idCompany={this.props.idCompany}
-                                              handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                              open={this.state.openCalendarModal} closeModal={this.closeModal}
-                                              openModal={() => {
-                                                  this.setState({openCalendarModal: true})
-                                              }} idHoliday={this.state.idHoliday}/>
-                                </div>
+                                <Calendar idCompany={this.props.idCompany}
+                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                    open={this.state.openCalendarModal} closeModal={this.closeModal}
+                                    openModal={() => {
+                                        this.setState({ openCalendarModal: true })
+                                    }} idHoliday={this.state.idHoliday} />
                             </div>
                         </div>
                     </div>
