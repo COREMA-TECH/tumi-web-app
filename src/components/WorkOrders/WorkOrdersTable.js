@@ -222,7 +222,7 @@ class WorkOrdersTable extends Component {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+        console.log("These are my props", this.props)
 
         return (
             <div>
@@ -238,7 +238,7 @@ class WorkOrdersTable extends Component {
                                 <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Assign to</CustomTableCell>
+                                {this.props.showRecruiter && <CustomTableCell className={"Table-head text-center"}>Assign to</CustomTableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -295,37 +295,37 @@ class WorkOrdersTable extends Component {
                                         <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
-
-                                        <CustomTableCell>
-                                            <div className="input-group">
-                                                <select
-                                                    required
-                                                    name={`RecruiterId`}
-                                                    className="form-control"
-                                                    id=""
-                                                    onChange={(e) => { this.handleChange(e, row.id) }}
-                                                    value={this.state.RecruiterId}
-                                                    onBlur={this.handleValidate}
-                                                >
-                                                    <option value="0">Select a Recruiter</option>
-                                                    {this.state.recruiters.map((recruiter) => (
-                                                        <option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                    ))}
-                                                </select>
-                                                <Tooltip title="Convert to Opening">
-                                                    <button
-                                                        className="btn btn-link float-left ml-1"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            this.handleConvertToOpening(e, { ...row });
-                                                        }}
+                                        {this.props.showRecruiter &&
+                                            <CustomTableCell>
+                                                <div className="input-group">
+                                                    <select
+                                                        required
+                                                        name={`RecruiterId`}
+                                                        className="form-control"
+                                                        id=""
+                                                        onChange={(e) => { this.handleChange(e, row.id) }}
+                                                        value={this.state.RecruiterId}
+                                                        onBlur={this.handleValidate}
                                                     >
-                                                        <i class="fas fa-exchange-alt text-info"></i>
-                                                    </button>
-                                                </Tooltip>
-                                            </div>
-                                        </CustomTableCell>
+                                                        <option value="0">Select a Recruiter</option>
+                                                        {this.state.recruiters.map((recruiter) => (
+                                                            <option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                        ))}
+                                                    </select>
+                                                    <Tooltip title="Convert to Opening">
+                                                        <button
+                                                            className="btn btn-link float-left ml-1"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                this.handleConvertToOpening(e, { ...row });
+                                                            }}
+                                                        >
+                                                            <i class="fas fa-exchange-alt text-info"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                </div>
+                                            </CustomTableCell>}
                                     </TableRow>
                                 );
                             })}

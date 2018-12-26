@@ -1,122 +1,131 @@
-import React from 'react';
-import gql from 'graphql-tag';
-import { withApollo } from 'react-apollo';
-import { select } from 'async';
-import months from './months.json';
-import timeZones from './timezones.json';
+import React from "react";
+import gql from "graphql-tag";
+import { withApollo } from "react-apollo";
+import { select } from "async";
+import months from "./months.json";
+import timeZones from "./timezones.json";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
-import Calendar from "../../Holidays/Calendar"
+import Calendar from "../../Holidays/Calendar";
 import CatalogItem from "../../Generic/CatalogItem";
 
 class Preferences extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             Id: null,
             period: 1,
             charge: false,
-            amount: '',
+            amount: "",
             idCompany: this.props.idCompany,
             Entityid: this.props.idCompany,
             disabled: true,
-            time: '',
+            time: "",
             options: [],
 
             startMonth: null,
             endMonth: null,
             timeZone: null,
-            openCalendarModal: false,
-
+            openCalendarModal: false
         };
         //this.setState({ idCompany: this.props.idCompany });
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    closeModal = (fnc = () => {
-    }) => {
-        this.setState({
-            openCalendarModal: false,
-            idHoliday: null
-        }, fnc);
-    }
-
+    closeModal = (fnc = () => { }) => {
+        this.setState(
+            {
+                openCalendarModal: false,
+                idHoliday: null
+            },
+            fnc
+        );
+    };
 
     componentWillMount() {
-        this.setState({
-            loading: true
-        }, () => {
-            this.props.client
-                .query({
-                    query: this.GET_QUERY,
-                    variables: { id: this.state.idCompany },
-                    fetchPolicy: 'no-cache'
-                })
-                .then((result) => {
-                    let data = result.data;
-                    if (data.companyPreferences != null) {
-                        this.setState({
-                            Id: data.companyPreferences[0].id,
-                            period: data.companyPreferences[0].PeriodId,
-                            charge: data.companyPreferences[0].charge,
-                            amount: data.companyPreferences[0].amount,
-                            EntityId: data.companyPreferences[0].EntityId,
-                            disabled: !data.companyPreferences[0].charge,
-                            startMonth: data.companyPreferences[0].FiscalMonth1,
-                            endMonth: data.companyPreferences[0].FiscalMonth2,
-                            timeZone: data.companyPreferences[0].Timezone,
-                            time: data.companyPreferences[0].time,
-                        }, () => {
-
-                        });
-                    }
-                })
-                .catch((error) => {
-                    this.setState({
-                        errorMessage: 'Error: Loading departments: ' + error
-                    });
-
-                    this.setState({
-                        loading: false
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .query({
+                        query: this.GET_QUERY,
+                        variables: { id: this.state.idCompany },
+                        fetchPolicy: "no-cache"
                     })
-                });
-        });
-
-        this.setState({
-            loading: true
-        }, () => {
-            this.props.client
-                .query({
-                    query: this.GET_QUERY_CATALOGS,
-                    variables: { id: 11 },
-                    fetchPolicy: 'no-cache'
-                })
-                .then((result) => {
-                    let data = result.data;
-                    if (data.getcatalogitem != null) {
+                    .then(result => {
+                        let data = result.data;
+                        if (data.companyPreferences != null) {
+                            this.setState(
+                                {
+                                    Id: data.companyPreferences[0].id,
+                                    period: data.companyPreferences[0].PeriodId,
+                                    charge: data.companyPreferences[0].charge,
+                                    amount: data.companyPreferences[0].amount,
+                                    EntityId: data.companyPreferences[0].EntityId,
+                                    disabled: !data.companyPreferences[0].charge,
+                                    startMonth: data.companyPreferences[0].FiscalMonth1,
+                                    endMonth: data.companyPreferences[0].FiscalMonth2,
+                                    timeZone: data.companyPreferences[0].Timezone,
+                                    time: data.companyPreferences[0].time
+                                },
+                                () => { }
+                            );
+                        }
+                    })
+                    .catch(error => {
                         this.setState({
-                            options: data.getcatalogitem
-                        }, () => {
-                            this.setState({
-                                loading: false
-                            });
+                            errorMessage: "Error: Loading departments: " + error
                         });
-                    } else {
+
                         this.setState({
                             loading: false
                         });
-                    }
-                })
-                .catch((error) => {
-                    this.setState({
-                        errorMessage: 'Error: Loading positions: ' + error
                     });
-                });
-        });
+            }
+        );
+
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .query({
+                        query: this.GET_QUERY_CATALOGS,
+                        variables: { id: 11 },
+                        fetchPolicy: "no-cache"
+                    })
+                    .then(result => {
+                        let data = result.data;
+                        if (data.getcatalogitem != null) {
+                            this.setState(
+                                {
+                                    options: data.getcatalogitem
+                                },
+                                () => {
+                                    this.setState({
+                                        loading: false
+                                    });
+                                }
+                            );
+                        } else {
+                            this.setState({
+                                loading: false
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        this.setState({
+                            errorMessage: "Error: Loading positions: " + error
+                        });
+                    });
+            }
+        );
     }
 
-    toggleState = (event) => {
+    toggleState = event => {
         this.setState({
             disabled: !this.state.disabled
         });
@@ -124,7 +133,7 @@ class Preferences extends React.Component {
 
     handleChange(event) {
         const target = event.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const value = target.type === "checkbox" ? target.checked : target.value;
         const name = target.name;
 
         this.setState({
@@ -133,156 +142,150 @@ class Preferences extends React.Component {
 
         if (name === "charge") {
             this.setState({
-                amount: !value ? '' : this.state.amount
+                amount: !value ? "" : this.state.amount,
+                time: !value ? "" : this.state.time,
+                period: !value ? null : this.state.period
             });
         }
-
     }
 
     handleSubmit(event) {
         event.preventDefault();
         this.setState({ saving: true }, () => {
-            if (this.state.disabled && (this.props.idCompany == "" || this.state.period == undefined || this.state.amount == undefined || this.state.amount < 0)) {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error all fields are required'
-                );
+            if (
+                this.state.disabled &&
+                (this.props.idCompany == "" ||
+                    this.state.period == undefined ||
+                    this.state.amount == undefined ||
+                    this.state.amount < 0)
+            ) {
+                this.props.handleOpenSnackbar("error", "Error all fields are required");
             } else {
-                if (this.state.Id == null)
-                    this.add();
-                else
-                    this.update();
+                if (this.state.Id == null) this.add();
+                else this.update();
             }
-        })
+        });
     }
 
     add() {
-        this.props.client.mutate({
-            mutation: this.INSERT_QUERY,
-            variables: {
-                input: {
-                    EntityId: this.props.idCompany,
-                    PeriodId: this.state.period,
-                    amount: parseFloat(this.state.amount),
-                    charge: this.state.charge,
-                    FiscalMonth1: this.state.startMonth == "" ? null : this.state.startMonth,
-                    FiscalMonth2: this.state.endMonth == "" ? null : this.state.endMonth,
-                    Timezone: parseInt(this.state.timeZone),
-                    time: this.state.time
+        this.props.client
+            .mutate({
+                mutation: this.INSERT_QUERY,
+                variables: {
+                    input: {
+                        EntityId: this.props.idCompany,
+                        PeriodId: this.state.period,
+                        amount: parseFloat(this.state.amount),
+                        charge: this.state.charge,
+                        FiscalMonth1:
+                            this.state.startMonth == "" ? null : this.state.startMonth,
+                        FiscalMonth2:
+                            this.state.endMonth == "" ? null : this.state.endMonth,
+                        Timezone: parseInt(this.state.timeZone),
+                        time: this.state.time
+                    }
                 }
-            }
-        })
-            .then((data) => {
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Preference Inserted!'
-                );
-                this.setState({ saving: false })
             })
-            .catch((error) => {
-                this.setState({ saving: false })
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error Preferences: ' + error
-                );
+            .then(data => {
+                this.props.handleOpenSnackbar("success", "Preference Inserted!");
+                this.setState({ saving: false });
+            })
+            .catch(error => {
+                this.setState({ saving: false });
+                this.props.handleOpenSnackbar("error", "Error Preferences: " + error);
             });
     }
 
     update() {
-        this.props.client.mutate({
-            mutation: this.UPDATE_QUERY,
-            variables: {
-                input: {
-                    id: this.state.Id,
-                    EntityId: this.props.idCompany,
-                    PeriodId: this.state.period,
-                    amount: parseFloat(this.state.amount),
-                    charge: this.state.charge,
-                    FiscalMonth1: this.state.startMonth,
-                    FiscalMonth2: this.state.endMonth,
-                    Timezone: parseInt(this.state.timeZone),
-                    time: this.state.time
+        this.props.client
+            .mutate({
+                mutation: this.UPDATE_QUERY,
+                variables: {
+                    input: {
+                        id: this.state.Id,
+                        EntityId: this.props.idCompany,
+                        PeriodId: this.state.period,
+                        amount: parseFloat(this.state.amount),
+                        charge: this.state.charge,
+                        FiscalMonth1: this.state.startMonth,
+                        FiscalMonth2: this.state.endMonth,
+                        Timezone: parseInt(this.state.timeZone),
+                        time: this.state.time
+                    }
                 }
-            }
-        })
-            .then((data) => {
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Preference Updated!'
-                );
-                this.setState({ saving: false })
             })
-            .catch((error) => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error Preferences: ' + error
-                );
-                this.setState({ saving: false })
+            .then(data => {
+                this.props.handleOpenSnackbar("success", "Preference Updated!");
+                this.setState({ saving: false });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar("error", "Error Preferences: " + error);
+                this.setState({ saving: false });
             });
     }
 
     GET_QUERY = gql`
-        query companyPreferences($id:Int) {
-            companyPreferences(EntityId: $id) {
-                id
-                EntityId
-                PeriodId
-                amount
-                charge
-                FiscalMonth1
-                FiscalMonth2
-                Timezone
-                time
-            }
-        }
-    `;
+    query companyPreferences($id: Int) {
+      companyPreferences(EntityId: $id) {
+        id
+        EntityId
+        PeriodId
+        amount
+        charge
+        FiscalMonth1
+        FiscalMonth2
+        Timezone
+        time
+      }
+    }
+  `;
 
     GET_QUERY_CATALOGS = gql`
-        query getcatalogitem($id:Int) {
-            getcatalogitem(IsActive: 1, Id_Catalog: $id) {
-                Id
-                Code: Name
-                Name: Description
-                IsActive
-            }
-        }
-    `;
+    query getcatalogitem($id: Int) {
+      getcatalogitem(IsActive: 1, Id_Catalog: $id) {
+        Id
+        Code: Name
+        Name: Description
+        IsActive
+      }
+    }
+  `;
 
     INSERT_QUERY = gql`
-        mutation addCompanyPreference($input: [inputInsertCompanyPreference]) {
-            addCompanyPreference(companyPreference: $input) {
-                id
-                PeriodId
-                charge
-                amount
-                EntityId
-                FiscalMonth1
-                FiscalMonth2
-                Timezone
-                time
-            }
-        }
-    `;
+    mutation addCompanyPreference($input: [inputInsertCompanyPreference]) {
+      addCompanyPreference(companyPreference: $input) {
+        id
+        PeriodId
+        charge
+        amount
+        EntityId
+        FiscalMonth1
+        FiscalMonth2
+        Timezone
+        time
+      }
+    }
+  `;
 
     UPDATE_QUERY = gql`
-        mutation updateCompanyPreference($input: inputUpdateCompanyPreference) {
-            updateCompanyPreference(companyPreference: $input) {
-                id
-                PeriodId
-                charge
-                amount
-                EntityId
-                FiscalMonth1
-                FiscalMonth2
-                Timezone
-                time
-            }
-        }
-    `;
+    mutation updateCompanyPreference($input: inputUpdateCompanyPreference) {
+      updateCompanyPreference(companyPreference: $input) {
+        id
+        PeriodId
+        charge
+        amount
+        EntityId
+        FiscalMonth1
+        FiscalMonth2
+        Timezone
+        time
+      }
+    }
+  `;
 
     render() {
         if (this.state.loading) {
-            return <LinearProgress />
+            return <LinearProgress />;
         }
 
         return (
@@ -290,14 +293,20 @@ class Preferences extends React.Component {
                 <form onSubmit={this.handleSubmit} className="Preferences-form">
                     <div className="row">
                         <div className="col-md-12">
-                            <button type="button" className="btn btn-info edit-company-button float-right ml-1"
-                                onClick={(e) => {
+                            <button
+                                type="button"
+                                className="btn btn-info edit-company-button float-right ml-1"
+                                onClick={e => {
                                     e.preventDefault();
-                                    this.setState({ openCalendarModal: true })
-                                }}>
+                                    this.setState({ openCalendarModal: true });
+                                }}
+                            >
                                 Add Holiday <i class="fas fa-calendar-alt ml-1" />
                             </button>
-                            <button type="submit" className="btn btn-success edit-company-button float-right">
+                            <button
+                                type="submit"
+                                className="btn btn-success edit-company-button float-right"
+                            >
                                 Save {!this.state.saving && <i class="fas fa-save ml-1" />}
                                 {this.state.saving && <i class="fas fa-spinner fa-spin ml-1" />}
                             </button>
@@ -311,44 +320,58 @@ class Preferences extends React.Component {
                                     <div className="row">
                                         <div className="col-md-2">
                                             <div className="onoffswitch">
-                                                <input type="checkbox" checked={this.state.charge} name="charge"
-                                                    onClick={this.toggleState} onChange={this.handleChange}
-                                                    className="onoffswitch-checkbox" id="myonoffswitch" />
-                                                <label className="onoffswitch-label" htmlFor="myonoffswitch">
-                                                    <span className="onoffswitch-inner"></span>
-                                                    <span className="onoffswitch-switch"></span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.charge}
+                                                    name="charge"
+                                                    onClick={this.toggleState}
+                                                    onChange={this.handleChange}
+                                                    className="onoffswitch-checkbox"
+                                                    id="myonoffswitch"
+                                                />
+                                                <label
+                                                    className="onoffswitch-label"
+                                                    htmlFor="myonoffswitch"
+                                                >
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </div>
                                         <div className="col-md-10">
                                             <label className="font-weight-bold">
                                                 Do You Have Any Lunch Period Deductions?
-                                            </label>
+                      </label>
                                         </div>
-                                        <br /><br />
-                                        <div className="col-md-12 mb-2"></div>
+                                        <br />
+                                        <br />
+                                        <div className="col-md-12 mb-2" />
                                         {/*<div className="col-md-6">*/}
                                         <div className="col-md-3">
                                             <label className="font-weight-bold d-lg-block text-lg-right">
                                                 Time (min)
-                                                </label>
+                      </label>
                                         </div>
                                         <div className="col-md-3">
-                                            <input type="number" name="amount"
-                                                disabled={(this.state.disabled) ? "disabled" : ""}
-                                                value={this.state.time} className="form-control"
-                                                onChange={(e) => {
+                                            <input
+                                                type="number"
+                                                name="amount"
+                                                disabled={this.state.disabled ? "disabled" : ""}
+                                                value={this.state.time}
+                                                className="form-control"
+                                                onChange={e => {
                                                     this.setState({
                                                         time: e.target.value
-                                                    })
-                                                }} />
+                                                    });
+                                                }}
+                                            />
                                         </div>
                                         {/*</div>*/}
                                         {/*<div className="col-md-6">*/}
                                         <div className="col-md-2">
                                             <label className="font-weight-bold d-lg-block text-lg-right">
                                                 Amount
-                                                </label>
+                      </label>
                                         </div>
                                         <div className="col-md-3">
                                             <input
@@ -356,45 +379,48 @@ class Preferences extends React.Component {
                                                 min="0"
                                                 name="amount"
                                                 step=".01"
-                                                disabled={(this.state.disabled) ? "disabled" : ""}
-                                                value={this.state.amount} className="form-control"
+                                                disabled={this.state.disabled ? "disabled" : ""}
+                                                value={this.state.amount}
+                                                className="form-control"
                                                 onChange={this.handleChange}
                                                 placeholder="$"
                                             />
                                         </div>
-                                        <div className="col-12 col-md-12 mb-4"></div>
+                                        <div className="col-12 col-md-12 mb-4" />
                                         {/*</div>*/}
                                         <div className="col-md-2">
-                                            <label className="font-weight-bold">
-                                                Frequency
-                                                    </label>
+                                            <label className="font-weight-bold">Frequency</label>
                                         </div>
-                                        {
-                                            this.state.options.map((item) => {
-                                                //return <option value={item.Id} key={item.Id} > {item.Name}</option>
-                                                return (
-                                                    <div className="col-3 col-md-3">
-                                                        <div>
-                                                            <div className="col-md-12">
-                                                                <label>{item.Name}</label>
-                                                            </div>
-                                                            <div className="col-md-12">
-                                                                <input
-                                                                    value={item.Id}
-                                                                    checked={this.state.period == item.Id ? true : false}
-                                                                    onChange={(event) => {
-                                                                        this.setState({ period: parseInt(event.target.value) }, () => { console.log(this.state.period) })
-                                                                    }}
-                                                                    type="radio"
-                                                                    name="frequency"
-                                                                />
-                                                            </div>
+                                        {this.state.options.map(item => {
+                                            //return <option value={item.Id} key={item.Id} > {item.Name}</option>
+                                            return (
+                                                <div className="col-3 col-md-3">
+                                                    <div>
+                                                        <div className="col-md-12">
+                                                            <label>{item.Name}</label>
+                                                        </div>
+                                                        <div className="col-md-12">
+                                                            <input
+                                                                value={item.Id}
+                                                                checked={
+                                                                    this.state.period == item.Id ? true : false
+                                                                }
+                                                                onChange={event => {
+                                                                    this.setState(
+                                                                        { period: parseInt(event.target.value) },
+                                                                        () => {
+                                                                            console.log(this.state.period);
+                                                                        }
+                                                                    );
+                                                                }}
+                                                                type="radio"
+                                                                name="frequency"
+                                                            />
                                                         </div>
                                                     </div>
-                                                )
-                                            }
-                                            )
-                                        }
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             </div>
@@ -405,64 +431,60 @@ class Preferences extends React.Component {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col-md-12">
-                                                    <label>
-                                                        Start Month
-                                                    </label>
+                                                    <label>Start Month</label>
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
                                                         value={this.state.startMonth}
                                                         className="form-control"
-                                                        onChange={(event) => {
+                                                        onChange={event => {
                                                             this.setState({
                                                                 startMonth: event.target.value
-                                                            })
+                                                            });
                                                         }}
                                                     >
                                                         <option value="12">Select a month</option>
-                                                        {
-                                                            months.map(month => {
-                                                                if (this.state.endMonth != month.id) {
-                                                                    return <option
-                                                                        value={month.id}>{month.description}</option>
-                                                                }
-                                                            })
-                                                        }
+                                                        {months.map(month => {
+                                                            if (this.state.endMonth != month.id) {
+                                                                return (
+                                                                    <option value={month.id}>
+                                                                        {month.description}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        })}
                                                     </select>
                                                 </div>
                                             </div>
                                             <div className="row">
                                                 <div className="col-md-12">
-                                                    <label>
-                                                        End Month
-                                                    </label>
+                                                    <label>End Month</label>
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
                                                         value={this.state.endMonth}
                                                         className="form-control"
-                                                        onChange={(event) => {
+                                                        onChange={event => {
                                                             this.setState({
                                                                 endMonth: event.target.value
-                                                            })
+                                                            });
                                                         }}
                                                     >
                                                         <option value="12">Select a month</option>
-                                                        {
-                                                            months.map(month => {
-                                                                if (this.state.startMonth != month.id) {
-                                                                    return <option
-                                                                        value={month.id}>{month.description}</option>
-                                                                }
-                                                            })
-                                                        }
+                                                        {months.map(month => {
+                                                            if (this.state.startMonth != month.id) {
+                                                                return (
+                                                                    <option value={month.id}>
+                                                                        {month.description}
+                                                                    </option>
+                                                                );
+                                                            }
+                                                        })}
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
                                 <div className="col-md-6">
                                     {/* Time Zone preferences*/}
@@ -471,29 +493,26 @@ class Preferences extends React.Component {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col-md-12">
-                                                    <label>
-                                                        Time Zone
-                                                    </label>
+                                                    <label>Time Zone</label>
                                                 </div>
                                                 <div className="col-md-12">
                                                     <select
                                                         value={this.state.timeZone}
                                                         className="form-control"
-                                                        onChange={(event) => {
+                                                        onChange={event => {
                                                             this.setState({
                                                                 timeZone: event.target.value
-                                                            })
+                                                            });
                                                         }}
                                                     >
                                                         <option value="">Select an option</option>
-                                                        {
-                                                            timeZones.map(item => {
-                                                                return (
-                                                                    <option
-                                                                        value={item.id}
-                                                                    >{item.offset + ' ' + item.name}</option>)
-                                                            })
-                                                        }
+                                                        {timeZones.map(item => {
+                                                            return (
+                                                                <option value={item.id}>
+                                                                    {item.offset + " " + item.name}
+                                                                </option>
+                                                            );
+                                                        })}
                                                     </select>
                                                 </div>
                                             </div>
@@ -504,12 +523,16 @@ class Preferences extends React.Component {
                         </div>
                         <div className="col-md-7">
                             <div className="card">
-                                <Calendar idCompany={this.props.idCompany}
+                                <Calendar
+                                    idCompany={this.props.idCompany}
                                     handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    open={this.state.openCalendarModal} closeModal={this.closeModal}
+                                    open={this.state.openCalendarModal}
+                                    closeModal={this.closeModal}
                                     openModal={() => {
-                                        this.setState({ openCalendarModal: true })
-                                    }} idHoliday={this.state.idHoliday} />
+                                        this.setState({ openCalendarModal: true });
+                                    }}
+                                    idHoliday={this.state.idHoliday}
+                                />
                             </div>
                         </div>
                     </div>
@@ -517,7 +540,6 @@ class Preferences extends React.Component {
             </div>
         );
     }
-
 }
 
 export default withApollo(Preferences);
