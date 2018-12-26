@@ -9,8 +9,8 @@ export const CREATE_WORKORDER = gql`
 `;
 
 export const UPDATE_WORKORDER = gql`
-	mutation updateWorkOrder($workOrder: inputUpdateWorkOrder) {
-		updateWorkOrder(workOrder: $workOrder) {
+	mutation updateWorkOrder($quantity:Int!, $startshift: String!,$endshift: String!,$startDate: Date!,$endDate: Date!,$workOrder: inputUpdateWorkOrder,$shift: [inputInsertShift]) {
+		updateWorkOrder(quantity:$quantity,startshift: $startshift,endshift: $endshift,startDate: $startDate,endDate:$endDate,workOrder: $workOrder, shift:$shift) {
 			id
 		}
 	}
