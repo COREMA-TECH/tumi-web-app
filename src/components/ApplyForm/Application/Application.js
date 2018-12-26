@@ -583,7 +583,7 @@ class Application extends Component {
                                                                     });
 														});
 
-														
+
 														// let zip_code = '';
 														// zip_code = event.target.value.substring(0, 5);
 														// fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
