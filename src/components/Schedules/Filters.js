@@ -24,7 +24,7 @@ class Filters extends Component {
             })
             .then(({ data }) => {
                 this.setState({
-                    cities: data.getcatalogitem
+                    // cities: data.getcatalogitem
                 });
             })
             .catch();
@@ -40,11 +40,11 @@ class Filters extends Component {
                 <div className="row">
                     <div className="col-md-3">
                         <label htmlFor="">City</label>
-                        <select name="state" id="" className="form-control">
+                        <select name="state" id="" className="form-control" onChange={this.handleChange}>
                             <option value="0">Select a Option</option>
                             {
                                 this.state.cities.map((city) => {
-                                    <option value={`${city.Id}`}>{city.Name}</option>
+                                    return <option value={`${city.Id}`}>{city.Name}</option>
                                 })
                             }
                         </select>

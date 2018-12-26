@@ -19,7 +19,7 @@ class Shifts extends Component {
         });
         schedulerData.localeMoment.locale('en');
         schedulerData.setResources(DemoData.resources);
-        schedulerData.setEvents(DemoData.eventsForCustomEventStyle);
+        schedulerData.setEvents(DemoData.events);
         this.state = {
             viewModel: schedulerData
         }
