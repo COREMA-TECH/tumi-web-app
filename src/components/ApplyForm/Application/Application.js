@@ -20,6 +20,7 @@ import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import axios from "axios";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'es');
@@ -570,16 +571,29 @@ class Application extends Component {
 													onChange={(event) => {
 														this.setState({
 															zipCode: event.target.value
+														}, () => {
+                                                            const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+                                                            if (zipCode)
+                                                                axios.get(`https://ziptasticapi.com/${zipCode}`)
+                                                                    .then(res => {
+                                                                        const cities = res.data;
+                                                                        if (!cities.error) {
+                                                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                                        }
+                                                                    });
 														});
-														let zip_code = '';
-														zip_code = event.target.value.substring(0, 5);
-														fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-															return response.json()
-														}).then((cities) => {
-															if (!cities.error) {
-																this.findByZipCode(cities.state, cities.city.toLowerCase());
-															}
-														});
+
+														
+														// let zip_code = '';
+														// zip_code = event.target.value.substring(0, 5);
+														// fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
+														// 	return response.json()
+														// }).then((cities) => {
+														// 	if (!cities.error) {
+														// 		this.findByZipCode(cities.state, cities.city.toLowerCase());
+														// 	}
+														// });
+
 													}}
 													value={this.state.zipCode}
 													placeholder="99999-99999"
