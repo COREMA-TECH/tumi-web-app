@@ -96,9 +96,6 @@ class Shifts extends Component {
     render() {
         const {viewModel} = this.state;
 
-        console.log("******************");
-        console.log(schedulerData.events);
-
         if (this.state.loading) {
             return <LinearProgress/>
         }
