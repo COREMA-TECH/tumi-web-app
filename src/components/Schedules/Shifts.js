@@ -21,13 +21,14 @@ class Shifts extends Component {
             schedulerWidth: '1500',
         });
         schedulerData.localeMoment.locale('en');
-        schedulerData.setResources(DemoData.resources);
+        //schedulerData.setResources(DemoData.resources);
         schedulerData.setEvents(DemoData.events);
 
 
         this.state = {
             viewModel: schedulerData,
-            shifts: []
+            shift: [],
+            shiftDetail: [],
         }
     }
 
@@ -38,10 +39,14 @@ class Shifts extends Component {
             })
             .then(({data}) => {
                 this.setState({
-                    shifts: data.shift
+                    shift: data.shift,
+                    shiftDetail: data.ShiftDetail,
                 }, () => {
                     this.setState({
                         loading: false
+                    }, () => {
+                        console.log(this.state.shift);
+                        console.log(this.state.shiftDetail);
                     })
                 })
             })
@@ -52,6 +57,14 @@ class Shifts extends Component {
                 );
             })
     };
+
+    componentDidMount(){
+        this.setState({
+            loading: true
+        }, () => {
+            this.fetchShifts()
+        });
+    }
 
     render() {
         const { viewModel } = this.state;
