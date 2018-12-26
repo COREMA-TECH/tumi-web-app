@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
+import React, {Component} from 'react';
+import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
-import moment from 'moment';
 import withApollo from "react-apollo/withApollo";
 import {GET_SHIFTS} from "./Queries";
 import withGlobalContent from "../Generic/Global";
@@ -10,10 +9,10 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false, {
     views: [
-        { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
-        { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
-        { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
-        { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
+        {viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false},
+        {viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false},
+        {viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true},
+        {viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false},
     ],
     schedulerWidth: '1500',
 });
@@ -36,11 +35,11 @@ class Shifts extends Component {
     }
 
     fetchShifts = () => {
-         this.props.client
+        this.props.client
             .query({
                 query: GET_SHIFTS
             })
-            .then( ({data}) => {
+            .then(({data}) => {
                 this.setState({
                     shift: data.shift,
                     shiftDetail: data.ShiftDetail,
@@ -51,7 +50,7 @@ class Shifts extends Component {
                     allEvents = [];
                     this.state.shift.map(shiftItem => {
                         this.state.shiftDetail.map(shiftDetailItem => {
-                            if(shiftItem.id === shiftDetailItem.ShiftId) {
+                            if (shiftItem.id === shiftDetailItem.ShiftId) {
                                 allEvents.push({
                                     id: shiftDetailItem.id,
                                     start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
@@ -82,7 +81,7 @@ class Shifts extends Component {
             })
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.loadShifts();
     }
 
@@ -95,13 +94,13 @@ class Shifts extends Component {
     };
 
     render() {
-        const { viewModel } = this.state;
+        const {viewModel} = this.state;
 
         console.log("******************");
         console.log(schedulerData.events);
 
-        if(this.state.loading) {
-            return <LinearProgress />
+        if (this.state.loading) {
+            return <LinearProgress/>
         }
 
         return (
@@ -225,12 +224,16 @@ class Shifts extends Component {
             borderColor = event.type == 1 ? 'rgba(0,139,236,1)' : (event.type == 3 ? 'rgba(245,60,43,1)' : '#999');
             backgroundColor = event.type == 1 ? '#80C5F6' : (event.type == 3 ? '#FA9E95' : '#D9D9D9');
         }
-        let divStyle = { borderLeft: borderWidth + 'px solid ' + borderColor, backgroundColor: backgroundColor, height: mustBeHeight };
+        let divStyle = {
+            borderLeft: borderWidth + 'px solid ' + borderColor,
+            backgroundColor: backgroundColor,
+            height: mustBeHeight
+        };
         if (!!agendaMaxEventWidth)
-            divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
+            divStyle = {...divStyle, maxWidth: agendaMaxEventWidth};
 
         return <div key={event.id} className={mustAddCssClass} style={divStyle}>
-            <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
+            <span style={{marginLeft: '4px', lineHeight: `${mustBeHeight}px`}}>{titleText}</span>
         </div>;
     }
 }
