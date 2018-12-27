@@ -7,6 +7,16 @@ import moment from 'moment';
 import Shifts from './Shifts.js';
 
 class Schedules extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            cityId: 0,
+            positionId: 0,
+            shiftId: 0
+        }
+    }
+
     getSelectedValue = (item) => {
         console.log("This is my item:::", item)
     }
@@ -22,10 +32,10 @@ class Schedules extends Component {
                     <div className="col-md-10">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesHeader">
-                                <Filters />
+                                <Filters cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts getSelectedValue={this.getSelectedValue} />
+                                <Shifts getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                         </div>
                     </div>

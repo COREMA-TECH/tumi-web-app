@@ -27,9 +27,19 @@ export const GET_POSITION = gql`
   }
 `;
 
-export const GET_CITIES_QUERY = gql`
+export const GET_STATES_QUERY = gql`
     query Cities($id: Int) {
-        getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 5) {
+        getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 3) {
+            Id
+            Name
+            IsActive
+        }
+    }
+`;
+
+export const GET_CITIES_QUERY = gql`
+    query Cities($id: Int, $parentId: Int) {
+        getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 5, Id_Parent: $parentId) {
             Id
             Name
             IsActive
