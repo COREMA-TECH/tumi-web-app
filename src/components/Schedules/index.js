@@ -8,6 +8,15 @@ import Shifts from './Shifts.js';
 
 class Schedules extends Component {
 
+    constructor() {
+        super();
+        this.state = {
+            cityId: 0,
+            positionId: 0,
+            shiftId: 0
+        }
+    }
+
     render() {
         return (
             <div className="MasterShift">
@@ -20,10 +29,10 @@ class Schedules extends Component {
                     <div className="col-md-10">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesHeader">
-                                <Filters />
+                                <Filters cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts />
+                                <Shifts cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                         </div>
                     </div>
