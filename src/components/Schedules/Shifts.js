@@ -153,7 +153,7 @@ class Shifts extends Component {
     };
 
     eventClicked = (schedulerData, event) => {
-        alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
+        this.props.getSelectedValue(event.id);
     };
 
     ops1 = (schedulerData, event) => {
