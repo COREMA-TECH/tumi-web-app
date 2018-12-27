@@ -90,6 +90,10 @@ class Shifts extends Component {
         });
     };
 
+    componentWillReceiveProps(nextProps){
+        
+    }
+
     render() {
         const { viewModel } = this.state;
 
