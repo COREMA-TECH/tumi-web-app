@@ -121,6 +121,11 @@ class Application extends Component {
 
             // React tag input with suggestions
             positionsTags: [],
+
+
+            // Validation
+            homePhoneNumberValid: true,
+            cellPhoneNumberValid: true,
         };
     }
 
@@ -263,7 +268,9 @@ class Application extends Component {
                                 state: applicantData.state,
                                 zipCode: applicantData.zipCode,
                                 homePhone: applicantData.homePhone,
+                                homePhoneNumberValid: this.state.homePhone.length > 0,
                                 cellPhone: applicantData.cellPhone,
+                                cellPhoneNumberValid: this.state.cellPhone.length > 0,
                                 birthDay:
                                     applicantData.birthDay === null ? '' : applicantData.birthDay.substring(0, 10),
                                 socialSecurityNumber: applicantData.socialSecurityNumber,
@@ -405,7 +412,20 @@ class Application extends Component {
                     onSubmit={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        this.updateApplicationInformation(this.props.applicationId);
+
+                        if (
+                            this.state.homePhoneNumberValid ||
+                            this.state.cellPhoneNumberValid
+                        ) {
+                            this.updateApplicationInformation(this.props.applicationId);
+                        } else {
+                            this.props.handleOpenSnackbar(
+                                'warning',
+                                'Complete all the fields and try again!',
+                                'bottom',
+                                'right'
+                            );
+                        }
                     }}
                 >
                     <div className="">
@@ -689,11 +709,32 @@ class Application extends Component {
                                                     mask="+(999) 999-9999"
                                                     maskChar=" "
                                                     value={this.state.homePhone}
-                                                    className="form-control"
+                                                    className={
+                                                        this.state.homePhoneNumberValid ? 'form-control' : 'form-control _invalid'
+                                                    }
                                                     disabled={!this.state.editing}
                                                     onChange={(event) => {
                                                         this.setState({
                                                             homePhone: event.target.value
+                                                        }, () => {
+                                                            let phoneNumberValid =
+                                                                this.state.homePhone
+                                                                    .replace(/-/g, '')
+                                                                    .replace(/ /g, '')
+                                                                    .replace('+', '')
+                                                                    .replace('(', '')
+                                                                    .replace(')', '').length === 10 ||
+                                                                this.state.homePhone
+                                                                    .replace(/-/g, '')
+                                                                    .replace(/ /g, '')
+                                                                    .replace('+', '')
+                                                                    .replace('(', '')
+                                                                    .replace(')', '').length === 0;
+
+                                                            console.log(phoneNumberValid);
+                                                            this.setState({
+                                                                homePhoneNumberValid: phoneNumberValid
+                                                            })
                                                         });
                                                     }}
                                                     placeholder="+(999) 999-9999"
@@ -710,11 +751,32 @@ class Application extends Component {
                                                     mask="+(999) 999-9999"
                                                     maskChar=" "
                                                     value={this.state.cellPhone}
-                                                    className="form-control"
+                                                    className={
+                                                        this.state.cellPhoneNumberValid ? 'form-control' : 'form-control _invalid'
+                                                    }
                                                     disabled={!this.state.editing}
                                                     onChange={(event) => {
                                                         this.setState({
                                                             cellPhone: event.target.value
+                                                        }, () => {
+                                                            let phoneNumberValid =
+                                                                this.state.cellPhone
+                                                                    .replace(/-/g, '')
+                                                                    .replace(/ /g, '')
+                                                                    .replace('+', '')
+                                                                    .replace('(', '')
+                                                                    .replace(')', '').length === 10 ||
+                                                                this.state.cellPhone
+                                                                    .replace(/-/g, '')
+                                                                    .replace(/ /g, '')
+                                                                    .replace('+', '')
+                                                                    .replace('(', '')
+                                                                    .replace(')', '').length === 0;
+
+                                                            console.log(phoneNumberValid);
+                                                            this.setState({
+                                                                cellPhoneNumberValid: phoneNumberValid
+                                                            })
                                                         });
                                                     }}
                                                     placeholder="+(999) 999-9999"
@@ -733,9 +795,6 @@ class Application extends Component {
                                                     maskChar=" "
                                                     className="form-control"
                                                     disabled={!this.state.editing}
-                                                    onClick={(event) => {
-                                                        event.target.setSelectionRange(0, 0);
-                                                    }}
                                                     onChange={(event) => {
                                                         this.setState({
                                                             socialSecurityNumber: event.target.value
@@ -744,7 +803,7 @@ class Application extends Component {
                                                     value={this.state.socialSecurityNumber}
                                                     placeholder="999-99-9999"
                                                     required
-                                                    minLength="15"
+                                                    minLength="11"
                                                 />
                                             </div>
                                         </div>
