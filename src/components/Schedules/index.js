@@ -7,7 +7,9 @@ import moment from 'moment';
 import Shifts from './Shifts.js';
 
 class Schedules extends Component {
-
+    getSelectedValue = (item) => {
+        console.log("This is my item:::", item)
+    }
     render() {
         return (
             <div className="MasterShift">
@@ -23,7 +25,7 @@ class Schedules extends Component {
                                 <Filters />
                             </div>
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts />
+                                <Shifts getSelectedValue={this.getSelectedValue} />
                             </div>
                         </div>
                     </div>
