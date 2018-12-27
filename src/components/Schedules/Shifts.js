@@ -91,9 +91,52 @@ class Shifts extends Component {
     };
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps.cityId);
-        console.log(nextProps.positionId);
-        console.log(nextProps.shiftId);
+        this.filterShifts(nextProps.cityId, nextProps.positionId, nextProps.shiftId);
+    }
+
+    filterShifts(city, position, shift){
+        allEvents = [];
+
+        let filterCity = city !== null;
+        let filterPosition = position !== null;
+        let filterShift = position !== null;
+
+
+        if(shift !== null) {
+            this.state.shift.map(shiftItem => {
+                if(
+                    (shift == null ? true : shiftItem.id == shift) &&
+                    (position == null ? true  : shiftItem.idPosition == position) &&
+                    (city == null ? true  :  shiftItem.company.City == city)
+                ) {
+                    this.state.shiftDetail.map(shiftDetailItem => {
+                        if (shiftItem.id === shiftDetailItem.ShiftId) {
+                            allEvents.push({
+                                id: shiftDetailItem.id,
+                                start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
+                                end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
+                                title: shiftItem.title,
+                                resourceId: 'r2',
+                                bgColor: shiftItem.bgColor
+                            })
+                        }
+                    })
+                }
+            });
+        }
+
+        schedulerData.setEvents(allEvents);
+        this.setState({
+            loading: true
+        }, () => {
+            this.setState({
+                viewModel: schedulerData
+            }, () => {
+                this.setState({
+                    loading: false
+                });
+            })
+        });
     }
 
     render() {

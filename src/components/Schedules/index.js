@@ -9,10 +9,10 @@ import Shifts from './Shifts.js';
 class Schedules extends Component {
 
     INITIAL_STATE = {
-        cityId: 0,
-        positionId: 0,
-        shiftId: 0
-    }
+        cityId: null,
+        positionId: null,
+        shiftId: null
+    };
 
     constructor() {
         super();
