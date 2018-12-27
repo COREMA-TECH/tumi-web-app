@@ -182,6 +182,8 @@ class Catalogs extends React.Component {
                 IsRecruiter
                 IdRegion
                 IsActive
+                IdSchedulesEmployees
+                IdSchedulesManager
             }
         }
     `;
@@ -597,7 +599,9 @@ class Catalogs extends React.Component {
                          AllowEdit,
                          IsRecruiter,
                          IdRegion,
-                         IsActive
+                         IsActive,
+                         IdSchedulesEmployees,
+                         IdSchedulesManager,
                      }) => {
         this.setState({showCircularLoading: false}, () => {
             this.setState(
@@ -619,6 +623,8 @@ class Catalogs extends React.Component {
                     IsRecruiter: IsRecruiter,
                     IdRegion: IdRegion,
                     IsActive: IsActive == 1,
+                    IdSchedulesEmployees: IdSchedulesManager,
+                    IdSchedulesManager: IdSchedulesManager,
 
                     formValid: true,
                     idContactValid: true,
