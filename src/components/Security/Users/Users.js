@@ -1361,6 +1361,30 @@ class Catalogs extends React.Component {
 														</label>
 													</div>
 												</li>
+                                                <br/><br/>
+												<li className="col-md-4 col-sm-12 col-lg-12">
+                                                    <label>Employees can see schedules for:</label>
+                                                    <br/>
+                                                    <select
+														className="form-control"
+														name="" id="">
+                                                        <option value="">Select a option</option>
+                                                        <option value="0">The company</option>
+                                                        <option value="1">Their group</option>
+                                                        <option value="2">Just themselves</option>
+													</select>
+												</li>
+                                                <li className="col-md-6 col-sm-12 col-lg-12">
+                                                    <label>Managers can add, edit or delete shifts for:</label>
+                                                    <br/>
+                                                    <select
+                                                        className="form-control"
+														name="" id="">
+                                                        <option value="">Select a option</option>
+                                                        <option value="0">The company</option>
+                                                        <option value="1">Their employees</option>
+                                                    </select>
+                                                </li>
 											</ul>
 										</div>
 									</div>
