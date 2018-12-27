@@ -91,7 +91,9 @@ class Shifts extends Component {
     };
 
     componentWillReceiveProps(nextProps){
-        
+        console.log(nextProps.cityId);
+        console.log(nextProps.positionId);
+        console.log(nextProps.shiftId);
     }
 
     render() {
@@ -219,7 +221,6 @@ class Shifts extends Component {
         this.setState({
             viewModel: schedulerData
         })
-
     };
 
     eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
