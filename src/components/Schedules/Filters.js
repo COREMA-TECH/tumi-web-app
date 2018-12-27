@@ -147,7 +147,7 @@ class Filters extends Component {
                         </select>
                     </div>
                     <div className="col-md-1 d-flex flex-column-reverse">
-                        <button type="button" className="btn btn-danger">
+                        <button type="button" className="btn btn-danger" onClick={this.props.handleReset}>
                             Reset
                         </button>
                     </div>
