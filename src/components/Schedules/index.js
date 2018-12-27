@@ -17,6 +17,9 @@ class Schedules extends Component {
         }
     }
 
+    getSelectedValue = (item) => {
+        console.log("This is my item:::", item)
+    }
     render() {
         return (
             <div className="MasterShift">
@@ -32,7 +35,7 @@ class Schedules extends Component {
                                 <Filters cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                                <Shifts getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                         </div>
                     </div>

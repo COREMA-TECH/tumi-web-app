@@ -17,7 +17,6 @@ class FilterForm extends Component {
 
     DEFAULT_STATE = {
         selectedEmployees: [],
-        locations: [],
         location: 0,
         positions: [],
         position: 0,
@@ -33,6 +32,7 @@ class FilterForm extends Component {
         super(props);
         this.state = {
             employees: [],
+            locations: [],
             ...this.DEFAULT_STATE
         }
     }

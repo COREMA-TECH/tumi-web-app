@@ -623,8 +623,8 @@ class Catalogs extends React.Component {
                     IsRecruiter: IsRecruiter,
                     IdRegion: IdRegion,
                     IsActive: IsActive == 1,
-                    IdSchedulesEmployees: IdSchedulesManager,
-                    IdSchedulesManager: IdSchedulesManager,
+                    IdSchedulesEmployees: IdSchedulesEmployees.toString(),
+                    IdSchedulesManager: IdSchedulesManager.toString(),
 
                     formValid: true,
                     idContactValid: true,
