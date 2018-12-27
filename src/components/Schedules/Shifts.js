@@ -44,9 +44,6 @@ class Shifts extends Component {
                     shift: data.shift,
                     shiftDetail: data.ShiftDetail,
                 }, () => {
-                    console.log(this.state.shift);
-                    console.log(this.state.shiftDetail);
-
                     allEvents = [];
                     this.state.shift.map(shiftItem => {
                         this.state.shiftDetail.map(shiftDetailItem => {
@@ -153,7 +150,15 @@ class Shifts extends Component {
     };
 
     eventClicked = (schedulerData, event) => {
-        this.props.getSelectedValue(event.id);
+        // Find shift detail state property
+        let shiftDetailItem = this.state.shiftDetail.find(item => {
+            if(item.id === event.id) {
+                return item;
+            }
+        });
+
+        // Return shiftDetailItem by props
+        this.props.getSelectedValue(shiftDetailItem);
     };
 
     ops1 = (schedulerData, event) => {
