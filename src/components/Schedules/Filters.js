@@ -11,22 +11,8 @@ class Filters extends Component {
             cities: [],
             states: [],
             positions: [],
-            shifts: [],
-            stateId: 0,
-            cityId: 0,
-            shiftId: 0
+            shifts: []
         };
-    }
-
-    handleChange = (event) => {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-
-        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
-        this.setState({
-            [name]: value
-        });
     }
 
     handleLoadCities = () => {
@@ -35,18 +21,18 @@ class Filters extends Component {
 
     handleStateChange = (e) => {
         var value = e.target.value;
-        this.setState(prevState => {
-            return { stateId: value }
-        }, this.getCities());
+        this.setState({
+            stateId: value
+        }, this.getCities(value));
     }
 
-    getCities = () => {
+    getCities = (stateId) => {
         this.props.client
             .query({
                 query: GET_CITIES_QUERY,
                 fetchPolicy: 'no-cache',
                 variables: {
-                    parentId: this.state.stateId
+                    parentId: stateId
                 }
             })
             .then(({ data }) => {
@@ -99,7 +85,7 @@ class Filters extends Component {
             .catch();
     }
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
         this.getStates();
         this.getPosition();
         this.getShifts();
@@ -109,7 +95,7 @@ class Filters extends Component {
         return (
             <form action="">
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         <label htmlFor="">
                             Location
                         </label>
@@ -128,7 +114,7 @@ class Filters extends Component {
                             <div class="input-group-prepend">
                                 <span class="input-group-text">City</span>
                             </div>
-                            <select name="state" id="" className="form-control" value={this.state.cityId} onChange={this.handleChange}>
+                            <select name="stateId" id="" className="form-control" value={this.state.cityId} onChange={this.props.handleChange}>
                                 <option value="0">Select a Option</option>
                                 {
                                     this.state.cities.map((city) => {
@@ -140,7 +126,7 @@ class Filters extends Component {
                     </div>
                     <div className="col-md-3">
                         <label htmlFor="">Position</label>
-                        <select name="position" id="" className="form-control" onChange={this.handleChange}>
+                        <select name="positionId" id="" className="form-control" onChange={this.props.handleChange}>
                             <option value="">Select a Option</option>
                             {
                                 this.state.positions.map((position) => {
@@ -151,7 +137,7 @@ class Filters extends Component {
                     </div>
                     <div className="col-md-3">
                         <label htmlFor="">Shifts</label>
-                        <select name="shifts" id="" className="form-control" onChange={this.handleChange}>
+                        <select name="shiftId" id="" className="form-control" onChange={this.props.handleChange}>
                             <option value="">Select a Option</option>
                             {
                                 this.state.shifts.map((shift) => {
@@ -159,6 +145,11 @@ class Filters extends Component {
                                 })
                             }
                         </select>
+                    </div>
+                    <div className="col-md-1 d-flex flex-column-reverse">
+                        <button type="button" className="btn btn-danger">
+                            Reset
+                        </button>
                     </div>
                 </div>
             </form>
