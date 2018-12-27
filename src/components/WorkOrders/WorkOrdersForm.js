@@ -69,6 +69,7 @@ class WorkOrdersForm extends Component {
         needEnglish: false,
         comment: '',
         EspecialComment: '',
+        Electronic_Address: '',
         position: 0,
         PositionRateId: null,
         PositionName: '',
@@ -201,6 +202,7 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
+                    Electronic_Address: this.state.Electronic_Address,
                     startshift: this.state.shift,
                     endshift: this.state.endShift,
                     startDate: this.state.startDate,
@@ -352,15 +354,24 @@ class WorkOrdersForm extends Component {
 
     handleChange = (event) => {
         console.log("veamos el evento ", event);
+        console.log("veamos el event.target ", event.target);
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         let comments = '';
+        let request = '';
 
         // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
+
+        if (name === 'contactId') {
+            request = this.state.contacts.find((item) => { return item.Id == value })
+            this.setState({
+                Electronic_Address: request != null ? request.Electronic_Address : ''
+            });
+        }
 
         if (name === 'PositionRateId') {
             comments = this.state.positions.find((item) => { return item.Id == value })
