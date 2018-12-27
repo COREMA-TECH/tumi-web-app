@@ -94,7 +94,7 @@ class Shifts extends Component {
     };
 
     render() {
-        const {viewModel} = this.state;
+        const { viewModel } = this.state;
 
         if (this.state.loading) {
             return <LinearProgress/>
@@ -102,20 +102,20 @@ class Shifts extends Component {
 
         return (
             <Scheduler schedulerData={viewModel}
-                       prevClick={this.prevClick}
-                       nextClick={this.nextClick}
-                       onSelectDate={this.onSelectDate}
-                       onViewChange={this.onViewChange}
-                       eventItemClick={this.eventClicked}
-                       viewEventClick={this.ops1}
-                       viewEventText="Ops 1"
-                       viewEvent2Text="Ops 2"
-                       viewEvent2Click={this.ops2}
-                       updateEventStart={this.updateEventStart}
-                       updateEventEnd={this.updateEventEnd}
-                       moveEvent={this.moveEvent}
-                       newEvent={this.newEvent}
-                       eventItemTemplateResolver={this.eventItemTemplateResolver}
+                prevClick={this.prevClick}
+                nextClick={this.nextClick}
+                onSelectDate={this.onSelectDate}
+                onViewChange={this.onViewChange}
+                eventItemClick={this.eventClicked}
+                viewEventClick={this.ops1}
+                viewEventText="Ops 1"
+                viewEvent2Text="Ops 2"
+                viewEvent2Click={this.ops2}
+                updateEventStart={this.updateEventStart}
+                updateEventEnd={this.updateEventEnd}
+                moveEvent={this.moveEvent}
+                newEvent={this.newEvent}
+                eventItemTemplateResolver={this.eventItemTemplateResolver}
             />
         );
     };
@@ -227,10 +227,10 @@ class Shifts extends Component {
             height: mustBeHeight
         };
         if (!!agendaMaxEventWidth)
-            divStyle = {...divStyle, maxWidth: agendaMaxEventWidth};
+            divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
 
         return <div key={event.id} className={mustAddCssClass} style={divStyle}>
-            <span style={{marginLeft: '4px', lineHeight: `${mustBeHeight}px`}}>{titleText}</span>
+            <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
         </div>;
     }
 }
