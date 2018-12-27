@@ -8,18 +8,40 @@ import Shifts from './Shifts.js';
 
 class Schedules extends Component {
 
+    INITIAL_STATE = {
+        cityId: 0,
+        positionId: 0,
+        shiftId: 0
+    }
+
     constructor() {
         super();
         this.state = {
-            cityId: 0,
-            positionId: 0,
-            shiftId: 0
+            ...this.INITIAL_STATE
         }
+    }
+
+    handleChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleReset = () => {
+        this.setState({
+            ...this.INITIAL_STATE
+        });
     }
 
     getSelectedValue = (item) => {
         console.log("This is my item:::", item)
     }
+
     render() {
         return (
             <div className="MasterShift">
