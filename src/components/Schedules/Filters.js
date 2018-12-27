@@ -114,7 +114,7 @@ class Filters extends Component {
                             <div class="input-group-prepend">
                                 <span class="input-group-text">City</span>
                             </div>
-                            <select name="stateId" id="" className="form-control" value={this.state.cityId} onChange={this.props.handleChange}>
+                            <select name="cityId" id="" className="form-control" value={this.state.cityId} onChange={this.props.handleChange}>
                                 <option value="0">Select a Option</option>
                                 {
                                     this.state.cities.map((city) => {
