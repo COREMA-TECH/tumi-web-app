@@ -55,7 +55,7 @@ class Schedules extends Component {
                     <div className="col-md-10">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesHeader">
-                                <Filters handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                                <Filters handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                             <div className="MasterShift-schedulesBody" id="divToPrint">
                                 <Shifts getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
