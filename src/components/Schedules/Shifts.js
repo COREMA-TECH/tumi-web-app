@@ -90,41 +90,41 @@ class Shifts extends Component {
         });
     };
 
-    componentWillReceiveProps(nextProps){
+    componentWillReceiveProps(nextProps) {
         this.filterShifts(nextProps.cityId, nextProps.positionId, nextProps.shiftId);
     }
 
-    filterShifts(city, position, shift){
+    filterShifts(city, position, shift) {
         allEvents = [];
 
         let filterCity = city !== null;
         let filterPosition = position !== null;
         let filterShift = position !== null;
 
+        console.log(city, " - ", position, " - ", shift);
 
-        if(shift !== null) {
-            this.state.shift.map(shiftItem => {
-                if(
-                    (shift == null ? true : shiftItem.id == shift) &&
-                    (position == null ? true  : shiftItem.idPosition == position) &&
-                    (city == null ? true  :  shiftItem.company.City == city)
-                ) {
-                    console.log("TRUE VALUES");
-                    this.state.shiftDetail.map(shiftDetailItem => {
-                        if (shiftItem.id === shiftDetailItem.ShiftId) {
-                            allEvents.push({
-                                id: shiftDetailItem.id,
-                                start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
-                                end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
-                                title: shiftItem.title,
-                                resourceId: 'r2',
-                                bgColor: shiftItem.bgColor
-                            })
-                        }
-                    })
-                }
-            });
-        }
+
+        this.state.shift.map(shiftItem => {
+            if (
+                (shift == null || shift == "null" ? true : shiftItem.id == shift) &&
+                (position == null || position == "null" ? true : shiftItem.idPosition == position) &&
+                (city == null || city == "null" ? true : shiftItem.company.City == city)
+            ) {
+                console.log("TRUE VALUES");
+                this.state.shiftDetail.map(shiftDetailItem => {
+                    if (shiftItem.id === shiftDetailItem.ShiftId) {
+                        allEvents.push({
+                            id: shiftDetailItem.id,
+                            start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
+                            end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
+                            title: shiftItem.title,
+                            resourceId: 'r2',
+                            bgColor: shiftItem.bgColor
+                        })
+                    }
+                })
+            }
+        });
 
         schedulerData.setEvents(allEvents);
         this.setState({
@@ -141,7 +141,7 @@ class Shifts extends Component {
     }
 
     render() {
-        const { viewModel } = this.state;
+        const {viewModel} = this.state;
 
         if (this.state.loading) {
             return <LinearProgress/>
@@ -149,20 +149,20 @@ class Shifts extends Component {
 
         return (
             <Scheduler schedulerData={viewModel}
-                prevClick={this.prevClick}
-                nextClick={this.nextClick}
-                onSelectDate={this.onSelectDate}
-                onViewChange={this.onViewChange}
-                eventItemClick={this.eventClicked}
-                viewEventClick={this.ops1}
-                viewEventText="Ops 1"
-                viewEvent2Text="Ops 2"
-                viewEvent2Click={this.ops2}
-                updateEventStart={this.updateEventStart}
-                updateEventEnd={this.updateEventEnd}
-                moveEvent={this.moveEvent}
-                newEvent={this.newEvent}
-                eventItemTemplateResolver={this.eventItemTemplateResolver}
+                       prevClick={this.prevClick}
+                       nextClick={this.nextClick}
+                       onSelectDate={this.onSelectDate}
+                       onViewChange={this.onViewChange}
+                       eventItemClick={this.eventClicked}
+                       viewEventClick={this.ops1}
+                       viewEventText="Ops 1"
+                       viewEvent2Text="Ops 2"
+                       viewEvent2Click={this.ops2}
+                       updateEventStart={this.updateEventStart}
+                       updateEventEnd={this.updateEventEnd}
+                       moveEvent={this.moveEvent}
+                       newEvent={this.newEvent}
+                       eventItemTemplateResolver={this.eventItemTemplateResolver}
             />
         );
     };
@@ -202,7 +202,7 @@ class Shifts extends Component {
     eventClicked = (schedulerData, event) => {
         // Find shift detail state property
         let shiftDetailItem = this.state.shiftDetail.find(item => {
-            if(item.id === event.id) {
+            if (item.id === event.id) {
                 return item;
             }
         });
@@ -281,10 +281,10 @@ class Shifts extends Component {
             height: mustBeHeight
         };
         if (!!agendaMaxEventWidth)
-            divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
+            divStyle = {...divStyle, maxWidth: agendaMaxEventWidth};
 
         return <div key={event.id} className={mustAddCssClass} style={divStyle}>
-            <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
+            <span style={{marginLeft: '4px', lineHeight: `${mustBeHeight}px`}}>{titleText}</span>
         </div>;
     }
 }
