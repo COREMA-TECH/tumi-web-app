@@ -977,7 +977,7 @@ class GeneralInformation extends Component {
 			{
 				endWeek: id,
 				startWeek: idStartWeek,
-				startWeekValid:true
+				startWeekValid: true
 			},
 			() => {
 				this.validateField('endWeek', id);
