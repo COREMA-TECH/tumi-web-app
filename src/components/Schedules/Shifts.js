@@ -109,6 +109,7 @@ class Shifts extends Component {
                     (position == null ? true  : shiftItem.idPosition == position) &&
                     (city == null ? true  :  shiftItem.company.City == city)
                 ) {
+                    console.log("TRUE VALUES");
                     this.state.shiftDetail.map(shiftDetailItem => {
                         if (shiftItem.id === shiftDetailItem.ShiftId) {
                             allEvents.push({
