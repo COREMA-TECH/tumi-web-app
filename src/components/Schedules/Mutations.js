@@ -24,3 +24,12 @@ mutation createShiftDetail(
     }
   }
 `;
+
+export const CHANGE_STATUS_SHIFT = gql`
+mutation changeStatusShift($id: Int!,$status:Int!,$color:String!)
+{
+  changeStatusShift(id:$id,status:$status,color: $color)
+  {
+    id
+  }
+}`;

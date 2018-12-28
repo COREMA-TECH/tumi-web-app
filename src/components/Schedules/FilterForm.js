@@ -4,7 +4,7 @@ import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
 import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
-import { INSERT_SHIFT } from './Mutations';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT } from './Mutations';
 
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
@@ -199,6 +199,28 @@ class FilterForm extends Component {
         this.setState({ color: color.hex })
     };
 
+    handleChangeStatusShift = (status, color) => {
+        this.props.client
+            .mutate({
+                mutation: CHANGE_STATUS_SHIFT,
+                variables: {
+                    id: 127,//this.state.id,
+                    status: status,
+                    color: color
+                }
+            })
+            .then((data) => {
+                if (status == 2) { this.props.handleOpenSnackbar('success', 'Shift approved successfully!'); }
+                else { this.props.handleOpenSnackbar('success', 'Shift rejected successfully!'); }
+
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error approved Shift');
+            });
+    };
+
+
+
     onSubmit = (event) => {
         event.preventDefault();
 
@@ -293,7 +315,12 @@ class FilterForm extends Component {
                     <div className="col-md-12">
                         <button className="btn btn-success float-right" type="submit">Publish</button>
                     </div>
-
+                    <div className="col-md-12">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-info float-right" onClick={() => { this.handleChangeStatusShift(2, "#3be1ec") }}>Approve Shift</button>
+                            <button type="button" className="btn btn-danger float-right" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }}>Reject Shift</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
