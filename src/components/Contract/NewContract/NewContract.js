@@ -78,6 +78,8 @@ class NewContract extends Component {
         Billing_StateValid: true,
         Billing_CityValid: true,
         Billing_Zip_CodeValid: true,
+        Id_ManagementValid: true,
+        Id_HotelValid: true,
         validForm: true
     };
 
@@ -121,7 +123,7 @@ class NewContract extends Component {
             Exhibit_E: '',
             Exhibit_F: '',
             IsActive: 1,
-            IdManagement: props.Id_Parent,
+            IdManagement: props.Id_Parent != null ? props.Id_Parent : 0,
             Management: '',
             User_Created: '',
             User_Updated: '',
@@ -913,9 +915,12 @@ class NewContract extends Component {
         let Company_Signed_DateValid = this.state.Company_Signed_DateValid;
         let Id_User_Billing_ContactValid = this.state.Id_User_Billing_ContactValid;
         let Billing_StreetValid = this.state.Billing_StreetValid;
-        let Billing_StateValid = this.state.Billing_StateValid;
-        let Billing_CityValid = this.state.Billing_CityValid;
+        // let Billing_StateValid = this.state.Billing_StateValid;
+        // let Billing_CityValid = this.state.Billing_CityValid;
         let Billing_Zip_CodeValid = this.state.Billing_Zip_CodeValid;
+
+        let Id_ManagementValid = this.state.Id_ManagementValid;
+        let Id_HotelValid = this.state.Id_HotelValid;
 
         switch (fieldName) {
             case 'Contract_Name':
@@ -971,12 +976,19 @@ class NewContract extends Component {
             case 'Billing_Street':
                 Billing_StreetValid = value !== null && value !== 0 && value !== '';
                 break;
-            case 'Billing_State':
-                Billing_StateValid = value !== null && value !== 0 && value !== '';
+            /* case 'Billing_State':
+                 Billing_StateValid = value !== null && value !== 0 && value !== '';
+                 break;
+             case 'Billing_City':
+                 Billing_CityValid = value !== null && value !== 0 && value !== '';
+                 break;*/
+            case 'IdManagement':
+                Id_ManagementValid = value !== null && value !== 0 && value !== '';
                 break;
-            case 'Billing_City':
-                Billing_CityValid = value !== null && value !== 0 && value !== '';
+            case 'Id_Entity':
+                Id_HotelValid = value !== null && value !== 0 && value !== '';
                 break;
+
             case 'Billing_Zip_Code':
                 Billing_Zip_CodeValid = value.toString().trim().length >= 2;
             default:
@@ -1001,8 +1013,8 @@ class NewContract extends Component {
                 Company_Signed_DateValid,
                 Id_User_Billing_ContactValid,
                 Billing_StreetValid,
-                Billing_StateValid,
-                Billing_CityValid,
+                // Billing_StateValid,
+                // Billing_CityValid,
                 Billing_Zip_CodeValid
             },
             this.validateForm
@@ -1042,10 +1054,10 @@ class NewContract extends Component {
             this.state.Id_User_Billing_Contact !== '';
         let Billing_StreetValid =
             this.state.Billing_Street !== null && this.state.Billing_Street !== 0 && this.state.Billing_Street !== '';
-        let Billing_StateValid =
-            this.state.Billing_State !== null && this.state.Billing_State !== 0 && this.state.Billing_State !== '';
-        let Billing_CityValid =
-            this.state.Billing_City !== null && this.state.Billing_City !== 0 && this.state.Billing_City !== '';
+        /* let Billing_StateValid =
+             this.state.Billing_State !== null && this.state.Billing_State !== 0 && this.state.Billing_State !== '';
+         let Billing_CityValid =
+             this.state.Billing_City !== null && this.state.Billing_City !== 0 && this.state.Billing_City !== '';*/
         let Billing_Zip_CodeValid = this.state.Billing_Zip_Code.toString().trim().length >= 2;
 
         this.setState(
@@ -1067,8 +1079,8 @@ class NewContract extends Component {
                 Company_Signed_DateValid,
                 Id_User_Billing_ContactValid,
                 Billing_StreetValid,
-                Billing_StateValid,
-                Billing_CityValid,
+                // Billing_StateValid,
+                // Billing_CityValid,
                 Billing_Zip_CodeValid
             },
             () => {
@@ -1099,8 +1111,8 @@ class NewContract extends Component {
                     this.state.Company_Signed_DateValid &&
                     this.state.Id_User_Billing_ContactValid &&
                     this.state.Billing_StreetValid &&
-                    this.state.Billing_StateValid &&
-                    this.state.Billing_CityValid &&
+                    // this.state.Billing_StateValid &&
+                    //this.state.Billing_CityValid &&
                     this.state.Billing_Zip_CodeValid
             },
             func
@@ -1307,7 +1319,8 @@ class NewContract extends Component {
                                                                     id="management"
                                                                     required
                                                                     className="form-control"
-                                                                    //disabled={!this.state.editing}
+                                                                    error={!this.state.Id_ManagementValid}
+                                                                    disabled={!this.state.editing}
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             IdManagement: e.target.value
@@ -1315,7 +1328,7 @@ class NewContract extends Component {
                                                                     }}
                                                                     value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement}
                                                                 >
-                                                                    <option value="">Select a Management</option>
+                                                                    <option value="0">Select a Management</option>
                                                                     {data.getbusinesscompanies.map((item) => (
                                                                         <option value={item.Id}>{item.Name}</option>
                                                                     ))}
@@ -1330,7 +1343,7 @@ class NewContract extends Component {
                                                 <label>* Hotel</label>
                                                 <Query
                                                     query={this.getbusinesscompaniesQuery}
-                                                    variables={{ Id_Parent: this.state.IdManagement }}
+                                                    variables={{ Id_Parent: (this.state.IdManagement === 0 ? 919191 : this.state.IdManagement) }}
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         // if (networkStatus === 4) return <LinearProgress />;
@@ -1353,9 +1366,10 @@ class NewContract extends Component {
                                                                         Id_Entity: e.target.value
                                                                     });
                                                                 }}
+                                                                error={this.state.Id_HotelValid}
                                                                 value={this.state.Id_Entity}
                                                             >
-                                                                <option value="">Select a Hotel</option>
+                                                                <option value="0">Select a Hotel</option>
                                                                 {data.getbusinesscompanies.map((item) => (
                                                                     <option value={item.Id}>{item.Name}</option>
                                                                 ))}
@@ -1674,7 +1688,7 @@ class NewContract extends Component {
                                                             showNone={false}
                                                             update={this.updateProvidence}
                                                             value={this.state.Billing_State}
-                                                            error={!this.state.Billing_StateValid}
+                                                        //error={!this.state.Billing_StateValid}
                                                         />
                                                     );
                                                 }
@@ -1711,7 +1725,7 @@ class NewContract extends Component {
                                                             update={this.updateCity}
                                                             showNone={false}
                                                             value={this.state.Billing_City}
-                                                            error={!this.state.Billing_CityValid}
+                                                        //error={!this.state.Billing_CityValid}
                                                         />
                                                     );
                                                 }
