@@ -317,8 +317,8 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-12">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className="btn btn-info float-right" onClick={() => { this.handleChangeStatusShift(2, "#3be1ec") }}>Approve Shift</button>
-                            <button type="button" className="btn btn-danger float-right" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }}>Reject Shift</button>
+                            <button type="button" className="btn btn-info" onClick={() => { this.handleChangeStatusShift(2, "#3be1ec") }}>Approve Shift</button>
+                            <button type="button" className="btn btn-danger" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }}>Reject Shift</button>
                         </div>
                     </div>
                 </div>
