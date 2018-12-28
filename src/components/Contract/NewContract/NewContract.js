@@ -103,7 +103,7 @@ class NewContract extends Component {
             Contract_Start_Date: this.getNewDate(),
             contractExpiration: this.getNewDate(),
 
-            Contract_Term: '',
+            Contract_Term: 222,
             NewContract_Term: '',
             Display_Contract_Term: '',
             Owner_Expiration_Notification: '',
@@ -423,7 +423,7 @@ class NewContract extends Component {
                                     Billing_Street: `'${this.state.Billing_Street}'`,
                                     Billing_City: parseInt(this.state.Billing_City),
                                     Billing_State: parseInt(this.state.Billing_State),
-                                    Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
+                                    Billing_Zip_Code: `'${this.state.Billing_Zip_Code}'`,
                                     Billing_Country: 6,
                                     Contract_Terms: "''",
                                     Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
@@ -505,7 +505,7 @@ class NewContract extends Component {
                                     Billing_Street: `'${this.state.Billing_Street}'`,
                                     Billing_City: parseInt(this.state.Billing_City),
                                     Billing_State: parseInt(this.state.Billing_State),
-                                    Billing_Zip_Code: parseInt(this.state.Billing_Zip_Code),
+                                    Billing_Zip_Code: `'${this.state.Billing_Zip_Code}'`,
                                     Billing_Country: 6,
                                     Contract_Terms: `'${this.state.Contract_Terms}'`,
                                     Id_Contract_Template: parseInt(this.state.Id_Contract_Template),
@@ -886,6 +886,12 @@ class NewContract extends Component {
         if (this.props.contractId !== 0) {
             // this.setState({ idManagement: this.props.Id_Parent })
             this.getContractData(this.props.contractId);
+        } else {
+            let expireDate = new Date(new Date(this.state.Contract_Start_Date).setMonth(new Date(this.state.Contract_Start_Date).getMonth() + parseInt(12)));
+
+            this.setState({
+                contractExpiration: expireDate.toISOString().substring(0, 10)
+            })
         }
 
         if (this.props.Id_Parent !== undefined) {
@@ -1058,7 +1064,7 @@ class NewContract extends Component {
              this.state.Billing_State !== null && this.state.Billing_State !== 0 && this.state.Billing_State !== '';
          let Billing_CityValid =
              this.state.Billing_City !== null && this.state.Billing_City !== 0 && this.state.Billing_City !== '';*/
-        let Billing_Zip_CodeValid = this.state.Billing_Zip_Code.toString().trim().length >= 2;
+        let Billing_Zip_CodeValid = this.state.Billing_Zip_Code.toString().trim().length == 5;
 
         this.setState(
             {
@@ -1669,7 +1675,10 @@ class NewContract extends Component {
                                                     }
                                                 });
                                             }}
-                                            type="number"
+
+                                            id="Billing_Zip_Code"
+                                            name="Billing_Zip_Code"
+                                            maxLength="5"
                                             error={!this.state.Billing_Zip_CodeValid}
                                         />
                                     </div>
