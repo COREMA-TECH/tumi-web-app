@@ -33,7 +33,7 @@ class HotelDialog extends Component {
                     fullScreen
                 >
                     <DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-                    <AppBar style={{ background: '#0092BD' }}>
+                    <AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
                         <Toolbar>
                             <IconButton color="inherit" onClick={this.props.handleClose} aria-label="Close">
                                 <CloseIcon />
@@ -43,7 +43,7 @@ class HotelDialog extends Component {
                             </Typography>
                         </Toolbar>
                     </AppBar>
-                    <DialogContent>
+                    <DialogContent style={{ background: "#F5F7F9" }}>
                         <TabsInDialog
                             idCompany={this.props.idCompany}
                             Markup={this.props.Markup}
