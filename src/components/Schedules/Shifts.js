@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
 import 'react-big-scheduler/lib/css/style.css';
+import 'antd/lib/style/index.less';
+import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
 import withApollo from "react-apollo/withApollo";
 import {GET_SHIFTS} from "./Queries";
 import withGlobalContent from "../Generic/Global";
@@ -54,12 +55,14 @@ class Shifts extends Component {
                                     end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                                     title: shiftItem.title,
                                     resourceId: 'r2',
+                                    // bgColor: shiftItem.bgColor
                                     bgColor: shiftItem.bgColor
                                 })
                             }
                         })
                     });
 
+                    console.table(allEvents);
                     schedulerData.setEvents(allEvents);
                     this.setState({
                         viewModel: schedulerData
@@ -154,7 +157,6 @@ class Shifts extends Component {
                        updateEventEnd={this.updateEventEnd}
                        moveEvent={this.moveEvent}
                        newEvent={this.newEvent}
-                       eventItemTemplateResolver={this.eventItemTemplateResolver}
             />
         );
     };
@@ -258,27 +260,6 @@ class Shifts extends Component {
             viewModel: schedulerData
         })
     };
-
-    eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
-        let borderWidth = isStart ? '4' : '0';
-        let borderColor = 'rgba(0,139,236,1)', backgroundColor = '#80C5F6';
-        let titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
-        if (!!event.type) {
-            borderColor = event.type == 1 ? 'rgba(0,139,236,1)' : (event.type == 3 ? 'rgba(245,60,43,1)' : '#999');
-            backgroundColor = event.type == 1 ? '#80C5F6' : (event.type == 3 ? '#FA9E95' : '#D9D9D9');
-        }
-        let divStyle = {
-            borderLeft: borderWidth + 'px solid ' + borderColor,
-            backgroundColor: backgroundColor,
-            height: mustBeHeight
-        };
-        if (!!agendaMaxEventWidth)
-            divStyle = {...divStyle, maxWidth: agendaMaxEventWidth};
-
-        return <div key={event.id} className={mustAddCssClass} style={divStyle}>
-            <span style={{marginLeft: '4px', lineHeight: `${mustBeHeight}px`}}>{titleText}</span>
-        </div>;
-    }
 }
 
 export default withApollo(withGlobalContent(withDnDContext(Shifts)));
