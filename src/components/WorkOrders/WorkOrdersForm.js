@@ -574,25 +574,7 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-                                        {this.state.id && (
-                                            <div className="col-md-6">
-                                                <label htmlFor="">Assign to</label>
-                                                <select
-                                                    required
-                                                    name="RecruiterId"
-                                                    className="form-control"
-                                                    id=""
-                                                    onChange={this.handleChange}
-                                                    value={this.state.RecruiterId}
-                                                    onBlur={this.handleValidate}
-                                                >
-                                                    <option value="0">Select a Recruiter</option>
-                                                    {this.state.recruiters.map((recruiter) => (
-                                                        < option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        )}
+
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
@@ -711,21 +693,7 @@ class WorkOrdersForm extends Component {
                                                 Save {!this.state.saving && <i class="fas fa-save ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
-                                            {this.state.id && (
-                                                /*<button className="btn btn-info ml-1 float-right" type="submit">
-                                                    Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
-                                                    {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
-                                                </button>*/
 
-                                                <button
-                                                    className="btn btn-info float-right"
-                                                    type="button"
-                                                    onClick={this.handleChangeState}
-                                                >
-                                                    Convert to Opening {!this.state.converting && <i class="fas fa-sync-alt"></i>}
-                                                    {this.state.converting && <i class="fas fa-spinner fa-spin  ml2" />}
-                                                </button>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
