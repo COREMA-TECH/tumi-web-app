@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
@@ -19,10 +19,10 @@ import studyTypes from '../data/studyTypes';
 import InputMask from 'react-input-mask';
 import languageLevelsJSON from '../data/languagesLevels';
 import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
-import { GET_LANGUAGES_QUERY } from '../Queries.js';
+import {GET_LANGUAGES_QUERY} from '../Queries.js';
 import withApollo from 'react-apollo/withApollo';
 import Query from 'react-apollo/Query';
-import { GET_CITIES_QUERY, GET_POSITIONS_QUERY, GET_POSITIONS_CATALOG, GET_STATES_QUERY } from '../Queries';
+import {GET_CITIES_QUERY, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_STATES_QUERY} from '../Queries';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import {
@@ -31,13 +31,13 @@ import {
     ADD_LANGUAGES,
     ADD_MILITARY_SERVICES,
     ADD_SKILL,
-    CREATE_APPLICATION, RECREATE_IDEAL_JOB_LIST,
+    CREATE_APPLICATION,
+    RECREATE_IDEAL_JOB_LIST,
     UPDATE_APPLICATION
 } from '../Mutations';
 import Route from 'react-router-dom/es/Route';
 import withGlobalContent from "../../Generic/Global";
 import SignatureForm from "../SignatureForm/SignatureForm";
-import TagsInput from 'react-tagsinput';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
@@ -914,6 +914,7 @@ class VerticalLinearStepper extends Component {
                                 });
                             }}
                             placeholder="+(999) 999-9999"
+                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                             minLength="15"
                         />
                     </div>
@@ -935,6 +936,7 @@ class VerticalLinearStepper extends Component {
                                         cellPhone: event.target.value
                                     });
                                 }}
+                                pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                 placeholder="+(999) 999-9999"
                                 required
                                 minLength="15"
@@ -958,6 +960,7 @@ class VerticalLinearStepper extends Component {
                                 }}
                                 value={this.state.socialSecurityNumber}
                                 placeholder="999-99-9999"
+                                pattern="^\d{3}-\d{2}-\d{4}$"
                                 required
                                 minLength="15"
                             />
