@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import 'react-big-scheduler/lib/css/style.css';
-import 'antd/lib/style/index.less';
 import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
 import withApollo from "react-apollo/withApollo";
 import {GET_SHIFTS} from "./Queries";
@@ -95,6 +94,8 @@ class Shifts extends Component {
 
     componentWillReceiveProps(nextProps) {
         this.filterShifts(nextProps.cityId, nextProps.positionId, nextProps.shiftId);
+
+        console.log(nextProps.cityId, " ", nextProps.positionId, " " ,nextProps.shiftId);
     }
 
     filterShifts(city, position, shift) {
