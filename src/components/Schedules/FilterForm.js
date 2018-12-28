@@ -315,16 +315,13 @@ class FilterForm extends Component {
                     <div className="col-md-12">
                         <button className="btn btn-success float-right" type="submit">Publish</button>
                     </div>
-
+                    <div className="col-md-12">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className="btn btn-info float-right" onClick={() => { this.handleChangeStatusShift(2, "#3be1ec") }}>Approve Shift</button>
+                            <button type="button" className="btn btn-danger float-right" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }}>Reject Shift</button>
+                        </div>
+                    </div>
                 </div>
-                <div className="col-md-5">
-                    <button className="btn btn-info float-right" onClick={() => {this.handleChangeStatusShift(2, "#3be1ec")}}>Approve Shift</button>
-                </div>
-                <div className="col-md-5">
-                    <button className="btn btn-danger float-right" onClick={() => {this.handleChangeStatusShift(3, "#cccccc")}}>Reject Shift</button>
-                </div>
-
-
             </form>
         </div>
     }
