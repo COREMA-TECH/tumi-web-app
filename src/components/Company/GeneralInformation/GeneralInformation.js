@@ -30,6 +30,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import axios from 'axios';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -243,7 +244,7 @@ class GeneralInformation extends Component {
 									avatar: item.ImageURL,
 									Code: item.Code.trim(),
 									Code01: item.Code01.trim(),
-									zipCode: item.Zipcode,
+									zipCode: item.Zipcode.trim(),
 									fax: item.Fax,
 									startDate: item.Start_Date.trim(),
 									active: item.IsActive,
@@ -977,7 +978,7 @@ class GeneralInformation extends Component {
 			{
 				endWeek: id,
 				startWeek: idStartWeek,
-				startWeekValid:true
+				startWeekValid: true
 			},
 			() => {
 				this.validateField('endWeek', id);
@@ -991,12 +992,15 @@ class GeneralInformation extends Component {
 			}, () => {
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('https://ziptasticapi.com/' + text).then((response) => {
-						return response.json()
-					}).then((cities) => {
-						if (!cities.error)
-							this.findByZipCode(cities.state, cities.city.toLowerCase());
-					});
+					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+					if (zipCode) {
+						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+							const cities = res.data;
+							if (!cities.error) {
+								this.findByZipCode(cities.state, cities.city.toLowerCase());
+							}
+						})
+					}
 				}
 			}
 		);
@@ -1831,7 +1835,7 @@ class GeneralInformation extends Component {
 					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-					<AppBar style={{ background: '#0092BD' }}>
+					<AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
 						<Toolbar>
 							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
 								<CloseIcon />
@@ -1841,7 +1845,7 @@ class GeneralInformation extends Component {
 							</Typography>
 						</Toolbar>
 					</AppBar>
-					<DialogContent>
+					<DialogContent style={{ background: "#F5F7F9" }}>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
 							<TabsInDialog

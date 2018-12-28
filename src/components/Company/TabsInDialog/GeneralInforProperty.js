@@ -16,6 +16,7 @@ import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import InputForm from 'ui-components/InputForm/InputForm';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import axios from 'axios';
 
 class GeneralInfoProperty extends Component {
 	constructor(props) {
@@ -338,7 +339,7 @@ class GeneralInfoProperty extends Component {
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
-									Zipcode: `'${this.state.zipCode}'`,
+									Zipcode: `'${this.state.zipCode.trim()}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -538,7 +539,7 @@ class GeneralInfoProperty extends Component {
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
 									//Rate: parseFloat(companyId),
-									Zipcode: `'${this.state.zipCode}'`,
+									Zipcode: `'${this.state.zipCode.trim()}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -611,12 +612,15 @@ class GeneralInfoProperty extends Component {
 					})
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('https://ziptasticapi.com/' + text).then((response) => {
-						return response.json()
-					}).then((cities) => {
-						if (!cities.error)
-							this.findByZipCode(cities.state, cities.city.toLowerCase());
-					});
+					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+					if (zipCode) {
+						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+							const cities = res.data;
+							if (!cities.error) {
+								this.findByZipCode(cities.state, cities.city.toLowerCase());
+							}
+						})
+					}
 				}
 			}
 		);
@@ -1221,6 +1225,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validCity === '' ? false : true}
 																			value={this.state.city}
 																			showNone={false}
+																			disabled={true}
 																		>
 																			<option value="">Select a city</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1235,7 +1240,7 @@ class GeneralInfoProperty extends Component {
 													</div>
 
 													<div className="col-md-6 col-lg-2">
-														<label>* States</label>
+														<label>* States unidos</label>
 														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 															{({ loading, error, data, refetch, networkStatus }) => {
 																//if (networkStatus === 4) return <LinearProgress />;
@@ -1258,6 +1263,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validState === '' ? false : true}
 																			value={this.state.state}
 																			showNone={false}
+																			disabled={true}
 																		>
 																			<option value="">Select a state</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1282,7 +1288,6 @@ class GeneralInfoProperty extends Component {
 															maxLength="10"
 															min={0}
 															type="text"
-															disabled={!this.props.showStepper}
 														/>
 
 													</div>

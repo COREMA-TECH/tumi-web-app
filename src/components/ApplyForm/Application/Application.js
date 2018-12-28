@@ -231,6 +231,7 @@ class Application extends Component {
             })
     };
 
+
     /**
      * To get applications by id
      */

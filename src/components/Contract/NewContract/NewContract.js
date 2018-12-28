@@ -12,6 +12,7 @@ import Query from 'react-apollo/Query';
 import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
 import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
+import withGlobalContent from 'Generic/Global';
 
 import PropTypes from 'prop-types';
 import 'ui-components/InputForm/index.css';
@@ -20,6 +21,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import { Route } from "react-router-dom";
+import axios from 'axios';
 
 const styles = (theme) => ({
     wrapper: {
@@ -1663,17 +1665,17 @@ class NewContract extends Component {
                                                     },
                                                     () => {
                                                         this.validateField('Billing_Zip_Code', text);
+                                                        const zipCode = this.state.Billing_Zip_Code.trim().replace('-', '').substring(0, 5);
+                                                        if (zipCode) {
+                                                            axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+                                                                const cities = res.data;
+                                                                if (!cities.error) {
+                                                                    this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                                }
+                                                            })
+                                                        }
                                                     }
                                                 );
-                                                let zip_code = '';
-                                                zip_code = text;
-                                                fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                                    return response.json()
-                                                }).then((cities) => {
-                                                    if (!cities.error) {
-                                                        this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                    }
-                                                });
                                             }}
 
                                             id="Billing_Zip_Code"
@@ -1697,6 +1699,8 @@ class NewContract extends Component {
                                                             showNone={false}
                                                             update={this.updateProvidence}
                                                             value={this.state.Billing_State}
+                                                            disabled
+
                                                         //error={!this.state.Billing_StateValid}
                                                         />
                                                     );
@@ -1734,6 +1738,7 @@ class NewContract extends Component {
                                                             update={this.updateCity}
                                                             showNone={false}
                                                             value={this.state.Billing_City}
+                                                            disabled
                                                         //error={!this.state.Billing_CityValid}
                                                         />
                                                     );
@@ -1756,4 +1761,4 @@ class NewContract extends Component {
 NewContract.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(NewContract));
+export default withStyles(styles)(withApollo(withGlobalContent(NewContract)));
