@@ -155,8 +155,8 @@ class Shifts extends Component {
                        viewEvent2Click={this.ops2}
                        updateEventStart={this.updateEventStart}
                        updateEventEnd={this.updateEventEnd}
-                       moveEvent={this.moveEvent}
-                       newEvent={this.newEvent}
+                       //moveEvent={this.moveEvent}
+                       //newEvent={this.newEvent}
             />
         );
     };
