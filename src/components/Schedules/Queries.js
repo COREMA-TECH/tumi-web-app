@@ -67,4 +67,28 @@ export const GET_SHIFTS = gql`
     }
 `;
 
+export const GET_SHIFTS_QUERY = gql`
+    query GetInformation($id: Int){
+        ShiftDetail(id:$id) {
+        id
+        startDate
+        endDate
+        startTime
+        endTime
+        ShiftId
+        shift{
+            id
+            entityId
+            title
+            color
+            status
+            idPosition
+        }
+        detailEmployee{
+            EmployeeId
+        }
+        }
+    }  
+`;
+
 

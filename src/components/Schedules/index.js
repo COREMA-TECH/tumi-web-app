@@ -1,17 +1,17 @@
 import FilterForm from './FilterForm.js';
 import Filters from './Filters.js';
 import React, { Component } from 'react';
-import Scheduler, { SchedulerData, ViewTypes, DATE_FORMAT, DemoData } from 'react-big-scheduler';
-import 'react-big-scheduler/lib/css/style.css';
-import moment from 'moment';
 import Shifts from './Shifts.js';
+
+import withGlobalContent from 'Generic/Global';
 
 class Schedules extends Component {
 
     INITIAL_STATE = {
         cityId: 0,
         positionId: 0,
-        shiftId: 0
+        shiftId: 0,
+        selectedShiftId: 0
     }
 
     constructor() {
@@ -22,7 +22,6 @@ class Schedules extends Component {
     }
 
     handleChange = (event) => {
-        console.log(this.state);
         const target = event.target;
         const value = target.value;
         const name = target.name;
@@ -40,7 +39,7 @@ class Schedules extends Component {
     }
 
     getSelectedValue = (item) => {
-        console.log("This is my item:::", item)
+        this.setState({ selectedShiftId: item.id })
     }
 
     render() {
@@ -49,7 +48,7 @@ class Schedules extends Component {
                 <div className="row">
                     <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
-                            <FilterForm />
+                            <FilterForm id={this.state.selectedShiftId} />
                         </div>
                     </div>
                     <div className="col-md-10">

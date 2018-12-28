@@ -3,14 +3,13 @@ import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
-import { GET_INITIAL_DATA, GET_POSITION } from './Queries';
+import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY } from './Queries';
 import { INSERT_SHIFT } from './Mutations';
 
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import TimeField from 'react-simple-timefield';
 import Options from './Options';
-import ReactDOM from 'react-dom';
 import ShiftColorPicker from './ShiftColorPicker';
 
 class FilterForm extends Component {
@@ -25,7 +24,8 @@ class FilterForm extends Component {
         startHour: '00:00',
         endHour: '00:00',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        selectedDetailId: 0
     }
 
     constructor(props) {
@@ -65,7 +65,7 @@ class FilterForm extends Component {
                 );
             });
     }
-    getPosition = () => {
+    getPosition = (position = 0) => {
         this.setState({ loadingPosition: true }, () => {
             this.props.client
                 .query({
@@ -77,7 +77,7 @@ class FilterForm extends Component {
                 .then(({ data }) => {
                     //Save Positions into state
                     this.setState((prevState) => {
-                        return { positions: data.getposition, position: 0, loadingPosition: false }
+                        return { positions: data.getposition, position, loadingPosition: false }
                     })
 
                 }).catch(error => {
@@ -122,6 +122,43 @@ class FilterForm extends Component {
             });
     };
 
+    getInfoForSelectedShift = (id) => {
+        this.props.client
+            .query({
+                query: GET_SHIFTS_QUERY,
+                variables: {
+                    id
+                }
+            })
+            .then(({ data }) => {
+                const shiftDetail = data.ShiftDetail[0];
+                this.setState({
+                    startDate: shiftDetail.startDate.substring(0, 10),
+                    endDate: shiftDetail.endDate.substring(0, 10),
+                    startHour: shiftDetail.startTime,
+                    endHour: shiftDetail.endTime,
+                    location: shiftDetail.shift.entityId,
+                    title: shiftDetail.shift.title,
+                    color: shiftDetail.shift.color,
+                    selectedDetailId: id,
+                    selectedEmployees: this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId)
+                }, () => this.getPosition(shiftDetail.shift.idPosition))
+
+            }).catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error loading selected shift information',
+                    'bottom',
+                    'right'
+                );
+            });
+    }
+
+    getSelectedEmployee = (id) => {
+        return this.state.employees.find(item => item.value == id)
+
+    }
+
     renderLocationList = () => {
         return this.state.locations.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
@@ -137,13 +174,15 @@ class FilterForm extends Component {
     }
 
     validateControls = () => {
+
         if (this.state.selectedEmployees.length == 0)
             return { valid: false, message: 'You need to select at least one employee' };
         if (this.state.endDate < this.state.startDate)
             return { valid: false, message: 'End Date can not be less than Start Date' };
 
         let startHour = this.state.startHour.replace(':', ''), endHour = this.state.endHour.replace(':', '');
-        if (parseInt(endHour) < parseInt(startHour))
+
+        if (parseInt(endHour) < parseInt(startHour) && this.state.startDate == this.state.endDate)
             return { valid: false, message: 'End Time can not be less than Start Time' };
 
         if (parseInt(this.state.location) == 0)
@@ -209,12 +248,20 @@ class FilterForm extends Component {
             this.insertShift();
         } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
     }
-
+    clearInputs = (e) => {
+        e.preventDefault();
+        this.setState({ ...this.DEFAULT_STATE })
+    }
     componentWillMount() {
         this.getEmployees()
     }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.id != nextProps.id && nextProps.id != 0)
+            this.getInfoForSelectedShift(nextProps.id)
+    }
     render() {
-        console.log("this is my range of hours", this.state.endHour - this.state.startHour)
+        const isEdition = this.state.selectedDetailId != 0;
+
         return <div className="MasterShiftForm">
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
@@ -222,14 +269,14 @@ class FilterForm extends Component {
                         <Options />
                     </div>
                     <div className="col-md-12">
-                        <label htmlFor="">* Employes</label>
+                        <label htmlFor="">* Employees</label>
                         <Select
                             name="employees"
                             options={this.state.employees}
                             value={this.state.selectedEmployees}
                             onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
-                            components={makeAnimated()}
+                            isDisabled={isEdition}
                             isMulti
                         />
                     </div>
@@ -260,6 +307,7 @@ class FilterForm extends Component {
                             onChange={this.handleSelectValueChange}
                             value={this.state.location}
                             className="form-control"
+                            disabled={isEdition}
                             required
                         >
                             <option value={0}>Select a location</option>
@@ -274,7 +322,7 @@ class FilterForm extends Component {
                             onChange={this.handleSelectValueChange}
                             value={this.state.position}
                             className="form-control"
-                            disabled={this.state.loadingPosition}
+                            disabled={this.state.loadingPosition || isEdition}
                             required
                         >
                             <option value={0}>Select a position</option>
@@ -290,7 +338,10 @@ class FilterForm extends Component {
                     </div>
                 </div  >
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-6">
+                        <button className="btn btn-danger float-right" onClick={this.clearInputs} >Clear</button>
+                    </div>
+                    <div className="col-md-6">
                         <button className="btn btn-success float-right" type="submit">Publish</button>
                     </div>
 
