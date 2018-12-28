@@ -330,7 +330,7 @@ class PositionsTable extends React.Component {
 
 									{this.props.showPayRate && (
 										<CustomTableCell>
-											{row.Pay_Rate}
+											$ {row.Pay_Rate}
 										</CustomTableCell>
 									)}
 									<CustomTableCell padding="none">

@@ -72,7 +72,7 @@ const styles = (theme) => ({
         }
     },
     buttonCreateContract: {
-        background: ' #3da2c7',
+        background: '#28a745',
         borderRadius: '5px',
         padding: '.5em 1em',
 
@@ -87,7 +87,7 @@ const styles = (theme) => ({
         //	backgroundColor: '#357a38',
         color: 'white',
         '&:hover': {
-            background: ' #3da2c7'
+            background: '#218838'
         }
     },
     fabProgress: {
@@ -467,18 +467,15 @@ class ExhibitContract extends Component {
 								Save
 							</div>*/}
                             <div className="col-md-12">
-                                <Button
-                                    //className="contract-next-button"
-                                    className={classes.buttonCreateContract}
+
+                                <button
+                                    className={'btn btn-info mt-1'}
                                     onClick={this.handleClickOpenModal}
                                     disabled={this.state.loadingContract}
                                 >
-                                    Create Contract
-                                </Button>
+                                    Create Contract {this.state.loadingContract && <i class="fas fa-spinner fa-spin  ml-1" />}
+                                </button>
 
-                                {this.state.loadingContract && (
-                                    <CircularProgress size={24} className={classes.buttonProgress} />
-                                )}
                             </div>
                         </div>
                     </div>

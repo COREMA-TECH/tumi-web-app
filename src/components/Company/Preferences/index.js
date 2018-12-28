@@ -293,16 +293,7 @@ class Preferences extends React.Component {
                 <form onSubmit={this.handleSubmit} className="Preferences-form">
                     <div className="row">
                         <div className="col-md-12">
-                            <button
-                                type="button"
-                                className="btn btn-info edit-company-button float-right ml-1"
-                                onClick={e => {
-                                    e.preventDefault();
-                                    this.setState({ openCalendarModal: true });
-                                }}
-                            >
-                                Add Holiday <i class="fas fa-calendar-alt ml-1" />
-                            </button>
+
                             <button
                                 type="submit"
                                 className="btn btn-success edit-company-button float-right"
@@ -523,16 +514,31 @@ class Preferences extends React.Component {
                         </div>
                         <div className="col-md-7">
                             <div className="card">
-                                <Calendar
-                                    idCompany={this.props.idCompany}
-                                    handleOpenSnackbar={this.props.handleOpenSnackbar}
-                                    open={this.state.openCalendarModal}
-                                    closeModal={this.closeModal}
-                                    openModal={() => {
-                                        this.setState({ openCalendarModal: true });
-                                    }}
-                                    idHoliday={this.state.idHoliday}
-                                />
+                                <div className="card-body">
+                                    <div className="text-center">
+                                        <button
+                                            type="button"
+                                            className="btn btn-info edit-company-button"
+                                            onClick={e => {
+                                                e.preventDefault();
+                                                this.setState({ openCalendarModal: true });
+                                            }}
+                                        >
+                                            Add Holiday <i class="fas fa-calendar-alt ml-1" />
+                                        </button>
+                                    </div>
+
+                                    <Calendar
+                                        idCompany={this.props.idCompany}
+                                        handleOpenSnackbar={this.props.handleOpenSnackbar}
+                                        open={this.state.openCalendarModal}
+                                        closeModal={this.closeModal}
+                                        openModal={() => {
+                                            this.setState({ openCalendarModal: true });
+                                        }}
+                                        idHoliday={this.state.idHoliday}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
