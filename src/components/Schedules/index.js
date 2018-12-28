@@ -32,7 +32,7 @@ class Schedules extends Component {
         });
     }
 
-    handleReset = () => {
+    handleReset = (e) => {
         this.setState({
             ...this.INITIAL_STATE
         });
