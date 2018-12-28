@@ -1221,6 +1221,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validCity === '' ? false : true}
 																			value={this.state.city}
 																			showNone={false}
+																			disabled={true}
 																		>
 																			<option value="">Select a city</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1235,7 +1236,7 @@ class GeneralInfoProperty extends Component {
 													</div>
 
 													<div className="col-md-6 col-lg-2">
-														<label>* States</label>
+														<label>* States unidos</label>
 														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 															{({ loading, error, data, refetch, networkStatus }) => {
 																//if (networkStatus === 4) return <LinearProgress />;
@@ -1258,6 +1259,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validState === '' ? false : true}
 																			value={this.state.state}
 																			showNone={false}
+																			disabled={true}
 																		>
 																			<option value="">Select a state</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1282,7 +1284,6 @@ class GeneralInfoProperty extends Component {
 															maxLength="10"
 															min={0}
 															type="text"
-															disabled={!this.props.showStepper}
 														/>
 
 													</div>

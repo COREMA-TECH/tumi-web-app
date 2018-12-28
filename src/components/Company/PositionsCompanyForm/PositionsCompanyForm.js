@@ -925,7 +925,7 @@ query getposition {
 													'Next'
 												) : (
 														<React.Fragment>
-															Create Contract <i class="fas fa-file-contract ml-1" />
+															Add Contract <i class="fas fa-file-contract ml-1" />
 														</React.Fragment>
 													)}
 											</button>
