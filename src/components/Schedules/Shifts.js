@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import 'react-big-scheduler/lib/css/style.css';
 import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
 import withApollo from "react-apollo/withApollo";
-import {GET_SHIFTS} from "./Queries";
+import {GET_INITIAL_DATA, GET_SHIFTS} from "./Queries";
 import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -18,19 +18,21 @@ let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false
 });
 
 let allEvents;
+let allResources;
 
 class Shifts extends Component {
     constructor(props) {
         super(props);
 
         schedulerData.localeMoment.locale('en');
-        schedulerData.setResources(DemoData.resources);
-        schedulerData.setEvents(DemoData.events);
+
 
         this.state = {
             viewModel: schedulerData,
             shift: [],
             shiftDetail: [],
+            employees: [],
+            locations: [],
         }
     }
 
@@ -45,6 +47,25 @@ class Shifts extends Component {
                     shiftDetail: data.ShiftDetail,
                 }, () => {
                     allEvents = [];
+                    allResources = [];
+
+                    this.state.shiftDetail.map(item => {
+                        if (item.detailEmployee !== null) {
+                            allResources.push(
+                                {
+                                    id: item.detailEmployee.EmployeeId == null ? 0 : item.detailEmployee.EmployeeId,
+                                    name: 'Resource' + item.detailEmployee.EmployeeId,
+                                }
+                            );
+                        } else {
+                            allResources.push(
+                                {
+                                    id: 0,
+                                    name: 'Resource' + 0,
+                                }
+                            );
+                        }
+                    });
                     this.state.shift.map(shiftItem => {
                         this.state.shiftDetail.map(shiftDetailItem => {
                             if (shiftItem.id === shiftDetailItem.ShiftId) {
@@ -53,16 +74,25 @@ class Shifts extends Component {
                                     start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
                                     end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                                     title: shiftItem.title,
-                                    resourceId: 'r2',
-                                    // bgColor: shiftItem.bgColor
+                                    resourceId: shiftDetailItem.detailEmployee !== null ? shiftDetailItem.detailEmployee.EmployeeId : 0,
                                     bgColor: shiftItem.bgColor
                                 })
                             }
                         })
                     });
 
-                    console.table(allEvents);
                     schedulerData.setEvents(allEvents);
+
+                    let result = allResources.reduce((unique, o) => {
+                        if(!unique.some(obj => obj.id === o.id && obj.name === o.name)) {
+                            unique.push(o);
+                        }
+                        return unique;
+                    },[]);
+
+                    console.table(result);
+                    schedulerData.setResources(result);
+
                     this.setState({
                         viewModel: schedulerData
                     }, () => {
@@ -88,14 +118,14 @@ class Shifts extends Component {
         this.setState({
             loading: true
         }, () => {
-            this.fetchShifts()
+            this.getEmployees();
         });
     };
 
     componentWillReceiveProps(nextProps) {
         this.filterShifts(nextProps.cityId, nextProps.positionId, nextProps.shiftId);
 
-        console.log(nextProps.cityId, " ", nextProps.positionId, " " ,nextProps.shiftId);
+        console.log(nextProps.cityId, " ", nextProps.positionId, " ", nextProps.shiftId);
     }
 
     filterShifts(city, position, shift) {
@@ -106,7 +136,6 @@ class Shifts extends Component {
                 (position == null || position == "null" ? true : shiftItem.idPosition == position) &&
                 (city == null || city == "null" ? true : shiftItem.company.City == city)
             ) {
-                console.log("TRUE VALUES");
                 this.state.shiftDetail.map(shiftDetailItem => {
                     if (shiftItem.id === shiftDetailItem.ShiftId) {
                         allEvents.push({
@@ -114,7 +143,7 @@ class Shifts extends Component {
                             start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
                             end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                             title: shiftItem.title,
-                            resourceId: 'r2',
+                            resourceId: shiftDetailItem.detailEmployee !== null ? shiftDetailItem.detailEmployee.EmployeeId : 0,
                             bgColor: shiftItem.bgColor
                         })
                     }
@@ -136,6 +165,42 @@ class Shifts extends Component {
         });
     }
 
+
+    getEmployees = () => {
+        this.props.client
+            .query({
+                query: GET_INITIAL_DATA
+            })
+            .then(({ data }) => {
+                //Save data into state
+                //--Employees
+                this.setState((prevState) => {
+                    let employees = data.employees.map(item => {
+                        return { value: item.id, label: `${item.firstName} ${item.lastName}` }
+                    });
+                    return { employees }
+                });
+                //Location
+                this.setState((prevState) => {
+                    return { locations: data.getbusinesscompanies }
+                });
+
+
+                this.fetchShifts();
+            }).catch(error => {
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error loading employees list',
+                'bottom',
+                'right'
+            );
+        });
+    };
+
+    getSelectedEmployee = (id) => {
+        return this.state.employees.find(item => item.value == id)
+    };
+
     render() {
         const {viewModel} = this.state;
 
@@ -156,8 +221,8 @@ class Shifts extends Component {
                        viewEvent2Click={this.ops2}
                        updateEventStart={this.updateEventStart}
                        updateEventEnd={this.updateEventEnd}
-                       //moveEvent={this.moveEvent}
-                       //newEvent={this.newEvent}
+                //moveEvent={this.moveEvent}
+                //newEvent={this.newEvent}
             />
         );
     };

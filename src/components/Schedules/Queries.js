@@ -67,6 +67,9 @@ export const GET_SHIFTS = gql`
             startTime
             end: endDate
             endTime
+            detailEmployee {
+                EmployeeId
+            }
         }
     }
 `;

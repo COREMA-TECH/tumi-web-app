@@ -155,7 +155,6 @@ class FilterForm extends Component {
 
     getSelectedEmployee = (id) => {
         return this.state.employees.find(item => item.value == id)
-
     }
 
     renderLocationList = () => {
