@@ -96,14 +96,6 @@ class Shifts extends Component {
 
     filterShifts(city, position, shift) {
         allEvents = [];
-
-        let filterCity = city !== null;
-        let filterPosition = position !== null;
-        let filterShift = position !== null;
-
-        console.log(city, " - ", position, " - ", shift);
-
-
         this.state.shift.map(shiftItem => {
             if (
                 (shift == null || shift == "null" ? true : shiftItem.id == shift) &&
