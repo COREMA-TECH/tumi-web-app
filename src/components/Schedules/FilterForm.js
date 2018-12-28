@@ -4,10 +4,9 @@ import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
 import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY } from './Queries';
-import { INSERT_SHIFT } from './Mutations';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT } from './Mutations';
 
 import Select from 'react-select';
-import makeAnimated from 'react-select/lib/animated';
 import TimeField from 'react-simple-timefield';
 import Options from './Options';
 import ShiftColorPicker from './ShiftColorPicker';
@@ -237,6 +236,28 @@ class FilterForm extends Component {
     handleColorChange = (color) => {
         this.setState({ color: color.hex })
     };
+
+    handleChangeStatusShift = (status, color) => {
+        this.props.client
+            .mutate({
+                mutation: CHANGE_STATUS_SHIFT,
+                variables: {
+                    id: 127,//this.state.id,
+                    status: status,
+                    color: color
+                }
+            })
+            .then((data) => {
+                if (status == 2) { this.props.handleOpenSnackbar('success', 'Shift approved successfully!'); }
+                else { this.props.handleOpenSnackbar('success', 'Shift rejected successfully!'); }
+
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error approved Shift');
+            });
+    };
+
+
 
     onSubmit = (event) => {
         event.preventDefault();

@@ -104,7 +104,7 @@ class Filters extends Component {
                                 <span class="input-group-text">State</span>
                             </div>
                             <select name="stateId" id="" className="form-control" onChange={this.handleStateChange} value={this.state.stateId}>
-                                <option value="0">Select a Option</option>
+                                <option value="null">Select a Option</option>
                                 {
                                     this.state.states.map((state) => {
                                         return <option value={`${state.Id}`}>{state.Name}</option>
@@ -115,7 +115,7 @@ class Filters extends Component {
                                 <span class="input-group-text">City</span>
                             </div>
                             <select name="cityId" id="" className="form-control" value={this.state.cityId} onChange={this.props.handleChange}>
-                                <option value="0">Select a Option</option>
+                                <option value="null">Select a Option</option>
                                 {
                                     this.state.cities.map((city) => {
                                         return <option value={`${city.Id}`}>{city.Name}</option>
@@ -127,7 +127,7 @@ class Filters extends Component {
                     <div className="col-md-3">
                         <label htmlFor="">Position</label>
                         <select name="positionId" id="" className="form-control" onChange={this.props.handleChange}>
-                            <option value="">Select a Option</option>
+                            <option value="null">Select a Option</option>
                             {
                                 this.state.positions.map((position) => {
                                     return <option value={`${position.Id}`}>{position.Position}</option>
@@ -138,7 +138,7 @@ class Filters extends Component {
                     <div className="col-md-3">
                         <label htmlFor="">Shifts</label>
                         <select name="shiftId" id="" className="form-control" onChange={this.props.handleChange}>
-                            <option value="">Select a Option</option>
+                            <option value="null">Select a Option</option>
                             {
                                 this.state.shifts.map((shift) => {
                                     return <option value={`${shift.id}`}>{shift.title}</option>

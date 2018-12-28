@@ -54,6 +54,10 @@ export const GET_SHIFTS = gql`
             title
             bgColor : color
             status
+            idPosition
+            company {
+                City
+            }
         }
 
         ShiftDetail {
