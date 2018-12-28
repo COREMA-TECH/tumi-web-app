@@ -16,6 +16,7 @@ import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import InputForm from 'ui-components/InputForm/InputForm';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import axios from 'axios';
 
 class GeneralInfoProperty extends Component {
 	constructor(props) {
@@ -338,7 +339,7 @@ class GeneralInfoProperty extends Component {
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
-									Zipcode: `'${this.state.zipCode}'`,
+									Zipcode: `'${this.state.zipCode.trim()}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -538,7 +539,7 @@ class GeneralInfoProperty extends Component {
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
 									//Rate: parseFloat(companyId),
-									Zipcode: `'${this.state.zipCode}'`,
+									Zipcode: `'${this.state.zipCode.trim()}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -611,12 +612,15 @@ class GeneralInfoProperty extends Component {
 					})
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('https://ziptasticapi.com/' + text).then((response) => {
-						return response.json()
-					}).then((cities) => {
-						if (!cities.error)
-							this.findByZipCode(cities.state, cities.city.toLowerCase());
-					});
+					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+					if (zipCode) {
+						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+							const cities = res.data;
+							if (!cities.error) {
+								this.findByZipCode(cities.state, cities.city.toLowerCase());
+							}
+						})
+					}
 				}
 			}
 		);

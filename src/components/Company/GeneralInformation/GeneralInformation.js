@@ -244,7 +244,7 @@ class GeneralInformation extends Component {
 									avatar: item.ImageURL,
 									Code: item.Code.trim(),
 									Code01: item.Code01.trim(),
-									zipCode: item.Zipcode,
+									zipCode: item.Zipcode.trim(),
 									fax: item.Fax,
 									startDate: item.Start_Date.trim(),
 									active: item.IsActive,
