@@ -1831,7 +1831,7 @@ class GeneralInformation extends Component {
 					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-					<AppBar style={{ background: '#0092BD' }}>
+					<AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
 						<Toolbar>
 							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
 								<CloseIcon />
@@ -1841,7 +1841,7 @@ class GeneralInformation extends Component {
 							</Typography>
 						</Toolbar>
 					</AppBar>
-					<DialogContent>
+					<DialogContent style={{ background: "#F5F7F9" }}>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
 							<TabsInDialog
