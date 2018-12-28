@@ -1504,8 +1504,7 @@ class NewContract extends Component {
                                                                             value={this.state.Contract_Term}
                                                                             error={!this.state.Contract_TermValid}
                                                                         >
-                                                                            <option value="">Select a term month
-                                                                            </option>
+
                                                                             {data.getcatalogitem.map((item) => (
                                                                                 <option
                                                                                     value={item.Id}>{item.Name}</option>
