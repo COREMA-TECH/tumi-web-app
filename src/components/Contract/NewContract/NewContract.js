@@ -12,6 +12,7 @@ import Query from 'react-apollo/Query';
 import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
 import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
+import withGlobalContent from 'Generic/Global';
 
 import PropTypes from 'prop-types';
 import 'ui-components/InputForm/index.css';
@@ -1697,6 +1698,8 @@ class NewContract extends Component {
                                                             showNone={false}
                                                             update={this.updateProvidence}
                                                             value={this.state.Billing_State}
+                                                            disabled
+
                                                         //error={!this.state.Billing_StateValid}
                                                         />
                                                     );
@@ -1734,6 +1737,7 @@ class NewContract extends Component {
                                                             update={this.updateCity}
                                                             showNone={false}
                                                             value={this.state.Billing_City}
+                                                            disabled
                                                         //error={!this.state.Billing_CityValid}
                                                         />
                                                     );
@@ -1756,4 +1760,4 @@ class NewContract extends Component {
 NewContract.propTypes = {
     classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(withApollo(NewContract));
+export default withStyles(styles)(withApollo(withGlobalContent(NewContract)));
