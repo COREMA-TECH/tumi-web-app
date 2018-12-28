@@ -1085,7 +1085,8 @@ class General extends Component {
                 })
             })
             .catch(error => {
-                alert("Error to get users");
+                // TODO: add snackbar message error
+                this.props.handleOpenSnackbar('error', 'Error to list users!');
             })
     };
 

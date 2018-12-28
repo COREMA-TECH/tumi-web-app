@@ -834,10 +834,9 @@ class BoardManager extends Component {
                                                 value={this.state.city}
                                                 showNone={false}
                                             >
-
-                                                <option value={0}>Work Order Active</option>
-                                                <option value={1}>Work Order Close</option>
-                                                <option value={2}>All Work Order</option>
+                                                <option value={0}>Active work orders</option>
+                                                <option value={1}>Closed work orders</option>
+                                                <option value={2}>All work orders</option>
                                             </select>
                                         </div>
                                         <div className="col-md-2">

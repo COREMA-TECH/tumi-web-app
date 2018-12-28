@@ -2,6 +2,18 @@ import React, { Component } from 'react';
 import './index.css';
 
 class InputForm extends Component {
+
+	isNumberKey = (e) => {
+		if (e.target.type == "number") {
+			e = e || window.event;
+			var charCode = (typeof e.which == "undefined") ? e.keyCode : e.which;
+			var charStr = String.fromCharCode(charCode);
+
+			if (!charStr.match(/^[0-9]*\.?[0-9]*$/))
+				e.preventDefault();
+		}
+	}
+
 	render() {
 		{
 			return (
@@ -15,7 +27,8 @@ class InputForm extends Component {
 					//	maxLength={this.props.maxLength}
 					//	min={this.props.type == 'number' ? 0 : null}
 					//	placeholder={this.props.placeholder}
-					//disabled={this.props.disabled}
+					disabled={this.props.disabled}
+					onKeyPress={this.isNumberKey}
 					onChange={(event) => {
 						if (event.target.value.toString().length > this.props.maxLength) return false;
 						if (this.props.type == 'number') {

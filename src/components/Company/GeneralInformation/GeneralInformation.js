@@ -1480,9 +1480,9 @@ class GeneralInformation extends Component {
 							</div>
 						</div>
 
-						<div class="card">
-							<div class="card-header info">General Information</div>
-							<div class="card-body">
+						<div className="card">
+							<div className="card-header info">General Information</div>
+							<div className="card-body">
 								<div className="row">
 									<div className="col-md-6 col-lg-4">
 										<label className="">* Address</label>
@@ -1771,7 +1771,7 @@ class GeneralInformation extends Component {
 						<div class="card">
 							<div class="card-header danger">Properties</div>
 							<div class="card-body">
-								<Table className="Table">
+								<Table className="Table table-responsive TableProperties">
 									<TableHead>
 										<TableRow>
 											<CustomTableCell className={'Table-head'}>Property Code</CustomTableCell>
@@ -1794,23 +1794,27 @@ class GeneralInformation extends Component {
 										})}
 									</TableBody>
 								</Table>
-								<div className="card-form-footer">
-									<button className="btn btn-success mr-1" onClick={this.handleOpenHotels}>
-										Add Existing Property <i class="fas fa-plus" />
-									</button>
-									<button
-										className={
-											this.props.idCompany == 0 ? (
-												'add-property__disabled btn btn-info'
-											) : (
-													'btn btn-info'
-												)
-										}
-										disabled={this.props.idCompany == 0}
-										onClick={this.handleClickOpen('paper', false, 0, 0)}
-									>
-										Add New Property <i class="fas fa-plus" />
-									</button>
+								<div className="row">
+									<div className="col-md-6">
+										<button className="btn btn-success btn-block mt-1" onClick={this.handleOpenHotels}>
+											Add Existing Property <i class="fas fa-plus" />
+										</button>
+									</div>
+									<div className="col-md-6">
+										<button
+											className={
+												this.props.idCompany == 0 ? (
+													'add-property__disabled btn btn-info btn-block mt-1'
+												) : (
+														'btn btn-info btn-block mt-1'
+													)
+											}
+											disabled={this.props.idCompany == 0}
+											onClick={this.handleClickOpen('paper', false, 0, 0)}
+										>
+											Add New Property <i class="fas fa-plus" />
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
