@@ -30,6 +30,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import axios from 'axios';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -991,12 +992,15 @@ class GeneralInformation extends Component {
 			}, () => {
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('https://ziptasticapi.com/' + text).then((response) => {
-						return response.json()
-					}).then((cities) => {
-						if (!cities.error)
-							this.findByZipCode(cities.state, cities.city.toLowerCase());
-					});
+					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+					if (zipCode) {
+						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+							const cities = res.data;
+							if (!cities.error) {
+								this.findByZipCode(cities.state, cities.city.toLowerCase());
+							}
+						})
+					}
 				}
 			}
 		);
