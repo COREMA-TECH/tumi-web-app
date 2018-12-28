@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import 'react-big-scheduler/lib/css/style.css';
 import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
 import withApollo from "react-apollo/withApollo";
-import {GET_SHIFTS} from "./Queries";
+import {GET_INITIAL_DATA, GET_SHIFTS} from "./Queries";
 import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -25,13 +25,14 @@ class Shifts extends Component {
         super(props);
 
         schedulerData.localeMoment.locale('en');
-        schedulerData.setResources(DemoData.resources);
-        schedulerData.setEvents(DemoData.events);
+
 
         this.state = {
             viewModel: schedulerData,
             shift: [],
             shiftDetail: [],
+            employees: [],
+            locations: [],
         }
     }
 
@@ -74,7 +75,6 @@ class Shifts extends Component {
                                     end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                                     title: shiftItem.title,
                                     resourceId: shiftDetailItem.detailEmployee !== null ? shiftDetailItem.detailEmployee.EmployeeId : 0,
-                                    // bgColor: shiftItem.bgColor
                                     bgColor: shiftItem.bgColor
                                 })
                             }
@@ -118,7 +118,7 @@ class Shifts extends Component {
         this.setState({
             loading: true
         }, () => {
-            this.fetchShifts()
+            this.getEmployees();
         });
     };
 
@@ -143,7 +143,7 @@ class Shifts extends Component {
                             start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
                             end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                             title: shiftItem.title,
-                            resourceId: 'r2',
+                            resourceId: shiftDetailItem.detailEmployee !== null ? shiftDetailItem.detailEmployee.EmployeeId : 0,
                             bgColor: shiftItem.bgColor
                         })
                     }
@@ -164,6 +164,42 @@ class Shifts extends Component {
             })
         });
     }
+
+
+    getEmployees = () => {
+        this.props.client
+            .query({
+                query: GET_INITIAL_DATA
+            })
+            .then(({ data }) => {
+                //Save data into state
+                //--Employees
+                this.setState((prevState) => {
+                    let employees = data.employees.map(item => {
+                        return { value: item.id, label: `${item.firstName} ${item.lastName}` }
+                    });
+                    return { employees }
+                });
+                //Location
+                this.setState((prevState) => {
+                    return { locations: data.getbusinesscompanies }
+                });
+
+
+                this.fetchShifts();
+            }).catch(error => {
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error loading employees list',
+                'bottom',
+                'right'
+            );
+        });
+    };
+
+    getSelectedEmployee = (id) => {
+        return this.state.employees.find(item => item.value == id)
+    };
 
     render() {
         const {viewModel} = this.state;
