@@ -6,6 +6,7 @@ import { GET_SHIFTS } from "./Queries";
 import withGlobalContent from "../../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
 import { INSERT_SHIFT, CHANGE_STATUS_SHIFT } from './Mutations';
 
 let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false, {
@@ -32,6 +33,9 @@ class Shifts extends Component {
             viewModel: schedulerData,
             shift: [],
             shiftDetail: [],
+            openAlert: false,
+            loading: false,
+            id: 0,
         }
     }
 
@@ -149,21 +153,33 @@ class Shifts extends Component {
         }
 
         return (
-            <Scheduler schedulerData={viewModel}
-                prevClick={this.prevClick}
-                nextClick={this.nextClick}
-                onSelectDate={this.onSelectDate}
-                onViewChange={this.onViewChange}
-                eventItemClick={this.eventClicked}
-                viewEventClick={this.ops1}
-                viewEventText="Approved"
-                viewEvent2Text="Rejected"
-                viewEvent2Click={this.ops2}
-                updateEventStart={this.updateEventStart}
-                updateEventEnd={this.updateEventEnd}
-            //moveEvent={this.moveEvent}
-            //newEvent={this.newEvent}
-            />
+            <div>
+                <AlertDialogSlide
+                    handleClose={this.handleCloseAlertDialog}
+                    handleConfirm={this.handleConfirmAlertDialog}
+                    open={this.state.openAlert}
+                    loadingConfirm={this.state.loading}
+                    content="Do you really want to continue whit this operation?"
+                />
+
+                <Scheduler schedulerData={viewModel}
+                    prevClick={this.prevClick}
+                    nextClick={this.nextClick}
+                    onSelectDate={this.onSelectDate}
+                    onViewChange={this.onViewChange}
+                    eventItemClick={this.eventClicked}
+                    viewEventClick={this.ops1}//{this.handleAlertOpen}//{this.ops1}
+                    viewEventText="Approved"
+                    viewEvent2Text="Rejected"
+                    viewEvent2Click={this.ops2}
+                    updateEventStart={this.updateEventStart}
+                    updateEventEnd={this.updateEventEnd}
+                //moveEvent={this.moveEvent}
+                //newEvent={this.newEvent}
+
+                />
+            </div>
+
         );
     };
 
@@ -212,6 +228,7 @@ class Shifts extends Component {
     };
 
     ops1 = (schedulerData, event) => {
+        console.log("estoy por aqui")
         this.props.client
             .mutate({
                 mutation: CHANGE_STATUS_SHIFT,
@@ -247,6 +264,22 @@ class Shifts extends Component {
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error rejected Shift');
             });
+    };
+
+    handleAlertOpen = (event) => {
+        console.log("Aqui esta el event ", event);
+        this.setState({
+            openAlert: true
+
+        });
+    };
+
+    handleCloseAlertDialog = () => {
+        this.setState({ openAlert: false });
+    };
+
+    handleConfirmAlertDialog = (event) => {
+        this.ops1(event);
     };
 
     newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
