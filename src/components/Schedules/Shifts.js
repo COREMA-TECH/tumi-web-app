@@ -20,6 +20,7 @@ let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false
 let allEvents;
 let allResources;
 
+// TODO: create documentation for this component
 class Shifts extends Component {
     constructor(props) {
         super(props);
