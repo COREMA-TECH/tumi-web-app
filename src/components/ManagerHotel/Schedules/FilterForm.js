@@ -24,7 +24,8 @@ class FilterForm extends Component {
         endHour: '00:00',
         startDate: '',
         endDate: '',
-        selectedDetailId: 0
+        selectedDetailId: 0,
+        ShiftId: 0
     }
 
     constructor(props) {
@@ -93,33 +94,33 @@ class FilterForm extends Component {
 
     }
 
-    insertShift = () => {
-        this.props.client
-            .mutate({
-                mutation: INSERT_SHIFT,
-                variables: {
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    startHour: this.state.startHour,
-                    endHour: this.state.endHour,
-                    shift: {
-                        entityId: this.state.location,
-                        title: this.state.title,
-                        color: this.state.color,
-                        status: 1,
-                        idPosition: this.state.position
-                    },
-                    employees: this.state.selectedEmployees.map(item => { return item.value })
-                }
-            })
-            .then((data) => {
-                this.setState({ ...this.DEFAULT_STATE })
-                this.props.handleOpenSnackbar('success', 'Shift created successfully!');
-            })
-            .catch((error) => {
-                this.props.handleOpenSnackbar('error', 'Error creating Shift');
-            });
-    };
+    /* insertShift = () => {
+         this.props.client
+             .mutate({
+                 mutation: INSERT_SHIFT,
+                 variables: {
+                     startDate: this.state.startDate,
+                     endDate: this.state.endDate,
+                     startHour: this.state.startHour,
+                     endHour: this.state.endHour,
+                     shift: {
+                         entityId: this.state.location,
+                         title: this.state.title,
+                         color: this.state.color,
+                         status: 1,
+                         idPosition: this.state.position
+                     },
+                     employees: this.state.selectedEmployees.map(item => { return item.value })
+                 }
+             })
+             .then((data) => {
+                 this.setState({ ...this.DEFAULT_STATE })
+                 this.props.handleOpenSnackbar('success', 'Shift created successfully!');
+             })
+             .catch((error) => {
+                 this.props.handleOpenSnackbar('error', 'Error creating Shift');
+             });
+     };*/
 
     getInfoForSelectedShift = (id) => {
         this.props.client
@@ -130,6 +131,7 @@ class FilterForm extends Component {
                 }
             })
             .then(({ data }) => {
+                console.log("este es el data del shigt ", data.ShiftDetail[0])
                 const shiftDetail = data.ShiftDetail[0];
                 this.setState({
                     startDate: shiftDetail.startDate.substring(0, 10),
@@ -140,6 +142,7 @@ class FilterForm extends Component {
                     title: shiftDetail.shift.title,
                     color: shiftDetail.shift.color,
                     selectedDetailId: id,
+                    ShiftId: shiftDetail.ShiftId,
                     selectedEmployees: this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId)
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
@@ -238,11 +241,12 @@ class FilterForm extends Component {
     };
 
     handleChangeStatusShift = (status, color) => {
+
         this.props.client
             .mutate({
                 mutation: CHANGE_STATUS_SHIFT,
                 variables: {
-                    id: 127,//this.state.id,
+                    id: this.state.ShiftId,
                     status: status,
                     color: color
                 }
@@ -259,16 +263,18 @@ class FilterForm extends Component {
 
 
 
-    onSubmit = (event) => {
-        event.preventDefault();
+    /* onSubmit = (event) => {
+         event.preventDefault();
+ 
+         let result = this.validateControls();
+         let { valid, message } = result;
+ 
+         if (valid) {
+             this.insertShift();
+         } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
+     }*/
 
-        let result = this.validateControls();
-        let { valid, message } = result;
 
-        if (valid) {
-            this.insertShift();
-        } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
-    }
     clearInputs = (e) => {
         e.preventDefault();
         this.setState({ ...this.DEFAULT_STATE })
@@ -284,7 +290,7 @@ class FilterForm extends Component {
         const isEdition = this.state.selectedDetailId != 0;
 
         return <div className="MasterShiftForm">
-            <form action="" onSubmit={this.onSubmit}>
+            <form action="" >
                 <div className="row">
                     <div className="col-md-12">
                         <Options />
@@ -360,10 +366,10 @@ class FilterForm extends Component {
                 </div  >
                 <div className="row">
                     <div className="col-md-6">
-                        <button className="btn btn-danger float-right" onClick={this.clearInputs} >Clear</button>
+                        <button className="btn btn-danger float-right" type="button" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }} >Rejected</button>
                     </div>
                     <div className="col-md-6">
-                        <button className="btn btn-success float-right" type="submit">Publish</button>
+                        <button className="btn btn-success float-right" type="button" onClick={() => { this.handleChangeStatusShift(2, "#114bff") }}>Approved</button>
                     </div>
 
                 </div>
