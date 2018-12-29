@@ -62,7 +62,7 @@ class Shifts extends Component {
                             allResources.push(
                                 {
                                     id: 0,
-                                    name: 'Resource' + 0,
+                                    name: 'Open position',
                                 }
                             );
                         }
