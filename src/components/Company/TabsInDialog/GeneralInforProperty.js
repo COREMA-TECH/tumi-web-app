@@ -948,11 +948,11 @@ class GeneralInfoProperty extends Component {
 				break;
 			case 'startWeek':
 				startWeekValid = value !== null && value !== 0 && value !== '';
-
+				endWeekValid = startWeekValid;
 				break;
 			case 'endWeek':
 				endWeekValid = value !== null && value !== 0 && value !== '';
-
+				startWeekValid = endWeekValid;
 				break;
 			case 'rate':
 				rateValid = parseInt(value) >= 0;
@@ -1430,12 +1430,14 @@ class GeneralInfoProperty extends Component {
 															this.setState({
 																startWeek: value,
 																validStartWeek: 'valid',
+																validEndWeek: 'valid',
 																endWeek: idEndWeek
 															});
 														} else {
 															this.setState({
 																startWeek: value,
 																validStartWeek: '',
+																validEndWeek: '',
 																endWeek: idEndWeek
 															});
 														}
@@ -1457,12 +1459,14 @@ class GeneralInfoProperty extends Component {
 															this.setState({
 																endWeek: value,
 																validEndWeek: 'valid',
+																validStartWeek: 'valid',
 																startWeek: idStartWeek
 															});
 														} else {
 															this.setState({
 																endWeek: value,
 																validEndWeek: '',
+																validStartWeek: '',
 																startWeek: idStartWeek
 															});
 														}
