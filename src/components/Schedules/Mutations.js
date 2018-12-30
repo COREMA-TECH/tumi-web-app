@@ -33,3 +33,16 @@ mutation changeStatusShift($id: Int!,$status:Int!,$color:String!)
     id
   }
 }`;
+
+export const UPDATE_SHIFT = gql`
+  mutation updateShift($shift: inputUpdateShift, 
+    $shiftDetail: inputUpdateShiftDetail)	{
+    updateShift(Shift:$shift){
+      id
+      
+    }
+    updateShiftDetail(ShiftDetail: $shiftDetail){
+      id
+    }
+  }
+`;

@@ -11,7 +11,8 @@ class Schedules extends Component {
         cityId: null,
         positionId: null,
         shiftId: null,
-        selectedShiftId: 0
+        selectedShiftId: 0,
+        refresh: true
     };
 
     constructor() {
@@ -42,13 +43,17 @@ class Schedules extends Component {
         this.setState({ selectedShiftId: item.id })
     }
 
+    toggleRefresh = () => {
+        this.setState({ refresh: !this.state.refresh })
+    }
+
     render() {
         return (
             <div className="MasterShift">
                 <div className="row">
                     <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
-                            <FilterForm id={this.state.selectedShiftId} />
+                            <FilterForm id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} />
                         </div>
                     </div>
                     <div className="col-md-10">
@@ -57,7 +62,7 @@ class Schedules extends Component {
                                 <Filters handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                                <Shifts refresh={this.state.refresh} getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
                         </div>
                     </div>

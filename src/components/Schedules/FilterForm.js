@@ -4,7 +4,7 @@ import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
 import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY } from './Queries';
-import { INSERT_SHIFT, CHANGE_STATUS_SHIFT } from './Mutations';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT } from './Mutations';
 
 import Select from 'react-select';
 import TimeField from 'react-simple-timefield';
@@ -24,7 +24,8 @@ class FilterForm extends Component {
         endHour: '00:00',
         startDate: '',
         endDate: '',
-        selectedDetailId: 0
+        selectedDetailId: 0,
+        status: 1
     }
 
     constructor(props) {
@@ -39,7 +40,7 @@ class FilterForm extends Component {
     getEmployees = () => {
         this.props.client
             .query({
-                query: GET_INITIAL_DATA
+                query: GET_INITIAL_DATA,
             })
             .then(({ data }) => {
                 //Save data into state
@@ -106,7 +107,7 @@ class FilterForm extends Component {
                         entityId: this.state.location,
                         title: this.state.title,
                         color: this.state.color,
-                        status: 1,
+                        status: this.state.status,
                         idPosition: this.state.position
                     },
                     employees: this.state.selectedEmployees.map(item => { return item.value })
@@ -115,9 +116,43 @@ class FilterForm extends Component {
             .then((data) => {
                 this.setState({ ...this.DEFAULT_STATE })
                 this.props.handleOpenSnackbar('success', 'Shift created successfully!');
+                this.props.toggleRefresh();
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error creating Shift');
+            });
+    };
+
+    updateShift = () => {
+        this.props.client
+            .mutate({
+                mutation: UPDATE_SHIFT,
+                variables: {
+                    shift: {
+                        id: this.state.shiftId,
+                        entityId: this.state.location,
+                        title: this.state.title,
+                        color: this.state.color,
+                        status: this.state.status,
+                        idPosition: this.state.position
+                    },
+                    shiftDetail: {
+                        id: this.state.selectedDetailId,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        startTime: this.state.startHour,
+                        endTime: this.state.endHour,
+                        ShiftId: this.state.shiftId
+                    }
+                }
+            })
+            .then((data) => {
+                this.setState({ ...this.DEFAULT_STATE })
+                this.props.handleOpenSnackbar('success', 'Shift updated successfully!');
+                this.props.toggleRefresh();
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error updating Shift');
             });
     };
 
@@ -140,6 +175,8 @@ class FilterForm extends Component {
                     title: shiftDetail.shift.title,
                     color: shiftDetail.shift.color,
                     selectedDetailId: id,
+                    shiftId: shiftDetail.shift.id,
+                    status: shiftDetail.shift.status,
                     selectedEmployees: this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId)
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
@@ -266,7 +303,11 @@ class FilterForm extends Component {
         let { valid, message } = result;
 
         if (valid) {
-            this.insertShift();
+            if (this.state.selectedDetailId == 0)
+                this.insertShift();
+            else
+                this.updateShift();
+
         } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
     }
     clearInputs = (e) => {

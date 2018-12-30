@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import 'react-big-scheduler/lib/css/style.css';
-import Scheduler, {DemoData, SchedulerData, ViewTypes} from 'react-big-scheduler';
+import Scheduler, { DemoData, SchedulerData, ViewTypes } from 'react-big-scheduler';
 import withApollo from "react-apollo/withApollo";
-import {GET_SHIFTS} from "./Queries";
+import { GET_SHIFTS } from "./Queries";
 import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
 let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false, {
     views: [
-        {viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false},
-        {viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false},
-        {viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true},
-        {viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false},
+        { viewName: 'Day', viewType: ViewTypes.Day, showAgenda: true, isEventPerspective: false },
+        { viewName: 'Week', viewType: ViewTypes.Week, showAgenda: false, isEventPerspective: false },
+        { viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true },
+        { viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false },
     ],
     schedulerWidth: '1500',
 });
@@ -39,7 +39,7 @@ class Shifts extends Component {
             .query({
                 query: GET_SHIFTS
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     shift: data.shift,
                     shiftDetail: data.ShiftDetail,
@@ -95,7 +95,7 @@ class Shifts extends Component {
     componentWillReceiveProps(nextProps) {
         this.filterShifts(nextProps.cityId, nextProps.positionId, nextProps.shiftId);
 
-        console.log(nextProps.cityId, " ", nextProps.positionId, " " ,nextProps.shiftId);
+        console.log(nextProps.cityId, " ", nextProps.positionId, " ", nextProps.shiftId);
     }
 
     filterShifts(city, position, shift) {
@@ -137,27 +137,27 @@ class Shifts extends Component {
     }
 
     render() {
-        const {viewModel} = this.state;
+        const { viewModel } = this.state;
 
         if (this.state.loading) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         return (
             <Scheduler schedulerData={viewModel}
-                       prevClick={this.prevClick}
-                       nextClick={this.nextClick}
-                       onSelectDate={this.onSelectDate}
-                       onViewChange={this.onViewChange}
-                       eventItemClick={this.eventClicked}
-                       viewEventClick={this.ops1}
-                       viewEventText="Ops 1"
-                       viewEvent2Text="Ops 2"
-                       viewEvent2Click={this.ops2}
-                       updateEventStart={this.updateEventStart}
-                       updateEventEnd={this.updateEventEnd}
-                       //moveEvent={this.moveEvent}
-                       //newEvent={this.newEvent}
+                prevClick={this.prevClick}
+                nextClick={this.nextClick}
+                onSelectDate={this.onSelectDate}
+                onViewChange={this.onViewChange}
+                eventItemClick={this.eventClicked}
+                viewEventClick={this.ops1}
+                viewEventText="Ops 1"
+                viewEvent2Text="Ops 2"
+                viewEvent2Click={this.ops2}
+                updateEventStart={this.updateEventStart}
+                updateEventEnd={this.updateEventEnd}
+            //moveEvent={this.moveEvent}
+            //newEvent={this.newEvent}
             />
         );
     };
