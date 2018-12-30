@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import 'react-big-scheduler/lib/css/style.css';
 import Scheduler, { DemoData, SchedulerData, ViewTypes } from 'react-big-scheduler';
 import withApollo from "react-apollo/withApollo";
-import { GET_INITIAL_DATA, GET_SHIFTS } from "./Queries";
-import withGlobalContent from "../Generic/Global";
+import { GET_SHIFTS } from "./Queries";
+import withGlobalContent from "../../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import AlertDialogSlide from 'Generic/AlertDialogSlide';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT } from './Mutations';
 
 let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false, {
     views: [
@@ -18,22 +20,22 @@ let schedulerData = new SchedulerData('2018-12-08', ViewTypes.Week, false, false
 });
 
 let allEvents;
-let allResources;
 
-// TODO: create documentation for this component
 class Shifts extends Component {
     constructor(props) {
         super(props);
 
         schedulerData.localeMoment.locale('en');
-
+        schedulerData.setResources(DemoData.resources);
+        schedulerData.setEvents(DemoData.events);
 
         this.state = {
             viewModel: schedulerData,
             shift: [],
             shiftDetail: [],
-            employees: [],
-            locations: [],
+            openAlert: false,
+            loading: false,
+            id: 0,
         }
     }
 
@@ -48,53 +50,26 @@ class Shifts extends Component {
                     shiftDetail: data.ShiftDetail,
                 }, () => {
                     allEvents = [];
-                    allResources = [];
-
-                    this.state.shiftDetail.map(item => {
-                        if (item.detailEmployee !== null) {
-                            let employee = this.getSelectedEmployee(item.detailEmployee.EmployeeId)
-                            allResources.push(
-                                {
-                                    id: item.detailEmployee.EmployeeId == null ? 0 : item.detailEmployee.EmployeeId,
-                                    name: employee.label
-                                }
-                            );
-                        } else {
-                            allResources.push(
-                                {
-                                    id: 0,
-                                    name: 'Open position',
-                                }
-                            );
-                        }
-                    });
                     this.state.shift.map(shiftItem => {
                         this.state.shiftDetail.map(shiftDetailItem => {
+
                             if (shiftItem.id === shiftDetailItem.ShiftId) {
                                 allEvents.push({
                                     id: shiftDetailItem.id,
                                     start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
                                     end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                                     title: shiftItem.title,
-                                    resourceId: shiftDetailItem.detailEmployee !== null ? shiftDetailItem.detailEmployee.EmployeeId : 0,
-                                    bgColor: shiftItem.bgColor
+                                    resourceId: 'r2',
+                                    // bgColor: shiftItem.bgColor
+                                    bgColor: shiftItem.bgColor,
+                                    ShiftId: shiftDetailItem.ShiftId
                                 })
                             }
                         })
                     });
 
+                    console.table(allEvents);
                     schedulerData.setEvents(allEvents);
-
-                    let result = allResources.reduce((unique, o) => {
-                        if (!unique.some(obj => obj.id === o.id && obj.name === o.name)) {
-                            unique.push(o);
-                        }
-                        return unique;
-                    }, []);
-
-                    console.table(result);
-                    schedulerData.setResources(result);
-
                     this.setState({
                         viewModel: schedulerData
                     }, () => {
@@ -120,7 +95,7 @@ class Shifts extends Component {
         this.setState({
             loading: true
         }, () => {
-            this.getEmployees();
+            this.fetchShifts()
         });
     };
 
@@ -138,15 +113,18 @@ class Shifts extends Component {
                 (position == null || position == "null" ? true : shiftItem.idPosition == position) &&
                 (city == null || city == "null" ? true : shiftItem.company.City == city)
             ) {
+                console.log("TRUE VALUES");
                 this.state.shiftDetail.map(shiftDetailItem => {
+
                     if (shiftItem.id === shiftDetailItem.ShiftId) {
                         allEvents.push({
                             id: shiftDetailItem.id,
                             start: shiftDetailItem.start.substring(0, 10) + ' ' + shiftDetailItem.startTime,
                             end: shiftDetailItem.end.substring(0, 10) + ' ' + shiftDetailItem.endTime,
                             title: shiftItem.title,
-                            resourceId: shiftDetailItem.detailEmployee !== null ? shiftDetailItem.detailEmployee.EmployeeId : 0,
-                            bgColor: shiftItem.bgColor
+                            resourceId: 'r2',
+                            bgColor: shiftItem.bgColor,
+                            ShiftId: shiftDetailItem.ShiftId
                         })
                     }
                 })
@@ -167,42 +145,6 @@ class Shifts extends Component {
         });
     }
 
-
-    getEmployees = () => {
-        this.props.client
-            .query({
-                query: GET_INITIAL_DATA
-            })
-            .then(({ data }) => {
-                //Save data into state
-                //--Employees
-                this.setState((prevState) => {
-                    let employees = data.employees.map(item => {
-                        return { value: item.id, label: `${item.firstName} ${item.lastName}` }
-                    });
-                    return { employees }
-                });
-                //Location
-                this.setState((prevState) => {
-                    return { locations: data.getbusinesscompanies }
-                });
-
-
-                this.fetchShifts();
-            }).catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error loading employees list',
-                    'bottom',
-                    'right'
-                );
-            });
-    };
-
-    getSelectedEmployee = (id) => {
-        return this.state.employees.find(item => item.value == id)
-    };
-
     render() {
         const { viewModel } = this.state;
 
@@ -211,21 +153,33 @@ class Shifts extends Component {
         }
 
         return (
-            <Scheduler schedulerData={viewModel}
-                prevClick={this.prevClick}
-                nextClick={this.nextClick}
-                onSelectDate={this.onSelectDate}
-                onViewChange={this.onViewChange}
-                eventItemClick={this.eventClicked}
-                viewEventClick={this.ops1}
-                viewEventText="Ops 1"
-                viewEvent2Text="Ops 2"
-                viewEvent2Click={this.ops2}
-                updateEventStart={this.updateEventStart}
-                updateEventEnd={this.updateEventEnd}
-            //moveEvent={this.moveEvent}
-            //newEvent={this.newEvent}
-            />
+            <div>
+                <AlertDialogSlide
+                    handleClose={this.handleCloseAlertDialog}
+                    handleConfirm={this.handleConfirmAlertDialog}
+                    open={this.state.openAlert}
+                    loadingConfirm={this.state.loading}
+                    content="Do you really want to continue whit this operation?"
+                />
+
+                <Scheduler schedulerData={viewModel}
+                    prevClick={this.prevClick}
+                    nextClick={this.nextClick}
+                    onSelectDate={this.onSelectDate}
+                    onViewChange={this.onViewChange}
+                    eventItemClick={this.eventClicked}
+                    viewEventClick={this.ops1}//{this.handleAlertOpen}//{this.ops1}
+                    viewEventText="Approved"
+                    viewEvent2Text="Rejected"
+                    viewEvent2Click={this.ops2}
+                    updateEventStart={this.updateEventStart}
+                    updateEventEnd={this.updateEventEnd}
+                //moveEvent={this.moveEvent}
+                //newEvent={this.newEvent}
+
+                />
+            </div>
+
         );
     };
 
@@ -274,11 +228,58 @@ class Shifts extends Component {
     };
 
     ops1 = (schedulerData, event) => {
-        alert(`You just executed ops1 to event: {id: ${event.id}, title: ${event.title}}`);
+        console.log("estoy por aqui")
+        this.props.client
+            .mutate({
+                mutation: CHANGE_STATUS_SHIFT,
+                variables: {
+                    id: event.ShiftId,//this.state.id,
+                    status: 2,
+                    color: "#114bff"
+                }
+            })
+            .then((data) => {
+                this.loadShifts();
+                this.props.handleOpenSnackbar('success', 'Shift approved successfully!');
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error approved Shift');
+            });
     };
 
     ops2 = (schedulerData, event) => {
-        alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
+        this.props.client
+            .mutate({
+                mutation: CHANGE_STATUS_SHIFT,
+                variables: {
+                    id: event.ShiftId,//this.state.id,
+                    status: 3,
+                    color: "#cccccc"
+                }
+            })
+            .then((data) => {
+                this.loadShifts();
+                this.props.handleOpenSnackbar('success', 'Shift rejected successfully!');
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error rejected Shift');
+            });
+    };
+
+    handleAlertOpen = (event) => {
+        console.log("Aqui esta el event ", event);
+        this.setState({
+            openAlert: true
+
+        });
+    };
+
+    handleCloseAlertDialog = () => {
+        this.setState({ openAlert: false });
+    };
+
+    handleConfirmAlertDialog = (event) => {
+        this.ops1(event);
     };
 
     newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
