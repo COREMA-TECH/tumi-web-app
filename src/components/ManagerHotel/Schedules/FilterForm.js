@@ -4,7 +4,7 @@ import withGlobalContent from '../../Generic/Global';
 import moment from 'moment';
 
 import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY } from './Queries';
-import { INSERT_SHIFT, CHANGE_STATUS_SHIFT } from './Mutations';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT } from './Mutations';
 
 import Select from 'react-select';
 import TimeField from 'react-simple-timefield';
@@ -25,6 +25,7 @@ class FilterForm extends Component {
         startDate: '',
         endDate: '',
         selectedDetailId: 0,
+        status: 1,
         ShiftId: 0
     }
 
@@ -40,7 +41,7 @@ class FilterForm extends Component {
     getEmployees = () => {
         this.props.client
             .query({
-                query: GET_INITIAL_DATA
+                query: GET_INITIAL_DATA,
             })
             .then(({ data }) => {
                 //Save data into state
@@ -143,7 +144,9 @@ class FilterForm extends Component {
                     color: shiftDetail.shift.color,
                     selectedDetailId: id,
                     ShiftId: shiftDetail.ShiftId,
-                    selectedEmployees: this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId)
+                    selectedEmployees: shiftDetail.detailEmployee != null ? this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId) : 0
+
+                    //       selectedEmployees: this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId)
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
             }).catch(error => {

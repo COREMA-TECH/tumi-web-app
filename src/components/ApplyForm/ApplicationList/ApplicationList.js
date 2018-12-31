@@ -47,20 +47,26 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-		{
-			applications(isActive: true) {
+	{
+		applications(isActive: true,isLead:true) {
+			id
+			firstName
+			middleName
+			lastName
+			socialSecurityNumber
+			emailAddress
+			position{
 				id
-				firstName
-				middleName
-				lastName
-				socialSecurityNumber
-				emailAddress
 				position {
-					Id
-					Description
-				}
-			}
+						  Position
+					  }
+				BusinessCompany {
+						  Id
+						  Code
+					  }
+			  }
 		}
+	}
 	`;
 	DELETE_APPLICATION_QUERY = gql`
 		mutation disableApplication($id: Int!) {
@@ -193,7 +199,7 @@ class ApplicationList extends Component {
 										(_.firstName +
 											_.middleName +
 											_.lastName +
-											(_.position ? _.position.Description : 'Open Position') +
+											(_.position ? _.position.position.Position.trim() : 'Open Position') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
