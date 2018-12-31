@@ -144,6 +144,10 @@ class FilterForm extends Component {
                         startTime: this.state.startHour,
                         endTime: this.state.endHour,
                         ShiftId: this.state.shiftId
+                    },
+                    shiftDetailEmployee: {
+                        ShiftDetailId: this.state.selectedDetailId,
+                        EmployeeId: this.state.openShift ? this.state.selectedEmployees.value : 0
                     }
                 }
             })
@@ -161,13 +165,13 @@ class FilterForm extends Component {
         this.props.client
             .query({
                 query: GET_SHIFTS_QUERY,
+                fetchPolicy: 'no-cache',
                 variables: {
                     id
                 }
             })
             .then(({ data }) => {
                 const shiftDetail = data.ShiftDetail[0];
-                console.log("I am a Open Shift", !shiftDetail.detailEmployee)
                 const detailEmployee = shiftDetail.detailEmployee;
 
                 this.setState({
@@ -196,7 +200,6 @@ class FilterForm extends Component {
     }
 
     getSelectedEmployee = (id) => {
-        console.log("This is my Open Shift id:::", id)
         return this.state.employees.find(item => item.value == id)
     }
 
@@ -204,21 +207,23 @@ class FilterForm extends Component {
         return this.state.locations.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
         })
-
     }
 
     renderPositionList = () => {
         return this.state.positions.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Position}</option>
         })
-
     }
 
     validateControls = () => {
+        //This is not an Open Shift
         if (!this.state.openShift) {
             if (this.state.selectedEmployees.length == 0)
                 return { valid: false, message: 'You need to select at least one employee' };
         }
+        else
+            if (!this.state.selectedEmployees)
+                return { valid: false, message: 'You need to select a employee' };
 
         if (this.state.endDate < this.state.startDate)
             return { valid: false, message: 'End Date can not be less than Start Date' };
@@ -246,8 +251,8 @@ class FilterForm extends Component {
         return moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
 
     }
+
     handleChangeEmployee = (selectedEmployees) => {
-        console.log("This is my selection", selectedEmployees)
         this.setState({ selectedEmployees });
     }
 
@@ -302,8 +307,6 @@ class FilterForm extends Component {
             });
     };
 
-
-
     onSubmit = (event) => {
         event.preventDefault();
 
@@ -318,13 +321,16 @@ class FilterForm extends Component {
 
         } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
     }
+
     clearInputs = (e) => {
         e.preventDefault();
         this.setState({ ...this.DEFAULT_STATE })
     }
+
     componentWillMount() {
         this.getEmployees()
     }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.id != nextProps.id && nextProps.id != 0)
             this.getInfoForSelectedShift(nextProps.id)
@@ -332,7 +338,7 @@ class FilterForm extends Component {
 
     render() {
         const isEdition = this.state.selectedDetailId != 0;
-
+        const isHotelManger = this.props.hotelManager;
         return <div className="MasterShiftForm">
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
@@ -347,25 +353,25 @@ class FilterForm extends Component {
                             value={this.state.selectedEmployees}
                             onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
-                            isDisabled={isEdition && !this.state.openShift}
+                            isDisabled={isHotelManger || (isEdition && !this.state.openShift)}
                             isMulti={!isEdition}
                         />
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">* Start Date</label>
-                        <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="startDate" disabled={isHotelManger} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">* End Date</label>
-                        <input type="date" name="endDate" className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="endDate" disabled={isHotelManger} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-6">
                         < label htmlFor="">* Start Time</label>
-                        <TimeField name="startHour" style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
+                        <TimeField name="startHour" disabled={isHotelManger} style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
                     <div className="col-md-6">
                         < label htmlFor="">* End Time</label>
-                        <TimeField name="endHour" style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
+                        <TimeField name="endHour" disabled={isHotelManger} style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
                     </div>
                     <div className="col-md-12">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
@@ -378,7 +384,7 @@ class FilterForm extends Component {
                             onChange={this.handleSelectValueChange}
                             value={this.state.location}
                             className="form-control"
-                            disabled={isEdition}
+                            disabled={isHotelManger || isEdition}
                             required
                         >
                             <option value={0}>Select a location</option>
@@ -393,7 +399,7 @@ class FilterForm extends Component {
                             onChange={this.handleSelectValueChange}
                             value={this.state.position}
                             className="form-control"
-                            disabled={this.state.loadingPosition || isEdition}
+                            disabled={isHotelManger || this.state.loadingPosition || isEdition}
                             required
                         >
                             <option value={0}>Select a position</option>
@@ -402,7 +408,7 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-9">
                         < label htmlFor="">* Title</label>
-                        <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
+                        <input type="text" disabled={isHotelManger} className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
                     </div>
                     <div className="col-md-3">
                         <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
