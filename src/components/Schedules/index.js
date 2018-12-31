@@ -53,7 +53,7 @@ class Schedules extends Component {
                 <div className="row">
                     <div className="col-md-2">
                         <div className="MasterShift-formWrapper">
-                            <FilterForm id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} />
+                            <FilterForm id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
                         </div>
                     </div>
                     <div className="col-md-10">
