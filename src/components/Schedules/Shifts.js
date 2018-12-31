@@ -224,8 +224,8 @@ class Shifts extends Component {
                 onViewChange={this.onViewChange}
                 eventItemClick={this.eventClicked}
                 viewEventClick={this.ops1}
-                viewEventText="Ops 1"
-                viewEvent2Text="Ops 2"
+                //viewEventText="Ops 1"
+                //viewEvent2Text="Ops 2"
                 viewEvent2Click={this.ops2}
                 updateEventStart={this.updateEventStart}
                 updateEventEnd={this.updateEventEnd}
