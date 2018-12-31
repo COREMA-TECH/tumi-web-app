@@ -113,7 +113,7 @@ const MobileMenu = (props) => {
 							</a>
 						</li>
 						<li className="SubMenu-item">
-							<a className="SubMenu-link" href="/home/property/HotelSchedules">
+							<a className="SubMenu-link" href="/home/property/schedules">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Hotel Manager Schedules
 							</a>
 						</li>
