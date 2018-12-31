@@ -52,10 +52,13 @@ class Shifts extends Component {
 
                     this.state.shiftDetail.map(item => {
                         if (item.detailEmployee !== null) {
+                            console.log("item.detailEmployee ", item.detailEmployee)
                             let employee = this.getSelectedEmployee(item.detailEmployee.EmployeeId)
+                            console.log("employee ", employee)
+
                             allResources.push(
                                 {
-                                    id: item.detailEmployee.EmployeeId == null ? 0 : item.detailEmployee.EmployeeId,
+                                    id: item.detailEmployee == null ? 0 : item.detailEmployee.EmployeeId,
                                     name: employee.label
                                 }
                             );
