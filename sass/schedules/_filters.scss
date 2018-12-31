@@ -1,0 +1,14 @@
+.MasterShift-schedulesHeader {
+    .FlexAlign-end {
+        height: 100%;
+        display: flex;
+        .btn {
+            margin-top: auto;
+            @include media-breakpoint-down(md) {
+                margin-left: auto;
+                margin-top: 1rem;
+            }
+        }
+    }
+
+}
