@@ -225,7 +225,7 @@ class ApplicationTable extends React.Component {
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell>
-												{row.position ? row.position.Description : 'Open Position'}
+												{row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
 											</CustomTableCell>
 											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>

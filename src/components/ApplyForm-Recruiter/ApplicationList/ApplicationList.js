@@ -57,10 +57,16 @@ class ApplicationList extends Component {
 				lastName
 				socialSecurityNumber
 				emailAddress
-				position {
-					Id
-					Description
-				}
+				position{
+					id
+					position {
+							  Position
+						  }
+					BusinessCompany {
+							  Id
+							  Code
+						  }
+				  }
 			}
 		}
 	`;
@@ -190,12 +196,12 @@ class ApplicationList extends Component {
 									if (this.state.filterText === '') {
 										return true;
 									}
-
+									console.log("aqui estamos en aplicant ", data.applications);
 									if (
 										(_.firstName +
 											_.middleName +
 											_.lastName +
-											(_.position ? _.position.Description : 'Open Position') +
+											(_.position ? _.position.position.Position.trim() : 'Open Position') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1
