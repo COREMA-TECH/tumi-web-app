@@ -352,7 +352,7 @@ class FilterForm extends Component {
                             value={this.state.selectedEmployees}
                             onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
-                            isDisabled={isHotelManger && !this.state.openShift}
+                            isDisabled={isHotelManger || (isEdition && !this.state.openShift)}
                             isMulti={!isEdition}
                         />
                     </div>
@@ -383,7 +383,7 @@ class FilterForm extends Component {
                             onChange={this.handleSelectValueChange}
                             value={this.state.location}
                             className="form-control"
-                            disabled={isEdition}
+                            disabled={isHotelManger || isEdition}
                             required
                         >
                             <option value={0}>Select a location</option>
@@ -398,7 +398,7 @@ class FilterForm extends Component {
                             onChange={this.handleSelectValueChange}
                             value={this.state.position}
                             className="form-control"
-                            disabled={this.state.loadingPosition || isEdition}
+                            disabled={isHotelManger || this.state.loadingPosition || isEdition}
                             required
                         >
                             <option value={0}>Select a position</option>
