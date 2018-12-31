@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
 import LastPageIcon from '@material-ui/icons/LastPage';
@@ -49,29 +49,29 @@ class TablePaginationActions extends React.Component {
     };
 
     render() {
-        const {classes, count, page, rowsPerPage, theme} = this.props;
+        const { classes, count, page, rowsPerPage, theme } = this.props;
 
         return (
             <div className={classes.root}>
                 <IconButton onClick={this.handleFirstPageButtonClick} disabled={page === 0} aria-label="First Page">
-                    {theme.direction === 'rtl' ? <LastPageIcon/> : <FirstPageIcon/>}
+                    {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
                 </IconButton>
                 <IconButton onClick={this.handleBackButtonClick} disabled={page === 0} aria-label="Previous Page">
-                    {theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
+                    {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Next Page"
                 >
-                    {theme.direction === 'rtl' ? <KeyboardArrowLeft/> : <KeyboardArrowRight/>}
+                    {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
                 </IconButton>
                 <IconButton
                     onClick={this.handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="Last Page"
                 >
-                    {theme.direction === 'rtl' ? <FirstPageIcon/> : <LastPageIcon/>}
+                    {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
                 </IconButton>
             </div>
         );
@@ -87,13 +87,13 @@ TablePaginationActions.propTypes = {
     theme: PropTypes.object.isRequired
 };
 
-const TablePaginationActionsWrapped = withStyles(actionsStyles, {withTheme: true})(TablePaginationActions);
+const TablePaginationActionsWrapped = withStyles(actionsStyles, { withTheme: true })(TablePaginationActions);
 
 let counter = 0;
 
 function createData(name, calories, fat) {
     counter += 1;
-    return {id: counter, name, calories, fat};
+    return { id: counter, name, calories, fat };
 }
 
 const CustomTableCell = withStyles((theme) => ({
@@ -148,11 +148,11 @@ class EmployeesTable extends React.Component {
         loadingRemoving: false,
     };
     handleChangePage = (event, page) => {
-        this.setState({page});
+        this.setState({ page });
     };
 
     handleChangeRowsPerPage = (event) => {
-        this.setState({rowsPerPage: event.target.value});
+        this.setState({ rowsPerPage: event.target.value });
     };
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -162,8 +162,8 @@ class EmployeesTable extends React.Component {
         if (
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage //||
-        //	this.state.order !== nextState.order ||
-        //this.state.orderBy !== nextState.orderBy
+            //	this.state.order !== nextState.order ||
+            //this.state.orderBy !== nextState.orderBy
         ) {
             return true;
         }
@@ -171,24 +171,23 @@ class EmployeesTable extends React.Component {
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         let items = this.props.data;
-        const {rowsPerPage, page} = this.state;
+        const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 
         if (this.state.loadingRemoving) {
-            return <LinearProgress/>;
+            return <LinearProgress />;
         }
 
         return (
             <Route
-                render={({history}) => (
+                render={({ history }) => (
                     <Paper className={classes.root}>
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={"Table-head"}/>
-                                    <CustomTableCell padding="none" className={"Table-head"}/>
+                                    <CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>First Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
@@ -206,36 +205,30 @@ class EmployeesTable extends React.Component {
                                                 this.props.update(row.id, row)
                                             }}
                                         >
-                                            <CustomTableCell component="th" padding="none">
-                                                {' '}
+                                            <CustomTableCell>
                                                 <Tooltip title="Edit">
-                                                    <div>
-                                                        <button
-                                                            className="btn btn-danger ml-1"
-                                                            disabled={this.props.loading}
-                                                            onClick={(e) => {
-                                                                this.props.update(row.id, row);
-                                                            }}
-                                                        >
-                                                            <i class="fas fa-pen"></i>
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        className="btn btn-danger float-left ml-1"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            this.props.update(row.id, row);
+                                                        }}
+                                                    >
+                                                        <i class="fas fa-pen"></i>
+                                                    </button>
                                                 </Tooltip>
-                                            </CustomTableCell>
-                                            <CustomTableCell component="th" padding="none">
+
                                                 <Tooltip title="Delete">
-                                                    <div>
-                                                        <button
-                                                            className="btn btn-success ml-1"
-                                                            disabled={this.props.loading}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                return this.props.delete(row.id);
-                                                            }}
-                                                        >
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
+                                                    <button
+                                                        className="btn btn-success float-left ml-1"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            return this.props.delete(row.id);
+                                                        }}
+                                                    >
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </Tooltip>
                                             </CustomTableCell>
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
@@ -249,8 +242,8 @@ class EmployeesTable extends React.Component {
                                 })}
 
                                 {emptyRows > 0 && (
-                                    <TableRow style={{height: 48 * emptyRows}}>
-                                        <TableCell colSpan={6}/>
+                                    <TableRow style={{ height: 48 * emptyRows }}>
+                                        <TableCell colSpan={6} />
                                     </TableRow>
                                 )}
                             </TableBody>
