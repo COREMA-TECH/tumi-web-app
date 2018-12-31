@@ -146,10 +146,12 @@ class Filters extends Component {
                             }
                         </select>
                     </div>
-                    <div className="col-md-1 d-flex flex-column-reverse">
-                        <button type="button" className="btn btn-danger" onClick={this.props.handleReset}>
-                            Reset
-                        </button>
+                    <div className="col-md-1">
+                        <div className="FlexAlign-end">
+                            <button type="button" className="btn btn-danger" onClick={this.props.handleReset}>
+                                Reset
+                            </button>
+                        </div>
                     </div>
                 </div>
             </form>
