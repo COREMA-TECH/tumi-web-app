@@ -4,17 +4,23 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
     query applications($id: Int!) {
         applications(id: $id) {
             id
-            firstName
-            middleName
-            lastName
-            isActive
+			firstName
+			middleName
+			lastName
+			socialSecurityNumber
             emailAddress
             cellPhone
-            Urlphoto
-            position {
-                Id
-                Name
-            }
+            isLead
+			position{
+				id
+				position {
+						  Position
+					  }
+				BusinessCompany {
+						  Id
+						  Code
+					  }
+			  }
         }
     }
 `;
