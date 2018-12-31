@@ -36,13 +36,20 @@ mutation changeStatusShift($id: Int!,$status:Int!,$color:String!)
 
 export const UPDATE_SHIFT = gql`
   mutation updateShift($shift: inputUpdateShift, 
-    $shiftDetail: inputUpdateShiftDetail)	{
+    $shiftDetail: inputUpdateShiftDetail,
+    $shiftDetailEmployee: inputInsertShiftDetailEmployee)	{
     updateShift(Shift:$shift){
       id
       
     }
+
     updateShiftDetail(ShiftDetail: $shiftDetail){
       id
     }
+
+    addShiftDetailEmployee(ShiftDetailEmployee:$shiftDetailEmployee){
+      ShiftDetailId
+       EmployeeId
+     }
   }
 `;

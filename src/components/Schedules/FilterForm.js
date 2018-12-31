@@ -144,6 +144,10 @@ class FilterForm extends Component {
                         startTime: this.state.startHour,
                         endTime: this.state.endHour,
                         ShiftId: this.state.shiftId
+                    },
+                    shiftDetailEmployee: {
+                        ShiftDetailId: this.state.selectedDetailId,
+                        EmployeeId: this.state.openShift ? this.state.selectedEmployees.value : 0
                     }
                 }
             })
@@ -167,7 +171,6 @@ class FilterForm extends Component {
             })
             .then(({ data }) => {
                 const shiftDetail = data.ShiftDetail[0];
-                console.log("I am a Open Shift", !shiftDetail.detailEmployee)
                 const detailEmployee = shiftDetail.detailEmployee;
 
                 this.setState({
@@ -196,7 +199,6 @@ class FilterForm extends Component {
     }
 
     getSelectedEmployee = (id) => {
-        console.log("This is my Open Shift id:::", id)
         return this.state.employees.find(item => item.value == id)
     }
 
@@ -204,21 +206,23 @@ class FilterForm extends Component {
         return this.state.locations.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
         })
-
     }
 
     renderPositionList = () => {
         return this.state.positions.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Position}</option>
         })
-
     }
 
     validateControls = () => {
+        //This is not an Open Shift
         if (!this.state.openShift) {
             if (this.state.selectedEmployees.length == 0)
                 return { valid: false, message: 'You need to select at least one employee' };
         }
+        else
+            if (!this.state.selectedEmployees)
+                return { valid: false, message: 'You need to select a employee' };
 
         if (this.state.endDate < this.state.startDate)
             return { valid: false, message: 'End Date can not be less than Start Date' };
@@ -246,8 +250,8 @@ class FilterForm extends Component {
         return moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
 
     }
+
     handleChangeEmployee = (selectedEmployees) => {
-        console.log("This is my selection", selectedEmployees)
         this.setState({ selectedEmployees });
     }
 
@@ -302,8 +306,6 @@ class FilterForm extends Component {
             });
     };
 
-
-
     onSubmit = (event) => {
         event.preventDefault();
 
@@ -318,13 +320,16 @@ class FilterForm extends Component {
 
         } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
     }
+
     clearInputs = (e) => {
         e.preventDefault();
         this.setState({ ...this.DEFAULT_STATE })
     }
+
     componentWillMount() {
         this.getEmployees()
     }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.id != nextProps.id && nextProps.id != 0)
             this.getInfoForSelectedShift(nextProps.id)
