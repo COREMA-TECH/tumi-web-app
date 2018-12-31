@@ -25,7 +25,8 @@ class FilterForm extends Component {
         startDate: '',
         endDate: '',
         selectedDetailId: 0,
-        status: 1
+        status: 1,
+        openShift: false
     }
 
     constructor(props) {
@@ -166,6 +167,9 @@ class FilterForm extends Component {
             })
             .then(({ data }) => {
                 const shiftDetail = data.ShiftDetail[0];
+                console.log("I am a Open Shift", !shiftDetail.detailEmployee)
+                const detailEmployee = shiftDetail.detailEmployee;
+
                 this.setState({
                     startDate: shiftDetail.startDate.substring(0, 10),
                     endDate: shiftDetail.endDate.substring(0, 10),
@@ -177,7 +181,8 @@ class FilterForm extends Component {
                     selectedDetailId: id,
                     shiftId: shiftDetail.shift.id,
                     status: shiftDetail.shift.status,
-                    selectedEmployees: this.getSelectedEmployee(shiftDetail.detailEmployee.EmployeeId)
+                    openShift: !shiftDetail.detailEmployee,
+                    selectedEmployees: this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
             }).catch(error => {
@@ -191,6 +196,7 @@ class FilterForm extends Component {
     }
 
     getSelectedEmployee = (id) => {
+        console.log("This is my Open Shift id:::", id)
         return this.state.employees.find(item => item.value == id)
     }
 
@@ -209,9 +215,11 @@ class FilterForm extends Component {
     }
 
     validateControls = () => {
+        if (!this.state.openShift) {
+            if (this.state.selectedEmployees.length == 0)
+                return { valid: false, message: 'You need to select at least one employee' };
+        }
 
-        if (this.state.selectedEmployees.length == 0)
-            return { valid: false, message: 'You need to select at least one employee' };
         if (this.state.endDate < this.state.startDate)
             return { valid: false, message: 'End Date can not be less than Start Date' };
 
@@ -239,6 +247,7 @@ class FilterForm extends Component {
 
     }
     handleChangeEmployee = (selectedEmployees) => {
+        console.log("This is my selection", selectedEmployees)
         this.setState({ selectedEmployees });
     }
 
@@ -337,8 +346,8 @@ class FilterForm extends Component {
                             value={this.state.selectedEmployees}
                             onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
-                            isDisabled={isEdition}
-                            isMulti
+                            isDisabled={isEdition && !this.state.openShift}
+                            isMulti={!isEdition}
                         />
                     </div>
                     <div className="col-md-12">
