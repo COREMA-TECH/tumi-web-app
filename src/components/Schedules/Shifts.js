@@ -56,12 +56,15 @@ class Shifts extends Component {
                             let employee = this.getSelectedEmployee(item.detailEmployee.EmployeeId)
                             console.log("employee ", employee)
 
-                            allResources.push(
-                                {
-                                    id: item.detailEmployee == null ? 0 : item.detailEmployee.EmployeeId,
-                                    name: employee.label
-                                }
-                            );
+                            if (employee) {
+                                allResources.push(
+                                    {
+                                        id: item.detailEmployee == null ? 0 : item.detailEmployee.EmployeeId,
+                                        name: employee.label
+                                    }
+
+                                );
+                            }
                         } else {
                             allResources.push(
                                 {
