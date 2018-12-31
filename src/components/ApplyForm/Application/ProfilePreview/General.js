@@ -1660,33 +1660,34 @@ class General extends Component {
                                 </div>
                                 <div className="col-md-4">
                                     <div className="row">
-                                    {
-                                        this.state.isLead?(<div className="item col-sm-12  col-md-12">
-                                        <button className="btn btn-outline-info" onClick={() => {
-                                            this.handleClickConvertToEmployee();
-                                        }}>Convert to Employee
-                                        </button>
-                                    </div>):('')
-                                    }
-                                        
                                         <div className="item col-sm-12  col-md-12">
-                                            <button className="btn btn-outline-info" onClick={() => {
-                                                this.handleClickOpenModal();
-                                            }}>Add to hotel
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                {
+                                                    this.state.isLead ? (
+                                                        <button className="btn btn-outline-info" onClick={() => {
+                                                            this.handleClickConvertToEmployee();
+                                                        }}>Convert to Employee
+                                        </button>
+                                                    ) : ('')
+                                                }
+                                                <button className="btn btn-outline-info" onClick={() => {
+                                                    this.handleClickOpenModal();
+                                                }}>Add to hotel
                                             </button>
-                                        </div>
-                                        {
-                                            userExist || this.state.createdProfile ? (
-                                                ''
-                                            ) : (
-                                                    <div className="item col-sm-12 col-md-12">
-                                                        <button className="btn btn-outline-success" onClick={() => {
-                                                            this.handleClickOpenUserModal();
-                                                        }}>Create Profile
+                                                {
+                                                    userExist || this.state.createdProfile ? (
+                                                        ''
+                                                    ) : (
+                                                            <button className="btn btn-outline-success" onClick={() => {
+                                                                this.handleClickOpenUserModal();
+                                                            }}>Create Profile
                                                     </button>
-                                                    </div>
-                                                )
-                                        }
+                                                        )
+                                                }
+
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>

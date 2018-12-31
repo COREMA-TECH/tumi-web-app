@@ -11,6 +11,7 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             emailAddress
             cellPhone
             isLead
+            Urlphoto
 			position{
 				id
 				position {
