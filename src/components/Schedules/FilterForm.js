@@ -282,12 +282,12 @@ class FilterForm extends Component {
         this.setState({ color: color.hex })
     };
 
-    handleChangeStatusShift = (status, color) => {
+    handleChangeStatusShifts = (status, color) => {
         this.props.client
             .mutate({
                 mutation: CHANGE_STATUS_SHIFT,
                 variables: {
-                    id: 127,//this.state.id,
+                    id: this.state.shiftId,
                     status: status,
                     color: color
                 }
@@ -329,6 +329,7 @@ class FilterForm extends Component {
         if (this.props.id != nextProps.id && nextProps.id != 0)
             this.getInfoForSelectedShift(nextProps.id)
     }
+
     render() {
         const isEdition = this.state.selectedDetailId != 0;
 
@@ -407,13 +408,23 @@ class FilterForm extends Component {
                         <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
                     </div>
                 </div  >
-                <div className="row">
-                    <div className="col-md-12">
-                        <button className="btn btn-success float-right mb-1 ml-1" type="submit">Publish</button>
-                        <button className="btn btn-danger float-right mb-1" onClick={this.clearInputs} >Clear</button>
-                    </div>
-
-                </div>
+                {
+                    this.props.hotelManager == true ? (
+                        <div className="row">
+                            <div className="col-md-12">
+                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Approved</button>
+                                <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected</button>
+                            </div>
+                        </div>
+                    ) : (
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <button className="btn btn-success float-right mb-1 ml-1" type="submit">Publish</button>
+                                    <button className="btn btn-danger float-right mb-1" type="button" onClick={this.clearInputs} >Clear</button>
+                                </div>
+                            </div>
+                        )
+                }
             </form>
         </div>
     }
