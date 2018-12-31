@@ -21,6 +21,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
+import axios from "axios";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -712,13 +713,23 @@ class Application extends Component {
                                                         this.setState({
                                                             zipCode: event.target.value
                                                         }, () => {
-                                                            fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
-                                                                return response.json()
-                                                            }).then((cities) => {
-                                                                if (!cities.error) {
-                                                                    this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                                }
-                                                            });
+                                                            // fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
+                                                            //     return response.json()
+                                                            // }).then((cities) => {
+                                                            //     if (!cities.error) {
+                                                            //         this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                            //     }
+                                                            // });
+
+                                                            const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+                                                            if (zipCode)
+                                                                axios.get(`https://ziptasticapi.com/${zipCode}`)
+                                                                    .then(res => {
+                                                                        const cities = res.data;
+                                                                        if (!cities.error) {
+                                                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                                        }
+                                                                    });
                                                         });
                                                     }}
                                                     value={this.state.zipCode}
@@ -742,7 +753,7 @@ class Application extends Component {
                                                                     id="state"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    disabled
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             state: e.target.value
@@ -787,7 +798,7 @@ class Application extends Component {
                                                                     id="city"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    disabled
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             city: e.target.value

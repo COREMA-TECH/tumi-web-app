@@ -73,6 +73,7 @@ export const GET_CONTACT_BY_QUERY = gql`
 			Id
 			First_Name
 			Last_Name
+			Electronic_Address
 		}
 	}
 `;

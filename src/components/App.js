@@ -10,6 +10,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { setContext } from 'apollo-link-context';
 import ReactDOM from 'react-dom';
+import { connection } from './connection';
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
 	localStorage.setItem('languageForm', 'en');
@@ -18,11 +19,7 @@ if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
-const baseEndpointURL = 'http://ec2-3-16-143-115.us-east-2.compute.amazonaws.com:4000';
-//const baseEndpointURL = 'https://corema-new-api.herokuapp.com';
-//const baseEndpointURL = 'https://tumicerti.herokuapp.com';
-//const baseEndpointURL = 'http://ec2-18-221-184-184.us-east-2.compute.amazonaws.com:4001';
-//const baseEndpointURL = 'http://localhost:4000';
+const baseEndpointURL = connection;
 
 
 const token =

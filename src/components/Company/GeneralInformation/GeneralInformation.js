@@ -30,6 +30,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import axios from 'axios';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -85,6 +86,7 @@ class GeneralInformation extends Component {
 		phoneNumberValid: true,
 
 		faxValid: true,
+		phonePrefixValid: true,
 		startDateValid: true,
 		otherNameEdit: false,
 		other01NameEdit: false,
@@ -242,7 +244,7 @@ class GeneralInformation extends Component {
 									avatar: item.ImageURL,
 									Code: item.Code.trim(),
 									Code01: item.Code01.trim(),
-									zipCode: item.Zipcode,
+									zipCode: item.Zipcode.trim(),
 									fax: item.Fax,
 									startDate: item.Start_Date.trim(),
 									active: item.IsActive,
@@ -958,7 +960,8 @@ class GeneralInformation extends Component {
 		this.setState(
 			{
 				startWeek: id,
-				endWeek: idEndWeek
+				endWeek: idEndWeek,
+				endWeekValid: true
 			},
 			() => {
 				this.validateField('startWeek', id);
@@ -974,7 +977,8 @@ class GeneralInformation extends Component {
 		this.setState(
 			{
 				endWeek: id,
-				startWeek: idStartWeek
+				startWeek: idStartWeek,
+				startWeekValid: true
 			},
 			() => {
 				this.validateField('endWeek', id);
@@ -988,12 +992,15 @@ class GeneralInformation extends Component {
 			}, () => {
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('https://ziptasticapi.com/' + text).then((response) => {
-						return response.json()
-					}).then((cities) => {
-						if (!cities.error)
-							this.findByZipCode(cities.state, cities.city.toLowerCase());
-					});
+					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+					if (zipCode) {
+						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+							const cities = res.data;
+							if (!cities.error) {
+								this.findByZipCode(cities.state, cities.city.toLowerCase());
+							}
+						})
+					}
 				}
 			}
 		);
@@ -1049,6 +1056,9 @@ class GeneralInformation extends Component {
 		let fax = this.state.fax.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
 		let faxValid = fax.length == 10 || fax.length == 0;
 
+		let phonePrefix = this.state.phonePrefix.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+		let phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
+
 		let startDateValid = this.state.startDate.trim().length == 10;
 
 		this.setState(
@@ -1063,7 +1073,8 @@ class GeneralInformation extends Component {
 				countryValid,
 				stateValid,
 				phoneNumberValid,
-				faxValid
+				faxValid,
+				phonePrefixValid
 			},
 			() => {
 				let message = ""
@@ -1083,6 +1094,8 @@ class GeneralInformation extends Component {
 					message = "You need to specify a valid Zip Code"
 				else if (!phoneNumberValid)
 					message = "You need to specify a valid Phone Number"
+				else if (!phonePrefixValid)
+					message = "You need to specify a valid Secondary Phone Number"
 				else if (!faxValid)
 					message = "You need to specify a valid Fax Number"
 				else if (!startWeekValid)
@@ -1115,6 +1128,7 @@ class GeneralInformation extends Component {
 		let phoneNumber2Valid = this.state.phoneNumber2Valid;
 		let faxValid = this.state.faxValid;
 		let startDateValid = this.state.startDateValid;
+		let phonePrefixValid = this.state.phonePrefixValid;
 
 		switch (fieldName) {
 			case 'Code':
@@ -1173,6 +1187,10 @@ class GeneralInformation extends Component {
 					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
 						.length == 10;
 				break;
+			case 'phonePrefix':
+				let phonePrefix = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+				phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
+				break;
 			case 'fax':
 				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
 				faxValid = fax.length == 10 || fax.length == 0;
@@ -1200,7 +1218,8 @@ class GeneralInformation extends Component {
 				//	suiteValid,
 				phoneNumberValid,
 				faxValid,
-				startDateValid
+				startDateValid,
+				phonePrefixValid
 			},
 			this.validateForm
 		);
@@ -1223,7 +1242,8 @@ class GeneralInformation extends Component {
 					// this.state.regionValid &&
 					//this.state.suiteValid &&
 					this.state.phoneNumberValid &&
-					this.state.faxValid
+					this.state.faxValid &&
+					this.state.phonePrefixValid
 				//this.state.startDateValid
 			},
 			func
@@ -1464,9 +1484,9 @@ class GeneralInformation extends Component {
 							</div>
 						</div>
 
-						<div class="card">
-							<div class="card-header info">General Information</div>
-							<div class="card-body">
+						<div className="card">
+							<div className="card-header info">General Information</div>
+							<div className="card-body">
 								<div className="row">
 									<div className="col-md-6 col-lg-4">
 										<label className="">* Address</label>
@@ -1626,7 +1646,9 @@ class GeneralInformation extends Component {
 											mask="+(999) 999-9999"
 											maskChar=" "
 											value={this.state.phonePrefix}
-											className={'form-control'}
+											className={
+												this.state.phonePrefixValid ? 'form-control' : 'form-control _invalid'
+											}
 											onChange={(e) => {
 												this.updateInput(e.target.value, 'phonePrefix');
 											}}
@@ -1753,7 +1775,7 @@ class GeneralInformation extends Component {
 						<div class="card">
 							<div class="card-header danger">Properties</div>
 							<div class="card-body">
-								<Table className="Table">
+								<Table className="Table table-responsive TableProperties">
 									<TableHead>
 										<TableRow>
 											<CustomTableCell className={'Table-head'}>Property Code</CustomTableCell>
@@ -1776,23 +1798,27 @@ class GeneralInformation extends Component {
 										})}
 									</TableBody>
 								</Table>
-								<div className="card-form-footer">
-									<button className="btn btn-success mr-1" onClick={this.handleOpenHotels}>
-										Add Existing Property <i class="fas fa-plus" />
-									</button>
-									<button
-										className={
-											this.props.idCompany == 0 ? (
-												'add-property__disabled btn btn-info'
-											) : (
-													'btn btn-info'
-												)
-										}
-										disabled={this.props.idCompany == 0}
-										onClick={this.handleClickOpen('paper', false, 0, 0)}
-									>
-										Add New Property <i class="fas fa-plus" />
-									</button>
+								<div className="row">
+									<div className="col-md-6">
+										<button className="btn btn-success btn-block mt-1" onClick={this.handleOpenHotels}>
+											Add Existing Property <i class="fas fa-plus" />
+										</button>
+									</div>
+									<div className="col-md-6">
+										<button
+											className={
+												this.props.idCompany == 0 ? (
+													'add-property__disabled btn btn-info btn-block mt-1'
+												) : (
+														'btn btn-info btn-block mt-1'
+													)
+											}
+											disabled={this.props.idCompany == 0}
+											onClick={this.handleClickOpen('paper', false, 0, 0)}
+										>
+											Add New Property <i class="fas fa-plus" />
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -1809,7 +1835,7 @@ class GeneralInformation extends Component {
 					fullScreen
 				>
 					<DialogTitle id="alert-dialog-title dialog-header">{'Property Information'}</DialogTitle>
-					<AppBar style={{ background: '#0092BD' }}>
+					<AppBar style={{ background: 'linear-gradient(to left, #3ca2c8, #254151)' }}>
 						<Toolbar>
 							<IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
 								<CloseIcon />
@@ -1819,7 +1845,7 @@ class GeneralInformation extends Component {
 							</Typography>
 						</Toolbar>
 					</AppBar>
-					<DialogContent>
+					<DialogContent style={{ background: "#F5F7F9" }}>
 						{this.state.propertyClick ? (
 							//Si el click es en una property : pasar el id de esa property
 							<TabsInDialog

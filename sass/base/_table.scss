@@ -15,6 +15,12 @@
     }
 }
 
+.TableProperties {
+    .Table-head {
+        min-width: auto;
+    }
+}
+
 tbody[class^="MuiTableBody-"] .btn {
     align-items: center;
     border-radius: 25px;

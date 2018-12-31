@@ -1,16 +1,16 @@
 import gql from 'graphql-tag';
 
 export const CREATE_WORKORDER = gql`
-	mutation addWorkOrder($workOrder: [inputInsertWorkOrder]) {
-		addWorkOrder(workOrder: $workOrder) {
+	mutation addWorkOrder($Electronic_Address: String!, $quantity:Int!, $startshift: String!,$endshift: String!,$startDate: Date!,$endDate: Date!,$workOrder: [inputInsertWorkOrder],$shift: [inputInsertShift]) {
+		addWorkOrder(Electronic_Address:$Electronic_Address ,quantity:$quantity,startshift: $startshift,endshift: $endshift,startDate: $startDate,endDate:$endDate,workOrder: $workOrder, shift:$shift) {
 			id
 		}
 	}
 `;
 
 export const UPDATE_WORKORDER = gql`
-	mutation updateWorkOrder($workOrder: inputUpdateWorkOrder) {
-		updateWorkOrder(workOrder: $workOrder) {
+	mutation updateWorkOrder($quantity:Int!, $startshift: String!,$endshift: String!,$startDate: Date!,$endDate: Date!,$workOrder: inputUpdateWorkOrder,$shift: [inputInsertShift]) {
+		updateWorkOrder(quantity:$quantity,startshift: $startshift,endshift: $endshift,startDate: $startDate,endDate:$endDate,workOrder: $workOrder, shift:$shift) {
 			id
 		}
 	}

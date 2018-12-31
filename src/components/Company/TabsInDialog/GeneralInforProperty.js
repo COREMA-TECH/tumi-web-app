@@ -15,6 +15,9 @@ import PropTypes from 'prop-types';
 import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import InputForm from 'ui-components/InputForm/InputForm';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+import axios from 'axios';
+
 class GeneralInfoProperty extends Component {
 	constructor(props) {
 		super(props);
@@ -233,9 +236,7 @@ class GeneralInfoProperty extends Component {
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
-					console.log(" data.data.getcontacts ", data.data);
 					if (data.data.getcatalogitem != null) {
-						console.log(" data.data.getcontacts ", data.data.getcatalogitem);
 						this.setState(
 							{
 								regions: data.data.getcatalogitem,
@@ -338,7 +339,7 @@ class GeneralInfoProperty extends Component {
 									Country: parseInt(this.state.country),
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
-									Zipcode: `'${this.state.zipCode}'`,
+									Zipcode: `'${this.state.zipCode.trim()}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -411,7 +412,8 @@ class GeneralInfoProperty extends Component {
 
 		this.setState(
 			{
-				linearProgress: true
+
+				removing: true
 			},
 			() => {
 				this.props.client
@@ -431,10 +433,15 @@ class GeneralInfoProperty extends Component {
 							pathname: '/company/edit',
 							state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
 						});*/
+						this.setState({
+							removing: false,
+							openConfirm: false
+						})
 					})
 					.catch((err) => {
 						//Capture error and show a specific message
 						this.props.handleOpenSnackbar('error', 'The error is: ' + err);
+						this.setState({ removing: false })
 					});
 			}
 		);
@@ -453,8 +460,7 @@ class GeneralInfoProperty extends Component {
 		}
 	`;
 
-	updateCompany = (companyId, updatedId) => {
-
+	updateCompany = (companyId, updatedId, buttonName) => {
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -464,7 +470,6 @@ class GeneralInfoProperty extends Component {
 		let updateRegionAsync = async () => {
 			if (vRegion) {
 				NewIdRegion = vRegion.Id;
-				console.log("Este es el nuevo ID ", NewIdRegion);
 			} else {
 				//const InsertDepartmentNew =
 				await this.props.client
@@ -507,8 +512,6 @@ class GeneralInfoProperty extends Component {
 					linearProgress: true
 				},
 				() => {
-					//Create the mutation using apollo global client
-					console.log("arrastro el nuevo ID ", NewIdRegion);
 
 					//Create the mutation using apollo global client
 
@@ -536,7 +539,7 @@ class GeneralInfoProperty extends Component {
 									State: parseInt(this.state.state),
 									Rate: parseFloat(this.state.rate),
 									//Rate: parseFloat(companyId),
-									Zipcode: `'${this.state.zipCode}'`,
+									Zipcode: `'${this.state.zipCode.trim()}'`,
 									Fax: `'${this.state.fax}'`,
 									Primary_Email: `'email'`,
 									Phone_Number: `'${this.state.phoneNumber}'`,
@@ -582,6 +585,9 @@ class GeneralInfoProperty extends Component {
 							this.setState({
 								linearProgress: false
 							});
+
+							if (buttonName == "next")
+								this.props.next();
 						})
 						.catch((err) => {
 							//Capture error and show a specific message
@@ -606,18 +612,21 @@ class GeneralInfoProperty extends Component {
 					})
 				this.validateField(name, text);
 				if (name == "zipCode") {
-					fetch('https://ziptasticapi.com/' + text).then((response) => {
-						return response.json()
-					}).then((cities) => {
-						if (!cities.error)
-							this.findByZipCode(cities.state, cities.city.toLowerCase());
-					});
+					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+					if (zipCode) {
+						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
+							const cities = res.data;
+							if (!cities.error) {
+								this.findByZipCode(cities.state, cities.city.toLowerCase());
+							}
+						})
+					}
 				}
 			}
 		);
 	};
 
-	handleFormSubmit = (event) => {
+	handleFormSubmit = (buttonName) => (event) => {
 		event.preventDefault();
 		let invalidInputs = document.querySelectorAll('input[required]'),
 			i,
@@ -650,16 +659,6 @@ class GeneralInfoProperty extends Component {
 						validated = false;
 					}
 				}
-
-				console.log(this.state)
-				//To set errors in selects
-				/*if (this.state.region === 0) {
-					this.setState({
-						validRegion: 'valid'
-					});
-
-					validated = false;
-				}*/
 
 				if (this.state.city === 0) {
 					this.setState({
@@ -706,7 +705,7 @@ class GeneralInfoProperty extends Component {
 					if (this.props.idProperty === null) {
 						this.insertCompany(this.props.idCompany);
 					} else {
-						this.updateCompany(this.props.idCompany, this.props.idProperty, this.props.Markup);
+						this.updateCompany(this.props.idCompany, this.props.idProperty, buttonName);
 					}
 				} else {
 					// Show snackbar warning
@@ -735,7 +734,6 @@ class GeneralInfoProperty extends Component {
 	 * Get data from property
 	 */
 	getPropertyData = (idProperty, idParent) => {
-		console.log("Entro al property");
 
 		this.setState(
 			{
@@ -757,8 +755,6 @@ class GeneralInfoProperty extends Component {
 							var Region = this.state.regions.find(function (obj) {
 								return obj.Id === item.Region;
 							});
-							//	console.log("esta es la informacion del porperty ", item.Region);
-							console.log("esta es la regios ", Region);
 							this.setState({
 								RegionName: Region ? Region.Name.trim() : '',
 								name: item.Name.trim(),
@@ -820,9 +816,7 @@ class GeneralInfoProperty extends Component {
 		this.setState({ avatar: this.context.avatarURL });
 		this.loadRegion(() => { });
 		if (this.props.idProperty !== null) {
-			console.log("esta aqui s");
 			this.loadRegion(() => {
-				console.log("esta aqui");
 				this.getPropertyData(this.props.idProperty, this.props.idCompany);
 			});
 
@@ -901,7 +895,6 @@ class GeneralInfoProperty extends Component {
 	};
 
 	updateRegionName = (value) => {
-		console.log("Valores de la region ", value);
 		this.setState(
 			{
 				RegionName: value
@@ -955,11 +948,11 @@ class GeneralInfoProperty extends Component {
 				break;
 			case 'startWeek':
 				startWeekValid = value !== null && value !== 0 && value !== '';
-
+				endWeekValid = startWeekValid;
 				break;
 			case 'endWeek':
 				endWeekValid = value !== null && value !== 0 && value !== '';
-
+				startWeekValid = endWeekValid;
 				break;
 			case 'rate':
 				rateValid = parseInt(value) >= 0;
@@ -1054,8 +1047,19 @@ class GeneralInfoProperty extends Component {
 		return (
 			<Route
 				render={({ history }) => (
-					<form onSubmit={this.handleFormSubmit} noValidate>
+					<form >
 						<div className="row">
+							<ConfirmDialog
+								open={this.state.openConfirm}
+								closeAction={() => {
+									this.setState({ openConfirm: false });
+								}}
+								confirmAction={() => {
+									this.deleteCompany(this.props.idProperty);
+								}}
+								title="Do you really want to delete this property?"
+								loading={this.state.removing}
+							/>
 							<div className="col-md-12">
 								<div className="form-actions float-right">
 									{this.props.idProperty != null ? (
@@ -1063,7 +1067,7 @@ class GeneralInfoProperty extends Component {
 											disabled={false}
 											className="btn btn-danger"
 											onClick={() => {
-												this.deleteCompany(this.props.idProperty);
+												this.setState({ openConfirm: true })
 											}}
 											type="button"
 										>
@@ -1076,13 +1080,11 @@ class GeneralInfoProperty extends Component {
 
 									{
 										!this.state.nextButton ? (
-											<button type="submit" className="btn btn-success">
+											<button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')}>
 												Save<i className="fas fa-save ml-2" />
 											</button>
 										) : (
-												<button type="button" onClick={() => {
-													this.props.next();
-												}} className="btn btn-success">
+												<button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next">
 													Next <i className="fas fa-chevron-right"></i>
 												</button>
 											)
@@ -1223,6 +1225,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validCity === '' ? false : true}
 																			value={this.state.city}
 																			showNone={false}
+																			disabled={true}
 																		>
 																			<option value="">Select a city</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1237,7 +1240,7 @@ class GeneralInfoProperty extends Component {
 													</div>
 
 													<div className="col-md-6 col-lg-2">
-														<label>* States</label>
+														<label>* States unidos</label>
 														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 															{({ loading, error, data, refetch, networkStatus }) => {
 																//if (networkStatus === 4) return <LinearProgress />;
@@ -1260,6 +1263,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validState === '' ? false : true}
 																			value={this.state.state}
 																			showNone={false}
+																			disabled={true}
 																		>
 																			<option value="">Select a state</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1284,7 +1288,6 @@ class GeneralInfoProperty extends Component {
 															maxLength="10"
 															min={0}
 															type="text"
-															disabled={!this.props.showStepper}
 														/>
 
 													</div>
@@ -1427,12 +1430,14 @@ class GeneralInfoProperty extends Component {
 															this.setState({
 																startWeek: value,
 																validStartWeek: 'valid',
+																validEndWeek: 'valid',
 																endWeek: idEndWeek
 															});
 														} else {
 															this.setState({
 																startWeek: value,
 																validStartWeek: '',
+																validEndWeek: '',
 																endWeek: idEndWeek
 															});
 														}
@@ -1454,12 +1459,14 @@ class GeneralInfoProperty extends Component {
 															this.setState({
 																endWeek: value,
 																validEndWeek: 'valid',
+																validStartWeek: 'valid',
 																startWeek: idStartWeek
 															});
 														} else {
 															this.setState({
 																endWeek: value,
 																validEndWeek: '',
+																validStartWeek: '',
 																startWeek: idStartWeek
 															});
 														}

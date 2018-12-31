@@ -14,6 +14,44 @@ import { parse } from 'path';
 import { bool } from 'prop-types';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import TimeField from 'react-simple-timefield';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+const styles = (theme) => ({
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative'
+    },
+    buttonSuccess: {},
+    buttonProgress: {
+        //color: ,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default
+        },
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    }
+});
+
+const CustomTableCell = withStyles((theme) => ({
+    head: {
+        color: theme.palette.common.white
+    },
+    body: {
+        fontSize: 14
+    }
+}))(TableCell);
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -31,8 +69,10 @@ class WorkOrdersForm extends Component {
         needEnglish: false,
         comment: '',
         EspecialComment: '',
+        Electronic_Address: '',
         position: 0,
         PositionRateId: null,
+        PositionName: '',
         RecruiterId: null,
         contactId: null,
         userId: localStorage.getItem('LoginId'),
@@ -151,7 +191,9 @@ class WorkOrdersForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) this.add();
-            else this.update();
+            else {
+                this.update();
+            }
         }
     };
 
@@ -160,6 +202,12 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
+                    Electronic_Address: this.state.Electronic_Address,
+                    startshift: this.state.shift,
+                    endshift: this.state.endShift,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    quantity: this.state.quantity,
                     workOrder: {
                         IdEntity: this.state.IdEntity,
                         //contactId: this.state.contactId
@@ -177,6 +225,13 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         contactId: this.state.contactId,
                         userId: this.state.userId
+                    },
+                    shift: {
+                        entityId: this.state.IdEntity,
+                        title: this.state.PositionName,
+                        color: '#96989A',
+                        status: 1,
+                        idPosition: this.state.PositionRateId,
                     }
                 }
             })
@@ -196,6 +251,11 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: UPDATE_WORKORDER,
                 variables: {
+                    startshift: this.state.shift,
+                    endshift: this.state.endShift,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    quantity: this.state.quantity,
                     workOrder: {
                         id: this.state.id,
                         IdEntity: this.state.IdEntity,
@@ -213,6 +273,13 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId
+                    },
+                    shift: {
+                        entityId: this.state.IdEntity,
+                        title: this.state.PositionName,
+                        color: "#96989A",
+                        status: 1,
+                        idPosition: this.state.PositionRateId,
                     }
                 }
             })
@@ -287,20 +354,30 @@ class WorkOrdersForm extends Component {
 
     handleChange = (event) => {
         console.log("veamos el evento ", event);
+        console.log("veamos el event.target ", event.target);
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         let comments = '';
+        let request = '';
 
         // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
 
+        if (name === 'contactId') {
+            request = this.state.contacts.find((item) => { return item.Id == value })
+            this.setState({
+                Electronic_Address: request != null ? request.Electronic_Address : ''
+            });
+        }
+
         if (name === 'PositionRateId') {
             comments = this.state.positions.find((item) => { return item.Id == value })
             this.setState({
-                EspecialComment: comments != null ? comments.Comment : ''
+                EspecialComment: comments != null ? comments.Comment : '',
+                PositionName: comments != null ? comments.Position : ''
             });
         }
 
@@ -368,7 +445,7 @@ class WorkOrdersForm extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
         return (
@@ -454,42 +531,10 @@ class WorkOrdersForm extends Component {
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
                                             <TimeField name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onChange={this.handleTimeChange('shift')} />
-                                            {/* 
-                                            <select
-                                                required
-                                                className="form-control"
-                                                name="shift"
-                                                onChange={this.handleChange}
-                                                value={this.state.shift}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Shift</option>
-                                                {this.state.ShiftsData.map((shift) => (
-                                                    <option value={shift.Id}>{shift.Name}</option>
-                                                ))}
-                                            </select>
-                                            */}
-
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift End</label>
                                             <TimeField name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onChange={this.handleTimeChange('endShift')} />
-                                            {/*
-                                        <select
-                                                required
-                                                className="form-control"
-                                                name="endShift"
-                                                onChange={this.handleChange}
-                                                value={this.state.endShift}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Shift End</option>
-                                                {this.state.ShiftsData.map((shift) => (
-                                                    <option value={shift.Id}>{shift.Name}</option>
-                                                ))}
-                                            </select>
-                                        */}
-
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">From Date</label>
@@ -529,25 +574,7 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-                                        {this.state.id && (
-                                            <div className="col-md-6">
-                                                <label htmlFor="">Assign to</label>
-                                                <select
-                                                    required
-                                                    name="RecruiterId"
-                                                    className="form-control"
-                                                    id=""
-                                                    onChange={this.handleChange}
-                                                    value={this.state.RecruiterId}
-                                                    onBlur={this.handleValidate}
-                                                >
-                                                    <option value="0">Select a Recruiter</option>
-                                                    {this.state.recruiters.map((recruiter) => (
-                                                        < option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        )}
+
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
@@ -616,38 +643,45 @@ class WorkOrdersForm extends Component {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className='row'>
+                                <div className="col-md-12">
+                                    {this.state.id && (
+                                        <div class="card">
+                                            <div class="card-header danger">Employees assign to work order</div>
+                                            <div class="card-body">
+                                                <Table className="Table">
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <CustomTableCell className={'Table-head'}>Delete</CustomTableCell>
+                                                            <CustomTableCell className={'Table-head'}>Employees</CustomTableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {/*this.state.companyProperties.map((item) => {
+                                                                return (
+                                                                    <TableRow
+                                                                        hover
+                                                                        className={classes.row}
+                                                                        key={item.Id}
+                                                                        onClick={this.handleClickOpen('paper', true, item.Id, item.rate)}
+                                                                    >
+                                                                        <CustomTableCell>{item.Code}</CustomTableCell>
+                                                                        <CustomTableCell>{item.Name}</CustomTableCell>
+                                                                    </TableRow>
+                                                                );
+                                                            })
+                                                        */}
+                                                    </TableBody>
+                                                </Table>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="col-md-12">
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            {/*this.state.id && (
-                                                <div class="input-group">
-                                                    <select
-                                                        required
-                                                        name="RecruiterId"
-                                                        className="form-control"
-                                                        id=""
-                                                        onChange={this.handleChange}
-                                                        value={this.state.RecruiterId}
-                                                        onBlur={this.handleValidate}
-                                                    >
-                                                        <option value="0">Select a Recruiter</option>
-                                                        {this.state.recruiters.map((recruiter) => (
-                                                            < option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                        ))}
-                                                    </select>
-
-                                                    <div class="input-group-append">
-                                                        <button
-                                                            className="btn btn-info float-right"
-                                                            type="button"
-                                                            onClick={this.handleChangeState}
-                                                        >
-                                                            Create Opening
-														</button>
-                                                    </div>
-                                                </div>
-                                                        )*/}
-                                        </div>
                                         <div className="col-md-12">
                                             <button
                                                 className="btn btn-danger ml-1 float-right"
@@ -659,21 +693,7 @@ class WorkOrdersForm extends Component {
                                                 Save {!this.state.saving && <i class="fas fa-save ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
-                                            {this.state.id && (
-                                                /*<button className="btn btn-info ml-1 float-right" type="submit">
-                                                    Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
-                                                    {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
-                                                </button>*/
 
-                                                <button
-                                                    className="btn btn-info float-right"
-                                                    type="button"
-                                                    onClick={this.handleChangeState}
-                                                >
-                                                    Convert to Opening {!this.state.converting && <i class="fas fa-sync-alt"></i>}
-                                                    {this.state.converting && <i class="fas fa-spinner fa-spin  ml2" />}
-                                                </button>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
