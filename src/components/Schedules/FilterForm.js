@@ -332,7 +332,7 @@ class FilterForm extends Component {
 
     render() {
         const isEdition = this.state.selectedDetailId != 0;
-
+        const isHotelManger = this.props.hotelManager;
         return <div className="MasterShiftForm">
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
@@ -347,25 +347,25 @@ class FilterForm extends Component {
                             value={this.state.selectedEmployees}
                             onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
-                            isDisabled={isEdition && !this.state.openShift}
+                            isDisabled={isHotelManger && !this.state.openShift}
                             isMulti={!isEdition}
                         />
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">* Start Date</label>
-                        <input type="date" name="startDate" className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="startDate" disabled={isHotelManger} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">* End Date</label>
-                        <input type="date" name="endDate" className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="endDate" disabled={isHotelManger} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-6">
                         < label htmlFor="">* Start Time</label>
-                        <TimeField name="startHour" style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
+                        <TimeField name="startHour" disabled={isHotelManger} style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
                     <div className="col-md-6">
                         < label htmlFor="">* End Time</label>
-                        <TimeField name="endHour" style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
+                        <TimeField name="endHour" disabled={isHotelManger} style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
                     </div>
                     <div className="col-md-12">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
@@ -402,7 +402,7 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-9">
                         < label htmlFor="">* Title</label>
-                        <input type="text" className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
+                        <input type="text" disabled={isHotelManger} className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
                     </div>
                     <div className="col-md-3">
                         <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
