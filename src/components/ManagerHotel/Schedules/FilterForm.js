@@ -318,15 +318,15 @@ class FilterForm extends Component {
                         <label htmlFor="">* End Date</label>
                         <input type="date" name="endDate" disabled={isEdition} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-md-6">
                         < label htmlFor="">* Start Time</label>
                         <TimeField name="startHour" style={{ width: '100%' }} disabled={isEdition} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-md-6">
                         < label htmlFor="">* End Time</label>
                         <TimeField name="endHour" style={{ width: '100%' }} disabled={isEdition} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
                     </div>
-                    <div className="col-md-2">
+                    <div className="col-md-12">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
                     </div>
                     <div className="col-md-12">
@@ -368,11 +368,9 @@ class FilterForm extends Component {
                     </div>
                 </div  >
                 <div className="row">
-                    <div className="col-md-6">
-                        <button className="btn btn-danger float-right" type="button" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }} >Rejected</button>
-                    </div>
-                    <div className="col-md-6">
-                        <button className="btn btn-success float-right" type="button" onClick={() => { this.handleChangeStatusShift(2, "#114bff") }}>Approved</button>
+                    <div className="col-md-12">
+                        <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShift(3, "#cccccc") }} >Rejected</button>
+                        <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShift(2, "#114bff") }}>Approved</button>
                     </div>
 
                 </div>
