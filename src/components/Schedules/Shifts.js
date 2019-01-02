@@ -103,7 +103,7 @@ class Shifts extends Component {
                             } else {
                                 allResources.push({
                                     id: 0,
-                                    name: "Open position"
+                                    name: "Open Shift"
                                 });
                             }
                         });
