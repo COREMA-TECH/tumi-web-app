@@ -86,7 +86,8 @@ class Employees extends Component {
             numberEdit: "",
 
             progressNewEmployee: false,
-            finishLoading: false
+            finishLoading: false,
+            progressEditEmployee: false,
         };
     }
 
@@ -169,35 +170,44 @@ class Employees extends Component {
         e.stopPropagation();
 
         let form = document.getElementById("employee-edit-form");
-        this.props.client
-            .mutate({
-                mutation: UPDATE_EMPLOYEE,
-                variables: {
-                    employees: {
-                        id: this.state.idToEdit,
-                        firstName: form.elements[0].value,
-                        lastName: form.elements[1].value,
-                        electronicAddress: form.elements[2].value,
-                        mobileNumber: form.elements[3].value,
-                        idRole: 1,
-                        isActive: true,
-                        userCreated: 1,
-                        userUpdated: 1
+        this.setState({
+            progressEditEmployee: true
+        }, () => {
+            this.props.client
+                .mutate({
+                    mutation: UPDATE_EMPLOYEE,
+                    variables: {
+                        employees: {
+                            id: this.state.idToEdit,
+                            firstName: form.elements[0].value,
+                            lastName: form.elements[1].value,
+                            electronicAddress: form.elements[2].value,
+                            mobileNumber: form.elements[3].value,
+                            idRole: 1,
+                            isActive: true,
+                            userCreated: 1,
+                            userUpdated: 1
+                        }
                     }
-                }
-            })
-            .then(() => {
-                this.props.handleOpenSnackbar("success", "Employee Updated!");
+                })
+                .then(() => {
+                    this.props.handleOpenSnackbar("success", "Employee Updated!");
 
-                this.setState({
-                    finishLoading: true
+                    this.setState({
+                        finishLoading: true,
+                        progressEditEmployee: false
+                    });
+                    this.handleCloseModalEdit();
+                })
+                .catch(error => {
+                    this.props.handleOpenSnackbar("error", "Error updating Employee!");
+                    this.setState({
+                        finishLoading: true,
+                        progressEditEmployee: false
+                    });
                 });
+        });
 
-                this.handleCloseModalEdit();
-            })
-            .catch(error => {
-                this.props.handleOpenSnackbar("error", "Error updating Employee!");
-            });
     };
 
     insertEmployees = employeesArrays => {
@@ -414,8 +424,8 @@ class Employees extends Component {
                                     variant="fab"
                                     className="btn btn-success"
                                 >
-                                    Save {!this.state.saving && <i class="fas fa-save"/>}
-                                    {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                    Save {!this.state.progressNewEmployee && <i class="fas fa-save"/>}
+                                    {this.state.progressNewEmployee && <i class="fas fa-spinner fa-spin"/>}
                                 </button>
                             </div>
                         </div>
@@ -557,8 +567,8 @@ class Employees extends Component {
                                         variant="fab"
                                         className="btn btn-success"
                                     >
-                                        Save {!this.state.saving && <i class="fas fa-save"/>}
-                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                        Save {!this.state.progressEditEmployee && <i class="fas fa-save"/>}
+                                        {this.state.progressEditEmployee && <i class="fas fa-spinner fa-spin"/>}
                                     </button>
                                 </div>
                             </div>

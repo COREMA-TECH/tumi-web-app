@@ -91,7 +91,7 @@ class FilterForm extends Component {
                 } else {
                     this.setState({ updating: false }, () => {
                         this.props.handleOpenSnackbar(
-                            'error',
+                            'warning',
                             'This shift is not available',
                             'bottom',
                             'right'
