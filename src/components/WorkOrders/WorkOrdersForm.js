@@ -204,6 +204,7 @@ class WorkOrdersForm extends Component {
             this.setState({ saving: true });
             if (this.state.id == null) this.add();
             else {
+                //alert(this.state.employees.detailEmployee)
                 this.update();
             }
         }
@@ -259,51 +260,55 @@ class WorkOrdersForm extends Component {
     };
 
     update = (status = 1) => {
-        this.props.client
-            .mutate({
-                mutation: UPDATE_WORKORDER,
-                variables: {
-                    startshift: this.state.shift,
-                    endshift: this.state.endShift,
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
-                    quantity: this.state.quantity,
-                    workOrder: {
-                        id: this.state.id,
-                        IdEntity: this.state.IdEntity,
-                        date: this.state.date,
-                        quantity: this.state.quantity,
-                        status: status,
-                        shift: this.state.shift,
-                        endShift: this.state.endShift,
+      //  console.log(this.state.employees)
+        //if (this.state.employees.detailEmployee!=null) {
+            this.props.client
+                .mutate({
+                    mutation: UPDATE_WORKORDER,
+                    variables: {
+                        startshift: this.state.shift,
+                        endshift: this.state.endShift,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        needExperience: this.state.needExperience,
-                        needEnglish: this.state.needEnglish,
-                        comment: this.state.comment,
-                        EspecialComment: this.state.EspecialComment,
-                        PositionRateId: this.state.PositionRateId,
-                        userId: this.state.userId,
-                        contactId: this.state.contactId
-                    },
-                    shift: {
-                        entityId: this.state.IdEntity,
-                        title: this.state.PositionName,
-                        color: "#96989A",
-                        status: 1,
-                        idPosition: this.state.PositionRateId,
+                        quantity: this.state.quantity,
+                        workOrder: {
+                            id: this.state.id,
+                            IdEntity: this.state.IdEntity,
+                            date: this.state.date,
+                            quantity: this.state.quantity,
+                            status: status,
+                            shift: this.state.shift,
+                            endShift: this.state.endShift,
+                            startDate: this.state.startDate,
+                            endDate: this.state.endDate,
+                            needExperience: this.state.needExperience,
+                            needEnglish: this.state.needEnglish,
+                            comment: this.state.comment,
+                            EspecialComment: this.state.EspecialComment,
+                            PositionRateId: this.state.PositionRateId,
+                            userId: this.state.userId,
+                            contactId: this.state.contactId
+                        },
+                        shift: {
+                            entityId: this.state.IdEntity,
+                            title: this.state.PositionName,
+                            color: "#96989A",
+                            status: 1,
+                            idPosition: this.state.PositionRateId,
+                        }
                     }
-                }
-            })
-            .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Record Updated!');
-                this.setState({ openModal: false, saving: false, converting: false });
-                window.location.reload();
-            })
-            .catch((error) => {
-                this.setState({ saving: true, converting: false });
-                this.props.handleOpenSnackbar('error', 'Error: ' + error);
-            });
+                })
+                .then((data) => {
+                    this.props.handleOpenSnackbar('success', 'Record Updated!');
+                    this.setState({ openModal: false, saving: false, converting: false });
+                    window.location.reload();
+                })
+                .catch((error) => {
+                    this.setState({ saving: true, converting: false });
+                    this.props.handleOpenSnackbar('error', 'Error: ' + error);
+                });
+                //this.props.handleOpenSnackbar('success', 'Record Updated!');
+        //} else { this.props.handleOpenSnackbar('success', 'No se puede eliinar!'); }
     };
 
     getContacts = (id) => {
@@ -790,6 +795,7 @@ class WorkOrdersForm extends Component {
                                             >
                                                 Cancel<i class="fas fa-ban ml-2" />
                                             </button>
+
                                             <button className="btn btn-success ml-1 float-right" type="submit">
                                                 Save {!this.state.saving && <i class="fas fa-save ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
