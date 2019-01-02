@@ -123,7 +123,8 @@ class WorkOrdersForm extends Component {
                     comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
-                    EspecialComment: nextProps.item.EspecialComment
+                    EspecialComment: nextProps.item.EspecialComment,
+                    PositionName: nextProps.item.position.Position
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
@@ -641,8 +642,9 @@ class WorkOrdersForm extends Component {
                                                 min={0}
                                                 className="form-control"
                                                 name="quantity"
+                                                placeholder="0"
                                                 onChange={this.handleChange}
-                                                value={this.state.quantity}
+                                                value={this.state.quantity == 0 ? '' : this.state.quantity}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
@@ -719,7 +721,7 @@ class WorkOrdersForm extends Component {
 
                             <div className='row'>
                                 <div className="col-md-12">
-                                    {this.state.employees && (
+                                    {//this.state.employees[0].detailEmployee != null ? (
                                         <div class="card">
                                             <div class="card-header danger">Employees assign to work order</div>
                                             <div class="card-body">
@@ -785,7 +787,8 @@ class WorkOrdersForm extends Component {
                                                 />
                                             </div>
                                         </div>
-                                    )}
+                                   // ) : ''
+                                }
                                 </div>
 
                                 <div className="col-md-12">
