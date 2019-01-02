@@ -165,6 +165,7 @@ class FilterForm extends Component {
         this.props.client
             .query({
                 query: GET_SHIFTS_QUERY,
+                fetchPolicy: 'no-cache',
                 variables: {
                     id
                 }
