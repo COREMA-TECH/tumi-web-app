@@ -21,6 +21,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
 
 const styles = (theme) => ({
     wrapper: {
@@ -82,8 +83,9 @@ class WorkOrdersForm extends Component {
         ShiftsData: ShiftsData,
         saving: false,
         isAdmin: Boolean(localStorage.getItem('IsAdmin')),
-        employees: []
-
+        employees: [],
+        openConfirm: false,
+        idToDelete: 0,
     };
 
     constructor(props) {
@@ -480,7 +482,7 @@ class WorkOrdersForm extends Component {
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Employee deleted!');
-                this.setState({ openModal: false, saving: false, converting: false });
+                this.setState({ saving: false, converting: false });
                 window.location.reload();
             })
             .catch((error) => {
@@ -745,9 +747,14 @@ class WorkOrdersForm extends Component {
                                                                                 <Tooltip title="Delete">
                                                                                     <button
                                                                                         className="btn btn-danger float-left"
+                                                                                        /* onClick={(e) => {
+                                                                                             e.preventDefault();
+                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
+                                                                                         }}*/
+
                                                                                         onClick={(e) => {
                                                                                             e.preventDefault();
-                                                                                            this.deleteEmployee(item.detailEmployee.ShiftDetailId)
+                                                                                            this.setState({ openConfirm: true, idToDelete: item.detailEmployee.ShiftDetailId });
                                                                                         }}
                                                                                     >
                                                                                         <i className="fas fa-trash"></i>
@@ -763,6 +770,19 @@ class WorkOrdersForm extends Component {
                                                         }
                                                     </TableBody>
                                                 </Table>
+
+                                                <ConfirmDialog
+                                                    open={this.state.openConfirm}
+                                                    closeAction={() => {
+                                                        this.setState({ openConfirm: false });
+                                                    }}
+                                                    confirmAction={() => {
+                                                        //  this.handleDelete(this.state.idToDelete);
+                                                        this.deleteEmployee(this.state.idToDelete)
+                                                    }}
+                                                    title={'are you sure you want to delete this record?'}
+                                                    loading={this.state.removing}
+                                                />
                                             </div>
                                         </div>
                                     )}
