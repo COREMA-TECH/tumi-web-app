@@ -140,8 +140,15 @@ class Shifts extends Component {
                             return unique;
                         }, []);
 
-                        console.table(result);
-                        schedulerData.setResources(result);
+                        let orderedEmployees = result.sort(function(a, b) {
+                            return a.name.toLowerCase() > b.name.toLowerCase()
+                                ? 1
+                                : b.name.toLowerCase() > a.name.toLowerCase()
+                                    ? -1
+                                    : 0;
+                        });
+                        
+                        schedulerData.setResources(orderedEmployees);
 
                         this.setState(
                             {
