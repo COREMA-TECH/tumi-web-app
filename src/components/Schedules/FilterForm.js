@@ -348,7 +348,7 @@ class FilterForm extends Component {
             .then((data) => {
                 if (status == 2) { this.props.handleOpenSnackbar('success', 'Shift approved successfully!'); }
                 else { this.props.handleOpenSnackbar('success', 'Shift rejected successfully!'); }
-
+                this.props.toggleRefresh();
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error approved Shift');
