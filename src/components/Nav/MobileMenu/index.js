@@ -89,6 +89,11 @@ const MobileMenu = (props) => {
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Schedules
 							</a>
 						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/property/schedules">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Manage Schedules
+							</a>
+						</li>
 					</ul>
 				</li>
 				<li className="MainMenu-option">
@@ -112,11 +117,7 @@ const MobileMenu = (props) => {
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Board
 							</a>
 						</li>
-						<li className="SubMenu-item">
-							<a className="SubMenu-link" href="/home/property/schedules">
-								<i className="fas fa-angle-double-right SubMenu-icon" /> Hotel Manager Schedules
-							</a>
-						</li>
+
 					</ul>
 				</li>
 				<li className="MainMenu-option">
