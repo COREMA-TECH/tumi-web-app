@@ -328,22 +328,6 @@ class Employees extends Component {
         );
     };
 
-    /*fetchEmployeeList = () => {
-      this.setState(
-        {
-          loading: true
-        },
-        () => {
-          this.props.client
-            .query({
-              query: LIST_EMPLOYEES
-            })
-            .then(({ data }) => {})
-            .catch(error => {});
-        }
-      );
-    };*/
-
     render() {
         const {classes} = this.props;
         const {fullScreen} = this.props;
@@ -540,18 +524,6 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col-md-3">
-                                        {/*<input*/}
-                                        {/*type="number"*/}
-                                        {/*name="number"*/}
-                                        {/*className="form-control"*/}
-                                        {/*onChange={e => {*/}
-                                        {/*this.setState({*/}
-                                        {/*numberEdit: e.target.value*/}
-                                        {/*})*/}
-                                        {/*}}*/}
-                                        {/*value={this.state.numberEdit}*/}
-                                        {/*required*/}
-                                        {/*/>*/}
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
