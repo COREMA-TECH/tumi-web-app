@@ -37,20 +37,32 @@ query ShiftWorkOrder ($WorkOrderId: Int)
 			ShiftId
 			WorkOrderId
 		}
-
-        ShiftDetail {
-            id
-            ShiftId
-            start: startDate
-            startTime
-            end: endDate
-            endTime
-            detailEmployee {
-                EmployeeId
-            }
-        }
     }
 `;
+
+export const GET_DETAIL_SHIFT = gql`
+query ShiftDetail ($ShiftId:Int)
+{
+ShiftDetail (ShiftId:$ShiftId) {
+	id
+	ShiftId
+	start: startDate
+	startTime
+	end: endDate
+	endTime
+	detailEmployee {
+		EmployeeId
+		ShiftDetailId
+		Employees
+	  {
+		id
+		firstName
+		lastName
+	  }
+	}
+}
+}
+`
 
 export const GET_INITIAL_DATA = gql`
 query data {
