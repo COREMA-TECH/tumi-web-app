@@ -279,19 +279,6 @@ class General extends Component {
                     })
                     .then(({ data }) => {
                         var datos = []
-                        /* const datos = this.state.rowsInput.map((item, index) => {
-                             return {
-                                 firstName: this.state[`firstName${index}`],
-                                 lastName: this.state[`lastName${index}`],
-                                 electronicAddress: this.state[`email${index}`],
-                                 mobileNumber: this.state[`phoneNumber${index}`],
-                                 idRole: 1,
-                                 isActive: true,
-                                 userCreated: 1,
-                                 userUpdated: 1,
-                             }
-                         });*/
-
                         datos.push({
                             firstName: this.state.firstname,
                             lastName: this.state.lastname,
@@ -305,7 +292,8 @@ class General extends Component {
 
                         this.insertEmployees(datos)
                         this.setState({
-                            editing: false
+                            insertDialogLoading: false,
+                            isLead:false
                         });
 
                         this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
@@ -333,13 +321,12 @@ class General extends Component {
             })
             .then(({ data }) => {
                 this.props.handleOpenSnackbar('success', 'Employees Saved!');
-                // Hide dialog
-                this.handleCloseModal();
+
             })
             .catch(error => {
-                // Hide dialog
+
                 this.props.handleOpenSnackbar('error', 'Error to save Employees!');
-                this.handleCloseModal();
+
             })
     };
     /**
@@ -1178,7 +1165,7 @@ class General extends Component {
         let userExist = false;
 
 
-        if (this.state.loading) {
+        if (this.state.loading || this.state.insertDialogLoading) {
             return <LinearProgress />
         }
 
@@ -1669,7 +1656,7 @@ class General extends Component {
                                                         }}>Convert to Employee
                                         </button>
                                                     ) : ('')
-                                                    
+
                                                 }
                                                 <button className="btn btn-outline-info" onClick={() => {
                                                     this.handleClickOpenModal();
