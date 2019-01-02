@@ -45,12 +45,6 @@ let schedulerData = new SchedulerData(
                 viewType: ViewTypes.Month,
                 showAgenda: false,
                 isEventPerspective: true
-            },
-            {
-                viewName: "Year",
-                viewType: ViewTypes.Year,
-                showAgenda: false,
-                isEventPerspective: false
             }
         ],
         schedulerWidth: "1500"
