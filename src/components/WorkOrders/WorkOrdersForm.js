@@ -123,7 +123,8 @@ class WorkOrdersForm extends Component {
                     comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
-                    EspecialComment: nextProps.item.EspecialComment
+                    EspecialComment: nextProps.item.EspecialComment,
+                    PositionName: nextProps.item.position.Position
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
