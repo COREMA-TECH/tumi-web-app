@@ -8,7 +8,10 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
 			middleName
 			lastName
 			socialSecurityNumber
-			emailAddress
+            emailAddress
+            cellPhone
+            isLead
+            Urlphoto
 			position{
 				id
 				position {

@@ -26,7 +26,7 @@ import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import { INSERT_CONTACT, INSERT_DEPARTMENT } from "./Mutations";
+import { ADD_EMPLOYEES, INSERT_CONTACT, INSERT_DEPARTMENT, UPDATE_APPLICANT } from "./Mutations";
 import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 
@@ -112,7 +112,7 @@ class General extends Component {
             openModal: false,
             openUserModal: false,
 
-
+            insertDialogLoading: false,
             // Modal state
             Id: 0,
             idCompany: null,
@@ -129,7 +129,7 @@ class General extends Component {
             Date_Created: "'2018-08-14 16:10:25+00'",
             Date_Updated: "'2018-08-14 16:10:25+00'",
             hotelId: null,
-
+            isLead: false,
 
             contactTypes: ContactTypesData,
 
@@ -261,6 +261,87 @@ class General extends Component {
         this.setState({ openModal: true });
     };
 
+    handleClickConvertToEmployee = () => {
+        this.setState(
+            {
+                insertDialogLoading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_APPLICANT,
+                        variables: {
+
+                            id: this.props.applicationId,
+                            isLead: false
+
+                        }
+                    })
+                    .then(({ data }) => {
+                        var datos = []
+                        /* const datos = this.state.rowsInput.map((item, index) => {
+                             return {
+                                 firstName: this.state[`firstName${index}`],
+                                 lastName: this.state[`lastName${index}`],
+                                 electronicAddress: this.state[`email${index}`],
+                                 mobileNumber: this.state[`phoneNumber${index}`],
+                                 idRole: 1,
+                                 isActive: true,
+                                 userCreated: 1,
+                                 userUpdated: 1,
+                             }
+                         });*/
+
+                        datos.push({
+                            firstName: this.state.firstname,
+                            lastName: this.state.lastname,
+                            electronicAddress: this.state.email,
+                            mobileNumber: this.state.number,
+                            idRole: 1,
+                            isActive: true,
+                            userCreated: 1,
+                            userUpdated: 1,
+                        });
+
+                        this.insertEmployees(datos)
+                        this.setState({
+                            editing: false
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
+
+
+    insertEmployees = (employeesArrays) => {
+        this.props.client
+            .mutate({
+                mutation: ADD_EMPLOYEES,
+                variables: {
+                    Employees: employeesArrays
+                }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', 'Employees Saved!');
+                // Hide dialog
+                this.handleCloseModal();
+            })
+            .catch(error => {
+                // Hide dialog
+                this.props.handleOpenSnackbar('error', 'Error to save Employees!');
+                this.handleCloseModal();
+            })
+    };
     /**
      * To hide modal and then restart modal state values
      */
@@ -330,7 +411,8 @@ class General extends Component {
                         number: this.state.data.cellPhone,
                         firstname: this.state.data.firstName,
                         middlename: this.state.data.middleName,
-                        lastname: this.state.data.lastName
+                        lastname: this.state.data.lastName,
+                        isLead: this.state.data.isLead
                     })
                 });
             })
@@ -1579,23 +1661,34 @@ class General extends Component {
                                 <div className="col-md-4">
                                     <div className="row">
                                         <div className="item col-sm-12  col-md-12">
-                                            <button className="btn btn-outline-info" onClick={() => {
-                                                this.handleClickOpenModal();
-                                            }}>Add to hotel
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                {
+                                                    this.state.isLead ? (
+                                                        <button className="btn btn-outline-info" onClick={() => {
+                                                            this.handleClickConvertToEmployee();
+                                                        }}>Convert to Employee
+                                        </button>
+                                                    ) : ('')
+                                                    
+                                                }
+                                                <button className="btn btn-outline-info" onClick={() => {
+                                                    this.handleClickOpenModal();
+                                                }}>Add to hotel
                                             </button>
-                                        </div>
-                                        {
-                                            userExist || this.state.createdProfile ? (
-                                                ''
-                                            ) : (
-                                                    <div className="item col-sm-12 col-md-12">
-                                                        <button className="btn btn-outline-success" onClick={() => {
-                                                            this.handleClickOpenUserModal();
-                                                        }}>Create Profile
+                                                {
+                                                    userExist || this.state.createdProfile ? (
+                                                        ''
+                                                    ) : (
+                                                            <button className="btn btn-outline-success" onClick={() => {
+                                                                this.handleClickOpenUserModal();
+                                                            }}>Create Profile
                                                     </button>
-                                                    </div>
-                                                )
-                                        }
+                                                        )
+                                                }
+
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
