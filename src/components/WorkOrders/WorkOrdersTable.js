@@ -35,7 +35,7 @@ class WorkOrdersTable extends Component {
         this.state = {
             data: [],
             Hotels: [],
-            rowsPerPage: 3,
+            rowsPerPage: 5,
             page: 0,
             openConfirm: false,
             ShiftsData: ShiftsData,
