@@ -413,7 +413,6 @@ class Employees extends Component {
                                     type="submit"
                                     variant="fab"
                                     className="btn btn-success"
-                                    onClick={this.insertDepartment}
                                 >
                                     Save {!this.state.saving && <i class="fas fa-save"/>}
                                     {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
@@ -423,9 +422,17 @@ class Employees extends Component {
                         <div className={classes.root}>
                             <div className={classes.wrapper}>
                                 <button
-                                    variant="fab"
+                                    type="reset"
                                     className="btn btn-danger"
-                                    onClick={this.handleCloseModal}
+                                    onClick={() => {
+                                        this.setState({
+                                            openModal: false
+                                        }, () => {
+                                            this.setState({
+                                                rowsInput: [1]
+                                            });
+                                        });
+                                    }}
                                 >
                                     Cancel <i class="fas fa-ban"/>
                                 </button>
