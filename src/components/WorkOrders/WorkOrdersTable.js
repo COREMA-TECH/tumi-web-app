@@ -35,7 +35,7 @@ class WorkOrdersTable extends Component {
         this.state = {
             data: [],
             Hotels: [],
-            rowsPerPage: 10,
+            rowsPerPage: 5,
             page: 0,
             openConfirm: false,
             ShiftsData: ShiftsData,
@@ -124,6 +124,8 @@ class WorkOrdersTable extends Component {
         }
     }
 
+
+
     handleChange = (event, key) => {
         const target = event.target;
         const value = target.value;
@@ -201,6 +203,14 @@ class WorkOrdersTable extends Component {
                 });
             })
             .catch();
+    };
+
+    handleChangePage = (event, page) => {
+        this.setState({ page });
+    };
+
+    handleChangeRowsPerPage = (event) => {
+        this.setState({ rowsPerPage: event.target.value });
     };
 
     getHotel = () => {

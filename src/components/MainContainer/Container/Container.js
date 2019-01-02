@@ -35,6 +35,7 @@ import Calendar from '../../Holidays/Calendar';
 import Employees from "../../Employees/Employees";
 import Schedules from '../../Schedules';
 import Property_Schedules from "../../ManagerHotel/Schedules"
+import SchedulesAccept from '../../Schedules/SchedulesAccept';
 class Container extends Component {
 	constructor(props) {
 		super(props);
@@ -154,6 +155,8 @@ class Container extends Component {
 				<Route exact path="/home/calendar" component={Calendar} />
 				<Route exact path="/home/schedules" component={Schedules} />
 				<Route exact path="/home/property/schedules" component={Property_Schedules} />
+
+				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 			</div>
 		);
 	}
