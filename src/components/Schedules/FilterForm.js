@@ -362,8 +362,7 @@ class FilterForm extends Component {
             .then((data) => {
                 if (status == 2) { this.props.handleOpenSnackbar('success', 'Shift approved successfully!'); }
                 else { this.props.handleOpenSnackbar('success', 'Shift rejected successfully!'); }
-                this.setState({ ...this.DEFAULT_STATE })
-
+                this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
             })
             .catch((error) => {
                 this.setState({ confirm: false, reject: false }, () => {
@@ -491,15 +490,15 @@ class FilterForm extends Component {
                     this.props.hotelManager == true ? (
                         <div className="row">
                             <div className="col-md-12">
-                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
-                                <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
+                                <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
+                                <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
                             </div>
                         </div>
                     ) : (
                             <div className="row">
                                 <div className="col-md-12">
-                                    <button className="btn btn-success float-right mb-1 ml-1" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
-                                    <button className="btn btn-danger float-right mb-1" type="button" onClick={this.clearInputs} >Clear</button>
+                                    <button className="btn btn-success btn-large mb-1" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
+                                    <button className="btn btn-danger btn-large mb-1" type="button" onClick={this.clearInputs} >Clear</button>
                                 </div>
                             </div>
                         )
