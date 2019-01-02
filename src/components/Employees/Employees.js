@@ -543,6 +543,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.numberEdit}
                                             placeholder="+(999) 999-9999"
+                                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
                                 </div>
