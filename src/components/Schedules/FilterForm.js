@@ -10,6 +10,7 @@ import Select from 'react-select';
 import TimeField from 'react-simple-timefield';
 import Options from './Options';
 import ShiftColorPicker from './ShiftColorPicker';
+import { isArray } from 'util';
 
 class FilterForm extends Component {
 
@@ -27,7 +28,9 @@ class FilterForm extends Component {
         selectedDetailId: 0,
         status: 1,
         openShift: false,
-        updating:false
+        updating: false,
+        confirm: false,
+        reject: false
     }
 
     constructor(props) {
@@ -72,14 +75,25 @@ class FilterForm extends Component {
         //This evaluate if Employee control has selected one or many employees
         //If only one employee can be selected then the value is got from object.value 
         //other way it is selected from an array of selected values
-        let isOnEmployee = this.state.selectedDetailId != 0 || this.state.openShift;
+        let isOneEmployee = this.state.selectedDetailId != 0 || this.state.openShift;
+        let selectedValues;
+
+        //Selecte employees
+        if (!isOneEmployee) {
+            selectedValues = this.state.selectedEmployees.map(item => { return item.value })
+            if (selectedValues.length == 0)
+                selectedValues = 0;
+
+        }
+        //Verify if it is one employee or many 
+        let idEmployee = (isOneEmployee ? this.state.selectedEmployees.value : selectedValues);
         this.props.client
             .query({
                 query: GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY,
                 variables: {
                     startDate: this.state.startDate,
                     endDate: this.state.endDate,
-                    employeeId: isOnEmployee ? this.state.selectedEmployees.value : this.state.selectedEmployees.map(item => { return item.value }),
+                    employeeId: idEmployee == null ? 0 : idEmployee,
                     startTime: this.state.startHour,
                     endTime: this.state.endHour,
                     shiftDetailId: this.state.selectedDetailId
@@ -91,7 +105,7 @@ class FilterForm extends Component {
                 } else {
                     this.setState({ updating: false }, () => {
                         this.props.handleOpenSnackbar(
-                            'error',
+                            'warning',
                             'This shift is not available',
                             'bottom',
                             'right'
@@ -221,7 +235,7 @@ class FilterForm extends Component {
             .then(({ data }) => {
                 const shiftDetail = data.ShiftDetail[0];
                 const detailEmployee = shiftDetail.detailEmployee;
-
+                const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
                 this.setState({
                     startDate: shiftDetail.startDate.substring(0, 10),
                     endDate: shiftDetail.endDate.substring(0, 10),
@@ -234,7 +248,7 @@ class FilterForm extends Component {
                     shiftId: shiftDetail.shift.id,
                     status: shiftDetail.shift.status,
                     openShift: !shiftDetail.detailEmployee,
-                    selectedEmployees: this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
+                    selectedEmployees: selectedEmployee ? selectedEmployee : []
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
             }).catch(error => {
@@ -265,7 +279,7 @@ class FilterForm extends Component {
 
     validateControls = () => {
         //This is not an Open Shift
-        if (!this.state.openShift) {
+        if (isArray(this.state.selectedEmployees)) {
             if (this.state.selectedEmployees.length == 0)
                 return { valid: false, message: 'You need to select at least one employee' };
         }
@@ -348,10 +362,13 @@ class FilterForm extends Component {
             .then((data) => {
                 if (status == 2) { this.props.handleOpenSnackbar('success', 'Shift approved successfully!'); }
                 else { this.props.handleOpenSnackbar('success', 'Shift rejected successfully!'); }
+                this.setState({ ...this.DEFAULT_STATE })
 
             })
             .catch((error) => {
-                this.props.handleOpenSnackbar('error', 'Error approved Shift');
+                this.setState({ confirm: false, reject: false }, () => {
+                    this.props.handleOpenSnackbar('error', 'Error approved Shift');
+                })
             });
     };
 
@@ -362,6 +379,7 @@ class FilterForm extends Component {
         this.setState({ updating: true }, () => {
             let result = this.validateControls();
             let { valid, message } = result;
+
             if (valid) {
                 let mutation;
                 if (this.state.selectedDetailId == 0)
@@ -370,7 +388,9 @@ class FilterForm extends Component {
                     mutation = this.updateShift;
                 this.getShiftByDateAndEmployee(mutation);
 
-            } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
+            } else this.setState({ updating: false }, () => {
+                this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
+            })
         })
 
     }
@@ -412,19 +432,19 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">* Start Date</label>
-                        <input type="date" name="startDate" disabled={isHotelManger} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="startDate" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">* End Date</label>
-                        <input type="date" name="endDate" disabled={isHotelManger} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="endDate" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-6">
                         < label htmlFor="">* Start Time</label>
-                        <TimeField name="startHour" disabled={isHotelManger} style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
+                        <TimeField name="startHour" disabled={isHotelManger || this.state.openShift} style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
                     <div className="col-md-6">
                         < label htmlFor="">* End Time</label>
-                        <TimeField name="endHour" disabled={isHotelManger} style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
+                        <TimeField name="endHour" disabled={isHotelManger || this.state.openShift} style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
                     </div>
                     <div className="col-md-12">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
@@ -471,8 +491,8 @@ class FilterForm extends Component {
                     this.props.hotelManager == true ? (
                         <div className="row">
                             <div className="col-md-12">
-                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm</button>
-                                <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected</button>
+                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
+                                <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
                             </div>
                         </div>
                     ) : (
