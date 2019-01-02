@@ -16,6 +16,16 @@ export const UPDATE_WORKORDER = gql`
 	}
 `;
 
+export const DELETE_EMPLOYEE = gql`
+mutation deleteEmployees($id: Int)
+{
+  deleteShiftDetailEmployees(id: $id)
+  {
+    id
+  }
+}
+
+`;
 
 export const CONVERT_TO_OPENING = gql`
 mutation convertToOpening($id: Int, $userId: Int) {
