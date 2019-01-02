@@ -1,39 +1,36 @@
-import React, { Component } from 'react';
+import React, {Component} from "react";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import green from "@material-ui/core/colors/green";
-import PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core";
+import PropTypes from "prop-types";
+import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE } from "./Mutations";
+import {ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE} from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
-import TablesContracts from "../Contract/Main/MainContract/TablesContracts";
-import { Query } from "react-apollo";
-import NothingToDisplay from 'ui-components/NothingToDisplay/NothingToDisplay';
-import {
-    LIST_EMPLOYEES
-} from './Queries';
-import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import withGlobalContent from 'Generic/Global';
+import {Query} from "react-apollo";
+import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
+import {LIST_EMPLOYEES} from "./Queries";
+import AlertDialogSlide from "Generic/AlertDialogSlide";
+import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
 
-const styles = (theme) => ({
+const styles = theme => ({
     container: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        marginBottom: '30px',
-        width: '100%'
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexWrap: "wrap",
+        marginBottom: "30px",
+        width: "100%"
     },
     root: {
-        display: 'flex',
-        alignItems: 'center'
+        display: "flex",
+        alignItems: "center"
     },
     formControl: {
         margin: theme.spacing.unit
@@ -43,29 +40,29 @@ const styles = (theme) => ({
         margin: theme.spacing.unit
     },
     input: {
-        display: 'none'
+        display: "none"
     },
     wrapper: {
-        position: 'relative'
+        position: "relative"
     },
     buttonSuccess: {
         backgroundColor: green[500],
-        '&:hover': {
+        "&:hover": {
             backgroundColor: green[700]
         }
     },
     fabProgress: {
         color: green[500],
-        position: 'absolute',
+        position: "absolute",
         top: -6,
         left: -6,
         zIndex: 1
     },
     buttonProgress: {
         color: green[500],
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
+        position: "absolute",
+        top: "50%",
+        left: "50%",
         marginTop: -12,
         marginLeft: -12
     }
@@ -81,40 +78,46 @@ class Employees extends Component {
             employeesRegisters: [],
             rowsInput: [1],
             inputs: 1,
-            filterText: '',
+            filterText: "",
 
-            firstNameEdit: '',
-            lastNameEdit: '',
-            emailEdit: '',
-            numberEdit: '',
-        }
+            firstNameEdit: "",
+            lastNameEdit: "",
+            emailEdit: "",
+            numberEdit: "",
+
+            progressNewEmployee: false,
+            finishLoading: false
+        };
     }
 
     /**
      * To open modal updating the state
      */
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({openModal: true});
     };
 
     /**
      * To hide modal and then restart modal state values
      */
     handleCloseModal = () => {
-        this.setState({
-            openModal: false
-        }, () => {
-            this.setState({
-                rowsInput: [1]
-            })
-        });
+        this.setState(
+            {
+                openModal: false
+            },
+            () => {
+                this.setState({
+                    rowsInput: [1]
+                });
+            }
+        );
     };
 
     /**
      * To open modal updating the state
      */
     handleClickOpenModalEdit = () => {
-        this.setState({ openModalEdit: true });
+        this.setState({openModalEdit: true});
     };
 
     /**
@@ -123,20 +126,18 @@ class Employees extends Component {
     handleCloseModalEdit = () => {
         this.setState({
             openModalEdit: false,
-            firstNameEdit: '',
-            lastNameEdit: '',
-            emailEdit: '',
-            numberEdit: '',
+            firstNameEdit: "",
+            lastNameEdit: "",
+            emailEdit: "",
+            numberEdit: ""
         });
     };
-
-
 
     /**
      * Manage submit form
      * @param e - event submit of the form
      */
-    handleSubmit = (e) => {
+    handleSubmit = e => {
         // Stop submit propagation and prevent even default
         e.preventDefault();
         e.stopPropagation();
@@ -151,8 +152,8 @@ class Employees extends Component {
                 idRole: 1,
                 isActive: true,
                 userCreated: 1,
-                userUpdated: 1,
-            }
+                userUpdated: 1
+            };
         });
 
         // Remove undefined last element
@@ -162,12 +163,12 @@ class Employees extends Component {
         this.insertEmployees(datos);
     };
 
-    handleSubmitEmployeeEdit = (e) => {
+    handleSubmitEmployeeEdit = e => {
         // Stop submit propagation and prevent even default
         e.preventDefault();
         e.stopPropagation();
 
-        let form = document.getElementById('employee-edit-form');
+        let form = document.getElementById("employee-edit-form");
         this.props.client
             .mutate({
                 mutation: UPDATE_EMPLOYEE,
@@ -186,43 +187,68 @@ class Employees extends Component {
                 }
             })
             .then(() => {
-                this.props.handleOpenSnackbar('success', 'Employee Updated!');
+                this.props.handleOpenSnackbar("success", "Employee Updated!");
+
+                this.setState({
+                    finishLoading: true
+                });
 
                 this.handleCloseModalEdit();
             })
             .catch(error => {
-                this.props.handleOpenSnackbar('error', 'Error updating Employee!');
-            })
+                this.props.handleOpenSnackbar("error", "Error updating Employee!");
+            });
     };
 
-    insertEmployees = (employeesArrays) => {
-        this.props.client
-            .mutate({
-                mutation: ADD_EMPLOYEES,
-                variables: {
-                    Employees: employeesArrays
-                }
-            })
-            .then(({ data }) => {
-                this.props.handleOpenSnackbar('success', 'Employees Saved!');
-                // Hide dialog
-                this.handleCloseModal();
-            })
-            .catch(error => {
-                // Hide dialog
-                this.props.handleOpenSnackbar('error', 'Error to save Employees!');
-                this.handleCloseModal();
-            })
+    insertEmployees = employeesArrays => {
+        this.setState(
+            {
+                progressNewEmployee: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: ADD_EMPLOYEES,
+                        variables: {
+                            Employees: employeesArrays
+                        }
+                    })
+                    .then(({data}) => {
+                        this.props.handleOpenSnackbar("success", "Employees Saved!");
+                        // Hide dialog
+                        this.handleCloseModal();
+
+                        this.setState({
+                            progressNewEmployee: false,
+                            finishLoading: true
+                        });
+                    })
+                    .catch(error => {
+                        // Hide dialog
+                        this.props.handleOpenSnackbar("error", "Error to save Employees!");
+                        this.handleCloseModal();
+                        this.setState({
+                            progressNewEmployee: false,
+                            finishLoading: true
+                        });
+                    });
+            }
+        );
     };
 
-    deleteEmployeeById = (id) => {
-        this.setState({
-            idToDelete: id
-        }, () => {
-            this.setState({
-                opendialog: true, loadingRemoving: false, loadingContracts: false
-            })
-        });
+    deleteEmployeeById = id => {
+        this.setState(
+            {
+                idToDelete: id
+            },
+            () => {
+                this.setState({
+                    opendialog: true,
+                    loadingRemoving: false,
+                    loadingContracts: false
+                });
+            }
+        );
     };
 
     deleteEmployee = () => {
@@ -238,25 +264,30 @@ class Employees extends Component {
                             id: this.state.idToDelete
                         }
                     })
-                    .then((data) => {
+                    .then(data => {
                         this.setState(
                             {
                                 opendialog: false,
-                                loadingRemoving: false
+                                loadingRemoving: false,
+                                finishLoading: true
                             },
                             () => {
-                                this.props.handleOpenSnackbar('success', 'Employee Deleted!');
+                                this.props.handleOpenSnackbar("success", "Employee Deleted!");
                             }
                         );
                     })
-                    .catch((error) => {
+                    .catch(error => {
                         this.setState(
                             {
                                 opendialog: false,
-                                loadingRemoving: false
+                                loadingRemoving: false,
+                                finishLoading: true
                             },
                             () => {
-                                this.props.handleOpenSnackbar('error', 'Error: Deleting Employee: ' + error);
+                                this.props.handleOpenSnackbar(
+                                    "error",
+                                    "Error: Deleting Employee: " + error
+                                );
                             }
                         );
                     });
@@ -276,40 +307,42 @@ class Employees extends Component {
     handleChange = (name, value) => {
         this.setState({
             [name]: value
-        })
+        });
     };
 
     handleCloseAlertDialog = () => {
-        this.setState({ opendialog: false });
+        this.setState({opendialog: false});
     };
     handleConfirmAlertDialog = () => {
-        this.deleteEmployee()
+        this.deleteEmployee();
     };
 
-    updateEmployeeById = (id) => {
-        this.setState({
-            idToEdit: id
-        }, () => {
-            this.handleClickOpenModalEdit();
-        })
+    updateEmployeeById = id => {
+        this.setState(
+            {
+                idToEdit: id
+            },
+            () => {
+                this.handleClickOpenModalEdit();
+            }
+        );
     };
-
 
     render() {
-        const { classes } = this.props;
-        const { fullScreen } = this.props;
+        const {classes} = this.props;
+        const {fullScreen} = this.props;
 
         let renderHeaderContent = () => (
             <div className="row">
                 <div className="col-md-6">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">
-                                <i className="fa fa-search icon" />
-                            </span>
+              <span class="input-group-text" id="basic-addon1">
+                <i className="fa fa-search icon"/>
+              </span>
                         </div>
                         <input
-                            onChange={(text) => {
+                            onChange={text => {
                                 this.setState({
                                     filterText: text.target.value
                                 });
@@ -341,7 +374,7 @@ class Employees extends Component {
                 maxWidth="lg"
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
-                    <DialogTitle style={{ padding: '0px' }}>
+                    <DialogTitle style={{padding: "0px"}}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
                         </div>
@@ -362,39 +395,46 @@ class Employees extends Component {
                                     <label htmlFor="">* Phone Number</label>
                                 </div>
                             </div>
-                            {
-                                this.state.rowsInput.map((item, index) => {
-                                    return <EmployeeInputRow
+                            {this.state.rowsInput.map((item, index) => {
+                                return (
+                                    <EmployeeInputRow
                                         newRow={this.addNewRow}
                                         index={index}
                                         onchange={this.handleChange}
                                     />
-                                })
-                            }
+                                );
+                            })}
                         </div>
                     </DialogContent>
-                    <DialogActions style={{ margin: '20px 20px' }}>
+                    <DialogActions style={{margin: "20px 20px"}}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
                                 <button
                                     type="submit"
                                     variant="fab"
                                     className="btn btn-success"
-                                    onClick={this.insertDepartment}
                                 >
-                                    Save {!this.state.saving && <i class="fas fa-save" />}
-                                    {this.state.saving && <i class="fas fa-spinner fa-spin" />}
+                                    Save {!this.state.saving && <i class="fas fa-save"/>}
+                                    {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
                                 </button>
                             </div>
                         </div>
                         <div className={classes.root}>
                             <div className={classes.wrapper}>
                                 <button
-                                    variant="fab"
+                                    type="reset"
                                     className="btn btn-danger"
-                                    onClick={this.handleCloseModal}
+                                    onClick={() => {
+                                        this.setState({
+                                            openModal: false
+                                        }, () => {
+                                            this.setState({
+                                                rowsInput: [1]
+                                            });
+                                        });
+                                    }}
                                 >
-                                    Cancel <i class="fas fa-ban" />
+                                    Cancel <i class="fas fa-ban"/>
                                 </button>
                             </div>
                         </div>
@@ -412,17 +452,18 @@ class Employees extends Component {
                     loadingConfirm={this.state.loadingRemoving}
                     content="Do you really want to continue whit this operation?"
                 />
-                {
-                    renderHeaderContent()
-                }
+                {renderHeaderContent()}
                 <Dialog
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
                     aria-labelledby="responsive-dialog-title"
                     maxWidth="lg"
                 >
-                    <form id="employee-edit-form" onSubmit={this.handleSubmitEmployeeEdit}>
-                        <DialogTitle style={{ padding: '0px' }}>
+                    <form
+                        id="employee-edit-form"
+                        onSubmit={this.handleSubmitEmployeeEdit}
+                    >
+                        <DialogTitle style={{padding: "0px"}}>
                             <div className="modal-header">
                                 <h5 class="modal-title">Edit Employee</h5>
                             </div>
@@ -452,7 +493,7 @@ class Employees extends Component {
                                             onChange={e => {
                                                 this.setState({
                                                     firstNameEdit: e.target.value
-                                                })
+                                                });
                                             }}
                                             value={this.state.firstNameEdit}
                                             minLength="3"
@@ -467,7 +508,7 @@ class Employees extends Component {
                                             onChange={e => {
                                                 this.setState({
                                                     lastNameEdit: e.target.value
-                                                })
+                                                });
                                             }}
                                             value={this.state.lastNameEdit}
                                             minLength="3"
@@ -482,7 +523,7 @@ class Employees extends Component {
                                             onChange={e => {
                                                 this.setState({
                                                     emailEdit: e.target.value
-                                                })
+                                                });
                                             }}
                                             value={this.state.emailEdit}
                                             minLength="3"
@@ -490,18 +531,6 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col-md-3">
-                                        {/*<input*/}
-                                            {/*type="number"*/}
-                                            {/*name="number"*/}
-                                            {/*className="form-control"*/}
-                                            {/*onChange={e => {*/}
-                                                {/*this.setState({*/}
-                                                    {/*numberEdit: e.target.value*/}
-                                                {/*})*/}
-                                            {/*}}*/}
-                                            {/*value={this.state.numberEdit}*/}
-                                            {/*required*/}
-                                        {/*/>*/}
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -510,16 +539,17 @@ class Employees extends Component {
                                             onChange={e => {
                                                 this.setState({
                                                     numberEdit: e.target.value
-                                                })
+                                                });
                                             }}
                                             value={this.state.numberEdit}
                                             placeholder="+(999) 999-9999"
+                                            pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
                                 </div>
                             </div>
                         </DialogContent>
-                        <DialogActions style={{ margin: '20px 20px' }}>
+                        <DialogActions style={{margin: "20px 20px"}}>
                             <div className={[classes.root]}>
                                 <div className={classes.wrapper}>
                                     <button
@@ -527,8 +557,8 @@ class Employees extends Component {
                                         variant="fab"
                                         className="btn btn-success"
                                     >
-                                        Save {!this.state.saving && <i class="fas fa-save" />}
-                                        {this.state.saving && <i class="fas fa-spinner fa-spin" />}
+                                        Save {!this.state.saving && <i class="fas fa-save"/>}
+                                        {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
                                     </button>
                                 </div>
                             </div>
@@ -539,27 +569,32 @@ class Employees extends Component {
                                         className="btn btn-danger"
                                         onClick={this.handleCloseModalEdit}
                                     >
-                                        Cancel <i class="fas fa-ban" />
+                                        Cancel <i class="fas fa-ban"/>
                                     </button>
                                 </div>
                             </div>
                         </DialogActions>
                     </form>
                 </Dialog>
-                {
-                    renderNewEmployeeDialog()
-                }
-                <Query query={LIST_EMPLOYEES} pollInterval={500}>
-                    {({ loading, error, data, refetch, networkStatus }) => {
-                        if (this.state.filterText === '') {
-                            if (loading) return <LinearProgress />;
+                {renderNewEmployeeDialog()}
+                <Query query={LIST_EMPLOYEES}>
+                    {({loading, error, data, refetch, networkStatus}) => {
+                        if (this.state.filterText === "") {
+                            if (loading) return <LinearProgress/>;
+                        }
+
+                        if (this.state.finishLoading) {
+                            refetch();
+                            this.setState(prevState => ({
+                                finishLoading: false
+                            }));
                         }
 
                         if (error)
                             return (
                                 <ErrorMessageComponent
                                     title="Oops!"
-                                    message={'Error loading contracts'}
+                                    message={"Error loading contracts"}
                                     type="Error-danger"
                                     icon="danger"
                                 />
@@ -567,14 +602,18 @@ class Employees extends Component {
                         if (data.employees != null && data.employees.length > 0) {
                             // this.setState({ data: data.employees });
                             let dataEmployees = data.employees.filter((_, i) => {
-                                if (this.state.filterText === '') {
+                                if (this.state.filterText === "") {
                                     return true;
                                 }
 
                                 if (
                                     _.firstName.indexOf(this.state.filterText) > -1 ||
-                                    _.firstName.toLocaleLowerCase().indexOf(this.state.filterText) > -1 ||
-                                    _.firstName.toLocaleUpperCase().indexOf(this.state.filterText) > -1
+                                    _.firstName
+                                        .toLocaleLowerCase()
+                                        .indexOf(this.state.filterText) > -1 ||
+                                    _.firstName
+                                        .toLocaleUpperCase()
+                                        .indexOf(this.state.filterText) > -1
                                 ) {
                                     return true;
                                 }
@@ -587,7 +626,7 @@ class Employees extends Component {
                                             <div className="">
                                                 <EmployeesTable
                                                     data={dataEmployees}
-                                                    delete={(id) => {
+                                                    delete={id => {
                                                         this.deleteEmployeeById(id);
                                                     }}
                                                     update={(id, row) => {
@@ -597,8 +636,8 @@ class Employees extends Component {
                                                             firstNameEdit: row.firstName,
                                                             lastNameEdit: row.lastName,
                                                             emailEdit: row.electronicAddress,
-                                                            numberEdit: row.mobileNumber,
-                                                        })
+                                                            numberEdit: row.mobileNumber
+                                                        });
                                                     }}
                                                 />
                                             </div>
@@ -610,7 +649,7 @@ class Employees extends Component {
                         return (
                             <NothingToDisplay
                                 title="Oops!"
-                                message={'There are no employees'}
+                                message={"There are no employees"}
                                 type="Error-success"
                                 icon="wow"
                             />
