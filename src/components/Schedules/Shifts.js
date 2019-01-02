@@ -1,12 +1,8 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import "react-big-scheduler/lib/css/style.css";
-import Scheduler, {
-    DemoData,
-    SchedulerData,
-    ViewTypes
-} from "react-big-scheduler";
+import Scheduler, {SchedulerData, ViewTypes} from "react-big-scheduler";
 import withApollo from "react-apollo/withApollo";
-import { GET_INITIAL_DATA, GET_SHIFTS } from "./Queries";
+import {GET_INITIAL_DATA, GET_SHIFTS} from "./Queries";
 import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -72,7 +68,7 @@ class Shifts extends Component {
                 query: GET_SHIFTS,
                 fetchPolicy: "no-cache"
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState(
                     {
                         shift: data.shift,
@@ -100,11 +96,6 @@ class Shifts extends Component {
                                         name: employee.label
                                     });
                                 }
-                            } else {
-                                allResources.push({
-                                    id: 0,
-                                    name: "Open Shift"
-                                });
                             }
                         });
                         this.state.shift.map(shiftItem => {
@@ -140,14 +131,20 @@ class Shifts extends Component {
                             return unique;
                         }, []);
 
-                        let orderedEmployees = result.sort(function(a, b) {
+                        let orderedEmployees = result.sort(function (a, b) {
                             return a.name.toLowerCase() > b.name.toLowerCase()
                                 ? 1
                                 : b.name.toLowerCase() > a.name.toLowerCase()
                                     ? -1
                                     : 0;
                         });
-                        
+
+                        orderedEmployees.unshift(
+                            {
+                                id: 0,
+                                name: "Open Shift"
+                            }
+                        );
                         schedulerData.setResources(orderedEmployees);
 
                         this.setState(
@@ -273,7 +270,7 @@ class Shifts extends Component {
             .query({
                 query: GET_INITIAL_DATA
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 //Save data into state
                 //--Employees
                 this.setState(prevState => {
@@ -283,11 +280,11 @@ class Shifts extends Component {
                             label: `${item.firstName} ${item.lastName}`
                         };
                     });
-                    return { employees };
+                    return {employees};
                 });
                 //Location
                 this.setState(prevState => {
-                    return { locations: data.getbusinesscompanies };
+                    return {locations: data.getbusinesscompanies};
                 });
 
                 this.fetchShifts();
@@ -311,10 +308,10 @@ class Shifts extends Component {
     };
 
     render() {
-        const { viewModel } = this.state;
+        const {viewModel} = this.state;
 
         if (this.state.loading) {
-            return <LinearProgress />;
+            return <LinearProgress/>;
         }
 
         return (
@@ -327,8 +324,8 @@ class Shifts extends Component {
                 eventItemClick={this.eventClicked}
                 updateEventStart={this.updateEventStart}
                 updateEventEnd={this.updateEventEnd}
-            //moveEvent={this.moveEvent}
-            //newEvent={this.newEvent}
+                //moveEvent={this.moveEvent}
+                //newEvent={this.newEvent}
             />
         );
     }
@@ -384,8 +381,8 @@ class Shifts extends Component {
     ops1 = (schedulerData, event) => {
         alert(
             `You just executed ops1 to event: {id: ${event.id}, title: ${
-            event.title
-            }}`
+                event.title
+                }}`
         );
     };
 
