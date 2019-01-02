@@ -1669,6 +1669,7 @@ class General extends Component {
                                                         }}>Convert to Employee
                                         </button>
                                                     ) : ('')
+                                                    
                                                 }
                                                 <button className="btn btn-outline-info" onClick={() => {
                                                     this.handleClickOpenModal();
