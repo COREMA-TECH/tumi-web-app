@@ -27,7 +27,7 @@ class FilterForm extends Component {
         selectedDetailId: 0,
         status: 1,
         openShift: false,
-        updating:false
+        updating: false
     }
 
     constructor(props) {
@@ -471,15 +471,15 @@ class FilterForm extends Component {
                     this.props.hotelManager == true ? (
                         <div className="row">
                             <div className="col-md-12">
-                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm</button>
-                                <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected</button>
+                                <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm</button>
+                                <button className="btn btn-danger btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected</button>
                             </div>
                         </div>
                     ) : (
                             <div className="row">
                                 <div className="col-md-12">
-                                    <button className="btn btn-success float-right mb-1 ml-1" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
-                                    <button className="btn btn-danger float-right mb-1" type="button" onClick={this.clearInputs} >Clear</button>
+                                    <button className="btn btn-success btn-large mb-1" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
+                                    <button className="btn btn-danger btn-large mb-1" type="button" onClick={this.clearInputs} >Clear</button>
                                 </div>
                             </div>
                         )
