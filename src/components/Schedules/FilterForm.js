@@ -3,7 +3,7 @@ import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
-import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY } from './Queries';
+import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY, GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY } from './Queries';
 import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT } from './Mutations';
 
 import Select from 'react-select';
@@ -26,7 +26,8 @@ class FilterForm extends Component {
         endDate: '',
         selectedDetailId: 0,
         status: 1,
-        openShift: false
+        openShift: false,
+        updating:false
     }
 
     constructor(props) {
@@ -64,6 +65,49 @@ class FilterForm extends Component {
                     'bottom',
                     'right'
                 );
+            });
+    }
+
+    getShiftByDateAndEmployee = (executeMutation = () => { }) => {
+        //This evaluate if Employee control has selected one or many employees
+        //If only one employee can be selected then the value is got from object.value 
+        //other way it is selected from an array of selected values
+        let isOnEmployee = this.state.selectedDetailId != 0 || this.state.openShift;
+        this.props.client
+            .query({
+                query: GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY,
+                variables: {
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    employeeId: isOnEmployee ? this.state.selectedEmployees.value : this.state.selectedEmployees.map(item => { return item.value }),
+                    startTime: this.state.startHour,
+                    endTime: this.state.endHour,
+                    shiftDetailId: this.state.selectedDetailId
+                }
+            })
+            .then(({ data }) => {
+                if (data.ShiftDetailByDate.length == 0) {
+                    executeMutation();
+                } else {
+                    this.setState({ updating: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'This shift is not available',
+                            'bottom',
+                            'right'
+                        );
+                    })
+                }
+            }).catch(error => {
+
+                this.setState({ updating: false }, () => {
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Error evaluting schedule',
+                        'bottom',
+                        'right'
+                    );
+                })
             });
     }
     getPosition = (position = 0) => {
@@ -120,7 +164,9 @@ class FilterForm extends Component {
                 this.props.toggleRefresh();
             })
             .catch((error) => {
-                this.props.handleOpenSnackbar('error', 'Error creating Shift');
+                this.setState({ updating: false }, () => {
+                    this.props.handleOpenSnackbar('error', 'Error creating Shift');
+                })
             });
     };
 
@@ -157,7 +203,9 @@ class FilterForm extends Component {
                 this.props.toggleRefresh();
             })
             .catch((error) => {
-                this.props.handleOpenSnackbar('error', 'Error updating Shift');
+                this.setState({ updating: false }, () => {
+                    this.props.handleOpenSnackbar('error', 'Error updating Shift');
+                });
             });
     };
 
@@ -310,16 +358,21 @@ class FilterForm extends Component {
     onSubmit = (event) => {
         event.preventDefault();
 
-        let result = this.validateControls();
-        let { valid, message } = result;
 
-        if (valid) {
-            if (this.state.selectedDetailId == 0)
-                this.insertShift();
-            else
-                this.updateShift();
+        this.setState({ updating: true }, () => {
+            let result = this.validateControls();
+            let { valid, message } = result;
+            if (valid) {
+                let mutation;
+                if (this.state.selectedDetailId == 0)
+                    mutation = this.insertShift;
+                else
+                    mutation = this.updateShift;
+                this.getShiftByDateAndEmployee(mutation);
 
-        } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
+            } else this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
+        })
+
     }
 
     clearInputs = (e) => {
@@ -425,7 +478,7 @@ class FilterForm extends Component {
                     ) : (
                             <div className="row">
                                 <div className="col-md-12">
-                                    <button className="btn btn-success float-right mb-1 ml-1" type="submit">Publish</button>
+                                    <button className="btn btn-success float-right mb-1 ml-1" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
                                     <button className="btn btn-danger float-right mb-1" type="button" onClick={this.clearInputs} >Clear</button>
                                 </div>
                             </div>
