@@ -1661,33 +1661,36 @@ class General extends Component {
                                 <div className="col-md-4">
                                     <div className="row">
                                         <div className="item col-sm-12  col-md-12">
-                                            <div class="btn-group" role="group" aria-label="Basic example">
-                                                {
-                                                    this.state.isLead ? (
-                                                        <button className="btn btn-outline-info" onClick={() => {
-                                                            this.handleClickConvertToEmployee();
-                                                        }}>Convert to Employee
-                                        </button>
-                                                    ) : ('')
-                                                    
-                                                }
-                                                <button className="btn btn-outline-info" onClick={() => {
-                                                    this.handleClickOpenModal();
-                                                }}>Add to hotel
+                                            <div class="dropdown">
+                                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Options
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    {
+                                                        this.state.isLead ? (
+                                                            <button className="dropdown-item" onClick={() => {
+                                                                this.handleClickConvertToEmployee();
+                                                            }}>Convert to Employee
                                             </button>
-                                                {
-                                                    userExist || this.state.createdProfile ? (
-                                                        ''
-                                                    ) : (
-                                                            <button className="btn btn-outline-success" onClick={() => {
-                                                                this.handleClickOpenUserModal();
-                                                            }}>Create Profile
-                                                    </button>
-                                                        )
-                                                }
+                                                        ) : ('')
 
+                                                    }
+                                                    <button className="dropdown-item" onClick={() => {
+                                                        this.handleClickOpenModal();
+                                                    }}>Add to hotel
+                                                </button>
+                                                    {
+                                                        userExist || this.state.createdProfile ? (
+                                                            ''
+                                                        ) : (
+                                                                <button className="dropdown-item" onClick={() => {
+                                                                    this.handleClickOpenUserModal();
+                                                                }}>Create Profile
+                                                        </button>
+                                                            )
+                                                    }
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
