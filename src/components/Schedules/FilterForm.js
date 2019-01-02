@@ -417,7 +417,7 @@ class FilterForm extends Component {
                     this.props.hotelManager == true ? (
                         <div className="row">
                             <div className="col-md-12">
-                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Approved</button>
+                                <button className="btn btn-success float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm</button>
                                 <button className="btn btn-danger float-right mb-1 ml-1" type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected</button>
                             </div>
                         </div>
