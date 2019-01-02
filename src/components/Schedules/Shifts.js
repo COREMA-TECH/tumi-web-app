@@ -7,8 +7,22 @@ import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 
+let today = new Date();
+let dd = today.getDate();
+let mm = today.getMonth() + 1; //January is 0!
+let yyyy = today.getFullYear();
+
+if (dd < 10) {
+    dd = '0' + dd
+}
+
+if (mm < 10) {
+    mm = '0' + mm
+}
+
+today = yyyy + '-' + mm + '-' + dd;
 let schedulerData = new SchedulerData(
-    "2018-12-08",
+    today,
     ViewTypes.Week,
     false,
     false,
@@ -31,12 +45,6 @@ let schedulerData = new SchedulerData(
                 viewType: ViewTypes.Month,
                 showAgenda: false,
                 isEventPerspective: true
-            },
-            {
-                viewName: "Year",
-                viewType: ViewTypes.Year,
-                showAgenda: false,
-                isEventPerspective: false
             }
         ],
         schedulerWidth: "1500"
