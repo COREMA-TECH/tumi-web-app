@@ -3,10 +3,9 @@
     box-sizing: border-box;
     padding: 1rem;
     &-hour {
-        display: flex;
-        flex-direction: column-reverse;
         height: 100%;
-        margin-left: -15px;
+        display: block;
+        margin-top: 1rem;
         &:before {
             background: $danger;
             border-radius: $border-radius-standar;

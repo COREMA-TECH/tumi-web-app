@@ -24,3 +24,32 @@ mutation createShiftDetail(
     }
   }
 `;
+
+export const CHANGE_STATUS_SHIFT = gql`
+mutation changeStatusShift($id: Int!,$status:Int!,$color:String!)
+{
+  changeStatusShift(id:$id,status:$status,color: $color)
+  {
+    id
+  }
+}`;
+
+export const UPDATE_SHIFT = gql`
+  mutation updateShift($shift: inputUpdateShift, 
+    $shiftDetail: inputUpdateShiftDetail,
+    $shiftDetailEmployee: inputInsertShiftDetailEmployee)	{
+    updateShift(Shift:$shift){
+      id
+      
+    }
+
+    updateShiftDetail(ShiftDetail: $shiftDetail){
+      id
+    }
+
+    addShiftDetailEmployee(ShiftDetailEmployee:$shiftDetailEmployee){
+      ShiftDetailId
+       EmployeeId
+     }
+  }
+`;

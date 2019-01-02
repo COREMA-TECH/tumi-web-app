@@ -187,7 +187,7 @@ class ApplicationTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell padding="none" className={"Table-head"} />
+									<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
@@ -207,21 +207,19 @@ class ApplicationTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+											<CustomTableCell >
 												<Tooltip title="Delete">
-													<div>
-														<button
-															className="btn btn-danger ml-1"
-															disabled={this.props.loading}
-															onClick={(e) => {
-																e.stopPropagation();
+													<button
+														className="btn btn-danger ml-1"
+														disabled={this.props.loading}
+														onClick={(e) => {
+															e.stopPropagation();
 
-																return this.props.onDeleteHandler(row.id);
-															}}
-														>
-															<i class="fas fa-trash"></i>
-														</button>
-													</div>
+															return this.props.onDeleteHandler(row.id);
+														}}
+													>
+														<i class="fas fa-trash"></i>
+													</button>
 												</Tooltip>
 											</CustomTableCell>
 											<CustomTableCell>
