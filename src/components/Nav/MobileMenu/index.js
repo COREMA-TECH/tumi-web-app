@@ -42,13 +42,12 @@ const MobileMenu = (props) => {
 						<span>Contracts</span>
 					</Link>
 				</li>
-				{/* <li className="MainMenu-option">
-					<Link to={`/home/Recruiter`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
-						<i className={'fas fa-clipboard MenuMobile-icon'} title={'Recruiter'} />
-						<span>Recruiter</span>
+				<li className="MainMenu-option">
+					<Link to={`/home/employees`} className="MenuMobile-link" onClick={props.handleCloseMenu}>
+						<i className={'far fa-handshake MenuMobile-icon'} title={'Employees'} />
+						<span>Employees</span>
 					</Link>
-				</li>*/}
-
+				</li>
 				<li className="MainMenu-option">
 					<Link
 						to={`/home/application`}
@@ -80,6 +79,21 @@ const MobileMenu = (props) => {
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Public Application
 							</a>
 						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/work-orders">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/schedules">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Schedules
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/property/schedules">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Manage Schedules
+							</a>
+						</li>
 					</ul>
 				</li>
 				<li className="MainMenu-option">
@@ -94,7 +108,7 @@ const MobileMenu = (props) => {
 					</Link>
 					<ul className="SubMenu" id="1">
 						<li className="SubMenu-item">
-							<a className="SubMenu-link" href="/home/dashboard/manager">
+							<a className="SubMenu-link" href="/home/dashboard/hotel">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Dashboard
 							</a>
 						</li>
@@ -103,6 +117,7 @@ const MobileMenu = (props) => {
 								<i className="fas fa-angle-double-right SubMenu-icon" /> Board
 							</a>
 						</li>
+
 					</ul>
 				</li>
 				<li className="MainMenu-option">
@@ -129,6 +144,11 @@ const MobileMenu = (props) => {
 						<li className="SubMenu-item">
 							<a className="SubMenu-link" href="/home/Recruiter">
 								<i className="fas fa-angle-double-right SubMenu-icon" /> New Lead
+							</a>
+						</li>
+						<li className="SubMenu-item">
+							<a className="SubMenu-link" href="/home/work-orders">
+								<i className="fas fa-angle-double-right SubMenu-icon" /> Work Order
 							</a>
 						</li>
 					</ul>

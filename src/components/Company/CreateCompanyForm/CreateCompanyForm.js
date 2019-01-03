@@ -396,7 +396,7 @@ class ComposedTextField extends React.Component {
                                     {({ loading, error, data, refetch, networkStatus }) => {
                                         //if (networkStatus === 4) return <LinearProgress />;
                                         if (loading) return <LinearProgress />;
-                                        if (error) return <p>Error </p>;
+                                        if (error) return <p> </p>;
                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                             return (<Select label={"Country"} values={data.getcatalogitem}
                                                 value={this.state.country}
@@ -411,7 +411,7 @@ class ComposedTextField extends React.Component {
                                     {({ loading, error, data, refetch, networkStatus }) => {
                                         //if (networkStatus === 4) return <LinearProgress />;
                                         if (loading) return <LinearProgress />;
-                                        if (error) return <p>Error </p>;
+                                        if (error) return <p> </p>;
                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                             return <Select label={"States"} update={this.updateStateState}
                                                 value={this.state.state}
@@ -428,7 +428,7 @@ class ComposedTextField extends React.Component {
                                     {({ loading, error, data, refetch, networkStatus }) => {
                                         //if (networkStatus === 4) return <LinearProgress />;
                                         if (loading) return <LinearProgress />;
-                                        if (error) return <p>Error </p>;
+                                        if (error) return <p> </p>;
                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                             return <Select label={"Cities"} update={this.updateStateCity}
                                                 value={this.state.city}

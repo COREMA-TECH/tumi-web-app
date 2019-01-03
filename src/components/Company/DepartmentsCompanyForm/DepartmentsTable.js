@@ -190,10 +190,9 @@ class DepartmentsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
-							<CustomTableCell className={classes.th + " company-th Table-head"}>Department Code</CustomTableCell>
-							<CustomTableCell className={classes.th + " company-th Table-head"}>Department Name</CustomTableCell>
+							<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}> Actions </CustomTableCell>
+							<CustomTableCell className={"company-th Table-head"}>Department Code</CustomTableCell>
+							<CustomTableCell className={"company-th Table-head"}>Department Name</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -207,37 +206,30 @@ class DepartmentsTable extends React.Component {
 										return this.props.onEditHandler({ ...row });
 									}}
 								>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px', paddingLeft: '5px' }}>
-										{' '}
+									<CustomTableCell component="th" style={{ width: '50px' }}>
 										<Tooltip title="Edit">
-											<div>
-												<button
-													className="btn btn-success"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onEditHandler({ ...row });
-													}}
-												>
-													<i class="fas fa-pen"></i>
-												</button>
-											</div>
+											<button
+												className="btn btn-success float-left ml-1"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													return this.props.onEditHandler({ ...row });
+												}}
+											>
+												<i class="fas fa-pen"></i>
+											</button>
 										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										<Tooltip title="Delete">
-											<div>
-												<button
-													className="btn btn-danger"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onDeleteHandler(row.Id);
-													}}
-												>
-													<i class="fas fa-trash"></i>
-												</button>
-											</div>
+											<button
+												className="btn btn-danger float-left ml-1"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													return this.props.onDeleteHandler(row.Id);
+												}}
+											>
+												<i class="fas fa-trash"></i>
+											</button>
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell style={{ width: '150px' }}>{row.Code}</CustomTableCell>

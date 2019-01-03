@@ -28,12 +28,15 @@ import { GET_ROLES_FORMS } from '../Queries';
 import withGlobalContent from '../../Generic/Global';
 import { GET_FORMS_QUERY } from '../../Security/DropdownForm/queries';
 import NotFound from '../../NotFound/NotFound';
-import DashboardManager from '../../Dashboard/Manager';
+import DashboardManager from '../../Dashboard/TumiManager';
+import DashboardHotel from '../../Dashboard/HotelManager';
 import DashboardRecruiter from '../../Dashboard/Recruiter';
 import Holidays from '../../Holidays';
 import Calendar from '../../Holidays/Calendar';
 import Employees from "../../Employees/Employees";
-
+import Schedules from '../../Schedules';
+import Property_Schedules from "../../ManagerHotel/Schedules"
+import SchedulesAccept from '../../Schedules/SchedulesAccept';
 class Container extends Component {
 	constructor(props) {
 		super(props);
@@ -147,10 +150,15 @@ class Container extends Component {
 				<Route exact path="/home/board/manager" component={Board} />
 				<Route exact path="/home/board/recruiter" component={BoardRecruiter} />
 				<Route exact path="/home/dashboard/manager" component={DashboardManager} />
+				<Route exact path="/home/dashboard/hotel" component={DashboardHotel} />
 				<Route exact path="/home/dashboard/recruiter" component={DashboardRecruiter} />
 				<Route exact path="/home/openings" component={WorkOrdersPosition} />
 
 				<Route exact path="/home/calendar" component={Calendar} />
+				<Route exact path="/home/schedules" component={Schedules} />
+				<Route exact path="/home/property/schedules" component={Property_Schedules} />
+
+				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 			</div>
 		);
 	}

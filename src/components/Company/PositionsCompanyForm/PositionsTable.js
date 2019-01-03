@@ -251,10 +251,11 @@ class PositionsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th} />
+							<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }} >
+								Actions
+							</CustomTableCell>
 							<CustomTableCell style={{
-                                width: '25px'
+								width: '25px'
 							}} className={'Table-head'}>Department</CustomTableCell>
 							<CustomTableCell className={'Table-head'}>Title</CustomTableCell>
 
@@ -279,37 +280,31 @@ class PositionsTable extends React.Component {
 										return this.props.onEditHandler({ ...row });
 									}}
 								>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
-										{' '}
+
+									<CustomTableCell component="th" style={{ width: '50px' }}>
 										<Tooltip title="Edit">
-											<div>
-												<button
-													className="btn btn-success ml-1"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onEditHandler({ ...row });
-													}}
-												>
-													<i class="fas fa-pen"></i>
-												</button>
-											</div>
+											<button
+												className="btn btn-success ml-1 float-left"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													return this.props.onEditHandler({ ...row });
+												}}
+											>
+												<i class="fas fa-pen"></i>
+											</button>
 										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										<Tooltip title="Delete">
-											<div>
-												<button
-													className="btn btn-danger"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onDeleteHandler(row.Id);
-													}}
-												>
-													<i class="fas fa-trash"></i>
-												</button>
-											</div>
+											<button
+												className="btn btn-danger float-left ml-1"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													return this.props.onDeleteHandler(row.Id);
+												}}
+											>
+												<i class="fas fa-trash"></i>
+											</button>
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell>
@@ -330,30 +325,12 @@ class PositionsTable extends React.Component {
 									</CustomTableCell>
 									<CustomTableCell>{row.Position}</CustomTableCell>
 									<CustomTableCell>
-										{/*<TextField*/}
-											{/*value={row.Bill_Rate}*/}
-											{/*id="billrate"*/}
-											{/*readOnly*/}
-											{/*InputProps={{*/}
-												{/*inputComponent: NumberFormatCustom,*/}
-												{/*disableUnderline: true*/}
-											{/*}}*/}
-										{/*/>*/}
-                                        {row.Bill_Rate}
+										$ {row.Bill_Rate}
 									</CustomTableCell>
 
 									{this.props.showPayRate && (
 										<CustomTableCell>
-											{/*<TextField*/}
-												{/*value={row.Pay_Rate}*/}
-												{/*id="payrate"*/}
-												{/*readOnly*/}
-												{/*InputProps={{*/}
-													{/*inputComponent: NumberFormatCustom,*/}
-													{/*disableUnderline: true*/}
-												{/*}}*/}
-											{/*/>*/}
-                                            {row.Pay_Rate}
+											$ {row.Pay_Rate}
 										</CustomTableCell>
 									)}
 									<CustomTableCell padding="none">

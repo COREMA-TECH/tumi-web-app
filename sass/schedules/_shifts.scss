@@ -1,0 +1,32 @@
+.MasterShift {
+    &-btn {
+        i {
+            color: $text-color;
+            line-height: 36px;
+            font-size: 2rem;
+        }
+        &:hover {
+            i {
+                color: $info;
+            }
+        }
+    }
+    &-schedules {
+        background: $white;
+        border-radius: $border-radius-standar;
+        overflow: hidden;
+        &Body {
+            background: $white;
+            padding: 1rem;
+            width: 100%;
+            @include media-breakpoint-down(lg) { 
+                overflow-x: scroll;
+            }
+        }
+        &Header {
+            background: map-get($gray-shades , $key: clear-gray);
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+    }
+}

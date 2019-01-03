@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
@@ -6,11 +6,12 @@ import {
     GET_APPLICATION_BY_ID,
     GET_CITIES_QUERY,
     GET_POSITIONS_QUERY,
+    GET_POSITIONS_CATALOG,
     GET_STATES_QUERY,
     getCompaniesQuery
 } from '../Queries';
 
-import {CREATE_APPLICATION, UPDATE_APPLICATION} from '../Mutations';
+import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
 
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -18,6 +19,9 @@ import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
+import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
+import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
+import axios from "axios";
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -118,12 +122,12 @@ class Application extends Component {
 
 
     handleChangePositionTag = (positionsTags) => {
-        this.setState({positionsTags});
+        this.setState({ positionsTags });
         console.log(`Option selected:`, positionsTags);
     };
 
     handleChange = (positionsTags) => {
-        this.setState({positionsTags});
+        this.setState({ positionsTags });
     };
 
     // To handle the stepper
@@ -192,10 +196,21 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         localStorage.setItem('idApplication', data.addApplication.id);
                         this.setState({
                             editing: false
+                        }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: parseInt(data.addApplication.id),
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object, parseInt(data.addApplication.id));
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
@@ -256,9 +271,20 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             editing: false
+                        }, () => {
+                            let object = [];
+                            this.state.positionsTags.map(item => {
+                                object.push({
+                                    ApplicationId: this.props.applicationId,
+                                    idPosition: item.value,
+                                    description: item.label
+                                })
+                            });
+
+                            this.addApplicantJobs(object, this.props.applicationId);
                         });
 
                         this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
@@ -274,17 +300,37 @@ class Application extends Component {
             }
         );
     };
+
+
+    addApplicantJobs = (idealJobArrayObject, applicationId) => {
+        this.props.client
+            .mutate({
+                mutation: RECREATE_IDEAL_JOB_LIST,
+                variables: {
+                    ApplicationId: applicationId,
+                    applicationIdealJob: idealJobArrayObject
+                }
+            })
+            .then(({ data }) => {
+                console.log("DEBUG");
+            })
+            .catch(error => {
+                console.log("DEBUG ERROR");
+            })
+    };
+
+
     getHotels = (func = () => {
     }) => {
         // getHotels = (idParent) => {
         this.props.client.query({
             query: getCompaniesQuery, //this.getCompaniesQuery,
-            variables: {Id_Parent: -1},
+            variables: { Id_Parent: -1 },
             fetchPolicy: 'no-cache'
-        }).then(({data}) => {
+        }).then(({ data }) => {
             this.setState({
-                    hotels: data.getbusinesscompanies
-                },
+                hotels: data.getbusinesscompanies
+            },
                 func);
         }).catch();
     };
@@ -305,7 +351,7 @@ class Application extends Component {
                             id: id
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         if (data.applications != null && data.applications.length > 0) {
                             let applicantData = data.applications[0];
                             this.setState(
@@ -339,9 +385,7 @@ class Application extends Component {
                                 },
                                 () => {
                                     this.removeSkeletonAnimation();
-                                    this.setState({
-                                        loading: false
-                                    });
+                                    this.getIdealJobsByApplicationId();
                                 }
                             );
                         }
@@ -359,6 +403,44 @@ class Application extends Component {
                     });
             }
         );
+    };
+
+
+    // get ideal jobs
+    getIdealJobsByApplicationId = () => {
+        this.props.client
+            .query({
+                query: GET_APPLICANT_IDEAL_JOBS,
+                variables: {
+                    ApplicationId: this.props.applicationId
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                let dataAPI = data.applicantIdealJob;
+                let object;
+
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        positionsTags: [...prevState.positionsTags, {
+                            value: item.id,
+                            label: item.description
+                        }]
+                    }))
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
     };
 
     // To validate all the inputs and set a red border when the input is invalid
@@ -408,7 +490,7 @@ class Application extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: {parent: -1, value: `'${zipCode}'`},
+            variables: { parent: -1, value: `'${zipCode}'` },
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({
@@ -417,7 +499,7 @@ class Application extends Component {
             });
         });
 
-    }
+    };
 
     render() {
         return (
@@ -443,20 +525,20 @@ class Application extends Component {
                                 {this.state.editing ? (
                                     ''
                                 ) : (
-                                    <button
-                                        className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            //alert(this.props.applicationId);
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
-                                    >
-                                        {spanishActions[1].label} <i className="far fa-edit"/>
-                                    </button>
-                                )}
+                                        <button
+                                            className="applicant-card__edit-button"
+                                            onClick={() => {
+                                                //alert(this.props.applicationId);
+                                                this.setState({
+                                                    editing: true
+                                                });
+                                            }}
+                                        >
+                                            {spanishActions[1].label} <i className="far fa-edit" />
+                                        </button>
+                                    )}
                             </div>
-                            <br/>
+                            <br />
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-md-12 col-lg-6 form-section-1">
@@ -465,46 +547,49 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label">
                                                     {formSpanish[16].label}
                                                 </span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-
-                                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                {/*if (data.getposition != null && data.getposition.length > 0) {*/}
-                                                {/*return (*/}
-                                                {/*<select*/}
-                                                {/*name="positionApply"*/}
-                                                {/*id="positionApply"*/}
-                                                {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*positionApplyingFor: event.target.value*/}
-                                                {/*});*/}
-                                                {/*}}*/}
-                                                {/*value={this.state.positionApplyingFor}*/}
-                                                {/*className="form-control"*/}
-                                                {/*disabled={!this.state.editing}*/}
-                                                {/*>*/}
-                                                {/*<option value="">Select a position</option>*/}
-                                                {/*{data.getposition.map((item) => (*/}
-                                                {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                {/*//    console.log("Info del hotel ", ),*/}
-
-                                                {/*< option value={item.Id} > {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }) ? this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code : '') + ')'}</option>*/}
-                                                {/*))}*/}
-                                                {/*</select>*/}
-                                                {/*);*/}
-                                                {/*}*/}
-                                                {/*return <SelectNothingToDisplay />;*/}
-                                                {/*}}*/}
-                                                {/*</Query>*/}
                                                 <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.workOrder != null && data.workOrder.length > 0) {
+                                                            return (
+                                                                <select
+                                                                    name="positionApply"
+                                                                    id="positionApply"
+                                                                    onChange={(event) => {
+                                                                        this.setState({
+                                                                            positionApplyingFor: event.target.value
+                                                                        });
+                                                                    }}
+                                                                    value={this.state.positionApplyingFor}
+                                                                    className="form-control"
+                                                                    disabled={!this.state.editing}
+                                                                >
+                                                                    <option value="">Select a position</option>
+                                                                    <option value="0">Open Position</option>
+                                                                    {data.workOrder.map((item) => (
+                                                                        <option
+                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
+                                                                    ))}
+                                                                </select>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <span className="primary applicant-card__label">
+                                                    {formSpanish[17].label}
+                                                </span>
+                                                <Query query={GET_POSITIONS_CATALOG}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                             let options = [];
                                                             data.getcatalogitem.map((item) => (
-                                                                options.push({value: item.Id, label: item.Description})
+                                                                options.push({ value: item.Id, label: item.Description })
                                                             ));
 
                                                             return (
@@ -522,78 +607,6 @@ class Application extends Component {
                                                                         isMulti
                                                                     />
                                                                 </div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay/>;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label">
-                                                    {formSpanish[17].label}
-                                                </span>
-                                                {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                                                    {/*{({loading, error, data, refetch, networkStatus}) => {*/}
-
-                                                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                                        {/*if (error) return <p>Nothing To Display </p>;*/}
-                                                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                                            {/*return (*/}
-                                                                {/*<select*/}
-                                                                    {/*name="positionApply"*/}
-                                                                    {/*id="positionApply"*/}
-                                                                    {/*onChange={(event) => {*/}
-                                                                        {/*this.setState({*/}
-                                                                            {/*positionApplyingFor: event.target.value*/}
-                                                                        {/*});*/}
-                                                                    {/*}}*/}
-                                                                    {/*value={this.state.positionApplyingFor}*/}
-                                                                    {/*className="form-control"*/}
-                                                                    {/*disabled={!this.state.editing}*/}
-                                                                {/*>*/}
-                                                                    {/*<option value="">Select a position</option>*/}
-                                                                    {/*{data.getcatalogitem.map((item) => (*/}
-                                                                        {/*//  console.log("Info del hotel ", this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code = '' ? '' : this.state.hotels.find((obj) => { return obj.Id === item.Id_Entity }).Code),*/}
-                                                                        {/*//    console.log("Info del hotel ", ),*/}
-
-                                                                        {/*< option*/}
-                                                                            {/*value={item.Id}> {item.Position.trim() + ' (' + (this.state.hotels.find((obj) => {*/}
-                                                                            {/*return obj.Id === item.Id_Entity*/}
-                                                                        {/*}) ? this.state.hotels.find((obj) => {*/}
-                                                                            {/*return obj.Id === item.Id_Entity*/}
-                                                                        {/*}).Code : '') + ')'}</option>*/}
-                                                                    {/*))}*/}
-                                                                {/*</select>*/}
-                                                            {/*);*/}
-                                                        {/*}*/}
-                                                        {/*return <SelectNothingToDisplay/>;*/}
-                                                    {/*}}*/}
-                                                {/*</Query>*/}
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="positionApply"
-                                                                    id="positionApply"
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            idealJob: event.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.idealJob}
-                                                                    className="form-control"
-                                                                    disabled={!this.state.editing}
-                                                                >
-                                                                    <option value="">Select a position</option>
-                                                                    <option value="0">Open Position</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option
-                                                                            value={item.Id}>{item.Description}</option>
-                                                                    ))}
-                                                                </select>
                                                             );
                                                         }
                                                         return <SelectNothingToDisplay />;
@@ -685,27 +698,6 @@ class Application extends Component {
                                                     minLength="3"
                                                 />
                                             </div>
-                                            {/*
-                                            <div className="col-md-12 ">
-                                                <span
-                                                    className="primary applicant-card__label ">{formSpanish[22].label}</span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            streetAddress: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.streetAddress}
-                                                    name="streetAddress"
-                                                    type="text"
-                                                    className="form-control"
-                                                    required
-                                                    disabled={!this.state.editing}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="5"
-                                                />
-												</div>*/}
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label ">
                                                     * {formSpanish[5].label}
@@ -720,15 +712,24 @@ class Application extends Component {
                                                     onChange={(event) => {
                                                         this.setState({
                                                             zipCode: event.target.value
-                                                        });
-                                                        let zip_code = '';
-                                                        zip_code = event.target.value.substring(0, 5);
-                                                        fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                                            return response.json()
-                                                        }).then((cities) => {
-                                                            if (!cities.error) {
-                                                                this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                            }
+                                                        }, () => {
+                                                            // fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
+                                                            //     return response.json()
+                                                            // }).then((cities) => {
+                                                            //     if (!cities.error) {
+                                                            //         this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                            //     }
+                                                            // });
+
+                                                            const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
+                                                            if (zipCode)
+                                                                axios.get(`https://ziptasticapi.com/${zipCode}`)
+                                                                    .then(res => {
+                                                                        const cities = res.data;
+                                                                        if (!cities.error) {
+                                                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
+                                                                        }
+                                                                    });
                                                         });
                                                     }}
                                                     value={this.state.zipCode}
@@ -741,8 +742,8 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label ">
                                                     * {formSpanish[6].label}
                                                 </span>
-                                                <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -752,7 +753,7 @@ class Application extends Component {
                                                                     id="state"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    disabled
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             state: e.target.value
@@ -767,7 +768,7 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
@@ -775,8 +776,8 @@ class Application extends Component {
                                                 <span className="primary applicant-card__label ">
                                                     * {formSpanish[7].label}
                                                 </span>
-                                                <Query query={GET_CITIES_QUERY} variables={{parent: this.state.state}}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -797,7 +798,7 @@ class Application extends Component {
                                                                     id="city"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    disabled
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             city: e.target.value
@@ -812,7 +813,7 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
@@ -841,30 +842,10 @@ class Application extends Component {
                                                         minLength="10"
                                                     />
                                                     <label className="onoffswitch-label" htmlFor="carSwitch">
-                                                        <span className="onoffswitch-inner"/>
-                                                        <span className="onoffswitch-switch"/>
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
-
-                                                {/*<label className="switch">*/}
-                                                {/*<input*/}
-                                                {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                {/*car: event.target.checked*/}
-                                                {/*});*/}
-                                                {/*}}*/}
-                                                {/*checked={this.state.car}*/}
-                                                {/*value={this.state.car}*/}
-                                                {/*name="car"*/}
-                                                {/*type="checkbox"*/}
-                                                {/*className="form-control"*/}
-                                                {/*disabled={!this.state.editing}*/}
-                                                {/*min="0"*/}
-                                                {/*maxLength="50"*/}
-                                                {/*minLength="10"*/}
-                                                {/*/>*/}
-                                                {/*<p className="slider round" />*/}
-                                                {/*</label>*/}
                                             </div>
                                         </div>
                                     </div>
@@ -909,7 +890,6 @@ class Application extends Component {
                                                         });
                                                     }}
                                                     placeholder="+(999) 999-9999"
-                                                    required
                                                     minLength="15"
                                                 />
                                             </div>
@@ -979,24 +959,24 @@ class Application extends Component {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="applicant-card__footer">
-                                    <button
-                                        className="applicant-card__cancel-button"
-                                        onClick={() => {
-                                            window.location.href = '/home/Recruiter'
-                                        }}
-                                    >
-                                        {spanishActions[9].label}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            this.props.handleNext();
-                                        }}
-                                        className="applicant-card__save-button">
-                                        {spanishActions[8].label}
-                                    </button>
-                                </div>
-                            )}
+                                    <div className="applicant-card__footer">
+                                        <button
+                                            className="applicant-card__cancel-button"
+                                            onClick={() => {
+                                                window.location.href = '/home/Recruiter'
+                                            }}
+                                        >
+                                            {spanishActions[9].label}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                this.props.handleNext();
+                                            }}
+                                            className="applicant-card__save-button">
+                                            {spanishActions[8].label}
+                                        </button>
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </form>

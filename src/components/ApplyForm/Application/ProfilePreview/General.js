@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './preview-profile.css';
 import './../index.css';
 import withApollo from "react-apollo/withApollo";
@@ -22,12 +22,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import PropTypes from 'prop-types';
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import ContactTypesData from '../../../../data/contactTypes';
 import withGlobalContent from "../../../Generic/Global";
-import {INSERT_CONTACT, INSERT_DEPARTMENT} from "./Mutations";
-import {GET_LANGUAGES_QUERY} from "../../../ApplyForm-Recruiter/Queries";
+import { ADD_EMPLOYEES, INSERT_CONTACT, INSERT_DEPARTMENT, UPDATE_APPLICANT } from "./Mutations";
+import { GET_LANGUAGES_QUERY } from "../../../ApplyForm-Recruiter/Queries";
 import gql from 'graphql-tag';
 
 
@@ -112,7 +112,7 @@ class General extends Component {
             openModal: false,
             openUserModal: false,
 
-
+            insertDialogLoading: false,
             // Modal state
             Id: 0,
             idCompany: null,
@@ -129,13 +129,13 @@ class General extends Component {
             Date_Created: "'2018-08-14 16:10:25+00'",
             Date_Updated: "'2018-08-14 16:10:25+00'",
             hotelId: null,
-
+            isLead: false,
 
             contactTypes: ContactTypesData,
 
             // Functional states
-            titles: [{Id: 0, Name: 'Nothing', Description: 'Nothing'}],
-            departments: [{Id: 0, Name: 'Nothing', Description: 'Nothing'}],
+            titles: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
+            departments: [{ Id: 0, Name: 'Nothing', Description: 'Nothing' }],
             hotels: [],
             supervisors: [],
             allSupervisors: [],
@@ -258,9 +258,77 @@ class General extends Component {
      * To open modal updating the state
      */
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ openModal: true });
     };
 
+    handleClickConvertToEmployee = () => {
+        this.setState(
+            {
+                insertDialogLoading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_APPLICANT,
+                        variables: {
+
+                            id: this.props.applicationId,
+                            isLead: false
+
+                        }
+                    })
+                    .then(({ data }) => {
+                        var datos = []
+                        datos.push({
+                            firstName: this.state.firstname,
+                            lastName: this.state.lastname,
+                            electronicAddress: this.state.email,
+                            mobileNumber: this.state.number,
+                            idRole: 1,
+                            isActive: true,
+                            userCreated: 1,
+                            userUpdated: 1,
+                        });
+
+                        this.insertEmployees(datos)
+                        this.setState({
+                            insertDialogLoading: false,
+                            isLead: false
+                        });
+
+                        this.props.handleOpenSnackbar('success', 'Candidate was updated!', 'bottom', 'right');
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
+
+
+    insertEmployees = (employeesArrays) => {
+        this.props.client
+            .mutate({
+                mutation: ADD_EMPLOYEES,
+                variables: {
+                    Employees: employeesArrays
+                }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', 'Employees Saved!');
+
+            })
+            .catch(error => {
+
+                this.props.handleOpenSnackbar('error', 'Error to save Employees!');
+
+            })
+    };
     /**
      * To hide modal and then restart modal state values
      */
@@ -281,7 +349,7 @@ class General extends Component {
      * To open the user modal
      */
     handleClickOpenUserModal = () => {
-        this.setState({openUserModal: true});
+        this.setState({ openUserModal: true });
     };
 
     /**
@@ -320,7 +388,7 @@ class General extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     data: data.applications[0]
                 }, () => {
@@ -330,7 +398,8 @@ class General extends Component {
                         number: this.state.data.cellPhone,
                         firstname: this.state.data.firstName,
                         middlename: this.state.data.middleName,
-                        lastname: this.state.data.lastName
+                        lastname: this.state.data.lastName,
+                        isLead: this.state.data.isLead
                     })
                 });
             })
@@ -351,7 +420,7 @@ class General extends Component {
             .query({
                 query: GET_HOTELS_QUERY
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -701,7 +770,7 @@ class General extends Component {
     }
 
     handleCheckedChange = (name) => (event) => {
-        if (name == 'IsRecruiter' && !event.target.checked) this.setState({IdRegion: 0, IdRegionValid: true});
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
         if (name == 'isAdmin' && event.target.checked)
             this.setState(
                 {
@@ -713,7 +782,7 @@ class General extends Component {
                 },
                 this.validateForm
             );
-        else this.setState({[name]: event.target.checked}, this.validateForm);
+        else this.setState({ [name]: event.target.checked }, this.validateForm);
     };
 
     updateSelect = (id, name) => {
@@ -764,7 +833,7 @@ class General extends Component {
     };
 
     onChangeHandler(value, name) {
-        this.setState({[name]: value}, this.validateField(name, value));
+        this.setState({ [name]: value }, this.validateField(name, value));
     }
 
     enableCancelButton = () => {
@@ -1050,7 +1119,7 @@ class General extends Component {
                         this.setState({
                             createdProfile: true
                         }, () => {
-                            this.setState({openUserModal: false, showCircularLoading: true, loading: false});
+                            this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
                             this.resetUserModalState();
                         });
 
@@ -1075,7 +1144,7 @@ class General extends Component {
             .query({
                 query: GET_EMAILS_USER
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     dataEmail: data.getusers
                 }, () => {
@@ -1085,23 +1154,24 @@ class General extends Component {
                 })
             })
             .catch(error => {
-                alert("Error to get users");
+                // TODO: add snackbar message error
+                this.props.handleOpenSnackbar('error', 'Error to list users!');
             })
     };
 
     render() {
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
         let userExist = false;
 
 
-        if (this.state.loading) {
-            return <LinearProgress/>
+        if (this.state.loading || this.state.insertDialogLoading) {
+            return <LinearProgress />
         }
 
 
         if (this.state.error) {
-            return <LinearProgress/>
+            return <LinearProgress />
         }
 
         /**
@@ -1125,20 +1195,20 @@ class General extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="md"
             >
-                <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
+                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">
                             {this.state.idToEdit != null &&
-                            this.state.idToEdit != '' &&
-                            this.state.idToEdit != 0 ? (
-                                'Edit  User'
-                            ) : (
-                                'Create User'
-                            )}
+                                this.state.idToEdit != '' &&
+                                this.state.idToEdit != 0 ? (
+                                    'Edit  User'
+                                ) : (
+                                    'Create User'
+                                )}
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600}}>
+                <DialogContent style={{ minWidth: 600 }}>
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
@@ -1247,8 +1317,8 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1265,8 +1335,8 @@ class General extends Component {
                                                     id="isAdmin"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1283,8 +1353,8 @@ class General extends Component {
                                                     id="allowInsert"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1301,8 +1371,8 @@ class General extends Component {
                                                     id="allowEdit"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1319,8 +1389,8 @@ class General extends Component {
                                                     id="allowDelete"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1337,8 +1407,8 @@ class General extends Component {
                                                     id="allowExport"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1348,7 +1418,7 @@ class General extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{margin: '16px 10px', borderTop: '1px solid #eee'}}>
+                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <div>
@@ -1365,7 +1435,7 @@ class General extends Component {
                         <div className={classes.wrapper}>
                             <div>
                                 <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
-                                    Cancel <i className="fas fa-ban ml-1"/>
+                                    Cancel <i className="fas fa-ban ml-1" />
                                 </button>
                             </div>
                         </div>
@@ -1385,12 +1455,12 @@ class General extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="lg"
             >
-                <DialogTitle style={{padding: '0px'}}>
+                <DialogTitle style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 class="modal-title">Add to hotel</h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600, maxWidth: 600, padding: '0px'}}>
+                <DialogContent style={{ minWidth: 600, maxWidth: 600, padding: '0px' }}>
                     <form className="container">
                         <div className="">
                             <div className="row">
@@ -1494,7 +1564,7 @@ class General extends Component {
                         </div>
                     </form>
                 </DialogContent>
-                <DialogActions style={{margin: '20px 20px'}}>
+                <DialogActions style={{ margin: '20px 20px' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <div>
@@ -1503,8 +1573,8 @@ class General extends Component {
                                     className="btn btn-success"
                                     onClick={this.insertDepartment}
                                 >
-                                    Save {!this.state.saving && <i class="fas fa-save"/>}
-                                    {this.state.saving && <i class="fas fa-spinner fa-spin"/>}
+                                    Save {!this.state.saving && <i class="fas fa-save" />}
+                                    {this.state.saving && <i class="fas fa-spinner fa-spin" />}
                                 </button>
                             </div>
                         </div>
@@ -1517,7 +1587,7 @@ class General extends Component {
                                     className="btn btn-danger"
                                     onClick={this.handleCloseModal}
                                 >
-                                    Cancel <i class="fas fa-ban"/>
+                                    Cancel <i class="fas fa-ban" />
                                 </button>
                             </div>
                         </div>
@@ -1545,7 +1615,7 @@ class General extends Component {
                                         <span
                                             className="col-sm-6 col-lg-12 font-weight-bold">Title</span>
                                         <span
-                                            className="col-sm-6 col-lg-12">{this.state.data.position.Name.trim()}</span>
+                                            className="col-sm-6 col-lg-12">{this.state.data.position ? this.state.data.position.position.Position.trim() + '(' + this.state.data.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}</span>
                                         {/*<span className="col-sm-6 col-lg-12">Department: Banquet</span>*/}
                                     </div>
                                 </div>
@@ -1568,8 +1638,8 @@ class General extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </div>
@@ -1578,63 +1648,77 @@ class General extends Component {
                                 <div className="col-md-4">
                                     <div className="row">
                                         <div className="item col-sm-12  col-md-12">
-                                            <button className="btn btn-outline-info" onClick={() => {
-                                                this.handleClickOpenModal();
-                                            }}>Add to hotel
+                                            <div class="dropdown">
+                                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Options
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    {
+                                                        this.state.isLead ? (
+                                                            <button className="dropdown-item" onClick={() => {
+                                                                this.handleClickConvertToEmployee();
+                                                            }}>Convert to Employee
                                             </button>
-                                        </div>
-                                        {
-                                            userExist || this.state.createdProfile ? (
-                                                ''
-                                            ) : (
-                                                <div className="item col-sm-12 col-md-12">
-                                                    <button className="btn btn-outline-success" onClick={() => {
-                                                        this.handleClickOpenUserModal();
-                                                    }}>Create Profile
-                                                    </button>
+                                                        ) : ('')
+
+                                                    }
+                                                    <button className="dropdown-item" onClick={() => {
+                                                        this.handleClickOpenModal();
+                                                    }}>Add to hotel
+                                                </button>
+                                                    {
+                                                        userExist || this.state.createdProfile ? (
+                                                            ''
+                                                        ) : (
+                                                                <button className="dropdown-item" onClick={() => {
+                                                                    this.handleClickOpenUserModal();
+                                                                }}>Create Profile
+                                                        </button>
+                                                            )
+                                                    }
                                                 </div>
-                                            )
-                                        }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <br/>
+                        <br />
                         <div className="applicant-card general-table-container">
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Handle</th>
-                                    </tr>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">First</th>
+                                            <th scope="col">Last</th>
+                                            <th scope="col">Handle</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
+                                        <tr>
+                                            <th scope="row">1</th>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">2</th>
+                                            <td>Jacob</td>
+                                            <td>Thornton</td>
+                                            <td>@fat</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">3</th>
+                                            <td>Larry</td>
+                                            <td>the Bird</td>
+                                            <td>@twitter</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <div className="row">
                                 <div className="col-sm-12">
                                     <h5>Titles</h5>

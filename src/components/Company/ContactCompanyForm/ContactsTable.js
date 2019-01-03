@@ -200,17 +200,16 @@ class ContactsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={classes.th} />
-							<CustomTableCell padding="none" className={classes.th + " Table-head"} />
-							<CustomTableCell className={classes.th + " Table-head"} width="60px">Contact
+							<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
+							<CustomTableCell className={"Table-head"} width="60px">Contact
                                 Type</CustomTableCell>
-							<CustomTableCell className={classes.th + " Table-head"}>Full Name</CustomTableCell>
-							<CustomTableCell className={classes.th + " Table-head"}>Department</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Department</CustomTableCell>
 							{/*<CustomTableCell className={classes.th}>Supervisor</CustomTableCell>*/}
-							<CustomTableCell className={classes.th + " Table-head"}>Email</CustomTableCell>
-							<CustomTableCell className={classes.th + " contact-th Table-head"}>Phone
+							<CustomTableCell className={"Table-head"}>Email</CustomTableCell>
+							<CustomTableCell className={"contact-th Table-head"}>Phone
                                 Number</CustomTableCell>
-							<CustomTableCell className={classes.th + " Table-head"}>Contact Title</CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Contact Title</CustomTableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -224,36 +223,30 @@ class ContactsTable extends React.Component {
 										return this.props.onEditHandler({ ...row });
 									}}
 								>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
+									<CustomTableCell>
 										<Tooltip title="Edit">
-											<div>
-												<button
-													className="btn btn-success ml-1"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onEditHandler({ ...row });
-													}}
-												>
-													<i class="fas fa-pen"></i>
-												</button>
-											</div>
+											<button
+												className="btn btn-success ml-1 float-left"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													return this.props.onEditHandler({ ...row });
+												}}
+											>
+												<i class="fas fa-pen"></i>
+											</button>
 										</Tooltip>
-									</CustomTableCell>
-									<CustomTableCell component="th" padding="none" style={{ width: '50px' }}>
 										<Tooltip title="Delete">
-											<div>
-												<button
-													className="btn btn-danger"
-													disabled={this.props.loading}
-													onClick={(e) => {
-														e.stopPropagation();
-														return this.props.onDeleteHandler(row.idSearch);
-													}}
-												>
-													<i class="fas fa-trash"></i>
-												</button>
-											</div>
+											<button
+												className="btn btn-danger float-left ml-1"
+												disabled={this.props.loading}
+												onClick={(e) => {
+													e.stopPropagation();
+													return this.props.onDeleteHandler(row.idSearch);
+												}}
+											>
+												<i class="fas fa-trash"></i>
+											</button>
 										</Tooltip>
 									</CustomTableCell>
 									<CustomTableCell>

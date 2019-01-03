@@ -6,6 +6,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			id
 			quantity
 			shift
+			endShift
 			needExperience
 			needEnglish
 			startDate
@@ -20,9 +21,65 @@ export const GET_WORKORDERS_QUERY = gql`
 			position {
 				Position
 			}
+			BusinessCompany
+			{
+				Id
+				Name
+			}
 		}
-		
 	}
+`;
+
+export const GET_SHIFTS = gql`
+query ShiftWorkOrder ($WorkOrderId: Int)
+{
+	ShiftWorkOrder(WorkOrderId:$WorkOrderId){
+			ShiftId
+			WorkOrderId
+		}
+    }
+`;
+
+export const GET_DETAIL_SHIFT = gql`
+query ShiftDetail ($ShiftId:Int)
+{
+ShiftDetail (ShiftId:$ShiftId) {
+	id
+	ShiftId
+	start: startDate
+	startTime
+	end: endDate
+	endTime
+	detailEmployee {
+		EmployeeId
+		ShiftDetailId
+		Employees
+	  {
+		id
+		firstName
+		lastName
+	  }
+	}
+}
+}
+`
+
+export const GET_INITIAL_DATA = gql`
+query data {
+    employees(isActive:true) {
+      id
+      firstName
+      lastName
+      electronicAddress
+      mobileNumber
+      
+    } 
+    getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: -1) {
+          Id
+          Code
+          Name         
+    } 
+  }
 `;
 
 export const GET_HOTEL_QUERY = gql`
@@ -68,6 +125,7 @@ export const GET_CONTACT_BY_QUERY = gql`
 			Id
 			First_Name
 			Last_Name
+			Electronic_Address
 		}
 	}
 `;

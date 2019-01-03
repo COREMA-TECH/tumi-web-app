@@ -912,7 +912,7 @@ query getposition {
 														state: {
 															contract: 0,
 															Id_Entity: this.state.idCompany,
-															Id_Parent: this.state.idManagement,
+															Id_Parent: this.props.idManagement,
 															idContract: this.props.idContract,
 															href: hrefValue
 														}
@@ -925,7 +925,7 @@ query getposition {
 													'Next'
 												) : (
 														<React.Fragment>
-															Create Contract <i class="fas fa-file-contract ml-1" />
+															Add Contract <i class="fas fa-file-contract ml-1" />
 														</React.Fragment>
 													)}
 											</button>
@@ -1070,6 +1070,7 @@ query getposition {
 									cols="30"
 									rows="5"
 									value={this.state.Comment}
+									maxLength="255"
 								/>
 							</div>
 						</div>

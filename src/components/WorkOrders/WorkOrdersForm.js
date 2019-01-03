@@ -6,13 +6,56 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY } from './queries';
-import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING } from './mutations';
+import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT } from './queries';
+import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
 import { bool } from 'prop-types';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
+import TimeField from 'react-simple-timefield';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import PropTypes from 'prop-types';
+import Tooltip from '@material-ui/core/Tooltip';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+
+const styles = (theme) => ({
+    wrapper: {
+        margin: theme.spacing.unit,
+        position: 'relative'
+    },
+    buttonSuccess: {},
+    buttonProgress: {
+        //color: ,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        marginTop: -12,
+        marginLeft: -12
+    },
+    row: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.default
+        },
+        '&:hover': {
+            cursor: 'pointer'
+        }
+    }
+
+});
+
+const CustomTableCell = withStyles((theme) => ({
+    head: {
+        color: theme.palette.common.white
+    },
+    body: {
+        fontSize: 14
+    }
+}))(TableCell);
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -23,21 +66,26 @@ class WorkOrdersForm extends Component {
         quantity: 0,
         status: 1,
         shift: '',
+        endShift: '',
         startDate: '',
         endDate: '',
         needExperience: false,
         needEnglish: false,
         comment: '',
         EspecialComment: '',
+        Electronic_Address: '',
         position: 0,
         PositionRateId: null,
+        PositionName: '',
         RecruiterId: null,
         contactId: null,
         userId: localStorage.getItem('LoginId'),
         ShiftsData: ShiftsData,
         saving: false,
-        isAdmin: Boolean(localStorage.getItem('IsAdmin'))
-
+        isAdmin: Boolean(localStorage.getItem('IsAdmin')),
+        employees: [],
+        openConfirm: false,
+        idToDelete: 0,
     };
 
     constructor(props) {
@@ -48,6 +96,7 @@ class WorkOrdersForm extends Component {
             positions: [],
             recruiters: [],
             contacts: [],
+
             ...this._states
         };
     }
@@ -56,6 +105,7 @@ class WorkOrdersForm extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.item && !this.state.openModal) {
+            console.log("Esto es la props UNSAFE_componentWillReceiveProps ", nextProps.item)
             this.setState(
                 {
                     id: nextProps.item.id,
@@ -65,6 +115,7 @@ class WorkOrdersForm extends Component {
                     quantity: nextProps.item.quantity,
                     status: nextProps.item.status,
                     shift: nextProps.item.shift,
+                    endShift: nextProps.item.endShift,
                     startDate: nextProps.item.startDate,
                     endDate: nextProps.item.endDate,
                     needExperience: nextProps.item.needExperience,
@@ -72,14 +123,17 @@ class WorkOrdersForm extends Component {
                     comment: nextProps.item.comment,
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
-                    EspecialComment: nextProps.item.EspecialComment
+                    EspecialComment: nextProps.item.EspecialComment,
+                    PositionName: nextProps.item.position.Position
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
+
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
 
+                    this.getEmployees(() => { });
                     this.ReceiveStatus = true;
                 }
             );
@@ -90,6 +144,7 @@ class WorkOrdersForm extends Component {
                 quantity: 0,
                 status: 0,
                 shift: '',
+                endShift: '',
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -117,6 +172,8 @@ class WorkOrdersForm extends Component {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 });
+                console.log("Esto es la props ", this.props)
+                //   this.getEmployees( this.props.openModal);
             })
             .catch();
 
@@ -125,6 +182,8 @@ class WorkOrdersForm extends Component {
 
         });
     }
+
+
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -138,6 +197,8 @@ class WorkOrdersForm extends Component {
             this.state.endDate == '' ||
             this.state.shift == '' ||
             this.state.shift == 0 ||
+            this.state.endShift == '' ||
+            this.state.endShift == 0 ||
             this.state.contactId == ''
         ) {
 
@@ -145,7 +206,10 @@ class WorkOrdersForm extends Component {
         } else {
             this.setState({ saving: true });
             if (this.state.id == null) this.add();
-            else this.update();
+            else {
+                //alert(this.state.employees.detailEmployee)
+                this.update();
+            }
         }
     };
 
@@ -154,6 +218,12 @@ class WorkOrdersForm extends Component {
             .mutate({
                 mutation: CREATE_WORKORDER,
                 variables: {
+                    Electronic_Address: this.state.Electronic_Address,
+                    startshift: this.state.shift,
+                    endshift: this.state.endShift,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    quantity: this.state.quantity,
                     workOrder: {
                         IdEntity: this.state.IdEntity,
                         //contactId: this.state.contactId
@@ -161,6 +231,7 @@ class WorkOrdersForm extends Component {
                         quantity: this.state.quantity,
                         status: 1,
                         shift: this.state.shift,
+                        endShift: this.state.endShift,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         needExperience: this.state.needExperience,
@@ -170,6 +241,13 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         contactId: this.state.contactId,
                         userId: this.state.userId
+                    },
+                    shift: {
+                        entityId: this.state.IdEntity,
+                        title: this.state.PositionName,
+                        color: '#96989A',
+                        status: 1,
+                        idPosition: this.state.PositionRateId,
                     }
                 }
             })
@@ -185,10 +263,17 @@ class WorkOrdersForm extends Component {
     };
 
     update = (status = 1) => {
+        //  console.log(this.state.employees)
+        //if (this.state.employees.detailEmployee!=null) {
         this.props.client
             .mutate({
                 mutation: UPDATE_WORKORDER,
                 variables: {
+                    startshift: this.state.shift,
+                    endshift: this.state.endShift,
+                    startDate: this.state.startDate,
+                    endDate: this.state.endDate,
+                    quantity: this.state.quantity,
                     workOrder: {
                         id: this.state.id,
                         IdEntity: this.state.IdEntity,
@@ -196,6 +281,7 @@ class WorkOrdersForm extends Component {
                         quantity: this.state.quantity,
                         status: status,
                         shift: this.state.shift,
+                        endShift: this.state.endShift,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         needExperience: this.state.needExperience,
@@ -205,6 +291,13 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId
+                    },
+                    shift: {
+                        entityId: this.state.IdEntity,
+                        title: this.state.PositionName,
+                        color: "#96989A",
+                        status: 1,
+                        idPosition: this.state.PositionRateId,
                     }
                 }
             })
@@ -217,6 +310,8 @@ class WorkOrdersForm extends Component {
                 this.setState({ saving: true, converting: false });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
+        //this.props.handleOpenSnackbar('success', 'Record Updated!');
+        //} else { this.props.handleOpenSnackbar('success', 'No se puede eliinar!'); }
     };
 
     getContacts = (id) => {
@@ -245,7 +340,9 @@ class WorkOrdersForm extends Component {
             this.state.startDate == '' ||
             this.state.endDate == '' ||
             this.state.shift == '' ||
-            this.state.shift == 0
+            this.state.shift == 0 ||
+            this.state.endShift == '' ||
+            this.state.endShift == 0
         ) {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
@@ -277,20 +374,30 @@ class WorkOrdersForm extends Component {
 
     handleChange = (event) => {
         console.log("veamos el evento ", event);
+        console.log("veamos el event.target ", event.target);
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         let comments = '';
+        let request = '';
 
         // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
 
+        if (name === 'contactId') {
+            request = this.state.contacts.find((item) => { return item.Id == value })
+            this.setState({
+                Electronic_Address: request != null ? request.Electronic_Address : ''
+            });
+        }
+
         if (name === 'PositionRateId') {
             comments = this.state.positions.find((item) => { return item.Id == value })
             this.setState({
-                EspecialComment: comments != null ? comments.Comment : ''
+                EspecialComment: comments != null ? comments.Comment : '',
+                PositionName: comments != null ? comments.Position : ''
             });
         }
 
@@ -332,6 +439,59 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
+    getEmployees = (func = () => { }) => {
+        console.log("estoy en el getemployees ", this.state.id)
+        this.props.client
+            .query({
+                query: GET_SHIFTS,
+                variables: { WorkOrderId: this.state.id }
+            })
+            .then(({ data }) => {
+                this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
+                    func
+
+            })
+            .catch();
+    };
+
+    getDetailShift = (id) => {
+        console.log("estoy en el getemployees ", id)
+        this.props.client
+            .query({
+                query: GET_DETAIL_SHIFT,
+                variables: { ShiftId: id }
+            })
+            .then(({ data }) => {
+                console.log("Estoy trayendo el details de shift ", data)
+                this.setState({
+                    employees: data.ShiftDetail
+                });
+
+                console.log("este son los empleados ", this.state.employees)
+            })
+            .catch();
+    };
+
+    deleteEmployee = (id) => {
+        this.props.client
+            .mutate({
+                mutation: DELETE_EMPLOYEE,
+                variables: {
+                    id: id,
+
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Employee deleted!');
+                this.setState({ saving: false, converting: false });
+                window.location.reload();
+            })
+            .catch((error) => {
+                this.setState({ saving: true, converting: false });
+                this.props.handleOpenSnackbar('error', 'Error: ' + error);
+            });
+    };
+
     validateInvalidInput = () => {
         if (document.addEventListener) {
             document.addEventListener(
@@ -344,6 +504,10 @@ class WorkOrdersForm extends Component {
         }
     };
 
+    handleTimeChange = (name) => (text) => {
+        this.setState({ [name]: text })
+    }
+
     handleValidate = (event) => {
         let selfHtml = event.currentTarget;
         if (selfHtml.value == "" || selfHtml.value == 0)
@@ -355,10 +519,10 @@ class WorkOrdersForm extends Component {
 
     render() {
 
+        const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
         return (
-
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
                     <DialogTitle style={{ padding: '0px' }}>
@@ -438,37 +602,15 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Quantity</label>
-                                            <input
-                                                required
-                                                type="number"
-                                                maxLength="10"
-                                                min={0}
-                                                className="form-control"
-                                                name="quantity"
-                                                onChange={this.handleChange}
-                                                value={this.state.quantity}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-                                            <select
-                                                required
-                                                className="form-control"
-                                                name="shift"
-                                                onChange={this.handleChange}
-                                                value={this.state.shift}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value="0">Select a Shift</option>
-                                                {this.state.ShiftsData.map((shift) => (
-                                                    <option value={shift.Id}>{shift.Name}</option>
-                                                ))}
-                                            </select>
+                                            <TimeField name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onChange={this.handleTimeChange('shift')} />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Date Needed By</label>
+                                            <label htmlFor="">Shift End</label>
+                                            <TimeField name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onChange={this.handleTimeChange('endShift')} />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">From Date</label>
                                             <input
                                                 required
                                                 type="date"
@@ -480,7 +622,7 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">To</label>
+                                            <label htmlFor="">To Date</label>
                                             <input
                                                 required
                                                 type="date"
@@ -491,25 +633,22 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-                                        {this.state.id && (
-                                            <div className="col-md-6">
-                                                <label htmlFor="">Assign to</label>
-                                                <select
-                                                    required
-                                                    name="RecruiterId"
-                                                    className="form-control"
-                                                    id=""
-                                                    onChange={this.handleChange}
-                                                    value={this.state.RecruiterId}
-                                                    onBlur={this.handleValidate}
-                                                >
-                                                    <option value="0">Select a Recruiter</option>
-                                                    {this.state.recruiters.map((recruiter) => (
-                                                        < option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        )}
+                                        <div className="col-md-6">
+                                            <label htmlFor="">Quantity</label>
+                                            <input
+                                                required
+                                                type="number"
+                                                maxLength="10"
+                                                min={0}
+                                                className="form-control"
+                                                name="quantity"
+                                                placeholder="0"
+                                                onChange={this.handleChange}
+                                                value={this.state.quantity == 0 ? '' : this.state.quantity}
+                                                onBlur={this.handleValidate}
+                                            />
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
@@ -578,38 +717,81 @@ class WorkOrdersForm extends Component {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className='row'>
+                                <div className="col-md-12">
+                                    {this.state.employees && (
+                                        <div class="card">
+                                            <div class="card-header danger">Employees assign to work order</div>
+                                            <div class="card-body">
+                                                <Table className="Table">
+                                                    <TableHead>
+                                                        <TableRow>
+                                                            <CustomTableCell className={'Table-head'}>Delete</CustomTableCell>
+                                                            <CustomTableCell className={'Table-head'}>Employees</CustomTableCell>
+                                                        </TableRow>
+                                                    </TableHead>
+                                                    <TableBody>
+                                                        {
+
+                                                            this.state.employees.map((item) => {
+                                                                // console.log("esto son los items ", item)
+                                                                if (item.detailEmployee) {
+                                                                    return (
+                                                                        <TableRow
+                                                                            hover
+                                                                            className={classes.row}
+                                                                            key={item.id}
+                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
+                                                                        >
+                                                                            <CustomTableCell>
+                                                                                <Tooltip title="Delete">
+                                                                                    <button
+                                                                                        className="btn btn-danger float-left"
+                                                                                        /* onClick={(e) => {
+                                                                                             e.preventDefault();
+                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
+                                                                                         }}*/
+
+                                                                                        onClick={(e) => {
+                                                                                            e.preventDefault();
+                                                                                            this.setState({ openConfirm: true, idToDelete: item.detailEmployee.ShiftDetailId });
+                                                                                        }}
+                                                                                    >
+                                                                                        <i className="fas fa-trash"></i>
+                                                                                    </button>
+                                                                                </Tooltip>
+                                                                            </CustomTableCell>
+                                                                            <CustomTableCell>{item.detailEmployee.Employees.firstName}{' '} {item.detailEmployee.Employees.lastName}</CustomTableCell>
+                                                                        </TableRow>
+                                                                    )
+                                                                }
+                                                            })
+
+                                                        }
+                                                    </TableBody>
+                                                </Table>
+
+                                                <ConfirmDialog
+                                                    open={this.state.openConfirm}
+                                                    closeAction={() => {
+                                                        this.setState({ openConfirm: false });
+                                                    }}
+                                                    confirmAction={() => {
+                                                        //  this.handleDelete(this.state.idToDelete);
+                                                        this.deleteEmployee(this.state.idToDelete)
+                                                    }}
+                                                    title={'are you sure you want to delete this record?'}
+                                                    loading={this.state.removing}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
                                 <div className="col-md-12">
                                     <div className="row">
-                                        <div className="col-md-6">
-                                            {/*this.state.id && (
-                                                <div class="input-group">
-                                                    <select
-                                                        required
-                                                        name="RecruiterId"
-                                                        className="form-control"
-                                                        id=""
-                                                        onChange={this.handleChange}
-                                                        value={this.state.RecruiterId}
-                                                        onBlur={this.handleValidate}
-                                                    >
-                                                        <option value="0">Select a Recruiter</option>
-                                                        {this.state.recruiters.map((recruiter) => (
-                                                            < option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                        ))}
-                                                    </select>
-
-                                                    <div class="input-group-append">
-                                                        <button
-                                                            className="btn btn-info float-right"
-                                                            type="button"
-                                                            onClick={this.handleChangeState}
-                                                        >
-                                                            Create Opening
-														</button>
-                                                    </div>
-                                                </div>
-                                                        )*/}
-                                        </div>
                                         <div className="col-md-12">
                                             <button
                                                 className="btn btn-danger ml-1 float-right"
@@ -617,25 +799,12 @@ class WorkOrdersForm extends Component {
                                             >
                                                 Cancel<i class="fas fa-ban ml-2" />
                                             </button>
+
                                             <button className="btn btn-success ml-1 float-right" type="submit">
                                                 Save {!this.state.saving && <i class="fas fa-save ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
-                                            {this.state.id && (
-                                                /*<button className="btn btn-info ml-1 float-right" type="submit">
-                                                    Convert to Opening {!this.state.saving && <i class="fas fa-sync-alt"></i>}
-                                                    {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
-                                                </button>*/
 
-                                                <button
-                                                    className="btn btn-info float-right"
-                                                    type="button"
-                                                    onClick={this.handleChangeState}
-                                                >
-                                                    Convert to Opening {!this.state.converting && <i class="fas fa-sync-alt"></i>}
-                                                    {this.state.converting && <i class="fas fa-spinner fa-spin  ml2" />}
-                                                </button>
-                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -648,4 +817,9 @@ class WorkOrdersForm extends Component {
     }
 }
 
-export default (withMobileDialog()(withApollo(WorkOrdersForm)));
+WorkOrdersForm.propTypes = {
+    classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(withApollo(WorkOrdersForm));
+//export default (withMobileDialog()(withApollo(WorkOrdersForm)));

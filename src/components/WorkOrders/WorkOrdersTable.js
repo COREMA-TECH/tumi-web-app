@@ -35,7 +35,7 @@ class WorkOrdersTable extends Component {
         this.state = {
             data: [],
             Hotels: [],
-            rowsPerPage: 10,
+            rowsPerPage: 5,
             page: 0,
             openConfirm: false,
             ShiftsData: ShiftsData,
@@ -105,7 +105,7 @@ class WorkOrdersTable extends Component {
                 date: data.IdEntity,
                 quantity: data.quantity,
                 status: 2,
-                shift: data.shift,
+                shift: data.shift + '-' + data.endShift,
                 startDate: data.startDate,
                 endDate: data.endDate,
                 needExperience: data.needExperience,
@@ -123,6 +123,8 @@ class WorkOrdersTable extends Component {
             this.props.handleOpenSnackbar('error', 'Recruiter fields is required');
         }
     }
+
+
 
     handleChange = (event, key) => {
         const target = event.target;
@@ -203,6 +205,14 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
+    handleChangePage = (event, page) => {
+        this.setState({ page });
+    };
+
+    handleChangeRowsPerPage = (event) => {
+        this.setState({ rowsPerPage: event.target.value });
+    };
+
     getHotel = () => {
         this.props.client
             .query({
@@ -222,7 +232,7 @@ class WorkOrdersTable extends Component {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+        console.log("These are my props", this.props)
 
         return (
             <div>
@@ -238,14 +248,14 @@ class WorkOrdersTable extends Component {
                                 <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Assign to</CustomTableCell>
+                                {this.props.showRecruiter && <CustomTableCell className={"Table-head text-center"}>Assign to</CustomTableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                                 return (
                                     <TableRow>
-                                        <CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>
                                             <Tooltip title="Life Cycle">
                                                 <button
                                                     className="btn btn-success mr-1 float-left"
@@ -289,77 +299,43 @@ class WorkOrdersTable extends Component {
                                             </Tooltip>
                                         </CustomTableCell>
                                         <CustomTableCell>{row.id}</CustomTableCell>
-                                        <CustomTableCell>{
-                                            <Query query={GET_HOTEL_QUERY} variables={{ id: row.IdEntity }}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>  </p>;
-                                                    if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-                                                        return (
-                                                            <select
-                                                                name="hotel"
-                                                                id="hotel"
-                                                                required
-                                                                className="form-control"
-                                                                disabled={true}
-                                                                onChange={(e) => {
-                                                                    this.setState({
-                                                                        state: e.target.value
-                                                                    });
-                                                                }}
-                                                                value={row.IdEntity}
-                                                            >
-                                                                <option value="">Select a hotel</option>
-                                                                {data.getbusinesscompanies.map((item) => (
-                                                                    <option value={item.Id}>{item.Name}</option>
-                                                                ))}
-                                                            </select>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
-                                        }</CustomTableCell>
+                                        <CustomTableCell>{row.BusinessCompany.Name}</CustomTableCell>
                                         <CustomTableCell>{row.position.Position}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
-                                        <CustomTableCell className={'text-center'}>
-                                            {this.state.ShiftsData.map((shift) => (
-                                                shift.Id == row.shift ? shift.Name : ''
-                                            ))}
-                                        </CustomTableCell>
+                                        <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
-
-                                        <CustomTableCell>
-                                            <div className="input-group">
-                                                <select
-                                                    required
-                                                    name={`RecruiterId`}
-                                                    className="form-control"
-                                                    id=""
-                                                    onChange={(e) => { this.handleChange(e, row.id) }}
-                                                    value={this.state.RecruiterId}
-                                                    onBlur={this.handleValidate}
-                                                >
-                                                    <option value="0">Select a Recruiter</option>
-                                                    {this.state.recruiters.map((recruiter) => (
-                                                        <option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                    ))}
-                                                </select>
-                                                <Tooltip title="Convert to Opening">
-                                                    <button
-                                                        className="btn btn-link float-left ml-1"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            this.handleConvertToOpening(e, { ...row });
-                                                        }}
+                                        {this.props.showRecruiter &&
+                                            <CustomTableCell>
+                                                <div className="input-group">
+                                                    <select
+                                                        required
+                                                        name={`RecruiterId`}
+                                                        className="form-control"
+                                                        id=""
+                                                        onChange={(e) => { this.handleChange(e, row.id) }}
+                                                        value={this.state.RecruiterId}
+                                                        onBlur={this.handleValidate}
                                                     >
-                                                        <i class="fas fa-exchange-alt text-info"></i>
-                                                    </button>
-                                                </Tooltip>
-                                            </div>
-                                        </CustomTableCell>
+                                                        <option value="0">Select a Recruiter</option>
+                                                        {this.state.recruiters.map((recruiter) => (
+                                                            <option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                        ))}
+                                                    </select>
+                                                    <Tooltip title="Convert to Opening">
+                                                        <button
+                                                            className="btn btn-link float-left ml-1"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                this.handleConvertToOpening(e, { ...row });
+                                                            }}
+                                                        >
+                                                            <i class="fas fa-exchange-alt text-info"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                </div>
+                                            </CustomTableCell>}
                                     </TableRow>
                                 );
                             })}

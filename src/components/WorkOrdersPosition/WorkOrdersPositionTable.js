@@ -123,37 +123,7 @@ class WorkOrdersPositionTable extends Component {
 											</Tooltip>
 										</CustomTableCell>
 										<CustomTableCell>{row.id}</CustomTableCell>
-										<CustomTableCell>{
-											<Query query={GET_HOTEL_QUERY} variables={{ id: row.IdEntity }}>
-												{({ loading, error, data, refetch, networkStatus }) => {
-													//if (networkStatus === 4) return <LinearProgress />;
-													if (error) return <p>  </p>;
-													if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-														return (
-															<select
-																name="hotel"
-																id="hotel"
-																required
-																className="form-control"
-																disabled={true}
-																onChange={(e) => {
-																	this.setState({
-																		state: e.target.value
-																	});
-																}}
-																value={row.IdEntity}
-															>
-																<option value="">Select a hotel</option>
-																{data.getbusinesscompanies.map((item) => (
-																	<option value={item.Id}>{item.Name}</option>
-																))}
-															</select>
-														);
-													}
-													return <SelectNothingToDisplay />;
-												}}
-											</Query>
-										}</CustomTableCell>
+										<CustomTableCell>{row.BusinessCompany.Name}</CustomTableCell>
 										<CustomTableCell>{row.position.Position}</CustomTableCell>
 										<CustomTableCell>{row.quantity}</CustomTableCell>
 										<CustomTableCell>

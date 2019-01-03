@@ -6,6 +6,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			id
 			quantity
 			shift
+			endShift
 			needExperience
 			needEnglish
 			startDate
@@ -13,10 +14,17 @@ export const GET_WORKORDERS_QUERY = gql`
 			comment
 			date
 			IdEntity
+			contactId
 			PositionRateId
 			status
+			EspecialComment
 			position {
 				Position
+			}
+			BusinessCompany
+			{
+				Id
+				Name
 			}
 		}
 	}
@@ -24,11 +32,29 @@ export const GET_WORKORDERS_QUERY = gql`
 
 export const GET_HOTEL_QUERY = gql`
 	query hotels($id: Int) {
-		getbusinesscompanies(Id: $id, IsActive: null, Contract_Status: null, Id_Parent: null) {
+		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
 			Id
 			Name
 		}
 	}
+`;
+
+export const PHASE_WORK_ORDER = gql`
+	query phaseworkOrder($WorkOrderId:Int){
+			phaseworkOrder(WorkOrderId:$WorkOrderId){
+			userId
+			phaseworkOrderId
+			actions{
+				Id
+				Name
+			  }
+			  users{
+				Code_User
+			  }
+			createdAt
+			WorkOrderId
+		}
+   }
 `;
 
 export const GET_POSITION_BY_QUERY = gql`
@@ -36,6 +62,28 @@ export const GET_POSITION_BY_QUERY = gql`
 		getposition(Id: null, IsActive: null, Id_Entity: $id) {
 			Id
 			Position
+			Comment
 		}
 	}
 `;
+
+export const GET_CONTACT_BY_QUERY = gql`
+	query getcontacts($id: Int) {
+		getcontacts(Id: null, IsActive: 1, Id_Entity: $id) {
+			Id
+			First_Name
+			Last_Name
+		}
+	}
+`;
+
+export const GET_RECRUITER = gql`
+    query getUsers {
+		getusers(Id: null,IsActive: 1 ,IsRecruiter:1) {
+            Id
+			Id_Contact
+			Full_Name
+        }
+       
+    }
+    `;
