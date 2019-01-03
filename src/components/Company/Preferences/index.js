@@ -524,7 +524,7 @@ class Preferences extends React.Component {
                                                 this.setState({ openCalendarModal: true });
                                             }}
                                         >
-                                            Add Holiday <i class="fas fa-calendar-alt ml-1" />
+                                            Set Up Company Holidays <i class="fas fa-calendar-alt ml-1" />
                                         </button>
                                     </div>
 

@@ -19,7 +19,7 @@ class FileUpload extends Component {
 		// Get the file selected
 		const file = event.target.files[0];
 
-		var _validFileExtensions = [ ...this.context.extImage, ...this.context.extWord, ...this.context.extPdf ];
+		var _validFileExtensions = [...this.context.extImage, ...this.context.extWord, ...this.context.extPdf];
 		if (
 			!_validFileExtensions.find((value) => {
 				return file.name.toLowerCase().endsWith(value);
@@ -89,6 +89,7 @@ class FileUpload extends Component {
 	}
 
 	render() {
+		console.log("This props", !this.props.url)
 		return (
 			<div className="">
 				<div className="">
@@ -110,14 +111,20 @@ class FileUpload extends Component {
 							<a
 								class="btn btn-outline-secondary"
 								id="inputGroupFileAddon04"
-								href={!this.props.disabled && this.props.url}
+								href={""}
 								onClick={(e) => {
+									e.preventDefault();
 									if (this.state.loading) {
-										e.preventDefault();
 										return true;
 									}
+									if (this.props.url) {
+										window.open(
+											this.props.url,
+											'_blank'
+										);
+									}
 								}}
-								disabled={this.props.disabled}
+								disabled={!this.props.url}
 								target="_blank"
 							>
 								{this.state.loading && <i className="fa fa-spinner fa-spin" />}
