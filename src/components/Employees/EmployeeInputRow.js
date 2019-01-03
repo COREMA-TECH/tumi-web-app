@@ -20,6 +20,8 @@ class EmployeeInputRow extends Component {
         const lastName = `lastName${this.props.index}`;
         const email = `email${this.props.index}`;
         const phoneNumber = `phoneNumber${this.props.index}`;
+        const department = `department${this.props.index}`;
+        const contactTitle = `contactTitle${this.props.index}`;
 
 
         return (
