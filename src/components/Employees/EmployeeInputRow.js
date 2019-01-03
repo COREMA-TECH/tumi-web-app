@@ -22,7 +22,6 @@ class EmployeeInputRow extends Component {
         const phoneNumber = `phoneNumber${this.props.index}`;
 
 
-
         return (
             <div className="row">
                 <div className="col-md-2">
