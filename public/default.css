@@ -7663,6 +7663,22 @@ label:not(.custom-file-label):not(.form-check-label) {
 .QuickButton {
   color: #FFF !important; }
 
+.dropdown-toggle:focus {
+  pointer-events: none; }
+
+.dropdown-toggle:focus + .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto; }
+
+.dropdown-menu {
+  opacity: 0;
+  display: block;
+  visibility: hidden;
+  -webkit-transition: visibility 0.5s;
+  -o-transition: visibility 0.5s;
+  transition: visibility 0.5s; }
+
 .inputGroup {
   background-color: #fff;
   display: block;
@@ -8401,6 +8417,9 @@ tbody[class^="MuiTableBody-"] .btn {
     padding-bottom: 1rem;
     padding-top: 1rem;
     height: auto; }
+
+.applicant-card {
+  overflow: unset !important; }
 
 .card {
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
