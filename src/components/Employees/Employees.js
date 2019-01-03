@@ -150,6 +150,8 @@ class Employees extends Component {
                 lastName: this.state[`lastName${index}`],
                 electronicAddress: this.state[`email${index}`],
                 mobileNumber: this.state[`phoneNumber${index}`],
+                department: this.state[`department${index}`],
+                contactTitle: this.state[`contactTitle${index}`],
                 idRole: 1,
                 isActive: true,
                 userCreated: 1,
