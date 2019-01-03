@@ -394,18 +394,25 @@ class Employees extends Component {
                     <DialogContent>
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* First Name</label>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Last Name</label>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Email Address</label>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Phone Number</label>
                                 </div>
+                                <div className="col-md-2">
+                                    <label htmlFor="">* Department</label>
+                                </div>
+                                <div className="col-md-2">
+                                    <label htmlFor="">* Contact Title</label>
+                                </div>
+
                             </div>
                             {this.state.rowsInput.map((item, index) => {
                                 return (
