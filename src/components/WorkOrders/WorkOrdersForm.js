@@ -84,6 +84,7 @@ class WorkOrdersForm extends Component {
         saving: false,
         isAdmin: Boolean(localStorage.getItem('IsAdmin')),
         employees: [],
+        employeesarray: [],
         openConfirm: false,
         idToDelete: 0,
     };
@@ -447,6 +448,13 @@ class WorkOrdersForm extends Component {
                 variables: { WorkOrderId: this.state.id }
             })
             .then(({ data }) => {
+                let shiftIdData = [];
+                let count = 0
+
+                data.ShiftWorkOrder.map((item) => {
+                    shiftIdData[count] = item.ShiftId
+                    count = count + 1
+                })
                 this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
                     func
 
@@ -464,7 +472,8 @@ class WorkOrdersForm extends Component {
             .then(({ data }) => {
                 console.log("Estoy trayendo el details de shift ", data)
                 this.setState({
-                    employees: data.ShiftDetail
+                    employees: data.ShiftDetail[0].detailEmployee,
+                    employeesarray: data.ShiftDetail
                 });
 
                 console.log("este son los empleados ", this.state.employees)
@@ -522,6 +531,10 @@ class WorkOrdersForm extends Component {
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
+        if (this.state.employees != null) {
+            console.log("Aqui si hay iusuaiors")
+
+        } else { console.log("No hay usuarios ") }
         return (
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
@@ -721,7 +734,7 @@ class WorkOrdersForm extends Component {
 
                             <div className='row'>
                                 <div className="col-md-12">
-                                    {this.state.employees && (
+                                    {this.state.employees != null ? (
                                         <div class="card">
                                             <div class="card-header danger">Employees assign to work order</div>
                                             <div class="card-body">
@@ -735,8 +748,8 @@ class WorkOrdersForm extends Component {
                                                     <TableBody>
                                                         {
 
-                                                            this.state.employees.map((item) => {
-                                                                // console.log("esto son los items ", item)
+                                                            this.state.employeesarray.map((item) => {
+                                                                console.log("esto son los items ", item)
                                                                 if (item.detailEmployee) {
                                                                     return (
                                                                         <TableRow
@@ -787,7 +800,8 @@ class WorkOrdersForm extends Component {
                                                 />
                                             </div>
                                         </div>
-                                    )}
+                                    ) : ''
+                                    }
                                 </div>
 
                                 <div className="col-md-12">
@@ -809,9 +823,9 @@ class WorkOrdersForm extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                        </form >
+                    </DialogContent >
+                </Dialog >
             </div >
         );
     }

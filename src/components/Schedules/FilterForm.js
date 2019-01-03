@@ -247,7 +247,7 @@ class FilterForm extends Component {
                     selectedDetailId: id,
                     shiftId: shiftDetail.shift.id,
                     status: shiftDetail.shift.status,
-                    openShift: !shiftDetail.detailEmployee,
+                    openShift: shiftDetail.shift.workOrder,
                     selectedEmployees: selectedEmployee ? selectedEmployee : []
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
@@ -491,7 +491,7 @@ class FilterForm extends Component {
                         <div className="row">
                             <div className="col-md-12">
                                 <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
-                                <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Rejected {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
+                                <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Reject {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
                             </div>
                         </div>
                     ) : (
