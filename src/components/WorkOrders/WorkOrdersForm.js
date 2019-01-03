@@ -447,6 +447,13 @@ class WorkOrdersForm extends Component {
                 variables: { WorkOrderId: this.state.id }
             })
             .then(({ data }) => {
+                let shiftIdData = [];
+                let count = 0
+
+                data.ShiftWorkOrder.map((item) => {
+                    shiftIdData[count] = item.ShiftId
+                    count = count + 1
+                })
                 this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
                     func
 
@@ -721,7 +728,7 @@ class WorkOrdersForm extends Component {
 
                             <div className='row'>
                                 <div className="col-md-12">
-                                    {this.state.employees && (
+                                    {//this.state.employees[0].detailEmployee != null ? (
                                         <div class="card">
                                             <div class="card-header danger">Employees assign to work order</div>
                                             <div class="card-body">
@@ -787,7 +794,8 @@ class WorkOrdersForm extends Component {
                                                 />
                                             </div>
                                         </div>
-                                    )}
+                                        // ) : ''
+                                    }
                                 </div>
 
                                 <div className="col-md-12">
