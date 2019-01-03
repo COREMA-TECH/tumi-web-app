@@ -895,7 +895,7 @@ class Application extends Component {
                                             </div>
                                             <div className="col-md-12">
                                                 <span className="primary applicant-card__label ">
-                                                    * {formSpanish[13].label}
+                                                    {formSpanish[13].label}
                                                 </span>
                                                 <input
                                                     onChange={(event) => {
@@ -907,7 +907,7 @@ class Application extends Component {
                                                     name="emailAddress"
                                                     type="email"
                                                     className="form-control"
-                                                    required
+                                                    //required
                                                     disabled={!this.state.editing}
                                                     min="0"
                                                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
@@ -952,6 +952,7 @@ class Application extends Component {
                                             });
                                         }}
                                     >
+
                                         {spanishActions[2].label}
                                     </button>
                                     <button type="submit" className="applicant-card__save-button">
