@@ -145,7 +145,7 @@
 	color: $white !important;
 }
 
-
+.applicant-card {
 .dropdown-toggle:focus {
 	pointer-events: none;
   }
@@ -160,3 +160,4 @@
 	visibility: hidden;
 	transition: visibility 0.5s;
   }
+}

@@ -7663,15 +7663,15 @@ label:not(.custom-file-label):not(.form-check-label) {
 .QuickButton {
   color: #FFF !important; }
 
-.dropdown-toggle:focus {
+.applicant-card .dropdown-toggle:focus {
   pointer-events: none; }
 
-.dropdown-toggle:focus + .dropdown-menu {
+.applicant-card .dropdown-toggle:focus + .dropdown-menu {
   opacity: 1;
   visibility: visible;
   pointer-events: auto; }
 
-.dropdown-menu {
+.applicant-card .dropdown-menu {
   opacity: 0;
   display: block;
   visibility: hidden;
