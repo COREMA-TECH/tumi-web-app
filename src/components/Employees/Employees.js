@@ -1348,7 +1348,7 @@ class Employees extends Component {
                                         <label htmlFor="">* Last Name</label>
                                     </div>
                                     <div className="col-md-2">
-                                        <label htmlFor="">* Email Address</label>
+                                        <label htmlFor="">Email Address</label>
                                     </div>
                                     <div className="col-md-2">
                                         <label htmlFor="">* Phone Number</label>
