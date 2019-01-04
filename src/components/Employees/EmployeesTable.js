@@ -206,9 +206,23 @@ class EmployeesTable extends React.Component {
                                             }}
                                         >
                                             <CustomTableCell>
+                                                <Tooltip title="Assign Role">
+                                                    <button
+                                                        className="btn btn-outline-info float-left ml-1"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
+
+                                                            //this.props.assign(row.id, row);
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-plus"></i>
+                                                    </button>
+                                                </Tooltip>
                                                 <Tooltip title="Edit">
                                                     <button
-                                                        className="btn btn-danger float-left ml-1"
+                                                        className="btn btn-success float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
                                                             this.props.update(row.id, row);
@@ -220,7 +234,7 @@ class EmployeesTable extends React.Component {
 
                                                 <Tooltip title="Delete">
                                                     <button
-                                                        className="btn btn-success float-left ml-1"
+                                                        className="btn btn-danger float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
