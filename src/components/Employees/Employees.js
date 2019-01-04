@@ -95,6 +95,10 @@ class Employees extends Component {
             emailEdit: "",
             numberEdit: "",
 
+
+            emailToCreateUser: "",
+            phoneNumberToCreateUser: "",
+
             progressNewEmployee: false,
             finishLoading: false,
             progressEditEmployee: false,
@@ -197,7 +201,9 @@ class Employees extends Component {
             firstNameEdit: "",
             lastNameEdit: "",
             emailEdit: "",
-            numberEdit: ""
+            numberEdit: "",
+            departmentEdit: "",
+            contactTitleEdit: "",
         });
     };
 
@@ -414,8 +420,12 @@ class Employees extends Component {
     /**
      * To open the user modal
      */
-    handleClickOpenUserModal = () => {
+    handleClickOpenUserModal = (email, phoneNumber) => {
         this.setState({ openUserModal: true });
+        this.setState({
+            email: email,
+            number: phoneNumber
+        })
     };
 
     /**
@@ -437,7 +447,9 @@ class Employees extends Component {
             username: '',
             idRol: null,
             idLanguage: null,
-            usernameValid: true
+            usernameValid: true,
+            email: "",
+            number: ""
         })
     };
 
@@ -1405,39 +1417,16 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col-md-2">
-                                        {/*<AutosuggestInput*/}
-                                            {/*id="department"*/}
-                                            {/*name="department"*/}
-                                            {/*data={this.state.departments}*/}
-                                            {/*error={this.state.departmentNameValid}*/}
-                                            {/*value={this.state.departmentName}*/}
-                                            {/*onChange={(value) => {*/}
-                                                {/*this.setState({*/}
-                                                    {/*departmentName: value*/}
-                                                {/*}, () => {*/}
-                                                    {/*this.setState({*/}
-                                                        {/*departmentNameValid: false*/}
-                                                    {/*})*/}
-                                                {/*})*/}
-                                            {/*}}*/}
-                                            {/*onSelect={(value) => {*/}
-                                                {/*this.setState({*/}
-                                                    {/*departmentName: value,*/}
-                                                    {/*departmentEdit: value*/}
-                                                {/*}, () => {*/}
-                                                    {/*this.setState({*/}
-                                                        {/*departmentNameValid: false*/}
-                                                    {/*})*/}
-                                                {/*})*/}
-                                            {/*}}*/}
-                                        {/*/>*/}
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
                                                 this.setState({
                                                     departmentEdit: e.target.value
                                                 })
-                                            }}>
+                                            }}
+                                            value={this.state.departmentEdit}
+                                            required
+                                        >
                                             <option>Select a option</option>
                                             {
                                                 this.state.departments.map(item => {
@@ -1455,7 +1444,10 @@ class Employees extends Component {
                                                 this.setState({
                                                     contactTitleEdit: e.target.value
                                                 })
-                                            }}>
+                                            }}
+                                            value={this.state.contactTitleEdit}
+                                            required
+                                        >
                                             <option>Select a option</option>
                                             {
                                                 this.state.titles.map(item => {
