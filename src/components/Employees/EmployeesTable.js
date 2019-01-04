@@ -192,6 +192,8 @@ class EmployeesTable extends React.Component {
                                     <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -252,8 +254,24 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.electronicAddress}</CustomTableCell>
+                                            <CustomTableCell>{row.electronicAddress}</CustomTableCell>
                                             <CustomTableCell>
-                                                {row.mobileNumber}
+                                                {
+                                                    this.props.departments.map(item => {
+                                                        if(item.Id === row.Id_Deparment) {
+                                                            return item.Name.trim()
+                                                        }
+                                                    })
+                                                }
+                                            </CustomTableCell>
+                                            <CustomTableCell>
+                                                {
+                                                    this.props.titles.map(item => {
+                                                        if(item.Id === row.Contact_Title) {
+                                                            return item.Name.trim()
+                                                        }
+                                                    })
+                                                }
                                             </CustomTableCell>
                                         </TableRow>
                                     );

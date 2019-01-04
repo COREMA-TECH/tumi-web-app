@@ -1561,6 +1561,8 @@ class Employees extends Component {
                                                         });
                                                     }}
                                                     handleClickOpenUserModal={this.handleClickOpenUserModal}
+                                                    departments={this.state.departments}
+                                                    titles={this.state.titles}
                                                 />
                                             </div>
                                         </div>
