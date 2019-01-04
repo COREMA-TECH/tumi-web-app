@@ -1250,7 +1250,7 @@ class Employees extends Component {
                                     <label htmlFor="">* Last Name</label>
                                 </div>
                                 <div className="col-md-2">
-                                    <label htmlFor="">* Email Address</label>
+                                    <label htmlFor="">Email Address</label>
                                 </div>
                                 <div className="col-md-2">
                                     <label htmlFor="">* Phone Number</label>
@@ -1404,7 +1404,6 @@ class Employees extends Component {
                                             }}
                                             value={this.state.emailEdit}
                                             minLength="3"
-                                            required
                                         />
                                     </div>
                                     <div className="col-md-2">

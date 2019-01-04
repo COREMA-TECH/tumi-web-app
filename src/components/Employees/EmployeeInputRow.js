@@ -69,7 +69,6 @@ class EmployeeInputRow extends Component {
                         type="email"
                         name="email"
                         className="form-control"
-                        required={!this.state.lastRow}
                     />
                 </div>
                 <div className="col-md-2">
