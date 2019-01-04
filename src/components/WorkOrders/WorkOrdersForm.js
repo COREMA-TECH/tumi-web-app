@@ -75,10 +75,10 @@ class WorkOrdersForm extends Component {
         EspecialComment: '',
         Electronic_Address: '',
         position: 0,
-        PositionRateId: null,
+        PositionRateId: 0,
         PositionName: '',
-        RecruiterId: null,
-        contactId: null,
+        RecruiterId: 0,
+        contactId: 0,
         userId: localStorage.getItem('LoginId'),
         ShiftsData: ShiftsData,
         saving: false,
@@ -191,16 +191,18 @@ class WorkOrdersForm extends Component {
         if (
             this.state.IdEntity == 0 ||
             this.state.PositionRateId == 0 ||
+            this.state.PositionRateId == null ||
             this.state.quantity == '' ||
             this.state.quantity == 0 ||
             this.state.date == '' ||
             this.state.startDate == '' ||
             this.state.endDate == '' ||
-            this.state.shift == '' ||
+            /*this.state.shift == '' ||
             this.state.shift == 0 ||
             this.state.endShift == '' ||
-            this.state.endShift == 0 ||
-            this.state.contactId == ''
+            this.state.endShift == 0 ||*/
+            this.state.contactId == 0 ||
+            this.state.contactId == null
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
@@ -519,7 +521,7 @@ class WorkOrdersForm extends Component {
 
     handleValidate = (event) => {
         let selfHtml = event.currentTarget;
-        if (selfHtml.value == "" || selfHtml.value == 0)
+        if (selfHtml.value == "" || selfHtml.value == 0 || selfHtml.value == null)
             selfHtml.classList.add("is-invalid");
         else
             selfHtml.classList.remove("is-invalid");
@@ -549,7 +551,7 @@ class WorkOrdersForm extends Component {
                                 <div className="col-md-7 col-7">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label htmlFor="">Hotel</label>
+                                            <label htmlFor="">* Hotel</label>
                                             <select
                                                 required
                                                 name="IdEntity"
@@ -567,7 +569,7 @@ class WorkOrdersForm extends Component {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Requested by</label>
+                                            <label htmlFor="">* Requested by</label>
                                             <select
                                                 required
                                                 name="contactId"
@@ -585,7 +587,7 @@ class WorkOrdersForm extends Component {
                                             </select>
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Position</label>
+                                            <label htmlFor="">* Position</label>
                                             <select
                                                 required
                                                 name="PositionRateId"
@@ -616,14 +618,14 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-                                            <TimeField name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onChange={this.handleTimeChange('shift')} />
+                                            <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift End</label>
-                                            <TimeField name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onChange={this.handleTimeChange('endShift')} />
+                                            <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">From Date</label>
+                                            <label htmlFor="">* From Date</label>
                                             <input
                                                 required
                                                 type="date"
@@ -635,7 +637,7 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">To Date</label>
+                                            <label htmlFor="">* To Date</label>
                                             <input
                                                 required
                                                 type="date"
@@ -647,7 +649,7 @@ class WorkOrdersForm extends Component {
                                             />
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Quantity</label>
+                                            <label htmlFor="">* Quantity</label>
                                             <input
                                                 required
                                                 type="number"
