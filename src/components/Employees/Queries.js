@@ -13,6 +13,8 @@ export const LIST_EMPLOYEES = gql`
         mobileNumber
         idRole
         isActive
+        Id_Deparment
+        Contact_Title
       }
 }   
 `;

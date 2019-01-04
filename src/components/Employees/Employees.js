@@ -26,6 +26,7 @@ import {
     GET_HOTELS_QUERY, GET_ROLES_QUERY, GET_TYPES_QUERY
 } from "../ApplyForm/Application/ProfilePreview/Queries";
 import {GET_LANGUAGES_QUERY} from "../ApplyForm-Recruiter/Queries";
+import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
 
 const styles = theme => ({
     container: {
@@ -251,6 +252,8 @@ class Employees extends Component {
                             lastName: form.elements[1].value,
                             electronicAddress: form.elements[2].value,
                             mobileNumber: form.elements[3].value,
+                            Id_Deparment: parseInt(form.elements[4].value),
+                            Contact_Title: parseInt(form.elements[5].value),
                             idRole: 1,
                             isActive: true,
                             userCreated: 1,
@@ -1400,6 +1403,32 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col-md-2">
+                                        {/*<AutosuggestInput*/}
+                                            {/*id="department"*/}
+                                            {/*name="department"*/}
+                                            {/*data={this.state.departments}*/}
+                                            {/*error={this.state.departmentNameValid}*/}
+                                            {/*value={this.state.departmentName}*/}
+                                            {/*onChange={(value) => {*/}
+                                                {/*this.setState({*/}
+                                                    {/*departmentName: value*/}
+                                                {/*}, () => {*/}
+                                                    {/*this.setState({*/}
+                                                        {/*departmentNameValid: false*/}
+                                                    {/*})*/}
+                                                {/*})*/}
+                                            {/*}}*/}
+                                            {/*onSelect={(value) => {*/}
+                                                {/*this.setState({*/}
+                                                    {/*departmentName: value,*/}
+                                                    {/*departmentEdit: value*/}
+                                                {/*}, () => {*/}
+                                                    {/*this.setState({*/}
+                                                        {/*departmentNameValid: false*/}
+                                                    {/*})*/}
+                                                {/*})*/}
+                                            {/*}}*/}
+                                        {/*/>*/}
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1407,8 +1436,14 @@ class Employees extends Component {
                                                     departmentEdit: e.target.value
                                                 })
                                             }}>
-                                            <option>Select a option
-                                            </option>
+                                            <option>Select a option</option>
+                                            {
+                                                this.state.departments.map(item => {
+                                                    return (
+                                                        <option value={item.Id}>{item.Name.trim()}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                     <div className="col-md-2">
@@ -1420,6 +1455,13 @@ class Employees extends Component {
                                                 })
                                             }}>
                                             <option>Select a option</option>
+                                            {
+                                                this.state.titles.map(item => {
+                                                    return (
+                                                        <option value={item.Id}>{item.Name.trim()}</option>
+                                                    )
+                                                })
+                                            }
                                         </select>
                                     </div>
                                 </div>
