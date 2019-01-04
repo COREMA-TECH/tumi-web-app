@@ -85,6 +85,7 @@ class Shifts extends Component {
                     () => {
                         allEvents = [];
                         allResources = [];
+                        let openShiftExist = false;
 
                         this.state.shiftDetail.map(item => {
                             if (item.detailEmployee !== null) {
@@ -104,7 +105,7 @@ class Shifts extends Component {
                                         name: employee.label
                                     });
                                 }
-                            }
+                            } 
                         });
                         this.state.shift.map(shiftItem => {
                             this.state.shiftDetail.map(shiftDetailItem => {
@@ -126,11 +127,15 @@ class Shifts extends Component {
                                                 : 0,
                                         bgColor: shiftItem.bgColor
                                     });
+
+                                    if(shiftDetailItem.detailEmployee == null) {
+                                        openShiftExist = true;
+                                    }
                                 }
                             });
                         });
 
-                        schedulerData.setEvents(allEvents);
+
 
                         let result = allResources.reduce((unique, o) => {
                             if (!unique.some(obj => obj.id === o.id && obj.name === o.name)) {
@@ -147,13 +152,17 @@ class Shifts extends Component {
                                     : 0;
                         });
 
-                        orderedEmployees.unshift(
-                            {
-                                id: 0,
-                                name: "Open Shift"
-                            }
-                        );
+                        if(openShiftExist) {
+                            orderedEmployees.unshift(
+                                {
+                                    id: 0,
+                                    name: "Open Shift"
+                                }
+                            );
+                        }
+
                         schedulerData.setResources(orderedEmployees);
+                        schedulerData.setEvents(allEvents);
 
                         this.setState(
                             {

@@ -1022,7 +1022,8 @@ class GeneralInformation extends Component {
 				let citySelected = this.state.cities.filter(city => {
 					return city.Name.toLowerCase().includes(cityFinal);
 				});
-				this.updateCity(citySelected[0].Id);
+				if (citySelected.length > 0)
+					this.updateCity(citySelected[0].Id);
 			});
 		});
 
@@ -1800,7 +1801,13 @@ class GeneralInformation extends Component {
 								</Table>
 								<div className="row">
 									<div className="col-md-6">
-										<button className="btn btn-success btn-block mt-1" onClick={this.handleOpenHotels}>
+										<button className={this.props.idCompany == 0 ? (
+											'add-property__disabled btn btn-success btn-block mt-1'
+										) : (
+												'btn btn-success btn-block mt-1'
+											)}
+											disabled={this.props.idCompany == 0}
+											onClick={this.handleOpenHotels}>
 											Add Existing Property <i class="fas fa-plus" />
 										</button>
 									</div>
