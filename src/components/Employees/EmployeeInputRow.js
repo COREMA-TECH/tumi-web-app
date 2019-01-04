@@ -16,13 +16,17 @@ class EmployeeInputRow extends Component {
     }
 
     render() {
-        const firstName = `firstName${this.props.index}`
-        const lastName = `lastName${this.props.index}`
-        const email = `email${this.props.index}`
-        const phoneNumber = `phoneNumber${this.props.index}`
+        const firstName = `firstName${this.props.index}`;
+        const lastName = `lastName${this.props.index}`;
+        const email = `email${this.props.index}`;
+        const phoneNumber = `phoneNumber${this.props.index}`;
+        const department = `department${this.props.index}`;
+        const contactTitle = `contactTitle${this.props.index}`;
+
+
         return (
             <div className="row">
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <input
                         onChange={(e) => {
                             const value = e.target.value;
@@ -44,7 +48,7 @@ class EmployeeInputRow extends Component {
                         required={!this.state.lastRow}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <input
                         onChange={(e) => {
                             this.props.onchange(lastName, e.target.value);
@@ -56,7 +60,7 @@ class EmployeeInputRow extends Component {
                         required={!this.state.lastRow}
                     />
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-2">
                     <input
                         onChange={(e) => {
                             this.props.onchange(email, e.target.value);
@@ -68,17 +72,7 @@ class EmployeeInputRow extends Component {
                         required={!this.state.lastRow}
                     />
                 </div>
-                <div className="col-md-3">
-                    {/*<input*/}
-                        {/*onChange={(e) => {*/}
-                            {/*this.props.onchange(phoneNumber, e.target.value);*/}
-                        {/*}}*/}
-                        {/*value={this.props[phoneNumber]}*/}
-                        {/*type="number"*/}
-                        {/*name="number"*/}
-                        {/*className="form-control"*/}
-                        {/*required={!this.state.lastRow}*/}
-                    {/*/>*/}
+                <div className="col-md-2">
                     <InputMask
                         id="number"
                         name="number"
@@ -92,6 +86,25 @@ class EmployeeInputRow extends Component {
                         placeholder="+(999) 999-9999"
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     />
+                </div>
+                <div className="col-md-2">
+                    <select
+                        className="form-control"
+                        onChange={(e) => {
+                            this.props.onchange(department, e.target.value);
+                        }}>
+                        <option>Select a option
+                        </option>
+                    </select>
+                </div>
+                <div className="col-md-2">
+                    <select
+                        className="form-control"
+                        onChange={(e) => {
+                            this.props.onchange(contactTitle, e.target.value);
+                        }}>
+                        <option>Select a option</option>
+                    </select>
                 </div>
             </div>
         );

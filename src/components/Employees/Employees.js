@@ -150,6 +150,8 @@ class Employees extends Component {
                 lastName: this.state[`lastName${index}`],
                 electronicAddress: this.state[`email${index}`],
                 mobileNumber: this.state[`phoneNumber${index}`],
+                department: this.state[`department${index}`],
+                contactTitle: this.state[`contactTitle${index}`],
                 idRole: 1,
                 isActive: true,
                 userCreated: 1,
@@ -392,18 +394,25 @@ class Employees extends Component {
                     <DialogContent>
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* First Name</label>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Last Name</label>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Email Address</label>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Phone Number</label>
                                 </div>
+                                <div className="col-md-2">
+                                    <label htmlFor="">* Department</label>
+                                </div>
+                                <div className="col-md-2">
+                                    <label htmlFor="">* Contact Title</label>
+                                </div>
+
                             </div>
                             {this.state.rowsInput.map((item, index) => {
                                 return (
@@ -481,21 +490,28 @@ class Employees extends Component {
                         <DialogContent>
                             <div className="container">
                                 <div className="row">
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <label htmlFor="">* First Name</label>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <label htmlFor="">* Last Name</label>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <label htmlFor="">* Email Address</label>
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <label htmlFor="">* Phone Number</label>
                                     </div>
+                                    <div className="col-md-2">
+                                        <label htmlFor="">* Department</label>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <label htmlFor="">* Contact Title</label>
+                                    </div>
+
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <input
                                             type="text"
                                             name="firstName"
@@ -510,7 +526,7 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <input
                                             type="text"
                                             name="lastName"
@@ -525,7 +541,7 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <input
                                             type="email"
                                             name="email"
@@ -540,7 +556,7 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-2">
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -555,6 +571,29 @@ class Employees extends Component {
                                             placeholder="+(999) 999-9999"
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
+                                    </div>
+                                    <div className="col-md-2">
+                                        <select
+                                            className="form-control"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    departmentEdit: e.target.value
+                                                })
+                                            }}>
+                                            <option>Select a option
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div className="col-md-2">
+                                        <select
+                                            className="form-control"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    contactTitleEdit: e.target.value
+                                                })
+                                            }}>
+                                            <option>Select a option</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -641,12 +680,13 @@ class Employees extends Component {
                                                     }}
                                                     update={(id, row) => {
                                                         this.updateEmployeeById(id);
-                                                        console.log(row.mobileNumber);
                                                         this.setState({
                                                             firstNameEdit: row.firstName,
                                                             lastNameEdit: row.lastName,
                                                             emailEdit: row.electronicAddress,
-                                                            numberEdit: row.mobileNumber
+                                                            numberEdit: row.mobileNumber,
+                                                            departmentEdit: row.department,
+                                                            contactTitleEdit: row.contactTitle,
                                                         });
                                                     }}
                                                 />
