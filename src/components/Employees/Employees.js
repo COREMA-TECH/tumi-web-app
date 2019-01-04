@@ -217,8 +217,8 @@ class Employees extends Component {
                 lastName: this.state[`lastName${index}`],
                 electronicAddress: this.state[`email${index}`],
                 mobileNumber: this.state[`phoneNumber${index}`],
-                department: this.state[`department${index}`],
-                contactTitle: this.state[`contactTitle${index}`],
+                Id_Deparment: parseInt(this.state[`department${index}`]),
+                Contact_Title: parseInt(this.state[`contactTitle${index}`]),
                 idRole: 1,
                 isActive: true,
                 userCreated: 1,
@@ -1250,6 +1250,8 @@ class Employees extends Component {
                                         newRow={this.addNewRow}
                                         index={index}
                                         onchange={this.handleChange}
+                                        departments={this.state.departments}
+                                        titles={this.state.titles}
                                     />
                                 );
                             })}
@@ -1550,13 +1552,14 @@ class Employees extends Component {
                                                     }}
                                                     update={(id, row) => {
                                                         this.updateEmployeeById(id);
+                                                        console.table(row);
                                                         this.setState({
                                                             firstNameEdit: row.firstName,
                                                             lastNameEdit: row.lastName,
                                                             emailEdit: row.electronicAddress,
                                                             numberEdit: row.mobileNumber,
-                                                            departmentEdit: row.department,
-                                                            contactTitleEdit: row.contactTitle,
+                                                            departmentEdit: row.Id_Deparment,
+                                                            contactTitleEdit: row.Contact_Title,
                                                         });
                                                     }}
                                                     handleClickOpenUserModal={this.handleClickOpenUserModal}

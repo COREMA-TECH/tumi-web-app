@@ -93,8 +93,14 @@ class EmployeeInputRow extends Component {
                         onChange={(e) => {
                             this.props.onchange(department, e.target.value);
                         }}>
-                        <option>Select a option
-                        </option>
+                        <option>Select a option</option>
+                        {
+                            this.props.departments.map(item => {
+                                return (
+                                    <option value={item.Id}>{item.Name.trim()}</option>
+                                )
+                            })
+                        }
                     </select>
                 </div>
                 <div className="col-md-2">
@@ -104,6 +110,13 @@ class EmployeeInputRow extends Component {
                             this.props.onchange(contactTitle, e.target.value);
                         }}>
                         <option>Select a option</option>
+                        {
+                            this.props.titles.map(item => {
+                                return (
+                                    <option value={item.Id}>{item.Name.trim()}</option>
+                                )
+                            })
+                        }
                     </select>
                 </div>
             </div>
