@@ -90,6 +90,10 @@ export const GET_SHIFTS_QUERY = gql`
             color
             status
             idPosition
+            workOrder
+            {
+              id    
+            }
         }
         detailEmployee{
             EmployeeId
