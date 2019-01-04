@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import InputMask from "react-input-mask";
+import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
+import AutoComplete from "./AutoComplete";
 
 class EmployeeInputRow extends Component {
     constructor(props) {
@@ -11,7 +13,9 @@ class EmployeeInputRow extends Component {
             emailAddress: '',
             phoneNumber: '',
 
-            lastRow: true
+            lastRow: true,
+            department: "",
+            contactTitle: ""
         }
     }
 
@@ -87,36 +91,77 @@ class EmployeeInputRow extends Component {
                     />
                 </div>
                 <div className="col-md-2">
-                    <select
-                        className="form-control"
-                        onChange={(e) => {
-                            this.props.onchange(department, e.target.value);
-                        }}>
-                        <option>Select a option</option>
-                        {
-                            this.props.departments.map(item => {
-                                return (
-                                    <option value={item.Id}>{item.Name.trim()}</option>
-                                )
+                    <AutoComplete
+                        id="department"
+                        name="department"
+                        value={this.state.department}
+                        data={this.props.departments}
+                        onChange={(value) => {
+                            this.props.onchange(department, value);
+                            this.setState({
+                                department: value
                             })
-                        }
-                    </select>
+                        }}
+                        onSelect={(value) => {
+                            this.props.onchange(department, value);
+                            this.setState({
+                                department: value
+                            })
+                        }}
+                        required
+                    />
+
+                    {/*<select*/}
+                        {/*className="form-control"*/}
+                        {/*onChange={(e) => {*/}
+                            {/*this.props.onchange(department, e.target.value);*/}
+                        {/*}}>*/}
+                        {/*<option>Select a option</option>*/}
+                        {/*{*/}
+                            {/*this.props.departments.map(item => {*/}
+                                {/*return (*/}
+                                    {/*<option value={item.Id}>{item.Name.trim()}</option>*/}
+                                {/*)*/}
+                            {/*})*/}
+                        {/*}*/}
+                    {/*</select>*/}
                 </div>
                 <div className="col-md-2">
-                    <select
-                        className="form-control"
-                        onChange={(e) => {
-                            this.props.onchange(contactTitle, e.target.value);
-                        }}>
-                        <option>Select a option</option>
-                        {
-                            this.props.titles.map(item => {
-                                return (
-                                    <option value={item.Id}>{item.Name.trim()}</option>
-                                )
+                    <AutoComplete
+                        id="contactTitle"
+                        name="contactTitle"
+                        value={this.state.contactTitle}
+                        data={this.props.titles}
+                        onChange={(value) => {
+                            alert(value);
+                            this.props.onchange(contactTitle, value);
+                            this.setState({
+                                contactTitle: value
                             })
-                        }
-                    </select>
+                        }}
+                        onSelect={(value) => {
+                            alert(value);
+                            this.props.onchange(contactTitle, value);
+                            this.setState({
+                                contactTitle: value
+                            })
+                        }}
+                        required
+                    />
+                    {/*<select*/}
+                        {/*className="form-control"*/}
+                        {/*onChange={(e) => {*/}
+                            {/*this.props.onchange(contactTitle, e.target.value);*/}
+                        {/*}}>*/}
+                        {/*<option>Select a option</option>*/}
+                        {/*{*/}
+                            {/*this.props.titles.map(item => {*/}
+                                {/*return (*/}
+                                    {/*<option value={item.Id}>{item.Name.trim()}</option>*/}
+                                {/*)*/}
+                            {/*})*/}
+                        {/*}*/}
+                    {/*</select>*/}
                 </div>
             </div>
         );

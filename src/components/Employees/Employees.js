@@ -1259,7 +1259,7 @@ class Employees extends Component {
                                     <label htmlFor="">* Department</label>
                                 </div>
                                 <div className="col-md-2">
-                                    <label htmlFor="">* Contact Title</label>
+                                    <label htmlFor="">* Position</label>
                                 </div>
 
                             </div>
@@ -1357,7 +1357,7 @@ class Employees extends Component {
                                         <label htmlFor="">* Department</label>
                                     </div>
                                     <div className="col-md-2">
-                                        <label htmlFor="">* Contact Title</label>
+                                        <label htmlFor="">* Position</label>
                                     </div>
 
                                 </div>
