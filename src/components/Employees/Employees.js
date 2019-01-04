@@ -22,11 +22,13 @@ import InputForm from "../ui-components/InputForm/InputForm";
 import gql from 'graphql-tag';
 import {
     GET_CONTACTS_IN_USER_DIALOG,
-    GET_DEPARTMENTS_QUERY, GET_EMAILS_USER,
-    GET_HOTELS_QUERY, GET_ROLES_QUERY, GET_TYPES_QUERY
+    GET_DEPARTMENTS_QUERY,
+    GET_EMAILS_USER,
+    GET_HOTELS_QUERY,
+    GET_ROLES_QUERY,
+    GET_TYPES_QUERY
 } from "../ApplyForm/Application/ProfilePreview/Queries";
 import {GET_LANGUAGES_QUERY} from "../ApplyForm-Recruiter/Queries";
-import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
 
 const styles = theme => ({
     container: {
@@ -130,6 +132,7 @@ class Employees extends Component {
         RegionName: '',
         IsActive: 1,
         IdRegion: 0,
+        employeeId: null,
 
         departmentName: '',
         titleName: '',
@@ -420,12 +423,14 @@ class Employees extends Component {
     /**
      * To open the user modal
      */
-    handleClickOpenUserModal = (email, phoneNumber) => {
-        this.setState({ openUserModal: true });
+    handleClickOpenUserModal = (email, phoneNumber, idEmployee) => {
+        this.setState({openUserModal: true});
+        console.log("Employee ID: ", idEmployee);
         this.setState({
             email: email,
-            number: phoneNumber
-        })
+            number: phoneNumber,
+            employeeId: idEmployee
+        });
     };
 
     /**
@@ -449,7 +454,13 @@ class Employees extends Component {
             idLanguage: null,
             usernameValid: true,
             email: "",
-            number: ""
+            number: "",
+            employeeId: null,
+            isAdmin: false,
+            allowInsert: false,
+            allowEdit: false,
+            allowDelete: false,
+            allowExport: false,
         })
     };
 
@@ -461,7 +472,7 @@ class Employees extends Component {
             .query({
                 query: GET_HOTELS_QUERY
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -588,7 +599,7 @@ class Employees extends Component {
             .query({
                 query: GET_EMAILS_USER
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 this.setState({
                     dataEmail: data.getusers
                 }, () => {
@@ -630,9 +641,8 @@ class Employees extends Component {
     };
 
 
-
     handleCheckedChange = (name) => (event) => {
-        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({IdRegion: 0, IdRegionValid: true});
         if (name == 'isAdmin' && event.target.checked)
             this.setState(
                 {
@@ -644,11 +654,11 @@ class Employees extends Component {
                 },
                 this.validateForm
             );
-        else this.setState({ [name]: event.target.checked }, this.validateForm);
+        else this.setState({[name]: event.target.checked}, this.validateForm);
     };
 
     onChangeHandler(value, name) {
-        this.setState({ [name]: value }, this.validateField(name, value));
+        this.setState({[name]: value}, this.validateField(name, value));
     }
 
     updateSelect = (id, name) => {
@@ -665,25 +675,18 @@ class Employees extends Component {
 
 
     addUserHandler = () => {
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                this.validateAllFields(() => {
-                    if (this.state.formValid) this.insertUser();
-                    else {
-                        this.props.handleOpenSnackbar(
-                            'warning',
-                            'Error: Saving Information: You must fill all the required fields'
-                        );
-                        this.setState({
-                            loading: false
-                        });
-                    }
+        this.validateAllFields(() => {
+            if (this.state.formValid) this.insertUser();
+            else {
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'Error: Saving Information: You must fill all the required fields'
+                );
+                this.setState({
+                    loading: false
                 });
             }
-        );
+        });
     };
 
     INSERT_USER_QUERY = gql`
@@ -700,7 +703,7 @@ class Employees extends Component {
     insertUser = () => {
         this.setState(
             {
-                loading: true
+                finishLoading: false
             },
             () => {
                 this.props.client
@@ -730,7 +733,8 @@ class Employees extends Component {
                                 User_Created: 1,
                                 User_Updated: 1,
                                 Date_Created: "'2018-08-14 16:10:25+00'",
-                                Date_Updated: "'2018-08-14 16:10:25+00'"
+                                Date_Updated: "'2018-08-14 16:10:25+00'",
+                                idEmployee: this.state.employeeId
                             }
                         }
                     })
@@ -738,9 +742,12 @@ class Employees extends Component {
                         this.props.handleOpenSnackbar('success', 'User Inserted!');
 
                         this.setState({
+                            finishLoading: true
+                        });
+                        this.setState({
                             createdProfile: true
                         }, () => {
-                            this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
+                            this.setState({openUserModal: false, showCircularLoading: true, loading: false});
                             this.resetUserModalState();
                         });
 
@@ -924,7 +931,7 @@ class Employees extends Component {
         const {classes} = this.props;
         const {fullScreen} = this.props;
 
-        if(this.state.loading) return <LinearProgress />;
+        if (this.state.loading) return <LinearProgress/>;
 
         let renderHeaderContent = () => (
             <div className="row">
@@ -970,7 +977,7 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="md"
             >
-                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
+                <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
                     <div className="modal-header">
                         <h5 className="modal-title">
                             {this.state.idToEdit != null &&
@@ -983,7 +990,7 @@ class Employees extends Component {
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{ minWidth: 600 }}>
+                <DialogContent style={{minWidth: 600}}>
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
@@ -1092,8 +1099,8 @@ class Employees extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1110,8 +1117,8 @@ class Employees extends Component {
                                                     id="isAdmin"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1128,8 +1135,8 @@ class Employees extends Component {
                                                     id="allowInsert"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1146,8 +1153,8 @@ class Employees extends Component {
                                                     id="allowEdit"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1164,8 +1171,8 @@ class Employees extends Component {
                                                     id="allowDelete"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1182,8 +1189,8 @@ class Employees extends Component {
                                                     id="allowExport"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </li>
@@ -1193,7 +1200,7 @@ class Employees extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
+                <DialogActions style={{margin: '16px 10px', borderTop: '1px solid #eee'}}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <div>
@@ -1210,7 +1217,7 @@ class Employees extends Component {
                         <div className={classes.wrapper}>
                             <div>
                                 <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
-                                    Cancel <i className="fas fa-ban ml-1" />
+                                    Cancel <i className="fas fa-ban ml-1"/>
                                 </button>
                             </div>
                         </div>
@@ -1477,7 +1484,7 @@ class Employees extends Component {
                             <div className={classes.root}>
                                 <div className={classes.wrapper}>
                                     <button
-                                        variant="fab"
+                                        type="reset"
                                         className="btn btn-danger"
                                         onClick={this.handleCloseModalEdit}
                                     >

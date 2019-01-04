@@ -206,20 +206,24 @@ class EmployeesTable extends React.Component {
                                             }}
                                         >
                                             <CustomTableCell>
-                                                <Tooltip title="Assign Role">
-                                                    <button
-                                                        className="btn btn-outline-info float-left ml-1"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            e.preventDefault();
+                                                {
+                                                    row.idUsers == null ? (
+                                                        <Tooltip title="Assign Role">
+                                                            <button
+                                                                className="btn btn-outline-info float-left ml-1"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    e.preventDefault();
 
-                                                            this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber);
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-plus"></i>
-                                                    </button>
-                                                </Tooltip>
+                                                                    this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-plus"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                    ) : ''
+                                                }
                                                 <Tooltip title="Edit">
                                                     <button
                                                         className="btn btn-success float-left ml-1"

@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
  */
 export const LIST_EMPLOYEES = gql`
     {
-          employees(isActive: true) {
+        employees(isActive: true) {
             id
             firstName
             lastName
@@ -15,6 +15,7 @@ export const LIST_EMPLOYEES = gql`
             isActive
             Id_Deparment
             Contact_Title
-          }
-    }   
+            idUsers
+        }
+    }
 `;
