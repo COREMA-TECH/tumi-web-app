@@ -1255,13 +1255,15 @@ class Employees extends Component {
                                 <div className="col-md-2">
                                     <label htmlFor="">* Phone Number</label>
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-md-1">
+                                    <label htmlFor=""> Hotel</label>
+                                </div>
+                                <div className="col-md-1">
                                     <label htmlFor="">* Department</label>
                                 </div>
                                 <div className="col-md-2">
                                     <label htmlFor="">* Position</label>
                                 </div>
-
                             </div>
                             {this.state.rowsInput.map((item, index) => {
                                 return (
@@ -1271,6 +1273,7 @@ class Employees extends Component {
                                         onchange={this.handleChange}
                                         departments={this.state.departments}
                                         titles={this.state.titles}
+                                        hotels={this.state.hotels}
                                     />
                                 );
                             })}
@@ -1353,7 +1356,12 @@ class Employees extends Component {
                                     <div className="col-md-2">
                                         <label htmlFor="">* Phone Number</label>
                                     </div>
-                                    <div className="col-md-2">
+
+                                    <div className="col-md-1">
+                                        <label htmlFor="">* Hotels</label>
+                                    </div>
+
+                                    <div className="col-md-1">
                                         <label htmlFor="">* Department</label>
                                     </div>
                                     <div className="col-md-2">
@@ -1422,7 +1430,28 @@ class Employees extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col-md-1">
+                                        <select
+                                            className="form-control"
+                                            onChange={(e) => {
+                                                this.setState({
+                                                    hotelEdit: e.target.value
+                                                })
+                                            }}
+                                            value={this.state.hotelEdit}
+                                            required
+                                        >
+                                            <option>Select a option</option>
+                                            {
+                                                this.state.hotels.map(item => {
+                                                    return (
+                                                        <option value={item.Id}>{item.Name.trim()}</option>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+                                    </div>
+                                    <div className="col-md-1">
                                         <select
                                             className="form-control"
                                             onChange={(e) => {

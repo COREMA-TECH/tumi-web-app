@@ -90,7 +90,28 @@ class EmployeeInputRow extends Component {
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     />
                 </div>
-                <div className="col-md-2">
+                <div className="col-md-1">
+                    <select
+                        className="form-control"
+                        onChange={(e) => {
+                            this.setState({
+                                hotelEdit: e.target.value
+                            })
+                        }}
+                        value={this.state.hotelEdit}
+                        required
+                    >
+                        <option>Select a option</option>
+                        {
+                            this.props.hotels.map(item => {
+                                return (
+                                    <option value={item.Id}>{item.Name.trim()}</option>
+                                )
+                            })
+                        }
+                    </select>
+                </div>
+                <div className="col-md-1">
                     <AutoComplete
                         id="department"
                         name="department"
