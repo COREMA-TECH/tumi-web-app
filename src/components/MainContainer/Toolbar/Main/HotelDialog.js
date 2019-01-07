@@ -28,6 +28,7 @@ class HotelDialog extends Component {
         return (
             <div>
                 <Dialog
+
                     open={this.props.open}
                     aria-labelledby="scroll-dialog-title"
                     fullScreen

@@ -884,85 +884,91 @@ class ContactcontactForm extends React.Component {
 			return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
 		});
 
+		console.log("Esto es el deparment ", department)
 		let insdepartmentAsync = async () => {
+
 			if (department) {
 				IdDeparment = department.Id;
 			} else {
 				//const InsertDepartmentNew =
-				await this.props.client
-					.mutate({
-						mutation: this.INSERT_DEPARTMENTS_QUERY,
-						variables: {
-							input: {
-								Id: 0,
-								Id_Catalog: 8,
-								Id_Parent: 0,
-								Name: `'${this.state.departmentName}'`,
-								DisplayLabel: `'${this.state.departmentName}'`,
-								Description: `'${this.state.departmentName}'`,
-								Value: null,
-								Value01: null,
-								Value02: null,
-								Value03: null,
-								Value04: null,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-09-20 08:10:25+00'",
-								Date_Updated: "'2018-09-20 08:10:25+00'"
+				if (department != undefined) {
+					await this.props.client
+						.mutate({
+							mutation: this.INSERT_DEPARTMENTS_QUERY,
+							variables: {
+								input: {
+									Id: 0,
+									Id_Catalog: 8,
+									Id_Parent: 0,
+									Name: `'${this.state.departmentName}'`,
+									DisplayLabel: `'${this.state.departmentName}'`,
+									Description: `'${this.state.departmentName}'`,
+									Value: null,
+									Value01: null,
+									Value02: null,
+									Value03: null,
+									Value04: null,
+									IsActive: 1,
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-09-20 08:10:25+00'",
+									Date_Updated: "'2018-09-20 08:10:25+00'"
+								}
 							}
-						}
-					})
-					.then((data) => {
-						IdDeparment = data.data.inscatalogitem.Id;
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-						this.setState({
-							saving: false
+						})
+						.then((data) => {
+							IdDeparment = data.data.inscatalogitem.Id;
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+							this.setState({
+								saving: false
+							});
+							return false;
 						});
-						return false;
-					});
+				}
 			}
 
 			if (title) {
 				IdTitle = title.Id;
 			} else {
 				//const InsertDepartmentNew =
-				await this.props.client
-					.mutate({
-						mutation: this.INSERT_DEPARTMENTS_QUERY,
-						variables: {
-							input: {
-								Id: 0,
-								Id_Catalog: 6,
-								Id_Parent: 0,
-								Name: `'${this.state.titleName}'`,
-								DisplayLabel: `'${this.state.titleName}'`,
-								Description: `'${this.state.titleName}'`,
-								Value: null,
-								Value01: null,
-								Value02: null,
-								Value03: null,
-								Value04: null,
-								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-09-20 08:10:25+00'",
-								Date_Updated: "'2018-09-20 08:10:25+00'"
+				if (title != undefined) {
+					await this.props.client
+						.mutate({
+							mutation: this.INSERT_DEPARTMENTS_QUERY,
+							variables: {
+								input: {
+									Id: 0,
+									Id_Catalog: 6,
+									Id_Parent: 0,
+									Name: `'${this.state.titleName}'`,
+									DisplayLabel: `'${this.state.titleName}'`,
+									Description: `'${this.state.titleName}'`,
+									Value: null,
+									Value01: null,
+									Value02: null,
+									Value03: null,
+									Value04: null,
+									IsActive: 1,
+									User_Created: 1,
+									User_Updated: 1,
+									Date_Created: "'2018-09-20 08:10:25+00'",
+									Date_Updated: "'2018-09-20 08:10:25+00'"
+								}
 							}
-						}
-					})
-					.then((data) => {
-						IdTitle = data.data.inscatalogitem.Id;
-					})
-					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-						this.setState({
-							saving: false
+						})
+						.then((data) => {
+							IdTitle = data.data.inscatalogitem.Id;
+						})
+						.catch((error) => {
+							this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
+							this.setState({
+								saving: false
+							});
+							return false;
 						});
-						return false;
-					});
+				}
 			}
 
 			this.insertContacts(IdDeparment, IdTitle);
@@ -1352,30 +1358,32 @@ class ContactcontactForm extends React.Component {
 					</div>
 				</div>
 
-				{this.props.showStepper ? (
-					<div className="advanced-tab-options">
-						<span
-							className="options-button options-button--back"
-							onClick={() => {
-								this.props.back();
-							}}
-						>
-							Back
+				{
+					this.props.showStepper ? (
+						<div className="advanced-tab-options">
+							<span
+								className="options-button options-button--back"
+								onClick={() => {
+									this.props.back();
+								}}
+							>
+								Back
 						</span>
-						<span
-							className="options-button options-button--next"
-							onClick={() => {
-								// When the user click Next button, open second tab
-								this.props.next();
-							}}
-						>
-							{this.props.valueTab < 2 ? 'Next' : 'Finish'}
-						</span>
-					</div>
-				) : (
-						''
-					)}
-			</div>
+							<span
+								className="options-button options-button--next"
+								onClick={() => {
+									// When the user click Next button, open second tab
+									this.props.next();
+								}}
+							>
+								{this.props.valueTab < 2 ? 'Next' : 'Finish'}
+							</span>
+						</div>
+					) : (
+							''
+						)
+				}
+			</div >
 		);
 	}
 }

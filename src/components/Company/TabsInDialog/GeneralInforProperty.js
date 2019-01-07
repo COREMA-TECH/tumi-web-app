@@ -50,7 +50,7 @@ class GeneralInfoProperty extends Component {
 			workWeek: '',
 			otherPhoneNumber: '',
 			room: '',
-			rate: this.props.Markup,
+			rate: this.props.Markup == 0 ? '' : this.props.Markup,
 			fax: '',
 			zipCode: '',
 			phonePrefix: '505',
@@ -68,6 +68,7 @@ class GeneralInfoProperty extends Component {
 			validStartWeek: '',
 			validEndWeek: '',
 			zipCodeValid: true,
+			rateValid: true,
 			contractURL: '',
 			contractFile: '',
 
@@ -83,6 +84,7 @@ class GeneralInfoProperty extends Component {
 			other01File: '',
 
 			phoneNumberValid: true,
+			faxValid: true,
 			faxNumberValid: true,
 			cityFinal: '',
 			loadingData: false,
@@ -642,10 +644,11 @@ class GeneralInfoProperty extends Component {
 						.replace('+', '')
 						.replace('(', '')
 						.replace(')', '').length === 10,
-				faxNumberValid: fax.length === 10 || fax.length === 0
+				faxValid: fax.length === 10 || fax.length === 0
+				//faxNumberValid: fax.length === 10 || fax.length === 0
 			},
 			() => {
-				if (!this.state.phoneNumberValid || !this.state.faxNumberValid) {
+				if (!this.state.phoneNumberValid || !this.state.faxValid) {
 					validated = false;
 				}
 
@@ -1119,16 +1122,16 @@ class GeneralInfoProperty extends Component {
 													<div className="col-md-6 col-lg-1">
 														<label>* Markup</label>
 														<InputValid
-															type="number"
-															value={this.state.rate}
 															change={(text) => {
 																this.setState({
 																	rate: text
 																});
 															}}
-															error={!this.state.rateValid}
+															value={this.state.rate}
+															type="number"
 															maxLength="10"
-														//disabled={this.props.idProperty !== null ? true : false}
+															required
+															placeholder='0'
 														/>
 													</div>
 													<div className="col-md-6 col-lg-2">
@@ -1279,7 +1282,7 @@ class GeneralInfoProperty extends Component {
 													<div className="col-md-6 col-lg-2">
 
 														<label>* Zip Code</label>
-														<InputForm
+														<InputValid
 															value={this.state.zipCode.trim()}
 															change={(text) => {
 																this.updateInput(text, 'zipCode');
@@ -1338,7 +1341,7 @@ class GeneralInfoProperty extends Component {
 															maskChar=" "
 															value={this.state.fax}
 															className={
-																this.state.faxNumberValid ? (
+																this.state.faxValid ? (
 																	'form-control'
 																) : (
 																		'input-form _invalid'
@@ -1347,7 +1350,7 @@ class GeneralInfoProperty extends Component {
 															onChange={(e) => {
 																this.setState({
 																	fax: e.target.value,
-																	faxNumberValid: true
+																	faxValid: true
 																});
 															}}
 															placeholder="+(999) 999-9999"
