@@ -15,10 +15,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 
 class hotels extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            hotels: []
+            hotels: [],
+            loadingUpdate: false
         }
     }
 
@@ -86,8 +87,20 @@ class hotels extends Component {
     /*    UNSAFE_componentWillMount() {
             this.getHotels();
         }*/
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        if (nextProps.hotels != null) {
+
+            this.setState(
+                { hotels: nextProps.hotels }
+            );
+        }
+        else {
+            this.getHotels();
+        }
+    }
 
     componentWillMount() {
+
         this.getHotels();
     }
 
@@ -97,6 +110,7 @@ class hotels extends Component {
             variables: {},
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
+
             this.setState({
                 hotels: data.getbusinesscompanies
             });
@@ -104,72 +118,76 @@ class hotels extends Component {
     }
 
     assignHotel = (hotel) => {
-        this.props.client
-            .mutate({
-                // Pass the mutation structure
-                mutation: this.UPDATE_COMPANY_QUERY,
-                variables: {
-                    input: {
-                        Id: hotel.Id,
-                        Id_Contract: 1,
-                        Id_Company: hotel.Id_Company,
-                        Code: `'${hotel.Code}'`,
-                        Code01: `'${hotel.Code01}'`,
-                        BusinessType: 1,
-                        Name: `'${hotel.Name}'`,
-                        Description: `'${hotel.Description}'`,
-                        Start_Week: hotel.Start_Week,
-                        End_Week: hotel.End_Week,
-                        Legal_Name: `'${hotel.Legal_Name}'`,
-                        Country: hotel.Country,
-                        State: hotel.State,
-                        City: hotel.City,
-                        Id_Parent: this.props.ManagmentId,
-                        ImageURL: `'${hotel.ImageURL}'`,
-                        Start_Date: `'${hotel.Start_Date}'`,
-                        Location: `'${hotel.Location}'`,
-                        Location01: `'${hotel.Location01}'`,
-                        Rate: hotel.Rate,
-                        Zipcode: hotel.Zipcode,
-                        Fax: `'${hotel.Fax}'`,
-                        Phone_Number: `'${hotel.Phone_Number}'`,
-                        Primary_Email: `'${hotel.Primary_Email}'`,
-                        Contract_URL: `'${hotel.Contract_URL}'`,
-                        Insurance_URL: `'${hotel.Insurance_URL}'`,
-                        Other_URL: `'${hotel.Other_URL}'`,
-                        Other_Name: `'${hotel.Other_Name}'`,
-                        Other01_URL: `'${hotel.Other01_URL}'`,
-                        Other01_Name: `'${hotel.Other01_Name}'`,
-                        Suite: `'${hotel.Suite}'`,
-                        Rooms: hotel.Rooms,
-                        IsActive: hotel.IsActive,
-                        User_Created: hotel.User_Created,
-                        User_Updated: hotel.User_Updated,
-                        Date_Created: `'${new Date(hotel.Date_Created).toISOString().substring(0, 10)}'`,
-                        Date_Updated: `'${new Date(hotel.Date_Updated).toISOString().substring(0, 10)}'`,
-                        Contract_Status: `'${hotel.Contract_Status}'`,
-                        Contract_File: `'${hotel.Contract_File}'`,
-                        Insurance_File: `'${hotel.Insurance_File}'`,
-                        Other_File: `'${hotel.Other_File}'`,
-                        Other01_File: `'${hotel.Other01_File}'`,
-                        Region: hotel.Region,
-                        Phone_Prefix: `'${hotel.Phone_Prefix}'`
+        this.setState({ loadingUpdate: true }, () => {
+            this.props.client
+                .mutate({
+                    // Pass the mutation structure
+                    mutation: this.UPDATE_COMPANY_QUERY,
+                    variables: {
+                        input: {
+                            Id: hotel.Id,
+                            Id_Contract: 1,
+                            Id_Company: hotel.Id_Company,
+                            Code: `'${hotel.Code}'`,
+                            Code01: `'${hotel.Code01}'`,
+                            BusinessType: 1,
+                            Name: `'${hotel.Name}'`,
+                            Description: `'${hotel.Description}'`,
+                            Start_Week: hotel.Start_Week,
+                            End_Week: hotel.End_Week,
+                            Legal_Name: `'${hotel.Legal_Name}'`,
+                            Country: hotel.Country,
+                            State: hotel.State,
+                            City: hotel.City,
+                            Id_Parent: this.props.ManagmentId,
+                            ImageURL: `'${hotel.ImageURL}'`,
+                            Start_Date: `'${hotel.Start_Date}'`,
+                            Location: `'${hotel.Location}'`,
+                            Location01: `'${hotel.Location01}'`,
+                            Rate: hotel.Rate,
+                            Zipcode: hotel.Zipcode,
+                            Fax: `'${hotel.Fax}'`,
+                            Phone_Number: `'${hotel.Phone_Number}'`,
+                            Primary_Email: `'${hotel.Primary_Email}'`,
+                            Contract_URL: `'${hotel.Contract_URL}'`,
+                            Insurance_URL: `'${hotel.Insurance_URL}'`,
+                            Other_URL: `'${hotel.Other_URL}'`,
+                            Other_Name: `'${hotel.Other_Name}'`,
+                            Other01_URL: `'${hotel.Other01_URL}'`,
+                            Other01_Name: `'${hotel.Other01_Name}'`,
+                            Suite: `'${hotel.Suite}'`,
+                            Rooms: hotel.Rooms,
+                            IsActive: hotel.IsActive,
+                            User_Created: hotel.User_Created,
+                            User_Updated: hotel.User_Updated,
+                            Date_Created: `'${new Date(hotel.Date_Created).toISOString().substring(0, 10)}'`,
+                            Date_Updated: `'${new Date(hotel.Date_Updated).toISOString().substring(0, 10)}'`,
+                            Contract_Status: `'${hotel.Contract_Status}'`,
+                            Contract_File: `'${hotel.Contract_File}'`,
+                            Insurance_File: `'${hotel.Insurance_File}'`,
+                            Other_File: `'${hotel.Other_File}'`,
+                            Other01_File: `'${hotel.Other01_File}'`,
+                            Region: hotel.Region,
+                            Phone_Prefix: `'${hotel.Phone_Prefix}'`
+                        }
                     }
-                }
-            })
-            .then((data) => {
-                this.props.handleOpenSnackbar('success', 'Hotel Assigned');
-                this.props.handleClose();
-            })
-            .catch((error) => {
-                this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
-                this.setState({
-                    loadingUpdate: false
+                })
+                .then((data) => {
+                    this.setState({ loadingUpdate: false });
+                    this.props.handleOpenSnackbar('success', 'Hotel Assigned');
+                    this.props.handleClose();
+                })
+                .catch((error) => {
+                    this.props.handleOpenSnackbar('error', 'Error: Inserting General Information: ' + error);
+                    this.setState({
+                        loadingUpdate: false
+                    });
                 });
-            });
+        });
     }
 
     render() {
+
         return (
             <div>
                 <Dialog

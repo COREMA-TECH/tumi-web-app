@@ -189,6 +189,137 @@ class GeneralInformation extends Component {
 		}
 	`;
 
+	GET_COMPANY_CHILD_QUERY = gql`
+    {
+        getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: null, Id_Parent: 99999) {
+            Id
+            Id_Contract
+            Id_Company
+            Code
+            Code01
+            BusinessType
+            Name
+            Description
+            Start_Week
+            End_Week
+            Legal_Name
+            Country
+            State
+            City
+            Id_Parent
+            ImageURL
+            Start_Date
+            Location
+            Location01
+            Rate
+            Zipcode
+            Fax
+            Phone_Prefix
+            Phone_Number
+            Primary_Email
+            Contract_URL
+            Insurance_URL
+            Other_File
+            Other_Name
+            Other01_URL
+            Other01_Name
+            Suite
+            Rooms
+            IsActive
+            User_Created
+            User_Updated
+            Date_Created
+            Date_Updated
+            Contract_Status
+            Contract_File
+            Insurance_File
+            Other_File
+            Other01_File
+            Region
+        }
+    }
+	`;
+
+	/*getHotels = () => {
+		this.props.client.query({
+			query: this.getCompaniesQuery,
+			variables: {}
+			//fetchPolicy: 'no-cache'
+		}).then(({ data }) => {
+			this.setState({
+				hotels: data.getbusinesscompanies
+			});
+		}).catch();
+	}
+		getHotels = (func = () => { }) => {
+			console.log("aqui estoy getHotels")
+			this.setState(
+				{
+					loading: true
+				},
+				() => {
+			this.props.client.query({
+				query: this.GET_COMPANY_CHILD_QUERY,
+				variables: {}
+				//fetchPolicy: 'no-cache'
+			}).then(({ data }) => {
+				console.log("esta es la data ", data)
+				this.setState({
+					hotels: data.getbusinesscompanies,
+					loading: false
+									},
+									func
+				);
+			}).catch();
+		}
+		);
+		};*/
+	getHotels = (func = () => { }) => {
+		this.setState({
+			loadingCompanyProperties: true
+		},
+			() => {
+				this.props.client
+					.query({
+						query: this.GET_COMPANY_CHILD_QUERY,
+						variables: {},
+						fetchPolicy: 'no-cache'
+					})
+					.then((data) => {
+						if (data.data.getbusinesscompanies != null) {
+							this.setState(
+								{
+									hotels: data.getbusinesscompanies,
+									loadingCompanyProperties: false,
+									indexView: 1
+								},
+								func
+							);
+						} else {
+							this.setState({
+								loadingCompanyProperties: false,
+								loading: false,
+								indexView: 2,
+								errorMessage:
+									'Error: Loading company properties: getbusinesscompanies not exists in query data',
+								firstLoad: false
+							});
+						}
+					})
+					.catch((error) => {
+						this.setState({
+							loadingCompanyProperties: false,
+							loading: false,
+							indexView: 2,
+							errorMessage: 'Error: Loading company properties: ' + error,
+							firstLoad: false
+						});
+					});
+			}
+		);
+	};
+
+
 	loadCompany = (func = () => { }) => {
 		this.setState(
 			{
@@ -204,7 +335,7 @@ class GeneralInformation extends Component {
 					.then((data) => {
 						if (data.data.getbusinesscompanies != null) {
 							var item = data.data.getbusinesscompanies[0];
-
+						
 							this.setState(
 								{
 									name: item.Name.trim(),
@@ -289,13 +420,11 @@ class GeneralInformation extends Component {
 	};*/
 
 	handleOpenHotels = () => {
-		this.setState({
-			hotelModal: true
-		});
+		this.setState({ hotelModal: true });
 	}
 
 	handleCloseHotels = () => {
-		this.setState({ hotelModal: false }, this.loadCompanyProperties);
+		this.setState({ hotelModal: false }, this.loadCompanyProperties, this.getHotels);
 	};
 
 	loadCompanyProperties = (func = () => { }) => {
@@ -773,6 +902,10 @@ class GeneralInformation extends Component {
 		this.loadCompanyProperties(() => {
 			this.setState({ indexView: 1, firstLoad: false });
 		});
+
+		this.getHotels(() => {
+			this.setState({ indexView: 1, firstLoad: false });
+		});
 	};
 
 	/**
@@ -802,13 +935,16 @@ class GeneralInformation extends Component {
 				},
 				() => {
 					this.setState({ firstLoad: true }, () => {
-						this.loadCompany(() => {
-							this.loadCountries(() => {
-								this.loadCities(() => {
-									this.loadStates(() => {
-										this.loadRegions(() => {
-											this.loadCompanyProperties(() => {
-												this.setState({ indexView: 1, firstLoad: false });
+						this.getHotels(() => {
+							this.loadCompany(() => {
+								this.loadCountries(() => {
+									this.loadCities(() => {
+										this.loadStates(() => {
+											this.loadRegions(() => {
+
+												this.loadCompanyProperties(() => {
+													this.setState({ indexView: 1, firstLoad: false });
+												});
 											});
 										});
 									});
@@ -870,6 +1006,7 @@ class GeneralInformation extends Component {
 			cities: [],
 			regions: [],
 			companyProperties: [],
+			hotels: [],
 			country: 6,
 			state: 0,
 			city: 0,
@@ -1349,14 +1486,16 @@ class GeneralInformation extends Component {
 										className="btn btn-success float-right"
 										onClick={() => {
 											this.setState({ firstLoad: true }, () => {
-												this.loadCompany(() => {
-													this.loadCountries(() => {
-														this.loadCities(() => {
-															this.loadStates(() => {
-																this.loadRegions(() => {
-																	this.loadCompanyProperties(() => {
-																		this.props.toggleStepper();
-																		this.setState({ indexView: 1, firstLoad: false });
+												this.getHotels(() => {
+													this.loadCompany(() => {
+														this.loadCountries(() => {
+															this.loadCities(() => {
+																this.loadStates(() => {
+																	this.loadRegions(() => {
+																		this.loadCompanyProperties(() => {
+																			this.props.toggleStepper();
+																			this.setState({ indexView: 1, firstLoad: false });
+																		});
 																	});
 																});
 															});
@@ -1399,14 +1538,16 @@ class GeneralInformation extends Component {
 											return true;
 										}
 										this.setState({ firstLoad: true }, () => {
-											this.loadCompany(() => {
-												this.loadCountries(() => {
-													this.loadCities(() => {
-														this.loadStates(() => {
-															this.loadRegions(() => {
-																this.loadCompanyProperties(() => {
-																	this.props.toggleStepper();
-																	this.setState({ indexView: 1, firstLoad: false });
+											this.getHotels(() => {
+												this.loadCompany(() => {
+													this.loadCountries(() => {
+														this.loadCities(() => {
+															this.loadStates(() => {
+																this.loadRegions(() => {
+																	this.loadCompanyProperties(() => {
+																		this.props.toggleStepper();
+																		this.setState({ indexView: 1, firstLoad: false });
+																	});
 																});
 															});
 														});
@@ -1832,7 +1973,7 @@ class GeneralInformation extends Component {
 					</div>
 				</div>
 
-				<Hotels handleOpenSnackbar={this.props.handleOpenSnackbar} ManagmentId={this.props.idCompany} open={this.state.hotelModal} handleClose={this.handleCloseHotels} />
+				<Hotels handleOpenSnackbar={this.props.handleOpenSnackbar} ManagmentId={this.props.idCompany} hotels={this.state.hotels} open={this.state.hotelModal} handleClose={this.handleCloseHotels} />
 
 				<Dialog
 					open={this.state.open}
