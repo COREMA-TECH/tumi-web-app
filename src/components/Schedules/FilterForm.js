@@ -38,6 +38,7 @@ class FilterForm extends Component {
         this.state = {
             employees: [],
             locations: [],
+            closedForm: true,
             ...this.DEFAULT_STATE
         }
     }
@@ -408,15 +409,31 @@ class FilterForm extends Component {
             this.getInfoForSelectedShift(nextProps.id)
     }
 
+    handleCloseForm = () => {
+        this.setState({
+            closedForm: true
+        });
+    }
+
     render() {
         const isEdition = this.state.selectedDetailId != 0;
         const isHotelManger = this.props.hotelManager;
-        return <div className="MasterShiftForm">
+        return <div className={`MasterShiftForm ${this.state.closedForm ? '' : 'active'}`}>
+            <div className="row">
+                <div className="col-md-10">
+                    <h3 className="MasterShiftForm-title">From Mon 11 to Sat 15</h3>
+                </div>
+                <div className="col-md-2">
+                    <button className="btn btn-link MasterShiftForm-close" onClick={this.handleCloseForm}>
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
             <form action="" onSubmit={this.onSubmit}>
                 <div className="row">
-                    <div className="col-md-12">
+                    {/* <div className="col-md-12">
                         <Options />
-                    </div>
+                    </div> */}
                     <div className="col-md-12">
                         <label htmlFor="">* Employees</label>
                         <Select
@@ -429,26 +446,26 @@ class FilterForm extends Component {
                             isMulti={!isEdition}
                         />
                     </div>
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                         <label htmlFor="">* Start Date</label>
                         <input type="date" name="startDate" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
-                    <div className="col-md-12">
+                    <div className="col-md-6">
                         <label htmlFor="">* End Date</label>
                         <input type="date" name="endDate" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         < label htmlFor="">* Start Time</label>
                         <TimeField name="startHour" disabled={isHotelManger || this.state.openShift} style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-5">
                         < label htmlFor="">* End Time</label>
                         <TimeField name="endHour" disabled={isHotelManger || this.state.openShift} style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
                     </div>
-                    <div className="col-md-12">
+                    <div className="col-md-2">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
                     </div>
-                    <div className="col-md-12">
+                    {/* <div className="col-md-12">
                         < label htmlFor="">* Location</label>
                         <select
                             name="location"
@@ -477,32 +494,52 @@ class FilterForm extends Component {
                             <option value={0}>Select a position</option>
                             {this.renderPositionList()}
                         </select>
-                    </div>
-                    <div className="col-md-9">
+                    </div> */}
+                    {/* <div className="col-md-12">
                         < label htmlFor="">* Title</label>
                         <input type="text" disabled={isHotelManger} className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
-                    </div>
-                    <div className="col-md-3">
-                        <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
-                    </div>
-                </div  >
-                {
-                    this.props.hotelManager == true ? (
-                        <div className="row">
-                            <div className="col-md-12">
-                                <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
-                                <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Reject {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
-                            </div>
+                    </div> */}
+                    <div className="col-md-12">
+                        <label htmlFor="">Repeat?</label>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary">MO</button>
+                            <button type="button" class="btn btn-secondary">TU</button>
+                            <button type="button" class="btn btn-secondary">WE</button>
+                            <button type="button" class="btn btn-secondary">TH</button>
+                            <button type="button" class="btn btn-secondary">FR</button>
+                            <button type="button" class="btn btn-secondary">SA</button>
+                            <button type="button" class="btn btn-secondary">SU</button>
                         </div>
-                    ) : (
+                    </div>
+                    <div className="col-md-12">
+                        <label htmlFor="">Comment</label>
+                        <textarea name="" className="form-control" id="" cols="30" rows="10"></textarea>
+                    </div>
+                    {/* <div className="col-md-3">
+                        <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
+                    </div> */}
+                </div>
+                <div className="MasterShiftForm-groupButtons">
+                    {
+                        this.props.hotelManager == true ? (
                             <div className="row">
                                 <div className="col-md-12">
-                                    <button className="btn btn-success btn-large mb-1" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
-                                    <button className="btn btn-danger btn-large mb-1" type="button" onClick={this.clearInputs} >Clear</button>
+                                    <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
+                                    <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Reject {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
                                 </div>
                             </div>
-                        )
-                }
+                        ) : (
+                                <div>
+                                    <button type="button" className="btn btn-link text-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
+                                    <button className="btn btn-default" type="button" onClick={this.clearInputs} >Save Draft</button>
+                                    <button className="btn btn-success" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
+                                </div>
+                            )
+                    }
+                </div>
             </form>
         </div>
     }

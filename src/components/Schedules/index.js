@@ -50,17 +50,14 @@ class Schedules extends Component {
     render() {
         return (
             <div className="MasterShift">
+                <FilterForm id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
+
                 <div className="row">
-                    <div className="col-md-2">
-                        <div className="MasterShift-formWrapper">
-                            <FilterForm id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
-                        </div>
-                    </div>
-                    <div className="col-md-10">
+                    <div className="col-md-12">
                         <div className="MasterShift-schedules">
-                            <div className="MasterShift-schedulesHeader">
+                            {/* <div className="MasterShift-schedulesHeader">
                                 <Filters handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
-                            </div>
+                            </div> */}
                             <div className="MasterShift-schedulesBody" id="divToPrint">
                                 <Shifts refresh={this.state.refresh} getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
