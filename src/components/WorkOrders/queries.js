@@ -18,6 +18,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			PositionRateId
 			status
 			EspecialComment
+			dayWeek
 			position {
 				Position
 			}

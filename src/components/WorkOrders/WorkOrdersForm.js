@@ -87,6 +87,14 @@ class WorkOrdersForm extends Component {
         employeesarray: [],
         openConfirm: false,
         idToDelete: 0,
+        Monday: 'MO,',
+        Tuesday: 'TU,',
+        Wednesday: 'WE,',
+        Thursday: 'TH,',
+        Friday: 'FR,',
+        Saturday: 'SA,',
+        Sunday: 'SU,',
+        dayWeek: ''
     };
 
     constructor(props) {
@@ -106,7 +114,8 @@ class WorkOrdersForm extends Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.item && !this.state.openModal) {
-            console.log("Esto es la props UNSAFE_componentWillReceiveProps ", nextProps.item)
+            // console.log("Esto es la props UNSAFE_componentWillReceiveProps ", nextProps.item)
+            // console.log("aqui esta el estado ", nextProps.item.dayWeek.indexOf('TU'))
             this.setState(
                 {
                     id: nextProps.item.id,
@@ -125,7 +134,15 @@ class WorkOrdersForm extends Component {
                     userId: localStorage.getItem('LoginId'),
                     openModal: nextProps.openModal,
                     EspecialComment: nextProps.item.EspecialComment,
-                    PositionName: nextProps.item.position.Position
+                    PositionName: nextProps.item.position.Position,
+                    Monday: nextProps.item.dayWeek.indexOf('MO') != -1 ? 'MO,' : '',
+                    Tuesday: nextProps.item.dayWeek.indexOf('TU') != -1 ? 'TU,' : '',
+                    Wednesday: nextProps.item.dayWeek.indexOf('WE') != -1 ? 'WE,' : '',
+                    Thursday: nextProps.item.dayWeek.indexOf('TH') != -1 ? 'TH,' : '',
+                    Friday: nextProps.item.dayWeek.indexOf('FR') != -1 ? 'FR,' : '',
+                    Saturday: nextProps.item.dayWeek.indexOf('SA') != -1 ? 'SA,' : '',
+                    Sunday: nextProps.item.dayWeek.indexOf('SU') != -1 ? 'SU,' : '',
+
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
@@ -243,7 +260,8 @@ class WorkOrdersForm extends Component {
                         EspecialComment: this.state.EspecialComment,
                         PositionRateId: this.state.PositionRateId,
                         contactId: this.state.contactId,
-                        userId: this.state.userId
+                        userId: this.state.userId,
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -293,7 +311,8 @@ class WorkOrdersForm extends Component {
                         EspecialComment: this.state.EspecialComment,
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
-                        contactId: this.state.contactId
+                        contactId: this.state.contactId,
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -502,6 +521,20 @@ class WorkOrdersForm extends Component {
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
     };
+
+    UpdateState = (e) => {
+        console.log(e.id)
+        if (e.id == 'Monday') { if (this.state.Monday == 'MO,') { this.setState({ Monday: '' }); } else { this.setState({ Monday: 'MO,' }); } }
+        if (e.id == 'Tuesday') { if (this.state.Tuesday == 'TU,') { this.setState({ Tuesday: '' }); } else { this.setState({ Tuesday: 'TU,' }); } }
+        if (e.id == 'Wednesday') { if (this.state.Wednesday == 'WE,') { this.setState({ Wednesday: '' }); } else { this.setState({ Wednesday: 'WE,' }); } }
+        if (e.id == 'Thursday') { if (this.state.Thursday == 'TH,') { this.setState({ Thursday: '' }); } else { this.setState({ Thursday: 'TH,' }); } }
+        if (e.id == 'Friday') { if (this.state.Friday == 'FR,') { this.setState({ Friday: '' }); } else { this.setState({ Friday: 'FR,' }); } }
+        if (e.id == 'Saturday') { if (this.state.Saturday == 'SA,') { this.setState({ Saturday: '' }); } else { this.setState({ Saturday: 'SA,' }); } }
+        if (e.id == 'Sunday') { if (this.state.Sunday == 'SU,') { this.setState({ Sunday: '' }); } else { this.setState({ Sunday: 'SU,' }); } }
+
+
+        console.log("Este es el state monday ", this.state.Monday)
+    }
 
     validateInvalidInput = () => {
         if (document.addEventListener) {
@@ -733,6 +766,20 @@ class WorkOrdersForm extends Component {
                                     </div>
                                 </div>
                             </div>
+                            <div className='row'>
+                                <div className="col-md-12">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button id="Monday" type="button" className={this.state.Monday == 'MO,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Monday</button>
+                                        <button id="Tuesday" type="button" className={this.state.Tuesday == 'TU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Tuesday</button>
+                                        <button id="Wednesday" type="button" className={this.state.Wednesday == 'WE,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Wednesday</button>
+                                        <button id="Thursday" type="button" className={this.state.Thursday == 'TH,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Thursday</button>
+                                        <button id="Friday" type="button" className={this.state.Friday == 'FR,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Friday</button>
+                                        <button id="Saturday" type="button" className={this.state.Saturday == 'SA,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Saturday</button>
+                                        <button id="Sunday" type="button" className={this.state.Sunday == 'SU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Sunday</button>
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div className='row'>
                                 <div className="col-md-12">
@@ -838,4 +885,4 @@ WorkOrdersForm.propTypes = {
 };
 
 export default withStyles(styles)(withApollo(WorkOrdersForm));
-//export default (withMobileDialog()(withApollo(WorkOrdersForm)));
+            //export default (withMobileDialog()(withApollo(WorkOrdersForm)));
