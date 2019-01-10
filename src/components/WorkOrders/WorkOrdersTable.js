@@ -299,7 +299,7 @@ class WorkOrdersTable extends Component {
                                             </Tooltip>
                                         </CustomTableCell>
                                         <CustomTableCell>{row.id}</CustomTableCell>
-                                        <CustomTableCell>{row.BusinessCompany.Name}</CustomTableCell>
+                                        <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
                                         <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
                                         <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
