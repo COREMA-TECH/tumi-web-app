@@ -50,7 +50,6 @@ class FilterForm extends Component {
         this.state = {
             employees: [],
             locations: [],
-            closedForm: false,
             ...this.DEFAULT_STATE
         }
     }
@@ -439,12 +438,6 @@ class FilterForm extends Component {
             this.getInfoForSelectedShift(nextProps.id)
     }
 
-    handleCloseForm = () => {
-        this.setState({
-            closedForm: true
-        });
-    }
-
     getWeekDayStyle = (dayName) => {
         return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
     }
@@ -482,13 +475,13 @@ class FilterForm extends Component {
     render() {
         const isEdition = this.state.selectedDetailId != 0;
         const isHotelManger = this.props.hotelManager;
-        return <div className={`MasterShiftForm ${this.state.closedForm ? '' : 'active'}`}>
+        return <div className={`MasterShiftForm ${this.props.closedForm ? '' : 'active'}`}>
             <div className="row">
                 <div className="col-md-10">
                     <h3 className="MasterShiftForm-title">From Mon 11 to Sat 15</h3>
                 </div>
                 <div className="col-md-2">
-                    <button className="btn btn-link MasterShiftForm-close" onClick={this.handleCloseForm}>
+                    <button className="btn btn-link MasterShiftForm-close" onClick={this.props.handleCloseForm}>
                         <i class="fas fa-times"></i>
                     </button>
                 </div>

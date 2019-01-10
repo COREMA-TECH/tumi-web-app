@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS } from './Queries';
 import withApollo from 'react-apollo/withApollo';
+import Options from './Options';
 
 class Filters extends Component {
 
@@ -86,76 +87,45 @@ class Filters extends Component {
     }
 
     componentWillMount() {
-        this.getStates();
-        this.getPosition();
-        this.getShifts();
+
+    }
+
+    changeHotel = () => {
+
     }
 
     render() {
         return (
-            <form action="">
+            <div className="MasterShiftHeader">
                 <div className="row">
-                    <div className="col-md-5">
-                        <label htmlFor="">
-                            Location
-                        </label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">State</span>
+                    <div className="col-md-12">
+                        Location: <a href="" onClick={this.changeHotel} className="link">Hotel lo que sea</a>,
+                        Position: <a href="" onClick={this.changeHotel} className="link">Cualquier posición</a>
+                    </div>
+                </div>
+                <div className="MasterShiftHeader-controls">
+                    <div className="row">
+                        <div className="col-md-8">
+                            <div className="MasterShiftHeader-controlLeft">
+                                <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
+                                <button className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
+                                <button className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                             </div>
-                            <select name="stateId" id="" className="form-control" onChange={this.handleStateChange} value={this.state.stateId}>
-                                <option value="null">Select a Option</option>
-                                {
-                                    this.state.states.map((state) => {
-                                        return <option value={`${state.Id}`}>{state.Name}</option>
-                                    })
-                                }
-                            </select>
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">City</span>
-                            </div>
-                            <select name="cityId" id="" className="form-control" value={this.state.cityId} onChange={this.props.handleChange}>
-                                <option value="null">Select a Option</option>
-                                {
-                                    this.state.cities.map((city) => {
-                                        return <option value={`${city.Id}`}>{city.Name}</option>
-                                    })
-                                }
-                            </select>
                         </div>
-                    </div>
-                    <div className="col-md-3">
-                        <label htmlFor="">Position</label>
-                        <select name="positionId" id="" className="form-control" onChange={this.props.handleChange}>
-                            <option value="null">Select a Option</option>
-                            {
-                                this.state.positions.map((position) => {
-                                    return <option value={`${position.Id}`}>{position.Position}</option>
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div className="col-md-3">
-                        <label htmlFor="">Shifts</label>
-                        <select name="shiftId" id="" className="form-control" onChange={this.props.handleChange}>
-                            <option value="null">Select a Option</option>
-                            {
-                                this.state.shifts.map((shift) => {
-                                    return <option value={`${shift.id}`}>{shift.title}</option>
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div className="col-md-1">
-                        <div className="FlexAlign-end">
-                            <button type="button" className="btn btn-danger" onClick={this.props.handleReset}>
-                                Reset
-                            </button>
+                        <div className="col-md-4">
+                            <div className="MasterShiftHeader-controlRight">
+                                <div className="can-toggle">
+                                    <input id="my-full" type="checkbox" />
+                                    <label htmlFor="my-full" className="my-full">
+                                        <div className="can-toggle__switch" data-checked="MY" data-unchecked="FULL"></div>
+                                    </label>
+                                </div>
+                                <button className="btn btn-default btn-not-rounded btn-publish" type="button">Publish</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </form>
-
+            </div>
         );
     }
 

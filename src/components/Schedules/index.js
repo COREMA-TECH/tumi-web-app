@@ -18,7 +18,8 @@ class Schedules extends Component {
     constructor() {
         super();
         this.state = {
-            ...this.INITIAL_STATE
+            ...this.INITIAL_STATE,
+            closedForm: true
         }
     }
 
@@ -47,17 +48,26 @@ class Schedules extends Component {
         this.setState({ refresh: !this.state.refresh })
     }
 
+    handleCloseForm = () => {
+        this.setState({
+            closedForm: true
+        });
+    }
+
+    handleOpenForm = () => {
+        this.setState({
+            closedForm: false
+        });
+    }
+
     render() {
         return (
             <div className="MasterShift">
-                <FilterForm id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
-
+                <Filters handleOpenForm={this.handleOpenForm} handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                <FilterForm handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
-                            {/* <div className="MasterShift-schedulesHeader">
-                                <Filters handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
-                            </div> */}
                             <div className="MasterShift-schedulesBody" id="divToPrint">
                                 <Shifts refresh={this.state.refresh} getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
                             </div>
