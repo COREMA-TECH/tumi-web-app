@@ -1,8 +1,8 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import "react-big-scheduler/lib/css/style.css";
-import Scheduler, {SchedulerData, ViewTypes} from "react-big-scheduler";
+import Scheduler, { SchedulerData, ViewTypes } from "react-big-scheduler";
 import withApollo from "react-apollo/withApollo";
-import {GET_INITIAL_DATA, GET_SHIFTS} from "./Queries";
+import { GET_INITIAL_DATA, GET_SHIFTS } from "./Queries";
 import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
@@ -76,7 +76,7 @@ class Shifts extends Component {
                 query: GET_SHIFTS,
                 fetchPolicy: "no-cache"
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState(
                     {
                         shift: data.shift,
@@ -89,9 +89,6 @@ class Shifts extends Component {
 
                         this.state.shiftDetail.map(item => {
                             if (item.detailEmployee !== null) {
-                                console.log("item.detailEmployee ", item.detailEmployee);
-                                console.log(this.state.loading);
-
                                 let employee = this.getSelectedEmployee(
                                     item.detailEmployee.EmployeeId
                                 );
@@ -105,7 +102,7 @@ class Shifts extends Component {
                                         name: employee.label
                                     });
                                 }
-                            } 
+                            }
                         });
                         this.state.shift.map(shiftItem => {
                             this.state.shiftDetail.map(shiftDetailItem => {
@@ -128,7 +125,7 @@ class Shifts extends Component {
                                         bgColor: shiftItem.bgColor
                                     });
 
-                                    if(shiftDetailItem.detailEmployee == null) {
+                                    if (shiftDetailItem.detailEmployee == null) {
                                         openShiftExist = true;
                                     }
                                 }
@@ -152,7 +149,7 @@ class Shifts extends Component {
                                     : 0;
                         });
 
-                        if(openShiftExist) {
+                        if (openShiftExist) {
                             orderedEmployees.unshift(
                                 {
                                     id: 0,
@@ -192,7 +189,6 @@ class Shifts extends Component {
                 loading: true
             },
             () => {
-                console.log(this.state.loading);
                 this.getEmployees();
             }
         );
@@ -205,9 +201,6 @@ class Shifts extends Component {
             nextProps.shiftId
         );
 
-        console.log("Next prop", nextProps.refresh);
-        console.log("This prop", this.props.refresh);
-
         if (nextProps.refresh != this.props.refresh) {
             this.setState(
                 {
@@ -218,14 +211,6 @@ class Shifts extends Component {
                 }
             );
         }
-
-        console.log(
-            nextProps.cityId,
-            " ",
-            nextProps.positionId,
-            " ",
-            nextProps.shiftId
-        );
     }
 
     filterShifts(city, position, shift) {
@@ -287,7 +272,7 @@ class Shifts extends Component {
             .query({
                 query: GET_INITIAL_DATA
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 //Save data into state
                 //--Employees
                 this.setState(prevState => {
@@ -297,11 +282,11 @@ class Shifts extends Component {
                             label: `${item.firstName} ${item.lastName}`
                         };
                     });
-                    return {employees};
+                    return { employees };
                 });
                 //Location
                 this.setState(prevState => {
-                    return {locations: data.getbusinesscompanies};
+                    return { locations: data.getbusinesscompanies };
                 });
 
                 this.fetchShifts();
@@ -325,10 +310,10 @@ class Shifts extends Component {
     };
 
     render() {
-        const {viewModel} = this.state;
+        const { viewModel } = this.state;
 
         if (this.state.loading) {
-            return <LinearProgress/>;
+            return <LinearProgress />;
         }
 
         return (
@@ -341,8 +326,9 @@ class Shifts extends Component {
                 eventItemClick={this.eventClicked}
                 updateEventStart={this.updateEventStart}
                 updateEventEnd={this.updateEventEnd}
-                //moveEvent={this.moveEvent}
-                //newEvent={this.newEvent}
+                eventItemTemplateResolver={this.eventItemTemplateResolver}
+            //moveEvent={this.moveEvent}
+            //newEvent={this.newEvent}
             />
         );
     }
@@ -398,8 +384,8 @@ class Shifts extends Component {
     ops1 = (schedulerData, event) => {
         alert(
             `You just executed ops1 to event: {id: ${event.id}, title: ${
-                event.title
-                }}`
+            event.title
+            }}`
         );
     };
 
@@ -449,6 +435,20 @@ class Shifts extends Component {
             viewModel: schedulerData
         });
     };
+
+    eventItemTemplateResolver = (schedulerData, event, bgColor, isStart, isEnd, mustAddCssClass, mustBeHeight, agendaMaxEventWidth) => {
+        let borderWidth = isStart ? '4' : '0';
+        let borderColor = bgColor, backgroundColor = bgColor;
+        let titleText = schedulerData.behaviors.getEventTextFunc(schedulerData, event);
+
+        let divStyle = { borderLeft: borderWidth + 'px solid ' + borderColor, backgroundColor: backgroundColor, height: mustBeHeight };
+        if (!!agendaMaxEventWidth)
+            divStyle = { ...divStyle, maxWidth: agendaMaxEventWidth };
+
+        return <div key={event.id} className={mustAddCssClass} style={divStyle}>
+            <span style={{ marginLeft: '4px', lineHeight: `${mustBeHeight}px` }}>{titleText}</span>
+        </div>;
+    }
 }
 
 export default withApollo(withGlobalContent(withDnDContext(Shifts)));
