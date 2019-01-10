@@ -12,14 +12,18 @@ import Options from './Options';
 import ShiftColorPicker from './ShiftColorPicker';
 import { isArray } from 'util';
 
+const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
+
 class FilterForm extends Component {
 
     DEFAULT_STATE = {
         selectedEmployees: [],
-        location: 0,
+        //location: 0,
+        location: 175,
         positions: [],
-        position: 0,
-        color: '#867979',
+        // position: 0,
+        position: 94,
+        color: '#5f4d8b',
         title: '',
         startHour: '00:00',
         endHour: '00:00',
@@ -30,7 +34,14 @@ class FilterForm extends Component {
         openShift: false,
         updating: false,
         confirm: false,
-        reject: false
+        reject: false,
+        needExperience: false,
+        needEnglish: false,
+        comment: '',
+        specialComment: '',
+        userId: 1,
+        requestedBy: 1,
+        dayWeeks: "MO,TU",
     }
 
     constructor(props) {
@@ -38,7 +49,7 @@ class FilterForm extends Component {
         this.state = {
             employees: [],
             locations: [],
-            closedForm: true,
+            closedForm: false,
             ...this.DEFAULT_STATE
         }
     }
@@ -159,8 +170,6 @@ class FilterForm extends Component {
             .mutate({
                 mutation: INSERT_SHIFT,
                 variables: {
-                    startDate: this.state.startDate,
-                    endDate: this.state.endDate,
                     startHour: this.state.startHour,
                     endHour: this.state.endHour,
                     shift: {
@@ -168,9 +177,21 @@ class FilterForm extends Component {
                         title: this.state.title,
                         color: this.state.color,
                         status: this.state.status,
-                        idPosition: this.state.position
+                        idPosition: this.state.position,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        dayWeeks: this.state.dayWeeks
                     },
-                    employees: this.state.selectedEmployees.map(item => { return item.value })
+                    employees: this.state.selectedEmployees.map(item => { return item.value }),
+                    special: {
+                        needExperience: this.state.needExperience,
+                        needEnglish: this.state.needEnglish,
+                        comment: this.state.comment,
+                        specialComment: this.state.specialComment,
+                        status: this.state.status,
+                        userId: this.state.userId,
+                        requestedBy: this.state.requestedBy
+                    }
                 }
             })
             .then((data) => {
@@ -415,6 +436,21 @@ class FilterForm extends Component {
         });
     }
 
+    getWeekDayStyle = (dayName) => {
+        return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
+    }
+
+    selectWeekDay = (dayName) => {
+        if (this.state.dayWeeks.includes(dayName))
+            this.setState((prevState) => {
+                return { dayWeeks: prevState.dayWeeks.replace(dayName, '') }
+            })
+        else
+            this.setState((prevState) => {
+                return { dayWeeks: prevState.dayWeeks.concat(dayName) }
+            })
+    }
+
     render() {
         const isEdition = this.state.selectedDetailId != 0;
         const isHotelManger = this.props.hotelManager;
@@ -501,14 +537,14 @@ class FilterForm extends Component {
                     </div> */}
                     <div className="col-md-12">
                         <label htmlFor="">Repeat?</label>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-secondary">MO</button>
-                            <button type="button" class="btn btn-secondary">TU</button>
-                            <button type="button" class="btn btn-secondary">WE</button>
-                            <button type="button" class="btn btn-secondary">TH</button>
-                            <button type="button" class="btn btn-secondary">FR</button>
-                            <button type="button" class="btn btn-secondary">SA</button>
-                            <button type="button" class="btn btn-secondary">SU</button>
+                        <div className="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                            <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                            <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                            <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                            <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                            <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                            <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
                         </div>
                     </div>
                     <div className="col-md-12">
