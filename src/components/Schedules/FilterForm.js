@@ -24,9 +24,10 @@ class FilterForm extends Component {
         // position: 0,
         position: 94,
         color: '#5f4d8b',
-        title: '',
-        startHour: '00:00',
-        endHour: '00:00',
+        //  title: '',
+        title: 'My Title',
+        startHour: '',
+        endHour: '',
         startDate: '',
         endDate: '',
         selectedDetailId: 0,
@@ -41,7 +42,7 @@ class FilterForm extends Component {
         specialComment: '',
         userId: 1,
         requestedBy: 1,
-        dayWeeks: "MO,TU",
+        dayWeeks: "",
     }
 
     constructor(props) {
@@ -125,7 +126,6 @@ class FilterForm extends Component {
                     })
                 }
             }).catch(error => {
-
                 this.setState({ updating: false }, () => {
                     this.props.handleOpenSnackbar(
                         'error',
@@ -180,7 +180,7 @@ class FilterForm extends Component {
                         idPosition: this.state.position,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeeks: this.state.dayWeeks
+                        dayWeek: this.state.dayWeeks
                     },
                     employees: this.state.selectedEmployees.map(item => { return item.value }),
                     special: {
@@ -323,17 +323,20 @@ class FilterForm extends Component {
             return { valid: false, message: 'You need to select a position' };
         if (!this.state.title.trim())
             return { valid: false, message: 'You need to set a title' };
-
+        var { dayWeeks } = this.state;
+        if (!(dayWeeks.includes(MONDAY) || dayWeeks.includes(TUESDAY) || dayWeeks.includes(WEDNESDAY)
+            || dayWeeks.includes(THURSDAY) || dayWeeks.includes(FRIDAY) || dayWeeks.includes(SATURDAY)
+            || dayWeeks.includes(SUNDAY)))
+            return { valid: false, message: 'You need to select a week day' };
 
         return { valid: true, message: 'Everything is ok' };
     }
 
     calculateHours = () => {
-        let startDate = new Date(`01-01-2000 ${this.state.startHour}`)
-        let endDate = new Date(`01-01-2000 ${this.state.endHour}`)
+        let startDate = new Date(`01/01/2000 ${this.state.startHour}`)
+        let endDate = new Date(`01/01/2000 ${this.state.endHour}`)
 
         return moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
-
     }
 
     handleChangeEmployee = (selectedEmployees) => {
@@ -363,8 +366,9 @@ class FilterForm extends Component {
         })
     }
 
-    handleTimeChange = (name) => (text) => {
-        this.setState({ [name]: text })
+    handleTimeChange = (event) => {
+        var element = event.target;
+        this.setState({ [element.name]: element.value })
     }
 
     handleColorChange = (color) => {
@@ -403,11 +407,15 @@ class FilterForm extends Component {
 
             if (valid) {
                 let mutation;
-                if (this.state.selectedDetailId == 0)
-                    mutation = this.insertShift;
-                else
-                    mutation = this.updateShift;
-                this.getShiftByDateAndEmployee(mutation);
+                var position = this.state.positions.find(item => item.Id == this.state.position)
+                if (position)
+                    this.setState({ specialComment: position.Comment ? position.Comment : '' }, () => {
+                        if (this.state.selectedDetailId == 0)
+                            mutation = this.insertShift;
+                        else
+                            mutation = this.updateShift;
+                        this.getShiftByDateAndEmployee(mutation);
+                    })
 
             } else this.setState({ updating: false }, () => {
                 this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
@@ -423,6 +431,7 @@ class FilterForm extends Component {
 
     componentWillMount() {
         this.getEmployees()
+        this.getPosition(this.state.position);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -449,6 +458,25 @@ class FilterForm extends Component {
             this.setState((prevState) => {
                 return { dayWeeks: prevState.dayWeeks.concat(dayName) }
             })
+    }
+
+    showConfirmationButtons = () => {
+        if (this.props.hotelManager)
+            return <div className="row">
+                <div className="col-md-12">
+                    <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
+                    <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Reject {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
+                </div>
+            </div>
+        else
+            return <div>
+                <button type="button" className="btn btn-link text-danger">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
+                <button className="btn btn-default" type="button" onClick={this.clearInputs} >Save Draft</button>
+                <button className="btn btn-success" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
+            </div>
     }
 
     render() {
@@ -492,12 +520,13 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">* Start Time</label>
-                        <TimeField name="startHour" disabled={isHotelManger || this.state.openShift} style={{ width: '100%' }} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange('startHour')} />
+                        <input type="time" name="startHour" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input>
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">* End Time</label>
-                        <TimeField name="endHour" disabled={isHotelManger || this.state.openShift} style={{ width: '100%' }} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange('endHour')} />
+                        <input type="time" name="endHour" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input>
                     </div>
+
                     <div className="col-md-2">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
                     </div>
@@ -549,32 +578,14 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">Comment</label>
-                        <textarea name="" className="form-control" id="" cols="30" rows="10"></textarea>
+                        <textarea name="comment" className="form-control" id="" cols="30" rows="10" value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
                     </div>
                     {/* <div className="col-md-3">
                         <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
                     </div> */}
                 </div>
                 <div className="MasterShiftForm-groupButtons">
-                    {
-                        this.props.hotelManager == true ? (
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <button className="btn btn-success btn-large mb-1" type="button" onClick={() => { this.handleChangeStatusShifts(2, "#114bff") }}>Confirm {this.state.confirm && <i className="fa fa-spinner fa-spin" />}</button>
-                                    <button className="btn btn-danger btn-large mb-1 " type="button" onClick={() => { this.handleChangeStatusShifts(3, "#cccccc") }} >Reject {this.state.reject && <i className="fa fa-spinner fa-spin" />}</button>
-                                </div>
-                            </div>
-                        ) : (
-                                <div>
-                                    <button type="button" className="btn btn-link text-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                    <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
-                                    <button className="btn btn-default" type="button" onClick={this.clearInputs} >Save Draft</button>
-                                    <button className="btn btn-success" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
-                                </div>
-                            )
-                    }
+                    {this.showConfirmationButtons()}
                 </div>
             </form>
         </div>

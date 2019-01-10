@@ -19,10 +19,11 @@ query data {
 `;
 
 export const GET_POSITION = gql`
-  query positions($Id_Entity: Int){
-    getposition(Id_Entity: $Id_Entity){
+  query positions($Id_Entity: Int, $Id: Int){
+    getposition(Id_Entity: $Id_Entity, Id: $Id){
       Id
       Position      
+      Comment
     }
   }
 `;
