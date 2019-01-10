@@ -2,6 +2,7 @@ import FilterForm from './FilterForm.js';
 import Filters from './Filters.js';
 import React, { Component } from 'react';
 import Shifts from './Shifts.js';
+import PreFilter from './PreFilter';
 
 import withGlobalContent from 'Generic/Global';
 
@@ -19,7 +20,10 @@ class Schedules extends Component {
         super();
         this.state = {
             ...this.INITIAL_STATE,
-            closedForm: true
+            closedForm: true,
+            openPreFilter: true,
+            location: null,
+            position: null
         }
     }
 
@@ -60,11 +64,19 @@ class Schedules extends Component {
         });
     }
 
+    handleApplyFilters = (position, location) => {
+        console.log(position, location);
+        this.setState((prevState) => {
+            return { position, location }
+        })
+    }
+
     render() {
         return (
             <div className="MasterShift">
+                <PreFilter handleApplyFilters={this.handleApplyFilters} openPreFilter={this.state.openPreFilter} />
                 <Filters handleOpenForm={this.handleOpenForm} handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
-                <FilterForm handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
+                <FilterForm location={this.state.location} position={this.state.position} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
