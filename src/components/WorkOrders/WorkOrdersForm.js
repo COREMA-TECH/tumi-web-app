@@ -172,7 +172,16 @@ class WorkOrdersForm extends Component {
                 PositionRateId: 0,
                 contactId: 0,
                 userId: localStorage.getItem('LoginId'),
-                isAdmin: Boolean(localStorage.getItem('IsAdmin'))
+                isAdmin: Boolean(localStorage.getItem('IsAdmin')),
+                Monday: 'MO,',
+                Tuesday: 'TU,',
+                Wednesday: 'WE,',
+                Thursday: 'TH,',
+                Friday: 'FR,',
+                Saturday: 'SA,',
+                Sunday: 'SU,',
+                dayWeek: ''
+
             });
         }
         this.setState({
@@ -269,6 +278,10 @@ class WorkOrdersForm extends Component {
                         color: '#96989A',
                         status: 1,
                         idPosition: this.state.PositionRateId,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+
                     }
                 }
             })
@@ -320,6 +333,9 @@ class WorkOrdersForm extends Component {
                         color: "#96989A",
                         status: 1,
                         idPosition: this.state.PositionRateId,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
                     }
                 }
             })
@@ -531,9 +547,6 @@ class WorkOrdersForm extends Component {
         if (e.id == 'Friday') { if (this.state.Friday == 'FR,') { this.setState({ Friday: '' }); } else { this.setState({ Friday: 'FR,' }); } }
         if (e.id == 'Saturday') { if (this.state.Saturday == 'SA,') { this.setState({ Saturday: '' }); } else { this.setState({ Saturday: 'SA,' }); } }
         if (e.id == 'Sunday') { if (this.state.Sunday == 'SU,') { this.setState({ Sunday: '' }); } else { this.setState({ Sunday: 'SU,' }); } }
-
-
-        console.log("Este es el state monday ", this.state.Monday)
     }
 
     validateInvalidInput = () => {
@@ -567,7 +580,7 @@ class WorkOrdersForm extends Component {
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
         if (this.state.employees != null) {
-            console.log("Aqui si hay iusuaiors")
+            console.log("Aqui si hay iusuaiors ", this.state.employees.length)
 
         } else { console.log("No hay usuarios ") }
         return (
@@ -769,90 +782,93 @@ class WorkOrdersForm extends Component {
                             <div className='row'>
                                 <div className="col-md-12">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button id="Monday" type="button" className={this.state.Monday == 'MO,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Monday</button>
-                                        <button id="Tuesday" type="button" className={this.state.Tuesday == 'TU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Tuesday</button>
-                                        <button id="Wednesday" type="button" className={this.state.Wednesday == 'WE,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Wednesday</button>
-                                        <button id="Thursday" type="button" className={this.state.Thursday == 'TH,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Thursday</button>
-                                        <button id="Friday" type="button" className={this.state.Friday == 'FR,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Friday</button>
-                                        <button id="Saturday" type="button" className={this.state.Saturday == 'SA,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Saturday</button>
-                                        <button id="Sunday" type="button" className={this.state.Sunday == 'SU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>Sunday</button>
+                                        <button id="Monday" type="button" className={this.state.Monday == 'MO,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>MO</button>
+                                        <button id="Tuesday" type="button" className={this.state.Tuesday == 'TU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>TU</button>
+                                        <button id="Wednesday" type="button" className={this.state.Wednesday == 'WE,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>WE</button>
+                                        <button id="Thursday" type="button" className={this.state.Thursday == 'TH,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>TH</button>
+                                        <button id="Friday" type="button" className={this.state.Friday == 'FR,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>FR</button>
+                                        <button id="Saturday" type="button" className={this.state.Saturday == 'SA,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>SA</button>
+                                        <button id="Sunday" type="button" className={this.state.Sunday == 'SU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>SU</button>
                                     </div>
                                 </div>
                             </div>
 
 
                             <div className='row'>
-                                <div className="col-md-12">
-                                    {this.state.employees != null ? (
-                                        <div class="card">
-                                            <div class="card-header danger">Employees assign to work order</div>
-                                            <div class="card-body">
-                                                <Table className="Table">
-                                                    <TableHead>
-                                                        <TableRow>
-                                                            <CustomTableCell className={'Table-head'}>Delete</CustomTableCell>
-                                                            <CustomTableCell className={'Table-head'}>Employees</CustomTableCell>
-                                                        </TableRow>
-                                                    </TableHead>
-                                                    <TableBody>
-                                                        {
+                                {this.state.id && (
 
-                                                            this.state.employeesarray.map((item) => {
-                                                                console.log("esto son los items ", item)
-                                                                if (item.detailEmployee) {
-                                                                    return (
-                                                                        <TableRow
-                                                                            hover
-                                                                            className={classes.row}
-                                                                            key={item.id}
-                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
-                                                                        >
-                                                                            <CustomTableCell>
-                                                                                <Tooltip title="Delete">
-                                                                                    <button
-                                                                                        className="btn btn-danger float-left"
-                                                                                        /* onClick={(e) => {
-                                                                                             e.preventDefault();
-                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
-                                                                                         }}*/
+                                    <div className="col-md-12">
+                                        {this.state.employees != null ? (
+                                            <div class="card">
+                                                <div class="card-header danger">Employees assign to work order</div>
+                                                <div class="card-body">
+                                                    <Table className="Table">
+                                                        <TableHead>
+                                                            <TableRow>
+                                                                <CustomTableCell className={'Table-head'}>Delete</CustomTableCell>
+                                                                <CustomTableCell className={'Table-head'}>Employees</CustomTableCell>
+                                                            </TableRow>
+                                                        </TableHead>
+                                                        <TableBody>
+                                                            {
 
-                                                                                        onClick={(e) => {
-                                                                                            e.preventDefault();
-                                                                                            this.setState({ openConfirm: true, idToDelete: item.detailEmployee.ShiftDetailId });
-                                                                                        }}
-                                                                                    >
-                                                                                        <i className="fas fa-trash"></i>
-                                                                                    </button>
-                                                                                </Tooltip>
-                                                                            </CustomTableCell>
-                                                                            <CustomTableCell>{item.detailEmployee.Employees.firstName}{' '} {item.detailEmployee.Employees.lastName}</CustomTableCell>
-                                                                        </TableRow>
-                                                                    )
-                                                                }
-                                                            })
+                                                                this.state.employeesarray.map((item) => {
+                                                                    console.log("esto son los items ", item)
+                                                                    if (item.detailEmployee) {
+                                                                        return (
+                                                                            <TableRow
+                                                                                hover
+                                                                                className={classes.row}
+                                                                                key={item.id}
+                                                                            //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
+                                                                            >
+                                                                                <CustomTableCell>
+                                                                                    <Tooltip title="Delete">
+                                                                                        <button
+                                                                                            className="btn btn-danger float-left"
+                                                                                            /* onClick={(e) => {
+                                                                                                 e.preventDefault();
+                                                                                                 this.deleteEmployee(item.detailEmployee.ShiftDetailId)
+                                                                                             }}*/
 
-                                                        }
-                                                    </TableBody>
-                                                </Table>
+                                                                                            onClick={(e) => {
+                                                                                                e.preventDefault();
+                                                                                                this.setState({ openConfirm: true, idToDelete: item.detailEmployee.ShiftDetailId });
+                                                                                            }}
+                                                                                        >
+                                                                                            <i className="fas fa-trash"></i>
+                                                                                        </button>
+                                                                                    </Tooltip>
+                                                                                </CustomTableCell>
+                                                                                <CustomTableCell>{item.detailEmployee.Employees.firstName}{' '} {item.detailEmployee.Employees.lastName}</CustomTableCell>
+                                                                            </TableRow>
+                                                                        )
+                                                                    }
+                                                                })
 
-                                                <ConfirmDialog
-                                                    open={this.state.openConfirm}
-                                                    closeAction={() => {
-                                                        this.setState({ openConfirm: false });
-                                                    }}
-                                                    confirmAction={() => {
-                                                        //  this.handleDelete(this.state.idToDelete);
-                                                        this.deleteEmployee(this.state.idToDelete)
-                                                    }}
-                                                    title={'are you sure you want to delete this record?'}
-                                                    loading={this.state.removing}
-                                                />
+                                                            }
+                                                        </TableBody>
+                                                    </Table>
+
+                                                    <ConfirmDialog
+                                                        open={this.state.openConfirm}
+                                                        closeAction={() => {
+                                                            this.setState({ openConfirm: false });
+                                                        }}
+                                                        confirmAction={() => {
+                                                            //  this.handleDelete(this.state.idToDelete);
+                                                            this.deleteEmployee(this.state.idToDelete)
+                                                        }}
+                                                        title={'are you sure you want to delete this record?'}
+                                                        loading={this.state.removing}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                    ) : ''
-                                    }
-                                </div>
+                                        ) : ''
+                                        }
+                                    </div>
 
+                                )}
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
