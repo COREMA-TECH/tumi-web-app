@@ -1,21 +1,68 @@
 .MasterShiftForm {
     background: map-get($gray-shades, soft-gray);
+    border-right: solid 1px map-get($gray-shades,gray-1);
     box-sizing: border-box;
+    height: 100%;
+    left: -400px;
     padding: 1rem;
+    position: fixed;
+    top: 0;
+    transition: left .5s ease-out;
+    width: 400px;
+    z-index: 9999;
+    &.active {
+        left: 0;
+    }
+    &-close {
+        color: $text-color;
+        display: block;
+        margin-left: auto;
+        margin-right: -1rem;
+        padding-top: 0;
+    }
     &-hour {
         height: 100%;
-        display: block;
-        margin-top: 1rem;
+        display: flex;
+        flex-direction: column-reverse;
         &:before {
-            background: $danger;
+            background: map-get($gray-shades,gray-1);
             border-radius: $border-radius-standar;
-            color: $white;
+            color: $text-color;
             content: attr(data-hour);
             display: block;
+            font-size: .75rem;
             height: calc(2.1rem + 2px);
             line-height: calc(2.1rem + 2px);
             text-align: center;
             width: 100%;
+        }
+    }
+    &-groupButtons {
+        display: block;
+        margin-left: auto;
+        width: fit-content;
+        .btn {
+            border-radius: $border-radius-standar;
+            margin-left: 5px;
+            &.text-danger {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+    }
+    &-title {
+        font-size: 1.2rem;
+    }
+    .btn-group  {
+        & > .btn:first-child {
+            border-radius: $border-radius-standar 0 0 $border-radius-standar;
+        }
+        & > :last-child {
+            border-radius: 0 $border-radius-standar $border-radius-standar 0;
+        }
+        .btn {
+            padding-left: .9rem;
+            padding-right: .9rem;
         }
     }
 }
