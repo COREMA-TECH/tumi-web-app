@@ -11,6 +11,7 @@ import TimeField from 'react-simple-timefield';
 import Options from './Options';
 import ShiftColorPicker from './ShiftColorPicker';
 import { isArray } from 'util';
+import ReactDOM, { findDOMNode } from 'react-dom'
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
@@ -32,6 +33,7 @@ class FilterForm extends Component {
         endDate: '',
         selectedDetailId: 0,
         status: 1,
+        notify: false,
         openShift: false,
         updating: false,
         confirm: false,
@@ -187,7 +189,7 @@ class FilterForm extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         specialComment: this.state.specialComment,
-                        status: this.state.status,
+                        notify: this.state.notify,
                         userId: this.state.userId,
                         requestedBy: this.state.requestedBy
                     }
@@ -313,7 +315,7 @@ class FilterForm extends Component {
 
         let startHour = this.state.startHour.replace(':', ''), endHour = this.state.endHour.replace(':', '');
 
-        if (parseInt(endHour) < parseInt(startHour) && this.state.startDate == this.state.endDate)
+        if (parseInt(endHour) < parseInt(startHour))
             return { valid: false, message: 'End Time can not be less than Start Time' };
 
         if (parseInt(this.state.location) == 0)
@@ -397,8 +399,8 @@ class FilterForm extends Component {
     };
 
     onSubmit = (event) => {
-        event.preventDefault();
 
+        event.preventDefault();
 
         this.setState({ updating: true }, () => {
             let result = this.validateControls();
@@ -467,9 +469,30 @@ class FilterForm extends Component {
                     <i className="fas fa-trash"></i>
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
-                <button className="btn btn-default" type="button" onClick={this.clearInputs} >Save Draft</button>
-                <button className="btn btn-success" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
-            </div>
+                <button className="btn btn-default" type="button" onClick={this.saveDraft} >Save Draft {(this.state.updating && !this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
+                <button className="btn btn-success" type="button" onClick={this.savePublish} >Publish {(this.state.updating && this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
+                <button ref={input => this.publish = input} className="btn btn-success" style={{ visibility: 'hidden', widht: 0 }} type="submit">None</button>
+            </div >
+    }
+
+    saveDraft = (e) => {
+        e.preventDefault();
+        if (this.state.selectedDetailId == 0)
+            this.setState({ notify: 0 },
+                () => {
+                    this.publish.click();
+                }
+            );
+    }
+
+    savePublish = (e) => {
+        e.preventDefault();
+        if (this.state.selectedDetailId == 0)
+            this.setState({ notify: 1 },
+                () => {
+                    this.publish.click();
+                }
+            );
     }
 
     render() {
@@ -486,7 +509,7 @@ class FilterForm extends Component {
                     </button>
                 </div>
             </div>
-            <form action="" onSubmit={this.onSubmit}>
+            <form id="form" method="POST" onSubmit={this.onSubmit} >
                 <div className="row">
                     {/* <div className="col-md-12">
                         <Options />

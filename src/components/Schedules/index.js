@@ -21,7 +21,7 @@ class Schedules extends Component {
         this.state = {
             ...this.INITIAL_STATE,
             closedForm: true,
-            openPreFilter: true,
+            openPreFilter: false,
             location: null,
             position: null,
             openPreFilter: true,
