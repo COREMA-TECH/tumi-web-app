@@ -23,7 +23,9 @@ class Schedules extends Component {
             closedForm: true,
             openPreFilter: false,
             location: null,
-            position: null
+            position: null,
+            openPreFilter: true,
+            requested: null
         }
     }
 
@@ -58,24 +60,53 @@ class Schedules extends Component {
         });
     }
 
-    handleOpenForm = () => {
+    handleClosePreFilter = (event) => {
+        event.preventDefault();
+        this.setState({
+            openPreFilter: true
+        });
+    }
+
+    handleOpenForm = (event) => {
+        event.preventDefault();
         this.setState({
             closedForm: false
         });
     }
 
-    handleApplyFilters = (position, location) => {
-        console.log(position, location);
+    handleApplyFilters = (position, location, requested) => {
         this.setState((prevState) => {
-            return { position, location }
+            return { position, location, requested, openPreFilter: false, positionId: position }
+        })
+    }
+
+    handleGetTextofFilters = (position, location, requested) => {
+        this.setState((prevState) => {
+            return { positionName: position, locationName: location, requestedName: requested }
         })
     }
 
     render() {
         return (
             <div className="MasterShift">
-                <PreFilter handleApplyFilters={this.handleApplyFilters} openPreFilter={this.state.openPreFilter} />
-                <Filters handleOpenForm={this.handleOpenForm} handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                <PreFilter
+                    openPreFilter={this.state.openPreFilter}
+                    handleApplyFilters={this.handleApplyFilters}
+                    openPreFilter={this.state.openPreFilter}
+                    handleGetTextofFilters={this.handleGetTextofFilters}
+                />
+                <Filters
+                    handleClosePreFilter={this.handleClosePreFilter}
+                    handleOpenForm={this.handleOpenForm}
+                    handleReset={this.handleReset}
+                    handleChange={this.handleChange}
+                    cityId={this.state.cityId}
+                    positionId={this.state.positionId}
+                    shiftId={this.state.shiftId}
+                    positionName={this.state.positionName}
+                    locationName={this.state.locationName}
+                    requestedName={this.state.requestedName}
+                />
                 <FilterForm location={this.state.location} position={this.state.position} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
                 <div className="row">
                     <div className="col-md-12">

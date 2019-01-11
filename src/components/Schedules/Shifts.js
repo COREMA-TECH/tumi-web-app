@@ -47,7 +47,7 @@ let schedulerData = new SchedulerData(
                 isEventPerspective: true
             }
         ],
-        schedulerWidth: "1500"
+        schedulerWidth: "1366"
     }
 );
 
