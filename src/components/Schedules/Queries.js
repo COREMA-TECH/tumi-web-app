@@ -115,4 +115,15 @@ export const GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY = gql`
     }
 `;
 
+export const GET_CONTACT_BY_QUERY = gql`
+	query getcontacts($id: Int) {
+		getcontacts(Id: null, IsActive: 1, Id_Entity: $id) {
+			Id
+			First_Name
+			Last_Name
+			Electronic_Address
+		}
+	}
+`;
+
 

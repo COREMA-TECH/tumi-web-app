@@ -464,7 +464,7 @@ class FilterForm extends Component {
         else
             return <div>
                 <button type="button" className="btn btn-link text-danger">
-                    <i class="fas fa-trash"></i>
+                    <i className="fas fa-trash"></i>
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Save Draft</button>
@@ -482,7 +482,7 @@ class FilterForm extends Component {
                 </div>
                 <div className="col-md-2">
                     <button className="btn btn-link MasterShiftForm-close" onClick={this.props.handleCloseForm}>
-                        <i class="fas fa-times"></i>
+                        <i className="fas fa-times"></i>
                     </button>
                 </div>
             </div>
