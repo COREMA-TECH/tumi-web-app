@@ -91,6 +91,7 @@ export const GET_SHIFTS_QUERY = gql`
             color
             status
             idPosition
+            comment
             workOrder
             {
               id    

@@ -181,7 +181,8 @@ class FilterForm extends Component {
                         idPosition: this.state.position,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.dayWeeks
+                        dayWeek: this.state.dayWeeks,
+                        comment: this.state.comment
                     },
                     employees: this.state.selectedEmployees.map(item => { return item.value }),
                     special: {
@@ -271,7 +272,8 @@ class FilterForm extends Component {
                     shiftId: shiftDetail.shift.id,
                     status: shiftDetail.shift.status,
                     openShift: shiftDetail.shift.workOrder,
-                    selectedEmployees: selectedEmployee ? selectedEmployee : []
+                    selectedEmployees: selectedEmployee ? selectedEmployee : [],
+                    comment: shiftDetail.shift.comment
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
             }).catch(error => {
@@ -402,27 +404,24 @@ class FilterForm extends Component {
 
         event.preventDefault();
 
-        this.setState({ updating: true }, () => {
-            let result = this.validateControls();
-            let { valid, message } = result;
+        let result = this.validateControls();
+        let { valid, message } = result;
 
-            if (valid) {
-                let mutation;
-                var position = this.state.positions.find(item => item.Id == this.state.position)
-                if (position)
-                    this.setState({ specialComment: position.Comment ? position.Comment : '' }, () => {
-                        if (this.state.selectedDetailId == 0)
-                            mutation = this.insertShift;
-                        else
-                            mutation = this.updateShift;
-                        this.getShiftByDateAndEmployee(mutation);
-                    })
+        if (valid) {
+            let mutation;
+            var position = this.state.positions.find(item => item.Id == this.state.position)
+            if (position)
+                this.setState({ specialComment: position.Comment ? position.Comment : '', updating: true }, () => {
+                    if (this.state.selectedDetailId == 0)
+                        mutation = this.insertShift;
+                    else
+                        mutation = this.updateShift;
+                    this.getShiftByDateAndEmployee(mutation);
+                })
 
-            } else this.setState({ updating: false }, () => {
-                this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
-            })
+        } else this.setState({ updating: false }, () => {
+            this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
         })
-
     }
 
     clearInputs = (e) => {
@@ -466,7 +465,7 @@ class FilterForm extends Component {
         else
             return <div>
                 <button type="button" className="btn btn-link text-danger">
-                    <i class="fas fa-trash"></i>
+                    <i className="fas fa-trash"></i>
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
                 <button className="btn btn-default" type="button" onClick={this.saveDraft} >Save Draft {(this.state.updating && !this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
@@ -505,7 +504,7 @@ class FilterForm extends Component {
                 </div>
                 <div className="col-md-2">
                     <button className="btn btn-link MasterShiftForm-close" onClick={this.props.handleCloseForm}>
-                        <i class="fas fa-times"></i>
+                        <i className="fas fa-times"></i>
                     </button>
                 </div>
             </div>
