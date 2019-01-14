@@ -6,6 +6,9 @@ import { GET_INITIAL_DATA, GET_SHIFTS } from "./Queries";
 import withGlobalContent from "../Generic/Global";
 import withDnDContext from "./withDnDContext";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
 
 let today = new Date();
 let dd = today.getDate();
@@ -47,7 +50,7 @@ let schedulerData = new SchedulerData(
                 isEventPerspective: true
             }
         ],
-        schedulerWidth: "1500"
+        schedulerWidth: "1366"
     }
 );
 
@@ -66,7 +69,8 @@ class Shifts extends Component {
             shift: [],
             shiftDetail: [],
             employees: [],
-            locations: []
+            locations: [],
+            eventId: null
         };
     }
 
@@ -317,19 +321,34 @@ class Shifts extends Component {
         }
 
         return (
-            <Scheduler
-                schedulerData={viewModel}
-                prevClick={this.prevClick}
-                nextClick={this.nextClick}
-                onSelectDate={this.onSelectDate}
-                onViewChange={this.onViewChange}
-                eventItemClick={this.eventClicked}
-                updateEventStart={this.updateEventStart}
-                updateEventEnd={this.updateEventEnd}
-                eventItemTemplateResolver={this.eventItemTemplateResolver}
-            //moveEvent={this.moveEvent}
-            //newEvent={this.newEvent}
-            />
+            <div>
+                <Scheduler
+                    schedulerData={viewModel}
+                    prevClick={this.prevClick}
+                    nextClick={this.nextClick}
+                    onSelectDate={this.onSelectDate}
+                    onViewChange={this.onViewChange}
+                    eventItemClick={this.eventClicked}
+                    updateEventStart={this.updateEventStart}
+                    updateEventEnd={this.updateEventEnd}
+                    eventItemTemplateResolver={this.eventItemTemplateResolver}
+                //moveEvent={this.moveEvent}
+                //newEvent={this.newEvent}
+                />
+                <Dialog maxWidth="sm" open={this.props.editConfirmOpened} onClose={this.props.handleClosePreFilter}>
+                    <DialogContent>
+                        <h2>Do you want edit Shift or Serie?</h2>
+                    </DialogContent>
+                    <DialogActions>
+                        <button className="btn btn-success btn-not-rounded mr-1" type="button" onClick={() => { this.selectTypeEdition(true) }}>
+                            Edit Shift
+                        </button>
+                        <button className="btn btn-default btn-not-rounded" type="button" onClick={() => { this.selectTypeEdition(false) }}>
+                            Edit Serie
+                        </button>
+                    </DialogActions>
+                </Dialog>
+            </div>
         );
     }
 
@@ -371,15 +390,22 @@ class Shifts extends Component {
 
     eventClicked = (schedulerData, event) => {
         // Find shift detail state property
+        this.props.openEditConfirm();
+        this.setState(() => {
+            return { eventId: event.id }
+        });
+    };
+
+    selectTypeEdition = (type) => {
         let shiftDetailItem = this.state.shiftDetail.find(item => {
-            if (item.id === event.id) {
+            if (item.id === this.state.eventId) {
                 return item;
             }
         });
 
         // Return shiftDetailItem by props
-        this.props.getSelectedValue(shiftDetailItem);
-    };
+        this.props.getSelectedValue(shiftDetailItem, type);
+    }
 
     ops1 = (schedulerData, event) => {
         alert(

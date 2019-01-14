@@ -99,8 +99,9 @@ class Filters extends Component {
             <div className="MasterShiftHeader">
                 <div className="row">
                     <div className="col-md-12">
-                        Location: <a href="" onClick={this.changeHotel} className="link">Hotel lo que sea</a>,
-                        Position: <a href="" onClick={this.changeHotel} className="link">Cualquier posición</a>
+                        Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
+                        Position: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.positionName}</a>,
+                        Requested By: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.requestedName}</a>
                     </div>
                 </div>
                 <div className="MasterShiftHeader-controls">

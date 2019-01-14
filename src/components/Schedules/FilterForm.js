@@ -11,6 +11,7 @@ import TimeField from 'react-simple-timefield';
 import Options from './Options';
 import ShiftColorPicker from './ShiftColorPicker';
 import { isArray } from 'util';
+import ReactDOM, { findDOMNode } from 'react-dom'
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
@@ -32,6 +33,7 @@ class FilterForm extends Component {
         endDate: '',
         selectedDetailId: 0,
         status: 1,
+        notify: false,
         openShift: false,
         updating: false,
         confirm: false,
@@ -43,6 +45,7 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
+        editSerie: true
     }
 
     constructor(props) {
@@ -76,9 +79,7 @@ class FilterForm extends Component {
             }).catch(error => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error loading employees list',
-                    'bottom',
-                    'right'
+                    'Error loading employees list'
                 );
             });
     }
@@ -108,7 +109,8 @@ class FilterForm extends Component {
                     employeeId: idEmployee == null ? 0 : idEmployee,
                     startTime: this.state.startHour,
                     endTime: this.state.endHour,
-                    shiftDetailId: this.state.selectedDetailId
+                    shiftDetailId: this.state.selectedDetailId,
+                    daysWeek: this.state.dayWeeks
                 }
             })
             .then(({ data }) => {
@@ -118,9 +120,7 @@ class FilterForm extends Component {
                     this.setState({ updating: false }, () => {
                         this.props.handleOpenSnackbar(
                             'warning',
-                            'This shift is not available',
-                            'bottom',
-                            'right'
+                            'This shift is not available'
                         );
                     })
                 }
@@ -128,9 +128,7 @@ class FilterForm extends Component {
                 this.setState({ updating: false }, () => {
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error evaluting schedule',
-                        'bottom',
-                        'right'
+                        'Error evaluting schedule'
                     );
                 })
             });
@@ -154,9 +152,7 @@ class FilterForm extends Component {
                     this.setState({ loadingPosition: false })
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error loading position list',
-                        'bottom',
-                        'right'
+                        'Error loading position list'
                     );
                 });
 
@@ -179,7 +175,8 @@ class FilterForm extends Component {
                         idPosition: this.state.position,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.dayWeeks
+                        dayWeek: this.state.dayWeeks,
+                        comment: this.state.comment
                     },
                     employees: this.state.selectedEmployees.map(item => { return item.value }),
                     special: {
@@ -187,7 +184,7 @@ class FilterForm extends Component {
                         needEnglish: this.state.needEnglish,
                         comment: this.state.comment,
                         specialComment: this.state.specialComment,
-                        status: this.state.status,
+                        notify: this.state.notify,
                         userId: this.state.userId,
                         requestedBy: this.state.requestedBy
                     }
@@ -258,8 +255,8 @@ class FilterForm extends Component {
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
                 this.setState({
-                    startDate: shiftDetail.startDate.substring(0, 10),
-                    endDate: shiftDetail.endDate.substring(0, 10),
+                    startDate: this.state.editSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
+                    endDate: this.state.editSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
                     startHour: shiftDetail.startTime,
                     endHour: shiftDetail.endTime,
                     location: shiftDetail.shift.entityId,
@@ -269,15 +266,14 @@ class FilterForm extends Component {
                     shiftId: shiftDetail.shift.id,
                     status: shiftDetail.shift.status,
                     openShift: shiftDetail.shift.workOrder,
-                    selectedEmployees: selectedEmployee ? selectedEmployee : []
+                    selectedEmployees: selectedEmployee ? selectedEmployee : [],
+                    comment: shiftDetail.shift.comment
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
 
             }).catch(error => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error loading selected shift information',
-                    'bottom',
-                    'right'
+                    'Error loading selected shift information'
                 );
             });
     }
@@ -313,7 +309,7 @@ class FilterForm extends Component {
 
         let startHour = this.state.startHour.replace(':', ''), endHour = this.state.endHour.replace(':', '');
 
-        if (parseInt(endHour) < parseInt(startHour) && this.state.startDate == this.state.endDate)
+        if (parseInt(endHour) < parseInt(startHour))
             return { valid: false, message: 'End Time can not be less than Start Time' };
 
         if (parseInt(this.state.location) == 0)
@@ -397,30 +393,27 @@ class FilterForm extends Component {
     };
 
     onSubmit = (event) => {
+
         event.preventDefault();
 
+        let result = this.validateControls();
+        let { valid, message } = result;
 
-        this.setState({ updating: true }, () => {
-            let result = this.validateControls();
-            let { valid, message } = result;
+        if (valid) {
+            let mutation;
+            var position = this.state.positions.find(item => item.Id == this.state.position)
+            if (position)
+                this.setState({ specialComment: position.Comment ? position.Comment : '', updating: true }, () => {
+                    if (this.state.selectedDetailId == 0)
+                        mutation = this.insertShift;
+                    else
+                        mutation = this.updateShift;
+                    this.getShiftByDateAndEmployee(mutation);
+                })
 
-            if (valid) {
-                let mutation;
-                var position = this.state.positions.find(item => item.Id == this.state.position)
-                if (position)
-                    this.setState({ specialComment: position.Comment ? position.Comment : '' }, () => {
-                        if (this.state.selectedDetailId == 0)
-                            mutation = this.insertShift;
-                        else
-                            mutation = this.updateShift;
-                        this.getShiftByDateAndEmployee(mutation);
-                    })
-
-            } else this.setState({ updating: false }, () => {
-                this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
-            })
+        } else this.setState({ updating: false }, () => {
+            this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
         })
-
     }
 
     clearInputs = (e) => {
@@ -464,12 +457,33 @@ class FilterForm extends Component {
         else
             return <div>
                 <button type="button" className="btn btn-link text-danger">
-                    <i class="fas fa-trash"></i>
+                    <i className="fas fa-trash"></i>
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
-                <button className="btn btn-default" type="button" onClick={this.clearInputs} >Save Draft</button>
-                <button className="btn btn-success" type="submit">Publish {this.state.updating && <i className="fa fa-spinner fa-spin" />}</button>
-            </div>
+                <button className="btn btn-default" type="button" onClick={this.saveDraft} >Save Draft {(this.state.updating && !this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
+                <button className="btn btn-success" type="button" onClick={this.savePublish} >Publish {(this.state.updating && this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
+                <button ref={input => this.publish = input} className="btn btn-success" style={{ visibility: 'hidden', widht: 0 }} type="submit">None</button>
+            </div >
+    }
+
+    saveDraft = (e) => {
+        e.preventDefault();
+        if (this.state.selectedDetailId == 0)
+            this.setState({ notify: 0 },
+                () => {
+                    this.publish.click();
+                }
+            );
+    }
+
+    savePublish = (e) => {
+        e.preventDefault();
+        if (this.state.selectedDetailId == 0)
+            this.setState({ notify: 1 },
+                () => {
+                    this.publish.click();
+                }
+            );
     }
 
     render() {
@@ -482,11 +496,11 @@ class FilterForm extends Component {
                 </div>
                 <div className="col-md-2">
                     <button className="btn btn-link MasterShiftForm-close" onClick={this.props.handleCloseForm}>
-                        <i class="fas fa-times"></i>
+                        <i className="fas fa-times"></i>
                     </button>
                 </div>
             </div>
-            <form action="" onSubmit={this.onSubmit}>
+            <form id="form" method="POST" onSubmit={this.onSubmit} >
                 <div className="row">
                     {/* <div className="col-md-12">
                         <Options />

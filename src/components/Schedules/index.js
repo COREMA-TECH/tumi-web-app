@@ -13,7 +13,8 @@ class Schedules extends Component {
         positionId: null,
         shiftId: null,
         selectedShiftId: 0,
-        refresh: true
+        refresh: true,
+        isSerie: false
     };
 
     constructor() {
@@ -21,9 +22,13 @@ class Schedules extends Component {
         this.state = {
             ...this.INITIAL_STATE,
             closedForm: true,
-            openPreFilter: true,
+            openPreFilter: false,
             location: null,
-            position: null
+            position: null,
+            openPreFilter: true,
+            requested: null,
+            editConfirmOpened: false,
+            filtered: false
         }
     }
 
@@ -44,8 +49,13 @@ class Schedules extends Component {
         });
     }
 
-    getSelectedValue = (item) => {
-        this.setState({ selectedShiftId: item.id })
+    getSelectedValue = (item, type) => {
+        this.setState({
+            selectedShiftId: item.id,
+            isSerie: type,
+            editConfirmOpened: false,
+            closedForm: false
+        })
     }
 
     toggleRefresh = () => {
@@ -58,30 +68,77 @@ class Schedules extends Component {
         });
     }
 
-    handleOpenForm = () => {
+    handleClosePreFilter = (event) => {
+        event.preventDefault();
+        this.setState({
+            openPreFilter: true
+        });
+    }
+
+    handleOpenForm = (event) => {
+        event.preventDefault();
         this.setState({
             closedForm: false
         });
     }
 
-    handleApplyFilters = (position, location) => {
-        console.log(position, location);
+    handleApplyFilters = (position, location, requested) => {
         this.setState((prevState) => {
-            return { position, location }
+            return { position, location, requested, openPreFilter: false, positionId: position, filtered: true }
         })
+    }
+
+    handleGetTextofFilters = (position, location, requested) => {
+        this.setState((prevState) => {
+            return { positionName: position, locationName: location, requestedName: requested }
+        })
+    }
+
+    openEditConfirm = () => {
+        this.setState(() => {
+            return { editConfirmOpened: true }
+        });
     }
 
     render() {
         return (
             <div className="MasterShift">
-                <PreFilter handleApplyFilters={this.handleApplyFilters} openPreFilter={this.state.openPreFilter} />
-                <Filters handleOpenForm={this.handleOpenForm} handleReset={this.handleReset} handleChange={this.handleChange} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                <PreFilter
+                    openPreFilter={this.state.openPreFilter}
+                    handleApplyFilters={this.handleApplyFilters}
+                    openPreFilter={this.state.openPreFilter}
+                    handleGetTextofFilters={this.handleGetTextofFilters}
+                />
+                <Filters
+                    handleClosePreFilter={this.handleClosePreFilter}
+                    handleOpenForm={this.handleOpenForm}
+                    handleReset={this.handleReset}
+                    handleChange={this.handleChange}
+                    cityId={this.state.cityId}
+                    positionId={this.state.positionId}
+                    shiftId={this.state.shiftId}
+                    positionName={this.state.positionName}
+                    locationName={this.state.locationName}
+                    requestedName={this.state.requestedName}
+                />
                 <FilterForm location={this.state.location} position={this.state.position} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts refresh={this.state.refresh} getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                                {
+                                    this.state.filtered == true ? (
+                                        <Shifts
+                                            editConfirmOpened={this.state.editConfirmOpened}
+                                            openEditConfirm={this.openEditConfirm}
+                                            refresh={this.state.refresh}
+                                            getSelectedValue={this.getSelectedValue}
+                                            cityId={this.state.cityId}
+                                            positionId={this.state.positionId}
+                                            shiftId={this.state.shiftId}
+                                        />
+                                    ) : ('')
+                                }
                             </div>
                         </div>
                     </div>
