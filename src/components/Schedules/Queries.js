@@ -94,6 +94,7 @@ export const GET_SHIFTS_QUERY = gql`
             startDate
             endDate
             comment
+            dayWeek
             workOrder
             {
               id    
@@ -129,4 +130,10 @@ export const GET_CONTACT_BY_QUERY = gql`
 	}
 `;
 
-
+export const GET_LIST_SHIFT_ID = gql`
+    query getshiftid($ShiftId: Int) {
+        ShiftDetail (ShiftId:$ShiftId){
+        id
+        }
+    }
+`;

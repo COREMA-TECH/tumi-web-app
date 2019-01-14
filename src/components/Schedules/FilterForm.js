@@ -3,15 +3,11 @@ import withApollo from 'react-apollo/withApollo';
 import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
-import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY, GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY } from './Queries';
-import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT } from './Mutations';
+import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY, GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY, GET_LIST_SHIFT_ID } from './Queries';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT_RECORD, UPDATE_SHIFT } from './Mutations';
 
 import Select from 'react-select';
-import TimeField from 'react-simple-timefield';
-import Options from './Options';
-import ShiftColorPicker from './ShiftColorPicker';
 import { isArray } from 'util';
-import ReactDOM, { findDOMNode } from 'react-dom'
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
@@ -45,7 +41,8 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
-        editSerie: true
+        editSerie: true,
+        workOrderId: 0
     }
 
     constructor(props) {
@@ -84,7 +81,11 @@ class FilterForm extends Component {
             });
     }
 
-    getShiftByDateAndEmployee = (executeMutation = () => { }) => {
+    getShiftByDateAndEmployee = (executeMutation = () => { },
+        shiftDetailId = []//list of shift detail id to be excluded from the validation
+    ) => {
+
+        console.log("List of Shift Detail Id:::", shiftDetailId)
         //This evaluate if Employee control has selected one or many employees
         //If only one employee can be selected then the value is got from object.value 
         //other way it is selected from an array of selected values
@@ -109,7 +110,7 @@ class FilterForm extends Component {
                     employeeId: idEmployee == null ? 0 : idEmployee,
                     startTime: this.state.startHour,
                     endTime: this.state.endHour,
-                    shiftDetailId: this.state.selectedDetailId,
+                    shiftDetailId: shiftDetailId,
                     daysWeek: this.state.dayWeeks
                 }
             })
@@ -203,30 +204,27 @@ class FilterForm extends Component {
     };
 
     updateShift = () => {
+
         this.props.client
             .mutate({
                 mutation: UPDATE_SHIFT,
                 variables: {
                     shift: {
-                        id: this.state.shiftId,
-                        entityId: this.state.location,
-                        title: this.state.title,
-                        color: this.state.color,
-                        status: this.state.status,
-                        idPosition: this.state.position
+                        id: this.state.editSerie ? this.state.shiftId : 0,//Only serie edition can modify shift comment
+                        comment: this.state.comment
                     },
                     shiftDetail: {
                         id: this.state.selectedDetailId,
-                        startDate: this.state.startDate,
-                        endDate: this.state.endDate,
                         startTime: this.state.startHour,
                         endTime: this.state.endHour,
-                        ShiftId: this.state.shiftId
                     },
                     shiftDetailEmployee: {
                         ShiftDetailId: this.state.selectedDetailId,
-                        EmployeeId: this.state.openShift ? this.state.selectedEmployees.value : 0
-                    }
+                        EmployeeId: this.state.selectedEmployees.value
+                    },
+                    openShift: this.state.openShift,
+                    workorderId: this.state.workOrderId,
+                    comment: this.state.comment
                 }
             })
             .then((data) => {
@@ -265,7 +263,9 @@ class FilterForm extends Component {
                     selectedDetailId: id,
                     shiftId: shiftDetail.shift.id,
                     status: shiftDetail.shift.status,
-                    openShift: shiftDetail.shift.workOrder,
+                    openShift: !shiftDetail.detailEmployee,//Is open shift when there is no employee associated to a Shift
+                    workOrderId: shiftDetail.shift.workOrder ? shiftDetail.shift.workOrder.id : 0,
+                    dayWeeks: shiftDetail.shift.dayWeek,
                     selectedEmployees: selectedEmployee ? selectedEmployee : [],
                     comment: shiftDetail.shift.comment
                 }, () => this.getPosition(shiftDetail.shift.idPosition))
@@ -408,12 +408,38 @@ class FilterForm extends Component {
                         mutation = this.insertShift;
                     else
                         mutation = this.updateShift;
-                    this.getShiftByDateAndEmployee(mutation);
+                    if (this.state.editSerie)
+                        this.getAssociatedShiftDetailList((shiftDetailId) => this.getShiftByDateAndEmployee(mutation, shiftDetailId))
+                    else
+                        this.getShiftByDateAndEmployee(mutation, this.state.selectedDetailId);
                 })
+            else
+                this.props.handleOpenSnackbar('warning', "You need to select a position", 'bottom', 'right');
 
         } else this.setState({ updating: false }, () => {
-            this.props.handleOpenSnackbar('error', message, 'bottom', 'right');
+            this.props.handleOpenSnackbar('warning', message, 'bottom', 'right');
         })
+    }
+
+    getAssociatedShiftDetailList = (execMutation = () => { }) => {
+        this.props.client
+            .query({
+                query: GET_LIST_SHIFT_ID,
+                variables: {
+                    ShiftId: this.state.shiftId
+                }
+            })
+            .then(({ data }) => {
+                var shiftDetailId = data.ShiftDetail.map(item => { return item.id })
+                execMutation(shiftDetailId)
+
+            }).catch(error => {
+                this.setState({ updating: false })
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error getting serie'
+                );
+            });
     }
 
     clearInputs = (e) => {
@@ -468,22 +494,20 @@ class FilterForm extends Component {
 
     saveDraft = (e) => {
         e.preventDefault();
-        if (this.state.selectedDetailId == 0)
-            this.setState({ notify: 0 },
-                () => {
-                    this.publish.click();
-                }
-            );
+        this.setState({ notify: 0 },
+            () => {
+                this.publish.click();
+            }
+        );
     }
 
     savePublish = (e) => {
         e.preventDefault();
-        if (this.state.selectedDetailId == 0)
-            this.setState({ notify: 1 },
-                () => {
-                    this.publish.click();
-                }
-            );
+        this.setState({ notify: 1 },
+            () => {
+                this.publish.click();
+            }
+        );
     }
 
     render() {
@@ -513,79 +537,44 @@ class FilterForm extends Component {
                             value={this.state.selectedEmployees}
                             onChange={this.handleChangeEmployee}
                             closeMenuOnSelect={false}
-                            isDisabled={isHotelManger || (isEdition && !this.state.openShift)}
+                            isDisabled={isHotelManger}
                             isMulti={!isEdition}
                         />
                     </div>
                     <div className="col-md-6">
                         <label htmlFor="">* Start Date</label>
-                        <input type="date" name="startDate" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="startDate" disabled={isHotelManger || isEdition} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-6">
                         <label htmlFor="">* End Date</label>
-                        <input type="date" name="endDate" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
+                        <input type="date" name="endDate" disabled={isHotelManger || isEdition} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">* Start Time</label>
-                        <input type="time" name="startHour" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input>
+                        <input type="time" name="startHour" disabled={isHotelManger} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input>
                     </div>
                     <div className="col-md-5">
                         < label htmlFor="">* End Time</label>
-                        <input type="time" name="endHour" disabled={isHotelManger || this.state.openShift} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input>
+                        <input type="time" name="endHour" disabled={isHotelManger} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input>
                     </div>
-
                     <div className="col-md-2">
                         <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
                     </div>
-                    {/* <div className="col-md-12">
-                        < label htmlFor="">* Location</label>
-                        <select
-                            name="location"
-                            id="location"
-                            onChange={this.handleSelectValueChange}
-                            value={this.state.location}
-                            className="form-control"
-                            disabled={isHotelManger || isEdition}
-                            required
-                        >
-                            <option value={0}>Select a location</option>
-                            {this.renderLocationList()}
-                        </select>
-                    </div>
-                    <div className="col-md-12">
-                        < label htmlFor="">* Position</label>
-                        <select
-                            name="position"
-                            id="position"
-                            onChange={this.handleSelectValueChange}
-                            value={this.state.position}
-                            className="form-control"
-                            disabled={isHotelManger || this.state.loadingPosition || isEdition}
-                            required
-                        >
-                            <option value={0}>Select a position</option>
-                            {this.renderPositionList()}
-                        </select>
-                    </div> */}
-                    {/* <div className="col-md-12">
-                        < label htmlFor="">* Title</label>
-                        <input type="text" disabled={isHotelManger} className="form-control" name="title" value={this.state.title} onChange={this.handleInputValueChange} />
-                    </div> */}
                     <div className="col-md-12">
                         <label htmlFor="">Repeat?</label>
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                            <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                            <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                            <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                            <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                            <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                            <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                            <button disabled={isEdition} type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
                         </div>
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">Comment</label>
-                        <textarea name="comment" className="form-control" id="" cols="30" rows="10" value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
+                        <textarea name="comment" className="form-control" id="" cols="30" rows="10" disabled={isHotelManger || (this.state.editSerie == false && this.state.selectedDetailId != 0)} value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
                     </div>
                     {/* <div className="col-md-3">
                         <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
