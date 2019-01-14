@@ -13,7 +13,8 @@ class Schedules extends Component {
         positionId: null,
         shiftId: null,
         selectedShiftId: 0,
-        refresh: true
+        refresh: true,
+        isSerie: false
     };
 
     constructor() {
@@ -25,7 +26,8 @@ class Schedules extends Component {
             location: null,
             position: null,
             openPreFilter: true,
-            requested: null
+            requested: null,
+            editConfirmOpened: false
         }
     }
 
@@ -46,8 +48,13 @@ class Schedules extends Component {
         });
     }
 
-    getSelectedValue = (item) => {
-        this.setState({ selectedShiftId: item.id })
+    getSelectedValue = (item, type) => {
+        this.setState({
+            selectedShiftId: item.id,
+            isSerie: type,
+            editConfirmOpened: false,
+            closedForm: false
+        })
     }
 
     toggleRefresh = () => {
@@ -86,6 +93,12 @@ class Schedules extends Component {
         })
     }
 
+    openEditConfirm = () => {
+        this.setState(() => {
+            return { editConfirmOpened: true }
+        });
+    }
+
     render() {
         return (
             <div className="MasterShift">
@@ -112,7 +125,15 @@ class Schedules extends Component {
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
                             <div className="MasterShift-schedulesBody" id="divToPrint">
-                                <Shifts refresh={this.state.refresh} getSelectedValue={this.getSelectedValue} cityId={this.state.cityId} positionId={this.state.positionId} shiftId={this.state.shiftId} />
+                                <Shifts
+                                    editConfirmOpened={this.state.editConfirmOpened}
+                                    openEditConfirm={this.openEditConfirm}
+                                    refresh={this.state.refresh}
+                                    getSelectedValue={this.getSelectedValue}
+                                    cityId={this.state.cityId}
+                                    positionId={this.state.positionId}
+                                    shiftId={this.state.shiftId}
+                                />
                             </div>
                         </div>
                     </div>
