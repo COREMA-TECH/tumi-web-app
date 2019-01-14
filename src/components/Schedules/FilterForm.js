@@ -78,9 +78,7 @@ class FilterForm extends Component {
             }).catch(error => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error loading employees list',
-                    'bottom',
-                    'right'
+                    'Error loading employees list'
                 );
             });
     }
@@ -110,7 +108,8 @@ class FilterForm extends Component {
                     employeeId: idEmployee == null ? 0 : idEmployee,
                     startTime: this.state.startHour,
                     endTime: this.state.endHour,
-                    shiftDetailId: this.state.selectedDetailId
+                    shiftDetailId: this.state.selectedDetailId,
+                    daysWeek: this.state.dayWeeks
                 }
             })
             .then(({ data }) => {
@@ -120,9 +119,7 @@ class FilterForm extends Component {
                     this.setState({ updating: false }, () => {
                         this.props.handleOpenSnackbar(
                             'warning',
-                            'This shift is not available',
-                            'bottom',
-                            'right'
+                            'This shift is not available'
                         );
                     })
                 }
@@ -130,9 +127,7 @@ class FilterForm extends Component {
                 this.setState({ updating: false }, () => {
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error evaluting schedule',
-                        'bottom',
-                        'right'
+                        'Error evaluting schedule'
                     );
                 })
             });
@@ -156,9 +151,7 @@ class FilterForm extends Component {
                     this.setState({ loadingPosition: false })
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error loading position list',
-                        'bottom',
-                        'right'
+                        'Error loading position list'
                     );
                 });
 
@@ -279,9 +272,7 @@ class FilterForm extends Component {
             }).catch(error => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error loading selected shift information',
-                    'bottom',
-                    'right'
+                    'Error loading selected shift information'
                 );
             });
     }
