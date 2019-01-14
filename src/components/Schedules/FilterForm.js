@@ -45,6 +45,7 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
+        editSerie: true
     }
 
     constructor(props) {
@@ -78,9 +79,7 @@ class FilterForm extends Component {
             }).catch(error => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error loading employees list',
-                    'bottom',
-                    'right'
+                    'Error loading employees list'
                 );
             });
     }
@@ -110,7 +109,8 @@ class FilterForm extends Component {
                     employeeId: idEmployee == null ? 0 : idEmployee,
                     startTime: this.state.startHour,
                     endTime: this.state.endHour,
-                    shiftDetailId: this.state.selectedDetailId
+                    shiftDetailId: this.state.selectedDetailId,
+                    daysWeek: this.state.dayWeeks
                 }
             })
             .then(({ data }) => {
@@ -120,9 +120,7 @@ class FilterForm extends Component {
                     this.setState({ updating: false }, () => {
                         this.props.handleOpenSnackbar(
                             'warning',
-                            'This shift is not available',
-                            'bottom',
-                            'right'
+                            'This shift is not available'
                         );
                     })
                 }
@@ -130,9 +128,7 @@ class FilterForm extends Component {
                 this.setState({ updating: false }, () => {
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error evaluting schedule',
-                        'bottom',
-                        'right'
+                        'Error evaluting schedule'
                     );
                 })
             });
@@ -156,9 +152,7 @@ class FilterForm extends Component {
                     this.setState({ loadingPosition: false })
                     this.props.handleOpenSnackbar(
                         'error',
-                        'Error loading position list',
-                        'bottom',
-                        'right'
+                        'Error loading position list'
                     );
                 });
 
@@ -261,8 +255,8 @@ class FilterForm extends Component {
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
                 this.setState({
-                    startDate: shiftDetail.startDate.substring(0, 10),
-                    endDate: shiftDetail.endDate.substring(0, 10),
+                    startDate: this.state.editSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
+                    endDate: this.state.editSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
                     startHour: shiftDetail.startTime,
                     endHour: shiftDetail.endTime,
                     location: shiftDetail.shift.entityId,
@@ -279,9 +273,7 @@ class FilterForm extends Component {
             }).catch(error => {
                 this.props.handleOpenSnackbar(
                     'error',
-                    'Error loading selected shift information',
-                    'bottom',
-                    'right'
+                    'Error loading selected shift information'
                 );
             });
     }

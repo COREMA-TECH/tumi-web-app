@@ -91,6 +91,8 @@ export const GET_SHIFTS_QUERY = gql`
             color
             status
             idPosition
+            startDate
+            endDate
             comment
             workOrder
             {
@@ -105,8 +107,8 @@ export const GET_SHIFTS_QUERY = gql`
 `;
 
 export const GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY = gql`
-    query ShiftDetailByDate ($startDate: Date,$endDate:Date,$startTime: String,$endTime: String,$employeeId: [Int], $shiftDetailId: Int){
-        ShiftDetailByDate(startDate: $startDate,endDate: $endDate,startTime: $startTime,endTime: $endTime,employeeId:$employeeId, shiftDetailId: $shiftDetailId){
+    query ShiftDetailByDate ($startDate: Date,$endDate:Date,$startTime: String,$endTime: String,$employeeId: [Int], $shiftDetailId: Int, $daysWeek: String){
+        ShiftDetailByDate(startDate: $startDate,endDate: $endDate,startTime: $startTime,endTime: $endTime,employeeId:$employeeId, shiftDetailId: $shiftDetailId, daysWeek: $daysWeek){
             id
             startDate
             endDate
