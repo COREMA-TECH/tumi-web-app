@@ -45,6 +45,7 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
+        editSerie: true
     }
 
     constructor(props) {
@@ -254,8 +255,8 @@ class FilterForm extends Component {
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
                 this.setState({
-                    startDate: shiftDetail.startDate.substring(0, 10),
-                    endDate: shiftDetail.endDate.substring(0, 10),
+                    startDate: this.state.editSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
+                    endDate: this.state.editSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
                     startHour: shiftDetail.startTime,
                     endHour: shiftDetail.endTime,
                     location: shiftDetail.shift.entityId,
