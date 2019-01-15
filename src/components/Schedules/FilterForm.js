@@ -15,11 +15,7 @@ class FilterForm extends Component {
 
     DEFAULT_STATE = {
         selectedEmployees: [],
-        //location: 0,
-        location: 175,
         positions: [],
-        // position: 0,
-        position: 94,
         color: '#5f4d8b',
         //  title: '',
         title: 'My Title',
@@ -41,7 +37,6 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
-        editSerie: true,
         workOrderId: 0
     }
 
@@ -140,7 +135,7 @@ class FilterForm extends Component {
                 .query({
                     query: GET_POSITION,
                     variables: {
-                        Id_Entity: this.state.location
+                        Id_Entity: this.props.location
                     }
                 })
                 .then(({ data }) => {
@@ -169,11 +164,11 @@ class FilterForm extends Component {
                     startHour: this.state.startHour,
                     endHour: this.state.endHour,
                     shift: {
-                        entityId: this.state.location,
+                        entityId: this.props.location,
                         title: this.state.title,
                         color: this.state.color,
                         status: this.state.status,
-                        idPosition: this.state.position,
+                        idPosition: this.props.position,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
@@ -210,7 +205,7 @@ class FilterForm extends Component {
                 mutation: UPDATE_SHIFT,
                 variables: {
                     shift: {
-                        id: this.state.editSerie ? this.state.shiftId : 0,//Only serie edition can modify shift comment
+                        id: this.props.isSerie ? this.state.shiftId : 0,//Only serie edition can modify shift comment
                         comment: this.state.comment
                     },
                     shiftDetail: {
@@ -253,8 +248,8 @@ class FilterForm extends Component {
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
                 this.setState({
-                    startDate: this.state.editSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
-                    endDate: this.state.editSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
+                    startDate: this.props.isSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
+                    endDate: this.props.isSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
                     startHour: shiftDetail.startTime,
                     endHour: shiftDetail.endTime,
                     location: shiftDetail.shift.entityId,
@@ -312,9 +307,9 @@ class FilterForm extends Component {
         if (parseInt(endHour) < parseInt(startHour))
             return { valid: false, message: 'End Time can not be less than Start Time' };
 
-        if (parseInt(this.state.location) == 0)
+        if (parseInt(this.props.location) == 0)
             return { valid: false, message: 'You need to select a location' };
-        if (parseInt(this.state.position) == 0)
+        if (parseInt(this.props.position) == 0)
             return { valid: false, message: 'You need to select a position' };
         if (!this.state.title.trim())
             return { valid: false, message: 'You need to set a title' };
@@ -401,14 +396,14 @@ class FilterForm extends Component {
 
         if (valid) {
             let mutation;
-            var position = this.state.positions.find(item => item.Id == this.state.position)
+            var position = this.state.positions.find(item => item.Id == this.props.position)
             if (position)
                 this.setState({ specialComment: position.Comment ? position.Comment : '', updating: true }, () => {
                     if (this.state.selectedDetailId == 0)
                         mutation = this.insertShift;
                     else
                         mutation = this.updateShift;
-                    if (this.state.editSerie)
+                    if (this.props.isSerie)
                         this.getAssociatedShiftDetailList((shiftDetailId) => this.getShiftByDateAndEmployee(mutation, shiftDetailId))
                     else
                         this.getShiftByDateAndEmployee(mutation, this.state.selectedDetailId);
@@ -449,7 +444,7 @@ class FilterForm extends Component {
 
     componentWillMount() {
         this.getEmployees()
-        this.getPosition(this.state.position);
+        this.getPosition(this.props.position);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -574,7 +569,7 @@ class FilterForm extends Component {
                     </div>
                     <div className="col-md-12">
                         <label htmlFor="">Comment</label>
-                        <textarea name="comment" className="form-control" id="" cols="30" rows="10" disabled={isHotelManger || (this.state.editSerie == false && this.state.selectedDetailId != 0)} value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
+                        <textarea name="comment" className="form-control" id="" cols="30" rows="10" disabled={isHotelManger || (this.props.isSerie == false && this.state.selectedDetailId != 0)} value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
                     </div>
                     {/* <div className="col-md-3">
                         <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
