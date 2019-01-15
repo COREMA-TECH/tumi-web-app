@@ -16,6 +16,9 @@
         float: right;
         margin-right: 5px;
     }
+    .btn-default {
+        background: map-get($gray-shades, gray-1);
+    }
     &-controlLeft {
         @include media-breakpoint-down(sm) {
             .btn {

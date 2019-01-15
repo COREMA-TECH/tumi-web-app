@@ -9,6 +9,7 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import { GET_SHIFT_BY_DATE } from './Queries';
 
 let today = new Date();
 let dd = today.getDate();
@@ -70,7 +71,9 @@ class Shifts extends Component {
             shiftDetail: [],
             employees: [],
             locations: [],
-            eventId: null
+            eventId: null,
+            draftStartDate: '',
+            draftEndDate: ''
         };
     }
 
@@ -164,15 +167,17 @@ class Shifts extends Component {
 
                         schedulerData.setResources(orderedEmployees);
                         schedulerData.setEvents(allEvents);
-
                         this.setState(
                             {
-                                viewModel: schedulerData
+                                viewModel: schedulerData,
+                                draftStartDate: schedulerData.startDate,
+                                draftEndDate: schedulerData.endDate
                             },
                             () => {
                                 this.setState({
                                     loading: false
                                 });
+                                this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
                             }
                         );
                     }
@@ -182,6 +187,24 @@ class Shifts extends Component {
                 this.props.handleOpenSnackbar("error", "Error to list shifts!");
             });
     };
+
+    getShiftRendered = (startDate, endDate, idPosition, entityId) => {
+        this.props.client
+            .query({
+                query: GET_SHIFT_BY_DATE,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    startDate: startDate,
+                    endDate: endDate,
+                    idPosition: idPosition,
+                    entityId: entityId
+                }
+            })
+            .then(({ data }) => {
+                this.props.saveTemplateShift(data.shiftDetailByWeek);
+            })
+            .catch();
+    }
 
     componentWillMount() {
         this.loadShifts();
@@ -356,7 +379,11 @@ class Shifts extends Component {
         schedulerData.prev();
         schedulerData.setEvents(allEvents);
         this.setState({
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            draftStartDate: schedulerData.startDate,
+            draftEndDate: schedulerData.endDate
+        }, () => {
+            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
         });
     };
 
@@ -364,7 +391,11 @@ class Shifts extends Component {
         schedulerData.next();
         schedulerData.setEvents(allEvents);
         this.setState({
-            viewModel: schedulerData
+            viewModel: schedulerData,
+            draftStartDate: schedulerData.startDate,
+            draftEndDate: schedulerData.endDate
+        }, () => {
+            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
         });
     };
 

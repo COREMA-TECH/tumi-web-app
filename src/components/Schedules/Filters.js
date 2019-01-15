@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS } from './Queries';
 import withApollo from 'react-apollo/withApollo';
 import Options from './Options';
+import moment from 'moment';
 
 class Filters extends Component {
 
@@ -90,8 +91,10 @@ class Filters extends Component {
 
     }
 
-    changeHotel = () => {
-
+    getStartAndEndDate = () => {
+        let startDayOfWeek = moment().startOf('week').format();
+        let endDayOfWeek = moment().endOf('week').format();
+        console.log(startDayOfWeek, endDayOfWeek);
     }
 
     render() {
@@ -110,7 +113,15 @@ class Filters extends Component {
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
                                 <button className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
-                                <button className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
+                                <button onClick={this.getStartAndEndDate} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
+                                <div class="dropdown float-left dropdown-withoutjs">
+                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Use Template</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="col-md-4">
@@ -121,7 +132,7 @@ class Filters extends Component {
                                         <div className="can-toggle__switch" data-checked="MY" data-unchecked="FULL"></div>
                                     </label>
                                 </div>
-                                <button className="btn btn-default btn-not-rounded btn-publish" type="button">Publish</button>
+                                <button className="btn btn-success btn-not-rounded btn-publish" type="button">Publish</button>
                             </div>
                         </div>
                     </div>

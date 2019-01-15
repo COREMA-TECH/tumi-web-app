@@ -24,9 +24,9 @@ mutation createShiftDetail(
 `;
 
 export const CHANGE_STATUS_SHIFT = gql`
-mutation changeStatusShift($id: Int!,$status:Int!,$color:String!)
+mutation changeStatusShift($id: Int!,$status:Int!,$color:String!,$comment:String!)
 {
-  changeStatusShift(id:$id,status:$status,color: $color)
+  changeStatusShift(id:$id,status:$status,color: $color, comment: $comment)
   {
     id
   }

@@ -165,3 +165,20 @@
 		transition: visibility 0.5s;
 	}
 }
+
+.dropdown-withoutjs {
+	.dropdown-toggle:focus {
+		pointer-events: none;
+	}
+	.dropdown-toggle:focus + .dropdown-menu {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+	}
+	.dropdown-menu {
+		opacity: 0;
+		display: block;
+		visibility: hidden;
+		transition: visibility 0.5s;
+	}
+}

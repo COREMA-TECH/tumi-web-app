@@ -28,8 +28,16 @@ class Schedules extends Component {
             openPreFilter: true,
             requested: null,
             editConfirmOpened: false,
-            filtered: false
+            filtered: false,
+            templateShifts: [],
+            previousWeekShifts: []
         }
+    }
+
+    saveTemplateShift = (templateShifts) => {
+        this.setState((prevState) => {
+            return { templateShifts: templateShifts }
+        })
     }
 
     handleChange = (event) => {
@@ -108,6 +116,7 @@ class Schedules extends Component {
                     handleApplyFilters={this.handleApplyFilters}
                     openPreFilter={this.state.openPreFilter}
                     handleGetTextofFilters={this.handleGetTextofFilters}
+                    templateShifts={this.templateShifts}
                 />
                 <Filters
                     handleClosePreFilter={this.handleClosePreFilter}
@@ -136,6 +145,9 @@ class Schedules extends Component {
                                             cityId={this.state.cityId}
                                             positionId={this.state.positionId}
                                             shiftId={this.state.shiftId}
+                                            entityId={this.state.location}
+                                            saveTemplateShift={this.saveTemplateShift}
+                                            previousWeekShifts={this.previousWeekShifts}
                                         />
                                     ) : ('')
                                 }

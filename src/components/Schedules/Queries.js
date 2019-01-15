@@ -130,3 +130,14 @@ export const GET_CONTACT_BY_QUERY = gql`
 `;
 
 
+export const GET_SHIFT_BY_DATE = gql`
+    query getshift($startDate: Date, $endDate: Date, $idPosition: Int, $entityId: Int) {
+        shiftDetailByWeek(startDate:$startDate,endDate: $endDate,idPosition:$idPosition, entityId:$entityId)
+        {
+            id
+            startDate
+            endDate
+        }
+    }
+`;
+
