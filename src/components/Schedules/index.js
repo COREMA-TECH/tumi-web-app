@@ -45,7 +45,6 @@ class Schedules extends Component {
         const value = target.value;
         const name = target.name;
 
-        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
@@ -130,7 +129,7 @@ class Schedules extends Component {
                     locationName={this.state.locationName}
                     requestedName={this.state.requestedName}
                 />
-                <FilterForm location={this.state.location} position={this.state.position} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
+                <FilterForm isSerie={this.state.isSerie} location={this.state.location} position={this.state.position} requestedBy={this.state.requested} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">

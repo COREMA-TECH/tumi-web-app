@@ -363,10 +363,10 @@ class Shifts extends Component {
                         <h2>Do you want edit Shift or Serie?</h2>
                     </DialogContent>
                     <DialogActions>
-                        <button className="btn btn-success btn-not-rounded mr-1" type="button" onClick={() => { this.selectTypeEdition(true) }}>
+                        <button className="btn btn-success btn-not-rounded mr-1" type="button" onClick={() => { this.selectTypeEdition(false) }}>
                             Edit Shift
                         </button>
-                        <button className="btn btn-default btn-not-rounded" type="button" onClick={() => { this.selectTypeEdition(false) }}>
+                        <button className="btn btn-default btn-not-rounded" type="button" onClick={() => { this.selectTypeEdition(true) }}>
                             Edit Serie
                         </button>
                     </DialogActions>
