@@ -80,7 +80,6 @@ class FilterForm extends Component {
         shiftDetailId = []//list of shift detail id to be excluded from the validation
     ) => {
 
-        console.log("List of Shift Detail Id:::", shiftDetailId)
         //This evaluate if Employee control has selected one or many employees
         //If only one employee can be selected then the value is got from object.value 
         //other way it is selected from an array of selected values

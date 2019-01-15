@@ -37,7 +37,6 @@ class Schedules extends Component {
         const value = target.value;
         const name = target.name;
 
-        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
@@ -101,7 +100,6 @@ class Schedules extends Component {
     }
 
     render() {
-        console.log("State:::", this.state)
         return (
             <div className="MasterShift">
                 <PreFilter
