@@ -10772,6 +10772,14 @@ button.rbc-input::-moz-focus-inner {
   z-index: 1299; }
   .MasterShiftForm.active {
     left: 0; }
+  .MasterShiftForm.active + .MasterShiftForm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100vh;
+    z-index: 1297; }
   .MasterShiftForm-close {
     color: #7e7e7e;
     display: block;
