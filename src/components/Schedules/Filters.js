@@ -4,6 +4,9 @@ import { CREATE_TEMPLATE } from './Mutations';
 import withApollo from 'react-apollo/withApollo';
 import Options from './Options';
 import moment from 'moment';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 class Filters extends Component {
 
@@ -15,7 +18,9 @@ class Filters extends Component {
             states: [],
             positions: [],
             shifts: [],
-            templates: []
+            templates: [],
+            titleModalOpened: false,
+            title: ''
         };
     }
 
@@ -112,24 +117,42 @@ class Filters extends Component {
         let endDayOfWeek = moment().endOf('week').format();
     }
 
-    saveAsTemplate = () => {
+    saveAsTemplate = (event) => {
+        event.preventDefault();
         this.props.client
             .mutate({
                 mutation: CREATE_TEMPLATE,
                 variables: {
                     id: this.props.templateShifts,
-                    title: "test",
-                    startDate: this.props.templateStartDate,
+                    title: this.state.title,
                     endDate: this.props.templateEndDate
                 }
             })
             .then((data) => {
                 this.getTemplates();
                 alert('saved');
+                this.openFormTitle();
             })
             .catch((error) => {
                 alert('crash');
             });
+    }
+
+    handleChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+
+    }
+
+    openFormTitle = () => {
+        this.setState({
+            titleModalOpened: !this.state.titleModalOpened
+        });
     }
 
     render() {
@@ -147,7 +170,7 @@ class Filters extends Component {
                         <div className="col-md-8">
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
-                                <button onClick={this.saveAsTemplate} className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
+                                <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
                                 <button onClick={this.getStartAndEndDate} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
                                     <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Use Template</button>
@@ -174,6 +197,22 @@ class Filters extends Component {
                         </div>
                     </div>
                 </div>
+                <Dialog maxWidth="md" open={this.state.titleModalOpened}>
+                    <form onSubmit={this.saveAsTemplate}>
+                        <DialogContent>
+                            <label htmlFor="">Template Name</label>
+                            <input type="text" name="title" className="form-control" required onChange={this.handleChange} />
+                        </DialogContent>
+                        <DialogActions>
+                            <button onClick={this.openFormTitle} className="btn btn-danger btn-not-rounded" type="button">
+                                Cancel
+                            </button>
+                            <button className="btn btn-success btn-not-rounded mr-1" type="submit">
+                                Save
+                        </button>
+                        </DialogActions>
+                    </form>
+                </Dialog>
             </div>
         );
     }

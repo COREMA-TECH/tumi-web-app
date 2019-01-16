@@ -38,10 +38,16 @@ class Schedules extends Component {
 
     saveTemplateShift = (templateShifts, startDate, endDate) => {
         var newTemplateShiftArray = [];
+        var templateFound = [];
         templateShifts.map(templateShift => {
             delete templateShift.startDate;
             delete templateShift.endDate;
-            newTemplateShiftArray.push(templateShift);
+            templateShift.id = templateShift.ShiftId;
+            if (templateFound.indexOf(templateShift.ShiftId) < 0) {
+                templateFound.push(templateShift.ShiftId);
+                delete templateShift.ShiftId;
+                newTemplateShiftArray.push(templateShift.id);
+            }
         });
 
         this.setState((prevState) => {
@@ -117,6 +123,7 @@ class Schedules extends Component {
     }
 
     render() {
+        console.log(this.state.templateShifts);
         return (
             <div className="MasterShift">
                 <PreFilter
@@ -137,9 +144,9 @@ class Schedules extends Component {
                     positionName={this.state.positionName}
                     locationName={this.state.locationName}
                     requestedName={this.state.requestedName}
-                    templateShifts={this.templateShifts}
-                    templateStartDate={this.templateStartDate}
-                    templateEndDate={this.templateEndDate}
+                    templateShifts={this.state.templateShifts}
+                    templateStartDate={this.state.templateStartDate}
+                    templateEndDate={this.state.templateEndDate}
                 />
                 <FilterForm
                     isSerie={this.state.isSerie}

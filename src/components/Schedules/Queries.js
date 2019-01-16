@@ -138,6 +138,7 @@ export const GET_SHIFT_BY_DATE = gql`
             id
             startDate
             endDate
+            ShiftId
         }
     }
 `;

@@ -67,8 +67,8 @@ export const DELETE_SHIFT = gql`
 `;
 
 export const CREATE_TEMPLATE = gql`
-mutation gettemplate($id: [Int], $title: String, $startDate: Date, $endDate: Date) {
-  createTemplate (shiftIds:$id, title: $title, startDate: $startDate, endDate: $endDate){
+mutation gettemplate($id: [Int], $title: String, $endDate: Date) {
+  createTemplate (shiftIds:$id, title: $title, endDate: $endDate){
     id
   }
 }

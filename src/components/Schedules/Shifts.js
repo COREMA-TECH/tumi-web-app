@@ -164,7 +164,6 @@ class Shifts extends Component {
                                 }
                             );
                         }
-
                         schedulerData.setResources(orderedEmployees);
                         schedulerData.setEvents(allEvents);
                         this.setState(
@@ -201,6 +200,7 @@ class Shifts extends Component {
                 }
             })
             .then(({ data }) => {
+                console.log(data);
                 this.props.saveTemplateShift(data.shiftDetailByWeek, startDate, endDate);
             })
             .catch();
