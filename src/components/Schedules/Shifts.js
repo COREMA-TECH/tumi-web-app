@@ -200,7 +200,6 @@ class Shifts extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log(data);
                 this.props.saveTemplateShift(data.shiftDetailByWeek, startDate, endDate);
             })
             .catch();
@@ -400,6 +399,8 @@ class Shifts extends Component {
     };
 
     onViewChange = (schedulerData, view) => {
+        let viewType = view.viewType;
+        this.props.changeViewType(viewType)
         schedulerData.setViewType(
             view.viewType,
             view.showAgenda,

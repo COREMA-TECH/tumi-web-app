@@ -32,7 +32,8 @@ class Schedules extends Component {
             templateShifts: [],
             previousWeekShifts: [],
             templateStartDate: '',
-            templateEndDate: ''
+            templateEndDate: '',
+            viewType: 1
         }
     }
 
@@ -122,8 +123,13 @@ class Schedules extends Component {
         });
     }
 
+    changeViewType = (viewType) => {
+        this.setState({
+            viewType: viewType
+        });
+    }
+
     render() {
-        console.log(this.state.templateShifts);
         return (
             <div className="MasterShift">
                 <PreFilter
@@ -147,6 +153,8 @@ class Schedules extends Component {
                     templateShifts={this.state.templateShifts}
                     templateStartDate={this.state.templateStartDate}
                     templateEndDate={this.state.templateEndDate}
+                    requested={this.state.requested}
+                    viewType={this.state.viewType}
                 />
                 <FilterForm
                     isSerie={this.state.isSerie}
@@ -176,6 +184,7 @@ class Schedules extends Component {
                                             entityId={this.state.location}
                                             saveTemplateShift={this.saveTemplateShift}
                                             previousWeekShifts={this.previousWeekShifts}
+                                            changeViewType={this.changeViewType}
                                         />
                                     ) : ('')
                                 }

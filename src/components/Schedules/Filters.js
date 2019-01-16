@@ -7,6 +7,7 @@ import moment from 'moment';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import withGlobalContent from 'Generic/Global';
 
 class Filters extends Component {
 
@@ -129,12 +130,18 @@ class Filters extends Component {
                 }
             })
             .then((data) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Template Saved'
+                );
                 this.getTemplates();
-                alert('saved');
                 this.openFormTitle();
             })
             .catch((error) => {
-                alert('crash');
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error saving template'
+                );
             });
     }
 
@@ -155,6 +162,15 @@ class Filters extends Component {
         });
     }
 
+    loadTemplate = (id) => {
+        alert('template ' + id)
+        let endDayOfWeek = moment().endOf('week').format();
+        let positionId = this.props.positionId;
+        let requestedBy = this.props.requested;
+        let userId = localStorage.getItem('LoginId');
+        let specialComment = "";
+    }
+
     render() {
         return (
             <div className="MasterShiftHeader">
@@ -170,14 +186,14 @@ class Filters extends Component {
                         <div className="col-md-8">
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
-                                <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
+                                <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button>
                                 <button onClick={this.getStartAndEndDate} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
-                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Use Template</button>
+                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Use Template</button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         {
                                             this.state.templates.map((template) => {
-                                                return <a key={template.id} className="dropdown-item" href="#">{template.title}</a>
+                                                return <a key={template.id} className="dropdown-item" href="#" onClick={(event) => { event.preventDefault(); this.loadTemplate(template.id) }}>{template.title}</a>
                                             })
                                         }
                                     </div>
@@ -219,4 +235,4 @@ class Filters extends Component {
 
 }
 
-export default withApollo(Filters);
+export default withApollo(withGlobalContent(Filters));
