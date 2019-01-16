@@ -72,7 +72,7 @@ class SchedulesAccept extends Component {
     }
 
     handleSendComment = () => {
-        this.handleChangeStatusShifts(this.state.status, this.state.color, this.state.comment)
+        this.handleChangeStatusShifts(this.state.status, this.state.color, this.state.comment);
     }
 
     hanldeChange = (event) => {
@@ -93,7 +93,7 @@ class SchedulesAccept extends Component {
                     this.state.accept != 'true' ? (
                         <div className="mt-1 reason-wrapper">
                             <textarea name="" id="" cols="30" rows="10" name="comment" className="form-control" onChange={this.hanldeChange}></textarea>
-                            <button onClick={this.handleSendComment} className="btn btn-success mt-2">Send</button>
+                            <button onClick={this.handleSendComment} className="btn btn-large btn-success mt-2">Send</button>
                         </div>
                     ) : ('')
                 }
