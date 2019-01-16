@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS } from './Queries';
+import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS, GET_TEMPLATES } from './Queries';
+import { CREATE_TEMPLATE } from './Mutations';
 import withApollo from 'react-apollo/withApollo';
 import Options from './Options';
 import moment from 'moment';
@@ -13,7 +14,8 @@ class Filters extends Component {
             cities: [],
             states: [],
             positions: [],
-            shifts: []
+            shifts: [],
+            templates: []
         };
     }
 
@@ -87,14 +89,47 @@ class Filters extends Component {
             .catch();
     }
 
-    componentWillMount() {
+    getTemplates = () => {
+        this.props.client
+            .query({
+                query: GET_TEMPLATES,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState((prevState) => {
+                    return { templates: data.template }
+                });
+            })
+            .catch();
+    }
 
+    componentWillMount() {
+        this.getTemplates();
     }
 
     getStartAndEndDate = () => {
         let startDayOfWeek = moment().startOf('week').format();
         let endDayOfWeek = moment().endOf('week').format();
-        console.log(startDayOfWeek, endDayOfWeek);
+    }
+
+    saveAsTemplate = () => {
+        this.props.client
+            .mutate({
+                mutation: CREATE_TEMPLATE,
+                variables: {
+                    id: this.props.templateShifts,
+                    title: "test",
+                    startDate: this.props.templateStartDate,
+                    endDate: this.props.templateEndDate
+                }
+            })
+            .then((data) => {
+                this.getTemplates();
+                alert('saved');
+            })
+            .catch((error) => {
+                alert('crash');
+            });
     }
 
     render() {
@@ -112,14 +147,16 @@ class Filters extends Component {
                         <div className="col-md-8">
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
-                                <button className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
+                                <button onClick={this.saveAsTemplate} className="btn btn-default btn-not-rounded mr-1" type="button">Save as Template</button>
                                 <button onClick={this.getStartAndEndDate} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
-                                <div class="dropdown float-left dropdown-withoutjs">
+                                <div className="dropdown float-left dropdown-withoutjs">
                                     <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Use Template</button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        {
+                                            this.state.templates.map((template) => {
+                                                return <a key={template.id} className="dropdown-item" href="#">{template.title}</a>
+                                            })
+                                        }
                                     </div>
                                 </div>
                             </div>

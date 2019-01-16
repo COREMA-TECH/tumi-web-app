@@ -10,6 +10,9 @@
     transition: left .5s ease-out;
     width: 400px;
     z-index: 1299;
+    .btn-default {
+        background: map-get($gray-shades, gray-1);
+    }
     &.active {
         left: 0;
     }

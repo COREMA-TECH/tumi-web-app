@@ -4,7 +4,7 @@ import withGlobalContent from 'Generic/Global';
 import moment from 'moment';
 
 import { GET_INITIAL_DATA, GET_POSITION, GET_SHIFTS_QUERY, GET_SHIFTS_BY_DATE_EMPLOYEE_QUERY, GET_LIST_SHIFT_ID } from './Queries';
-import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT_RECORD, UPDATE_SHIFT } from './Mutations';
+import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT_RECORD, UPDATE_SHIFT, DELETE_SHIFT } from './Mutations';
 
 import Select from 'react-select';
 import { isArray } from 'util';
@@ -370,8 +370,6 @@ class FilterForm extends Component {
                 mutation: CHANGE_STATUS_SHIFT,
                 variables: {
                     id: this.state.shiftId,
-                    status: status,
-                    color: color
                 }
             })
             .then((data) => {
@@ -466,6 +464,35 @@ class FilterForm extends Component {
             })
     }
 
+    handleDisable = (id) => {
+        this.props.client
+            .mutate({
+                mutation: DELETE_SHIFT,
+                variables: {
+                    id: this.state.shiftId,
+                }
+            })
+            .then((data) => {
+                this.props.toggleRefresh();
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Shift disabled'
+                );
+                this.props.handleCloseForm();
+            })
+            .catch((error) => {
+                this.setState({
+                    updating: false
+                }, () => {
+
+                    this.props.handleOpenSnackbar(
+                        'error',
+                        'Shift can not be disabled'
+                    );
+                });
+            });
+    }
+
     showConfirmationButtons = () => {
         if (this.props.hotelManager)
             return <div className="row">
@@ -476,7 +503,7 @@ class FilterForm extends Component {
             </div>
         else
             return <div>
-                <button type="button" className="btn btn-link text-danger">
+                <button type="button" className="btn btn-link text-danger" onClick={this.handleDisable}>
                     <i className="fas fa-trash"></i>
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>

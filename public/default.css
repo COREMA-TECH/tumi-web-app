@@ -10770,6 +10770,8 @@ button.rbc-input::-moz-focus-inner {
   transition: left .5s ease-out;
   width: 400px;
   z-index: 1299; }
+  .MasterShiftForm .btn-default {
+    background: #d2d2d2; }
   .MasterShiftForm.active {
     left: 0; }
   .MasterShiftForm.active + .MasterShiftForm-overlay {

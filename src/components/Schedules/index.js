@@ -30,13 +30,22 @@ class Schedules extends Component {
             editConfirmOpened: false,
             filtered: false,
             templateShifts: [],
-            previousWeekShifts: []
+            previousWeekShifts: [],
+            templateStartDate: '',
+            templateEndDate: ''
         }
     }
 
-    saveTemplateShift = (templateShifts) => {
+    saveTemplateShift = (templateShifts, startDate, endDate) => {
+        var newTemplateShiftArray = [];
+        templateShifts.map(templateShift => {
+            delete templateShift.startDate;
+            delete templateShift.endDate;
+            newTemplateShiftArray.push(templateShift);
+        });
+
         this.setState((prevState) => {
-            return { templateShifts: templateShifts }
+            return { templateShifts: newTemplateShiftArray, templateStartDate: startDate, templateEndDate: endDate }
         })
     }
 
@@ -128,8 +137,21 @@ class Schedules extends Component {
                     positionName={this.state.positionName}
                     locationName={this.state.locationName}
                     requestedName={this.state.requestedName}
+                    templateShifts={this.templateShifts}
+                    templateStartDate={this.templateStartDate}
+                    templateEndDate={this.templateEndDate}
                 />
-                <FilterForm isSerie={this.state.isSerie} location={this.state.location} position={this.state.position} requestedBy={this.state.requested} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
+                <FilterForm
+                    isSerie={this.state.isSerie}
+                    location={this.state.location}
+                    position={this.state.position}
+                    requestedBy={this.state.requested}
+                    handleCloseForm={this.handleCloseForm}
+                    closedForm={this.state.closedForm}
+                    id={this.state.selectedShiftId}
+                    toggleRefresh={this.toggleRefresh}
+                    hotelManager={this.props.hotelManager}
+                />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">

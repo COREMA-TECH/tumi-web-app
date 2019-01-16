@@ -201,7 +201,7 @@ class Shifts extends Component {
                 }
             })
             .then(({ data }) => {
-                this.props.saveTemplateShift(data.shiftDetailByWeek);
+                this.props.saveTemplateShift(data.shiftDetailByWeek, startDate, endDate);
             })
             .catch();
     }

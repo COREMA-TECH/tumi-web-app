@@ -149,3 +149,13 @@ export const GET_LIST_SHIFT_ID = gql`
         }
     }
 `;
+
+
+export const GET_TEMPLATES = gql`
+    query gettemplate($id: Int) {
+        template (id:$id){
+        id,
+        title
+    }
+}
+`;

@@ -55,3 +55,21 @@ export const UPDATE_SHIFT = gql`
          }
  }
 `;
+
+export const DELETE_SHIFT = gql`
+  mutation disableShift($id: Int!) {
+    disableShift(id:$id){
+      id
+      entityId
+      isActive
+    }
+  }
+`;
+
+export const CREATE_TEMPLATE = gql`
+mutation gettemplate($id: [Int], $title: String, $startDate: Date, $endDate: Date) {
+  createTemplate (shiftIds:$id, title: $title, startDate: $startDate, endDate: $endDate){
+    id
+  }
+}
+`;
