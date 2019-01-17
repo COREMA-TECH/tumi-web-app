@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS, GET_TEMPLATES } from './Queries';
-import { CREATE_TEMPLATE } from './Mutations';
+import { CREATE_TEMPLATE, USE_TEMPLATE, LOAD_PREVWEEK } from './Mutations';
 import withApollo from 'react-apollo/withApollo';
 import Options from './Options';
 import moment from 'moment';
@@ -163,12 +163,66 @@ class Filters extends Component {
     }
 
     loadTemplate = (id) => {
-        alert('template ' + id)
         let endDayOfWeek = moment().endOf('week').format();
         let positionId = this.props.positionId;
         let requestedBy = this.props.requested;
         let userId = localStorage.getItem('LoginId');
         let specialComment = "";
+        this.props.client
+            .mutate({
+                mutation: USE_TEMPLATE,
+                variables: {
+                    templateId: id,
+                    endDate: endDayOfWeek,
+                    userId: userId,
+                    positionId: positionId,
+                    requestedBy: requestedBy,
+                    specialComment: specialComment
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Template Saved'
+                );
+                this.props.toggleRefresh();
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error saving template'
+                );
+            });
+    }
+
+    loadPreviousWeek = () => {
+        let endDayOfWeek = moment().endOf('week').format();
+        let positionId = this.props.positionId;
+        let entiotyId = this.props.location;
+        let userId = localStorage.getItem('LoginId');
+        this.props.client
+            .mutate({
+                mutation: LOAD_PREVWEEK,
+                variables: {
+                    endDate: endDayOfWeek,
+                    positionId: positionId,
+                    entiotyId: entiotyId,
+                    userId: userId
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Previous week loaded'
+                );
+                this.props.toggleRefresh();
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error recovering previous week data'
+                );
+            });
     }
 
     render() {
@@ -187,7 +241,7 @@ class Filters extends Component {
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
                                 <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button>
-                                <button onClick={this.getStartAndEndDate} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
+                                <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
                                     <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Use Template</button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">

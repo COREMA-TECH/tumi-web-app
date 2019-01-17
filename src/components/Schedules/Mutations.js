@@ -73,3 +73,23 @@ mutation gettemplate($id: [Int], $title: String, $endDate: Date) {
   }
 }
 `;
+
+export const USE_TEMPLATE = gql`
+mutation createShiftBasedOnTemplate($templateId: Int, $endDate: Date, $userId: Int, $positionId: Int, $requestedBy: Int, $specialComment: String) {
+  createShiftBasedOnTemplate(templateId:$templateId,endDate:$endDate,userId: $userId,positionId: $positionId,requestedBy:$requestedBy,specialComment: $specialComment)
+  {
+    id
+    entityId
+  }
+}
+`;
+
+export const LOAD_PREVWEEK = gql`
+mutation PreviousWeekShift($endDate: Date, $positionId: Int, $entityId: Int, $userId: Int) {
+  create PreviousWeekShift(endDate: $endDate,positionId: $positionId,entityId: $entityId, userId: $userId)
+  {
+    id
+    entityId
+  }
+}
+`;

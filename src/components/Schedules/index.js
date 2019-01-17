@@ -155,6 +155,7 @@ class Schedules extends Component {
                     templateEndDate={this.state.templateEndDate}
                     requested={this.state.requested}
                     viewType={this.state.viewType}
+                    location={this.state.location}
                 />
                 <FilterForm
                     isSerie={this.state.isSerie}
