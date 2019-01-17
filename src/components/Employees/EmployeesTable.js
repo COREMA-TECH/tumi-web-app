@@ -214,7 +214,7 @@ class EmployeesTable extends React.Component {
                                                             e.stopPropagation();
                                                             e.preventDefault();
 
-                                                            //this.props.assign(row.id, row);
+                                                            // this.props.assign(row.id, row);
                                                         }}
                                                     >
                                                         <i className="fas fa-plus"></i>
