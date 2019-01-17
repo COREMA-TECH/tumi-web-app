@@ -28,8 +28,32 @@ class Schedules extends Component {
             openPreFilter: true,
             requested: null,
             editConfirmOpened: false,
-            filtered: false
+            filtered: false,
+            templateShifts: [],
+            previousWeekShifts: [],
+            templateStartDate: '',
+            templateEndDate: '',
+            viewType: 1
         }
+    }
+
+    saveTemplateShift = (templateShifts, startDate, endDate) => {
+        var newTemplateShiftArray = [];
+        var templateFound = [];
+        templateShifts.map(templateShift => {
+            delete templateShift.startDate;
+            delete templateShift.endDate;
+            templateShift.id = templateShift.ShiftId;
+            if (templateFound.indexOf(templateShift.ShiftId) < 0) {
+                templateFound.push(templateShift.ShiftId);
+                delete templateShift.ShiftId;
+                newTemplateShiftArray.push(templateShift.id);
+            }
+        });
+
+        this.setState((prevState) => {
+            return { templateShifts: newTemplateShiftArray, templateStartDate: startDate, templateEndDate: endDate }
+        })
     }
 
     handleChange = (event) => {
@@ -99,6 +123,12 @@ class Schedules extends Component {
         });
     }
 
+    changeViewType = (viewType) => {
+        this.setState({
+            viewType: viewType
+        });
+    }
+
     render() {
         return (
             <div className="MasterShift">
@@ -107,6 +137,7 @@ class Schedules extends Component {
                     handleApplyFilters={this.handleApplyFilters}
                     openPreFilter={this.state.openPreFilter}
                     handleGetTextofFilters={this.handleGetTextofFilters}
+                    templateShifts={this.templateShifts}
                 />
                 <Filters
                     handleClosePreFilter={this.handleClosePreFilter}
@@ -119,8 +150,24 @@ class Schedules extends Component {
                     positionName={this.state.positionName}
                     locationName={this.state.locationName}
                     requestedName={this.state.requestedName}
+                    templateShifts={this.state.templateShifts}
+                    templateStartDate={this.state.templateStartDate}
+                    templateEndDate={this.state.templateEndDate}
+                    requested={this.state.requested}
+                    viewType={this.state.viewType}
+                    location={this.state.location}
                 />
-                <FilterForm isSerie={this.state.isSerie} location={this.state.location} position={this.state.position} requestedBy={this.state.requested} handleCloseForm={this.handleCloseForm} closedForm={this.state.closedForm} id={this.state.selectedShiftId} toggleRefresh={this.toggleRefresh} hotelManager={this.props.hotelManager} />
+                <FilterForm
+                    isSerie={this.state.isSerie}
+                    location={this.state.location}
+                    position={this.state.position}
+                    requestedBy={this.state.requested}
+                    handleCloseForm={this.handleCloseForm}
+                    closedForm={this.state.closedForm}
+                    id={this.state.selectedShiftId}
+                    toggleRefresh={this.toggleRefresh}
+                    hotelManager={this.props.hotelManager}
+                />
                 <div className="row">
                     <div className="col-md-12">
                         <div className="MasterShift-schedules">
@@ -135,6 +182,10 @@ class Schedules extends Component {
                                             cityId={this.state.cityId}
                                             positionId={this.state.positionId}
                                             shiftId={this.state.shiftId}
+                                            entityId={this.state.location}
+                                            saveTemplateShift={this.saveTemplateShift}
+                                            previousWeekShifts={this.previousWeekShifts}
+                                            changeViewType={this.changeViewType}
                                         />
                                     ) : ('')
                                 }

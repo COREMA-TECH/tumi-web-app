@@ -11,18 +11,22 @@ class SchedulesAccept extends Component {
         this.state = {
             id: 0,
             msg: '',
-            accept: true
+            accept: true,
+            comment: '',
+            status: false,
+            color: ''
         }
     }
 
-    handleChangeStatusShifts = (status, color) => {
+    handleChangeStatusShifts = (status, color, comment) => {
         this.props.client
             .mutate({
                 mutation: CHANGE_STATUS_SHIFT,
                 variables: {
                     id: this.state.id,
                     status: status,
-                    color: color
+                    color: color,
+                    comment: comment
                 }
             })
             .then((data) => {
@@ -53,21 +57,32 @@ class SchedulesAccept extends Component {
             msg += '<span class="font-weight-bold">Tell us the reason</span>';
         }
 
-        if (status != 0 && status == 2) {
+        if (status != 0) {
             this.setState({
                 id: id,
                 msg: msg,
-                accept: accept
-            },
-                // this.handleChangeStatusShifts(status, color)
-            );
-        } else {
-            this.setState({
-                id: id,
-                msg: msg,
-                accept: accept
+                accept: accept,
+                status: status,
+                color: color
+            }, () => {
+                if (status == 2)
+                    this.handleChangeStatusShifts(status, color, '')
             });
         }
+    }
+
+    handleSendComment = () => {
+        this.handleChangeStatusShifts(this.state.status, this.state.color, this.state.comment);
+    }
+
+    hanldeChange = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
     }
 
     render() {
@@ -77,8 +92,8 @@ class SchedulesAccept extends Component {
                 {
                     this.state.accept != 'true' ? (
                         <div className="mt-1 reason-wrapper">
-                            <textarea name="" id="" cols="30" rows="10" className="form-control"></textarea>
-                            <button className="btn btn-success mt-2">Send</button>
+                            <textarea name="" id="" cols="30" rows="10" name="comment" className="form-control" onChange={this.hanldeChange}></textarea>
+                            <button onClick={this.handleSendComment} className="btn btn-large btn-success mt-2">Send</button>
                         </div>
                     ) : ('')
                 }

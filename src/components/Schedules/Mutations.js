@@ -24,9 +24,9 @@ mutation createShiftDetail(
 `;
 
 export const CHANGE_STATUS_SHIFT = gql`
-mutation changeStatusShift($id: Int!,$status:Int!,$color:String!)
+mutation changeStatusShift($id: Int!,$status:Int!,$color:String!,$comment:String!)
 {
-  changeStatusShift(id:$id,status:$status,color: $color)
+  changeStatusShift(id:$id,status:$status,color: $color, comment: $comment)
   {
     id
   }
@@ -54,4 +54,42 @@ export const UPDATE_SHIFT = gql`
            comment
          }
  }
+`;
+
+export const DELETE_SHIFT = gql`
+  mutation disableShift($id: Int!) {
+    disableShift(id:$id){
+      id
+      entityId
+      isActive
+    }
+  }
+`;
+
+export const CREATE_TEMPLATE = gql`
+mutation gettemplate($id: [Int], $title: String, $endDate: Date) {
+  createTemplate (shiftIds:$id, title: $title, endDate: $endDate){
+    id
+  }
+}
+`;
+
+export const USE_TEMPLATE = gql`
+mutation createShiftBasedOnTemplate($templateId: Int, $endDate: Date, $userId: Int, $positionId: Int, $requestedBy: Int, $specialComment: String) {
+  createShiftBasedOnTemplate(templateId:$templateId,endDate:$endDate,userId: $userId,positionId: $positionId,requestedBy:$requestedBy,specialComment: $specialComment)
+  {
+    id
+    entityId
+  }
+}
+`;
+
+export const LOAD_PREVWEEK = gql`
+mutation PreviousWeekShift($endDate: Date, $positionId: Int, $entityId: Int, $userId: Int) {
+  create PreviousWeekShift(endDate: $endDate,positionId: $positionId,entityId: $entityId, userId: $userId)
+  {
+    id
+    entityId
+  }
+}
 `;

@@ -16,7 +16,8 @@ class PreFilter extends Component {
             saving: false,
             locations: [],
             positions: [],
-            contacts: []
+            contacts: [],
+            disabled: true
         }
     }
 
@@ -119,7 +120,8 @@ class PreFilter extends Component {
         const element = event.target;
         this.setState({
             [element.name]: element.value,
-            [element.name + "Name"]: text
+            [element.name + "Name"]: text,
+            disabled: false
         }, () => {
             if (element.name == 'location') {
                 this.getPosition();
@@ -139,6 +141,7 @@ class PreFilter extends Component {
     }
 
     render() {
+        const disabled = this.state.disabled;
         return (
             <Dialog maxWidth="sm" open={this.props.openPreFilter} onClose={this.props.handleClosePreFilter}>
                 <DialogContent>
@@ -147,21 +150,21 @@ class PreFilter extends Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <label htmlFor="">Location</label>
-                                    <select name="location" id="" className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="location" id="" className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
                                     </select>
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Position</label>
-                                    <select name="position" id="" className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="position" id="" disabled={disabled} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderPositionList()}
                                     </select>
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Requested By</label>
-                                    <select name="requested" id="" className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="requested" id="" disabled={disabled} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderContactsList()}
                                     </select>

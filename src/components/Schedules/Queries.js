@@ -77,7 +77,7 @@ export const GET_SHIFTS = gql`
 
 export const GET_SHIFTS_QUERY = gql`
     query GetInformation($id: Int){
-        ShiftDetail(id:$id) {
+        ShiftDetail( shiftDetail:{id:$id}) {
         id
         startDate
         endDate
@@ -130,10 +130,33 @@ export const GET_CONTACT_BY_QUERY = gql`
 	}
 `;
 
+
+export const GET_SHIFT_BY_DATE = gql`
+    query getshift($startDate: Date, $endDate: Date, $idPosition: Int, $entityId: Int) {
+        shiftDetailByWeek(startDate:$startDate,endDate: $endDate,idPosition:$idPosition, entityId:$entityId)
+        {
+            id
+            startDate
+            endDate
+            ShiftId
+        }
+    }
+`;
+
 export const GET_LIST_SHIFT_ID = gql`
     query getshiftid($ShiftId: Int) {
-        ShiftDetail (ShiftId:$ShiftId){
+        ShiftDetail ( shiftDetail:{ShiftId:$ShiftId}){
         id
         }
     }
+`;
+
+
+export const GET_TEMPLATES = gql`
+    query gettemplate($id: Int) {
+        template (id:$id){
+        id,
+        title
+    }
+}
 `;
