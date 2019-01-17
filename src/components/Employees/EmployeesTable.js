@@ -208,24 +208,6 @@ class EmployeesTable extends React.Component {
                                             }}
                                         >
                                             <CustomTableCell>
-                                                {
-                                                    row.idUsers == null ? (
-                                                        <Tooltip title="Assign Role">
-                                                            <button
-                                                                className="btn btn-outline-info float-left ml-1"
-                                                                disabled={this.props.loading}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    e.preventDefault();
-
-                                                                    this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
-                                                                }}
-                                                            >
-                                                                <i className="fas fa-plus"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                    ) : ''
-                                                }
                                                 <Tooltip title="Edit">
                                                     <button
                                                         className="btn btn-success float-left ml-1"
@@ -250,6 +232,24 @@ class EmployeesTable extends React.Component {
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </Tooltip>
+                                                {
+                                                    row.idUsers == null ? (
+                                                        <Tooltip title="Assign Role">
+                                                            <button
+                                                                className="btn btn-outline-info float-left ml-1"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    e.preventDefault();
+
+                                                                    this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-plus"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                    ) : ''
+                                                }
                                             </CustomTableCell>
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>
@@ -258,7 +258,7 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>
                                                 {
                                                     this.props.departments.map(item => {
-                                                        if(item.Id === row.Id_Deparment) {
+                                                        if (item.Id === row.Id_Deparment) {
                                                             return item.Name.trim()
                                                         }
                                                     })
@@ -267,7 +267,7 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>
                                                 {
                                                     this.props.titles.map(item => {
-                                                        if(item.Id === row.Contact_Title) {
+                                                        if (item.Id === row.Contact_Title) {
                                                             return item.Name.trim()
                                                         }
                                                     })
