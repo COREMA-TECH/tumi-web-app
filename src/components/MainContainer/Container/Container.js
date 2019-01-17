@@ -54,13 +54,15 @@ class Container extends Component {
 				loading: true
 			},
 			() => {
+
 				this.props.client
 					.query({
 						query: GET_ROLES_FORMS
 					})
 					.then(({ data }) => {
+
 						this.setState({
-							dataRolForm: data.getrolesforms,
+							dataRolForm: data.rolesforms,
 							loading: false
 						});
 					})
@@ -124,40 +126,34 @@ class Container extends Component {
 
 		return (
 			<div className="container-fluid">
-				<Route exact path="/home/application/info" component={ApplicationTabs} />
-				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
-				<Route exact path="/home/contract/add" component={Contract} />
-				<Route exact path="/home/contracts" component={MainContract} />
 				<Route exact path="/home/company" component={CompanyList} />
 				<Route exact path="/home/Properties" component={HotelList} />
-				<Route exact path="/home/company/edit" component={CreateCompany} />
-				<Route exact path="/home/company/add" component={CreateCompany} />
-				<Route exact path="/home/application" component={ApplicationList} />
-				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
-				<Route exact path="/home/work-orders" component={WorkOrders} />
-
+				<Route exact path="/home/contracts" component={MainContract} />
 				<Route exact path="/home/employees" component={Employees} />
-
-
-
-				<Route exact path="/home/Roles" component={CreateRole} />
-				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
-				<Route exact path="/home/Forms" component={CreateForms} />
-				<Route exact path="/home/Users" component={CreateUsers} />
-				<Route exact path="/Reset" component={ResetPassword} />
-				<Route exact path="/home/catalogs" component={Catalogs} />
-				<Route exact path="/home/signature" component={Signature} />
 				<Route exact path="/home/board/manager" component={Board} />
-				<Route exact path="/home/board/recruiter" component={BoardRecruiter} />
-				<Route exact path="/home/dashboard/manager" component={DashboardManager} />
-				<Route exact path="/home/dashboard/hotel" component={DashboardHotel} />
 				<Route exact path="/home/dashboard/recruiter" component={DashboardRecruiter} />
-				<Route exact path="/home/openings" component={WorkOrdersPosition} />
-
-				<Route exact path="/home/calendar" component={Calendar} />
+				<Route exact path="/home/dashboard/manager" component={DashboardManager} />
+				<Route exact path="/home/board/recruiter" component={BoardRecruiter} />
+				<Route exact path="/home/application" component={ApplicationList} />
+				<Route exact path="/home/work-orders" component={WorkOrders} />
 				<Route exact path="/home/schedules" component={Schedules} />
 				<Route exact path="/home/property/schedules" component={Property_Schedules} />
-
+				<Route exact path="/home/openings" component={WorkOrdersPosition} />
+				<Route exact path="/home/catalogs" component={Catalogs} />
+				<Route exact path="/home/Roles" component={CreateRole} />
+				<Route exact path="/home/Forms" component={CreateForms} />
+				<Route exact path="/home/RolesForms" component={CreateRolesForms} />
+				<Route exact path="/home/Users" component={CreateUsers} />
+				<Route exact path="/home/calendar" component={Calendar} />
+				<Route exact path="/home/application/info" component={ApplicationTabs} />
+				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
+				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
+				<Route exact path="/home/contract/add" component={Contract} />
+				<Route exact path="/home/dashboard/hotel" component={DashboardHotel} />
+				<Route exact path="/home/company/edit" component={CreateCompany} />
+				<Route exact path="/home/company/add" component={CreateCompany} />
+				<Route exact path="/Reset" component={ResetPassword} />
+				<Route exact path="/home/signature" component={Signature} />
 				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 			</div>
 		);

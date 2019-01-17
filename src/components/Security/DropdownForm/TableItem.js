@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {INSERT_ROL_FORM, UPDATE_ROL_FORM} from "./mutations";
+import React, { Component } from 'react';
+import { INSERT_ROL_FORM, UPDATE_ROL_FORM } from "./mutations";
 import withGlobalContent from "../../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 
@@ -13,14 +13,16 @@ class TableItem extends Component {
     }
 
     insertRolForm = (object) => {
+
         this.props.client
             .mutate({
                 mutation: INSERT_ROL_FORM,
                 variables: {
-                    input: object
+                    rolesforms: object
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
+
                 this.props.handleOpenSnackbar(
                     'success',
                     'Successfully saved',
@@ -31,6 +33,7 @@ class TableItem extends Component {
                 this.props.updateRolForms();
             })
             .catch(error => {
+
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error to save permission. Please, try again!',
@@ -45,10 +48,10 @@ class TableItem extends Component {
             .mutate({
                 mutation: UPDATE_ROL_FORM,
                 variables: {
-                    input: object
+                    rolesforms: object
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.props.handleOpenSnackbar(
                     'success',
                     'Successfully updated',
@@ -72,8 +75,6 @@ class TableItem extends Component {
         this.setState({
             checked: nextProps.asiggned
         });
-
-        console.log(this.state.checked);
     }
 
     render() {
@@ -88,6 +89,7 @@ class TableItem extends Component {
                                 checked: e.target.checked
                             }, () => {
                                 if (this.props.active) {
+
                                     let objectRolForm = {
                                         Id: this.props.idRolForm,
                                         IdRoles: this.props.rolId,
@@ -95,8 +97,8 @@ class TableItem extends Component {
                                         IsActive: 1,
                                         User_Created: 1,
                                         User_Updated: 1,
-                                        Date_Created: "'2018-08-14'",
-                                        Date_Updated: "'2018-08-14'"
+                                        Date_Created: "2018-08-14",
+                                        Date_Updated: "2018-08-14"
                                     };
 
                                     objectRolForm.IdForms = this.props.formId;
@@ -114,8 +116,8 @@ class TableItem extends Component {
                                         IsActive: 1,
                                         User_Created: 1,
                                         User_Updated: 1,
-                                        Date_Created: "'2018-08-14'",
-                                        Date_Updated: "'2018-08-14'"
+                                        Date_Created: "2018-08-14",
+                                        Date_Updated: "2018-08-14"
                                     };
 
                                     objectRolForm.IdForms = this.props.formId;

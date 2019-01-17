@@ -9,9 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DropdownBodyForm from "./DropdownBodyForm";
 import withApollo from "react-apollo/withApollo";
-import {GET_FORMS_QUERY} from "./queries";
+import { GET_FORMS_QUERY } from "./queries";
 import withGlobalContent from "../../Generic/Global";
-import {INSERT_ROL_FORM} from "./mutations";
+import { INSERT_ROL_FORM } from "./mutations";
 const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
@@ -49,7 +49,8 @@ class ControlledExpansionPanels extends React.Component {
                 .query({
                     query: GET_FORMS_QUERY,
                 })
-                .then(({data}) => {
+                .then(({ data }) => {
+                    console.log("GET_FORMS_QUERY ", data)
                     this.setState({
                         dataForm: data.getforms
                     })
@@ -73,7 +74,7 @@ class ControlledExpansionPanels extends React.Component {
         });
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.getFormsData();
     }
 
@@ -82,7 +83,7 @@ class ControlledExpansionPanels extends React.Component {
         const { expanded } = this.state;
         let items = this.props.data;
 
-        if(this.state.loadingData){
+        if (this.state.loadingData) {
             return <div></div>
         }
 
@@ -90,11 +91,12 @@ class ControlledExpansionPanels extends React.Component {
             <div className={classes.root}>
                 {
                     items.map(item => {
+
                         return (
-                            <ExpansionPanel  className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
+                            <ExpansionPanel className="panel-dropdown" onChange={this.handleChange(uuidv4())}>
                                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
                                     <Typography className={classes.heading}>{item.Description}</Typography>
-                                    <Typography className={classes.secondaryHeading}>0 Options</Typography>
+
                                 </ExpansionPanelSummary>
                                 <ExpansionPanelDetails className="panel-body">
                                     <Typography>

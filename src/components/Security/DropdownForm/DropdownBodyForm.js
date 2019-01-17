@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -12,10 +12,10 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import {lighten} from '@material-ui/core/styles/colorManipulator';
-import {INSERT_ROL_FORM} from "./mutations";
+import { lighten } from '@material-ui/core/styles/colorManipulator';
+import { INSERT_ROL_FORM } from "./mutations";
 import withApollo from "react-apollo/withApollo";
-import {GET_ROL_FORMS_QUERY} from "./queries";
+import { GET_ROL_FORMS_QUERY } from "./queries";
 import withGlobalContent from "../../Generic/Global";
 import TableItem from "./TableItem";
 
@@ -23,7 +23,7 @@ let counter = 0;
 
 function createData(name, calories, fat, carbs, protein) {
     counter += 1;
-    return {id: counter, name, calories, fat, carbs, protein};
+    return { id: counter, name, calories, fat, carbs, protein };
 }
 
 function desc(a, b, orderBy) {
@@ -51,9 +51,9 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-    {id: 'code', numeric: false, disablePadding: true, label: 'Code'},
-    {id: 'form', numeric: true, disablePadding: false, label: 'Form'},
-    {id: 'url', numeric: true, disablePadding: false, label: 'URL Value'},
+    { id: 'code', numeric: false, disablePadding: true, label: 'Code' },
+    { id: 'form', numeric: true, disablePadding: false, label: 'Form' },
+    { id: 'url', numeric: true, disablePadding: false, label: 'URL Value' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -62,7 +62,7 @@ class EnhancedTableHead extends React.Component {
     };
 
     render() {
-        const {onSelectAllClick, order, orderBy, numSelected, rowCount} = this.props;
+        const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
         return (
             <TableHead>
@@ -140,7 +140,7 @@ const toolbarStyles = theme => ({
 });
 
 let EnhancedTableToolbar = props => {
-    const {numSelected, classes} = props;
+    const { numSelected, classes } = props;
 
     return (
         <Toolbar
@@ -154,12 +154,12 @@ let EnhancedTableToolbar = props => {
                         {numSelected} selected
                     </Typography>
                 ) : (
-                    <Typography variant="h6" id="tableTitle">
-                        Roles
+                        <Typography variant="h6" id="tableTitle">
+                            Roles
                     </Typography>
-                )}
+                    )}
             </div>
-            <div className={classes.spacer}/>
+            <div className={classes.spacer} />
             <div className={classes.actions}>
                 {numSelected > 0 ? (
                     <Tooltip title="Assign">
@@ -172,12 +172,12 @@ let EnhancedTableToolbar = props => {
                         </button>
                     </Tooltip>
                 ) : (
-                    <Tooltip title="Filter list">
-                        <IconButton aria-label="Filter list">
-                            <FilterListIcon/>
-                        </IconButton>
-                    </Tooltip>
-                )}
+                        <Tooltip title="Filter list">
+                            <IconButton aria-label="Filter list">
+                                <FilterListIcon />
+                            </IconButton>
+                        </Tooltip>
+                    )}
             </div>
         </Toolbar>
     );
@@ -222,10 +222,10 @@ class EnhancedTable extends React.Component {
             .mutate({
                 mutation: INSERT_ROL_FORM,
                 variables: {
-                    input: object
+                    rolesforms: object
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 // Show a snackbar with a success message
                 this.props.handleOpenSnackbar(
                     'success',
@@ -265,14 +265,16 @@ class EnhancedTable extends React.Component {
     };
 
     getRolForms = () => {
+      
         this.props.client
             .query({
                 query: GET_ROL_FORMS_QUERY,
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
+        
                 this.setState({
-                    dataRolForm: data.getrolesforms
+                    dataRolForm: data.rolesforms
                 });
             })
             .catch(error => {
@@ -295,45 +297,45 @@ class EnhancedTable extends React.Component {
         return (
             <table className="table">
                 <thead className="thead-dark">
-                <tr>
-                    <th scope="col">Assigned</th>
-                    <th scope="col">Code</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Value</th>
-                </tr>
+                    <tr>
+                        <th scope="col">Assigned</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Value</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {forms.map((item) => {
-                    let checked = false;
-                    let isActive = false;
-                    let idRolForm = 0;
+                    {forms.map((item) => {
+                        let checked = false;
+                        let isActive = false;
+                        let idRolForm = 0;
 
-                    this.state.dataRolForm.map((itemRolForm) => {
-                        if (this.props.rolId === itemRolForm.IdRoles) {
-                            if (itemRolForm.IdForms === item.Id) {
-                                if (itemRolForm.IsActive === 1) {
-                                    checked = true;
+                        this.state.dataRolForm.map((itemRolForm) => {
+                            if (this.props.rolId === itemRolForm.IdRoles) {
+                                if (itemRolForm.IdForms === item.Id) {
+                                    if (itemRolForm.IsActive === 1) {
+                                        checked = true;
+                                    }
+                                    isActive = true;
+                                    idRolForm = itemRolForm.Id;
                                 }
-                                isActive = true;
-                                idRolForm = itemRolForm.Id;
                             }
-                        }
-                    });
+                        });
 
-                    return (
-                        <TableItem
-                            idRolForm={idRolForm}
-                            formId={item.Id}
-                            rolId={this.props.rolId}
-                            active={isActive}
-                            asiggned={checked}
-                            code={item.Code}
-                            name={item.Name}
-                            url={item.Value}
-                            updateRolForms={this.getRolForms}
-                        />
-                    );
-                })}
+                        return (
+                            <TableItem
+                                idRolForm={idRolForm}
+                                formId={item.Id}
+                                rolId={this.props.rolId}
+                                active={isActive}
+                                asiggned={checked}
+                                code={item.Code}
+                                name={item.Name}
+                                url={item.Value}
+                                updateRolForms={this.getRolForms}
+                            />
+                        );
+                    })}
                 </tbody>
             </table>
         );

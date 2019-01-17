@@ -91,6 +91,9 @@ class Login extends Component {
 				AllowExport
 				IsActive
 				Token
+				Id_Roles
+				IdSchedulesEmployees
+				IdSchedulesManager
 			}
 		}
 	`;
@@ -134,6 +137,7 @@ class Login extends Component {
 			.then((data) => {
 				if (data.data.getvalid_users) {
 					const user = data.data.getvalid_users;
+					console.log("usuario login ", user)
 					if (user.IsActive == 0) {
 						localStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
@@ -149,6 +153,10 @@ class Login extends Component {
 							localStorage.setItem('LoginId', user.Id);
 							localStorage.setItem('FullName', user.Full_Name);
 							localStorage.setItem('Token', user.Token);
+							localStorage.setItem('IdRoles', user.Id_Roles);
+							localStorage.setItem('IdSchedulesEmployees', user.IdSchedulesEmployees);
+							localStorage.setItem('IdSchedulesManager', user.IdSchedulesManager);
+
 
 							if (user.IsAdmin == 1) {
 								localStorage.setItem('IsAdmin', true);

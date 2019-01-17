@@ -19,7 +19,7 @@ export const GET_FORMS_QUERY = gql`
  */
 export const GET_ROL_FORMS_QUERY = gql`
     {
-        getrolesforms(Id: null){
+        rolesforms(IsActive: 1){
             Id
             IdRoles
             IdForms

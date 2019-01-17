@@ -17,6 +17,11 @@ class MainContainer extends Component {
 		else title = pathname[2];
 
 		title = title == 'Company' ? 'Management' : title;
+		/*if (title== 'Company' && 1==0)
+		{
+
+		}else
+		{window.location.href='https://google.com.ni'}*/
 		return title;
 	};
 
