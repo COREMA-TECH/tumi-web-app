@@ -1243,27 +1243,29 @@ class Employees extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <div className="container">
-                            <div className="row">
-                                <div className="col-md-2">
-                                    <label htmlFor="">* First Name</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">* Last Name</label>
-                                </div>
-                                <div className="col-md-1">
-                                    <label htmlFor="">Email Address</label>
-                                </div>
-                                <div className="col-md-1">
-                                    <label htmlFor="">* Phone Number</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor=""> Hotel</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">* Department</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">* Position</label>
+                            <div className="d-none d-lg-block">
+                                <div className="row">
+                                    <div className="col">
+                                        <label htmlFor="">* First Name</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">* Last Name</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">Email Address</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">* Phone Number</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor=""> Hotel</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">* Department</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">* Position</label>
+                                    </div>
                                 </div>
                             </div>
                             {this.state.rowsInput.map((item, index) => {
