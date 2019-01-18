@@ -105,17 +105,21 @@ class WorkOrdersForm extends Component {
             positions: [],
             recruiters: [],
             contacts: [],
+            Shift: [],
 
             ...this._states
         };
     }
 
+    /*    componentWillMount() {
+            console.log("Aqui estamos en shiftssssss ", this.state.Shift)
+        }*/
+
     ReceiveStatus = false;
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.item && !this.state.openModal) {
-            // console.log("Esto es la props UNSAFE_componentWillReceiveProps ", nextProps.item)
-            // console.log("aqui esta el estado ", nextProps.item.dayWeek.indexOf('TU'))
+
             this.setState(
                 {
                     id: nextProps.item.id,
@@ -151,7 +155,12 @@ class WorkOrdersForm extends Component {
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
 
-                    this.getEmployees(() => { });
+                    this.getEmployees(() => {
+                        this.getDetailShift(() => {
+                        });
+                    });
+                    //this.getEmployees();
+
                     this.ReceiveStatus = true;
                 }
             );
@@ -188,6 +197,8 @@ class WorkOrdersForm extends Component {
             openModal: nextProps.openModal
         });
     }
+
+
 
     UNSAFE_componentWillMount() {
 
@@ -448,7 +459,7 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
-                console.log("positions ", data.getposition)
+
                 this.setState({
                     positions: data.getposition,
                     PositionRateId: PositionId
@@ -473,6 +484,27 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
+    /*  getEmployees = (func = () => { }) => {
+          console.log("estoy en el getemployees ", this.state.id)
+          this.props.client
+              .query({
+                  query: GET_SHIFTS,
+                  variables: { WorkOrderId: this.state.id }
+              })
+              .then(({ data }) => {
+                  let shiftIdData = [];
+                  let count = 0
+  
+                  data.ShiftWorkOrder.map((item) => {
+                      shiftIdData[count] = item.ShiftId
+                      count = count + 1
+                  })
+                  this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
+                      func
+  
+              })
+              .catch();
+      };*/
     getEmployees = (func = () => { }) => {
         console.log("estoy en el getemployees ", this.state.id)
         this.props.client
@@ -481,22 +513,30 @@ class WorkOrdersForm extends Component {
                 variables: { WorkOrderId: this.state.id }
             })
             .then(({ data }) => {
-                let shiftIdData = [];
-                let count = 0
-
+                console.log("Aqui estamos en get employees ", data)
+                /*this.setState({
+                    Shift: data
+                }*/
                 data.ShiftWorkOrder.map((item) => {
-                    shiftIdData[count] = item.ShiftId
-                    count = count + 1
-                })
-                this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
+                    this.getDetailShift(item.ShiftId);
+                }),
                     func
-
             })
             .catch();
     };
 
+    /*getDetailShift = (func = () => { }) => {
+
+        this.state.Shift.ShiftWorkOrder.map((item) => {
+            console.log("Aqui estamos en this.state.Shift ",item. ShiftId)
+
+        })
+            ,
+            func
+    };*/
+
     getDetailShift = (id) => {
-        console.log("estoy en el getemployees ", id)
+        console.log("estoy en el getDetailShift ", id)
         this.props.client
             .query({
                 query: GET_DETAIL_SHIFT,
@@ -504,12 +544,18 @@ class WorkOrdersForm extends Component {
             })
             .then(({ data }) => {
                 console.log("Estoy trayendo el details de shift ", data)
-                this.setState({
-                    employees: data.ShiftDetail[0].detailEmployee,
-                    employeesarray: data.ShiftDetail
-                });
 
-                console.log("este son los empleados ", this.state.employees)
+                if (data.detailEmployee != null) {
+                    data.detailEmployee.map((item) => {
+                        console.log("Estoy data.detailEmployee ", item)
+                    })
+                }
+                /* this.setState({
+                     employees: data.ShiftDetail[0].detailEmployee,
+                     employeesarray: data.ShiftDetail
+                 });
+
+             console.log("este son los empleados ", this.state.employees)*/
             })
             .catch();
     };
@@ -575,10 +621,11 @@ class WorkOrdersForm extends Component {
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
-        if (this.state.employees != null) {
+        /*if (this.state.employees != null) {
             console.log("Aqui si hay iusuaiors ", this.state.employees.length)
 
         } else { console.log("No hay usuarios ") }
+        */
         return (
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
@@ -809,7 +856,7 @@ class WorkOrdersForm extends Component {
                                                             {
 
                                                                 this.state.employeesarray.map((item) => {
-                                                                    console.log("esto son los items ", item)
+
                                                                     if (item.detailEmployee) {
                                                                         return (
                                                                             <TableRow
