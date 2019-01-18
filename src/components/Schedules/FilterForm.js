@@ -250,6 +250,7 @@ class FilterForm extends Component {
                 const shiftDetail = data.ShiftDetail[0];
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
+                console.log(shiftDetail)
                 this.setState({
                     startDate: this.props.isSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
                     endDate: this.props.isSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
@@ -260,7 +261,7 @@ class FilterForm extends Component {
                     color: shiftDetail.shift.color,
                     selectedDetailId: id,
                     shiftId: shiftDetail.shift.id,
-                    status: shiftDetail.shift.status,
+                    status: shiftDetail.status,
                     openShift: !shiftDetail.detailEmployee,//Is open shift when there is no employee associated to a Shift
                     workOrderId: shiftDetail.shift.workOrder ? shiftDetail.shift.workOrder.id : 0,
                     dayWeeks: shiftDetail.shift.dayWeek,
@@ -551,7 +552,7 @@ class FilterForm extends Component {
 
     render() {
         const isEdition = this.state.selectedDetailId != 0;
-        const allowEdit = this.state.status == 0 || this.state.status == 1;
+        const allowEdit = this.state.status < 2;
 
         const isHotelManger = this.props.hotelManager;
         return <div>

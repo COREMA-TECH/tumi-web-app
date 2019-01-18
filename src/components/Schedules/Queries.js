@@ -86,6 +86,8 @@ export const GET_SHIFTS_QUERY = gql`
         startTime
         endTime
         ShiftId
+        color
+        status
         shift{
             id
             entityId

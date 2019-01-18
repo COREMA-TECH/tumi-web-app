@@ -146,7 +146,7 @@ class PreFilter extends Component {
     render() {
         const disabled = this.state.disabled;
         return (
-            <Dialog maxWidth="sm" open={this.props.openPreFilter} onClose={this.props.handleClosePreFilter}>
+            <Dialog maxWidth="sm" open={this.props.openPreFilter} >
                 <form action="" onSubmit={this.handleApplyFilters}>
                     <DialogContent>
                         <div className="container">
