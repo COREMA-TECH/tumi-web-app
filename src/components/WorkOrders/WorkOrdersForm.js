@@ -545,11 +545,14 @@ class WorkOrdersForm extends Component {
             .then(({ data }) => {
                 console.log("Estoy trayendo el details de shift ", data)
 
-                if (data.detailEmployee != null) {
-                    data.detailEmployee.map((item) => {
-                        console.log("Estoy data.detailEmployee ", item)
-                    })
-                }
+                data.ShiftDetail.map((item) => {
+                    console.log("Estoy item shift ", item)
+                    /* if (item.detailEmployee != null) {
+                         item.detailEmployee.map((item) => {
+                             console.log("Estoy data.detailEmployee ", item)
+                         })
+                     }*/
+                })
                 /* this.setState({
                      employees: data.ShiftDetail[0].detailEmployee,
                      employeesarray: data.ShiftDetail

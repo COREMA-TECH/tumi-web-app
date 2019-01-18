@@ -163,7 +163,7 @@ class Filters extends Component {
     }
 
     loadTemplate = (id) => {
-        let endDayOfWeek = moment().endOf('week').format();
+        let endDayOfWeek = this.props.templateEndDate;
         let positionId = this.props.positionId;
         let requestedBy = this.props.requested;
         let userId = localStorage.getItem('LoginId');
@@ -188,7 +188,6 @@ class Filters extends Component {
                 this.props.toggleRefresh();
             })
             .catch((error) => {
-                console.log(error)
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error saving template'
@@ -197,7 +196,7 @@ class Filters extends Component {
     }
 
     loadPreviousWeek = () => {
-        let endDayOfWeek = moment().endOf('week').subtract(7, "days").format();
+        let endDayOfWeek = this.props.templateEndDate;
         let positionId = this.props.positionId;
         let entiotyId = this.props.location;
         let userId = localStorage.getItem('LoginId');
