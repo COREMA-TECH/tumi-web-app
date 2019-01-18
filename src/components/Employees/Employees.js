@@ -1233,7 +1233,7 @@ class Employees extends Component {
                 open={this.state.openModal}
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth="lg"
+                maxWidth="xl"
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
                     <DialogTitle style={{ padding: "0px" }}>
@@ -1250,16 +1250,16 @@ class Employees extends Component {
                                 <div className="col-md-2">
                                     <label htmlFor="">* Last Name</label>
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-md-1">
                                     <label htmlFor="">Email Address</label>
                                 </div>
-                                <div className="col-md-2">
+                                <div className="col-md-1">
                                     <label htmlFor="">* Phone Number</label>
                                 </div>
-                                <div className="col-md-1">
+                                <div className="col-md-2">
                                     <label htmlFor=""> Hotel</label>
                                 </div>
-                                <div className="col-md-1">
+                                <div className="col-md-2">
                                     <label htmlFor="">* Department</label>
                                 </div>
                                 <div className="col-md-2">
@@ -1331,7 +1331,7 @@ class Employees extends Component {
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
                     aria-labelledby="responsive-dialog-title"
-                    maxWidth="lg"
+                    maxWidth="xl"
                 >
                     <form
                         id="employee-edit-form"
@@ -1351,18 +1351,18 @@ class Employees extends Component {
                                     <div className="col-md-2">
                                         <label htmlFor="">* Last Name</label>
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col-md-1">
                                         <label htmlFor="">Email Address</label>
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col-md-1">
                                         <label htmlFor="">* Phone Number</label>
                                     </div>
 
-                                    <div className="col-md-1">
+                                    <div className="col-md-2">
                                         <label htmlFor="">* Hotels</label>
                                     </div>
 
-                                    <div className="col-md-1">
+                                    <div className="col-md-2">
                                         <label htmlFor="">* Department</label>
                                     </div>
                                     <div className="col-md-2">
@@ -1401,7 +1401,7 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col-md-1">
                                         <input
                                             type="email"
                                             name="email"
@@ -1415,7 +1415,7 @@ class Employees extends Component {
                                             minLength="3"
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col-md-1">
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -1431,7 +1431,7 @@ class Employees extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
-                                    <div className="col-md-1">
+                                    <div className="col-md-2">
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1452,7 +1452,7 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-md-1">
+                                    <div className="col-md-2">
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
