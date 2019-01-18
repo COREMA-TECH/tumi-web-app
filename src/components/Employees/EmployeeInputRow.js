@@ -51,6 +51,7 @@ class EmployeeInputRow extends Component {
                         name="firstName"
                         className="form-control"
                         required={!this.state.lastRow}
+                        maxLength={50}
                     />
                 </div>
                 <div className="col">
@@ -64,10 +65,11 @@ class EmployeeInputRow extends Component {
                         name="lastName"
                         className="form-control"
                         required={!this.state.lastRow}
+                        maxLength={50}
                     />
                 </div>
                 <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Email Address</label>
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Email Address</label>
                     <input
                         onChange={(e) => {
                             this.props.onchange(email, e.target.value);
@@ -76,10 +78,11 @@ class EmployeeInputRow extends Component {
                         type="email"
                         name="email"
                         className="form-control"
+                        maxLength={100}
                     />
                 </div>
                 <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Phone Number</label>
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Phone Number</label>
                     <InputMask
                         id="number"
                         name="number"
@@ -104,7 +107,6 @@ class EmployeeInputRow extends Component {
                             })
                         }}
                         value={this.state.hotelEdit}
-                        required={!this.state.lastRow}
                     >
                         <option>Select a option</option>
                         {
@@ -117,7 +119,7 @@ class EmployeeInputRow extends Component {
                     </select>
                 </div>
                 <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Department</label>
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
                     <AutoComplete
                         id="department"
                         name="department"
@@ -135,26 +137,10 @@ class EmployeeInputRow extends Component {
                                 department: value
                             })
                         }}
-                        required={!this.state.lastRow}
                     />
-
-                    {/*<select*/}
-                    {/*className="form-control"*/}
-                    {/*onChange={(e) => {*/}
-                    {/*this.props.onchange(department, e.target.value);*/}
-                    {/*}}>*/}
-                    {/*<option>Select a option</option>*/}
-                    {/*{*/}
-                    {/*this.props.departments.map(item => {*/}
-                    {/*return (*/}
-                    {/*<option value={item.Id}>{item.Name.trim()}</option>*/}
-                    {/*)*/}
-                    {/*})*/}
-                    {/*}*/}
-                    {/*</select>*/}
                 </div>
                 <div className="col">
-                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Position</label>
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
                     <AutoComplete
                         id="contactTitle"
                         name="contactTitle"
@@ -172,22 +158,7 @@ class EmployeeInputRow extends Component {
                                 contactTitle: value
                             })
                         }}
-                        required={!this.state.lastRow}
                     />
-                    {/*<select*/}
-                    {/*className="form-control"*/}
-                    {/*onChange={(e) => {*/}
-                    {/*this.props.onchange(contactTitle, e.target.value);*/}
-                    {/*}}>*/}
-                    {/*<option>Select a option</option>*/}
-                    {/*{*/}
-                    {/*this.props.titles.map(item => {*/}
-                    {/*return (*/}
-                    {/*<option value={item.Id}>{item.Name.trim()}</option>*/}
-                    {/*)*/}
-                    {/*})*/}
-                    {/*}*/}
-                    {/*</select>*/}
                 </div>
             </div >
         );

@@ -1253,16 +1253,16 @@ class Employees extends Component {
                                         <label htmlFor="">Email Address</label>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">* Phone Number</label>
+                                        <label htmlFor="">Phone Number</label>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor=""> Hotel</label>
+                                        <label htmlFor="">Hotel</label>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">* Department</label>
+                                        <label htmlFor="">Department</label>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="">* Position</label>
+                                        <label htmlFor="">Position</label>
                                     </div>
                                 </div>
                             </div>
@@ -1356,7 +1356,7 @@ class Employees extends Component {
                                             <label htmlFor="">Email Address</label>
                                         </div>
                                         <div className="col">
-                                            <label htmlFor="">* Phone Number</label>
+                                            <label htmlFor="">Phone Number</label>
                                         </div>
 
                                         <div className="col">
@@ -1364,10 +1364,10 @@ class Employees extends Component {
                                         </div>
 
                                         <div className="col">
-                                            <label htmlFor="">* Department</label>
+                                            <label htmlFor="">Department</label>
                                         </div>
                                         <div className="col">
-                                            <label htmlFor="">* Position</label>
+                                            <label htmlFor="">Position</label>
                                         </div>
 
                                     </div>
@@ -1386,6 +1386,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.firstNameEdit}
                                             minLength="3"
+                                            maxLength={50}
                                             required
                                         />
                                     </div>
@@ -1402,11 +1403,12 @@ class Employees extends Component {
                                             }}
                                             value={this.state.lastNameEdit}
                                             minLength="3"
+                                            maxLength={50}
                                             required
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Email Address</label>
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Email Address</label>
                                         <input
                                             type="email"
                                             name="email"
@@ -1418,10 +1420,11 @@ class Employees extends Component {
                                             }}
                                             value={this.state.emailEdit}
                                             minLength="3"
+                                            maxLength={100}
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Phone Number</label>
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Phone Number</label>
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -1435,7 +1438,6 @@ class Employees extends Component {
                                             value={this.state.numberEdit}
                                             placeholder="+(999) 999-9999"
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
-                                            required
                                         />
                                     </div>
                                     <div className="col">
@@ -1461,7 +1463,7 @@ class Employees extends Component {
                                         </select>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Department</label>
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
                                         <select
                                             name="departmentEmployee"
                                             className="form-control"
@@ -1471,9 +1473,8 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.departmentEdit}
-                                            required
                                         >
-                                            <option value="" >Select a option</option>
+                                            <option>Select a option</option>
                                             {
 
                                                 this.state.departments.map(item => {
@@ -1485,7 +1486,7 @@ class Employees extends Component {
                                         </select>
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Position</label>
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1494,9 +1495,8 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.contactTitleEdit}
-                                            required
                                         >
-                                            <option value="">Select a option</option>
+                                            <option >Select a option</option>
                                             {
                                                 this.state.titles.map(item => {
                                                     return (
