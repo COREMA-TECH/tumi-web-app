@@ -1346,34 +1346,37 @@ class Employees extends Component {
                         </DialogTitle>
                         <DialogContent>
                             <div className="container">
-                                <div className="row">
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* First Name</label>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Last Name</label>
-                                    </div>
-                                    <div className="col-md-1">
-                                        <label htmlFor="">Email Address</label>
-                                    </div>
-                                    <div className="col-md-1">
-                                        <label htmlFor="">* Phone Number</label>
-                                    </div>
+                                <div className="d-none d-lg-block">
+                                    <div className="row">
+                                        <div className="col">
+                                            <label htmlFor="">* First Name</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">* Last Name</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">Email Address</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">* Phone Number</label>
+                                        </div>
 
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Hotels</label>
-                                    </div>
+                                        <div className="col">
+                                            <label htmlFor="">* Hotels</label>
+                                        </div>
 
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Department</label>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Position</label>
-                                    </div>
+                                        <div className="col">
+                                            <label htmlFor="">* Department</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">* Position</label>
+                                        </div>
 
+                                    </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-2">
+                                <div className="row Employees-row">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
                                         <input
                                             type="text"
                                             name="firstName"
@@ -1388,7 +1391,8 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Last Name</label>
                                         <input
                                             type="text"
                                             name="lastName"
@@ -1403,7 +1407,8 @@ class Employees extends Component {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-1">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Email Address</label>
                                         <input
                                             type="email"
                                             name="email"
@@ -1417,7 +1422,8 @@ class Employees extends Component {
                                             minLength="3"
                                         />
                                     </div>
-                                    <div className="col-md-1">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Phone Number</label>
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -1433,7 +1439,8 @@ class Employees extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotel</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1454,7 +1461,8 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Department</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1475,7 +1483,8 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
