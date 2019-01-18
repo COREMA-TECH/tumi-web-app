@@ -368,6 +368,9 @@ class Shifts extends Component {
                         <button className="btn btn-default btn-not-rounded" type="button" onClick={() => { this.selectTypeEdition(true) }}>
                             Edit Serie
                         </button>
+                        <button className="btn btn-danger btn-not-rounded mr-1" type="button" onClick={this.props.openEditConfirm}>
+                            Cancel
+                        </button>
                     </DialogActions>
                 </Dialog>
             </div>

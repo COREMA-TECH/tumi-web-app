@@ -14,7 +14,8 @@ class Schedules extends Component {
         shiftId: null,
         selectedShiftId: 0,
         refresh: true,
-        isSerie: false
+        isSerie: false,
+        isEditFilter: false
     };
 
     constructor() {
@@ -22,7 +23,6 @@ class Schedules extends Component {
         this.state = {
             ...this.INITIAL_STATE,
             closedForm: true,
-            openPreFilter: false,
             location: null,
             position: null,
             openPreFilter: true,
@@ -33,7 +33,8 @@ class Schedules extends Component {
             previousWeekShifts: [],
             templateStartDate: '',
             templateEndDate: '',
-            viewType: 1
+            viewType: 1,
+            filterFormDiabled: false
         }
     }
 
@@ -95,7 +96,8 @@ class Schedules extends Component {
     handleClosePreFilter = (event) => {
         event.preventDefault();
         this.setState({
-            openPreFilter: true
+            openPreFilter: !this.state.openPreFilter,
+            isEditFilter: true
         });
     }
 
@@ -120,7 +122,7 @@ class Schedules extends Component {
 
     openEditConfirm = () => {
         this.setState(() => {
-            return { editConfirmOpened: true }
+            return { editConfirmOpened: !this.state.editConfirmOpened }
         });
     }
 
@@ -139,6 +141,8 @@ class Schedules extends Component {
                     openPreFilter={this.state.openPreFilter}
                     handleGetTextofFilters={this.handleGetTextofFilters}
                     templateShifts={this.templateShifts}
+                    handleClosePreFilter={this.handleClosePreFilter}
+                    isEditFilter={this.state.isEditFilter}
                 />
                 <Filters
                     handleClosePreFilter={this.handleClosePreFilter}
