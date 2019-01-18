@@ -93,3 +93,11 @@ mutation PreviousWeekShift($endDate: Date, $positionId: Int, $entityId: Int, $us
   }
 }
 `;
+
+export const PUBLISH_ALL = gql`
+  mutation PublishAll($ids: [Int]){
+    PublishAll(ids: $ids ){
+      id
+    }
+  }
+`
