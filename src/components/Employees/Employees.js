@@ -426,7 +426,6 @@ class Employees extends Component {
      */
     handleClickOpenUserModal = (email, phoneNumber, idEmployee) => {
         this.setState({ openUserModal: true });
-        console.log("Employee ID: ", idEmployee);
         this.setState({
             email: email,
             number: phoneNumber,
@@ -523,7 +522,6 @@ class Employees extends Component {
             })
             .then((data) => {
                 if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-                    console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
                     this.setState({
                         contacts: data.data.getsupervisor,
                         regions: data.data.getcatalogitem,
@@ -668,7 +666,6 @@ class Employees extends Component {
                 [name]: id
             },
             () => {
-                console.log("Id de la fila ", id);
                 this.validateField(name, id);
             }
         );
@@ -929,6 +926,7 @@ class Employees extends Component {
     }
 
     render() {
+
         const { classes } = this.props;
         const { fullScreen } = this.props;
 
@@ -1047,7 +1045,7 @@ class Employees extends Component {
                                         }}
                                         value={this.state.idRol}
                                     >
-                                        <option value="">Select a rol</option>
+                                        <option value="">Select a role</option>
                                         {this.state.roles.map((item) => (
                                             <option key={item.Id} value={item.Id}>
                                                 {item.Name}
@@ -1233,7 +1231,7 @@ class Employees extends Component {
                 open={this.state.openModal}
                 onClose={this.handleCloseModal}
                 aria-labelledby="responsive-dialog-title"
-                maxWidth="lg"
+                maxWidth="xl"
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
                     <DialogTitle style={{ padding: "0px" }}>
@@ -1243,27 +1241,29 @@ class Employees extends Component {
                     </DialogTitle>
                     <DialogContent>
                         <div className="container">
-                            <div className="row">
-                                <div className="col-md-2">
-                                    <label htmlFor="">* First Name</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">* Last Name</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">Email Address</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">* Phone Number</label>
-                                </div>
-                                <div className="col-md-1">
-                                    <label htmlFor=""> Hotel</label>
-                                </div>
-                                <div className="col-md-1">
-                                    <label htmlFor="">* Department</label>
-                                </div>
-                                <div className="col-md-2">
-                                    <label htmlFor="">* Position</label>
+                            <div className="d-none d-lg-block">
+                                <div className="row">
+                                    <div className="col">
+                                        <label htmlFor="">* First Name</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">* Last Name</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">Email Address</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">Phone Number</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">Hotel</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">Department</label>
+                                    </div>
+                                    <div className="col">
+                                        <label htmlFor="">Position</label>
+                                    </div>
                                 </div>
                             </div>
                             {this.state.rowsInput.map((item, index) => {
@@ -1283,14 +1283,14 @@ class Employees extends Component {
                     <DialogActions style={{ margin: "20px 20px" }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
-                                <button
+                                {this.state.rowsInput.length > 1 && <button
                                     type="submit"
                                     variant="fab"
                                     className="btn btn-success"
                                 >
                                     Save {!this.state.progressNewEmployee && <i class="fas fa-save" />}
                                     {this.state.progressNewEmployee && <i class="fas fa-spinner fa-spin" />}
-                                </button>
+                                </button>}
                             </div>
                         </div>
                         <div className={classes.root}>
@@ -1331,7 +1331,7 @@ class Employees extends Component {
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
                     aria-labelledby="responsive-dialog-title"
-                    maxWidth="lg"
+                    maxWidth="xl"
                 >
                     <form
                         id="employee-edit-form"
@@ -1344,34 +1344,37 @@ class Employees extends Component {
                         </DialogTitle>
                         <DialogContent>
                             <div className="container">
-                                <div className="row">
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* First Name</label>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Last Name</label>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="">Email Address</label>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Phone Number</label>
-                                    </div>
+                                <div className="d-none d-lg-block">
+                                    <div className="row">
+                                        <div className="col">
+                                            <label htmlFor="">* First Name</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">* Last Name</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">Email Address</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">Phone Number</label>
+                                        </div>
 
-                                    <div className="col-md-1">
-                                        <label htmlFor="">* Hotels</label>
-                                    </div>
+                                        <div className="col">
+                                            <label htmlFor="">Hotel</label>
+                                        </div>
 
-                                    <div className="col-md-1">
-                                        <label htmlFor="">* Department</label>
-                                    </div>
-                                    <div className="col-md-2">
-                                        <label htmlFor="">* Position</label>
-                                    </div>
+                                        <div className="col">
+                                            <label htmlFor="">Department</label>
+                                        </div>
+                                        <div className="col">
+                                            <label htmlFor="">Position</label>
+                                        </div>
 
+                                    </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-2">
+                                <div className="row Employees-row">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
                                         <input
                                             type="text"
                                             name="firstName"
@@ -1383,10 +1386,12 @@ class Employees extends Component {
                                             }}
                                             value={this.state.firstNameEdit}
                                             minLength="3"
+                                            maxLength={50}
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Last Name</label>
                                         <input
                                             type="text"
                                             name="lastName"
@@ -1398,10 +1403,12 @@ class Employees extends Component {
                                             }}
                                             value={this.state.lastNameEdit}
                                             minLength="3"
+                                            maxLength={50}
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Email Address</label>
                                         <input
                                             type="email"
                                             name="email"
@@ -1413,9 +1420,11 @@ class Employees extends Component {
                                             }}
                                             value={this.state.emailEdit}
                                             minLength="3"
+                                            maxLength={100}
                                         />
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Phone Number</label>
                                         <InputMask
                                             name="number"
                                             mask="+(999) 999-9999"
@@ -1431,7 +1440,8 @@ class Employees extends Component {
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                                         />
                                     </div>
-                                    <div className="col-md-1">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotel</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1440,7 +1450,7 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.hotelEdit}
-                                            required
+
                                         >
                                             <option>Select a option</option>
                                             {
@@ -1452,8 +1462,10 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-md-1">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
                                         <select
+                                            name="departmentEmployee"
                                             className="form-control"
                                             onChange={(e) => {
                                                 this.setState({
@@ -1461,10 +1473,10 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.departmentEdit}
-                                            required
                                         >
                                             <option>Select a option</option>
                                             {
+
                                                 this.state.departments.map(item => {
                                                     return (
                                                         <option value={item.Id}>{item.Name.trim()}</option>
@@ -1473,7 +1485,8 @@ class Employees extends Component {
                                             }
                                         </select>
                                     </div>
-                                    <div className="col-md-2">
+                                    <div className="col">
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1482,9 +1495,8 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.contactTitleEdit}
-                                            required
                                         >
-                                            <option>Select a option</option>
+                                            <option >Select a option</option>
                                             {
                                                 this.state.titles.map(item => {
                                                     return (
@@ -1580,7 +1592,6 @@ class Employees extends Component {
                                                     }}
                                                     update={(id, row) => {
                                                         this.updateEmployeeById(id);
-                                                        console.table(row);
                                                         this.setState({
                                                             firstNameEdit: row.firstName,
                                                             lastNameEdit: row.lastName,

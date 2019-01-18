@@ -1149,7 +1149,7 @@ class Catalogs extends React.Component {
                                             />
                                         </div>
                                         <div className="col-md-12 col-lg-6">
-                                            <label>* Rol</label>
+                                            <label>* Role</label>
                                             <select
                                                 name="idRol"
                                                 className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
@@ -1161,7 +1161,7 @@ class Catalogs extends React.Component {
                                                 }}
                                                 value={this.state.idRol}
                                             >
-                                                <option value="">Select a rol</option>
+                                                <option value="">Select a role</option>
                                                 {this.state.roles.map((item) => (
                                                     <option key={item.Id} value={item.Id}>
                                                         {item.Name}

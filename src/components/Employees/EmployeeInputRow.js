@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import InputMask from "react-input-mask";
 import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
 import AutoComplete from "./AutoComplete";
@@ -27,10 +27,11 @@ class EmployeeInputRow extends Component {
         const department = `department${this.props.index}`;
         const contactTitle = `contactTitle${this.props.index}`;
 
-
         return (
-            <div className="row">
-                <div className="col-md-2">
+
+            < div className="row Employees-row" >
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
                     <input
                         onChange={(e) => {
                             const value = e.target.value;
@@ -50,9 +51,11 @@ class EmployeeInputRow extends Component {
                         name="firstName"
                         className="form-control"
                         required={!this.state.lastRow}
+                        maxLength={50}
                     />
                 </div>
-                <div className="col-md-2">
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Last Name</label>
                     <input
                         onChange={(e) => {
                             this.props.onchange(lastName, e.target.value);
@@ -62,9 +65,11 @@ class EmployeeInputRow extends Component {
                         name="lastName"
                         className="form-control"
                         required={!this.state.lastRow}
+                        maxLength={50}
                     />
                 </div>
-                <div className="col-md-2">
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Email Address</label>
                     <input
                         onChange={(e) => {
                             this.props.onchange(email, e.target.value);
@@ -73,9 +78,11 @@ class EmployeeInputRow extends Component {
                         type="email"
                         name="email"
                         className="form-control"
+                        maxLength={100}
                     />
                 </div>
-                <div className="col-md-2">
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Phone Number</label>
                     <InputMask
                         id="number"
                         name="number"
@@ -90,7 +97,8 @@ class EmployeeInputRow extends Component {
                         pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
                     />
                 </div>
-                <div className="col-md-1">
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotel</label>
                     <select
                         className="form-control"
                         onChange={(e) => {
@@ -99,7 +107,6 @@ class EmployeeInputRow extends Component {
                             })
                         }}
                         value={this.state.hotelEdit}
-                        required
                     >
                         <option>Select a option</option>
                         {
@@ -111,7 +118,8 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                 </div>
-                <div className="col-md-1">
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
                     <AutoComplete
                         id="department"
                         name="department"
@@ -129,62 +137,30 @@ class EmployeeInputRow extends Component {
                                 department: value
                             })
                         }}
-                        required
                     />
-
-                    {/*<select*/}
-                        {/*className="form-control"*/}
-                        {/*onChange={(e) => {*/}
-                            {/*this.props.onchange(department, e.target.value);*/}
-                        {/*}}>*/}
-                        {/*<option>Select a option</option>*/}
-                        {/*{*/}
-                            {/*this.props.departments.map(item => {*/}
-                                {/*return (*/}
-                                    {/*<option value={item.Id}>{item.Name.trim()}</option>*/}
-                                {/*)*/}
-                            {/*})*/}
-                        {/*}*/}
-                    {/*</select>*/}
                 </div>
-                <div className="col-md-2">
+                <div className="col">
+                    <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
                     <AutoComplete
                         id="contactTitle"
                         name="contactTitle"
                         value={this.state.contactTitle}
                         data={this.props.titles}
                         onChange={(value) => {
-                            alert(value);
                             this.props.onchange(contactTitle, value);
                             this.setState({
                                 contactTitle: value
                             })
                         }}
                         onSelect={(value) => {
-                            alert(value);
                             this.props.onchange(contactTitle, value);
                             this.setState({
                                 contactTitle: value
                             })
                         }}
-                        required
                     />
-                    {/*<select*/}
-                        {/*className="form-control"*/}
-                        {/*onChange={(e) => {*/}
-                            {/*this.props.onchange(contactTitle, e.target.value);*/}
-                        {/*}}>*/}
-                        {/*<option>Select a option</option>*/}
-                        {/*{*/}
-                            {/*this.props.titles.map(item => {*/}
-                                {/*return (*/}
-                                    {/*<option value={item.Id}>{item.Name.trim()}</option>*/}
-                                {/*)*/}
-                            {/*})*/}
-                        {/*}*/}
-                    {/*</select>*/}
                 </div>
-            </div>
+            </div >
         );
     }
 }

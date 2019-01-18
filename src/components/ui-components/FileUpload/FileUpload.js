@@ -18,7 +18,8 @@ class FileUpload extends Component {
 	handleUpload(event) {
 		// Get the file selected
 		const file = event.target.files[0];
-
+		if (!file)
+			return true;
 		var _validFileExtensions = [...this.context.extImage, ...this.context.extWord, ...this.context.extPdf];
 		if (
 			!_validFileExtensions.find((value) => {

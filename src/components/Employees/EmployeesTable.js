@@ -156,7 +156,8 @@ class EmployeesTable extends React.Component {
     };
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.data !== nextProps.data || this.props.loading !== nextProps.loading) {
+
+        if (this.props.data.toString() !== nextProps.data.toString() || this.props.loading !== nextProps.loading) {
             return true;
         }
         if (
@@ -175,7 +176,7 @@ class EmployeesTable extends React.Component {
         let items = this.props.data;
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-
+        console.log("Render Table")
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
@@ -279,7 +280,7 @@ class EmployeesTable extends React.Component {
 
                                 {emptyRows > 0 && (
                                     <TableRow style={{ height: 48 * emptyRows }}>
-                                        <TableCell colSpan={6} />
+                                        <TableCell colSpan={7} />
                                     </TableRow>
                                 )}
                             </TableBody>

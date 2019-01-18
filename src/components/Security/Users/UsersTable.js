@@ -58,7 +58,7 @@ const rows = [
 	//{ id: 'Full_Name', numeric: false, disablePadding: false, label: 'Full Name' },
 	{ id: 'Electronic_Address', numeric: false, disablePadding: false, label: 'Email' },
 	{ id: 'Phone_Number', numeric: false, disablePadding: false, label: 'Phone Number' },
-	{ id: 'Id_Roles', numeric: false, disablePadding: false, label: 'Rol' },
+	{ id: 'Id_Roles', numeric: false, disablePadding: false, label: 'Role' },
 	{ id: 'Id_language', numeric: false, disablePadding: false, label: 'Language' }
 ];
 

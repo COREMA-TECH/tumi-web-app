@@ -85,10 +85,11 @@ class Schedules extends Component {
         this.setState({ refresh: !this.state.refresh })
     }
 
-    handleCloseForm = () => {
+    handleCloseForm = (resetInputs = () => { }) => {
         this.setState({
-            closedForm: true
-        });
+            closedForm: true,
+            selectedShiftId: 0,
+        }, resetInputs);
     }
 
     handleClosePreFilter = (event) => {
@@ -156,6 +157,7 @@ class Schedules extends Component {
                     requested={this.state.requested}
                     viewType={this.state.viewType}
                     location={this.state.location}
+                    toggleRefresh={this.toggleRefresh}
                 />
                 <FilterForm
                     isSerie={this.state.isSerie}
