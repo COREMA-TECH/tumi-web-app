@@ -10,13 +10,13 @@ import Select from 'react-select';
 import { isArray } from 'util';
 
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
-
+const COLOR_ASSIGNED = '#5f4d8b'
 class FilterForm extends Component {
 
     DEFAULT_STATE = {
         selectedEmployees: [],
         positions: [],
-        color: '#5f4d8b',
+        color: COLOR_ASSIGNED,
         //  title: '',
         title: 'My Title',
         startHour: '',
@@ -204,14 +204,17 @@ class FilterForm extends Component {
                 mutation: UPDATE_SHIFT,
                 variables: {
                     shift: {
-                        id: this.props.isSerie ? this.state.shiftId : 0,//Only serie edition can modify shift comment
+                        id: this.props.isSerie ? this.state.shiftId : 0,//Only serie edition can modify shift
                         comment: this.state.comment,
-                        color: "#5f4d8b"
+                        color: COLOR_ASSIGNED
                     },
                     shiftDetail: {
                         id: this.state.selectedDetailId,
                         startTime: this.state.startHour,
                         endTime: this.state.endHour,
+                        ShiftId: this.props.isSerie ? this.state.shiftId : 0,
+                        color: COLOR_ASSIGNED,
+                        status: 1
                     },
                     shiftDetailEmployee: {
                         ShiftDetailId: this.state.selectedDetailId,
@@ -247,6 +250,7 @@ class FilterForm extends Component {
                 const shiftDetail = data.ShiftDetail[0];
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
+                console.log(shiftDetail)
                 this.setState({
                     startDate: this.props.isSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
                     endDate: this.props.isSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
@@ -257,7 +261,7 @@ class FilterForm extends Component {
                     color: shiftDetail.shift.color,
                     selectedDetailId: id,
                     shiftId: shiftDetail.shift.id,
-                    status: shiftDetail.shift.status,
+                    status: shiftDetail.status,
                     openShift: !shiftDetail.detailEmployee,//Is open shift when there is no employee associated to a Shift
                     workOrderId: shiftDetail.shift.workOrder ? shiftDetail.shift.workOrder.id : 0,
                     dayWeeks: shiftDetail.shift.dayWeek,
@@ -494,6 +498,14 @@ class FilterForm extends Component {
             });
     }
 
+    showLoadingDraft = () => {
+        if (this.state.updating && !this.state.notify) return <i className="fa fa-spinner fa-spin" />
+    }
+
+    showLoadingNotify = () => {
+        if (this.state.updating && this.state.notify) return <i className="fa fa-spinner fa-spin" />
+    }
+
     showConfirmationButtons = (allowEdit) => {
         if (!allowEdit)
             return '';
@@ -510,8 +522,8 @@ class FilterForm extends Component {
                     <i className="fas fa-trash"></i>
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
-                <button className="btn btn-default" type="button" onClick={this.saveDraft} >Save Draft {(this.state.updating && !this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
-                <button className="btn btn-success" type="button" onClick={this.savePublish} >Notify {(this.state.updating && this.state.notify) && <i className="fa fa-spinner fa-spin" />}</button>
+                <button className="btn btn-default" type="button" onClick={this.saveDraft} >Save Draft {this.showLoadingDraft()}</button>
+                <button className="btn btn-success" type="button" onClick={this.savePublish} >Notify {this.showLoadingNotify()}</button>
                 <button ref={input => this.publish = input} className="btn btn-success" style={{ visibility: 'hidden', widht: 0 }} type="submit">None</button>
             </div >
     }
@@ -540,7 +552,7 @@ class FilterForm extends Component {
 
     render() {
         const isEdition = this.state.selectedDetailId != 0;
-        const allowEdit = this.state.status == 0 || this.state.status == 1;
+        const allowEdit = this.state.status < 2;
 
         const isHotelManger = this.props.hotelManager;
         return <div>

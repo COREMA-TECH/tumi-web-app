@@ -129,7 +129,7 @@ class Shifts extends Component {
                                             shiftDetailItem.detailEmployee !== null
                                                 ? shiftDetailItem.detailEmployee.EmployeeId
                                                 : 0,
-                                        bgColor: shiftItem.bgColor
+                                        bgColor: shiftDetailItem.bgColor
                                     });
 
                                     if (shiftDetailItem.detailEmployee == null) {
@@ -266,7 +266,7 @@ class Shifts extends Component {
                                 shiftDetailItem.detailEmployee !== null
                                     ? shiftDetailItem.detailEmployee.EmployeeId
                                     : 0,
-                            bgColor: shiftItem.bgColor
+                            bgColor: shiftDetailItem.bgColor
                         });
                     }
                 });
@@ -367,6 +367,9 @@ class Shifts extends Component {
                         </button>
                         <button className="btn btn-default btn-not-rounded" type="button" onClick={() => { this.selectTypeEdition(true) }}>
                             Edit Serie
+                        </button>
+                        <button className="btn btn-danger btn-not-rounded mr-1" type="button" onClick={this.props.openEditConfirm}>
+                            Cancel
                         </button>
                     </DialogActions>
                 </Dialog>

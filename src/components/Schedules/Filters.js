@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS, GET_TEMPLATES } from './Queries';
-import { CREATE_TEMPLATE, USE_TEMPLATE, LOAD_PREVWEEK } from './Mutations';
+import { CREATE_TEMPLATE, USE_TEMPLATE, LOAD_PREVWEEK, PUBLISH_ALL } from './Mutations';
 import withApollo from 'react-apollo/withApollo';
 import Options from './Options';
 import moment from 'moment';
@@ -163,7 +163,7 @@ class Filters extends Component {
     }
 
     loadTemplate = (id) => {
-        let endDayOfWeek = moment().endOf('week').format();
+        let endDayOfWeek = this.props.templateEndDate;
         let positionId = this.props.positionId;
         let requestedBy = this.props.requested;
         let userId = localStorage.getItem('LoginId');
@@ -188,7 +188,6 @@ class Filters extends Component {
                 this.props.toggleRefresh();
             })
             .catch((error) => {
-                console.log(error)
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error saving template'
@@ -197,9 +196,9 @@ class Filters extends Component {
     }
 
     loadPreviousWeek = () => {
-        let endDayOfWeek = moment().endOf('week').subtract(7, "days").format();
+        let endDayOfWeek = this.props.templateEndDate;
         let positionId = this.props.positionId;
-        let entiotyId = this.props.location;
+        let entityId = this.props.location;
         let userId = localStorage.getItem('LoginId');
         this.props.client
             .mutate({
@@ -207,7 +206,7 @@ class Filters extends Component {
                 variables: {
                     endDate: endDayOfWeek,
                     positionId: positionId,
-                    entityId: entiotyId,
+                    entityId: entityId,
                     userId: userId
                 }
             })
@@ -226,6 +225,28 @@ class Filters extends Component {
             });
     }
 
+    publishAll = () => {
+        this.props.client
+            .mutate({
+                mutation: PUBLISH_ALL,
+                variables: {
+                    ids: this.props.templateShifts
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'All shifts published successfully'
+                );
+                this.props.toggleRefresh();
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error publishing shifts'
+                );
+            });
+    }
     render() {
         return (
             <div className="MasterShiftHeader">
@@ -257,13 +278,13 @@ class Filters extends Component {
                         </div>
                         <div className="col-md-4">
                             <div className="MasterShiftHeader-controlRight">
-                                <div className="can-toggle">
+                                {/* <div className="can-toggle">
                                     <input id="my-full" type="checkbox" />
                                     <label htmlFor="my-full" className="my-full">
                                         <div className="can-toggle__switch" data-checked="MY" data-unchecked="FULL"></div>
                                     </label>
-                                </div>
-                                <button className="btn btn-success btn-not-rounded btn-publish" type="button">Publish</button>
+                                </div> */}
+                                <button className="btn btn-success btn-not-rounded btn-publish" type="button" onClick={this.publishAll}>Publish All</button>
                             </div>
                         </div>
                     </div>
