@@ -1318,7 +1318,7 @@ class GeneralInfoProperty extends Component {
 																this.state.phoneNumberValid ? (
 																	'form-control'
 																) : (
-																		'input-form _invalid'
+																		'form-control _invalid'
 																	)
 															}
 															onChange={(e) => {
@@ -1344,7 +1344,7 @@ class GeneralInfoProperty extends Component {
 																this.state.faxValid ? (
 																	'form-control'
 																) : (
-																		'input-form _invalid'
+																		'form-control _invalid'
 																	)
 															}
 															onChange={(e) => {
