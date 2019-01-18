@@ -1101,6 +1101,8 @@ class General extends Component {
                                 AllowInsert: this.state.allowInsert ? 1 : 0,
                                 AllowEdit: this.state.allowEdit ? 1 : 0,
                                 AllowExport: this.state.allowExport ? 1 : 0,
+                                IdSchedulesEmployees: null,
+                                IdSchedulesManager: null,
                                 IsRecruiter: false,
                                 IdRegion: null,
                                 IsActive: this.state.IsActive ? 1 : 0,

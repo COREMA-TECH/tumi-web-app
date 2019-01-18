@@ -192,6 +192,8 @@ class EmployeesTable extends React.Component {
                                     <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -208,7 +210,7 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>
                                                 <Tooltip title="Edit">
                                                     <button
-                                                        className="btn btn-danger float-left ml-1"
+                                                        className="btn btn-success float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
                                                             this.props.update(row.id, row);
@@ -220,7 +222,7 @@ class EmployeesTable extends React.Component {
 
                                                 <Tooltip title="Delete">
                                                     <button
-                                                        className="btn btn-success float-left ml-1"
+                                                        className="btn btn-danger float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -230,12 +232,46 @@ class EmployeesTable extends React.Component {
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </Tooltip>
+                                                {
+                                                    row.idUsers == null ? (
+                                                        <Tooltip title="Assign Role">
+                                                            <button
+                                                                className="btn btn-outline-info float-left ml-1"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    e.preventDefault();
+
+                                                                    this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-plus"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                    ) : ''
+                                                }
                                             </CustomTableCell>
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.electronicAddress}</CustomTableCell>
+                                            <CustomTableCell>{row.electronicAddress}</CustomTableCell>
                                             <CustomTableCell>
-                                                {row.mobileNumber}
+                                                {
+                                                    this.props.departments.map(item => {
+                                                        if (item.Id === row.Id_Deparment) {
+                                                            return item.Name.trim()
+                                                        }
+                                                    })
+                                                }
+                                            </CustomTableCell>
+                                            <CustomTableCell>
+                                                {
+                                                    this.props.titles.map(item => {
+                                                        if (item.Id === row.Contact_Title) {
+                                                            return item.Name.trim()
+                                                        }
+                                                    })
+                                                }
                                             </CustomTableCell>
                                         </TableRow>
                                     );
