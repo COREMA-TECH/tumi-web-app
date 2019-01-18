@@ -1448,7 +1448,7 @@ class Employees extends Component {
                                                 })
                                             }}
                                             value={this.state.hotelEdit}
-                                            required
+
                                         >
                                             <option>Select a option</option>
                                             {
@@ -1463,6 +1463,7 @@ class Employees extends Component {
                                     <div className="col">
                                         <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* Department</label>
                                         <select
+                                            name="departmentEmployee"
                                             className="form-control"
                                             onChange={(e) => {
                                                 this.setState({
@@ -1472,8 +1473,9 @@ class Employees extends Component {
                                             value={this.state.departmentEdit}
                                             required
                                         >
-                                            <option>Select a option</option>
+                                            <option value="" >Select a option</option>
                                             {
+
                                                 this.state.departments.map(item => {
                                                     return (
                                                         <option value={item.Id}>{item.Name.trim()}</option>
@@ -1494,7 +1496,7 @@ class Employees extends Component {
                                             value={this.state.contactTitleEdit}
                                             required
                                         >
-                                            <option>Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
                                                 this.state.titles.map(item => {
                                                     return (
@@ -1590,7 +1592,6 @@ class Employees extends Component {
                                                     }}
                                                     update={(id, row) => {
                                                         this.updateEmployeeById(id);
-                                                        console.table(row);
                                                         this.setState({
                                                             firstNameEdit: row.firstName,
                                                             lastNameEdit: row.lastName,
