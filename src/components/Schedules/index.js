@@ -85,10 +85,11 @@ class Schedules extends Component {
         this.setState({ refresh: !this.state.refresh })
     }
 
-    handleCloseForm = () => {
+    handleCloseForm = (resetInputs = () => { }) => {
         this.setState({
-            closedForm: true
-        });
+            closedForm: true,
+            selectedShiftId: 0,
+        }, resetInputs);
     }
 
     handleClosePreFilter = (event) => {

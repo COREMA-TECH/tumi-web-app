@@ -199,8 +199,6 @@ class WorkOrdersForm extends Component {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 });
-                console.log("Esto es la props ", this.props)
-                //   this.getEmployees( this.props.openModal);
             })
             .catch();
 
@@ -276,7 +274,7 @@ class WorkOrdersForm extends Component {
                         entityId: this.state.IdEntity,
                         title: this.state.PositionName,
                         color: '#96989A',
-                        status: 1,
+                        status: 0,
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
