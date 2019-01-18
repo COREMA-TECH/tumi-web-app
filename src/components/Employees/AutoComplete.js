@@ -12,7 +12,13 @@ class IntegrationAutosuggest extends React.Component {
             <ReactAutocomplete
                 id={this.props.id}
                 name={this.props.name}
-                inputProps={{ className: this.props.error ? 'form-control _invalid input-autocomplete' : 'form-control input-autocomplete' }}
+                inputProps={
+                    {
+                        className: this.props.error
+                            ? 'form-control _invalid input-autocomplete' :
+                            'form-control input-autocomplete',
+                        required: this.props.required
+                    }}
                 items={this.props.data}
                 shouldItemRender={(item, value) => item.Name.toLowerCase().indexOf(value.toLowerCase()) > -1}
                 getItemValue={(item) => {
@@ -31,6 +37,7 @@ class IntegrationAutosuggest extends React.Component {
                     this.props.onSelect(value);
                 }}
                 wrapperStyle={{ display: 'block' }}
+
             />
         );
     }

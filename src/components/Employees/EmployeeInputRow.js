@@ -27,9 +27,9 @@ class EmployeeInputRow extends Component {
         const department = `department${this.props.index}`;
         const contactTitle = `contactTitle${this.props.index}`;
 
-
         return (
-            <div className="row Employees-row">
+
+            < div className="row Employees-row" >
                 <div className="col">
                     <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
                     <input
@@ -104,7 +104,7 @@ class EmployeeInputRow extends Component {
                             })
                         }}
                         value={this.state.hotelEdit}
-                        required
+                        required={!this.state.lastRow}
                     >
                         <option>Select a option</option>
                         {
@@ -135,7 +135,7 @@ class EmployeeInputRow extends Component {
                                 department: value
                             })
                         }}
-                        required
+                        required={!this.state.lastRow}
                     />
 
                     {/*<select*/}
@@ -161,20 +161,18 @@ class EmployeeInputRow extends Component {
                         value={this.state.contactTitle}
                         data={this.props.titles}
                         onChange={(value) => {
-                            alert(value);
                             this.props.onchange(contactTitle, value);
                             this.setState({
                                 contactTitle: value
                             })
                         }}
                         onSelect={(value) => {
-                            alert(value);
                             this.props.onchange(contactTitle, value);
                             this.setState({
                                 contactTitle: value
                             })
                         }}
-                        required
+                        required={!this.state.lastRow}
                     />
                     {/*<select*/}
                     {/*className="form-control"*/}
@@ -191,7 +189,7 @@ class EmployeeInputRow extends Component {
                     {/*}*/}
                     {/*</select>*/}
                 </div>
-            </div>
+            </div >
         );
     }
 }

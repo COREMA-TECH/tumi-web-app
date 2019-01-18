@@ -426,7 +426,6 @@ class Employees extends Component {
      */
     handleClickOpenUserModal = (email, phoneNumber, idEmployee) => {
         this.setState({ openUserModal: true });
-        console.log("Employee ID: ", idEmployee);
         this.setState({
             email: email,
             number: phoneNumber,
@@ -523,7 +522,6 @@ class Employees extends Component {
             })
             .then((data) => {
                 if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-                    console.log("data.data.getcatalogitem ", data.data.getcatalogitem);
                     this.setState({
                         contacts: data.data.getsupervisor,
                         regions: data.data.getcatalogitem,
@@ -668,7 +666,6 @@ class Employees extends Component {
                 [name]: id
             },
             () => {
-                console.log("Id de la fila ", id);
                 this.validateField(name, id);
             }
         );
@@ -929,6 +926,7 @@ class Employees extends Component {
     }
 
     render() {
+
         const { classes } = this.props;
         const { fullScreen } = this.props;
 
@@ -1047,7 +1045,7 @@ class Employees extends Component {
                                         }}
                                         value={this.state.idRol}
                                     >
-                                        <option value="">Select a rol</option>
+                                        <option value="">Select a role</option>
                                         {this.state.roles.map((item) => (
                                             <option key={item.Id} value={item.Id}>
                                                 {item.Name}
@@ -1285,14 +1283,14 @@ class Employees extends Component {
                     <DialogActions style={{ margin: "20px 20px" }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
-                                <button
+                                {this.state.rowsInput.length > 1 && <button
                                     type="submit"
                                     variant="fab"
                                     className="btn btn-success"
                                 >
                                     Save {!this.state.progressNewEmployee && <i class="fas fa-save" />}
                                     {this.state.progressNewEmployee && <i class="fas fa-spinner fa-spin" />}
-                                </button>
+                                </button>}
                             </div>
                         </div>
                         <div className={classes.root}>
@@ -1362,7 +1360,7 @@ class Employees extends Component {
                                         </div>
 
                                         <div className="col">
-                                            <label htmlFor="">* Hotels</label>
+                                            <label htmlFor="">Hotel</label>
                                         </div>
 
                                         <div className="col">
@@ -1437,6 +1435,7 @@ class Employees extends Component {
                                             value={this.state.numberEdit}
                                             placeholder="+(999) 999-9999"
                                             pattern="^(\+\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$"
+                                            required
                                         />
                                     </div>
                                     <div className="col">
