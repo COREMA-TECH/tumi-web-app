@@ -129,7 +129,7 @@ class Shifts extends Component {
                                             shiftDetailItem.detailEmployee !== null
                                                 ? shiftDetailItem.detailEmployee.EmployeeId
                                                 : 0,
-                                        bgColor: shiftItem.bgColor
+                                        bgColor: shiftDetailItem.bgColor
                                     });
 
                                     if (shiftDetailItem.detailEmployee == null) {
@@ -266,7 +266,7 @@ class Shifts extends Component {
                                 shiftDetailItem.detailEmployee !== null
                                     ? shiftDetailItem.detailEmployee.EmployeeId
                                     : 0,
-                            bgColor: shiftItem.bgColor
+                            bgColor: shiftDetailItem.bgColor
                         });
                     }
                 });

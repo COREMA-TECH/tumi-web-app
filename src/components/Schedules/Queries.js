@@ -68,6 +68,8 @@ export const GET_SHIFTS = gql`
             startTime
             end: endDate
             endTime
+            bgColor : color
+            status
             detailEmployee {
                 EmployeeId
             }
