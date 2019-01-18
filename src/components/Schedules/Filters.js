@@ -188,6 +188,7 @@ class Filters extends Component {
                 this.props.toggleRefresh();
             })
             .catch((error) => {
+                console.log(error)
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error saving template'
@@ -196,7 +197,7 @@ class Filters extends Component {
     }
 
     loadPreviousWeek = () => {
-        let endDayOfWeek = moment().endOf('week').format();
+        let endDayOfWeek = moment().endOf('week').subtract(7, "days").format();
         let positionId = this.props.positionId;
         let entiotyId = this.props.location;
         let userId = localStorage.getItem('LoginId');
@@ -206,7 +207,7 @@ class Filters extends Component {
                 variables: {
                     endDate: endDayOfWeek,
                     positionId: positionId,
-                    entiotyId: entiotyId,
+                    entityId: entiotyId,
                     userId: userId
                 }
             })

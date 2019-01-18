@@ -156,6 +156,7 @@ class Schedules extends Component {
                     requested={this.state.requested}
                     viewType={this.state.viewType}
                     location={this.state.location}
+                    toggleRefresh={this.toggleRefresh}
                 />
                 <FilterForm
                     isSerie={this.state.isSerie}

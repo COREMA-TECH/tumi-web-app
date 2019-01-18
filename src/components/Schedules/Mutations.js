@@ -86,7 +86,7 @@ mutation createShiftBasedOnTemplate($templateId: Int, $endDate: Date, $userId: I
 
 export const LOAD_PREVWEEK = gql`
 mutation PreviousWeekShift($endDate: Date, $positionId: Int, $entityId: Int, $userId: Int) {
-  create PreviousWeekShift(endDate: $endDate,positionId: $positionId,entityId: $entityId, userId: $userId)
+  createPreviousWeekShift(endDate: $endDate,positionId: $positionId,entityId: $entityId, userId: $userId)
   {
     id
     entityId
