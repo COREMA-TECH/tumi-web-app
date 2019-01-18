@@ -82,9 +82,7 @@ class MobileMenu extends Component {
 					</li>
 
 					{items.map(item => {
-						console.log("Aqui estoy ", item.Forms)
-
-						console.log("Aqui estoy ", item.Forms.Value == "/home/company")
+						
 						return item.Forms.Value == "/home/company" ?
 							<li className="MainMenu-option">
 								<Link to={`/home/Company`} className="MenuMobile-link" onClick={this.props.handleCloseMenu}>

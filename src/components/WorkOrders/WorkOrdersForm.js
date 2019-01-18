@@ -506,19 +506,16 @@ class WorkOrdersForm extends Component {
               .catch();
       };*/
     getEmployees = (func = () => { }) => {
-        console.log("estoy en el getemployees ", this.state.id)
+        this.setState({ employees: [] })
         this.props.client
             .query({
                 query: GET_SHIFTS,
                 variables: { WorkOrderId: this.state.id }
             })
             .then(({ data }) => {
-                console.log("Aqui estamos en get employees ", data)
-                /*this.setState({
-                    Shift: data
-                }*/
+
                 data.ShiftWorkOrder.map((item) => {
-                    this.getDetailShift(item.ShiftId);
+                    this.getDetailShift(item.WorkOrderId, item.ShiftId);
                 }),
                     func
             })
@@ -535,30 +532,35 @@ class WorkOrdersForm extends Component {
             func
     };*/
 
-    getDetailShift = (id) => {
-        console.log("estoy en el getDetailShift ", id)
+    getDetailShift = (WorkOrderId, ShiftId) => {
+        console.log("Estoy en getDetailShift ", WorkOrderId, " ", ShiftId)
+        console.log("Arreglo de employees ", this.state.employees)
+        let employeesList = [];
+        let employeeIdTemp = 0;
+
         this.props.client
             .query({
                 query: GET_DETAIL_SHIFT,
-                variables: { ShiftId: id }
+                variables: { ShiftId: ShiftId }
             })
             .then(({ data }) => {
-                console.log("Estoy trayendo el details de shift ", data)
-
-                data.ShiftDetail.map((item) => {
-                    console.log("Estoy item shift ", item)
-                    /* if (item.detailEmployee != null) {
-                         item.detailEmployee.map((item) => {
-                             console.log("Estoy data.detailEmployee ", item)
-                         })
-                     }*/
+                data.ShiftDetail.sort().map((item) => {
+                    if (item.detailEmployee != null) {
+                        if (employeesList.Value != item.detailEmployee.EmployeeId) {
+                            if (item.detailEmployee.EmployeeId != employeeIdTemp) {
+                                employeesList.push({
+                                    WorkOrderId: WorkOrderId,
+                                    ShiftId: ShiftId,
+                                    ShiftDetailId: item.id,
+                                    EmployeeId: item.detailEmployee.EmployeeId,
+                                    Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
+                                })
+                                employeeIdTemp = item.detailEmployee.EmployeeId
+                            }
+                        }
+                    }
                 })
-                /* this.setState({
-                     employees: data.ShiftDetail[0].detailEmployee,
-                     employeesarray: data.ShiftDetail
-                 });
-
-             console.log("este son los empleados ", this.state.employees)*/
+                this.setState({ employees: employeesList })
             })
             .catch();
     };
@@ -626,7 +628,7 @@ class WorkOrdersForm extends Component {
 
         /*if (this.state.employees != null) {
             console.log("Aqui si hay iusuaiors ", this.state.employees.length)
-
+    
         } else { console.log("No hay usuarios ") }
         */
         return (
@@ -858,38 +860,39 @@ class WorkOrdersForm extends Component {
                                                         <TableBody>
                                                             {
 
-                                                                this.state.employeesarray.map((item) => {
+                                                                this.state.employees.map((item) => {
+                                                                    console.log("this.state.employees ", this.state.employees)
 
-                                                                    if (item.detailEmployee) {
-                                                                        return (
-                                                                            <TableRow
-                                                                                hover
-                                                                                className={classes.row}
-                                                                                key={item.id}
-                                                                            //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
-                                                                            >
-                                                                                <CustomTableCell>
-                                                                                    <Tooltip title="Delete">
-                                                                                        <button
-                                                                                            className="btn btn-danger float-left"
-                                                                                            /* onClick={(e) => {
-                                                                                                 e.preventDefault();
-                                                                                                 this.deleteEmployee(item.detailEmployee.ShiftDetailId)
-                                                                                             }}*/
+                                                                    // if (item.detailEmployee) {
+                                                                    return (
+                                                                        <TableRow
+                                                                            hover
+                                                                            className={classes.row}
+                                                                            key={item.id}
+                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
+                                                                        >
+                                                                            <CustomTableCell>
+                                                                                <Tooltip title="Delete">
+                                                                                    <button
+                                                                                        className="btn btn-danger float-left"
+                                                                                        /* onClick={(e) => {
+                                                                                             e.preventDefault();
+                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
+                                                                                         }}*/
 
-                                                                                            onClick={(e) => {
-                                                                                                e.preventDefault();
-                                                                                                this.setState({ openConfirm: true, idToDelete: item.detailEmployee.ShiftDetailId });
-                                                                                            }}
-                                                                                        >
-                                                                                            <i className="fas fa-trash"></i>
-                                                                                        </button>
-                                                                                    </Tooltip>
-                                                                                </CustomTableCell>
-                                                                                <CustomTableCell>{item.detailEmployee.Employees.firstName}{' '} {item.detailEmployee.Employees.lastName}</CustomTableCell>
-                                                                            </TableRow>
-                                                                        )
-                                                                    }
+                                                                                        onClick={(e) => {
+                                                                                            e.preventDefault();
+                                                                                            this.setState({ openConfirm: true, idToDelete: item.ShiftDetailId });
+                                                                                        }}
+                                                                                    >
+                                                                                        <i className="fas fa-trash"></i>
+                                                                                    </button>
+                                                                                </Tooltip>
+                                                                            </CustomTableCell>
+                                                                            <CustomTableCell>{item.Employees}</CustomTableCell>
+                                                                        </TableRow>
+                                                                    )
+                                                                    //}
                                                                 })
 
                                                             }
