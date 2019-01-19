@@ -873,7 +873,7 @@ class Catalogs extends React.Component {
                         }
                     })
                     .then((data) => {
-                        if (id === null) {
+                        if (id == 0) {
                             this.sendMail();
                         }
                         this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
