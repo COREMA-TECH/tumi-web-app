@@ -276,7 +276,7 @@ class MobileMenu extends Component {
 							</li> : ''
 					})}
 					{items.map(item => {
-						return item.Forms.Value == "Admin" ?
+						return item.Forms.Value == "Security" ?
 							<li className="MainMenu-option">
 								<Link
 									to={`/home/application`}
@@ -286,7 +286,7 @@ class MobileMenu extends Component {
 
 								>
 									<i className="far fa-address-card MenuMobile-icon" title={'Recruiter'} />
-									<span>Security</span>
+									<span>Admin</span>
 								</Link>
 								<ul className="SubMenu" id="1">
 									{items.map(item => {
