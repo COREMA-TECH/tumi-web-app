@@ -138,14 +138,17 @@ class PreFilter extends Component {
         event.preventDefault();
         this.props.handleApplyFilters(this.state.position, this.state.location, this.state.requested);
         this.props.handleGetTextofFilters(this.state.positionName, this.state.locationName, this.state.requestedName);
+        this.setState({
+            disabled: !this.state.disabled
+        });
     }
 
     render() {
         const disabled = this.state.disabled;
         return (
-            <Dialog maxWidth="sm" open={this.props.openPreFilter} onClose={this.props.handleClosePreFilter}>
-                <DialogContent>
-                    <form action="" onSubmit={this.handleApplyFilters}>
+            <Dialog maxWidth="sm" open={this.props.openPreFilter} >
+                <form action="" onSubmit={this.handleApplyFilters}>
+                    <DialogContent>
                         <div className="container">
                             <div className="row">
                                 <div className="col-md-12">
@@ -169,16 +172,27 @@ class PreFilter extends Component {
                                         {this.renderContactsList()}
                                     </select>
                                 </div>
-                                <div className="col-md-12">
-                                    <button className="btn btn-success btn-not-rounded mt-2 float-right" type="submit">
-                                        Filter
-                                        {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
-                                    </button>
-                                </div>
                             </div>
                         </div>
-                    </form>
-                </DialogContent>
+                    </DialogContent>
+                    <DialogActions>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <button className="btn btn-success btn-not-rounded" type="submit">
+                                    Filter
+                                        {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
+                                </button>
+                                {
+                                    this.props.isEditFilter ? (
+                                        <button className="btn btn-defautl btn-not-rounded" type="button" onClick={this.props.handleClosePreFilter}>
+                                            Cancel
+                                    </button>
+                                    ) : ("")
+                                }
+                            </div>
+                        </div>
+                    </DialogActions>
+                </form>
             </Dialog>
         );
     }

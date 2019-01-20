@@ -44,7 +44,7 @@ query ShiftWorkOrder ($WorkOrderId: Int)
 export const GET_DETAIL_SHIFT = gql`
 query ShiftDetail ($ShiftId:Int)
 {
-ShiftDetail (ShiftId:$ShiftId) {
+	ShiftDetailbyShift (ShiftId:$ShiftId) {
 	id
 	ShiftId
 	start: startDate
