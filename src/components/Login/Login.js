@@ -151,6 +151,7 @@ class Login extends Component {
 						else {
 							localStorage.setItem('ChangePassword', user.Id);
 							localStorage.setItem('LoginId', user.Id);
+							localStorage.setItem('CodeUser', user.Code_User);
 							localStorage.setItem('FullName', user.Full_Name);
 							localStorage.setItem('Token', user.Token);
 							localStorage.setItem('IdRoles', user.Id_Roles);

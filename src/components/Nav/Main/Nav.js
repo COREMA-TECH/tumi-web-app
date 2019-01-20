@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import Menu from '../Menu';
 
@@ -13,7 +13,7 @@ class Nav extends Component {
     render() {
         return (
             <div className="nav">
-                <Menu/>
+                <Menu />
                 <div className="nav-element">
                     <span className="icon-right" onClick={this.handleResizeNavClick}></span>
                 </div>
