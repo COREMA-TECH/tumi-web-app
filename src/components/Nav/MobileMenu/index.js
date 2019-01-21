@@ -82,9 +82,7 @@ class MobileMenu extends Component {
 					</li>
 
 					{items.map(item => {
-						console.log("Aqui estoy ", item.Forms)
-
-						console.log("Aqui estoy ", item.Forms.Value == "/home/company")
+						
 						return item.Forms.Value == "/home/company" ?
 							<li className="MainMenu-option">
 								<Link to={`/home/Company`} className="MenuMobile-link" onClick={this.props.handleCloseMenu}>
@@ -276,7 +274,7 @@ class MobileMenu extends Component {
 							</li> : ''
 					})}
 					{items.map(item => {
-						return item.Forms.Value == "Admin" ?
+						return item.Forms.Value == "Security" ?
 							<li className="MainMenu-option">
 								<Link
 									to={`/home/application`}
@@ -286,7 +284,7 @@ class MobileMenu extends Component {
 
 								>
 									<i className="far fa-address-card MenuMobile-icon" title={'Recruiter'} />
-									<span>Security</span>
+									<span>Admin</span>
 								</Link>
 								<ul className="SubMenu" id="1">
 									{items.map(item => {

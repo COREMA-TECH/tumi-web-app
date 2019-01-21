@@ -150,16 +150,16 @@ class WorkOrdersForm extends Component {
                     //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
                 },
                 () => {
-
+                    this.getEmployees();
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
 
-                    this.getEmployees(() => {
-                        this.getDetailShift(() => {
-                        });
-                    });
-                    //this.getEmployees();
+                    //this.getEmployees(() => {
+                    //     this.getDetailShift(() => {
+                    //  });
+                    // });
+
 
                     this.ReceiveStatus = true;
                 }
@@ -246,7 +246,13 @@ class WorkOrdersForm extends Component {
             if (this.state.id == null) this.add();
             else {
                 //alert(this.state.employees.detailEmployee)
-                this.update();
+                if (this.state.employees.length > 0) {
+                    //  this.setState({ openConfirm: true, idToDelete: row.id });
+                    this.props.handleOpenSnackbar('error', 'This work order has assigned employees, to update them you must eliminate them');
+                    this.setState({ saving: false });
+                } else {
+                    this.update();
+                }
             }
         }
     };
@@ -505,63 +511,119 @@ class WorkOrdersForm extends Component {
               })
               .catch();
       };*/
-    getEmployees = (func = () => { }) => {
-        console.log("estoy en el getemployees ", this.state.id)
+    getEmployees = () => {//= (func = () => { }) => {
+        this.setState({ employees: [] })
+        //console.log("entro al metodo de empleado ", this.state.id)
         this.props.client
             .query({
                 query: GET_SHIFTS,
                 variables: { WorkOrderId: this.state.id }
             })
             .then(({ data }) => {
-                console.log("Aqui estamos en get employees ", data)
-                /*this.setState({
-                    Shift: data
-                }*/
+                let employeesList = [];
+                let employeeIdTemp = 0;
+
                 data.ShiftWorkOrder.map((item) => {
-                    this.getDetailShift(item.ShiftId);
-                }),
-                    func
+                    //       console.log("entro al ShiftWorkOrder ", item)
+                    //this.getDetailShift(item.WorkOrderId, item.ShiftId);
+                    this.props.client
+                        .query({
+                            query: GET_DETAIL_SHIFT,
+                            variables: { ShiftId: item.ShiftId }
+                        })
+                        .then(({ data }) => {
+                            data.ShiftDetailbyShift.sort().map((itemDetails) => {
+                                if (itemDetails.detailEmployee != null) {
+                                    //if (employeesList.Value != item.detailEmployee.EmployeeId) {
+                                    if (itemDetails.detailEmployee.EmployeeId != employeeIdTemp) {
+                                        console.log("el itemDetails.detailEmployee.EmployeeId es  ", itemDetails.detailEmployee.EmployeeId);
+                                        console.log("el employeeIdTempes  ", employeeIdTemp);
+                                        console.log("resultado de dataShiftDetails ", itemDetails.detailEmployee);
+
+                                        employeesList.push({
+                                            WorkOrderId: item.WorkOrderId,
+                                            ShiftId: item.ShiftId,
+                                            ShiftDetailId: itemDetails.id,
+                                            EmployeeId: itemDetails.detailEmployee.EmployeeId,
+                                            Employees: itemDetails.detailEmployee.Employees.firstName + ' ' + itemDetails.detailEmployee.Employees.lastName
+                                        })
+
+                                        employeeIdTemp = itemDetails.detailEmployee.EmployeeId;
+                                    }
+                                }
+                            })
+                            console.log("La infromacion de employeesList ", employeesList)
+                            this.setState({ employees: employeesList })
+                        })
+                        .catch();
+                })
             })
             .catch();
     };
 
     /*getDetailShift = (func = () => { }) => {
 
+
+     employeesList.push({
+                                    WorkOrderId: item.WorkOrderId,
+                                    ShiftId: item.ShiftId,
+                                    ShiftDetailId: itemDetails.id,
+                                    EmployeeId: itemDetails.detailEmployee.EmployeeId,
+                                    Employees: itemDetails.detailEmployee.Employees.firstName + ' ' + itemDetails.detailEmployee.Employees.lastName
+                                })
+
+
+
         this.state.Shift.ShiftWorkOrder.map((item) => {
             console.log("Aqui estamos en this.state.Shift ",item. ShiftId)
-
+    
         })
             ,
             func
     };*/
 
-    getDetailShift = (id) => {
-        console.log("estoy en el getDetailShift ", id)
+    /*getDetailShift = (WorkOrderId, ShiftId) => {
+        console.log("Estoy en getDetailShift ", WorkOrderId, " ", ShiftId)
+        console.log("Arreglo de employees ", this.state.employees)
+        // let employeesList = [];
+        let employeeIdTemp = 0;
+
         this.props.client
             .query({
                 query: GET_DETAIL_SHIFT,
-                variables: { ShiftId: id }
+                variables: { ShiftId: ShiftId }
             })
             .then(({ data }) => {
-                console.log("Estoy trayendo el details de shift ", data)
-
-                data.ShiftDetail.map((item) => {
-                    console.log("Estoy item shift ", item)
+                console.log("detauls ", data)
+                data.ShiftDetailbyShift.sort().map((item) => {
+                    employeesList.push({
+                        WorkOrderId: WorkOrderId,
+                        ShiftId: ShiftId,
+                        ShiftDetailId: item.id,
+                        EmployeeId: item.detailEmployee.EmployeeId,
+                        Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
+                    })
                     /* if (item.detailEmployee != null) {
-                         item.detailEmployee.map((item) => {
-                             console.log("Estoy data.detailEmployee ", item)
-                         })
-                     }*/
-                })
-                /* this.setState({
-                     employees: data.ShiftDetail[0].detailEmployee,
-                     employeesarray: data.ShiftDetail
-                 });
-
-             console.log("este son los empleados ", this.state.employees)*/
+                         if (employeesList.Value != item.detailEmployee.EmployeeId) {
+                             if (item.detailEmployee.EmployeeId != employeeIdTemp) {
+                                 employeesList.push({
+                                     WorkOrderId: WorkOrderId,
+                                     ShiftId: ShiftId,
+                                     ShiftDetailId: item.id,
+                                     EmployeeId: item.detailEmployee.EmployeeId,
+                                     Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
+                                 })
+                                 employeeIdTemp = item.detailEmployee.EmployeeId
+                             }
+                         }
+                     }
+})
+console.log("employeesList ", data)
+this.setState({ employees: employeesList })
+console.log("array employees ", this.state.employees)
             })
-            .catch();
-    };
+            .catch ();
+    };*/
 
     deleteEmployee = (id) => {
         this.props.client
@@ -624,11 +686,11 @@ class WorkOrdersForm extends Component {
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
-        /*if (this.state.employees != null) {
+        if (this.state.employees.length > 0) {
             console.log("Aqui si hay iusuaiors ", this.state.employees.length)
 
         } else { console.log("No hay usuarios ") }
-        */
+
         return (
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
@@ -842,9 +904,8 @@ class WorkOrdersForm extends Component {
 
                             <div className='row'>
                                 {this.state.id && (
-
                                     <div className="col-md-12">
-                                        {this.state.employees != null ? (
+                                        {this.state.employees.length > 0 ? (
                                             <div class="card">
                                                 <div class="card-header danger">Employees assign to work order</div>
                                                 <div class="card-body">
@@ -858,44 +919,44 @@ class WorkOrdersForm extends Component {
                                                         <TableBody>
                                                             {
 
-                                                                this.state.employeesarray.map((item) => {
+                                                                this.state.employees.map((item) => {
+                                                                    console.log("this.state.employees ", this.state.employees)
 
-                                                                    if (item.detailEmployee) {
-                                                                        return (
-                                                                            <TableRow
-                                                                                hover
-                                                                                className={classes.row}
-                                                                                key={item.id}
-                                                                            //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
-                                                                            >
-                                                                                <CustomTableCell>
-                                                                                    <Tooltip title="Delete">
-                                                                                        <button
-                                                                                            className="btn btn-danger float-left"
-                                                                                            /* onClick={(e) => {
-                                                                                                 e.preventDefault();
-                                                                                                 this.deleteEmployee(item.detailEmployee.ShiftDetailId)
-                                                                                             }}*/
+                                                                    // if (item.detailEmployee) {
+                                                                    return (
+                                                                        <TableRow
+                                                                            hover
+                                                                            className={classes.row}
+                                                                            key={item.id}
+                                                                        //onClick={this.handleClickOpen('paper', true, item.id, item.rate)}
+                                                                        >
+                                                                            <CustomTableCell>
+                                                                                <Tooltip title="Delete">
+                                                                                    <button
+                                                                                        className="btn btn-danger float-left"
+                                                                                        /* onClick={(e) => {
+                                                                                             e.preventDefault();
+                                                                                             this.deleteEmployee(item.detailEmployee.ShiftDetailId)
+                                                                                         }}*/
 
-                                                                                            onClick={(e) => {
-                                                                                                e.preventDefault();
-                                                                                                this.setState({ openConfirm: true, idToDelete: item.detailEmployee.ShiftDetailId });
-                                                                                            }}
-                                                                                        >
-                                                                                            <i className="fas fa-trash"></i>
-                                                                                        </button>
-                                                                                    </Tooltip>
-                                                                                </CustomTableCell>
-                                                                                <CustomTableCell>{item.detailEmployee.Employees.firstName}{' '} {item.detailEmployee.Employees.lastName}</CustomTableCell>
-                                                                            </TableRow>
-                                                                        )
-                                                                    }
+                                                                                        onClick={(e) => {
+                                                                                            e.preventDefault();
+                                                                                            this.setState({ openConfirm: true, idToDelete: item.EmployeeId });
+                                                                                        }}
+                                                                                    >
+                                                                                        <i className="fas fa-trash"></i>
+                                                                                    </button>
+                                                                                </Tooltip>
+                                                                            </CustomTableCell>
+                                                                            <CustomTableCell>{item.Employees}</CustomTableCell>
+                                                                        </TableRow>
+                                                                    )
+                                                                    //}
                                                                 })
 
                                                             }
                                                         </TableBody>
                                                     </Table>
-
                                                     <ConfirmDialog
                                                         open={this.state.openConfirm}
                                                         closeAction={() => {
@@ -937,6 +998,7 @@ class WorkOrdersForm extends Component {
                         </form >
                     </DialogContent >
                 </Dialog >
+
             </div >
         );
     }
@@ -947,4 +1009,4 @@ WorkOrdersForm.propTypes = {
 };
 
 export default withStyles(styles)(withApollo(WorkOrdersForm));
-            //export default (withMobileDialog()(withApollo(WorkOrdersForm)));
+

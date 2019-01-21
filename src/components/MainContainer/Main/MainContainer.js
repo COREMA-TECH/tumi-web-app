@@ -6,6 +6,7 @@ import MobileMenu from '../../Nav/MobileMenu';
 import Global from 'Generic/Global';
 
 class MainContainer extends Component {
+
 	handleClickMenu = (event) => {
 		//Open the menu
 	};
@@ -17,11 +18,6 @@ class MainContainer extends Component {
 		else title = pathname[2];
 
 		title = title == 'Company' ? 'Management' : title;
-		/*if (title== 'Company' && 1==0)
-		{
-
-		}else
-		{window.location.href='https://google.com.ni'}*/
 		return title;
 	};
 
@@ -36,7 +32,7 @@ class MainContainer extends Component {
 				<div className="MenuMobile-overlay" onClick={this.props.handleCloseMenu} />
 				<div className="main-container--header">
 					<span className="icon-menu" onClick={this.handleClickMenu} />
-					<span className="main-container__title">{this.setTitle(window.location.pathname)}</span>
+					<span className="main-container__title"> {this.setTitle(window.location.pathname)}</span>
 					<Toolbar handleOpenSnackbar={this.props.handleOpenSnackbar} />
 				</div>
 				<div className="main-container--container">
