@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
  */
 export const GET_STATES_QUERY = gql`
 	query States($parent: Int!, $value: String) {
-		getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
+		getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
 			Id
 			Name
 			IsActive
@@ -18,7 +18,7 @@ export const GET_STATES_QUERY = gql`
  */
 export const GET_CITIES_QUERY = gql`
 	query Cities($parent: Int!) {
-		getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+		getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
 			Id
 			Name
 			IsActive
@@ -59,7 +59,7 @@ export const GET_POSITIONS_CATALOG = gql`
  */
 export const GET_LANGUAGES_QUERY = gql`
 	{
-		getcatalogitem(Id: null, Id_Catalog: 9, IsActive: 1) {
+		getcatalogitem( Id_Catalog: 9, IsActive: 1) {
 			Id
 			Name
 		}

@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {withStyles} from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepContent from '@material-ui/core/StepContent';
@@ -19,10 +19,10 @@ import studyTypes from '../data/studyTypes';
 import InputMask from 'react-input-mask';
 import languageLevelsJSON from '../data/languagesLevels';
 import InputRangeDisabled from '../ui/InputRange/InputRangeDisabled';
-import {GET_LANGUAGES_QUERY} from '../Queries.js';
+import { GET_LANGUAGES_QUERY } from '../Queries.js';
 import withApollo from 'react-apollo/withApollo';
 import Query from 'react-apollo/Query';
-import {GET_CITIES_QUERY, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_STATES_QUERY} from '../Queries';
+import { GET_CITIES_QUERY, GET_POSITIONS_CATALOG, GET_POSITIONS_QUERY, GET_STATES_QUERY } from '../Queries';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import {
@@ -654,7 +654,7 @@ class VerticalLinearStepper extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: { parent: -1, value: `'${zipCode}'` },
+             variables: { parent: -1, value: `'${zipCode}'` },
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({
@@ -1069,34 +1069,34 @@ class VerticalLinearStepper extends Component {
                     <div className="col-md-6">
                         <span className="primary"> * Position Applying For</span>
                         {/*<Query query={GET_POSITIONS_CATALOG}>*/}
-                            {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                {/*if (error) return <p>Error </p>;*/}
-                                {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                                    {/*return (*/}
-                                        {/*<select*/}
-                                            {/*name="positionApply"*/}
-                                            {/*id="positionApply"*/}
-                                            {/*onChange={(event) => {*/}
-                                                {/*this.setState({*/}
-                                                    {/*idealJob: event.target.value*/}
-                                                {/*});*/}
-                                            {/*}}*/}
-                                            {/*value={this.state.idealJob}*/}
-                                            {/*className="form-control"*/}
-                                            {/*required*/}
-                                        {/*>*/}
-                                            {/*<option value="">Select a position</option>*/}
-                                            {/*<option value="0">Open Position</option>*/}
-                                            {/*{data.getcatalogitem.map((item) => (*/}
-                                                {/*<option*/}
-                                                    {/*value={item.Id}>{item.Description}</option>*/}
-                                            {/*))}*/}
-                                        {/*</select>*/}
-                                    {/*);*/}
-                                {/*}*/}
-                                {/*return <SelectNothingToDisplay />;*/}
-                            {/*}}*/}
+                        {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
+                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                        {/*if (error) return <p>Error </p>;*/}
+                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
+                        {/*return (*/}
+                        {/*<select*/}
+                        {/*name="positionApply"*/}
+                        {/*id="positionApply"*/}
+                        {/*onChange={(event) => {*/}
+                        {/*this.setState({*/}
+                        {/*idealJob: event.target.value*/}
+                        {/*});*/}
+                        {/*}}*/}
+                        {/*value={this.state.idealJob}*/}
+                        {/*className="form-control"*/}
+                        {/*required*/}
+                        {/*>*/}
+                        {/*<option value="">Select a position</option>*/}
+                        {/*<option value="0">Open Position</option>*/}
+                        {/*{data.getcatalogitem.map((item) => (*/}
+                        {/*<option*/}
+                        {/*value={item.Id}>{item.Description}</option>*/}
+                        {/*))}*/}
+                        {/*</select>*/}
+                        {/*);*/}
+                        {/*}*/}
+                        {/*return <SelectNothingToDisplay />;*/}
+                        {/*}}*/}
                         {/*</Query>*/}
                         <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {
@@ -1131,33 +1131,33 @@ class VerticalLinearStepper extends Component {
                     <div className="col-md-6">
                         <span className="primary">Willing to work as</span>
                         {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                            {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-                                {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                                {/*if (error) return <p>Error </p>;*/}
-                                {/*if (data.workOrder != null && data.workOrder.length > 0) {*/}
-                                    {/*let options = [];*/}
-                                    {/*data.workOrder.map((item) => (*/}
-                                        {/*options.push({ value: item.id, label: item.position.Position + (item.BusinessCompany.Code.trim()) })*/}
-                                    {/*));*/}
+                        {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
+                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
+                        {/*if (error) return <p>Error </p>;*/}
+                        {/*if (data.workOrder != null && data.workOrder.length > 0) {*/}
+                        {/*let options = [];*/}
+                        {/*data.workOrder.map((item) => (*/}
+                        {/*options.push({ value: item.id, label: item.position.Position + (item.BusinessCompany.Code.trim()) })*/}
+                        {/*));*/}
 
-                                    {/*return (*/}
-                                        {/*<div style={{*/}
-                                            {/*paddingTop: '0px',*/}
-                                            {/*paddingBottom: '2px',*/}
-                                        {/*}}>*/}
-                                            {/*<Select*/}
-                                                {/*options={options}*/}
-                                                {/*value={this.state.positionsTags}*/}
-                                                {/*onChange={this.handleChangePositionTag}*/}
-                                                {/*closeMenuOnSelect={false}*/}
-                                                {/*components={makeAnimated()}*/}
-                                                {/*isMulti*/}
-                                            {/*/>*/}
-                                        {/*</div>*/}
-                                    {/*);*/}
-                                {/*}*/}
-                                {/*return <SelectNothingToDisplay />;*/}
-                            {/*}}*/}
+                        {/*return (*/}
+                        {/*<div style={{*/}
+                        {/*paddingTop: '0px',*/}
+                        {/*paddingBottom: '2px',*/}
+                        {/*}}>*/}
+                        {/*<Select*/}
+                        {/*options={options}*/}
+                        {/*value={this.state.positionsTags}*/}
+                        {/*onChange={this.handleChangePositionTag}*/}
+                        {/*closeMenuOnSelect={false}*/}
+                        {/*components={makeAnimated()}*/}
+                        {/*isMulti*/}
+                        {/*/>*/}
+                        {/*</div>*/}
+                        {/*);*/}
+                        {/*}*/}
+                        {/*return <SelectNothingToDisplay />;*/}
+                        {/*}}*/}
                         {/*</Query>*/}
                         <Query query={GET_POSITIONS_CATALOG}>
                             {({ loading, error, data, refetch, networkStatus }) => {

@@ -92,7 +92,7 @@ class ComposedTextField extends React.Component {
 
     getCountriesQuery = gql`
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
+            getcatalogitem( IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
                 Id
                 Name
                 IsActive
@@ -103,7 +103,7 @@ class ComposedTextField extends React.Component {
     getStatesQuery = gql`
         query States($parent: Int!)
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: 6, Id_Catalog: 3) {
+            getcatalogitem(IsActive: 1, Id_Parent: 6, Id_Catalog: 3) {
                 Id
                 Name
                 IsActive
@@ -115,7 +115,7 @@ class ComposedTextField extends React.Component {
     getCitiesQuery = gql`
         query Cities($parent: Int!)
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: 140, Id_Catalog: 5) {
+            getcatalogitem(IsActive: 1, Id_Parent: 140, Id_Catalog: 5) {
                 Id
                 Name
                 IsActive
