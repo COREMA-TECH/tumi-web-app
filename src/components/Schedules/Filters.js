@@ -262,11 +262,13 @@ class Filters extends Component {
                         <div className="col-md-8">
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
-                                <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button>
+                                {/* <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button> */}
                                 <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
                                     <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Use Template</button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                        <a href="#" className="dropdown-item" style={{ fontStyle: "italic" }} onClick={this.openFormTitle}>Save as Template</a>
                                         {
                                             this.state.templates.map((template) => {
                                                 return <a key={template.id} className="dropdown-item" href="#" onClick={(event) => { event.preventDefault(); this.loadTemplate(template.id) }}>{template.title}</a>
