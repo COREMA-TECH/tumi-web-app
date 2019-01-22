@@ -303,7 +303,9 @@ class GeneralInfoProperty extends Component {
 						}
 					})
 					.then((data) => {
+						console.log("Data for:::", data)
 						NewIdRegion = data.data.inscatalogitem.Id;
+
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
@@ -377,6 +379,7 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then(({ data }) => {
+							console.log(data)
 							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(id));
 
 							this.setState({
