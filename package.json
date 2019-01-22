@@ -37,6 +37,8 @@
 		"react-input-color": "^1.7.5",
 		"react-input-colorpicker": "^1.0.13",
 		"react-input-mask": "^2.0.4",
+		"react-mobile-datepicker": "^4.0.0",
+		"react-native-modal-datetime-picker": "^6.0.0",
 		"react-number-format": "^3.5.2",
 		"react-onclickoutside": "^6.7.1",
 		"react-redux": "^5.1.0",

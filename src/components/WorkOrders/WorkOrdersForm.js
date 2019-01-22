@@ -22,6 +22,9 @@ import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import ReactDOM from 'react-dom';
+import DatePicker from 'react-mobile-datepicker';
+import './DatePicker.css';
 
 const styles = (theme) => ({
     wrapper: {
@@ -94,7 +97,11 @@ class WorkOrdersForm extends Component {
         Friday: 'FR,',
         Saturday: 'SA,',
         Sunday: 'SU,',
-        dayWeek: ''
+        dayWeek: '',
+
+        time: new Date(),
+        isOpen: false,
+
     };
 
     constructor(props) {
@@ -232,10 +239,6 @@ class WorkOrdersForm extends Component {
             this.state.date == '' ||
             this.state.startDate == '' ||
             this.state.endDate == '' ||
-            /*this.state.shift == '' ||
-            this.state.shift == 0 ||
-            this.state.endShift == '' ||
-            this.state.endShift == 0 ||*/
             this.state.contactId == 0 ||
             this.state.contactId == null
         ) {
@@ -561,70 +564,6 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
-    /*getDetailShift = (func = () => { }) => {
-
-
-     employeesList.push({
-                                    WorkOrderId: item.WorkOrderId,
-                                    ShiftId: item.ShiftId,
-                                    ShiftDetailId: itemDetails.id,
-                                    EmployeeId: itemDetails.detailEmployee.EmployeeId,
-                                    Employees: itemDetails.detailEmployee.Employees.firstName + ' ' + itemDetails.detailEmployee.Employees.lastName
-                                })
-
-
-
-        this.state.Shift.ShiftWorkOrder.map((item) => {
-            console.log("Aqui estamos en this.state.Shift ",item. ShiftId)
-    
-        })
-            ,
-            func
-    };*/
-
-    /*getDetailShift = (WorkOrderId, ShiftId) => {
-        console.log("Estoy en getDetailShift ", WorkOrderId, " ", ShiftId)
-        console.log("Arreglo de employees ", this.state.employees)
-        // let employeesList = [];
-        let employeeIdTemp = 0;
-
-        this.props.client
-            .query({
-                query: GET_DETAIL_SHIFT,
-                variables: { ShiftId: ShiftId }
-            })
-            .then(({ data }) => {
-                console.log("detauls ", data)
-                data.ShiftDetailbyShift.sort().map((item) => {
-                    employeesList.push({
-                        WorkOrderId: WorkOrderId,
-                        ShiftId: ShiftId,
-                        ShiftDetailId: item.id,
-                        EmployeeId: item.detailEmployee.EmployeeId,
-                        Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
-                    })
-                    /* if (item.detailEmployee != null) {
-                         if (employeesList.Value != item.detailEmployee.EmployeeId) {
-                             if (item.detailEmployee.EmployeeId != employeeIdTemp) {
-                                 employeesList.push({
-                                     WorkOrderId: WorkOrderId,
-                                     ShiftId: ShiftId,
-                                     ShiftDetailId: item.id,
-                                     EmployeeId: item.detailEmployee.EmployeeId,
-                                     Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
-                                 })
-                                 employeeIdTemp = item.detailEmployee.EmployeeId
-                             }
-                         }
-                     }
-})
-console.log("employeesList ", data)
-this.setState({ employees: employeesList })
-console.log("array employees ", this.state.employees)
-            })
-            .catch ();
-    };*/
-
     deleteEmployee = (id) => {
         this.props.client
             .mutate({
@@ -680,6 +619,26 @@ console.log("array employees ", this.state.employees)
             selfHtml.classList.remove("is-invalid");
 
     }
+
+    handleClick = () => {
+        this.setState({ isOpen: true });
+    }
+
+    handleCancel = () => {
+        this.setState({ isOpen: false });
+    }
+
+    handleSelect = (time) => {
+        this.setState({ time, isOpen: false });
+    }
+    _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+
+    _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+
+    _handleDatePicked = (date) => {
+        console.log('A date has been picked: ', date);
+        this._hideDateTimePicker();
+    };
 
     render() {
 
@@ -802,6 +761,19 @@ console.log("array employees ", this.state.employees)
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
+                                        <div className="col-md-6">
+                                            <a
+                                                className="select-btn"
+                                                onClick={this.handleClick}>
+                                                select time
+                                            </a>
+                                            <DatePicker
+                                                value={this.state.time}
+                                                isOpen={this.state.isOpen}
+                                                onSelect={this.handleSelect}
+                                                onCancel={this.handleCancel} />
+                                        </div>
+
                                         <div className="col-md-6">
                                             <label htmlFor="">* Quantity</label>
                                             <input
