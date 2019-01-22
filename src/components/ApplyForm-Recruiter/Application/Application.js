@@ -490,7 +490,7 @@ class Application extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: { parent: -1, value: `'${zipCode}'` },
+             variables: { parent: -1, value: `'${zipCode}'` },
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({

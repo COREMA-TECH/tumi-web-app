@@ -21,6 +21,7 @@ export const GET_WORKORDERS_QUERY = gql`
 			dayWeek
 			position {
 				Position
+				Shift
 			}
 			BusinessCompany
 			{
@@ -115,6 +116,7 @@ export const GET_POSITION_BY_QUERY = gql`
 		getposition(Id: null, IsActive: null, Id_Entity: $id) {
 			Id
 			Position
+			Shift
 			Comment
 		}
 	}

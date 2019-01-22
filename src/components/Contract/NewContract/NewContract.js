@@ -830,7 +830,7 @@ class NewContract extends Component {
 
     getStatesQuery = gql`
         query States($parent: Int!, $value: String) {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
+            getcatalogitem(IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
                 Id
                 Name
                 IsActive
@@ -840,7 +840,7 @@ class NewContract extends Component {
 
     getCitiesQuery = gql`
         query States($parent: Int!, $value: String) {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5, Value: $value) {
+            getcatalogitem(IsActive: 1, Id_Parent: $parent, Id_Catalog: 5, Value: $value) {
                 Id
                 Name
                 IsActive
@@ -853,7 +853,7 @@ class NewContract extends Component {
 
     getcatalogcontractterm = gql`
         query getcatalogitemQuery($Id: Int!) {
-            getcatalogitem(Id: $Id, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
+            getcatalogitem(Id: $Id, IsActive: 1,  Id_Catalog: 10) {
                 Id
                 Name
                 IsActive
@@ -863,7 +863,7 @@ class NewContract extends Component {
 
     getContractTermsQuery = gql`
         {
-            getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 10) {
+            getcatalogitem( IsActive: 1,  Id_Catalog: 10) {
                 Id
                 Name
                 IsActive

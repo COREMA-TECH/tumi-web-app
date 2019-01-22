@@ -753,7 +753,7 @@ console.log("array employees ", this.state.employees)
                                             >
                                                 <option value="0">Select a Position</option>
                                                 {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position}</option>
+                                                    <option value={position.Id}>{position.Position} - {position.Shift.trim() == 'A' ? '1st' : position.Shift.trim() == 'P' ? '2nd' : '3rd'}</option>
                                                 ))}
                                             </select>
                                         </div>

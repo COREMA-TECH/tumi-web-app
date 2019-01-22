@@ -209,6 +209,15 @@ class Catalogs extends React.Component {
         }
     `;
 
+
+    UPDATE_PASSWORD_USER_QUERY = gql`
+        mutation UpdUsersPassword($Id: Int!,$Password: String!) {
+            upduserspassword(Id: $Id,Password: $Password) {
+                Id
+            }
+        }
+    `;
+
     DELETE_USER_QUERY = gql`
         mutation delusers($Id: Int!) {
             delusers(Id: $Id, IsActive: 0) {
@@ -269,6 +278,7 @@ class Catalogs extends React.Component {
         loading: false,
         loadingConfirm: false,
         openModal: false,
+        resetPassword: false,
         showCircularLoading: false
     };
 
@@ -997,6 +1007,39 @@ class Catalogs extends React.Component {
         this.resetState();
     };
 
+    resetPasswordHandler = () => {
+        this.setState(
+            {
+                resetPassword: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: this.UPDATE_PASSWORD_USER_QUERY,
+                        variables: {
+                            Id: this.state.idToEdit,
+                            Password: `'TEMP','AES_KEY'`
+                        }
+                    })
+                    .then((data) => {
+                        this.props.handleOpenSnackbar('success', 'Password Changed Successfully!');
+                        this.setState({
+                            resetPassword: false, openModal: false
+                        });
+
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error', 'Error: Updating password: ' + error
+                        );
+                        this.setState({
+                            resetPassword: false
+                        });
+                    });
+            }
+        );
+    };
+
     handleCheckedChange = (name) => (event) => {
         if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
         if (name == 'isAdmin' && event.target.checked)
@@ -1434,6 +1477,17 @@ class Catalogs extends React.Component {
                             </div>
                         </div>
                         <div className={classes.root}>
+                            <div className={classes.wrapper}>
+                                <Tooltip title={'Cancel Operation'}>
+                                    <div>
+                                        <button className="btn btn-warning" onClick={this.resetPasswordHandler}>
+                                            Reset Password {!this.state.resetPassword && <i class="fas fa-sync-alt" />}
+                                            {this.state.resetPassword && <i className="fas fa-spinner fa-spin ml-1" />}
+                                        </button>
+                                    </div>
+                                </Tooltip>
+                            </div>
+
                             <div className={classes.wrapper}>
                                 <Tooltip title={'Cancel Operation'}>
                                     <div>
