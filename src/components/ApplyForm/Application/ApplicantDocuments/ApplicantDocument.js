@@ -278,12 +278,12 @@ class ApplicantDocument extends Component {
 									/>
 								</React.Fragment>
 							) : (
-								<ul className="UploadDocument-wrapper">
-									{this.renderStaticElement()}
-									{this.renderTemplateList()}
-									{this.renderDocumentList()}
-								</ul>
-							)}
+										<ul className="UploadDocument-wrapper">
+											{this.renderStaticElement()}
+											{this.renderTemplateList()}
+											{this.renderDocumentList()}
+										</ul>
+									)}
 						</div>
 					</div>
 				</div>

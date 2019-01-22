@@ -97,7 +97,7 @@ class GeneralInfoProperty extends Component {
      */
 	getCountriesQuery = gql`
 		{
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: null, Id_Catalog: 2) {
+			getcatalogitem(IsActive: 1, Id_Catalog: 2) {
 				Id
 				Name
 				IsActive
@@ -107,7 +107,7 @@ class GeneralInfoProperty extends Component {
 
 	getStatesQuery = gql`
 		query States($parent: Int!, $value: String) {
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
+			getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $value) {
 				Id
 				Name
 				IsActive
@@ -117,7 +117,7 @@ class GeneralInfoProperty extends Component {
 
 	getRegionsQuery = gql`
 	query Regions {
-		getcatalogitem(Id: null, IsActive: 1, Id_Catalog:4) {
+		getcatalogitem( IsActive: 1, Id_Catalog:4) {
 			Id
 			Name: DisplayLabel
 			IsActive
@@ -127,7 +127,7 @@ class GeneralInfoProperty extends Component {
 
 	getCitiesQuery = gql`
 		query Cities($parent: Int!) {
-			getcatalogitem(Id: null, IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
+			getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
 				Id
 				Name
 				IsActive

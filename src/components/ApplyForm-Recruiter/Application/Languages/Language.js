@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import '../index.css';
 import languageLevelsJSON from '../../data/languagesLevels';
 import Button from '@material-ui/core/Button/Button';
-import {GET_APPLICATION_LANGUAGES_BY_ID, GET_LANGUAGES_QUERY} from '../../Queries';
+import { GET_APPLICATION_LANGUAGES_BY_ID, GET_LANGUAGES_QUERY } from '../../Queries';
 import withApollo from 'react-apollo/withApollo';
-import {ADD_LANGUAGES, REMOVE_APPLICANT_LANGUAGE} from '../../Mutations';
+import { ADD_LANGUAGES, REMOVE_APPLICANT_LANGUAGE } from '../../Mutations';
 import CircularProgressLoading from '../../../material-ui/CircularProgressLoading';
 import withGlobalContent from '../../../Generic/Global';
 
@@ -44,7 +44,7 @@ class Language extends Component {
                         },
                         fetchPolicy: 'no-cache'
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             languages: data.applications[0].languages,
                             loading: false
@@ -68,7 +68,7 @@ class Language extends Component {
             .query({
                 query: GET_LANGUAGES_QUERY
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     languagesLoaded: data.getcatalogitem
                 });
@@ -136,7 +136,7 @@ class Language extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.props.handleOpenSnackbar('success', 'Successfully removed', 'bottom', 'right');
 
                 this.getLanguagesList(this.state.applicationId);
@@ -225,7 +225,7 @@ class Language extends Component {
                             {/*}}*/}
                             {/*</Query>*/}
                             {/*<input*/}
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                         <div className="col-3">
                             <span className="primary">* {languagesTable[1].label}</span>
@@ -239,7 +239,7 @@ class Language extends Component {
                                 <option value="">{spanishActions[5].label}</option>
                                 {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                             </select>
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                         <div className="col-3">
                             <span className="primary">* {languagesTable[2].label}</span>
@@ -253,19 +253,19 @@ class Language extends Component {
                                 <option value="">{spanishActions[5].label}</option>
                                 {languageLevelsJSON.map((item) => <option value={item.Id}>{item.Name}</option>)}
                             </select>
-                            <span className="check-icon"/>
+                            <span className="check-icon" />
                         </div>
                         <div className="col-2">
-                            <br/>
+                            <br />
                             <Button type="submit" form="form-language" className="save-skill-button">
                                 {spanishActions[0].label}
                             </Button>
                         </div>
                     </form>
                 ) : (
-                    ''
-                )}
-                <br/>
+                        ''
+                    )}
+                <br />
                 {this.state.languages.length > 0 ? (
                     <div className="skills-container skills-container--header">
                         <div className="row">
@@ -281,41 +281,41 @@ class Language extends Component {
                         </div>
                     </div>
                 ) : (
-                    ''
-                )}
+                        ''
+                    )}
 
                 {this.state.languages.map((languageItem) => (
                     <div key={uuidv4()} className="skills-container">
                         <div className="row">
                             <div className="col-3">
-								<span>
-									{this.state.languagesLoaded.map((item) => {
+                                <span>
+                                    {this.state.languagesLoaded.map((item) => {
                                         if (item.Id == languageItem.language) {
                                             return item.Name.trim();
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.conversation) {
                                             return item.Name;
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-4">
-								<span>
-									{languageLevelsJSON.map((item) => {
+                                <span>
+                                    {languageLevelsJSON.map((item) => {
                                         if (item.Id == languageItem.writing) {
                                             return item.Name;
                                         }
                                     })}
-								</span>
+                                </span>
                             </div>
                             <div className="col-1">
-								<span
+                                <span
                                     className="delete-school-button"
                                     onClick={() => {
                                         this.setState(
@@ -332,8 +332,8 @@ class Language extends Component {
                                         );
                                     }}
                                 >
-									<i className="fas fa-trash-alt"/>
-								</span>
+                                    <i className="fas fa-trash-alt" />
+                                </span>
                                 {/*<Button*/}
                                 {/*className="deleteSkillSection"*/}
                                 {/*onClick={() => {*/}
@@ -364,26 +364,26 @@ class Language extends Component {
                                 {this.state.editing ? (
                                     ''
                                 ) : (
-                                    <button
-                                        className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
-                                    >
-                                        {spanishActions[0].label} <i className="fas fa-plus"/>
-                                    </button>
-                                )}
+                                        <button
+                                            className="applicant-card__edit-button"
+                                            onClick={() => {
+                                                this.setState({
+                                                    editing: true
+                                                });
+                                            }}
+                                        >
+                                            {spanishActions[0].label} <i className="fas fa-plus" />
+                                        </button>
+                                    )}
                             </div>
                             <div className="">
                                 {this.state.loading ? (
                                     <div className="form-section-1 form-section--center">
-                                        <CircularProgressLoading/>
+                                        <CircularProgressLoading />
                                     </div>
                                 ) : (
-                                    renderlanguagesSection()
-                                )}
+                                        renderlanguagesSection()
+                                    )}
                             </div>
                             {this.state.editing ? (
                                 <div className="applicant-card__footer">
@@ -416,24 +416,24 @@ class Language extends Component {
                                     </button>
                                 </div>
                             ) : (
-                                <div className="applicant-card__footer">
-                                    <button
-                                        className="applicant-card__cancel-button"
-                                        onClick={() => {
-                                            this.props.handleBack();
-                                        }}
-                                    >
-                                        {spanishActions[9].label}
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            this.props.handleNext();
-                                        }}
-                                        className="applicant-card__save-button">
-                                        {spanishActions[8].label}
-                                    </button>
-                                </div>
-                            )}
+                                    <div className="applicant-card__footer">
+                                        <button
+                                            className="applicant-card__cancel-button"
+                                            onClick={() => {
+                                                this.props.handleBack();
+                                            }}
+                                        >
+                                            {spanishActions[9].label}
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                this.props.handleNext();
+                                            }}
+                                            className="applicant-card__save-button">
+                                            {spanishActions[8].label}
+                                        </button>
+                                    </div>
+                                )}
                         </div>
                     </div>
                 </div>

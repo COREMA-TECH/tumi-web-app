@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
@@ -11,8 +11,8 @@ import {
     GET_POSITIONS_QUERY,
     GET_STATES_QUERY
 } from '../Queries';
-import {updateApplicationInformation} from '../utils';
-import {RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION} from '../Mutations';
+import { updateApplicationInformation } from '../utils';
+import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION } from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
 import withGlobalContent from '../../Generic/Global';
@@ -131,12 +131,12 @@ class Application extends Component {
 
 
     handleChangePositionTag = (positionsTags) => {
-        this.setState({positionsTags});
+        this.setState({ positionsTags });
         console.log(`Option selected:`, positionsTags);
     };
 
     handleChange = (positionsTags) => {
-        this.setState({positionsTags});
+        this.setState({ positionsTags });
     };
 
     /**<
@@ -184,7 +184,7 @@ class Application extends Component {
                             }
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.setState({
                             editing: false
                         }, () => {
@@ -223,7 +223,7 @@ class Application extends Component {
                     applicationIdealJob: idealJobArrayObject
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 console.log("DEBUG");
             })
             .catch(error => {
@@ -249,7 +249,7 @@ class Application extends Component {
                         },
                         fetchPolicy: 'no-cache'
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         let applicantData = data.applications[0];
                         console.log("applicantData ", applicantData);
                         this.setState(
@@ -328,7 +328,7 @@ class Application extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 let dataAPI = data.applicantIdealJob;
                 let object;
 
@@ -402,7 +402,7 @@ class Application extends Component {
 
     render() {
         //this.validateInvalidInput();
-        const {tags, suggestions} = this.state;
+        const { tags, suggestions } = this.state;
 
         return (
             <div className="Apply-container--application">
@@ -436,27 +436,27 @@ class Application extends Component {
                                 {this.state.editing ? (
                                     ''
                                 ) : (
-                                    <button
-                                        className="applicant-card__edit-button"
-                                        onClick={() => {
-                                            this.setState({
-                                                editing: true
-                                            });
-                                        }}
-                                    >
-                                        {spanishActions[1].label} <i className="far fa-edit"/>
-                                    </button>
-                                )}
+                                        <button
+                                            className="applicant-card__edit-button"
+                                            onClick={() => {
+                                                this.setState({
+                                                    editing: true
+                                                });
+                                            }}
+                                        >
+                                            {spanishActions[1].label} <i className="far fa-edit" />
+                                        </button>
+                                    )}
                             </div>
-                            <br/>
+                            <br />
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-md-12 col-lg-6 form-section-1">
                                         <div className="row">
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[0].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[0].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -475,9 +475,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[1].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[1].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -495,9 +495,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[2].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[2].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -516,9 +516,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[24].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[24].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -537,9 +537,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-12 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[22].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[22].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -558,9 +558,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[4].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[4].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -578,9 +578,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[5].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[5].label}
+                                                </span>
                                                 <InputMask
                                                     id="zipCode"
                                                     name="zipCode"
@@ -622,11 +622,11 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[6].label}
-												</span>
-                                                <Query query={GET_STATES_QUERY} variables={{parent: 6}}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[6].label}
+                                                </span>
+                                                <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -651,16 +651,16 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[7].label}
-												</span>
-                                                <Query query={GET_CITIES_QUERY} variables={{parent: this.state.state}}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[7].label}
+                                                </span>
+                                                <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
@@ -696,14 +696,14 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[9].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[9].label}
+                                                </span>
                                                 <InputMask
                                                     id="home-number"
                                                     name="homePhone"
@@ -743,9 +743,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[10].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[10].label}
+                                                </span>
                                                 <InputMask
                                                     id="cell-number"
                                                     name="cellPhone"
@@ -786,9 +786,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-12 ">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[11].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[11].label}
+                                                </span>
                                                 <InputMask
                                                     id="socialSecurityNumber"
                                                     name="socialSecurityNumber"
@@ -812,9 +812,9 @@ class Application extends Component {
                                     <div className="col-md-12 col-lg-6 form-section-2">
                                         <div className="row">
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[12].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[12].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -833,9 +833,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[23].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[23].label}
+                                                </span>
                                                 <div className="onoffswitch">
                                                     <input
                                                         id="carInput"
@@ -855,15 +855,15 @@ class Application extends Component {
                                                         className="onoffswitch-checkbox"
                                                     />
                                                     <label className="onoffswitch-label" htmlFor="carInput">
-                                                        <span className="onoffswitch-inner"/>
-                                                        <span className="onoffswitch-switch"/>
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
                                             </div>
                                             <div className="col-md-12">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[13].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[13].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -883,9 +883,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[14].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[14].label}
+                                                </span>
                                                 <select
                                                     name="typeOfID"
                                                     id="typeOfID"
@@ -908,9 +908,9 @@ class Application extends Component {
                                                 </select>
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[15].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[15].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -929,17 +929,17 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-12">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[16].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[16].label}
+                                                </span>
                                                 <Query query={GET_POSITIONS_CATALOG}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                             let options = [];
                                                             data.getcatalogitem.map((item) => (
-                                                                options.push({value: item.Id, label: item.Description})
+                                                                options.push({ value: item.Id, label: item.Description })
                                                             ));
 
                                                             return (
@@ -959,17 +959,17 @@ class Application extends Component {
                                                                 </div>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
 
                                             <div className="col-md-12">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[17].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[17].label}
+                                                </span>
                                                 <Query query={GET_POSITIONS_QUERY}>
-                                                    {({loading, error, data, refetch, networkStatus}) => {
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
                                                         //if (networkStatus === 4) return <LinearProgress />;
                                                         if (error) return <p>Error </p>;
                                                         if (data.workOrder != null && data.workOrder.length > 0) {
@@ -996,14 +996,14 @@ class Application extends Component {
                                                                 </select>
                                                             );
                                                         }
-                                                        return <SelectNothingToDisplay/>;
+                                                        return <SelectNothingToDisplay />;
                                                     }}
                                                 </Query>
                                             </div>
                                             <div className="col-md-12">
-												<span className="primary applicant-card__label skeleton">
-													* {formSpanish[18].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    * {formSpanish[18].label}
+                                                </span>
                                                 <input
                                                     onChange={(event) => {
                                                         this.setState({
@@ -1021,9 +1021,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[19].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[19].label}
+                                                </span>
 
                                                 <div className="onoffswitch">
                                                     <input
@@ -1050,15 +1050,15 @@ class Application extends Component {
                                                         className="onoffswitch-checkbox"
                                                     />
                                                     <label className="onoffswitch-label" htmlFor="scheduleInput">
-                                                        <span className="onoffswitch-inner"/>
-                                                        <span className="onoffswitch-switch"/>
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[21].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[21].label}
+                                                </span>
                                                 <textarea
                                                     onChange={(event) => {
                                                         this.setState({
@@ -1075,9 +1075,9 @@ class Application extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[20].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[20].label}
+                                                </span>
 
                                                 <div className="onoffswitch">
                                                     <input
@@ -1104,16 +1104,16 @@ class Application extends Component {
                                                         className="onoffswitch-checkbox"
                                                     />
                                                     <label className="onoffswitch-label" htmlFor="convictedSwitch">
-                                                        <span className="onoffswitch-inner"/>
-                                                        <span className="onoffswitch-switch"/>
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
                                                     </label>
                                                 </div>
 
                                             </div>
                                             <div className="col-md-6">
-												<span className="primary applicant-card__label skeleton">
-													{formSpanish[21].label}
-												</span>
+                                                <span className="primary applicant-card__label skeleton">
+                                                    {formSpanish[21].label}
+                                                </span>
                                                 <textarea
                                                     onChange={(event) => {
                                                         this.setState({
@@ -1151,8 +1151,8 @@ class Application extends Component {
                                     </button>
                                 </div>
                             ) : (
-                                ''
-                            )}
+                                    ''
+                                )}
                         </div>
                     </div>
                 </form>
