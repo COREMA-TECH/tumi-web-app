@@ -165,13 +165,6 @@ class PreFilter extends Component {
                                         {this.renderPositionList()}
                                     </select>
                                 </div>
-                                <div className="col-md-12">
-                                    <label htmlFor="">Requested By</label>
-                                    <select name="requested" id="" disabled={disabled} required className="form-control" onChange={this.handleSelectValueChange}>
-                                        <option value="">Select a Option</option>
-                                        {this.renderContactsList()}
-                                    </select>
-                                </div>
                             </div>
                         </div>
                     </DialogContent>

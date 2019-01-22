@@ -89,7 +89,8 @@ class GeneralInfoProperty extends Component {
 			cityFinal: '',
 			loadingData: false,
 
-			nextButton: false
+			nextButton: false,
+			isCorrectCity: true
 		};
 	}
 	/**
@@ -1193,6 +1194,10 @@ class GeneralInfoProperty extends Component {
 
 													<div className="col-md-6 col-lg-3">
 														<label>City</label>
+														<span className="float-right">
+															<input type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
+															<label htmlFor="">Change selected city by zip code?</label>
+														</span>
 														<Query
 															query={this.getCitiesQuery}
 															variables={{ parent: this.state.state }}
@@ -1228,7 +1233,7 @@ class GeneralInfoProperty extends Component {
 																			error={this.state.validCity === '' ? false : true}
 																			value={this.state.city}
 																			showNone={false}
-																			disabled={true}
+																			disabled={this.state.isCorrectCity}
 																		>
 																			<option value="">Select a city</option>
 																			{data.getcatalogitem.map((item) => (
@@ -1243,7 +1248,7 @@ class GeneralInfoProperty extends Component {
 													</div>
 
 													<div className="col-md-6 col-lg-2">
-														<label>* States unidos</label>
+														<label>* States</label>
 														<Query query={this.getStatesQuery} variables={{ parent: 6 }}>
 															{({ loading, error, data, refetch, networkStatus }) => {
 																//if (networkStatus === 4) return <LinearProgress />;
