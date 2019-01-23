@@ -32,6 +32,16 @@
         margin-right: -1rem;
         padding-top: 0;
     }
+    &-footer {
+        border-top: solid 1px map-get($map: $gray-shades, $key: gray-3);
+        bottom: 0;
+        max-width: calc(400px - 2rem);
+        position: fixed;
+        width: 100%;
+    }
+    &-header {
+        border-bottom: solid 1px map-get($map: $gray-shades, $key: gray-3);
+    }
     &-hour {
         height: 100%;
         display: flex;
@@ -76,5 +86,23 @@
             padding-left: .9rem;
             padding-right: .9rem;
         }
+    }
+}
+
+.MasterShiftSummary {
+    &-icon {
+        flex-shrink: 0;
+        margin-right: 0.75rem;
+        text-align: center;
+        width: 30px;
+    }
+    &-item {
+        align-items: flex-start;
+        display: flex;
+        margin-top: 1rem;
+    }
+    &-line {
+        display: block;
+        width: 100%;
     }
 }

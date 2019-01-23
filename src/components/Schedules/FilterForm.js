@@ -37,7 +37,9 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
-        workOrderId: 0
+        workOrderId: 0,
+        idPosition: null,
+        summaryEnable: true
     }
 
     constructor(props) {
@@ -167,7 +169,7 @@ class FilterForm extends Component {
                         title: this.state.title,
                         color: this.state.color,
                         status: this.state.status,
-                        idPosition: this.props.position,
+                        idPosition: this.state.idPosition,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
@@ -250,7 +252,6 @@ class FilterForm extends Component {
                 const shiftDetail = data.ShiftDetail[0];
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
-                console.log(shiftDetail)
                 this.setState({
                     startDate: this.props.isSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
                     endDate: this.props.isSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
@@ -266,8 +267,9 @@ class FilterForm extends Component {
                     workOrderId: shiftDetail.shift.workOrder ? shiftDetail.shift.workOrder.id : 0,
                     dayWeeks: shiftDetail.shift.dayWeek,
                     selectedEmployees: selectedEmployee ? selectedEmployee : [],
-                    comment: shiftDetail.shift.comment
-                }, () => this.getPosition(shiftDetail.shift.idPosition))
+                    comment: shiftDetail.shift.comment,
+                    idPosition: shiftDetail.shift.idPosition
+                }, () => this.getPosition())
 
             }).catch(error => {
                 this.props.handleOpenSnackbar(
@@ -445,8 +447,8 @@ class FilterForm extends Component {
     }
 
     componentWillMount() {
+        this.getPosition();
         this.getEmployees()
-        this.getPosition(this.props.position);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -550,87 +552,170 @@ class FilterForm extends Component {
         this.setState({ ...this.DEFAULT_STATE })
     }
 
+    renderSummary = () => {
+        return <div className="MasterShiftSummary">
+
+            <div className="MasterShiftSummary-wrapper">
+                <div className="MasterShiftSummary-item">
+                    <div className="MasterShiftSummary-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div className="MasterShiftSummary-position">
+                        Hola que hace
+            </div>
+                </div>
+                <div className="MasterShiftSummary-item">
+                    <div className="MasterShiftSummary-icon">
+                        <i class="far fa-clock"></i>
+                    </div>
+                    <div className="MasterShiftSummary-position">
+                        <span class="MasterShiftSummary-line">Sun, Jan 6, 2019</span>
+                        <span className="MasterShiftSummary-line">8:30 am - 12:30pm (4h)</span>
+                    </div>
+                </div>
+                <div className="MasterShiftSummary-item">
+                    <div className="MasterShiftSummary-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div className="MasterShiftSummary-position">
+                        1 Employees
+            </div>
+                </div>
+                <div className="MasterShiftSummary-item">
+                    <div className="MasterShiftSummary-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div className="MasterShiftSummary-position">
+                        Hotel y su localización
+            </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    handleSummaryState = () => {
+        this.setState(prevState => {
+            return { summaryEnable: !this.state.summaryEnable }
+        });
+    }
+
     render() {
         const isEdition = this.state.selectedDetailId != 0;
         const allowEdit = this.state.status < 2;
 
         const isHotelManger = this.props.hotelManager;
-        return <div>
-            <div className={`MasterShiftForm ${this.props.closedForm ? '' : 'active'}`}>
-                <div className="row">
-                    <div className="col-md-10">
-                        <h3 className="MasterShiftForm-title">From Mon 11 to Sat 15</h3>
-                    </div>
-                    <div className="col-md-2">
-                        <button className="btn btn-link MasterShiftForm-close"
-                            onClick={() => this.props.handleCloseForm(this.resetInputs)}>
-                            <i className="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <form id="form" method="POST" onSubmit={this.onSubmit} >
-                    <div className="row">
-                        {/* <div className="col-md-12">
-                        <Options />
-                    </div> */}
-                        <div className="col-md-12">
-                            <label htmlFor="">* Employees</label>
-                            <Select
-                                name="employees"
-                                options={this.state.employees}
-                                value={this.state.selectedEmployees}
-                                onChange={this.handleChangeEmployee}
-                                closeMenuOnSelect={false}
-                                isDisabled={isHotelManger || !allowEdit}
-                                isMulti={!isEdition}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <label htmlFor="">* Start Date</label>
-                            <input type="date" name="startDate" disabled={isHotelManger || isEdition || !allowEdit} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
-                        </div>
-                        <div className="col-md-6">
-                            <label htmlFor="">* End Date</label>
-                            <input type="date" name="endDate" disabled={isHotelManger || isEdition || !allowEdit} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
-                        </div>
-                        <div className="col-md-5">
-                            < label htmlFor="">* Start Time</label>
-                            <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input>
-                        </div>
-                        <div className="col-md-5">
-                            < label htmlFor="">* End Time</label>
-                            <input type="time" name="endHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input>
-                        </div>
-                        <div className="col-md-2">
-                            <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
-                        </div>
-                        <div className="col-md-12">
-                            <label htmlFor="">Repeat?</label>
-                            <div className="btn-group" role="group" aria-label="Basic example">
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+        return (
+            <div>
+                <div className={`MasterShiftForm ${this.props.closedForm ? '' : 'active'}`}>
+                    <header className="MasterShiftForm-header">
+                        <div className="row">
+                            <div className="col-md-10">
+                                <h3 className="MasterShiftForm-title">From {moment(this.state.startDate).format('ddd D')} to {moment(this.state.endDate).format('ddd D')}</h3>
+                            </div>
+                            <div className="col-md-2">
+                                <button className="btn btn-link MasterShiftForm-close"
+                                    onClick={() => this.props.handleCloseForm(this.resetInputs)}>
+                                    <i className="fas fa-times"></i>
+                                </button>
                             </div>
                         </div>
-                        <div className="col-md-12">
-                            <label htmlFor="">Comment</label>
-                            <textarea name="comment" className="form-control" id="" cols="30" rows="10" disabled={(isHotelManger || (this.props.isSerie == false && this.state.selectedDetailId != 0) || !allowEdit)} value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
+                    </header>
+
+                    {
+                        this.state.summaryEnable ?
+                            this.renderSummary() :
+                            (
+                                <form id="form" method="POST" onSubmit={this.onSubmit} >
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            <label htmlFor="">* Employees</label>
+                                            <Select
+                                                name="employees"
+                                                options={this.state.employees}
+                                                value={this.state.selectedEmployees}
+                                                onChange={this.handleChangeEmployee}
+                                                closeMenuOnSelect={false}
+                                                isDisabled={isHotelManger || !allowEdit}
+                                                isMulti={!isEdition}
+                                            />
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">* Position</label>
+                                            <select name="idPosition" id="" className="form-control" onChange={this.handleInputValueChange} value={this.state.idPosition} disabled={true}>
+                                                {this.renderPositionList()}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">* Start Date</label>
+                                            <input type="date" name="startDate" disabled={isHotelManger || isEdition || !allowEdit} className="form-control" value={this.state.startDate} onChange={this.handleInputValueChange} required />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">* End Date</label>
+                                            <input type="date" name="endDate" disabled={isHotelManger || isEdition || !allowEdit} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
+                                        </div>
+                                        <div className="col-md-5">
+                                            < label htmlFor="">* Start Time</label>
+                                            <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input>
+                                        </div>
+                                        <div className="col-md-5">
+                                            < label htmlFor="">* End Time</label>
+                                            <input type="time" name="endHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input>
+                                        </div>
+                                        <div className="col-md-2">
+                                            <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Repeat?</label>
+                                            <div className="btn-group" role="group" aria-label="Basic example">
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                                                <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+                                            </div>
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">Comment</label>
+                                            <textarea name="comment" className="form-control" id="" cols="30" rows="10" disabled={(isHotelManger || (this.props.isSerie == false && this.state.selectedDetailId != 0) || !allowEdit)} value={this.state.comment} onChange={this.handleInputValueChange}></textarea>
+                                        </div>
+                                        {/* <div className="col-md-3">
+                                <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
+                            </div> */}
+                                    </div>
+                                    <div className="MasterShiftForm-groupButtons">
+                                        {this.showConfirmationButtons(allowEdit)}
+                                    </div>
+                                </form>
+
+                            )
+
+                    }
+                    <footer className="MasterShiftForm-footer">
+                        <div className="row">
+                            <div className="col-xs-6 col-md-6">
+                                <button type="button" className="btn btn-success float-left btn-not-rounded">Notify</button>
+                            </div>
+                            {
+                                this.state.summaryEnable ? (
+                                    <div className="col-xs-6 col-md-6">
+                                        <button type="button" className="btn btn-default float-right btn-not-rounded" onClick={this.handleSummaryState}>Edit</button>
+                                    </div>
+                                ) :
+                                    (
+                                        <div className="col-xs-6 col-md-6">
+                                            <button type="button" className="btn btn-default float-right btn-not-rounded" onClick={this.handleSummaryState}>Cancel</button>
+                                        </div>
+                                    )
+                            }
                         </div>
-                        {/* <div className="col-md-3">
-                        <ShiftColorPicker onChange={this.handleColorChange} color={this.state.color} />
-                    </div> */}
-                    </div>
-                    <div className="MasterShiftForm-groupButtons">
-                        {this.showConfirmationButtons(allowEdit)}
-                    </div>
-                </form>
+                    </footer>
+                </div>
+
+                <div className="MasterShiftForm-overlay" onClick={() => this.props.handleCloseForm(this.resetInputs)}></div>
             </div>
-            <div className="MasterShiftForm-overlay"></div>
-        </div>
+        )
     }
 }
 

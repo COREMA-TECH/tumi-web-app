@@ -10810,6 +10810,14 @@ button.rbc-input::-moz-focus-inner {
     margin-left: auto;
     margin-right: -1rem;
     padding-top: 0; }
+  .MasterShiftForm-footer {
+    border-top: solid 1px #bdbdbd;
+    bottom: 0;
+    max-width: calc(400px - 2rem);
+    position: fixed;
+    width: 100%; }
+  .MasterShiftForm-header {
+    border-bottom: solid 1px #bdbdbd; }
   .MasterShiftForm-hour {
     height: 100%;
     display: -webkit-box;
@@ -10851,6 +10859,26 @@ button.rbc-input::-moz-focus-inner {
   .MasterShiftForm .btn-group .btn {
     padding-left: .9rem;
     padding-right: .9rem; }
+
+.MasterShiftSummary-icon {
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  margin-right: 0.75rem;
+  text-align: center;
+  width: 30px; }
+
+.MasterShiftSummary-item {
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 1rem; }
+
+.MasterShiftSummary-line {
+  display: block;
+  width: 100%; }
 
 .MasterShift-btn i {
   color: #7e7e7e;

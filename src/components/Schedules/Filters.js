@@ -8,6 +8,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import withGlobalContent from 'Generic/Global';
+import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
 
 class Filters extends Component {
 
@@ -21,7 +22,9 @@ class Filters extends Component {
             shifts: [],
             templates: [],
             titleModalOpened: false,
-            title: ''
+            title: '',
+            item: null,
+            openModal: false
         };
     }
 
@@ -247,6 +250,19 @@ class Filters extends Component {
                 );
             });
     }
+
+    handleClickOpenModal = () => {
+        this.setState({ openModal: true, openLife: false, item: null });
+    };
+
+    handleCloseModal = (event) => {
+        event.preventDefault();
+        this.setState({
+            openModal: false, openLife: false
+
+        });
+    };
+
     render() {
         return (
             <div className="MasterShiftHeader">
@@ -261,7 +277,7 @@ class Filters extends Component {
                     <div className="row">
                         <div className="col-md-8">
                             <div className="MasterShiftHeader-controlLeft">
-                                <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
+                                <button onClick={this.handleClickOpenModal} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
                                 {/* <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button> */}
                                 <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
@@ -307,6 +323,12 @@ class Filters extends Component {
                         </DialogActions>
                     </form>
                 </Dialog>
+                <WorkOrdersForm
+                    item={this.state.item}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    openModal={this.state.openModal}
+                    handleCloseModal={this.handleCloseModal}
+                />
             </div>
         );
     }
