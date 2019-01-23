@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS, GET_TEMPLATES } from './Queries';
+import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_SHIFTS, GET_TEMPLATES } from './Queries';
 import { CREATE_TEMPLATE, USE_TEMPLATE, LOAD_PREVWEEK, PUBLISH_ALL } from './Mutations';
 import withApollo from 'react-apollo/withApollo';
-import Options from './Options';
 import moment from 'moment';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -18,7 +17,6 @@ class Filters extends Component {
         this.state = {
             cities: [],
             states: [],
-            positions: [],
             shifts: [],
             templates: [],
             titleModalOpened: false,
@@ -70,19 +68,6 @@ class Filters extends Component {
             .catch();
     }
 
-    getPosition = () => {
-        this.props.client
-            .query({
-                query: GET_POSITION,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    positions: data.getposition
-                });
-            })
-            .catch();
-    }
 
     getShifts = () => {
         this.props.client
@@ -167,7 +152,6 @@ class Filters extends Component {
 
     loadTemplate = (id) => {
         let endDayOfWeek = this.props.templateEndDate;
-        let positionId = this.props.positionId;
         let requestedBy = this.props.requested;
         let userId = localStorage.getItem('LoginId');
         let specialComment = "";
@@ -178,7 +162,6 @@ class Filters extends Component {
                     templateId: id,
                     endDate: endDayOfWeek,
                     userId: userId,
-                    positionId: positionId,
                     requestedBy: requestedBy,
                     specialComment: specialComment
                 }
@@ -200,7 +183,6 @@ class Filters extends Component {
 
     loadPreviousWeek = () => {
         let endDayOfWeek = this.props.templateEndDate;
-        let positionId = this.props.positionId;
         let entityId = this.props.location;
         let userId = localStorage.getItem('LoginId');
         this.props.client
@@ -208,7 +190,6 @@ class Filters extends Component {
                 mutation: LOAD_PREVWEEK,
                 variables: {
                     endDate: endDayOfWeek,
-                    positionId: positionId,
                     entityId: entityId,
                     userId: userId
                 }
@@ -269,7 +250,7 @@ class Filters extends Component {
                 <div className="row">
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
-                        Position: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.positionName}</a>,
+                        Department: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.departmentName}</a>,
                         Requested By: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.requestedName}</a>
                     </div>
                 </div>
@@ -292,6 +273,7 @@ class Filters extends Component {
                                         }
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <div className="col-md-4">

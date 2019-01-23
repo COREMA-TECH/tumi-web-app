@@ -15,10 +15,8 @@ class FilterForm extends Component {
 
     DEFAULT_STATE = {
         selectedEmployees: [],
-        positions: [],
         color: COLOR_ASSIGNED,
-        //  title: '',
-        title: 'My Title',
+        title: '',
         startHour: '',
         endHour: '',
         startDate: '',
@@ -38,7 +36,7 @@ class FilterForm extends Component {
         requestedBy: 1,
         dayWeeks: "",
         workOrderId: 0,
-        idPosition: null,
+        position: "",
         summaryEnable: true
     }
 
@@ -47,14 +45,19 @@ class FilterForm extends Component {
         this.state = {
             employees: [],
             locations: [],
+            positions: [],
             ...this.DEFAULT_STATE
         }
     }
 
-    getEmployees = () => {
+    getEmployees = (idEntity) => {
         this.props.client
             .query({
                 query: GET_INITIAL_DATA,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    idEntity: idEntity
+                }
             })
             .then(({ data }) => {
                 //Save data into state
@@ -63,6 +66,7 @@ class FilterForm extends Component {
                     let employees = data.employees.map(item => {
                         return { value: item.id, label: `${item.firstName} ${item.lastName}` }
                     })
+                    this.props.updateEmployeeList(employees);
                     return { employees }
                 });
                 //Location
@@ -166,10 +170,11 @@ class FilterForm extends Component {
                     endHour: this.state.endHour,
                     shift: {
                         entityId: this.props.location,
+                        departmentId: this.props.department,
                         title: this.state.title,
                         color: this.state.color,
                         status: this.state.status,
-                        idPosition: this.state.idPosition,
+                        idPosition: this.state.position,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
@@ -283,12 +288,6 @@ class FilterForm extends Component {
         return this.state.employees.find(item => item.value == id)
     }
 
-    renderLocationList = () => {
-        return this.state.locations.map((item) => {
-            return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
-        })
-    }
-
     renderPositionList = () => {
         return this.state.positions.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.Position}</option>
@@ -400,7 +399,7 @@ class FilterForm extends Component {
 
         if (valid) {
             let mutation;
-            var position = this.state.positions.find(item => item.Id == this.props.position)
+            var position = this.state.positions.find(item => item.Id == this.state.position)
             if (position)
                 this.setState({ specialComment: position.Comment ? position.Comment : '', updating: true }, () => {
                     if (this.state.selectedDetailId == 0)
@@ -446,14 +445,18 @@ class FilterForm extends Component {
         this.setState({ ...this.DEFAULT_STATE })
     }
 
-    componentWillMount() {
-        this.getPosition();
-        this.getEmployees()
-    }
+    // componentWillMount() {
+    //     this.getPosition();
+    //     this.getEmployees()
+    // }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.id != nextProps.id && nextProps.id != 0)
             this.getInfoForSelectedShift(nextProps.id)
+        if (this.props.location != nextProps.location) {
+            this.getEmployees(nextProps.location);
+            this.getPosition();
+        }
     }
 
     getWeekDayStyle = (dayName) => {
@@ -663,6 +666,25 @@ class FilterForm extends Component {
                                         </div>
                                         <div className="col-md-2">
                                             <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
+                                        </div>
+                                        <div className="col-md-12">
+                                            <label htmlFor="">* Position</label>
+                                            <select
+                                                name="position"
+                                                id="position"
+                                                onChange={this.handleSelectValueChange}
+                                                value={this.state.position}
+                                                className="form-control"
+                                                disabled={isHotelManger || isEdition}
+                                                required
+                                            >
+                                                <option value="">Select a position</option>
+                                                {this.state.positions.map((item) => (
+                                                    <option
+                                                        value={item.Id}>{item.Position} </option>
+                                                ))}
+
+                                            </select>
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="">Repeat?</label>
