@@ -1034,7 +1034,8 @@ class GeneralInformation extends Component {
 			loadingUpdate: false,
 			indexView: 0, //Loading
 			errorMessage: '',
-			hotelModal: false
+			hotelModal: false,
+			isCorrectCity: true
 		};
 	}
 
@@ -1159,8 +1160,9 @@ class GeneralInformation extends Component {
 				let citySelected = this.state.cities.filter(city => {
 					return city.Name.toLowerCase().includes(cityFinal);
 				});
-				if (citySelected.length > 0)
+				if (citySelected.length > 0) {
 					this.updateCity(citySelected[0].Id);
+				}
 			});
 		});
 
@@ -1546,7 +1548,7 @@ class GeneralInformation extends Component {
 																this.loadRegions(() => {
 																	this.loadCompanyProperties(() => {
 																		this.props.toggleStepper();
-																		this.setState({ indexView: 1, firstLoad: false });
+																		this.setState({ indexView: 1, firstLoad: false, isCorrectCity: true });
 																	});
 																});
 															});
@@ -1666,47 +1668,12 @@ class GeneralInformation extends Component {
 											className={'form-control'}
 										/>
 									</div>
-									{/* <div className="col-md-5">
-										<label>* Country</label>
-										<select
-											name="country"
-											className={'form-control'}
-											disabled={this.state.loadingCountries}
-											onChange={(event) => {
-												this.updateCountry(event.target.value);
-											}}
-											error={!this.state.countryValid}
-											value={this.state.country}
-											disabled={!this.props.showStepper}
-										>
-											<option value="">Select a country</option>
-											{this.state.countries.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
-											))}
-										</select>
-									</div> */}
-									{/* <div className="col-md-6 col-lg-4">
-										<label>* Region</label>
-										<select
-											name="region"
-											className={'form-control'}
-											disabled={this.state.loadingRegion}
-											onChange={(event) => {
-												this.updateRegion(event.target.value);
-											}}
-											error={!this.state.regionValid}
-											value={this.state.region}
-											disabled={!this.props.showStepper}
-											showNone={false}
-										>
-											<option value="">Select a region</option>
-											{this.state.regions.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
-											))}
-										</select>
-									</div> */}
 									<div className="col-md-6 col-lg-4">
-										<label>* City</label>
+										<label className="mr-1">* City</label>
+										<span className="float-right">
+											<input disabled={!this.props.showStepper} type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
+											<label htmlFor="">Change selected city by zip code?</label>
+										</span>
 										<select
 											name="city"
 											className={'form-control'}
@@ -1717,7 +1684,7 @@ class GeneralInformation extends Component {
 											error={!this.state.cityValid}
 											value={this.state.city}
 											//	disabled={!this.props.showStepper}
-											disabled={true}
+											disabled={this.state.isCorrectCity}
 											showNone={false}
 										>
 											<option value="">Select a city</option>

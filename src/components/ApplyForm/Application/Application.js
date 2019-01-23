@@ -126,6 +126,7 @@ class Application extends Component {
             // Validation
             homePhoneNumberValid: true,
             cellPhoneNumberValid: true,
+            isCorrectCity: true
         };
     }
 
@@ -389,7 +390,7 @@ class Application extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: {parent: -1, value: `'${zipCode}'`},
+            variables: { parent: -1, value: `'${zipCode}'` },
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({
@@ -603,17 +604,6 @@ class Application extends Component {
                                                                     });
                                                         });
 
-
-                                                        // let zip_code = '';
-                                                        // zip_code = event.target.value.substring(0, 5);
-                                                        // fetch(`https://ziptasticapi.com/${zip_code}`).then((response) => {
-                                                        // 	return response.json()
-                                                        // }).then((cities) => {
-                                                        // 	if (!cities.error) {
-                                                        // 		this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                        // 	}
-                                                        // });
-
                                                     }}
                                                     value={this.state.zipCode}
                                                     placeholder="99999-99999"
@@ -636,7 +626,7 @@ class Application extends Component {
                                                                     id="state"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    disabled={true}
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             state: e.target.value
@@ -658,6 +648,10 @@ class Application extends Component {
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
                                                     * {formSpanish[7].label}
+                                                </span>
+                                                <span className="float-right">
+                                                    <input disabled={!this.state.editing} type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
+                                                    <label Style={"margin-top:0"} htmlFor="">Change selected city by zip code?</label>
                                                 </span>
                                                 <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
                                                     {({ loading, error, data, refetch, networkStatus }) => {
@@ -681,7 +675,7 @@ class Application extends Component {
                                                                     id="city"
                                                                     required
                                                                     className="form-control"
-                                                                    disabled={!this.state.editing}
+                                                                    disabled={this.state.isCorrectCity}
                                                                     onChange={(e) => {
                                                                         this.setState({
                                                                             city: e.target.value
@@ -1156,7 +1150,7 @@ class Application extends Component {
                         </div>
                     </div>
                 </form>
-            </div>
+            </div >
         );
     }
 }
