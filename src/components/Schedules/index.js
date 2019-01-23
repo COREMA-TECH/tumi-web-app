@@ -178,6 +178,7 @@ class Schedules extends Component {
                     id={this.state.selectedShiftId}
                     toggleRefresh={this.toggleRefresh}
                     hotelManager={this.props.hotelManager}
+                    locationName={this.state.locationName}
                 />
                 <div className="row">
                     <div className="col-md-12">
