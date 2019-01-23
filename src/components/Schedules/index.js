@@ -10,12 +10,12 @@ class Schedules extends Component {
 
     INITIAL_STATE = {
         cityId: null,
-        positionId: null,
         shiftId: null,
         selectedShiftId: 0,
         refresh: true,
         isSerie: false,
-        isEditFilter: false
+        isEditFilter: false,
+        employees: []
     };
 
     constructor() {
@@ -24,7 +24,6 @@ class Schedules extends Component {
             ...this.INITIAL_STATE,
             closedForm: true,
             location: null,
-            position: null,
             openPreFilter: true,
             requested: null,
             editConfirmOpened: false,
@@ -83,7 +82,7 @@ class Schedules extends Component {
     }
 
     toggleRefresh = () => {
-        this.setState({ refresh: !this.state.refresh })
+        this.setState((prevState) => { return { refresh: !prevState.refresh } })
     }
 
     handleCloseForm = (resetInputs = () => { }) => {
@@ -108,15 +107,15 @@ class Schedules extends Component {
         });
     }
 
-    handleApplyFilters = (position, location, requested) => {
+    handleApplyFilters = (location, requested, department) => {
         this.setState((prevState) => {
-            return { position, location, requested, openPreFilter: false, positionId: position, filtered: true }
+            return { location, requested, openPreFilter: false, filtered: true, department }
         })
     }
 
-    handleGetTextofFilters = (position, location, requested) => {
+    handleGetTextofFilters = (locationName, requestedName, departmentName) => {
         this.setState((prevState) => {
-            return { positionName: position, locationName: location, requestedName: requested }
+            return { locationName, requestedName, departmentName }
         })
     }
 
@@ -132,6 +131,11 @@ class Schedules extends Component {
         });
     }
 
+    updateEmployeeList = (employees) => {
+        var myEmployees = employees.slice();
+        myEmployees.unshift({ value: 0, label: "<No filter applied>" })
+        this.setState({ employees: myEmployees })
+    }
     render() {
         return (
             <div className="MasterShift">
@@ -150,23 +154,24 @@ class Schedules extends Component {
                     handleReset={this.handleReset}
                     handleChange={this.handleChange}
                     cityId={this.state.cityId}
-                    positionId={this.state.positionId}
                     shiftId={this.state.shiftId}
-                    positionName={this.state.positionName}
                     locationName={this.state.locationName}
                     requestedName={this.state.requestedName}
+                    departmentName={this.state.departmentName}
                     templateShifts={this.state.templateShifts}
                     templateStartDate={this.state.templateStartDate}
                     templateEndDate={this.state.templateEndDate}
                     requested={this.state.requested}
                     viewType={this.state.viewType}
                     location={this.state.location}
+                    department={this.state.department}
                     toggleRefresh={this.toggleRefresh}
                 />
                 <FilterForm
+                    updateEmployeeList={this.updateEmployeeList}
                     isSerie={this.state.isSerie}
                     location={this.state.location}
-                    position={this.state.position}
+                    department={this.state.department}
                     requestedBy={this.state.requested}
                     handleCloseForm={this.handleCloseForm}
                     closedForm={this.state.closedForm}
@@ -181,17 +186,19 @@ class Schedules extends Component {
                                 {
                                     this.state.filtered == true ? (
                                         <Shifts
+                                            employees={this.state.employees}
                                             editConfirmOpened={this.state.editConfirmOpened}
                                             openEditConfirm={this.openEditConfirm}
                                             refresh={this.state.refresh}
                                             getSelectedValue={this.getSelectedValue}
                                             cityId={this.state.cityId}
-                                            positionId={this.state.positionId}
                                             shiftId={this.state.shiftId}
                                             entityId={this.state.location}
                                             saveTemplateShift={this.saveTemplateShift}
                                             previousWeekShifts={this.previousWeekShifts}
                                             changeViewType={this.changeViewType}
+                                            location={this.state.location}
+                                            department={this.state.department}
                                         />
                                     ) : ('')
                                 }

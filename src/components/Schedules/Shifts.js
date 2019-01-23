@@ -81,7 +81,15 @@ class Shifts extends Component {
         this.props.client
             .query({
                 query: GET_SHIFTS,
-                fetchPolicy: "no-cache"
+                fetchPolicy: "no-cache",
+                variables: {
+                    shift: {
+                        entityId: this.props.location,
+                        departmentId: this.props.department
+                    },
+                    entityId: this.props.location,
+                    departmentId: this.props.department
+                }
             })
             .then(({ data }) => {
                 this.setState(
@@ -176,7 +184,7 @@ class Shifts extends Component {
                                 this.setState({
                                     loading: false
                                 });
-                                this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
+                                this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.entityId);
                             }
                         );
                     }
@@ -187,7 +195,7 @@ class Shifts extends Component {
             });
     };
 
-    getShiftRendered = (startDate, endDate, idPosition, entityId) => {
+    getShiftRendered = (startDate, endDate, entityId) => {
         this.props.client
             .query({
                 query: GET_SHIFT_BY_DATE,
@@ -195,7 +203,6 @@ class Shifts extends Component {
                 variables: {
                     startDate: startDate,
                     endDate: endDate,
-                    idPosition: idPosition,
                     entityId: entityId
                 }
             })
@@ -223,11 +230,11 @@ class Shifts extends Component {
     componentWillReceiveProps(nextProps) {
         this.filterShifts(
             nextProps.cityId,
-            nextProps.positionId,
             nextProps.shiftId
         );
 
-        if (nextProps.refresh != this.props.refresh) {
+        if (nextProps.location != this.props.location ||
+            nextProps.department != this.props.department) {
             this.setState(
                 {
                     loading: true
@@ -239,14 +246,11 @@ class Shifts extends Component {
         }
     }
 
-    filterShifts(city, position, shift) {
+    filterShifts(city, shift) {
         allEvents = [];
         this.state.shift.map(shiftItem => {
             if (
                 (shift == null || shift == "null" ? true : shiftItem.id == shift) &&
-                (position == null || position == "null"
-                    ? true
-                    : shiftItem.idPosition == position) &&
                 (city == null || city == "null" ? true : shiftItem.company.City == city)
             ) {
                 this.state.shiftDetail.map(shiftDetailItem => {
@@ -296,7 +300,10 @@ class Shifts extends Component {
     getEmployees = () => {
         this.props.client
             .query({
-                query: GET_INITIAL_DATA
+                query: GET_INITIAL_DATA,
+                variables: {
+                    idEntity: this.props.location
+                }
             })
             .then(({ data }) => {
                 //Save data into state
@@ -385,7 +392,7 @@ class Shifts extends Component {
             draftStartDate: schedulerData.startDate,
             draftEndDate: schedulerData.endDate
         }, () => {
-            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
+            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.entityId);
         });
     };
 
@@ -397,7 +404,7 @@ class Shifts extends Component {
             draftStartDate: schedulerData.startDate,
             draftEndDate: schedulerData.endDate
         }, () => {
-            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
+            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.entityId);
         });
     };
 

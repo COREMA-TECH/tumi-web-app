@@ -15,10 +15,8 @@ class FilterForm extends Component {
 
     DEFAULT_STATE = {
         selectedEmployees: [],
-        positions: [],
         color: COLOR_ASSIGNED,
-        //  title: '',
-        title: 'My Title',
+        title: '',
         startHour: '',
         endHour: '',
         startDate: '',
@@ -37,7 +35,8 @@ class FilterForm extends Component {
         userId: 1,
         requestedBy: 1,
         dayWeeks: "",
-        workOrderId: 0
+        workOrderId: 0,
+        position: ""
     }
 
     constructor(props) {
@@ -45,14 +44,19 @@ class FilterForm extends Component {
         this.state = {
             employees: [],
             locations: [],
+            positions: [],
             ...this.DEFAULT_STATE
         }
     }
 
-    getEmployees = () => {
+    getEmployees = (idEntity) => {
         this.props.client
             .query({
                 query: GET_INITIAL_DATA,
+                fetchPolicy: 'no-cache',
+                variables: {
+                    idEntity: idEntity
+                }
             })
             .then(({ data }) => {
                 //Save data into state
@@ -61,6 +65,7 @@ class FilterForm extends Component {
                     let employees = data.employees.map(item => {
                         return { value: item.id, label: `${item.firstName} ${item.lastName}` }
                     })
+                    this.props.updateEmployeeList(employees);
                     return { employees }
                 });
                 //Location
@@ -164,10 +169,11 @@ class FilterForm extends Component {
                     endHour: this.state.endHour,
                     shift: {
                         entityId: this.props.location,
+                        departmentId: this.props.department,
                         title: this.state.title,
                         color: this.state.color,
                         status: this.state.status,
-                        idPosition: this.props.position,
+                        idPosition: this.state.position,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
@@ -250,7 +256,6 @@ class FilterForm extends Component {
                 const shiftDetail = data.ShiftDetail[0];
                 const detailEmployee = shiftDetail.detailEmployee;
                 const selectedEmployee = this.getSelectedEmployee(detailEmployee ? detailEmployee.EmployeeId : null)
-                console.log(shiftDetail)
                 this.setState({
                     startDate: this.props.isSerie ? shiftDetail.shift.startDate.substring(0, 10) : shiftDetail.startDate.substring(0, 10),
                     endDate: this.props.isSerie ? shiftDetail.shift.endDate.substring(0, 10) : shiftDetail.endDate.substring(0, 10),
@@ -279,12 +284,6 @@ class FilterForm extends Component {
 
     getSelectedEmployee = (id) => {
         return this.state.employees.find(item => item.value == id)
-    }
-
-    renderLocationList = () => {
-        return this.state.locations.map((item) => {
-            return <option key={item.Id} value={item.Id}>{item.Code} | {item.Name}</option>
-        })
     }
 
     renderPositionList = () => {
@@ -398,7 +397,7 @@ class FilterForm extends Component {
 
         if (valid) {
             let mutation;
-            var position = this.state.positions.find(item => item.Id == this.props.position)
+            var position = this.state.positions.find(item => item.Id == this.state.position)
             if (position)
                 this.setState({ specialComment: position.Comment ? position.Comment : '', updating: true }, () => {
                     if (this.state.selectedDetailId == 0)
@@ -444,14 +443,13 @@ class FilterForm extends Component {
         this.setState({ ...this.DEFAULT_STATE })
     }
 
-    componentWillMount() {
-        this.getEmployees()
-        this.getPosition(this.props.position);
-    }
-
     componentWillReceiveProps(nextProps) {
         if (this.props.id != nextProps.id && nextProps.id != 0)
             this.getInfoForSelectedShift(nextProps.id)
+        if (this.props.location != nextProps.location) {
+            this.getEmployees(nextProps.location);
+            this.getPosition();
+        }
     }
 
     getWeekDayStyle = (dayName) => {
@@ -570,9 +568,6 @@ class FilterForm extends Component {
                 </div>
                 <form id="form" method="POST" onSubmit={this.onSubmit} >
                     <div className="row">
-                        {/* <div className="col-md-12">
-                        <Options />
-                    </div> */}
                         <div className="col-md-12">
                             <label htmlFor="">* Employees</label>
                             <Select
@@ -615,6 +610,25 @@ class FilterForm extends Component {
                                 <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
                                 <button disabled={isEdition || !allowEdit} type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
                             </div>
+                        </div>
+                        <div className="col-md-12">
+                            <label htmlFor="">* Position</label>
+                            <select
+                                name="position"
+                                id="position"
+                                onChange={this.handleSelectValueChange}
+                                value={this.state.position}
+                                className="form-control"
+                                disabled={isHotelManger || isEdition}
+                                required
+                            >
+                                <option value="">Select a position</option>
+                                {this.state.positions.map((item) => (
+                                    <option
+                                        value={item.Id}>{item.Position} </option>
+                                ))}
+
+                            </select>
                         </div>
                         <div className="col-md-12">
                             <label htmlFor="">Comment</label>

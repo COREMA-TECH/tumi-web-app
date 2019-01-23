@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import withGlobalContent from 'Generic/Global';
 import { withApollo } from 'react-apollo';
-import { GET_INITIAL_DATA, GET_POSITION, GET_CONTACT_BY_QUERY } from './Queries';
+import { GET_INITIAL_DATA, GET_CONTACT_BY_QUERY, GET_DEPARTMENTS } from './Queries';
 
 class PreFilter extends Component {
 
@@ -15,61 +15,62 @@ class PreFilter extends Component {
         this.state = {
             saving: false,
             locations: [],
-            positions: [],
+            departments: [],
             contacts: [],
             disabled: true
         }
     }
 
-    getLocations = () => {
-        this.props.client
-            .query({
-                query: GET_INITIAL_DATA,
-            })
-            .then(({ data }) => {
-                this.setState((prevState) => {
-                    return { locations: data.getbusinesscompanies }
-                })
-
-            }).catch(error => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error loading Locations list',
-                    'bottom',
-                    'right'
-                );
-            });
-    }
-
-    getPosition = (position = 0) => {
-        this.setState({ loadingPosition: true }, () => {
+    getDepartments = () => {
+        this.setState({ loadingDepartments: true }, () => {
             this.props.client
                 .query({
-                    query: GET_POSITION,
-                    variables: {
-                        Id_Entity: this.state.location
-                    }
+                    query: GET_DEPARTMENTS,
                 })
                 .then(({ data }) => {
-                    //Save Positions into state
                     this.setState((prevState) => {
-                        return { positions: data.getposition, position, loadingPosition: false }
+                        return { departments: data.getcatalogitem, loadingDepartments: false }
                     })
 
                 }).catch(error => {
-                    this.setState({ loadingPosition: false })
-                    this.props.handleOpenSnackbar(
-                        'error',
-                        'Error loading position list',
-                        'bottom',
-                        'right'
-                    );
-                });
+                    this.setState({ loadingDepartments: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error loading Department list',
+                            'bottom',
+                            'right'
+                        );
+                    });
+                })
         })
     }
 
+    getLocations = () => {
+        this.setState({ loadingLoaction: true }, () => {
+            this.props.client
+                .query({
+                    query: GET_INITIAL_DATA,
+                })
+                .then(({ data }) => {
+                    this.setState((prevState) => {
+                        return { locations: data.getbusinesscompanies, loadingLoaction: false }
+                    })
+
+                }).catch(error => {
+                    this.setState({ loadingLoaction: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error loading Locations list',
+                            'bottom',
+                            'right'
+                        );
+                    })
+
+                });
+        })
+    }
     getContacts = () => {
-        this.setState({ loadingPosition: true }, () => {
+        this.setState({ loadingContacts: true }, () => {
             this.props.client
                 .query({
                     query: GET_CONTACT_BY_QUERY,
@@ -80,11 +81,11 @@ class PreFilter extends Component {
                 .then(({ data }) => {
                     //Save Positions into state
                     this.setState((prevState) => {
-                        return { contacts: data.getcontacts, loadingPosition: false }
+                        return { contacts: data.getcontacts, loadingContacts: false }
                     })
 
                 }).catch(error => {
-                    this.setState({ loadingPosition: false })
+                    this.setState({ loadingContacts: false })
                     this.props.handleOpenSnackbar(
                         'error',
                         'Error loading Contacts list',
@@ -101,15 +102,15 @@ class PreFilter extends Component {
         })
     }
 
-    renderPositionList = () => {
-        return this.state.positions.map((item) => {
-            return <option key={item.Id} value={item.Id}>{item.Position}</option>
-        })
-    }
-
     renderContactsList = () => {
         return this.state.contacts.map((item) => {
             return <option key={item.Id} value={item.Id}>{item.First_Name + ' ' + item.Last_Name}</option>;
+        });
+    }
+
+    renderDeparmentList = () => {
+        return this.state.departments.map((item) => {
+            return <option key={item.Id} value={item.Id}>{item.Code + ' ' + item.Description}</option>;
         });
     }
 
@@ -118,14 +119,16 @@ class PreFilter extends Component {
         var text = event.nativeEvent.target[index].text;
 
         const element = event.target;
+
+        console.log(element.name, element.value)
         this.setState({
             [element.name]: element.value,
             [element.name + "Name"]: text,
             disabled: false
         }, () => {
             if (element.name == 'location') {
-                this.getPosition();
                 this.getContacts();
+                this.getDepartments();
             }
         })
     }
@@ -136,8 +139,8 @@ class PreFilter extends Component {
 
     handleApplyFilters = (event) => {
         event.preventDefault();
-        this.props.handleApplyFilters(this.state.position, this.state.location, this.state.requested);
-        this.props.handleGetTextofFilters(this.state.positionName, this.state.locationName, this.state.requestedName);
+        this.props.handleApplyFilters(this.state.location, this.state.requested, this.state.department);
+        this.props.handleGetTextofFilters(this.state.locationName, this.state.requestedName, this.state.departmentName);
         this.setState({
             disabled: !this.state.disabled
         });
@@ -153,21 +156,21 @@ class PreFilter extends Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <label htmlFor="">Location</label>
-                                    <select name="location" id="" className="form-control" required onChange={this.handleSelectValueChange}>
+                                    <select name="location" id="" disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
                                     </select>
                                 </div>
                                 <div className="col-md-12">
-                                    <label htmlFor="">Position</label>
-                                    <select name="position" id="" disabled={disabled} required className="form-control" onChange={this.handleSelectValueChange}>
+                                    <label htmlFor="">Department</label>
+                                    <select name="department" id="" disabled={disabled || this.state.loadingDepartments} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
-                                        {this.renderPositionList()}
+                                        {this.renderDeparmentList()}
                                     </select>
                                 </div>
                                 <div className="col-md-12">
                                     <label htmlFor="">Requested By</label>
-                                    <select name="requested" id="" disabled={disabled} required className="form-control" onChange={this.handleSelectValueChange}>
+                                    <select name="requested" id="" disabled={disabled || this.state.loadingContacts} required className="form-control" onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderContactsList()}
                                     </select>
@@ -184,7 +187,7 @@ class PreFilter extends Component {
                                 </button>
                                 {
                                     this.props.isEditFilter ? (
-                                        <button className="btn btn-defautl btn-not-rounded" type="button" onClick={this.props.handleClosePreFilter}>
+                                        <button className="btn btn-defautl btn-not-rounded ml-1" type="button" onClick={this.props.handleClosePreFilter}>
                                             Cancel
                                     </button>
                                     ) : ("")
