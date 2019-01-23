@@ -883,7 +883,7 @@ class Catalogs extends React.Component {
                         }
                     })
                     .then((data) => {
-                        if (id == 0) {
+                        if (this.state.idToEdit == null) {
                             this.sendMail();
                         }
                         this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
@@ -1476,17 +1476,20 @@ class Catalogs extends React.Component {
                                 </Tooltip>
                             </div>
                         </div>
+
                         <div className={classes.root}>
-                            <div className={classes.wrapper}>
-                                <Tooltip title={'Cancel Operation'}>
-                                    <div>
-                                        <button className="btn btn-warning" onClick={this.resetPasswordHandler}>
-                                            Reset Password {!this.state.resetPassword && <i class="fas fa-sync-alt" />}
-                                            {this.state.resetPassword && <i className="fas fa-spinner fa-spin ml-1" />}
-                                        </button>
-                                    </div>
-                                </Tooltip>
-                            </div>
+                            {this.state.idToEdit ?
+                                <div className={classes.wrapper}>
+                                    <Tooltip title={'Cancel Operation'}>
+                                        <div>
+                                            <button className="btn btn-warning" onClick={this.resetPasswordHandler}>
+                                                Reset Password {!this.state.resetPassword && <i class="fas fa-sync-alt" />}
+                                                {this.state.resetPassword && <i className="fas fa-spinner fa-spin ml-1" />}
+                                            </button>
+                                        </div>
+                                    </Tooltip>
+                                </div> : ''}
+
 
                             <div className={classes.wrapper}>
                                 <Tooltip title={'Cancel Operation'}>

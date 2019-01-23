@@ -171,13 +171,13 @@ class CustomizedTabs extends React.Component {
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Contacts"
+							label="Department Contact"
 							disabled={!this.state.activateTabs}
 						/>
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Departments Head"
+							label="Department"
 							disabled={!this.state.activateTabs}
 						/>
 						<Tab

@@ -22,9 +22,8 @@ import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import ReactDOM from 'react-dom';
-import DatePicker from 'react-mobile-datepicker';
-import './DatePicker.css';
+
+
 
 const styles = (theme) => ({
     wrapper: {
@@ -99,8 +98,16 @@ class WorkOrdersForm extends Component {
         Sunday: 'SU,',
         dayWeek: '',
 
-        time: new Date(),
+        time: '10:00',
         isOpen: false,
+
+
+        date: "1990-06-05",
+        format: "YYYY-MM-DD",
+        inputFormat: "DD/MM/YYYY",
+        mode: "date",
+
+        timeOnly: true
 
     };
 
@@ -116,6 +123,8 @@ class WorkOrdersForm extends Component {
 
             ...this._states
         };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleFormatChange = this.handleFormatChange.bind(this);
     }
 
     /*    componentWillMount() {
@@ -366,8 +375,7 @@ class WorkOrdersForm extends Component {
                 this.setState({ saving: true, converting: false });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-        //this.props.handleOpenSnackbar('success', 'Record Updated!');
-        //} else { this.props.handleOpenSnackbar('success', 'No se puede eliinar!'); }
+     
     };
 
     getContacts = (id) => {
@@ -493,27 +501,6 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
-    /*  getEmployees = (func = () => { }) => {
-          console.log("estoy en el getemployees ", this.state.id)
-          this.props.client
-              .query({
-                  query: GET_SHIFTS,
-                  variables: { WorkOrderId: this.state.id }
-              })
-              .then(({ data }) => {
-                  let shiftIdData = [];
-                  let count = 0
-  
-                  data.ShiftWorkOrder.map((item) => {
-                      shiftIdData[count] = item.ShiftId
-                      count = count + 1
-                  })
-                  this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
-                      func
-  
-              })
-              .catch();
-      };*/
     getEmployees = () => {//= (func = () => { }) => {
         this.setState({ employees: [] })
         //console.log("entro al metodo de empleado ", this.state.id)
@@ -607,6 +594,25 @@ class WorkOrdersForm extends Component {
         }
     };
 
+    handleChange(value) {
+        this.setState({
+            date: value
+        });
+    }
+
+    handleFormatChange(e) {
+        this.setState({
+            format: e.target.value
+        });
+    }
+
+    onCheck(event) {
+        this.setState({
+            timeOnly: !this.state.timeOnly
+        });
+    }
+
+
     handleTimeChange = (name) => (text) => {
         this.setState({ [name]: text })
     }
@@ -620,30 +626,20 @@ class WorkOrdersForm extends Component {
 
     }
 
-    handleClick = () => {
-        this.setState({ isOpen: true });
-    }
-
-    handleCancel = () => {
-        this.setState({ isOpen: false });
-    }
-
-    handleSelect = (time) => {
-        this.setState({ time, isOpen: false });
-    }
-    _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
-
-    _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
-
-    _handleDatePicked = (date) => {
-        console.log('A date has been picked: ', date);
-        this._hideDateTimePicker();
-    };
-
     render() {
 
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
+        const { date, format, mode, inputFormat } = this.state;
+        const fromValue = new Date();
+        fromValue.setHours(0);
+        fromValue.setMinutes(0);
+        fromValue.setSeconds(0);
+        const toValue = new Date();
+        toValue.setHours(23);
+        toValue.setMinutes(59);
+        toValue.setSeconds(59);
+
 
         if (this.state.employees.length > 0) {
             console.log("Aqui si hay iusuaiors ", this.state.employees.length)
@@ -712,7 +708,7 @@ class WorkOrdersForm extends Component {
                                             >
                                                 <option value="0">Select a Position</option>
                                                 {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} - {position.Shift.trim() == 'A' ? '1st' : position.Shift.trim() == 'P' ? '2nd' : '3rd'}</option>
+                                                    <option value={position.Id}>{position.Position} - {position.Shift.trim() == 'A' ? '1st' : position.Shift.trim() == 'P' ? '2nd' : '3rd'} Shift</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -761,17 +757,10 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
+
                                         <div className="col-md-6">
-                                            <a
-                                                className="select-btn"
-                                                onClick={this.handleClick}>
-                                                select time
-                                            </a>
-                                            <DatePicker
-                                                value={this.state.time}
-                                                isOpen={this.state.isOpen}
-                                                onSelect={this.handleSelect}
-                                                onCancel={this.handleCancel} />
+                                            <label for="appt-time">Choose an appointment time: </label>
+                                            <input id="appt-time" type="time" name="appt-time" value="13:30" />
                                         </div>
 
                                         <div className="col-md-6">
