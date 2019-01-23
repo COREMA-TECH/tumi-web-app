@@ -1711,6 +1711,10 @@ class NewContract extends Component {
                                     </div>
                                     <div className="col-md-6 col-lg-4">
                                         <label>* Billing City</label>
+                                        <span className="float-right">
+                                            <input type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
+                                            <label htmlFor="">Change selected city by zip code?</label>
+                                        </span>
                                         <Query
                                             query={this.getCitiesQuery}
                                             variables={{ parent: this.state.Billing_State }}
@@ -1738,7 +1742,7 @@ class NewContract extends Component {
                                                             update={this.updateCity}
                                                             showNone={false}
                                                             value={this.state.Billing_City}
-                                                            disabled
+                                                            disabled={!this.state.isCorrectCity}
                                                         //error={!this.state.Billing_CityValid}
                                                         />
                                                     );
