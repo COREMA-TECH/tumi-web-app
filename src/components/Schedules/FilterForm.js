@@ -556,7 +556,6 @@ class FilterForm extends Component {
 
     renderSummary = () => {
         var position = this.state.positions.length > 0 ? this.state.positions.find(item => item.Id == this.state.position) : ''
-        console.log(this.state.positions, this.state.position);
         return <div className="MasteShiftSummary">
 
             <div className="MasterShiftSummary-wrapper">
