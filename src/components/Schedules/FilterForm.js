@@ -662,33 +662,15 @@ class FilterForm extends Component {
                                         <div className="col-md-5">
                                             < label htmlFor="">* Start Time</label>
                                             {/* <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input> */}
-                                            <Datetime dateFormat={false} value={this.state.startHour} />
+                                            <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "startHour", onChange: this.handleTimeChange, required: true }} />
                                         </div>
                                         <div className="col-md-5">
                                             < label htmlFor="">* End Time</label>
-                                            <input type="time" name="endHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input>
+                                            {/* <input type="time" name="endHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input> */}
+                                            <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "endHour", onChange: this.handleTimeChange, required: true }} />
                                         </div>
                                         <div className="col-md-2">
                                             <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
-                                        </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">* Position</label>
-                                            <select
-                                                name="position"
-                                                id="position"
-                                                onChange={this.handleSelectValueChange}
-                                                value={this.state.position}
-                                                className="form-control"
-                                                disabled={isHotelManger || isEdition}
-                                                required
-                                            >
-                                                <option value="">Select a position</option>
-                                                {this.state.positions.map((item) => (
-                                                    <option
-                                                        value={item.Id}>{item.Position} </option>
-                                                ))}
-
-                                            </select>
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="">Repeat?</label>
