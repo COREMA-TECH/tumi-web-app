@@ -17,7 +17,8 @@ class PreFilter extends Component {
             locations: [],
             departments: [],
             contacts: [],
-            disabled: true
+            disabled: true,
+            location: 0
         }
     }
 
@@ -26,10 +27,13 @@ class PreFilter extends Component {
             this.props.client
                 .query({
                     query: GET_DEPARTMENTS,
+                    variables: {
+                        Id_Entity: this.state.location
+                    }
                 })
                 .then(({ data }) => {
                     this.setState((prevState) => {
-                        return { departments: data.getcatalogitem, loadingDepartments: false }
+                        return { departments: data.catalogitem, loadingDepartments: false }
                     })
 
                 }).catch(error => {
@@ -120,7 +124,6 @@ class PreFilter extends Component {
 
         const element = event.target;
 
-        console.log(element.name, element.value)
         this.setState({
             [element.name]: element.value,
             [element.name + "Name"]: text,

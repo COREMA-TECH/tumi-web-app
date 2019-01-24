@@ -29,8 +29,8 @@ export const GET_POSITION = gql`
 `;
 
 export const GET_DEPARTMENTS = gql`
-    query getDepartments{
-        getcatalogitem(IsActive: 1, Id_Catalog: 8) {
+    query getDepartments($Id_Entity: Int){
+        catalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:  $Id_Entity) {
             Id
             Code: Name
             Description
