@@ -124,13 +124,13 @@ class CustomizedTabs extends Component {
 							disabled={this.state.idProperty === null}
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Contacts"
+							label="Department Contact"
 						/>
 						<Tab
 							disabled={this.state.idProperty === null}
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Departments Head"
+							label="Departments"
 						/>
 						<Tab
 							disabled={this.state.idProperty === null}

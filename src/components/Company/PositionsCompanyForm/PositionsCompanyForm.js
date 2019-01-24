@@ -115,8 +115,8 @@ class PositionsCompanyForm extends React.Component {
 	`;
 
 	GET_POSITIONS_QUERY = gql`
-query getposition {
-        getcatalogitem(Id_Catalog: 6, IsActive: 1) {
+query getposition ($Id_Entity:Int){
+        getcatalogitem(Id_Catalog: 6, IsActive: 1,Id_Entity:$Id_Entity) {
             Id
             IsActive
 			Description

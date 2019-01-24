@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 
+
 const styles = (theme) => ({
     wrapper: {
         margin: theme.spacing.unit,
@@ -56,6 +57,25 @@ const CustomTableCell = withStyles((theme) => ({
         fontSize: 14
     }
 }))(TableCell);
+
+/*const Date = React.createClass({
+    render: function () {
+        return <input type="text" className="datepicker" />;
+    }
+});
+
+const Calendar = React.createClass({
+    componentDidMount: function () {
+        $('.datepicker').datepicker();
+    },
+    render: function () {
+        return (
+            <form>
+                <Date />
+            </form>
+        )
+    }
+});*/
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -94,7 +114,9 @@ class WorkOrdersForm extends Component {
         Friday: 'FR,',
         Saturday: 'SA,',
         Sunday: 'SU,',
-        dayWeek: ''
+        dayWeek: '',
+
+
     };
 
     constructor(props) {
@@ -109,11 +131,9 @@ class WorkOrdersForm extends Component {
 
             ...this._states
         };
+
     }
 
-    /*    componentWillMount() {
-            console.log("Aqui estamos en shiftssssss ", this.state.Shift)
-        }*/
 
     ReceiveStatus = false;
 
@@ -147,18 +167,13 @@ class WorkOrdersForm extends Component {
                     Saturday: nextProps.item.dayWeek.indexOf('SA') != -1 ? 'SA,' : '',
                     Sunday: nextProps.item.dayWeek.indexOf('SU') != -1 ? 'SU,' : '',
 
-                    //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
+
                 },
                 () => {
                     this.getEmployees();
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
-
-                    //this.getEmployees(() => {
-                    //     this.getDetailShift(() => {
-                    //  });
-                    // });
 
 
                     this.ReceiveStatus = true;
@@ -219,8 +234,6 @@ class WorkOrdersForm extends Component {
         });
     }
 
-
-
     handleSubmit = (event) => {
         event.preventDefault();
         if (
@@ -232,10 +245,6 @@ class WorkOrdersForm extends Component {
             this.state.date == '' ||
             this.state.startDate == '' ||
             this.state.endDate == '' ||
-            /*this.state.shift == '' ||
-            this.state.shift == 0 ||
-            this.state.endShift == '' ||
-            this.state.endShift == 0 ||*/
             this.state.contactId == 0 ||
             this.state.contactId == null
         ) {
@@ -363,8 +372,7 @@ class WorkOrdersForm extends Component {
                 this.setState({ saving: true, converting: false });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-        //this.props.handleOpenSnackbar('success', 'Record Updated!');
-        //} else { this.props.handleOpenSnackbar('success', 'No se puede eliinar!'); }
+
     };
 
     getContacts = (id) => {
@@ -490,27 +498,6 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
-    /*  getEmployees = (func = () => { }) => {
-          console.log("estoy en el getemployees ", this.state.id)
-          this.props.client
-              .query({
-                  query: GET_SHIFTS,
-                  variables: { WorkOrderId: this.state.id }
-              })
-              .then(({ data }) => {
-                  let shiftIdData = [];
-                  let count = 0
-  
-                  data.ShiftWorkOrder.map((item) => {
-                      shiftIdData[count] = item.ShiftId
-                      count = count + 1
-                  })
-                  this.getDetailShift(data.ShiftWorkOrder[0].ShiftId),
-                      func
-  
-              })
-              .catch();
-      };*/
     getEmployees = () => {//= (func = () => { }) => {
         this.setState({ employees: [] })
         //console.log("entro al metodo de empleado ", this.state.id)
@@ -561,70 +548,6 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
-    /*getDetailShift = (func = () => { }) => {
-
-
-     employeesList.push({
-                                    WorkOrderId: item.WorkOrderId,
-                                    ShiftId: item.ShiftId,
-                                    ShiftDetailId: itemDetails.id,
-                                    EmployeeId: itemDetails.detailEmployee.EmployeeId,
-                                    Employees: itemDetails.detailEmployee.Employees.firstName + ' ' + itemDetails.detailEmployee.Employees.lastName
-                                })
-
-
-
-        this.state.Shift.ShiftWorkOrder.map((item) => {
-            console.log("Aqui estamos en this.state.Shift ",item. ShiftId)
-    
-        })
-            ,
-            func
-    };*/
-
-    /*getDetailShift = (WorkOrderId, ShiftId) => {
-        console.log("Estoy en getDetailShift ", WorkOrderId, " ", ShiftId)
-        console.log("Arreglo de employees ", this.state.employees)
-        // let employeesList = [];
-        let employeeIdTemp = 0;
-
-        this.props.client
-            .query({
-                query: GET_DETAIL_SHIFT,
-                variables: { ShiftId: ShiftId }
-            })
-            .then(({ data }) => {
-                console.log("detauls ", data)
-                data.ShiftDetailbyShift.sort().map((item) => {
-                    employeesList.push({
-                        WorkOrderId: WorkOrderId,
-                        ShiftId: ShiftId,
-                        ShiftDetailId: item.id,
-                        EmployeeId: item.detailEmployee.EmployeeId,
-                        Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
-                    })
-                    /* if (item.detailEmployee != null) {
-                         if (employeesList.Value != item.detailEmployee.EmployeeId) {
-                             if (item.detailEmployee.EmployeeId != employeeIdTemp) {
-                                 employeesList.push({
-                                     WorkOrderId: WorkOrderId,
-                                     ShiftId: ShiftId,
-                                     ShiftDetailId: item.id,
-                                     EmployeeId: item.detailEmployee.EmployeeId,
-                                     Employees: item.detailEmployee.Employees.firstName + ' ' + item.detailEmployee.Employees.lastName
-                                 })
-                                 employeeIdTemp = item.detailEmployee.EmployeeId
-                             }
-                         }
-                     }
-})
-console.log("employeesList ", data)
-this.setState({ employees: employeesList })
-console.log("array employees ", this.state.employees)
-            })
-            .catch ();
-    };*/
-
     deleteEmployee = (id) => {
         this.props.client
             .mutate({
@@ -667,6 +590,9 @@ console.log("array employees ", this.state.employees)
             );
         }
     };
+
+
+
 
     handleTimeChange = (name) => (text) => {
         this.setState({ [name]: text })
@@ -748,7 +674,7 @@ console.log("array employees ", this.state.employees)
                                             >
                                                 <option value="0">Select a Position</option>
                                                 {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} - {position.Shift.trim() == 'A' ? '1st' : position.Shift.trim() == 'P' ? '2nd' : '3rd'}</option>
+                                                    <option value={position.Id}>{position.Position} - {position.Shift.trim() == 'A' ? '1st' : position.Shift.trim() == 'P' ? '2nd' : '3rd'} Shift</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -812,7 +738,6 @@ console.log("array employees ", this.state.employees)
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">

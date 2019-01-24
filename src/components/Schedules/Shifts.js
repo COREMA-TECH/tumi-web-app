@@ -80,7 +80,7 @@ class Shifts extends Component {
     }
 
     getFilterShift = (employeeId) => {
-        if (employeeId != 0)
+        if (employeeId == 0)
             return {
                 shift: {
                     entityId: this.props.location,
