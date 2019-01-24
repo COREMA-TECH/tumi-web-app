@@ -612,11 +612,6 @@ class WorkOrdersForm extends Component {
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
 
-        if (this.state.employees.length > 0) {
-            console.log("Aqui si hay iusuaiors ", this.state.employees.length)
-
-        } else { console.log("No hay usuarios ") }
-
         return (
             <div>
                 <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>

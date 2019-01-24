@@ -1038,7 +1038,8 @@ class GeneralInfoProperty extends Component {
 		}).then((data) => {
 			this.setState({
 				state: data.data.getcatalogitem[0].Id,
-				cityFinal: cityFinal
+				cityFinal: cityFinal,
+				byZipCode: true
 			});
 		});
 
@@ -1217,9 +1218,10 @@ class GeneralInfoProperty extends Component {
 																	citySelected = data.getcatalogitem.filter(city => {
 																		return city.Name.toLowerCase().includes(this.state.cityFinal);
 																	});
-																	if (citySelected[0].Id != this.state.city) {
+																	if (citySelected[0].Id != this.state.city && this.state.byZipCode) {
 																		this.setState({
-																			city: citySelected[0].Id
+																			city: citySelected[0].Id,
+																			byZipCode: false
 																		});
 																	}
 
@@ -1240,7 +1242,7 @@ class GeneralInfoProperty extends Component {
 																		>
 																			<option value="">Select a city</option>
 																			{data.getcatalogitem.map((item) => (
-																				<option value={item.Id}>{item.Name}</option>
+																				<option key={item.Id} value={item.Id}>{item.Name}</option>
 																			))}
 																		</select>
 																	);

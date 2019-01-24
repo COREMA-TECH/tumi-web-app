@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_INITIAL_DATA = gql`
-query data {
-    employees(isActive:true) {
+query data($idEntity: Int) {
+    employees(isActive:true, idEntity:  $idEntity) {
       id
       firstName
       lastName
@@ -28,6 +28,17 @@ export const GET_POSITION = gql`
   }
 `;
 
+export const GET_DEPARTMENTS = gql`
+    query getDepartments{
+        getcatalogitem(IsActive: 1, Id_Catalog: 8) {
+            Id
+            Code: Name
+            Description
+            IsActive
+        }
+    }
+`;
+
 export const GET_STATES_QUERY = gql`
     query Cities($id: Int) {
         getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 3) {
@@ -49,8 +60,8 @@ export const GET_CITIES_QUERY = gql`
 `;
 
 export const GET_SHIFTS = gql`
-    {
-        shift {
+  query getShifts($shiftDetail: inputShiftDetailQuery, $shift: inputShiftQuery, $shiftDetailEmployee: inputShiftDetailEmployeeQuery)  {
+        shift(shift: $shift) {
             id
             title
             bgColor : color
@@ -59,9 +70,10 @@ export const GET_SHIFTS = gql`
             company {
                 City
             }
+            entityId
         }
 
-        ShiftDetail {
+        ShiftDetail(shiftDetail: $shiftDetail, shift: $shift , shiftDetailEmployee: $shiftDetailEmployee) {
             id
             ShiftId
             start: startDate

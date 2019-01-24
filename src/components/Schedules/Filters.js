@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_POSITION, GET_SHIFTS, GET_TEMPLATES } from './Queries';
+import { GET_CITIES_QUERY, GET_STATES_QUERY, GET_SHIFTS, GET_TEMPLATES } from './Queries';
 import { CREATE_TEMPLATE, USE_TEMPLATE, LOAD_PREVWEEK, PUBLISH_ALL } from './Mutations';
 import withApollo from 'react-apollo/withApollo';
-import Options from './Options';
 import moment from 'moment';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import withGlobalContent from 'Generic/Global';
+import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
 
 class Filters extends Component {
 
@@ -17,11 +17,12 @@ class Filters extends Component {
         this.state = {
             cities: [],
             states: [],
-            positions: [],
             shifts: [],
             templates: [],
             titleModalOpened: false,
-            title: ''
+            title: '',
+            item: null,
+            openModal: false
         };
     }
 
@@ -67,19 +68,6 @@ class Filters extends Component {
             .catch();
     }
 
-    getPosition = () => {
-        this.props.client
-            .query({
-                query: GET_POSITION,
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    positions: data.getposition
-                });
-            })
-            .catch();
-    }
 
     getShifts = () => {
         this.props.client
@@ -164,7 +152,6 @@ class Filters extends Component {
 
     loadTemplate = (id) => {
         let endDayOfWeek = this.props.templateEndDate;
-        let positionId = this.props.positionId;
         let requestedBy = this.props.requested;
         let userId = localStorage.getItem('LoginId');
         let specialComment = "";
@@ -175,7 +162,6 @@ class Filters extends Component {
                     templateId: id,
                     endDate: endDayOfWeek,
                     userId: userId,
-                    positionId: positionId,
                     requestedBy: requestedBy,
                     specialComment: specialComment
                 }
@@ -197,7 +183,6 @@ class Filters extends Component {
 
     loadPreviousWeek = () => {
         let endDayOfWeek = this.props.templateEndDate;
-        let positionId = this.props.positionId;
         let entityId = this.props.location;
         let userId = localStorage.getItem('LoginId');
         this.props.client
@@ -205,7 +190,6 @@ class Filters extends Component {
                 mutation: LOAD_PREVWEEK,
                 variables: {
                     endDate: endDayOfWeek,
-                    positionId: positionId,
                     entityId: entityId,
                     userId: userId
                 }
@@ -247,13 +231,26 @@ class Filters extends Component {
                 );
             });
     }
+
+    handleClickOpenModal = () => {
+        this.setState({ openModal: true, openLife: false, item: null });
+    };
+
+    handleCloseModal = (event) => {
+        event.preventDefault();
+        this.setState({
+            openModal: false, openLife: false
+
+        });
+    };
+
     render() {
         return (
             <div className="MasterShiftHeader">
                 <div className="row">
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
-                        Position: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.positionName}</a>,
+                        Department: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.departmentName}</a>,
                         Requested By: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.requestedName}</a>
                     </div>
                 </div>
@@ -261,7 +258,7 @@ class Filters extends Component {
                     <div className="row">
                         <div className="col-md-8">
                             <div className="MasterShiftHeader-controlLeft">
-                                <button onClick={this.props.handleOpenForm} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
+                                <button onClick={this.handleClickOpenModal} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
                                 {/* <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button> */}
                                 <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
@@ -276,6 +273,7 @@ class Filters extends Component {
                                         }
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <div className="col-md-4">
@@ -307,6 +305,12 @@ class Filters extends Component {
                         </DialogActions>
                     </form>
                 </Dialog>
+                <WorkOrdersForm
+                    item={this.state.item}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    openModal={this.state.openModal}
+                    handleCloseModal={this.handleCloseModal}
+                />
             </div>
         );
     }

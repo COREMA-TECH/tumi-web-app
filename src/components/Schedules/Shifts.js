@@ -11,6 +11,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { GET_SHIFT_BY_DATE } from './Queries';
 
+import Select from 'react-select';
+
 let today = new Date();
 let dd = today.getDate();
 let mm = today.getMonth() + 1; //January is 0!
@@ -77,11 +79,32 @@ class Shifts extends Component {
         };
     }
 
-    fetchShifts = () => {
+    getFilterShift = (employeeId) => {
+        if (employeeId != 0)
+            return {
+                shift: {
+                    entityId: this.props.location,
+                    departmentId: this.props.department
+                }
+            }
+        else return {
+            shift: {
+                entityId: this.props.location,
+                departmentId: this.props.department
+            },
+            shiftDetailEmployee: {
+                EmployeeId: this.props.selectedEmployee.value
+            }
+        }
+    }
+    fetchShifts = (employeeId = 0) => {
         this.props.client
             .query({
                 query: GET_SHIFTS,
-                fetchPolicy: "no-cache"
+                fetchPolicy: "no-cache",
+                variables: {
+                    ...this.getFilterShift(employeeId)
+                }
             })
             .then(({ data }) => {
                 this.setState(
@@ -176,7 +199,7 @@ class Shifts extends Component {
                                 this.setState({
                                     loading: false
                                 });
-                                this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
+                                this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.entityId);
                             }
                         );
                     }
@@ -187,7 +210,7 @@ class Shifts extends Component {
             });
     };
 
-    getShiftRendered = (startDate, endDate, idPosition, entityId) => {
+    getShiftRendered = (startDate, endDate, entityId) => {
         this.props.client
             .query({
                 query: GET_SHIFT_BY_DATE,
@@ -195,7 +218,6 @@ class Shifts extends Component {
                 variables: {
                     startDate: startDate,
                     endDate: endDate,
-                    idPosition: idPosition,
                     entityId: entityId
                 }
             })
@@ -223,30 +245,28 @@ class Shifts extends Component {
     componentWillReceiveProps(nextProps) {
         this.filterShifts(
             nextProps.cityId,
-            nextProps.positionId,
             nextProps.shiftId
         );
 
-        if (nextProps.refresh != this.props.refresh) {
+        if (nextProps.location != this.props.location ||
+            nextProps.department != this.props.department ||
+            nextProps.selectedEmployee.value != this.props.selectedEmployee.value) {
             this.setState(
                 {
                     loading: true
                 },
                 () => {
-                    this.fetchShifts();
+                    this.fetchShifts(nextProps.selectedEmployee.value);
                 }
             );
         }
     }
 
-    filterShifts(city, position, shift) {
+    filterShifts(city, shift) {
         allEvents = [];
         this.state.shift.map(shiftItem => {
             if (
                 (shift == null || shift == "null" ? true : shiftItem.id == shift) &&
-                (position == null || position == "null"
-                    ? true
-                    : shiftItem.idPosition == position) &&
                 (city == null || city == "null" ? true : shiftItem.company.City == city)
             ) {
                 this.state.shiftDetail.map(shiftDetailItem => {
@@ -296,7 +316,10 @@ class Shifts extends Component {
     getEmployees = () => {
         this.props.client
             .query({
-                query: GET_INITIAL_DATA
+                query: GET_INITIAL_DATA,
+                variables: {
+                    idEntity: this.props.location
+                }
             })
             .then(({ data }) => {
                 //Save data into state
@@ -344,6 +367,16 @@ class Shifts extends Component {
 
         return (
             <div>
+                <div className="ScheduleWrapper">
+                    Employee <Select
+                        name="employees"
+                        className="EmployeeFilter"
+                        options={this.props.employees}
+                        value={this.props.selectedEmployee}
+                        onChange={this.props.onSelectedEmployeeChange}
+                        closeMenuOnSelect={false}
+                    />
+                </div>
                 <Scheduler
                     schedulerData={viewModel}
                     prevClick={this.prevClick}
@@ -385,7 +418,7 @@ class Shifts extends Component {
             draftStartDate: schedulerData.startDate,
             draftEndDate: schedulerData.endDate
         }, () => {
-            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
+            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.entityId);
         });
     };
 
@@ -397,7 +430,7 @@ class Shifts extends Component {
             draftStartDate: schedulerData.startDate,
             draftEndDate: schedulerData.endDate
         }, () => {
-            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.positionId, this.props.entityId);
+            this.getShiftRendered(this.state.draftStartDate, this.state.draftEndDate, this.props.entityId);
         });
     };
 
