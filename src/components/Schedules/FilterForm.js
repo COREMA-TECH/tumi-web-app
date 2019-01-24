@@ -658,18 +658,16 @@ class FilterForm extends Component {
                                             <label htmlFor="">* End Date</label>
                                             <input type="date" name="endDate" disabled={isHotelManger || isEdition || !allowEdit} className="form-control" value={this.state.endDate} onChange={this.handleInputValueChange} required />
                                         </div>
-                                        <div className="col-md-5">
+                                        <div className="col-md-6">
                                             < label htmlFor="">* Start Time</label>
                                             {/* <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input> */}
-                                            <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "startHour", onChange: this.handleTimeChange, required: true }} />
-                                        </div>
-                                        <div className="col-md-5">
+                                            <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "startHour", required: true }} onChange={this.handleTimeChange} />
                                             < label htmlFor="">* End Time</label>
                                             {/* <input type="time" name="endHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input> */}
                                             <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "endHour", onChange: this.handleTimeChange, required: true }} />
                                         </div>
-                                        <div className="col-md-2">
-                                            <span className="MasterShiftForm-hour" data-hour={this.calculateHours()}></span>
+                                        <div className="col-md-6">
+                                            <input type="text" className="MasterShiftForm-hour" value={this.calculateHours()} />
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="">Repeat?</label>

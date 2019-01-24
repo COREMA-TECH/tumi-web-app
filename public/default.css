@@ -11025,25 +11025,13 @@ button.rbc-input::-moz-focus-inner {
   .MasterShiftForm-header {
     border-bottom: solid 1px #bdbdbd; }
   .MasterShiftForm-hour {
-    height: 100%;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: reverse;
-    -ms-flex-direction: column-reverse;
-    flex-direction: column-reverse; }
-    .MasterShiftForm-hour:before {
-      background: #d2d2d2;
-      border-radius: 5px;
-      color: #7e7e7e;
-      content: attr(data-hour);
-      display: block;
-      font-size: .75rem;
-      height: calc(2.1rem + 2px);
-      line-height: calc(2.1rem + 2px);
-      text-align: center;
-      width: 100%; }
+    background: #f5f7f9;
+    border: dotted 1px #bdbdbd;
+    border-radius: 5px;
+    bottom: 0;
+    height: 80%;
+    position: absolute;
+    text-align: center; }
   .MasterShiftForm-groupButtons {
     display: block;
     margin-left: auto;
