@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import DepartmentsTable from './DepartmentsTable';
+import TitleTable from './TitleTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
@@ -72,10 +72,10 @@ const styles = (theme) => ({
 	}
 });
 
-class DepartmentsCompanyForm extends React.Component {
-	GET_DEPARTMENTS_QUERY = gql`
-	query getcatalogitem ($Id_Entity:Int){
-			getcatalogitem(IsActive: 1, Id_Catalog: 8,  Id_Entity:$Id_Entity) {
+class TitleCompanyForm extends React.Component {
+	GET_TITLE_QUERY = gql`
+		query getcatalogitem ($Id_Entity:Int){
+			getcatalogitem(IsActive: 1, Id_Catalog: 6, Id_Entity:$Id_Entity) {
 				Id
 				Code: Name
 				Description
@@ -83,7 +83,7 @@ class DepartmentsCompanyForm extends React.Component {
 			}
 		}
 	`;
-	INSERT_DEPARTMENTS_QUERY = gql`
+	INSERT_TITLE_QUERY = gql`
 		mutation inscatalogitem($input: iParamCI!) {
 			inscatalogitem(input: $input) {
 				Id
@@ -91,7 +91,7 @@ class DepartmentsCompanyForm extends React.Component {
 		}
 	`;
 
-	UPDATE_DEPARTMENTS_QUERY = gql`
+	UPDATE_TITLE_QUERY = gql`
 		mutation updcatalogitem($input: iParamCI!) {
 			updcatalogitem(input: $input) {
 				Id
@@ -99,7 +99,7 @@ class DepartmentsCompanyForm extends React.Component {
 		}
 	`;
 
-	DELETE_DEPARTMENTS_QUERY = gql`
+	DELETE_TITLE_QUERY = gql`
 		mutation delcatalogitem($Id: Int!) {
 			delcatalogitem(Id: $Id, IsActive: 0) {
 				Id
@@ -107,8 +107,8 @@ class DepartmentsCompanyForm extends React.Component {
 		}
 	`;
 
-	TITLE_ADD = 'Add Department';
-	TITLE_EDIT = 'Update Department';
+	TITLE_ADD = 'Add Title';
+	TITLE_EDIT = 'Update Title';
 
 	DEFAULT_STATE = {
 		id: '',
@@ -122,6 +122,9 @@ class DepartmentsCompanyForm extends React.Component {
 
 		codeHasValue: true,
 		descriptionHasValue: true,
+
+		User_Created: '',
+		Date_Created: '',
 
 		formValid: true,
 		opendialog: false,
@@ -272,7 +275,7 @@ class DepartmentsCompanyForm extends React.Component {
 		this.setState({ opendialog: false });
 	};
 	handleConfirmAlertDialog = () => {
-		this.deleteDepartment();
+		this.deleteTitle();
 	};
 	onEditHandler = ({ Id, Code, Description }) => {
 		this.setState(
@@ -302,14 +305,14 @@ class DepartmentsCompanyForm extends React.Component {
 	};
 
 	componentWillMount() {
-		this.loadDepartments();
+		this.loadTitle();
 	}
 
-	loadDepartments = (func = () => { }) => {
+	loadTitle = (func = () => { }) => {
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
-					query: this.GET_DEPARTMENTS_QUERY,
+					query: this.GET_TITLE_QUERY,
 					variables: { Id_Entity: this.state.idCompany },
 					fetchPolicy: 'no-cache'
 				})
@@ -329,7 +332,7 @@ class DepartmentsCompanyForm extends React.Component {
 						this.setState({
 							loadingData: false,
 							indexView: 2,
-							errorMessage: 'Error: Loading departments: getcatalogitem not exists in query data'
+							errorMessage: 'Error: Loading title: getcatalogitem not exists in query data'
 						});
 					}
 				})
@@ -337,23 +340,23 @@ class DepartmentsCompanyForm extends React.Component {
 					this.setState({
 						loadingData: false,
 						indexView: 2,
-						errorMessage: 'Error: Loading departments: ' + error
+						errorMessage: 'Error: Loading title: ' + error
 					});
 				});
 		});
 	};
 	getObjectToInsertAndUpdate = () => {
 		let id = 0;
-		let query = this.INSERT_DEPARTMENTS_QUERY;
+		let query = this.INSERT_TITLE_QUERY;
 		const isEdition = this.state.idToEdit != null && this.state.idToEdit != '' && this.state.idToEdit != 0;
 
 		if (isEdition) {
-			query = this.UPDATE_DEPARTMENTS_QUERY;
+			query = this.UPDATE_TITLE_QUERY;
 		}
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	insertDepartment = () => {
+	insertTitle = () => {
 		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
 		this.setState(
@@ -368,7 +371,7 @@ class DepartmentsCompanyForm extends React.Component {
 						variables: {
 							input: {
 								Id: id,
-								Id_Catalog: 8,
+								Id_Catalog: 6,
 								Id_Parent: 0,
 								Name: `'${this.state.code}'`,
 								DisplayLabel: `'${this.state.description}'`,
@@ -379,10 +382,10 @@ class DepartmentsCompanyForm extends React.Component {
 								Value03: `' '`,
 								Value04: `' '`,
 								IsActive: 1,
-								User_Created: 1,
-								User_Updated: 1,
-								Date_Created: "'2018-08-14 16:10:25+00'",
-								Date_Updated: "'2018-08-14 16:10:25+00'",
+								User_Created: this.Login.LoginId,
+								User_Updated: this.Login.LoginId,
+								Date_Created: "'2018-08-14'",
+								Date_Updated: "'2018-08-14'",
 								Id_Entity: this.props.idCompany
 							}
 						}
@@ -390,16 +393,16 @@ class DepartmentsCompanyForm extends React.Component {
 					.then((data) => {
 						this.props.handleOpenSnackbar(
 							'success',
-							isEdition ? 'Department Updated!' : 'Department Inserted!'
+							isEdition ? 'Title Updated!' : 'Title Inserted!'
 						);
 						this.setState({ showCircularLoading: true }, () => {
-							this.loadDepartments();
+							this.loadTitle();
 						});
 					})
 					.catch((error) => {
 						this.props.handleOpenSnackbar(
 							'error',
-							isEdition ? 'Error: Updating Department: ' + error : 'Error: Inserting Department: ' + error
+							isEdition ? 'Error: Updating Title: ' + error : 'Error: Inserting Title: ' + error
 						);
 						this.setState({
 							success: false,
@@ -409,7 +412,7 @@ class DepartmentsCompanyForm extends React.Component {
 			}
 		);
 	};
-	deleteDepartment = (id) => {
+	deleteTitle = (id) => {
 		this.setState(
 			{
 				loadingConfirm: true
@@ -417,19 +420,19 @@ class DepartmentsCompanyForm extends React.Component {
 			() => {
 				this.props.client
 					.mutate({
-						mutation: this.DELETE_DEPARTMENTS_QUERY,
+						mutation: this.DELETE_TITLE_QUERY,
 						variables: {
 							Id: this.state.idToDelete
 						}
 					})
 					.then((data) => {
-						this.props.handleOpenSnackbar('success', 'Department Deleted!');
+						this.props.handleOpenSnackbar('success', 'Title Deleted!');
 						this.setState({ showCircularLoading: true }, () => {
-							this.loadDepartments();
+							this.loadTitle();
 						});
 					})
 					.catch((error) => {
-						this.props.handleOpenSnackbar('error', 'Error: Deleting Department: ' + error);
+						this.props.handleOpenSnackbar('error', 'Error: Deleting Title: ' + error);
 						this.setState({
 							loadingConfirm: false
 						});
@@ -438,14 +441,14 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	};
 
-	addDepartmenttHandler = () => {
+	addTitleHandler = () => {
 		this.setState(
 			{
 				loading: true
 			},
 			() => {
 				this.validateAllFields(() => {
-					if (this.state.formValid) this.insertDepartment();
+					if (this.state.formValid) this.insertTitle();
 					else {
 						this.props.handleOpenSnackbar(
 							'warning',
@@ -460,7 +463,7 @@ class DepartmentsCompanyForm extends React.Component {
 		);
 	};
 
-	cancelDepartmentHandler = () => {
+	cancelTitleHandler = () => {
 		this.resetState();
 	};
 
@@ -504,7 +507,7 @@ class DepartmentsCompanyForm extends React.Component {
 							value={this.state.code}
 							change={(value) => this.onCodeChangeHandler(value)}
 							className="input-enable"
-							placeholder="* Department Code"
+							placeholder="* Title Code"
 						/>
 					</div>
 					<div className="col-md-4">
@@ -515,14 +518,14 @@ class DepartmentsCompanyForm extends React.Component {
 							error={!this.state.descriptionValid}
 							value={this.state.description}
 							change={(value) => this.onDescriptionChangeHandler(value)}
-							placeholder="* Department Name"
+							placeholder="* Title Name"
 						/>
 					</div>
 					<div className="col-md-4">
 						<button
 							disabled={this.state.loading || !this.Login.AllowEdit || !this.Login.AllowInsert}
 							className="btn btn-success mr-1"
-							onClick={this.addDepartmenttHandler}
+							onClick={this.addTitleHandler}
 						>
 							{isEdititing ? 'Save' : 'Add'}
 							{isEdititing && !loading && <i class="fas fa-save ml-1" />}
@@ -532,7 +535,7 @@ class DepartmentsCompanyForm extends React.Component {
 
 						<button
 							disabled={this.state.loading}
-							onClick={this.cancelDepartmentHandler}
+							onClick={this.cancelTitleHandler}
 							className="btn btn-danger"
 						>
 							Clear<i class="fas fa-ban ml-1" />
@@ -541,7 +544,7 @@ class DepartmentsCompanyForm extends React.Component {
 				</div>
 				<div className="row">
 					<div className="col-md-12">
-						<DepartmentsTable
+						<TitleTable
 							data={this.state.data}
 							loading={this.state.showCircularLoading && this.state.loadingData}
 							onEditHandler={this.onEditHandler}
@@ -577,8 +580,8 @@ class DepartmentsCompanyForm extends React.Component {
 	}
 }
 
-DepartmentsCompanyForm.propTypes = {
+TitleCompanyForm.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(DepartmentsCompanyForm));
+export default withStyles(styles)(withApollo(TitleCompanyForm));

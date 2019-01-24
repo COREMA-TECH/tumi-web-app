@@ -11,6 +11,7 @@ import PositionsCompanyForm from '../PositionsCompanyForm';
 import Preferences from '../Preferences';
 
 import withGlobalContent from 'Generic/Global';
+import TitleCompanyForm from '../TitleCompanyForm/TitleCompanyForm';
 
 const theme = createMuiTheme({
 	overrides: {
@@ -126,6 +127,20 @@ class CustomizedTabs extends React.Component {
 				);
 			case 3:
 				return (
+					<TitleCompanyForm
+						idCompany={this.state.idCompany}
+						idManagement={this.state.idManagement}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						item={this.state.item}
+						next={this.nextHandleChange}
+						back={this.backHandleChange}
+						valueTab={this.state.value}
+						showStepper={this.state.showStepper}
+						toggleStepper={this.toggleStepper}
+					/>
+				);
+			case 4:
+				return (
 					<PositionsCompanyForm
 						href={null}
 						idCompany={this.state.idCompany}
@@ -141,7 +156,7 @@ class CustomizedTabs extends React.Component {
 						showPayRate={true}
 					/>
 				);
-			case 4:
+			case 5:
 				return (
 					<Preferences
 						idCompany={this.state.idCompany}
@@ -171,13 +186,19 @@ class CustomizedTabs extends React.Component {
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Contacts"
+							label="Department Contact"
 							disabled={!this.state.activateTabs}
 						/>
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Departments Head"
+							label="Department"
+							disabled={!this.state.activateTabs}
+						/>
+						<Tab
+							disableRipple
+							classes={{ root: "Tab-item", selected: "Tab-selected" }}
+							label="Title"
 							disabled={!this.state.activateTabs}
 						/>
 						<Tab
