@@ -11,6 +11,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { GET_SHIFT_BY_DATE } from './Queries';
 
+import Select from 'react-select';
+
 let today = new Date();
 let dd = today.getDate();
 let mm = today.getMonth() + 1; //January is 0!
@@ -77,18 +79,31 @@ class Shifts extends Component {
         };
     }
 
-    fetchShifts = () => {
+    getFilterShift = (employeeId) => {
+        if (employeeId != 0)
+            return {
+                shift: {
+                    entityId: this.props.location,
+                    departmentId: this.props.department
+                }
+            }
+        else return {
+            shift: {
+                entityId: this.props.location,
+                departmentId: this.props.department
+            },
+            shiftDetailEmployee: {
+                EmployeeId: this.props.selectedEmployee.value
+            }
+        }
+    }
+    fetchShifts = (employeeId = 0) => {
         this.props.client
             .query({
                 query: GET_SHIFTS,
                 fetchPolicy: "no-cache",
                 variables: {
-                    shift: {
-                        entityId: this.props.location,
-                        departmentId: this.props.department
-                    },
-                    entityId: this.props.location,
-                    departmentId: this.props.department
+                    ...this.getFilterShift(employeeId)
                 }
             })
             .then(({ data }) => {
@@ -234,13 +249,14 @@ class Shifts extends Component {
         );
 
         if (nextProps.location != this.props.location ||
-            nextProps.department != this.props.department) {
+            nextProps.department != this.props.department ||
+            nextProps.selectedEmployee.value != this.props.selectedEmployee.value) {
             this.setState(
                 {
                     loading: true
                 },
                 () => {
-                    this.fetchShifts();
+                    this.fetchShifts(nextProps.selectedEmployee.value);
                 }
             );
         }
@@ -351,6 +367,16 @@ class Shifts extends Component {
 
         return (
             <div>
+                <div className="ScheduleWrapper">
+                    Employee <Select
+                        name="employees"
+                        className="EmployeeFilter"
+                        options={this.props.employees}
+                        value={this.props.selectedEmployee}
+                        onChange={this.props.onSelectedEmployeeChange}
+                        closeMenuOnSelect={false}
+                    />
+                </div>
                 <Scheduler
                     schedulerData={viewModel}
                     prevClick={this.prevClick}

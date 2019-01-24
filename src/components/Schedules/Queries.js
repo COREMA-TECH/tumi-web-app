@@ -60,8 +60,8 @@ export const GET_CITIES_QUERY = gql`
 `;
 
 export const GET_SHIFTS = gql`
-  query getShifts($shiftDetail: inputShiftDetailQuery, $shift: inputShiftQuery, $entityId: Int,$departmentId:Int)  {
-        shift(entityId: $entityId,departmentId: $departmentId) {
+  query getShifts($shiftDetail: inputShiftDetailQuery, $shift: inputShiftQuery, $shiftDetailEmployee: inputShiftDetailEmployeeQuery)  {
+        shift(shift: $shift) {
             id
             title
             bgColor : color
@@ -73,7 +73,7 @@ export const GET_SHIFTS = gql`
             entityId
         }
 
-        ShiftDetail(shiftDetail: $shiftDetail, shift: $shift ) {
+        ShiftDetail(shiftDetail: $shiftDetail, shift: $shift , shiftDetailEmployee: $shiftDetailEmployee) {
             id
             ShiftId
             start: startDate

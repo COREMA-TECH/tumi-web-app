@@ -11115,7 +11115,9 @@ button.rbc-input::-moz-focus-inner {
   max-width: 1366px;
   margin: 0 auto; }
   .ScheduleWrapper .EmployeeFilter {
-    width: 397px; }
+    width: 397px;
+    position: relative;
+    z-index: 99; }
 
 .MasterShift .can-toggle {
   position: relative; }

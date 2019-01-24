@@ -3,8 +3,9 @@ import Filters from './Filters.js';
 import React, { Component } from 'react';
 import Shifts from './Shifts.js';
 import PreFilter from './PreFilter';
+import DefaultClient from 'apollo-boost';
 
-import withGlobalContent from 'Generic/Global';
+const DEFAULT_EMPLOYEE = { value: 0, label: "<No filter applied>" };
 
 class Schedules extends Component {
 
@@ -15,7 +16,8 @@ class Schedules extends Component {
         refresh: true,
         isSerie: false,
         isEditFilter: false,
-        employees: []
+        employees: [],
+        selectedEmployee: { ...DEFAULT_EMPLOYEE }
     };
 
     constructor() {
@@ -133,8 +135,15 @@ class Schedules extends Component {
 
     updateEmployeeList = (employees) => {
         var myEmployees = employees.slice();
-        myEmployees.unshift({ value: 0, label: "<No filter applied>" })
-        this.setState({ employees: myEmployees })
+        myEmployees.unshift({ ...DEFAULT_EMPLOYEE })
+        this.setState({
+            employees: myEmployees,
+            selectedEmployee: { ...DEFAULT_EMPLOYEE }
+        })
+    }
+
+    onSelectedEmployeeChange = (selectedEmployee) => {
+        this.setState({ selectedEmployee });
     }
     render() {
         return (
@@ -200,6 +209,8 @@ class Schedules extends Component {
                                             changeViewType={this.changeViewType}
                                             location={this.state.location}
                                             department={this.state.department}
+                                            onSelectedEmployeeChange={this.onSelectedEmployeeChange}
+                                            selectedEmployee={this.state.selectedEmployee}
                                         />
                                     ) : ('')
                                 }
