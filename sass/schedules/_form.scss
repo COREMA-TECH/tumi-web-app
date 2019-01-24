@@ -43,21 +43,13 @@
         border-bottom: solid 1px map-get($map: $gray-shades, $key: gray-3);
     }
     &-hour {
-        height: 100%;
-        display: flex;
-        flex-direction: column-reverse;
-        &:before {
-            background: map-get($gray-shades,gray-1);
-            border-radius: $border-radius-standar;
-            color: $text-color;
-            content: attr(data-hour);
-            display: block;
-            font-size: .75rem;
-            height: calc(2.1rem + 2px);
-            line-height: calc(2.1rem + 2px);
-            text-align: center;
-            width: 100%;
-        }
+        background: map-get($map: $gray-shades, $key: light);
+        border: dotted 1px map-get($map: $gray-shades, $key: gray-3);
+        border-radius: $border-radius-standar;
+        bottom: 0;
+        height: 80%;
+        position: absolute;
+        text-align: center;
     }
     &-groupButtons {
         display: block;
