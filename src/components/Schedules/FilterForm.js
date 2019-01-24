@@ -9,8 +9,12 @@ import { INSERT_SHIFT, CHANGE_STATUS_SHIFT, UPDATE_SHIFT_RECORD, UPDATE_SHIFT, D
 import Select from 'react-select';
 import { isArray } from 'util';
 
+import Datetime from 'react-datetime';
+
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 const COLOR_ASSIGNED = '#5f4d8b'
+
+
 class FilterForm extends Component {
 
     DEFAULT_STATE = {
@@ -134,7 +138,7 @@ class FilterForm extends Component {
                 })
             });
     }
-    getPosition = (position = 0) => {
+    getPosition = (position = "") => {
         this.setState({ loadingPosition: true }, () => {
             this.props.client
                 .query({
@@ -273,8 +277,8 @@ class FilterForm extends Component {
                     dayWeeks: shiftDetail.shift.dayWeek,
                     selectedEmployees: selectedEmployee ? selectedEmployee : [],
                     comment: shiftDetail.shift.comment,
-                    idPosition: shiftDetail.shift.idPosition
-                }, () => this.getPosition())
+                    position: shiftDetail.shift.idPosition
+                }, () => this.getPosition(this.state.position))
 
             }).catch(error => {
                 this.props.handleOpenSnackbar(
@@ -314,7 +318,7 @@ class FilterForm extends Component {
 
         if (parseInt(this.props.location) == 0)
             return { valid: false, message: 'You need to select a location' };
-        if (parseInt(this.props.position) == 0)
+        if (parseInt(this.state.position) == 0)
             return { valid: false, message: 'You need to select a position' };
         if (!this.state.title.trim())
             return { valid: false, message: 'You need to set a title' };
@@ -445,11 +449,6 @@ class FilterForm extends Component {
         this.setState({ ...this.DEFAULT_STATE })
     }
 
-    // componentWillMount() {
-    //     this.getPosition();
-    //     this.getEmployees()
-    // }
-
     componentWillReceiveProps(nextProps) {
         if (this.props.id != nextProps.id && nextProps.id != 0)
             this.getInfoForSelectedShift(nextProps.id)
@@ -556,29 +555,33 @@ class FilterForm extends Component {
     }
 
     renderSummary = () => {
-        return <div className="MasterShiftSummary">
+        var position = this.state.positions.length > 0 ? this.state.positions.find(item => item.Id == this.state.position) : ''
+        console.log(this.state.positions, this.state.position);
+        return <div className="MasteShiftSummary">
 
             <div className="MasterShiftSummary-wrapper">
                 <div className="MasterShiftSummary-item">
                     <div className="MasterShiftSummary-icon">
-                        <i class="fas fa-building"></i>
+                        <i className="fas fa-building"></i>
                     </div>
                     <div className="MasterShiftSummary-position">
-                        Hola que hace
-            </div>
-                </div>
-                <div className="MasterShiftSummary-item">
-                    <div className="MasterShiftSummary-icon">
-                        <i class="far fa-clock"></i>
-                    </div>
-                    <div className="MasterShiftSummary-position">
-                        <span class="MasterShiftSummary-line">Sun, Jan 6, 2019</span>
-                        <span className="MasterShiftSummary-line">8:30 am - 12:30pm (4h)</span>
+                        {position ? position.Position : ''}
                     </div>
                 </div>
                 <div className="MasterShiftSummary-item">
                     <div className="MasterShiftSummary-icon">
-                        <i class="fas fa-user-friends"></i>
+                        <i className="far fa-clock"></i>
+                    </div>
+                    <div className="MasterShiftSummary-position">
+                        <span className="MasterShiftSummary-line">{moment(this.state.startDate).format('ddd D YYYY')}</span>
+                        <span className="MasterShiftSummary-line">
+                            {this.state.startHour} - {this.state.endHour} ({this.calculateHours()})
+                        </span>
+                    </div>
+                </div>
+                <div className="MasterShiftSummary-item">
+                    <div className="MasterShiftSummary-icon">
+                        <i className="fas fa-user-friends"></i>
                     </div>
                     <div className="MasterShiftSummary-position">
                         1 Employees
@@ -586,11 +589,11 @@ class FilterForm extends Component {
                 </div>
                 <div className="MasterShiftSummary-item">
                     <div className="MasterShiftSummary-icon">
-                        <i class="fas fa-map-marker-alt"></i>
+                        <i className="fas fa-map-marker-alt"></i>
                     </div>
                     <div className="MasterShiftSummary-position">
-                        Hotel y su localización
-            </div>
+                        {this.props.locationName}
+                    </div>
                 </div>
             </div>
         </div>
@@ -644,7 +647,7 @@ class FilterForm extends Component {
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="">* Position</label>
-                                            <select name="idPosition" id="" className="form-control" onChange={this.handleInputValueChange} value={this.state.idPosition} disabled={true}>
+                                            <select name="position" id="" className="form-control" onChange={this.handleInputValueChange} value={this.state.position} disabled={true}>
                                                 {this.renderPositionList()}
                                             </select>
                                         </div>
@@ -658,7 +661,8 @@ class FilterForm extends Component {
                                         </div>
                                         <div className="col-md-5">
                                             < label htmlFor="">* Start Time</label>
-                                            <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input>
+                                            {/* <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input> */}
+                                            <Datetime dateFormat={false} value={this.state.startHour} />
                                         </div>
                                         <div className="col-md-5">
                                             < label htmlFor="">* End Time</label>
