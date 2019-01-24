@@ -24,7 +24,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
 
 
-
 const styles = (theme) => ({
     wrapper: {
         margin: theme.spacing.unit,
@@ -58,6 +57,25 @@ const CustomTableCell = withStyles((theme) => ({
         fontSize: 14
     }
 }))(TableCell);
+
+/*const Date = React.createClass({
+    render: function () {
+        return <input type="text" className="datepicker" />;
+    }
+});
+
+const Calendar = React.createClass({
+    componentDidMount: function () {
+        $('.datepicker').datepicker();
+    },
+    render: function () {
+        return (
+            <form>
+                <Date />
+            </form>
+        )
+    }
+});*/
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -98,16 +116,6 @@ class WorkOrdersForm extends Component {
         Sunday: 'SU,',
         dayWeek: '',
 
-        time: '10:00',
-        isOpen: false,
-
-
-        date: "1990-06-05",
-        format: "YYYY-MM-DD",
-        inputFormat: "DD/MM/YYYY",
-        mode: "date",
-
-        timeOnly: true
 
     };
 
@@ -123,13 +131,9 @@ class WorkOrdersForm extends Component {
 
             ...this._states
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleFormatChange = this.handleFormatChange.bind(this);
+
     }
 
-    /*    componentWillMount() {
-            console.log("Aqui estamos en shiftssssss ", this.state.Shift)
-        }*/
 
     ReceiveStatus = false;
 
@@ -163,18 +167,13 @@ class WorkOrdersForm extends Component {
                     Saturday: nextProps.item.dayWeek.indexOf('SA') != -1 ? 'SA,' : '',
                     Sunday: nextProps.item.dayWeek.indexOf('SU') != -1 ? 'SU,' : '',
 
-                    //isAdmin: Boolean(localStorage.getItem('IsAdmin'))
+
                 },
                 () => {
                     this.getEmployees();
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
-
-                    //this.getEmployees(() => {
-                    //     this.getDetailShift(() => {
-                    //  });
-                    // });
 
 
                     this.ReceiveStatus = true;
@@ -234,8 +233,6 @@ class WorkOrdersForm extends Component {
 
         });
     }
-
-
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -375,7 +372,7 @@ class WorkOrdersForm extends Component {
                 this.setState({ saving: true, converting: false });
                 this.props.handleOpenSnackbar('error', 'Error: ' + error);
             });
-     
+
     };
 
     getContacts = (id) => {
@@ -594,23 +591,7 @@ class WorkOrdersForm extends Component {
         }
     };
 
-    handleChange(value) {
-        this.setState({
-            date: value
-        });
-    }
 
-    handleFormatChange(e) {
-        this.setState({
-            format: e.target.value
-        });
-    }
-
-    onCheck(event) {
-        this.setState({
-            timeOnly: !this.state.timeOnly
-        });
-    }
 
 
     handleTimeChange = (name) => (text) => {
@@ -630,16 +611,6 @@ class WorkOrdersForm extends Component {
 
         const { classes } = this.props;
         const isAdmin = localStorage.getItem('IsAdmin') == "true"
-        const { date, format, mode, inputFormat } = this.state;
-        const fromValue = new Date();
-        fromValue.setHours(0);
-        fromValue.setMinutes(0);
-        fromValue.setSeconds(0);
-        const toValue = new Date();
-        toValue.setHours(23);
-        toValue.setMinutes(59);
-        toValue.setSeconds(59);
-
 
         if (this.state.employees.length > 0) {
             console.log("Aqui si hay iusuaiors ", this.state.employees.length)
@@ -757,12 +728,6 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-
-                                        <div className="col-md-6">
-                                            <label for="appt-time">Choose an appointment time: </label>
-                                            <input id="appt-time" type="time" name="appt-time" value="13:30" />
-                                        </div>
-
                                         <div className="col-md-6">
                                             <label htmlFor="">* Quantity</label>
                                             <input
@@ -778,7 +743,6 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">

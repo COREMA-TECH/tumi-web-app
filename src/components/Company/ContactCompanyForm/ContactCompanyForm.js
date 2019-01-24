@@ -113,8 +113,9 @@ class ContactcontactForm extends React.Component {
 		}
 	`;
 	GET_TYPES_QUERY = gql`
-		{
-			getcatalogitem(IsActive: 1, Id_Catalog: 6) {
+	query getcatalogitem ($Id_Entity:Int)
+	{
+			getcatalogitem(IsActive: 1, Id_Catalog: 6, Id_Entity:$Id_Entity) {
 				Id
 				Name: DisplayLabel 
 				IsActive
@@ -130,8 +131,8 @@ class ContactcontactForm extends React.Component {
 		}
 	`;
 	GET_DEPARTMENTS_QUERY = gql`
-		{
-			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
+	query getcatalogitem ($Id_Entity:Int){
+			getcatalogitem(IsActive: 1, Id_Catalog: 8, Id_Entity: $Id_Entity) {
 				Id
 				Name: DisplayLabel
 				DisplayLabel
@@ -739,6 +740,7 @@ class ContactcontactForm extends React.Component {
 			this.props.client
 				.query({
 					query: this.GET_TYPES_QUERY,
+					variables: { Id_Entity: this.state.idCompany },
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
@@ -774,6 +776,7 @@ class ContactcontactForm extends React.Component {
 			this.props.client
 				.query({
 					query: this.GET_DEPARTMENTS_QUERY,
+					variables: { Id_Entity: this.state.idCompany },
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
@@ -912,7 +915,8 @@ class ContactcontactForm extends React.Component {
 									User_Created: 1,
 									User_Updated: 1,
 									Date_Created: "'2018-09-20 08:10:25+00'",
-									Date_Updated: "'2018-09-20 08:10:25+00'"
+									Date_Updated: "'2018-09-20 08:10:25+00'",
+									Id_Entity: this.props.idCompany
 								}
 							}
 						})
@@ -954,7 +958,8 @@ class ContactcontactForm extends React.Component {
 									User_Created: 1,
 									User_Updated: 1,
 									Date_Created: "'2018-09-20 08:10:25+00'",
-									Date_Updated: "'2018-09-20 08:10:25+00'"
+									Date_Updated: "'2018-09-20 08:10:25+00'",
+									Id_Entity: this.props.idCompany
 								}
 							}
 						})
