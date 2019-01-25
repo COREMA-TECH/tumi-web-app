@@ -9,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import withGlobalContent from 'Generic/Global';
 import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
 import Select from 'react-select';
+import onClickOutside from 'react-onclickoutside';
 
 class Filters extends Component {
 
@@ -23,7 +24,9 @@ class Filters extends Component {
             titleModalOpened: false,
             title: '',
             item: null,
-            openModal: false
+            openModal: false,
+            TemplateList: false,
+            openTemplateMenu: false
         };
     }
 
@@ -257,6 +260,17 @@ class Filters extends Component {
         });
     };
 
+    enableTemplateList = (event) => {
+        event.preventDefault();
+        this.setState({
+            TemplateList: !this.state.TemplateList
+        });
+    }
+
+    handleClickOutside = () => {
+        this.setState({ openTemplateMenu: false })
+    };
+
     render() {
         return (
             <div className="MasterShiftHeader">
@@ -284,17 +298,19 @@ class Filters extends Component {
                                 <button onClick={this.handleClickOpenModal} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
                                 {/* <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button> */}
                                 <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week {this.state.loadingPrevWeek && <i className="fa fa-spinner fa-spin" />}</button>
-                                <div className="dropdown float-left dropdown-withoutjs">
-                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Templates</button>
-                                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <div className="dropdown float-left">
+                                    <button onClick={() => { this.setState({ openTemplateMenu: !this.state.openTemplateMenu }) }} data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Templates</button>
+                                    <div className={`dropdown-menu ${this.state.openTemplateMenu ? 'd-block' : 'd-none'}`} aria-labelledby="dropdownMenuButton">
 
                                         <a href="#" className="dropdown-item" onClick={this.openFormTitle}>Save as Template</a>
-                                        <a href="#" className="dropdown-item" onClick={this.openFormTitle}>Use Template</a>
-                                        {
-                                            this.state.templates.map((template) => {
-                                                return <a key={template.id} className="dropdown-item" href="#" onClick={(event) => { event.preventDefault(); this.loadTemplate(template.id) }}>{template.title}</a>
-                                            })
-                                        }
+                                        <a href="#" className="dropdown-item" onClick={this.enableTemplateList}>Use Template</a>
+                                        <div className={`TampletsList ${this.state.TemplateList ? 'd-block' : 'd-none'}`}>
+                                            {
+                                                this.state.templates.map((template) => {
+                                                    return <a key={template.id} className="dropdown-item" href="#" onClick={(event) => { event.preventDefault(); this.loadTemplate(template.id) }}>{template.title}</a>
+                                                })
+                                            }
+                                        </div>
                                     </div>
                                 </div>
 
@@ -341,4 +357,4 @@ class Filters extends Component {
 
 }
 
-export default withApollo(withGlobalContent(Filters));
+export default withApollo(withGlobalContent(onClickOutside(Filters)));

@@ -57,6 +57,7 @@ class WorkOrders extends Component {
 				<div className="row">
 					<div className="col-md-12">
 						<WorkOrdersTable
+							filter={0}
 							onEditHandler={this.onEditHandler}
 							onLifeHandler={this.onLifeHandler}
 							handleOpenSnackbar={this.props.handleOpenSnackbar}

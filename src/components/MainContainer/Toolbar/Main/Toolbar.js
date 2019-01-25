@@ -107,7 +107,7 @@ class Toolbar extends Component {
 									</a>
 									<a className="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
 										<i className="fas fa-building" />
-										<small>Add Existing Property</small>
+										<small>Add New Property</small>
 										<span className="app-shortcuts__helper bg-gd-primary" />
 									</a>
 									<a
