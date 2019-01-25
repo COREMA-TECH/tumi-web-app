@@ -186,8 +186,8 @@ class WorkOrdersForm extends Component {
                 date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
                 status: 0,
-                shift: '08:00 AM',
-                endShift: '04:00 PM',
+                shift: moment('08:00', "HH:mm:ss"),
+                endShift: moment('16:00', "HH:mm:ss"),
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -622,19 +622,15 @@ class WorkOrdersForm extends Component {
         this.setState({
             endShift: _endHour,
             duration: value
-        }, () => {
-            console.log(this.state.endShift);
-
         });
     }
 
     calculateHours = () => {
-        let startDate = new Date(`01/01/2000 ${this.state.shift}`)
-        let endDate = new Date(`01/01/2000 ${this.state.endshift}`)
+        let startHour = this.state.shift;
+        let endHour = this.state.endShift;
 
-        var duration = moment.duration(
-            moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
-        ).asHours();
+        var duration = moment.duration(moment.utc(moment(endHour, "HH:mm:ss").diff(moment(startHour, "HH:mm:ss"))).format("HH:mm")).asHours();
+        duration = parseFloat(duration).toFixed(2);
 
         this.setState({
             duration: duration
@@ -734,6 +730,7 @@ class WorkOrdersForm extends Component {
                                             {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
                                         </div>
                                         <div className="col-md-6">
+                                            <label htmlFor="">Duration</label>
                                             <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
                                         <div className="col-md-6">
