@@ -133,8 +133,9 @@ query getposition ($Id_Entity:Int){
 	`;
 
 	GET_DEPARTMENTS_QUERY = gql`
+	query getcatalogitem ($Id_Entity:Int)
 		{
-			getcatalogitem(IsActive: 1, Id_Catalog: 8) {
+			getcatalogitem(IsActive: 1, Id_Catalog: 8,Id_Entity:$Id_Entity) {
 				Id
 				Code: Name
 				Name: Description
@@ -573,7 +574,7 @@ query getposition ($Id_Entity:Int){
 			this.props.client
 				.query({
 					query: this.GET_DEPARTMENTS_QUERY,
-					variables: { IdEntity: this.state.idCompany },
+					variables: { Id_Entity: this.state.idCompany },
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
