@@ -277,8 +277,13 @@ class FilterForm extends Component {
                     dayWeeks: shiftDetail.shift.dayWeek,
                     selectedEmployees: selectedEmployee ? selectedEmployee : [],
                     comment: shiftDetail.shift.comment,
-                    position: shiftDetail.shift.idPosition
-                }, () => this.getPosition(this.state.position))
+                    position: shiftDetail.shift.idPosition,
+                }, () => {
+                    this.getPosition(this.state.position);
+                    this.setState({
+                        duration: this.calculateHours()
+                    });
+                })
 
             }).catch(error => {
                 this.props.handleOpenSnackbar(
@@ -335,7 +340,9 @@ class FilterForm extends Component {
         let startDate = new Date(`01/01/2000 ${this.state.startHour}`)
         let endDate = new Date(`01/01/2000 ${this.state.endHour}`)
 
-        return moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
+        return moment.duration(
+            moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
+        ).asHours()
     }
 
     handleChangeEmployee = (selectedEmployees) => {
@@ -365,9 +372,26 @@ class FilterForm extends Component {
         })
     }
 
-    handleTimeChange = (event) => {
+    handleTimeChangeStart = (event) => {
         var element = event.target;
-        this.setState({ [element.name]: element.value })
+        let date = moment(event._d, "h:mm:ss").format("HH:mm")
+
+        const startHour = date;
+        const endHour = this.state.endHour;
+
+        var duration = moment.duration(moment.utc(moment(endHour, "HH:mm:ss").diff(moment(startHour, "HH:mm:ss"))).format("HH:mm")).asHours();
+        duration = parseFloat(duration).toFixed(2);
+
+        this.setState({
+            startHour: date,
+            duration: duration
+        })
+    }
+
+    handleTimeChangeEnd = (event) => {
+        var element = event.target;
+        let date = moment(event._d, "h:mm:ss").format("HH:mm")
+        this.setState({ endHour: date })
     }
 
     handleColorChange = (color) => {
@@ -604,6 +628,23 @@ class FilterForm extends Component {
         });
     }
 
+    handleCalculatedByDuration = (event) => {
+        const target = event.target;
+        const value = target.value;
+
+        const startHour = this.state.startHour;
+
+        var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
+        var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
+
+        var _endHour = (value == 0) ? _moment : endHour;
+
+        this.setState({
+            endHour: _endHour,
+            duration: value
+        });
+    }
+
     render() {
         const isEdition = this.state.selectedDetailId != 0;
         const allowEdit = this.state.status < 2;
@@ -661,13 +702,13 @@ class FilterForm extends Component {
                                         <div className="col-md-6">
                                             < label htmlFor="">* Start Time</label>
                                             {/* <input type="time" name="startHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.startHour} onChange={this.handleTimeChange} required></input> */}
-                                            <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "startHour", required: true }} onChange={this.handleTimeChange} />
+                                            <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "startHour", required: true }} onChange={this.handleTimeChangeStart} />
                                             < label htmlFor="">* End Time</label>
                                             {/* <input type="time" name="endHour" disabled={isHotelManger || !allowEdit} className="form-control" value={this.state.endHour} onChange={this.handleTimeChange} required></input> */}
-                                            <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "endHour", onChange: this.handleTimeChange, required: true }} />
+                                            <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "endHour", disabled: true }} />
                                         </div>
                                         <div className="col-md-6">
-                                            <input type="text" className="MasterShiftForm-hour" value={this.calculateHours()} />
+                                            <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
                                         <div className="col-md-12">
                                             <label htmlFor="">Repeat?</label>

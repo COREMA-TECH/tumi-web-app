@@ -11098,15 +11098,6 @@ button.rbc-input::-moz-focus-inner {
     padding-left: 1rem;
     padding-right: 1rem; }
 
-.ScheduleWrapper {
-  width: 100%;
-  max-width: 1366px;
-  margin: 0 auto; }
-  .ScheduleWrapper .EmployeeFilter {
-    width: 397px;
-    position: relative;
-    z-index: 99; }
-
 .MasterShift .can-toggle {
   position: relative; }
 
@@ -11610,3 +11601,31 @@ button.rbc-input::-moz-focus-inner {
       .MasterShift-schedulesHeader .FlexAlign-end .btn {
         margin-left: auto;
         margin-top: 1rem; } }
+
+.ScheduleWrapper {
+  display: inline-block;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content; }
+  .ScheduleWrapper .EmployeeFilter {
+    width: 397px;
+    position: relative;
+    z-index: 99;
+    border: none;
+    height: 20px; }
+    .ScheduleWrapper .EmployeeFilter .css-vj8t7z {
+      margin-top: 3px; }
+    .ScheduleWrapper .EmployeeFilter .css-vj8t7z, .ScheduleWrapper .EmployeeFilter .css-2o5izw {
+      background: transparent;
+      border: none;
+      height: 20px;
+      min-height: 20px; }
+    .ScheduleWrapper .EmployeeFilter .css-2o5izw {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      margin-top: 3px; }
+    .ScheduleWrapper .EmployeeFilter .css-1492t68 {
+      color: #3ca2c8;
+      font-weight: 700; }
+    .ScheduleWrapper .EmployeeFilter .css-19bqh2r {
+      display: none; }

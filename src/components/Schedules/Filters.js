@@ -8,6 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import withGlobalContent from 'Generic/Global';
 import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
+import Select from 'react-select';
 
 class Filters extends Component {
 
@@ -182,31 +183,43 @@ class Filters extends Component {
     }
 
     loadPreviousWeek = () => {
-        let endDayOfWeek = this.props.templateEndDate;
+
+
+        let endDayOfWeek = moment(this.props.templateStartDate).subtract(1, "days").format('YYYY-MM-DD');
         let entityId = this.props.location;
         let userId = localStorage.getItem('LoginId');
-        this.props.client
-            .mutate({
-                mutation: LOAD_PREVWEEK,
-                variables: {
-                    endDate: endDayOfWeek,
-                    entityId: entityId,
-                    userId: userId
-                }
-            })
-            .then((data) => {
-                this.props.handleOpenSnackbar(
-                    'success',
-                    'Previous week loaded'
-                );
-                this.props.toggleRefresh();
-            })
-            .catch((error) => {
-                this.props.handleOpenSnackbar(
-                    'error',
-                    'Error recovering previous week data'
-                );
-            });
+
+        this.setState({ loadingPrevWeek: true }, () => {
+            this.props.client
+                .mutate({
+                    mutation: LOAD_PREVWEEK,
+                    variables: {
+                        endDate: endDayOfWeek,
+                        entityId: entityId,
+                        userId: userId,
+                        departmentId: this.props.department
+                    }
+                })
+                .then((data) => {
+                    this.setState({ loadingPrevWeek: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            'Previous week loaded'
+                        );
+                        this.props.toggleRefresh();
+                    })
+
+                })
+                .catch((error) => {
+                    this.setState({ loadingPrevWeek: false }, () => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error recovering previous week data'
+                        );
+                    })
+                });
+        })
+
     }
 
     publishAll = () => {
@@ -251,7 +264,17 @@ class Filters extends Component {
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
                         Department: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.departmentName}</a>,
-                        Requested By: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.requestedName}</a>
+                        Employees:
+                        <div className="ScheduleWrapper">
+                            <Select
+                                name="employees"
+                                className="EmployeeFilter"
+                                options={this.props.employees}
+                                value={this.props.selectedEmployee}
+                                onChange={this.props.onSelectedEmployeeChange}
+                                closeMenuOnSelect={false}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="MasterShiftHeader-controls">
@@ -260,12 +283,13 @@ class Filters extends Component {
                             <div className="MasterShiftHeader-controlLeft">
                                 <button onClick={this.handleClickOpenModal} className="btn btn-success btn-not-rounded mr-1" type="button">Add Shift</button>
                                 {/* <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button> */}
-                                <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
+                                <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week {this.state.loadingPrevWeek && <i className="fa fa-spinner fa-spin" />}</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
-                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Use Template</button>
+                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Templates</button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                                        <a href="#" className="dropdown-item" style={{ fontStyle: "italic" }} onClick={this.openFormTitle}>Save as Template</a>
+                                        <a href="#" className="dropdown-item" onClick={this.openFormTitle}>Save as Template</a>
+                                        <a href="#" className="dropdown-item" onClick={this.openFormTitle}>Use Template</a>
                                         {
                                             this.state.templates.map((template) => {
                                                 return <a key={template.id} className="dropdown-item" href="#" onClick={(event) => { event.preventDefault(); this.loadTemplate(template.id) }}>{template.title}</a>

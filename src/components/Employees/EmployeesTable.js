@@ -209,23 +209,6 @@ class EmployeesTable extends React.Component {
                                             }}
                                         >
                                             <CustomTableCell>
-<<<<<<< HEAD
-=======
-                                                <Tooltip title="Assign Role">
-                                                    <button
-                                                        className="btn btn-outline-info float-left ml-1"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            e.preventDefault();
-
-                                                            // this.props.assign(row.id, row);
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-plus"></i>
-                                                    </button>
-                                                </Tooltip>
->>>>>>> 9b90875bacd9e4bf144da90f9f6487b0b5e8e081
                                                 <Tooltip title="Edit">
                                                     <button
                                                         className="btn btn-success float-left ml-1"

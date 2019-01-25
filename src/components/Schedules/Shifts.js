@@ -248,9 +248,19 @@ class Shifts extends Component {
             nextProps.shiftId
         );
 
+        console.log("nextProps department:::", nextProps.department)
+        console.log("this.props department:::", this.props.department)
+        console.log("nextProps location:::", nextProps.location)
+        console.log("this.props location:::", this.props.location)
+        console.log("nextProps selectedEmployee.value :::", nextProps.selectedEmployee.value)
+        console.log("this.props selectedEmployee.value :::", this.props.selectedEmployee.value)
+        console.log("nextProps refresh :::", nextProps.refresh)
+        console.log("this.props refresh :::", this.props.refresh)
+
         if (nextProps.location != this.props.location ||
             nextProps.department != this.props.department ||
-            nextProps.selectedEmployee.value != this.props.selectedEmployee.value) {
+            nextProps.selectedEmployee.value != this.props.selectedEmployee.value ||
+            nextProps.refresh != this.props.refresh) {
             this.setState(
                 {
                     loading: true
@@ -367,7 +377,7 @@ class Shifts extends Component {
 
         return (
             <div>
-                <div className="ScheduleWrapper">
+                {/* <div className="ScheduleWrapper">
                     Employee <Select
                         name="employees"
                         className="EmployeeFilter"
@@ -376,7 +386,7 @@ class Shifts extends Component {
                         onChange={this.props.onSelectedEmployeeChange}
                         closeMenuOnSelect={false}
                     />
-                </div>
+                </div> */}
                 <Scheduler
                     schedulerData={viewModel}
                     prevClick={this.prevClick}
