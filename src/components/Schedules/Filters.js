@@ -8,6 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import withGlobalContent from 'Generic/Global';
 import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
+import Select from 'react-select';
 
 class Filters extends Component {
 
@@ -251,7 +252,17 @@ class Filters extends Component {
                     <div className="col-md-12">
                         Location: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.locationName}</a>,
                         Department: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.departmentName}</a>,
-                        Requested By: <a href="" onClick={this.props.handleClosePreFilter} className="link">{this.props.requestedName}</a>
+                        Employees:
+                        <div className="ScheduleWrapper">
+                            <Select
+                                name="employees"
+                                className="EmployeeFilter"
+                                options={this.props.employees}
+                                value={this.props.selectedEmployee}
+                                onChange={this.props.onSelectedEmployeeChange}
+                                closeMenuOnSelect={false}
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="MasterShiftHeader-controls">
@@ -262,10 +273,11 @@ class Filters extends Component {
                                 {/* <button onClick={this.openFormTitle} className="btn btn-default btn-not-rounded mr-1" type="button" disabled={this.props.viewType != 1 ? true : false}>Save as Template</button> */}
                                 <button onClick={this.loadPreviousWeek} className="btn btn-default btn-not-rounded mr-1" type="button">Copy Previous Week</button>
                                 <div className="dropdown float-left dropdown-withoutjs">
-                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Use Template</button>
+                                    <button data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuButton" className="dropdown-toggle btn btn-default btn-not-rounded mr-1" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled={this.props.viewType != 1 ? true : false}>Templates</button>
                                     <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                                        <a href="#" className="dropdown-item" style={{ fontStyle: "italic" }} onClick={this.openFormTitle}>Save as Template</a>
+                                        <a href="#" className="dropdown-item" onClick={this.openFormTitle}>Save as Template</a>
+                                        <a href="#" className="dropdown-item" onClick={this.openFormTitle}>Use Template</a>
                                         {
                                             this.state.templates.map((template) => {
                                                 return <a key={template.id} className="dropdown-item" href="#" onClick={(event) => { event.preventDefault(); this.loadTemplate(template.id) }}>{template.title}</a>

@@ -158,7 +158,7 @@ class PreFilter extends Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col-md-12">
-                                    <label htmlFor="">Location</label>
+                                    <label htmlFor="">Property</label>
                                     <select name="location" id="" disabled={this.state.loadingLoaction} className="form-control" required onChange={this.handleSelectValueChange}>
                                         <option value="">Select a Option</option>
                                         {this.renderLocationList()}
@@ -181,13 +181,10 @@ class PreFilter extends Component {
                                     Filter
                                         {this.state.saving && <i className="fas fa-spinner fa-spin ml-2" />}
                                 </button>
-                                {
-                                    this.props.isEditFilter ? (
-                                        <button className="btn btn-defautl btn-not-rounded ml-1" type="button" onClick={this.props.handleClosePreFilter}>
-                                            Cancel
-                                    </button>
-                                    ) : ("")
-                                }
+
+                                <button className="btn btn-defautl btn-not-rounded ml-1" type="button" onClick={this.props.handleClosePreFilter}>
+                                    Cancel
+                                </button>
                             </div>
                         </div>
                     </DialogActions>

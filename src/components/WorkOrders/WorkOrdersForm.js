@@ -22,6 +22,8 @@ import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
+import moment from 'moment';
+import Datetime from 'react-datetime';
 
 
 const styles = (theme) => ({
@@ -134,10 +136,9 @@ class WorkOrdersForm extends Component {
 
     }
 
-
     ReceiveStatus = false;
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps) {
         if (nextProps.item && !this.state.openModal) {
 
             this.setState(
@@ -174,7 +175,7 @@ class WorkOrdersForm extends Component {
                     this.getPositions(nextProps.item.IdEntity, nextProps.item.PositionRateId);
                     this.getContacts(nextProps.item.IdEntity);
                     this.getRecruiter();
-
+                    this.calculateHours();
 
                     this.ReceiveStatus = true;
                 }
@@ -185,8 +186,8 @@ class WorkOrdersForm extends Component {
                 date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
                 status: 0,
-                shift: '',
-                endShift: '',
+                shift: '08:00 AM',
+                endShift: '04:00 PM',
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -204,7 +205,8 @@ class WorkOrdersForm extends Component {
                 Friday: 'FR,',
                 Saturday: 'SA,',
                 Sunday: 'SU,',
-                dayWeek: ''
+                dayWeek: '',
+                duration: '8'
 
             });
         }
@@ -215,7 +217,7 @@ class WorkOrdersForm extends Component {
 
 
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
 
         this.props.client
             .query({
@@ -523,10 +525,6 @@ class WorkOrdersForm extends Component {
                                 if (itemDetails.detailEmployee != null) {
                                     //if (employeesList.Value != item.detailEmployee.EmployeeId) {
                                     if (itemDetails.detailEmployee.EmployeeId != employeeIdTemp) {
-                                        console.log("el itemDetails.detailEmployee.EmployeeId es  ", itemDetails.detailEmployee.EmployeeId);
-                                        console.log("el employeeIdTempes  ", employeeIdTemp);
-                                        console.log("resultado de dataShiftDetails ", itemDetails.detailEmployee);
-
                                         employeesList.push({
                                             WorkOrderId: item.WorkOrderId,
                                             ShiftId: item.ShiftId,
@@ -539,7 +537,6 @@ class WorkOrdersForm extends Component {
                                     }
                                 }
                             })
-                            console.log("La infromacion de employeesList ", employeesList)
                             this.setState({ employees: employeesList })
                         })
                         .catch();
@@ -569,7 +566,6 @@ class WorkOrdersForm extends Component {
     };
 
     UpdateState = (e) => {
-        console.log(e.id)
         if (e.id == 'Monday') { if (this.state.Monday == 'MO,') { this.setState({ Monday: '' }); } else { this.setState({ Monday: 'MO,' }); } }
         if (e.id == 'Tuesday') { if (this.state.Tuesday == 'TU,') { this.setState({ Tuesday: '' }); } else { this.setState({ Tuesday: 'TU,' }); } }
         if (e.id == 'Wednesday') { if (this.state.Wednesday == 'WE,') { this.setState({ Wednesday: '' }); } else { this.setState({ Wednesday: 'WE,' }); } }
@@ -595,7 +591,11 @@ class WorkOrdersForm extends Component {
 
 
     handleTimeChange = (name) => (text) => {
-        this.setState({ [name]: text })
+        this.setState({
+            [name]: text
+        }, () => {
+            this.calculateHours()
+        })
     }
 
     handleValidate = (event) => {
@@ -605,6 +605,40 @@ class WorkOrdersForm extends Component {
         else
             selfHtml.classList.remove("is-invalid");
 
+    }
+
+    handleCalculatedByDuration = (event) => {
+        const target = event.target;
+        const value = target.value;
+
+        const startHour = this.state.shift;
+
+
+        var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
+        var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
+
+        var _endHour = (value == 0) ? _moment : endHour;
+
+        this.setState({
+            endShift: _endHour,
+            duration: value
+        }, () => {
+            console.log(this.state.endShift);
+
+        });
+    }
+
+    calculateHours = () => {
+        let startDate = new Date(`01/01/2000 ${this.state.shift}`)
+        let endDate = new Date(`01/01/2000 ${this.state.endshift}`)
+
+        var duration = moment.duration(
+            moment.utc(moment(endDate, "DD/MM/YYYY HH:mm:ss").diff(moment(startDate, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm")
+        ).asHours();
+
+        this.setState({
+            duration: duration
+        });
     }
 
     render() {
@@ -693,11 +727,14 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-                                            <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} />
+                                            <Datetime dateFormat={false} value={this.state.shift} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                            {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
+                                            <label htmlFor="">Shift End</label>
+                                            <Datetime dateFormat={false} value={this.state.endShift} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
+                                            {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
                                         </div>
                                         <div className="col-md-6">
-                                            <label htmlFor="">Shift End</label>
-                                            <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} />
+                                            <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">* From Date</label>
@@ -809,7 +846,7 @@ class WorkOrdersForm extends Component {
                             </div>
                             <div className='row'>
                                 <div className="col-md-12">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                    <div className="btn-group" role="group" aria-label="Basic example">
                                         <button id="Monday" type="button" className={this.state.Monday == 'MO,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>MO</button>
                                         <button id="Tuesday" type="button" className={this.state.Tuesday == 'TU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>TU</button>
                                         <button id="Wednesday" type="button" className={this.state.Wednesday == 'WE,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>WE</button>
@@ -826,9 +863,9 @@ class WorkOrdersForm extends Component {
                                 {this.state.id && (
                                     <div className="col-md-12">
                                         {this.state.employees.length > 0 ? (
-                                            <div class="card">
-                                                <div class="card-header danger">Employees assign to work order</div>
-                                                <div class="card-body">
+                                            <div className="card">
+                                                <div className="card-header danger">Employees assign to work order</div>
+                                                <div className="card-body">
                                                     <Table className="Table">
                                                         <TableHead>
                                                             <TableRow>
@@ -903,12 +940,12 @@ class WorkOrdersForm extends Component {
                                                 className="btn btn-danger ml-1 float-right"
                                                 onClick={this.props.handleCloseModal}
                                             >
-                                                Cancel<i class="fas fa-ban ml-2" />
+                                                Cancel<i className="fas fa-ban ml-2" />
                                             </button>
 
                                             <button className="btn btn-success ml-1 float-right" type="submit">
-                                                Save {!this.state.saving && <i class="fas fa-save ml2" />}
-                                                {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
+                                                Save {!this.state.saving && <i className="fas fa-save ml2" />}
+                                                {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
                                             </button>
 
                                         </div>

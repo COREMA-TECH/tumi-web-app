@@ -367,7 +367,7 @@ class Shifts extends Component {
 
         return (
             <div>
-                <div className="ScheduleWrapper">
+                {/* <div className="ScheduleWrapper">
                     Employee <Select
                         name="employees"
                         className="EmployeeFilter"
@@ -376,7 +376,7 @@ class Shifts extends Component {
                         onChange={this.props.onSelectedEmployeeChange}
                         closeMenuOnSelect={false}
                     />
-                </div>
+                </div> */}
                 <Scheduler
                     schedulerData={viewModel}
                     prevClick={this.prevClick}

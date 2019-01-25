@@ -12,3 +12,35 @@
     }
 
 }
+
+.ScheduleWrapper {
+    display: inline-block;
+    width: fit-content;
+    .EmployeeFilter {
+        width: 397px;
+        position: relative;
+        z-index: 99;
+        border: none;
+        height: 20px;
+        .css-vj8t7z {
+            margin-top: 3px;
+        }
+        .css-vj8t7z, .css-2o5izw {
+            background: transparent;
+            border: none;
+            height: 20px;
+            min-height: 20px;            
+        }
+        .css-2o5izw {
+            box-shadow: none;
+            margin-top: 3px;
+        }
+        .css-1492t68 {
+            color: $brand-primary;
+            font-weight: 400;
+        }
+        .css-19bqh2r {
+            display: none;
+        }
+    }
+}
