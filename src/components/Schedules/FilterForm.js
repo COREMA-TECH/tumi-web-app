@@ -551,7 +551,6 @@ class FilterForm extends Component {
                 </button>
                 <button className="btn btn-default" type="button" onClick={this.clearInputs} >Clear</button>
                 <button className="btn btn-default" type="button" onClick={this.saveDraft} >Save Draft {this.showLoadingDraft()}</button>
-                <button className="btn btn-success" type="button" onClick={this.savePublish} >Notify {this.showLoadingNotify()}</button>
                 <button ref={input => this.publish = input} className="btn btn-success" style={{ visibility: 'hidden', widht: 0 }} type="submit">None</button>
             </div >
     }
@@ -740,9 +739,9 @@ class FilterForm extends Component {
                     }
                     <footer className="MasterShiftForm-footer">
                         <div className="row">
-                            <div className="col-xs-6 col-md-6">
-                                <button type="button" className="btn btn-success float-left btn-not-rounded">Notify</button>
-                            </div>
+                            {!this.props.hotelManager && <div className="col-xs-6 col-md-6">
+                                <button className="btn btn-success float-left btn-not-rounded" type="button" onClick={this.savePublish}>Notify {this.showLoadingNotify()}</button>
+                            </div>}
                             {
                                 this.state.summaryEnable ? (
                                     <div className="col-xs-6 col-md-6">
