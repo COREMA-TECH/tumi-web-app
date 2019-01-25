@@ -142,7 +142,7 @@ class DashboardManager extends React.Component {
                             <div className="row">
                                 <div className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
                                     <div className="row p-0">
-                                        <div className="col-sm-6 col-xs-12">
+                                        <div className="col-sm-4 col-xs-12">
                                             <label> Start Date</label>
                                             <input
                                                 type="date"
@@ -151,7 +151,7 @@ class DashboardManager extends React.Component {
                                                 value="2018-10-30"
                                             />
                                         </div>
-                                        <div className="col-sm-6 col-xs-12">
+                                        <div className="col-sm-4 col-xs-12">
                                             <label> End Date</label>
                                             <input
                                                 type="date"
@@ -159,6 +159,14 @@ class DashboardManager extends React.Component {
                                                 placeholder="2018-10-30"
                                                 value="2018-10-30"
                                             />
+                                        </div>
+                                        <div className="col-sm-4 col-xs-12">
+                                            <label> Status</label>
+                                            <select name="" id="" className="form-control">
+                                                <option value="">Select an option</option>
+                                                <option value="0">All</option>
+                                                <option value="1">Canceled Work Orders</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

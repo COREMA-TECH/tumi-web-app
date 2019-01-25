@@ -281,7 +281,7 @@ class WorkOrdersTable extends Component {
                                                     <i className="fas fa-pen"></i>
                                                 </button>
                                             </Tooltip>
-                                            <Tooltip title="Delete">
+                                            <Tooltip title="Cancel">
                                                 <button
                                                     className="btn btn-danger float-left"
                                                     disabled={this.props.loading}
@@ -294,7 +294,7 @@ class WorkOrdersTable extends Component {
                                                         this.setState({ openConfirm: true, idToDelete: row.id });
                                                     }}
                                                 >
-                                                    <i className="fas fa-trash"></i>
+                                                    <i className="fas fa-ban"></i>
                                                 </button>
                                             </Tooltip>
                                         </CustomTableCell>
@@ -364,7 +364,7 @@ class WorkOrdersTable extends Component {
                         confirmAction={() => {
                             this.handleDelete(this.state.idToDelete);
                         }}
-                        title={'are you sure you want to delete this record?'}
+                        title={'are you sure you want to cancel this record?'}
                         loading={this.state.removing}
                     />
                 </Paper>
