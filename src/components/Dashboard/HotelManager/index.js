@@ -31,7 +31,8 @@ class DashboardManager extends React.Component {
             catalogs: [],
             phases: [],
             notShow: 0,
-            disqualified: 0
+            disqualified: 0,
+            filterValue: 0
         };
     }
 
@@ -162,8 +163,11 @@ class DashboardManager extends React.Component {
                                         </div>
                                         <div className="col-sm-4 col-xs-12">
                                             <label> Status</label>
-                                            <select name="" id="" className="form-control">
-                                                <option value="">Select an option</option>
+                                            <select name="" id="" className="form-control" onChange={(e) => {
+                                                this.setState({
+                                                    filterValue: parseInt(e.target.value)
+                                                })
+                                            }}>
                                                 <option value="0">All</option>
                                                 <option value="1">Canceled Work Orders</option>
                                             </select>
@@ -191,6 +195,7 @@ class DashboardManager extends React.Component {
                 </div>
                 <div className="col-md-12">
                     <WorkOrdersTable
+                        filter={this.state.filterValue}
                         onEditHandler={this.onEditHandler}
                         onLifeHandler={this.onLifeHandler}
                         handleOpenSnackbar={this.props.handleOpenSnackbar}
