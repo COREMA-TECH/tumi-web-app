@@ -22,7 +22,8 @@ import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-
+import Datetime from 'react-datetime';
+import moment from 'moment';
 
 const styles = (theme) => ({
     wrapper: {
@@ -594,8 +595,12 @@ class WorkOrdersForm extends Component {
 
 
 
-    handleTimeChange = (name) => (text) => {
+    /*handleTimeChange = (name) => (text) => {
         this.setState({ [name]: text })
+    }*/
+
+    handleTimeChange = (name) => (text) => {
+        console.log("handleTimeChange ", name, " ", text)
     }
 
     handleValidate = (event) => {
@@ -694,10 +699,13 @@ class WorkOrdersForm extends Component {
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
                                             <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} />
+                                            {/* <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ name: "startHour", required: true }} onChange={this.handleTimeChange} />*/}
+
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift End</label>
                                             <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} />
+                                            {/*  <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ name: "endHour", onChange: this.handleTimeChange, required: true }} />*/}
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">* From Date</label>

@@ -74,8 +74,8 @@ export const GET_COORDENADAS = gql`
 
 `;
 export const GET_WORK_ORDERS = gql`
-query workorder ($IdEntity: Int, $status: Int)  {
-	workOrder(IdEntity:$IdEntity, status:$status){
+query workorder ($IdEntity: Int, $status: Int,$id: Int)  {
+	workOrder(IdEntity:$IdEntity, status:$status,id:$id){
 		id
 		IdEntity
 		userId
@@ -91,13 +91,15 @@ query workorder ($IdEntity: Int, $status: Int)  {
 			Position
 			Id_positionApplying
 		  }
+		BusinessCompany
+		  {
+			   Id
+				  Name
+				  Zipcode
+			
+		  }
 		comment
 }
-	getbusinesscompanies(Id: null, IsActive: 1, Contract_Status: "'C'") {
-		Id
-		Name
-		Zipcode
-	}
 	getusers(Id: null,IsActive: 1) {
 		Id
 		Id_Contact

@@ -63,7 +63,7 @@ class WorkOrdersTable extends Component {
     }
 
     componentWillMount() {
-        this.props.client
+        /*this.props.client
             .query({
                 query: GET_WORKORDERS_QUERY
             })
@@ -72,11 +72,25 @@ class WorkOrdersTable extends Component {
                     data: data.workOrder
                 });
             })
-            .catch();
-
+            .catch();*/
+        this.getWorkOrders();
         this.getRecruiter();
         this.getHotel();
 
+    }
+
+    getWorkOrders = () => {
+        this.props.client
+            .query({
+                query: GET_WORKORDERS_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    data: data.workOrder
+                });
+            })
+            .catch();
     }
 
     handleDelete = (id) => {
@@ -87,9 +101,13 @@ class WorkOrdersTable extends Component {
                 id: id
             }
         }).then((data) => {
+
+            this.getWorkOrders();
+            this.getRecruiter();
+            this.getHotel();
             this.props.handleOpenSnackbar('success', 'Record Deleted!');
-            this.setState({ openModal: false, removing: false });
-            window.location.reload();
+            this.setState({ openConfirm: false, removing: false });
+            //window.location.reload();
         }).catch((error) => {
             this.setState({ removing: false })
             this.props.handleOpenSnackbar('error', 'Error: ' + error);
