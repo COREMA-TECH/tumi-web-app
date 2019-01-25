@@ -9385,7 +9385,7 @@ tbody[class^="MuiTableBody-"] .btn {
   border: solid 3px #3ca2c8;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  background-color: #dfeaee !important; }
+  background-color: #3ca2c8 !important; }
 
 .row.CardPermissions {
   margin-left: 0 !important; }
@@ -11029,7 +11029,8 @@ button.rbc-input::-moz-focus-inner {
     border: dotted 1px #bdbdbd;
     border-radius: 5px;
     bottom: 0;
-    height: 80%;
+    height: 75%;
+    left: 15px;
     position: absolute;
     text-align: center; }
   .MasterShiftForm-groupButtons {
@@ -11626,6 +11627,6 @@ button.rbc-input::-moz-focus-inner {
       margin-top: 3px; }
     .ScheduleWrapper .EmployeeFilter .css-1492t68 {
       color: #3ca2c8;
-      font-weight: 700; }
+      font-weight: 400; }
     .ScheduleWrapper .EmployeeFilter .css-19bqh2r {
       display: none; }

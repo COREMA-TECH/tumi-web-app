@@ -708,6 +708,7 @@ class FilterForm extends Component {
                                             <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ disabled: isHotelManger || !allowEdit, name: "endHour", disabled: true }} />
                                         </div>
                                         <div className="col-md-6">
+                                            <label htmlFor="">Duration</label>
                                             <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
                                         <div className="col-md-12">
