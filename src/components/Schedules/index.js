@@ -139,6 +139,8 @@ class Schedules extends Component {
         this.setState({
             employees: myEmployees,
             selectedEmployee: { ...DEFAULT_EMPLOYEE }
+        }, () => {
+            console.log("employees:::", employees)
         })
     }
 
@@ -175,6 +177,8 @@ class Schedules extends Component {
                     location={this.state.location}
                     department={this.state.department}
                     toggleRefresh={this.toggleRefresh}
+                    employees={this.state.employees}
+                    onSelectedEmployeeChange={this.onSelectedEmployeeChange}
                 />
                 <FilterForm
                     updateEmployeeList={this.updateEmployeeList}
@@ -196,7 +200,6 @@ class Schedules extends Component {
                                 {
                                     this.state.filtered == true ? (
                                         <Shifts
-                                            employees={this.state.employees}
                                             editConfirmOpened={this.state.editConfirmOpened}
                                             openEditConfirm={this.openEditConfirm}
                                             refresh={this.state.refresh}
@@ -209,7 +212,6 @@ class Schedules extends Component {
                                             changeViewType={this.changeViewType}
                                             location={this.state.location}
                                             department={this.state.department}
-                                            onSelectedEmployeeChange={this.onSelectedEmployeeChange}
                                             selectedEmployee={this.state.selectedEmployee}
                                         />
                                     ) : ('')
