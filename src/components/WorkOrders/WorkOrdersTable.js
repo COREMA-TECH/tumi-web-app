@@ -253,8 +253,9 @@ class WorkOrdersTable extends Component {
                         </TableHead>
                         <TableBody>
                             {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                let backgroundColor = row.status === 0 ? '#ddd' : '#fff';
                                 return (
-                                    <TableRow>
+                                    <TableRow style={{background: backgroundColor}}>
                                         <CustomTableCell className={'text-center'}>
                                             <Tooltip title="Life Cycle">
                                                 <button
