@@ -888,92 +888,93 @@ class ContactcontactForm extends React.Component {
 		});
 
 		console.log("Esto es el deparment ", department)
+		console.log("Esto es el title ", title)
 		let insdepartmentAsync = async () => {
 
 			if (department) {
 				IdDeparment = department.Id;
 			} else {
 				//const InsertDepartmentNew =
-				if (department != undefined) {
-					await this.props.client
-						.mutate({
-							mutation: this.INSERT_DEPARTMENTS_QUERY,
-							variables: {
-								input: {
-									Id: 0,
-									Id_Catalog: 8,
-									Id_Parent: 0,
-									Name: `'${this.state.departmentName}'`,
-									DisplayLabel: `'${this.state.departmentName}'`,
-									Description: `'${this.state.departmentName}'`,
-									Value: null,
-									Value01: null,
-									Value02: null,
-									Value03: null,
-									Value04: null,
-									IsActive: 1,
-									User_Created: 1,
-									User_Updated: 1,
-									Date_Created: "'2018-09-20 08:10:25+00'",
-									Date_Updated: "'2018-09-20 08:10:25+00'",
-									Id_Entity: this.props.idCompany
-								}
+				//if (department != undefined) {
+				await this.props.client
+					.mutate({
+						mutation: this.INSERT_DEPARTMENTS_QUERY,
+						variables: {
+							input: {
+								Id: 0,
+								Id_Catalog: 8,
+								Id_Parent: 0,
+								Name: `'${this.state.departmentName}'`,
+								DisplayLabel: `'${this.state.departmentName}'`,
+								Description: `'${this.state.departmentName}'`,
+								Value: null,
+								Value01: null,
+								Value02: null,
+								Value03: null,
+								Value04: null,
+								IsActive: 1,
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-09-20 08:10:25+00'",
+								Date_Updated: "'2018-09-20 08:10:25+00'",
+								Id_Entity: this.props.idCompany
 							}
-						})
-						.then((data) => {
-							IdDeparment = data.data.inscatalogitem.Id;
-						})
-						.catch((error) => {
-							this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-							this.setState({
-								saving: false
-							});
-							return false;
+						}
+					})
+					.then((data) => {
+						IdDeparment = data.data.inscatalogitem.Id;
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+						this.setState({
+							saving: false
 						});
-				}
+						return false;
+					});
+				//}
 			}
 
 			if (title) {
 				IdTitle = title.Id;
 			} else {
 				//const InsertDepartmentNew =
-				if (title != undefined) {
-					await this.props.client
-						.mutate({
-							mutation: this.INSERT_DEPARTMENTS_QUERY,
-							variables: {
-								input: {
-									Id: 0,
-									Id_Catalog: 6,
-									Id_Parent: 0,
-									Name: `'${this.state.titleName}'`,
-									DisplayLabel: `'${this.state.titleName}'`,
-									Description: `'${this.state.titleName}'`,
-									Value: null,
-									Value01: null,
-									Value02: null,
-									Value03: null,
-									Value04: null,
-									IsActive: 1,
-									User_Created: 1,
-									User_Updated: 1,
-									Date_Created: "'2018-09-20 08:10:25+00'",
-									Date_Updated: "'2018-09-20 08:10:25+00'",
-									Id_Entity: this.props.idCompany
-								}
+				//if (title != undefined) {
+				await this.props.client
+					.mutate({
+						mutation: this.INSERT_DEPARTMENTS_QUERY,
+						variables: {
+							input: {
+								Id: 0,
+								Id_Catalog: 6,
+								Id_Parent: 0,
+								Name: `'${this.state.titleName}'`,
+								DisplayLabel: `'${this.state.titleName}'`,
+								Description: `'${this.state.titleName}'`,
+								Value: null,
+								Value01: null,
+								Value02: null,
+								Value03: null,
+								Value04: null,
+								IsActive: 1,
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-09-20 08:10:25+00'",
+								Date_Updated: "'2018-09-20 08:10:25+00'",
+								Id_Entity: this.props.idCompany
 							}
-						})
-						.then((data) => {
-							IdTitle = data.data.inscatalogitem.Id;
-						})
-						.catch((error) => {
-							this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
-							this.setState({
-								saving: false
-							});
-							return false;
+						}
+					})
+					.then((data) => {
+						IdTitle = data.data.inscatalogitem.Id;
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Inserting Title: ' + error);
+						this.setState({
+							saving: false
 						});
-				}
+						return false;
+					});
+				//}
 			}
 
 			this.insertContacts(IdDeparment, IdTitle);
