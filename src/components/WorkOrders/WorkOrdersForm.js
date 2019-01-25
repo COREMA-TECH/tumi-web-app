@@ -22,14 +22,9 @@ import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-<<<<<<< HEAD
-import Datetime from 'react-datetime';
-import moment from 'moment';
-=======
 import moment from 'moment';
 import Datetime from 'react-datetime';
 
->>>>>>> 0be09e77d228134469d78adf70b855b9965ecdd9
 
 const styles = (theme) => ({
     wrapper: {
@@ -595,21 +590,12 @@ class WorkOrdersForm extends Component {
 
 
 
-<<<<<<< HEAD
-    /*handleTimeChange = (name) => (text) => {
-        this.setState({ [name]: text })
-    }*/
-
-    handleTimeChange = (name) => (text) => {
-        console.log("handleTimeChange ", name, " ", text)
-=======
     handleTimeChange = (name) => (text) => {
         this.setState({
             [name]: text
         }, () => {
             this.calculateHours()
         })
->>>>>>> 0be09e77d228134469d78adf70b855b9965ecdd9
     }
 
     handleValidate = (event) => {
@@ -741,16 +727,6 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-<<<<<<< HEAD
-                                            <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} />
-                                            {/* <Datetime dateFormat={false} value={moment(this.state.startHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ name: "startHour", required: true }} onChange={this.handleTimeChange} />*/}
-
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">Shift End</label>
-                                            <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} />
-                                            {/*  <Datetime dateFormat={false} value={moment(this.state.endHour, "h:mm:ss A").format("hh:mm A")} inputProps={{ name: "endHour", onChange: this.handleTimeChange, required: true }} />*/}
-=======
                                             <Datetime dateFormat={false} value={this.state.shift} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
                                             {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
                                             <label htmlFor="">Shift End</label>
@@ -759,7 +735,6 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
->>>>>>> 0be09e77d228134469d78adf70b855b9965ecdd9
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">* From Date</label>
