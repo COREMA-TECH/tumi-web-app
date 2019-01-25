@@ -248,15 +248,6 @@ class Shifts extends Component {
             nextProps.shiftId
         );
 
-        console.log("nextProps department:::", nextProps.department)
-        console.log("this.props department:::", this.props.department)
-        console.log("nextProps location:::", nextProps.location)
-        console.log("this.props location:::", this.props.location)
-        console.log("nextProps selectedEmployee.value :::", nextProps.selectedEmployee.value)
-        console.log("this.props selectedEmployee.value :::", this.props.selectedEmployee.value)
-        console.log("nextProps refresh :::", nextProps.refresh)
-        console.log("this.props refresh :::", this.props.refresh)
-
         if (nextProps.location != this.props.location ||
             nextProps.department != this.props.department ||
             nextProps.selectedEmployee.value != this.props.selectedEmployee.value ||
@@ -377,16 +368,6 @@ class Shifts extends Component {
 
         return (
             <div>
-                {/* <div className="ScheduleWrapper">
-                    Employee <Select
-                        name="employees"
-                        className="EmployeeFilter"
-                        options={this.props.employees}
-                        value={this.props.selectedEmployee}
-                        onChange={this.props.onSelectedEmployeeChange}
-                        closeMenuOnSelect={false}
-                    />
-                </div> */}
                 <Scheduler
                     schedulerData={viewModel}
                     prevClick={this.prevClick}
@@ -397,8 +378,7 @@ class Shifts extends Component {
                     updateEventStart={this.updateEventStart}
                     updateEventEnd={this.updateEventEnd}
                     eventItemTemplateResolver={this.eventItemTemplateResolver}
-                //moveEvent={this.moveEvent}
-                //newEvent={this.newEvent}
+
                 />
                 <Dialog maxWidth="sm" open={this.props.editConfirmOpened} onClose={this.props.handleClosePreFilter}>
                     <DialogContent>

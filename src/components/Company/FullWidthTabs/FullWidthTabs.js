@@ -125,7 +125,7 @@ class CustomizedTabs extends React.Component {
 						toggleStepper={this.toggleStepper}
 					/>
 				);
-			case 3:
+				{/*case 3:
 				return (
 					<TitleCompanyForm
 						idCompany={this.state.idCompany}
@@ -138,8 +138,8 @@ class CustomizedTabs extends React.Component {
 						showStepper={this.state.showStepper}
 						toggleStepper={this.toggleStepper}
 					/>
-				);
-			case 4:
+				); */}
+			case 3:
 				return (
 					<PositionsCompanyForm
 						href={null}
@@ -156,7 +156,7 @@ class CustomizedTabs extends React.Component {
 						showPayRate={true}
 					/>
 				);
-			case 5:
+			case 4:
 				return (
 					<Preferences
 						idCompany={this.state.idCompany}
@@ -195,12 +195,12 @@ class CustomizedTabs extends React.Component {
 							label="Department"
 							disabled={!this.state.activateTabs}
 						/>
-						<Tab
+						{/*<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
 							label="Title"
 							disabled={!this.state.activateTabs}
-						/>
+						/>*/}
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}

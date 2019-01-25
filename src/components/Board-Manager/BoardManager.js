@@ -14,8 +14,6 @@ import ShiftsData from '../../data/shitfs.json';
 import { InputLabel } from '@material-ui/core';
 import Query from 'react-apollo/Query';
 import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
-//import { withInfo } from '@storybook/addon-info'
-//import { storiesOf } from '@storybook/react'
 
 import Filters from './Filters';
 
@@ -90,6 +88,7 @@ class BoardManager extends Component {
             accepted: [],
             schedule: [],
             workOrders: [],
+            workOrdersPositions: [],
             Position: '',
             Hotel: '',
             states: [],
@@ -119,9 +118,6 @@ class BoardManager extends Component {
 
 
     handleDragStart = (cardId, laneId) => {
-        //////////console.log('drag started');
-        //console.log(`cardId: ${cardId}`);
-        //console.log(`laneId: ${laneId}`);
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
@@ -164,8 +160,6 @@ class BoardManager extends Component {
             }, () => {
                 this.loadhotel();
                 this.getWorkOrders();
-                // this.loadStates();
-                //this.loadCities();
             });
     }
 
@@ -229,7 +223,6 @@ class BoardManager extends Component {
                     matches: []
                 },
                 () => {
-                    // this.validateField('state', id);
                     this.loadStates();
                     this.loadCities();
                     this.getWorkOrders();
@@ -246,7 +239,6 @@ class BoardManager extends Component {
                     matches: []
                 },
                 () => {
-                    // this.validateField('state', id);
                     this.getWorkOrders();
                     this.loadStates();
                     this.loadCities();
@@ -268,17 +260,6 @@ class BoardManager extends Component {
             }
         );
     };
-
-    /* updateCity = (id) => {
-         this.setState(
-             {
-                 city: id
-             },
-             () => {
-                 // this.validateField('city', id);
-             }
-         );
-     };*/
 
     updateApplicationInformation = (id, isLead, Message) => {
         this.setState(
@@ -342,7 +323,39 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
-        if (laneId == "lane1") {
+        console.log("este es el laneId ", laneId)
+        console.log("este es el cardId ", cardId)
+        console.log("este es el metadata ", metadata)
+
+        if (laneId.trim() == "lane1") {
+            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+            let anotherCards = document.querySelectorAll("article[data-id]");
+
+            anotherCards.forEach((anotherCard) => {
+                anotherCard.classList.remove("CardBoard-selected");
+            });
+            cardSelected[0].classList.add("CardBoard-selected");
+
+            this.setState(
+                {
+                    Intopening: cardId
+                })
+
+            // this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
+            this.getWorkOrderPosition(cardId)
+            console.log("esta es la info del work ordeer ", this.state.workOrders);
+            if (sessionStorage.getItem('NewFilterLead') === 'true') {
+
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
+            } else {
+                this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
+            }
+        }
+
+        if (laneId.trim() == "Positions") {
+
+            console.log("esta es la info Positions ");
+
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -358,7 +371,7 @@ class BoardManager extends Component {
 
             this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
 
-
+            this.getWorkOrderPosition(cardId)
             console.log("esta es la info del work ordeer ", this.state.workOrders);
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
 
@@ -366,22 +379,98 @@ class BoardManager extends Component {
             } else {
                 this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
             }
-            /*let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-            let anotherCards = document.querySelectorAll("article[data-id]");
-
-            anotherCards.forEach((anotherCard) => {
-                anotherCard.classList.remove("CardBoard-selected");
-            });
-            cardSelected[0].classList.add("CardBoard-selected");
-
-
-            if (sessionStorage.getItem('NewFilter') === false) {
-                this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 50, laneId);
-            } else {
-                this.getMatches(sessionStorage.getItem('needEnglish'), sessionStorage.getItem('needExperience'), sessionStorage.getItem('NewDistances'), laneId);
-            }*/
         }
 
+
+    }
+
+    getWorkOrderPosition = async (WorkOrderId) => {
+        let getworkOrders = [];
+        let getworkOrdersPosition = [];
+        let datas = [];
+        let datapositions = [];
+        this.setState({ workOrdersPositions: [] });
+
+        await this.props.client.query({ query: GET_WORK_ORDERS, variables: { id: WorkOrderId } }).then(({ data }) => {
+            data.workOrder.forEach((wo) => {
+
+                const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
+                const Users = data.getusers.find((item) => { return item.Id == wo.userId });
+                const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
+
+                var currentQ = 1;
+
+                while (currentQ <= wo.quantity) {
+
+                    currentQ = currentQ + 1;
+                    getworkOrdersPosition.push({
+                        //datapositions = {
+                        id: wo.id,
+                        name: 'Title: ' + wo.position.Position,
+                        dueOn: 'Q: ' + 1,
+                        subTitle: 'ID: 000' + wo.id,
+                        body: wo.BusinessCompany.Name,
+                        escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                        cardStyle: { borderRadius: 6, marginBottom: 15 },
+                        needExperience: wo.needExperience,
+                        needEnglish: wo.needEnglish,
+                        PositionApplyfor: wo.position.Id_positionApplying,
+                        Position: wo.position.Position,
+                        Zipcode: wo.BusinessCompany.Zipcode
+                    });
+                }
+
+            })
+            this.setState({ workOrdersPositions: getworkOrdersPosition });
+        })
+
+        this.setState(
+            {
+                workOrder: this.state.workOrders,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Work Orders',
+                        label: ' ',
+                        cards: this.state.workOrders,
+                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Positions',
+                        title: 'Positions',
+                        label: ' ',
+                        cards: this.state.workOrdersPositions,
+                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Matches',
+                        title: 'Matches',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Notify',
+                        title: 'Notify',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Accepted',
+                        title: 'Accepted',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Schedule',
+                        title: 'Add to Schedule',
+                        label: ' ',
+                        cards: []
+                    }
+                ],
+                loading: false
+
+            });
     }
 
     //getMatches = async (language, experience, location, laneId) => {
@@ -558,6 +647,13 @@ class BoardManager extends Component {
                                         laneStyle: { borderRadius: 50, marginBottom: 15 }
                                     },
                                     {
+                                        id: 'Positions',
+                                        title: 'Positions',
+                                        label: ' ',
+                                        cards: this.state.workOrdersPositions,
+                                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                                    },
+                                    {
                                         id: 'Matches',
                                         title: 'Matches',
                                         label: ' ',
@@ -611,15 +707,15 @@ class BoardManager extends Component {
 
     getWorkOrders = async () => {
         let getworkOrders = [];
+        let getworkOrdersPosition = [];
         let datas = [];
+        let datapositions = [];
         //console.log("Este es el hotel ", this.state.hotel);
 
         if (this.state.hotel == 0) {
             await this.props.client.query({ query: GET_WORK_ORDERS, variables: {} }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
 
-
-                    const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
@@ -629,7 +725,7 @@ class BoardManager extends Component {
                         name: 'Title: ' + wo.position.Position,
                         dueOn: 'Q: ' + wo.quantity,
                         subTitle: 'ID: 000' + wo.id,
-                        body: Hotel != null ? Hotel.Name : '',
+                        body: wo.BusinessCompany.Name,
                         escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
                         escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
                         cardStyle: { borderRadius: 6, marginBottom: 15 },
@@ -637,56 +733,58 @@ class BoardManager extends Component {
                         needEnglish: wo.needEnglish,
                         PositionApplyfor: wo.position.Id_positionApplying,
                         Position: wo.position.Position,
-                        Zipcode: Hotel.Zipcode
+                        Zipcode: wo.BusinessCompany.Zipcode
                     };
-                    /* datas = {
-                         id: wo.id,
-                         name: 'Title: ' + wo.position.Position,
-                         dueOn: 'Q: ' + wo.quantity,
-                         //subTitle: wo.comment,
-                         subTitle: 'ID: 000' + wo.id,
-                         body: Hotel.Name,
-                         //escalationTextLeft: Hotel.Name,
-                         escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
-                         escalationTextRight: Shift.Name + '-Shift',
-                         cardStyle: { borderRadius: 6, marginBottom: 15 },
-                         needExperience: wo.needExperience,
-                         needEnglish: wo.needEnglish,
-                         PositionApplyfor: wo.position.Id_positionApplying,
-                         Zipcode: Hotel.Zipcode
-                     };*/
+
+                    /* var currentQ = 1;
+ 
+                     while (currentQ <= wo.quantity) {
+                         currentQ = currentQ + 1;
+ 
+                         datapositions = {
+                             id: wo.id,
+                             name: 'Title: ' + wo.position.Position,
+                             dueOn: 'Q: ' + 1,
+                             subTitle: 'ID: 000' + wo.id,
+                             //body: Hotel != null ? Hotel.Name : '',
+                             body: wo.BusinessCompany.Name,
+                             escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                             escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                             cardStyle: { borderRadius: 6, marginBottom: 15 },
+                             needExperience: wo.needExperience,
+                             needEnglish: wo.needEnglish,
+                             PositionApplyfor: wo.position.Id_positionApplying,
+                             Position: wo.position.Position,
+                             // Zipcode: Hotel.Zipcode
+                             Zipcode: wo.BusinessCompany.Zipcode
+                         };
+                     }*/
                     getworkOrders.push(datas);
+                    getworkOrdersPosition.push(datapositions);
                 });
-                //console.log("este es el work ", getworkOrders)
+
                 this.setState({
-                    workOrders: getworkOrders
+                    workOrders: getworkOrders,
+                    workOrdersPositions: getworkOrdersPosition
                 });
+
             }).catch(error => { })
         } else {
             await this.props.client.query({ query: GET_WORK_ORDERS, variables: { IdEntity: this.state.hotel } }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
 
-                    const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
+                    //const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
                     const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
                     const Users = data.getusers.find((item) => { return item.Id == wo.userId });
                     const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
-                    /*datas = {
-                        id: wo.id,
-                        name: 'Title: ' + wo.position.Position,
-                        dueOn: 'Q: ' + wo.quantity,
-                        subTitle: 'ID: 000' + wo.id,
-                        body: Hotel != null ? Hotel.Name : '',
-                        escalationTextLeft: Contacts != null ? Contacts.First_Name + ' ' + Contacts.Last_Name : '',
-                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                    };*/
                     datas = {
                         id: wo.id,
                         name: 'Title: ' + wo.position.Position,
                         dueOn: 'Q: ' + wo.quantity,
                         subTitle: 'ID: 000' + wo.id,
-                        body: Hotel != null ? Hotel.Name : '',
+                        // body: Hotel != null ? Hotel.Name : '',
+                        body: wo.BusinessCompany.Name,
                         escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
                         escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
                         cardStyle: { borderRadius: 6, marginBottom: 15 },
@@ -694,12 +792,37 @@ class BoardManager extends Component {
                         needEnglish: wo.needEnglish,
                         PositionApplyfor: wo.position.Id_positionApplying,
                         Position: wo.position.Position,
-                        Zipcode: Hotel.Zipcode
+                        //Zipcode: Hotel.Zipcode
+                        Zipcode: wo.BusinessCompany.Zipcode
                     };
+
+                    /*var currentQ = 1;
+
+                    while (currentQ <= wo.quantity) {
+                        currentQ = currentQ + 1;
+
+                        datapositions = {
+                            id: wo.id,
+                            name: 'Title: ' + wo.position.Position,
+                            dueOn: 'Q: ' + 1,
+                            subTitle: 'ID: 000' + wo.id,
+                            body: Hotel != null ? Hotel.Name : '',
+                            escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                            escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                            cardStyle: { borderRadius: 6, marginBottom: 15 },
+                            needExperience: wo.needExperience,
+                            needEnglish: wo.needEnglish,
+                            PositionApplyfor: wo.position.Id_positionApplying,
+                            Position: wo.position.Position,
+                            Zipcode: Hotel.Zipcode
+                        };
+                    }*/
                     getworkOrders.push(datas);
+                    //  getworkOrdersPosition.push(datapositions);
                 });
                 this.setState({
                     workOrders: getworkOrders
+                    //workOrdersPositions: getworkOrdersPosition
                 });
             }).catch(error => { })
         }
@@ -714,6 +837,13 @@ class BoardManager extends Component {
                         title: 'Work Orders',
                         label: ' ',
                         cards: this.state.workOrders,
+                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Positions',
+                        title: 'Positions',
+                        label: ' ',
+                        cards: [],
                         laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
                     },
                     {
