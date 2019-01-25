@@ -59,6 +59,8 @@ class WorkOrdersTable extends Component {
             saving: false,
             recruiters: [],
             contactId: null,
+
+            filterValue: 0
         }
     }
 
@@ -246,6 +248,12 @@ class WorkOrdersTable extends Component {
             .catch();
     };
 
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            filterValue: nextProps.filter
+        })
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
@@ -271,59 +279,67 @@ class WorkOrdersTable extends Component {
                         </TableHead>
                         <TableBody>
                             {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                return (
-                                    <TableRow>
-                                        <CustomTableCell className={'text-center'}>
-                                            <Tooltip title="Life Cycle">
-                                                <button
-                                                    className="btn btn-success mr-1 float-left"
-                                                    disabled={this.props.loading}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        this.props.onLifeHandler({ ...row });
-                                                        // return this.props.onEditHandler({ ...row });
-                                                    }}
-                                                >
-                                                    <i class="fas fa-info"></i>
-                                                </button>
-                                            </Tooltip>
-                                            <Tooltip title="Edit">
-                                                <button
-                                                    className="btn btn-success mr-1 float-left"
-                                                    disabled={this.props.loading}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        return this.props.onEditHandler({ ...row });
-                                                    }}
-                                                >
-                                                    <i className="fas fa-pen"></i>
-                                                </button>
-                                            </Tooltip>
-                                            <Tooltip title="Delete">
-                                                <button
-                                                    className="btn btn-danger float-left"
-                                                    disabled={this.props.loading}
-                                                    // onClick={(e) => {
-                                                    //     e.stopPropagation();
-                                                    //     return this.props.onDeleteHandler({ ...row });
-                                                    // }}
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        this.setState({ openConfirm: true, idToDelete: row.id });
-                                                    }}
-                                                >
-                                                    <i className="fas fa-trash"></i>
-                                                </button>
-                                            </Tooltip>
-                                        </CustomTableCell>
-                                        <CustomTableCell>{row.id}</CustomTableCell>
-                                        <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
-                                        <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
-                                        <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
-                                        <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
-                                        <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
-                                        <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
-                                        {this.props.showRecruiter &&
+                                let backgroundColor = row.status === 0 ? '#ddd' : '#fff';
+                                if(this.state.filterValue === 0) {
+                                    return (
+                                        <TableRow style={{background: backgroundColor}}>
+                                            <CustomTableCell className={'text-center'}>
+                                                <Tooltip title="Life Cycle">
+                                                    <button
+                                                        className="btn btn-success mr-1 float-left"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            this.props.onLifeHandler({ ...row });
+                                                            // return this.props.onEditHandler({ ...row });
+                                                        }}
+                                                    >
+                                                        <i class="fas fa-info"></i>
+                                                    </button>
+                                                </Tooltip>
+                                                <Tooltip title="Edit">
+                                                    <button
+                                                        className="btn btn-success mr-1 float-left"
+                                                        disabled={this.props.loading}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            return this.props.onEditHandler({ ...row });
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-pen"></i>
+                                                    </button>
+                                                </Tooltip>
+                                                {
+                                                    row.status != 0 ? (
+                                                        <Tooltip title="Cancel">
+                                                            <button
+                                                                className="btn btn-danger float-left"
+                                                                disabled={this.props.loading}
+                                                                // onClick={(e) => {
+                                                                //     e.stopPropagation();
+                                                                //     return this.props.onDeleteHandler({ ...row });
+                                                                // }}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    this.setState({ openConfirm: true, idToDelete: row.id });
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-ban"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        ''
+                                                    )
+                                                }
+                                            </CustomTableCell>
+                                            <CustomTableCell>{row.id}</CustomTableCell>
+                                            <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
+                                            <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
+                                            <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
+                                            <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
+                                            <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
+                                            <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
+                                            {this.props.showRecruiter &&
                                             <CustomTableCell>
                                                 <div className="input-group">
                                                     <select
@@ -354,8 +370,103 @@ class WorkOrdersTable extends Component {
                                                     </Tooltip>
                                                 </div>
                                             </CustomTableCell>}
-                                    </TableRow>
-                                );
+                                        </TableRow>
+                                    );
+                                } else if (this.state.filterValue == 1) {
+                                    if(row.status == 0){
+                                        return (
+                                            <TableRow style={{background: backgroundColor}}>
+                                                <CustomTableCell className={'text-center'}>
+                                                    <Tooltip title="Life Cycle">
+                                                        <button
+                                                            className="btn btn-success mr-1 float-left"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                this.props.onLifeHandler({ ...row });
+                                                                // return this.props.onEditHandler({ ...row });
+                                                            }}
+                                                        >
+                                                            <i class="fas fa-info"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                    <Tooltip title="Edit">
+                                                        <button
+                                                            className="btn btn-success mr-1 float-left"
+                                                            disabled={this.props.loading}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                return this.props.onEditHandler({ ...row });
+                                                            }}
+                                                        >
+                                                            <i className="fas fa-pen"></i>
+                                                        </button>
+                                                    </Tooltip>
+                                                    {
+                                                        row.status != 0 ? (
+                                                            <Tooltip title="Cancel">
+                                                                <button
+                                                                    className="btn btn-danger float-left"
+                                                                    disabled={this.props.loading}
+                                                                    // onClick={(e) => {
+                                                                    //     e.stopPropagation();
+                                                                    //     return this.props.onDeleteHandler({ ...row });
+                                                                    // }}
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        this.setState({ openConfirm: true, idToDelete: row.id });
+                                                                    }}
+                                                                >
+                                                                    <i className="fas fa-ban"></i>
+                                                                </button>
+                                                            </Tooltip>
+                                                        ) : (
+                                                            ''
+                                                        )
+                                                    }
+                                                </CustomTableCell>
+                                                <CustomTableCell>{row.id}</CustomTableCell>
+                                                <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
+                                                <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
+                                                <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
+                                                <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
+                                                <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
+                                                <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
+                                                {this.props.showRecruiter &&
+                                                <CustomTableCell>
+                                                    <div className="input-group">
+                                                        <select
+                                                            required
+                                                            name={`RecruiterId`}
+                                                            className="form-control"
+                                                            id=""
+                                                            onChange={(e) => { this.handleChange(e, row.id) }}
+                                                            value={this.state.RecruiterId}
+                                                            onBlur={this.handleValidate}
+                                                        >
+                                                            <option value="0">Select a Recruiter</option>
+                                                            {this.state.recruiters.map((recruiter) => (
+                                                                <option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                            ))}
+                                                        </select>
+                                                        <Tooltip title="Convert to Opening">
+                                                            <button
+                                                                className="btn btn-link float-left ml-1"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    this.handleConvertToOpening(e, { ...row });
+                                                                }}
+                                                            >
+                                                                <i class="fas fa-exchange-alt text-info"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                    </div>
+                                                </CustomTableCell>}
+                                            </TableRow>
+                                        );
+                                    }
+                                }
                             })}
                         </TableBody>
                         <TableFooter>
@@ -382,7 +493,7 @@ class WorkOrdersTable extends Component {
                         confirmAction={() => {
                             this.handleDelete(this.state.idToDelete);
                         }}
-                        title={'are you sure you want to delete this record?'}
+                        title={'are you sure you want to cancel this record?'}
                         loading={this.state.removing}
                     />
                 </Paper>

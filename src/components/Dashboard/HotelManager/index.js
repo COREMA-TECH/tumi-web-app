@@ -31,7 +31,8 @@ class DashboardManager extends React.Component {
             catalogs: [],
             phases: [],
             notShow: 0,
-            disqualified: 0
+            disqualified: 0,
+            filterValue: 0
         };
     }
 
@@ -136,12 +137,13 @@ class DashboardManager extends React.Component {
         return (
             <div className="row WorkOrder">
                 <div className="col-md-12">
+                    <h3 className="text-success">Work Orders</h3>
                     <div className="card">
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
                                     <div className="row p-0">
-                                        <div className="col-sm-6 col-xs-12">
+                                        <div className="col-sm-4 col-xs-12">
                                             <label> Start Date</label>
                                             <input
                                                 type="date"
@@ -150,7 +152,7 @@ class DashboardManager extends React.Component {
                                                 value="2018-10-30"
                                             />
                                         </div>
-                                        <div className="col-sm-6 col-xs-12">
+                                        <div className="col-sm-4 col-xs-12">
                                             <label> End Date</label>
                                             <input
                                                 type="date"
@@ -158,6 +160,17 @@ class DashboardManager extends React.Component {
                                                 placeholder="2018-10-30"
                                                 value="2018-10-30"
                                             />
+                                        </div>
+                                        <div className="col-sm-4 col-xs-12">
+                                            <label> Status</label>
+                                            <select name="" id="" className="form-control" onChange={(e) => {
+                                                this.setState({
+                                                    filterValue: parseInt(e.target.value)
+                                                })
+                                            }}>
+                                                <option value="0">All</option>
+                                                <option value="1">Canceled Work Orders</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -182,6 +195,7 @@ class DashboardManager extends React.Component {
                 </div>
                 <div className="col-md-12">
                     <WorkOrdersTable
+                        filter={this.state.filterValue}
                         onEditHandler={this.onEditHandler}
                         onLifeHandler={this.onLifeHandler}
                         handleOpenSnackbar={this.props.handleOpenSnackbar}

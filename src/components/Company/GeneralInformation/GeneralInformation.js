@@ -1916,7 +1916,7 @@ class GeneralInformation extends Component {
 											)}
 											disabled={this.props.idCompany == 0}
 											onClick={this.handleOpenHotels}>
-											Add Existing Property <i class="fas fa-plus" />
+											Link Existing Property <i class="fas fa-plus" />
 										</button>
 									</div>
 									<div className="col-md-6">
