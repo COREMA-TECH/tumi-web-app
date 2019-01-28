@@ -592,7 +592,7 @@ class WorkOrdersForm extends Component {
 
     handleTimeChange = (name) => (text) => {
         this.setState({
-            [name]: text
+            [name]: moment(text, "HH:mm:ss").format("HH:mm A")
         }, () => {
             this.calculateHours()
         })

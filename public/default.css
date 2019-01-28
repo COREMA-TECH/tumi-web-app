@@ -9387,6 +9387,14 @@ tbody[class^="MuiTableBody-"] .btn {
   box-sizing: border-box;
   background-color: #3ca2c8 !important; }
 
+@media (min-width: 992px) {
+  .company-card {
+    width: 15% !important; } }
+
+@media (min-width: 576px) {
+  .company-card .company-card__title {
+    font-size: 1.1rem; } }
+
 .row.CardPermissions {
   margin-left: 0 !important; }
 

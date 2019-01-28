@@ -80,10 +80,6 @@
 		font-weight: 300;
 	}
 
-	.company-card__title {
-		font-size: 1.3em;
-		color: #333;
-	}
 
 	.company-card__description {
 		color: #888;
@@ -98,9 +94,6 @@
 }
 
 @media (min-width: 1000px) {
-	.company-card {
-		width: 18%;
-	}
 
 	.company-card__header .avatar {
 		width: 5em;
