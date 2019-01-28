@@ -7,7 +7,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import withGlobalContent from 'Generic/Global';
-import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
+
 import Select from 'react-select';
 import onClickOutside from 'react-onclickoutside';
 
@@ -249,7 +249,7 @@ class Filters extends Component {
     }
 
     handleClickOpenModal = () => {
-        this.setState({ openModal: true, openLife: false, item: null });
+        this.props.handleOpenWorkOrderForm();
     };
 
     handleCloseModal = (event) => {
@@ -345,12 +345,6 @@ class Filters extends Component {
                         </DialogActions>
                     </form>
                 </Dialog>
-                <WorkOrdersForm
-                    item={this.state.item}
-                    handleOpenSnackbar={this.props.handleOpenSnackbar}
-                    openModal={this.state.openModal}
-                    handleCloseModal={this.handleCloseModal}
-                />
             </div>
         );
     }

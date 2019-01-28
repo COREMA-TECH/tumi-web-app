@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT } from './queries';
+import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT,GET_WORKORDERS_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -118,6 +118,7 @@ class WorkOrdersForm extends Component {
         Sunday: 'SU,',
         dayWeek: '',
         DateContract: '',
+        departmentId: 0
 
     };
 
@@ -153,6 +154,7 @@ class WorkOrdersForm extends Component {
                     endShift: nextProps.item.endShift,
                     startDate: nextProps.item.startDate,
                     endDate: nextProps.item.endDate,
+                    sameContractDate: nextProps.item.endDate,
                     needExperience: nextProps.item.needExperience,
                     needEnglish: nextProps.item.needEnglish,
                     comment: nextProps.item.comment,
@@ -186,8 +188,8 @@ class WorkOrdersForm extends Component {
                 date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
                 status: 0,
-                shift: moment('08:00', "HH:mm:ss"),
-                endShift: moment('16:00', "HH:mm:ss"),
+                shift: moment('08:00', "HH:mm").format("HH:mm"),
+                endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -215,10 +217,22 @@ class WorkOrdersForm extends Component {
         });
     }
 
+    getWorkOrders = () => {
+        this.props.client
+            .query({
+                query: GET_WORKORDERS_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    data: data.workOrder
+                });
+            })
+            .catch();
+    }
 
 
     componentWillMount() {
-
         this.props.client
             .query({
                 query: GET_HOTEL_QUERY
@@ -281,7 +295,6 @@ class WorkOrdersForm extends Component {
                     quantity: this.state.quantity,
                     workOrder: {
                         IdEntity: this.state.IdEntity,
-                        //contactId: this.state.contactId
                         date: this.state.date,
                         quantity: this.state.quantity,
                         status: 1,
@@ -306,7 +319,8 @@ class WorkOrdersForm extends Component {
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        departmentId: this.state.departmentId
 
                     }
                 }
@@ -314,6 +328,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.setState({ openModal: false, saving: false });
+                this.getWorkOrders();
                 window.location.reload();
             })
             .catch((error) => {
@@ -361,7 +376,8 @@ class WorkOrdersForm extends Component {
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        departmentId: this.state.departmentId
                     }
                 }
             })
@@ -384,9 +400,18 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
+                var request = data.getcontacts.find((item) => { return item.Id == this.state.contactId })
                 this.setState({
-                    contacts: data.getcontacts
+                    contacts: data.getcontacts,
+                    Electronic_Address: request != null ? request.Electronic_Address : '',
+                    departmentId: request != null ? request.Id_Deparment : 0
                 });
+
+
+                /*this.setState({
+                    contacts: data.getcontacts
+                    departmentId
+                });*/
             })
             .catch();
     };
@@ -450,7 +475,8 @@ class WorkOrdersForm extends Component {
         if (name === 'contactId') {
             request = this.state.contacts.find((item) => { return item.Id == value })
             this.setState({
-                Electronic_Address: request != null ? request.Electronic_Address : ''
+                Electronic_Address: request != null ? request.Electronic_Address : '',
+                departmentId: request != null ? request.Id_Deparment : 0
             });
         }
 
@@ -592,7 +618,7 @@ class WorkOrdersForm extends Component {
 
     handleTimeChange = (name) => (text) => {
         this.setState({
-            [name]: moment(text, "HH:mm:ss").format("HH:mm A")
+            [name]: moment(text, "HH:mm:ss").format("HH:mm")
         }, () => {
             this.calculateHours()
         })
@@ -729,10 +755,10 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-                                            <Datetime dateFormat={false} value={this.state.shift} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
                                             {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
                                             <label htmlFor="">Shift End</label>
-                                            <Datetime dateFormat={false} value={this.state.endShift} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
+                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
                                             {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
                                         </div>
                                         <div className="col-md-6">
@@ -758,9 +784,9 @@ class WorkOrdersForm extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 name="endDate"
-                                                disabled={this.state.sameContractDate}
+                                                // disabled={this.state.sameContractDate}
                                                 onChange={this.handleChange}
-                                                value={this.state.endDate}
+                                                value={this.state.endDate.substring(0, 10)}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
@@ -881,7 +907,6 @@ class WorkOrdersForm extends Component {
                                                             {
 
                                                                 this.state.employees.map((item) => {
-                                                                    console.log("this.state.employees ", this.state.employees)
 
                                                                     // if (item.detailEmployee) {
                                                                     return (
@@ -941,6 +966,7 @@ class WorkOrdersForm extends Component {
                                     <div className="row">
                                         <div className="col-md-12">
                                             <button
+                                                type="button"
                                                 className="btn btn-danger ml-1 float-right"
                                                 onClick={this.props.handleCloseModal}
                                             >
