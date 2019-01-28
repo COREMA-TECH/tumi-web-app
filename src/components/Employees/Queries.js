@@ -31,12 +31,12 @@ export const GET_ALL_DEPARTMENTS_QUERY = gql`
     }
 `;
 
-export const GET_ALL_TITLES_QUERY = gql`
-    query getcatalogitem {
-        catalogitem(IsActive: 1, Id_Catalog: 6) {
+export const GET_ALL_POSITIONS_QUERY = gql`
+    {
+        getposition {
             Id
-            Name
-            IsActive
+            Position
+            Id_Entity
         }
     }
 `;

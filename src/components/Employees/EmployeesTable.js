@@ -278,7 +278,7 @@ class EmployeesTable extends React.Component {
                                                 {
                                                     this.props.titles.map(item => {
                                                         if (item.Id === row.Contact_Title) {
-                                                            return item.Name.trim()
+                                                            return item.Position.trim()
                                                         }
                                                     })
                                                 }

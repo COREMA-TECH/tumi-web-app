@@ -1,21 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { withStyles } from "@material-ui/core";
+import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "Generic/Global";
 import green from "@material-ui/core/colors/green";
 
 import InputMask from "react-input-mask";
-import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
-import AutoComplete from "./AutoComplete";
-import {
-    GET_CONTACTS_IN_USER_DIALOG,
-    GET_DEPARTMENTS_QUERY,
-    GET_EMAILS_USER,
-    GET_HOTELS_QUERY,
-    GET_ROLES_QUERY,
-    GET_TYPES_QUERY
-} from "../ApplyForm/Application/ProfilePreview/Queries";
+import {GET_DEPARTMENTS_QUERY} from "../ApplyForm/Application/ProfilePreview/Queries";
+import {GET_ALL_POSITIONS_QUERY} from "./Queries";
 
 const styles = theme => ({
     container: {
@@ -89,14 +81,14 @@ class EmployeeInputRow extends Component {
         console.log("fetchTitles ", id);
         this.props.client
             .query({
-                query: GET_TYPES_QUERY,
-                variables: { Id_Entity: id },
+                query: GET_ALL_POSITIONS_QUERY,
+                variables: {Id_Entity: id},
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.getcatalogitem != null) {
+                if (data.data.getposition != null) {
                     this.setState({
-                        arraytitles: data.data.getcatalogitem,
+                        arraytitles: data.data.getposition,
                     }, () => {
                         // this.getHotels()
                     });
@@ -110,7 +102,7 @@ class EmployeeInputRow extends Component {
             });
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.fetchDepartments()
     }
 
@@ -119,7 +111,7 @@ class EmployeeInputRow extends Component {
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
-                variables: { Id_Entity: id },
+                variables: {Id_Entity: id},
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -152,7 +144,7 @@ class EmployeeInputRow extends Component {
 
         return (
 
-            < div className="row Employees-row" >
+            < div className="row Employees-row">
                 <div className="col">
                     <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
                     <input
@@ -239,7 +231,7 @@ class EmployeeInputRow extends Component {
                                 contactTitle: "",
                             });
 
-                            if(e.target.value == "null") {
+                            if (e.target.value == "null") {
                                 this.fetchDepartments();
                             } else {
                                 this.fetchDepartments(e.target.value);
@@ -282,25 +274,25 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                     {/*<AutoComplete*/}
-                        {/*id="department"*/}
-                        {/*name="department"*/}
-                        {/*value={this.state.department}*/}
-                        {/*data={this.state.arrayDepartment}*/}
-                        {/*//data={this.props.departments}*/}
-                        {/*onChange={(value) => {*/}
-                            {/*console.log("Department Title: ",value);*/}
-                            {/*this.props.onchange(department, value);*/}
-                            {/*this.setState({*/}
-                                {/*department: value*/}
-                            {/*})*/}
-                        {/*}}*/}
-                        {/*onSelect={(value) => {*/}
-                            {/*console.log("Department Title: ",value);*/}
-                            {/*this.props.onchange(department, value);*/}
-                            {/*this.setState({*/}
-                                {/*department: value*/}
-                            {/*})*/}
-                        {/*}}*/}
+                    {/*id="department"*/}
+                    {/*name="department"*/}
+                    {/*value={this.state.department}*/}
+                    {/*data={this.state.arrayDepartment}*/}
+                    {/*//data={this.props.departments}*/}
+                    {/*onChange={(value) => {*/}
+                    {/*console.log("Department Title: ",value);*/}
+                    {/*this.props.onchange(department, value);*/}
+                    {/*this.setState({*/}
+                    {/*department: value*/}
+                    {/*})*/}
+                    {/*}}*/}
+                    {/*onSelect={(value) => {*/}
+                    {/*console.log("Department Title: ",value);*/}
+                    {/*this.props.onchange(department, value);*/}
+                    {/*this.setState({*/}
+                    {/*department: value*/}
+                    {/*})*/}
+                    {/*}}*/}
                     {/*/>*/}
                 </div>
                 <div className="col">
@@ -321,34 +313,38 @@ class EmployeeInputRow extends Component {
                     >
                         <option value="">Select a option</option>
                         {
-                            this.state.arraytitles.map(item => (
-                                <option value={item.Id}>{item.Name.trim()}</option>
-                            ))
+                            this.state.arraytitles.map(item => {
+                                if (this.state.hotelEdit == item.Id_Entity) {
+                                    return (
+                                        <option value={item.Id}>{item.Position.trim()}</option>
+                                    )
+                                }
+                            })
                         }
                     </select>
                     {/*<AutoComplete*/}
-                        {/*id="contactTitle"*/}
-                        {/*name="contactTitle"*/}
-                        {/*value={this.state.contactTitle}*/}
-                        {/*//data={this.props.titles}*/}
-                        {/*data={this.state.arraytitles}*/}
-                        {/*onChange={(value) => {*/}
-                            {/*console.log("Contact Title: ",value);*/}
-                            {/*this.props.onchange(contactTitle, value);*/}
-                            {/*this.setState({*/}
-                                {/*contactTitle: value*/}
-                            {/*})*/}
-                        {/*}}*/}
-                        {/*onSelect={(value) => {*/}
-                            {/*console.log("Contact Title: ",value);*/}
-                            {/*this.props.onchange(contactTitle, value);*/}
-                            {/*this.setState({*/}
-                                {/*contactTitle: value*/}
-                            {/*})*/}
-                        {/*}}*/}
+                    {/*id="contactTitle"*/}
+                    {/*name="contactTitle"*/}
+                    {/*value={this.state.contactTitle}*/}
+                    {/*//data={this.props.titles}*/}
+                    {/*data={this.state.arraytitles}*/}
+                    {/*onChange={(value) => {*/}
+                    {/*console.log("Contact Title: ",value);*/}
+                    {/*this.props.onchange(contactTitle, value);*/}
+                    {/*this.setState({*/}
+                    {/*contactTitle: value*/}
+                    {/*})*/}
+                    {/*}}*/}
+                    {/*onSelect={(value) => {*/}
+                    {/*console.log("Contact Title: ",value);*/}
+                    {/*this.props.onchange(contactTitle, value);*/}
+                    {/*this.setState({*/}
+                    {/*contactTitle: value*/}
+                    {/*})*/}
+                    {/*}}*/}
                     {/*/>*/}
                 </div>
-            </div >
+            </div>
         );
     }
 }
