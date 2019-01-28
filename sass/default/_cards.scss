@@ -100,7 +100,7 @@
     &-selected {
         border: solid 3px $brand-primary;
         box-sizing: border-box;
-        background-color: $brand-primary !important;
+        background-color: rgba($brand-primary,.1) !important;
     }
 }
 
