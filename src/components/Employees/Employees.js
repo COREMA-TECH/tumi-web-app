@@ -285,16 +285,25 @@ class Employees extends Component {
                     this.handleCloseModalEdit();
 
                     this.setState({
-                        progressNewEmployee: false,
-                        finishLoading: true,
-                        progressEditEmployee: false
+                        filterText: ""
+                    }, () => {
+                        this.setState({
+                            progressNewEmployee: false,
+                            finishLoading: true,
+                            progressEditEmployee: false,
+                        });
                     });
                 })
                 .catch(error => {
                     this.props.handleOpenSnackbar("error", "Error updating Employee!");
                     this.setState({
-                        finishLoading: true,
-                        progressEditEmployee: false
+                        filterText: ""
+                    }, () => {
+                        this.setState({
+                            progressNewEmployee: false,
+                            finishLoading: true,
+                            progressEditEmployee: false,
+                        });
                     });
                 });
         });
@@ -1608,15 +1617,16 @@ class Employees extends Component {
                 {renderUserDialog()}
                 <Query query={LIST_EMPLOYEES}>
                     {({ loading, error, data, refetch, networkStatus }) => {
-                        if (this.state.filterText === "") {
-                            if (loading) return <LinearProgress />;
-                        }
-
                         if (this.state.finishLoading) {
                             refetch();
                             this.setState(prevState => ({
                                 finishLoading: false
                             }));
+                        }
+
+
+                        if (this.state.filterText === "") {
+                            if (loading) return <LinearProgress />;
                         }
 
                         if (error)
