@@ -384,7 +384,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
-                window.location.reload();
+               // window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true, converting: false });
