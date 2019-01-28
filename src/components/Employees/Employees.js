@@ -258,6 +258,7 @@ class Employees extends Component {
         this.setState({
             progressEditEmployee: true,
             finishLoading: false,
+            progressNewEmployee: true
         }, () => {
             this.props.client
                 .mutate({
@@ -281,12 +282,13 @@ class Employees extends Component {
                 })
                 .then(() => {
                     this.props.handleOpenSnackbar("success", "Employee Updated!");
+                    this.handleCloseModalEdit();
 
                     this.setState({
+                        progressNewEmployee: false,
                         finishLoading: true,
                         progressEditEmployee: false
                     });
-                    this.handleCloseModalEdit();
                 })
                 .catch(error => {
                     this.props.handleOpenSnackbar("error", "Error updating Employee!");
