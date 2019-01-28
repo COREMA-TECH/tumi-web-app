@@ -188,8 +188,8 @@ class WorkOrdersForm extends Component {
                 date: new Date().toISOString().substring(0, 10),
                 quantity: 0,
                 status: 0,
-                shift: moment('08:00', "HH:mm:ss"),
-                endShift: moment('16:00', "HH:mm:ss"),
+                shift: moment('08:00', "HH:mm").format("HH:mm"),
+                endShift: moment('16:00', "HH:mm").format("HH:mm"),
                 startDate: '',
                 endDate: '',
                 needExperience: false,
@@ -313,7 +313,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.setState({ openModal: false, saving: false });
-                //window.location.reload();
+                window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true });
@@ -384,9 +384,20 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
+                console.log("Contactos ssss ", data.getcontacts)
+                var request = data.getcontacts.find((item) => { return item.Id == this.state.contactId })
                 this.setState({
-                    contacts: data.getcontacts
+                    contacts: data.getcontacts,
+                    Electronic_Address: request != null ? request.Electronic_Address : '',
+                    departmentId: request != null ? request.Id_Deparment : 0
                 });
+
+
+                console.log("Electronic_Address ", this.state.Electronic_Address, "departmentId ", this.state.departmentId)
+                /*this.setState({
+                    contacts: data.getcontacts
+                    departmentId
+                });*/
             })
             .catch();
     };
