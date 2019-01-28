@@ -9156,6 +9156,16 @@ tbody[class^="MuiTableBody-"] .btn {
   left: -290px;
   z-index: 9999;
   width: 290px; }
+  .MenuMobile:after {
+    background: url(../images/logo-orion.png) no-repeat bottom left;
+    background-size: contain;
+    display: block;
+    content: " ";
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    height: 150px;
+    width: 150px; }
   .MenuMobile::before {
     background: #0F2027;
     /* fallback for old browsers */

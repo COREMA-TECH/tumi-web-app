@@ -77,6 +77,17 @@
     left: -290px;
     z-index: 9999;
     width: 290px;
+    &:after {
+        background: url(../images/logo-orion.png) no-repeat bottom left;
+        background-size: contain;
+        display: block;
+        content: " ";
+        position: absolute;
+        bottom: 0;
+        left: 25%;
+        height: 150px;
+        width: 150px;
+    }
     &::before {
         background: #0F2027;  /* fallback for old browsers */
         background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
