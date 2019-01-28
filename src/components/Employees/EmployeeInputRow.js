@@ -241,47 +241,81 @@ class EmployeeInputRow extends Component {
                 </div>
                 <div className="col">
                     <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
-                    <AutoComplete
-                        id="department"
+                    <select
                         name="department"
-                        value={this.state.department}
-                        data={this.state.arrayDepartment}
-                        //data={this.props.departments}
-                        onChange={(value) => {
-                            this.props.onchange(department, value);
-                            this.setState({
-                                department: value
-                            })
+                        id="department"
+                        className="form-control"
+                        onChange={(e) => {
+                            this.props.onchange(department, e.target.value);
                         }}
-                        onSelect={(value) => {
-                            this.props.onchange(department, value);
-                            this.setState({
-                                department: value
-                            })
-                        }}
-                    />
+                    >
+                        <option value="">Select a option</option>
+                        {
+                            this.state.arrayDepartment.map(item => (
+                                <option value={item.Id}>{item.Name.trim()}</option>
+                            ))
+                        }
+                    </select>
+                    {/*<AutoComplete*/}
+                        {/*id="department"*/}
+                        {/*name="department"*/}
+                        {/*value={this.state.department}*/}
+                        {/*data={this.state.arrayDepartment}*/}
+                        {/*//data={this.props.departments}*/}
+                        {/*onChange={(value) => {*/}
+                            {/*console.log("Department Title: ",value);*/}
+                            {/*this.props.onchange(department, value);*/}
+                            {/*this.setState({*/}
+                                {/*department: value*/}
+                            {/*})*/}
+                        {/*}}*/}
+                        {/*onSelect={(value) => {*/}
+                            {/*console.log("Department Title: ",value);*/}
+                            {/*this.props.onchange(department, value);*/}
+                            {/*this.setState({*/}
+                                {/*department: value*/}
+                            {/*})*/}
+                        {/*}}*/}
+                    {/*/>*/}
                 </div>
                 <div className="col">
                     <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
-                    <AutoComplete
+                    <select
                         id="contactTitle"
                         name="contactTitle"
-                        value={this.state.contactTitle}
-                        //data={this.props.titles}
-                        data={this.state.arraytitles}
-                        onChange={(value) => {
-                            this.props.onchange(contactTitle, value);
-                            this.setState({
-                                contactTitle: value
-                            })
+                        className="form-control"
+                        onChange={(e) => {
+                            this.props.onchange(contactTitle, e.target.value);
                         }}
-                        onSelect={(value) => {
-                            this.props.onchange(contactTitle, value);
-                            this.setState({
-                                contactTitle: value
-                            })
-                        }}
-                    />
+                    >
+                        <option value="">Select a option</option>
+                        {
+                            this.state.arraytitles.map(item => (
+                                <option value={item.Id}>{item.Name.trim()}</option>
+                            ))
+                        }
+                    </select>
+                    {/*<AutoComplete*/}
+                        {/*id="contactTitle"*/}
+                        {/*name="contactTitle"*/}
+                        {/*value={this.state.contactTitle}*/}
+                        {/*//data={this.props.titles}*/}
+                        {/*data={this.state.arraytitles}*/}
+                        {/*onChange={(value) => {*/}
+                            {/*console.log("Contact Title: ",value);*/}
+                            {/*this.props.onchange(contactTitle, value);*/}
+                            {/*this.setState({*/}
+                                {/*contactTitle: value*/}
+                            {/*})*/}
+                        {/*}}*/}
+                        {/*onSelect={(value) => {*/}
+                            {/*console.log("Contact Title: ",value);*/}
+                            {/*this.props.onchange(contactTitle, value);*/}
+                            {/*this.setState({*/}
+                                {/*contactTitle: value*/}
+                            {/*})*/}
+                        {/*}}*/}
+                    {/*/>*/}
                 </div>
             </div >
         );
