@@ -246,6 +246,7 @@ class EmployeeInputRow extends Component {
                         id="department"
                         className="form-control"
                         onChange={(e) => {
+                            console.info("Department ID: ", e.target.value);
                             this.props.onchange(department, e.target.value);
                         }}
                     >
@@ -285,6 +286,7 @@ class EmployeeInputRow extends Component {
                         name="contactTitle"
                         className="form-control"
                         onChange={(e) => {
+                            console.info("Contact Title ID: ", e.target.value);
                             this.props.onchange(contactTitle, e.target.value);
                         }}
                     >
