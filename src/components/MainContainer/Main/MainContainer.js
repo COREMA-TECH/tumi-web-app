@@ -21,9 +21,9 @@ class MainContainer extends Component {
 		return title;
 	};
 
-	render() {
-		return (
-			<div className="main-container">
+	renderHeader = () => {
+		if (localStorage.getItem('LoginId'))
+			return <div>
 				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" />
 				<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
 					<i className="fas fa-bars" />
@@ -35,6 +35,13 @@ class MainContainer extends Component {
 					<span className="main-container__title"> {this.setTitle(window.location.pathname)}</span>
 					<Toolbar handleOpenSnackbar={this.props.handleOpenSnackbar} />
 				</div>
+			</div>
+	}
+
+	render() {
+		return (
+			<div className="main-container">
+				{this.renderHeader()}
 				<div className="main-container--container">
 					<Container />
 				</div>

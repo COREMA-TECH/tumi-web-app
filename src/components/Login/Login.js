@@ -101,7 +101,6 @@ class Login extends Component {
 	handleSubmit = (e, data) => {
 		this.setState({ loadingLogin: true });
 		e.preventDefault();
-		//console.log("estoy validando", this.state.pass);
 		if (this.checkInputs()) {
 			//this.setState({
 			this.checkUser();
@@ -137,7 +136,6 @@ class Login extends Component {
 			.then((data) => {
 				if (data.data.getvalid_users) {
 					const user = data.data.getvalid_users;
-					console.log("usuario login ", user)
 					if (user.IsActive == 0) {
 						localStorage.clear();
 						this.props.handleOpenSnackbar('error', 'Error: Loading users: User invalid');
