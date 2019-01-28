@@ -255,10 +255,18 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.electronicAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.electronicAddress}</CustomTableCell>
+                                            <CustomTableCell>{row.mobileNumber}</CustomTableCell>
                                             <CustomTableCell>
                                                 {
+                                                    console.log("ID Department is: ", row.Id_Deparment)
+                                                }
+                                                {
+                                                    console.table(this.props.departments)
+                                                }
+                                                {
                                                     this.props.departments.map(item => {
+                                                        console.log("Row ID is: ", row.Id_Deparment);
+                                                        console.log("Row ID comparation: ", item.Id === row.Id_Deparment);
                                                         if (item.Id === row.Id_Deparment) {
                                                             return item.Name.trim()
                                                         }

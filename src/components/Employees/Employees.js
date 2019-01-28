@@ -1450,14 +1450,21 @@ class Employees extends Component {
                                             onChange={(e) => {
                                                 this.setState({
                                                     hotelEdit: e.target.value
-                                                }),
-                                                    this.fetchDepartments(e.target.value);
+                                                });
+                                                this.setState({
+                                                    departmentEdit: "",
+                                                    contactTitleEdit: "",
+                                                });
 
+                                                if(e.target.value == "null") {
+                                                    this.fetchDepartments();
+                                                } else {
+                                                    this.fetchDepartments(e.target.value);
+                                                }
                                             }}
                                             value={this.state.hotelEdit}
-
                                         >
-                                            <option>Select a option</option>
+                                            <option value="null">Select a option</option>
                                             {
                                                 this.state.hotels.map(item => {
                                                     return (
@@ -1605,6 +1612,8 @@ class Employees extends Component {
                                                             departmentEdit: row.Id_Deparment,
                                                             contactTitleEdit: row.Contact_Title,
                                                         });
+
+                                                        console.table(row);
                                                     }}
                                                     handleClickOpenUserModal={this.handleClickOpenUserModal}
                                                     departments={this.state.departments}

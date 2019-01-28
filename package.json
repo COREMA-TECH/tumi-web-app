@@ -61,6 +61,7 @@
 		"react-time-picker": "^3.2.0",
 		"react-trello": "^2.0.1",
 		"redux": "^4.0.1",
+		"smooth-dnd": "^0.6.3",
 		"uuid": "^3.3.2",
 		"webpack": "^3.11.0"
 	},
