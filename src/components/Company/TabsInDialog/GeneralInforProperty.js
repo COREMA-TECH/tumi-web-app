@@ -199,6 +199,7 @@ class GeneralInfoProperty extends Component {
 				Id
 				Name
 				Description
+				Id_Parent
 			}
 		}
 	`;
@@ -320,6 +321,7 @@ class GeneralInfoProperty extends Component {
 					linearProgress: true
 				},
 				() => {
+					console.log("Id Parent:::", id)
 					this.props.client
 						.mutate({
 							// Pass the mutation structure
@@ -379,7 +381,8 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then(({ data }) => {
-							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(id));
+							console.log("data::::", data)
+							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
 
 							this.setState({
 								linearProgress: false
@@ -435,7 +438,7 @@ class GeneralInfoProperty extends Component {
 						this.props.handleClose();
 						/*history.push({
 							pathname: '/company/edit',
-							state: { idCompany: this.props.idCompany, idContract: this.props.idContract }
+							state: { idManagement: this.props.idManagement, idContract: this.props.idContract }
 						});*/
 						this.setState({
 							removing: false,
@@ -465,6 +468,7 @@ class GeneralInfoProperty extends Component {
 	`;
 
 	updateCompany = (companyId, updatedId, buttonName) => {
+		console.log({ companyId, updatedId, buttonName })
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -631,6 +635,7 @@ class GeneralInfoProperty extends Component {
 	};
 
 	handleFormSubmit = (buttonName) => (event) => {
+		console.log("Props:::", this.props)
 		event.preventDefault();
 		let invalidInputs = document.querySelectorAll('input[required]'),
 			i,
@@ -708,9 +713,9 @@ class GeneralInfoProperty extends Component {
 				if (validated) {
 					//Show loading component
 					if (this.props.idProperty === null) {
-						this.insertCompany(this.props.idCompany);
+						this.insertCompany(this.props.idManagement);
 					} else {
-						this.updateCompany(this.props.idCompany, this.props.idProperty, buttonName);
+						this.updateCompany(this.props.idManagement, this.props.idProperty, buttonName);
 					}
 				} else {
 					// Show snackbar warning
@@ -822,7 +827,7 @@ class GeneralInfoProperty extends Component {
 		this.loadRegion(() => { });
 		if (this.props.idProperty !== null) {
 			this.loadRegion(() => {
-				this.getPropertyData(this.props.idProperty, this.props.idCompany);
+				this.getPropertyData(this.props.idProperty, this.props.idManagement);
 			});
 
 		} else {
@@ -1403,7 +1408,7 @@ class GeneralInfoProperty extends Component {
 												/>
 											</div>
 											<div className="col-md-6 col-lg-4">
-												<label>Contract Start Date</label>
+												<label>* Contract Start Date</label>
 												<InputValid
 													change={(text) => {
 														this.setState({

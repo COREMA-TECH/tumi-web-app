@@ -141,8 +141,7 @@ class CustomizedTabs extends Component {
 					</Tabs>
 					{value === 0 && (
 						<GeneralInforProperty
-							idCompany={this.props.idCompany}
-							idManagement={this.props.idManagement}
+							idManagement={this.props.idCompany ? this.props.idCompany : this.state.idManagement}
 							idProperty={this.state.idProperty}
 							Markup={this.props.Markup}
 							updateIdProperty={(id, idmanagement) => {
