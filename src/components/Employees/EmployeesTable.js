@@ -160,6 +160,7 @@ class EmployeesTable extends React.Component {
         if (this.props.data.toString() !== nextProps.data.toString() || this.props.loading !== nextProps.loading) {
             return true;
         }
+
         if (
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage //||

@@ -14,7 +14,7 @@ import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import { Query } from "react-apollo";
 import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import { LIST_EMPLOYEES } from "./Queries";
+import {GET_ALL_DEPARTMENTS_QUERY, GET_ALL_TITLES_QUERY, LIST_EMPLOYEES} from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -88,6 +88,8 @@ class Employees extends Component {
             openModalEdit: false,
             openUserModal: false,
             employeesRegisters: [],
+            allDepartments: [],
+            allTitles: [],
             rowsInput: [1],
             inputs: 1,
             filterText: "",
@@ -207,6 +209,7 @@ class Employees extends Component {
             numberEdit: "",
             departmentEdit: "",
             contactTitleEdit: "",
+            idEntityEdit: ""
         });
     };
 
@@ -231,7 +234,8 @@ class Employees extends Component {
                 idRole: 1,
                 isActive: true,
                 userCreated: 1,
-                userUpdated: 1
+                userUpdated: 1,
+                idEntity:  parseInt(this.state[`idEntity${index}`]),
             };
         });
 
@@ -247,9 +251,13 @@ class Employees extends Component {
         e.preventDefault();
         e.stopPropagation();
 
+
+
         let form = document.getElementById("employee-edit-form");
+
         this.setState({
-            progressEditEmployee: true
+            progressEditEmployee: true,
+            finishLoading: false,
         }, () => {
             this.props.client
                 .mutate({
@@ -261,8 +269,9 @@ class Employees extends Component {
                             lastName: form.elements[1].value,
                             electronicAddress: form.elements[2].value,
                             mobileNumber: form.elements[3].value,
-                            Id_Deparment: parseInt(form.elements[4].value),
-                            Contact_Title: parseInt(form.elements[5].value),
+                            Id_Deparment: parseInt(this.state.departmentEdit),
+                            Contact_Title: parseInt(this.state.contactTitleEdit),
+                            idEntity: parseInt(this.state.hotelEdit),
                             idRole: 1,
                             isActive: true,
                             userCreated: 1,
@@ -276,7 +285,6 @@ class Employees extends Component {
                     this.setState({
                         finishLoading: true,
                         progressEditEmployee: false
-
                     });
                     this.handleCloseModalEdit();
                 })
@@ -507,6 +515,50 @@ class Employees extends Component {
             .catch((error) => {
                 // TODO: show a SnackBar with error message
 
+                this.setState({
+                    loading: false
+                })
+            });
+    };
+
+    fetchAllDepartments = () => {
+        this.props.client
+            .query({
+                query: GET_ALL_DEPARTMENTS_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.catalogitem != null) {
+                    this.setState({
+                       allDepartments: data.data.catalogitem,
+                    }, () => {
+                        this.fetchAllTitles()
+                    });
+                }
+            })
+            .catch((error) => {
+                this.setState({
+                    loading: false
+                })
+            });
+    };
+
+    fetchAllTitles = () => {
+        this.props.client
+            .query({
+                query: GET_ALL_TITLES_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.catalogitem != null) {
+                    this.setState({
+                        allTitles: data.data.catalogitem,
+                    }, () => {
+                        this.fetchDepartments()
+                    });
+                }
+            })
+            .catch((error) => {
                 this.setState({
                     loading: false
                 })
@@ -924,7 +976,7 @@ class Employees extends Component {
         this.setState({
             loading: true
         }, () => {
-            this.fetchDepartments();
+            this.fetchAllDepartments()
         })
     }
 
@@ -1483,6 +1535,8 @@ class Employees extends Component {
                                                 this.setState({
                                                     departmentEdit: e.target.value
                                                 })
+
+                                                console.log("ID DEPARTMENT EDIT: ", e.target.value)
                                             }}
                                             value={this.state.departmentEdit}
                                         >
@@ -1611,13 +1665,20 @@ class Employees extends Component {
                                                             numberEdit: row.mobileNumber,
                                                             departmentEdit: row.Id_Deparment,
                                                             contactTitleEdit: row.Contact_Title,
+                                                            hotelEdit: row.idEntity
+                                                        }, () => {
+                                                            if(this.state.hotelEdit == null){
+                                                                this.fetchDepartments()
+                                                            } else {
+                                                                this.fetchDepartments(parseInt(this.state.hotelEdit))
+                                                            }
                                                         });
 
                                                         console.table(row);
                                                     }}
                                                     handleClickOpenUserModal={this.handleClickOpenUserModal}
-                                                    departments={this.state.departments}
-                                                    titles={this.state.titles}
+                                                    departments={this.state.allDepartments}
+                                                    titles={this.state.allTitles}
                                                 />
                                             </div>
                                         </div>

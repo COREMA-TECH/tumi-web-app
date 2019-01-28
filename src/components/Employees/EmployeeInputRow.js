@@ -148,6 +148,7 @@ class EmployeeInputRow extends Component {
         const phoneNumber = `phoneNumber${this.props.index}`;
         const department = `department${this.props.index}`;
         const contactTitle = `contactTitle${this.props.index}`;
+        const idEntity = `idEntity${this.props.index}`;
 
         return (
 
@@ -227,6 +228,10 @@ class EmployeeInputRow extends Component {
                             this.setState({
                                 hotelEdit: e.target.value
                             });
+
+                            this.props.onchange(idEntity, e.target.value);
+
+
                             this.props.onchange(department, null);
                             this.props.onchange(contactTitle, null);
                             this.setState({

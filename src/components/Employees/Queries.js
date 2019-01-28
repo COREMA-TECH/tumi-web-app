@@ -16,6 +16,28 @@ export const LIST_EMPLOYEES = gql`
             Id_Deparment
             Contact_Title
             idUsers
+            idEntity
         }
     }
 `;
+
+export const GET_ALL_DEPARTMENTS_QUERY = gql`
+    query catalogitem {
+        catalogitem(IsActive: 1, Id_Catalog: 8) {
+            Id
+            Name: DisplayLabel
+            IsActive
+        }
+    }
+`;
+
+export const GET_ALL_TITLES_QUERY = gql`
+    query getcatalogitem {
+        catalogitem(IsActive: 1, Id_Catalog: 6) {
+            Id
+            Name
+            IsActive
+        }
+    }
+`;
+
