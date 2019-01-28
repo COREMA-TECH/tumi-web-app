@@ -255,7 +255,7 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>{row.firstName}</CustomTableCell>
                                             <CustomTableCell>{row.lastName}</CustomTableCell>
                                             <CustomTableCell>{row.electronicAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.electronicAddress}</CustomTableCell>
+                                            <CustomTableCell>{row.mobileNumber}</CustomTableCell>
                                             <CustomTableCell>
                                                 {
                                                     this.props.departments.map(item => {
