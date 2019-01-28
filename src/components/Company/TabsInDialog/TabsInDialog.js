@@ -124,13 +124,13 @@ class CustomizedTabs extends Component {
 							disabled={this.state.idProperty === null}
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Department Contact"
+							label="Departments"
 						/>
 						<Tab
 							disabled={this.state.idProperty === null}
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Departments"
+							label="Department Contact"
 						/>
 						<Tab
 							disabled={this.state.idProperty === null}
@@ -157,7 +157,7 @@ class CustomizedTabs extends Component {
 						/>
 					)}
 					{value === 1 && (
-						<ContactCompanyForm
+						<DepartmentsCompanyForm
 							idCompany={this.state.idProperty}
 							item={this.state.item}
 							next={this.nextHandleChange}
@@ -169,7 +169,7 @@ class CustomizedTabs extends Component {
 						/>
 					)}
 					{value === 2 && (
-						<DepartmentsCompanyForm
+						<ContactCompanyForm
 							idCompany={this.state.idProperty}
 							item={this.state.item}
 							next={this.nextHandleChange}
