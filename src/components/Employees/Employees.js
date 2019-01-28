@@ -487,10 +487,12 @@ class Employees extends Component {
     /**
      * To get a list od departments
      */
-    fetchDepartments = () => {
+    fetchDepartments = (id) => {
+        console.log("fetchDepartments ", id);
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
+                variables: { Id_Entity: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -498,7 +500,7 @@ class Employees extends Component {
                     this.setState({
                         departments: data.data.getcatalogitem,
                     }, () => {
-                        this.fetchTitles()
+                        this.fetchTitles(id)
                     });
                 }
             })
@@ -616,10 +618,11 @@ class Employees extends Component {
     /**
      * To fetch a list of titles
      */
-    fetchTitles = () => {
+    fetchTitles = (id) => {
         this.props.client
             .query({
                 query: GET_TYPES_QUERY,
+                variables: { Id_Entity: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -1441,13 +1444,15 @@ class Employees extends Component {
                                         />
                                     </div>
                                     <div className="col">
-                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotel</label>
+                                        <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotelsss</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
                                                 this.setState({
                                                     hotelEdit: e.target.value
-                                                })
+                                                }),
+                                                    this.fetchDepartments(e.target.value);
+
                                             }}
                                             value={this.state.hotelEdit}
 

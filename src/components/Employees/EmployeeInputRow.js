@@ -1,7 +1,70 @@
 import React, { Component } from 'react';
+
+import { withStyles } from "@material-ui/core";
+import withApollo from "react-apollo/withApollo";
+import withGlobalContent from "Generic/Global";
+import green from "@material-ui/core/colors/green";
+
 import InputMask from "react-input-mask";
 import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
 import AutoComplete from "./AutoComplete";
+import {
+    GET_CONTACTS_IN_USER_DIALOG,
+    GET_DEPARTMENTS_QUERY,
+    GET_EMAILS_USER,
+    GET_HOTELS_QUERY,
+    GET_ROLES_QUERY,
+    GET_TYPES_QUERY
+} from "../ApplyForm/Application/ProfilePreview/Queries";
+
+const styles = theme => ({
+    container: {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexWrap: "wrap",
+        marginBottom: "30px",
+        width: "100%"
+    },
+    root: {
+        display: "flex",
+        alignItems: "center"
+    },
+    formControl: {
+        margin: theme.spacing.unit
+        //width: '100px'
+    },
+    button: {
+        margin: theme.spacing.unit
+    },
+    input: {
+        display: "none"
+    },
+    wrapper: {
+        position: "relative"
+    },
+    buttonSuccess: {
+        backgroundColor: green[500],
+        "&:hover": {
+            backgroundColor: green[700]
+        }
+    },
+    fabProgress: {
+        color: green[500],
+        position: "absolute",
+        top: -6,
+        left: -6,
+        zIndex: 1
+    },
+    buttonProgress: {
+        color: green[500],
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        marginTop: -12,
+        marginLeft: -12
+    }
+});
 
 class EmployeeInputRow extends Component {
     constructor(props) {
@@ -15,9 +78,64 @@ class EmployeeInputRow extends Component {
 
             lastRow: true,
             department: "",
-            contactTitle: ""
+            contactTitle: "",
+
+            arrayDepartment: [],
+            arraytitles: []
         }
     }
+
+    fetchTitles = (id) => {
+        console.log("fetchTitles ", id);
+        this.props.client
+            .query({
+                query: GET_TYPES_QUERY,
+                variables: { Id_Entity: id },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.getcatalogitem != null) {
+                    this.setState({
+                        arraytitles: data.data.getcatalogitem,
+                    }, () => {
+                        // this.getHotels()
+                    });
+                }
+            })
+            .catch((error) => {
+                // TODO: show a SnackBar with error message
+                this.setState({
+                    loading: false
+                })
+            });
+    };
+
+    fetchDepartments = (id) => {
+        console.log("fetchDepartments ", id);
+        this.props.client
+            .query({
+                query: GET_DEPARTMENTS_QUERY,
+                variables: { Id_Entity: id },
+                fetchPolicy: 'no-cache'
+            })
+            .then((data) => {
+                if (data.data.getcatalogitem != null) {
+                    this.setState({
+                        arrayDepartment: data.data.getcatalogitem,
+                        //  departments: data.data.getcatalogitem,
+                    }, () => {
+                        this.fetchTitles(id)
+                    });
+                }
+            })
+            .catch((error) => {
+                // TODO: show a SnackBar with error message
+
+                this.setState({
+                    loading: false
+                })
+            });
+    };
 
     render() {
         const firstName = `firstName${this.props.index}`;
@@ -105,6 +223,9 @@ class EmployeeInputRow extends Component {
                             this.setState({
                                 hotelEdit: e.target.value
                             })
+                            this.fetchDepartments(e.target.value);
+                            //this.fetchTitles(e.target.value);
+                            //console.log("Hotelassssssss ", e.target.value)
                         }}
                         value={this.state.hotelEdit}
                     >
@@ -124,7 +245,8 @@ class EmployeeInputRow extends Component {
                         id="department"
                         name="department"
                         value={this.state.department}
-                        data={this.props.departments}
+                        data={this.state.arrayDepartment}
+                        //data={this.props.departments}
                         onChange={(value) => {
                             this.props.onchange(department, value);
                             this.setState({
@@ -145,7 +267,8 @@ class EmployeeInputRow extends Component {
                         id="contactTitle"
                         name="contactTitle"
                         value={this.state.contactTitle}
-                        data={this.props.titles}
+                        //data={this.props.titles}
+                        data={this.state.arraytitles}
                         onChange={(value) => {
                             this.props.onchange(contactTitle, value);
                             this.setState({
@@ -165,4 +288,5 @@ class EmployeeInputRow extends Component {
     }
 }
 
-export default EmployeeInputRow;
+//export default EmployeeInputRow;
+export default withStyles(styles)(withApollo(withGlobalContent(EmployeeInputRow)));

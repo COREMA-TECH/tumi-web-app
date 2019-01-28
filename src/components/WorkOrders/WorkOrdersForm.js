@@ -117,7 +117,7 @@ class WorkOrdersForm extends Component {
         Saturday: 'SA,',
         Sunday: 'SU,',
         dayWeek: '',
-
+        DateContract: '',
 
     };
 
@@ -636,9 +636,13 @@ class WorkOrdersForm extends Component {
             duration: duration
         });
     }
-    myFunction = (e) => {
-        console.log("Info de myFunction  ", document.getElementById('#materialUnchecked'))
+
+    TakeDateContract = () => {
+        const DateExpiration = this.state.hotels.find((item) => { return item.Id == this.state.IdEntity })
+        var ExpirationDate = new Date(DateExpiration.Contract_Expiration_Date);
+        this.setState({ endDate: ExpirationDate.toISOString().substring(0, 10) });
     }
+
     render() {
 
         const { classes } = this.props;
@@ -657,13 +661,6 @@ class WorkOrdersForm extends Component {
                             <div className="row pl-0 pr-0">
                                 <div className="col-md-7 col-7">
                                     <div className="row">
-                                        <div className="col-md-6">
-                                        </div>
-                                        <div className="col-md-6">
-                                            <input type="checkbox" class="form-check-input" id="materialUnchecked" onClick={(e) => { this.myFunction(e); }} />
-                                            <label class="form-check-label" for="materialUnchecked">Same as contract end date?</label>
-                                        </div>
-
                                         <div className="col-md-6">
                                             <label htmlFor="">* Hotel</label>
                                             <select
@@ -763,7 +760,7 @@ class WorkOrdersForm extends Component {
                                                 name="endDate"
                                                 disabled={this.state.sameContractDate}
                                                 onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
+                                                value={this.state.endDate}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
