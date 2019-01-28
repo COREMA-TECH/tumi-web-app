@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import Shifts from './Shifts.js';
 import PreFilter from './PreFilter';
 import DefaultClient from 'apollo-boost';
+import WorkOrdersForm from "../WorkOrders/WorkOrdersForm";
+import withGlobalContent from 'Generic/Global';
 
 const DEFAULT_EMPLOYEE = { value: 0, label: "<No filter applied>" };
 
@@ -35,7 +37,8 @@ class Schedules extends Component {
             templateStartDate: '',
             templateEndDate: '',
             viewType: 1,
-            filterFormDiabled: false
+            filterFormDiabled: false,
+            openWorkOrderForm: false
         }
     }
 
@@ -121,6 +124,13 @@ class Schedules extends Component {
         })
     }
 
+    handleOpenWorkOrderForm = () => {
+        this.setState({
+            openWorkOrderForm: !this.state.openWorkOrderForm,
+            item: null
+        });
+    }
+
     openEditConfirm = () => {
         this.setState(() => {
             return { editConfirmOpened: !this.state.editConfirmOpened }
@@ -179,6 +189,7 @@ class Schedules extends Component {
                     toggleRefresh={this.toggleRefresh}
                     employees={this.state.employees}
                     onSelectedEmployeeChange={this.onSelectedEmployeeChange}
+                    handleOpenWorkOrderForm={this.handleOpenWorkOrderForm}
                 />
                 <FilterForm
                     updateEmployeeList={this.updateEmployeeList}
@@ -192,6 +203,13 @@ class Schedules extends Component {
                     toggleRefresh={this.toggleRefresh}
                     hotelManager={this.props.hotelManager}
                     locationName={this.state.locationName}
+                />
+                <WorkOrdersForm
+                    item={this.state.item}
+                    handleOpenSnackbar={this.props.handleOpenSnackbar}
+                    openModal={this.state.openWorkOrderForm}
+                    handleCloseModal={this.handleCloseModal}
+                    handleCloseModal={this.handleOpenWorkOrderForm}
                 />
                 <div className="row">
                     <div className="col-md-12">
@@ -225,4 +243,4 @@ class Schedules extends Component {
     }
 }
 
-export default Schedules;
+export default withGlobalContent(Schedules);
