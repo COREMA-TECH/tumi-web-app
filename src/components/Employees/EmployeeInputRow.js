@@ -222,7 +222,10 @@ class EmployeeInputRow extends Component {
                         onChange={(e) => {
                             this.setState({
                                 hotelEdit: e.target.value
-                            })
+                            });
+                            this.props.onchange(department, null);
+                            this.props.onchange(contactTitle, null);
+
                             this.fetchDepartments(e.target.value);
                             //this.fetchTitles(e.target.value);
                             //console.log("Hotelassssssss ", e.target.value)
