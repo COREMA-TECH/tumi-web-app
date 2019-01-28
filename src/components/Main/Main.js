@@ -6,6 +6,7 @@ import Private from '../Private/Private';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import ApplyFormMessage from '../ApplyForm/ApplyFormMessage';
 import StepperApplyForm from '../ApplyForm/Stepper/StepperApplyForm';
+import Signature from '../Contract/Signature';
 import PropTypes from 'prop-types';
 import ResetPassword from "../ResetPassword/ResetPassword";
 
@@ -49,6 +50,7 @@ class Main extends Component {
 
                 {/*<PrivateRoute path="/application/info" component={ApplicationInfo} />*/}
                 <PrivateRoute path="/employment-application" component={StepperApplyForm} />
+                <PrivateRoute path="/home/signature" component={Signature} />
                 <PrivateRoute path="/employment-application-message" component={ApplyFormMessage} />
                 <PrivateRoute path="/reset" component={ResetPassword} />
                 <PrivateRoute path="/home" component={Private} />

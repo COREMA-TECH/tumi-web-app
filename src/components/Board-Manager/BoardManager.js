@@ -323,9 +323,7 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
-        console.log("este es el laneId ", laneId)
-        console.log("este es el cardId ", cardId)
-        console.log("este es el metadata ", metadata)
+
 
         if (laneId.trim() == "lane1") {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
@@ -341,7 +339,7 @@ class BoardManager extends Component {
                     Intopening: cardId
                 })
 
-            // this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
+            this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
             this.getWorkOrderPosition(cardId)
             console.log("esta es la info del work ordeer ", this.state.workOrders);
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
@@ -390,6 +388,7 @@ class BoardManager extends Component {
         let datas = [];
         let datapositions = [];
         this.setState({ workOrdersPositions: [] });
+
 
         await this.props.client.query({ query: GET_WORK_ORDERS, variables: { id: WorkOrderId } }).then(({ data }) => {
             data.workOrder.forEach((wo) => {

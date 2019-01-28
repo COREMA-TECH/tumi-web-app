@@ -304,7 +304,6 @@ class GeneralInfoProperty extends Component {
 						}
 					})
 					.then((data) => {
-						console.log("Data for:::", data)
 						NewIdRegion = data.data.inscatalogitem.Id;
 
 					})
@@ -380,7 +379,6 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then(({ data }) => {
-							console.log(data)
 							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(id));
 
 							this.setState({
