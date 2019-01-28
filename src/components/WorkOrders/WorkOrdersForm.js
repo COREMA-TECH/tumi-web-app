@@ -384,7 +384,6 @@ class WorkOrdersForm extends Component {
                 variables: { id: id }
             })
             .then(({ data }) => {
-                console.log("Contactos ssss ", data.getcontacts)
                 var request = data.getcontacts.find((item) => { return item.Id == this.state.contactId })
                 this.setState({
                     contacts: data.getcontacts,
@@ -393,7 +392,6 @@ class WorkOrdersForm extends Component {
                 });
 
 
-                console.log("Electronic_Address ", this.state.Electronic_Address, "departmentId ", this.state.departmentId)
                 /*this.setState({
                     contacts: data.getcontacts
                     departmentId
@@ -893,7 +891,6 @@ class WorkOrdersForm extends Component {
                                                             {
 
                                                                 this.state.employees.map((item) => {
-                                                                    console.log("this.state.employees ", this.state.employees)
 
                                                                     // if (item.detailEmployee) {
                                                                     return (
@@ -953,6 +950,7 @@ class WorkOrdersForm extends Component {
                                     <div className="row">
                                         <div className="col-md-12">
                                             <button
+                                                type="button"
                                                 className="btn btn-danger ml-1 float-right"
                                                 onClick={this.props.handleCloseModal}
                                             >
