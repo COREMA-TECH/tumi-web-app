@@ -28,8 +28,8 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
 
 
 export const GET_DEPARTMENTS_QUERY = gql`
-    {
-        getcatalogitem(IsActive: 1, Id_Catalog: 8) {
+query getcatalogitem ($Id_Entity:Int){
+        getcatalogitem(IsActive: 1, Id_Catalog: 8, Id_Entity: $Id_Entity ) {
             Id
             Name: DisplayLabel
             IsActive
@@ -57,8 +57,8 @@ export const GET_CONTACTS_QUERY = gql`
 `;
 
 export const GET_TYPES_QUERY = gql`
-    {
-        getcatalogitem(IsActive: 1, Id_Catalog: 6) {
+    query getcatalogitem($Id_Entity: Int){
+        getcatalogitem(IsActive: 1, Id_Catalog: 6, Id_Entity:$Id_Entity) {
             Id
             Name
             IsActive

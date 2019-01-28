@@ -117,7 +117,7 @@ class WorkOrdersForm extends Component {
         Saturday: 'SA,',
         Sunday: 'SU,',
         dayWeek: '',
-
+        DateContract: '',
 
     };
 
@@ -637,6 +637,12 @@ class WorkOrdersForm extends Component {
         });
     }
 
+    TakeDateContract = () => {
+        const DateExpiration = this.state.hotels.find((item) => { return item.Id == this.state.IdEntity })
+        var ExpirationDate = new Date(DateExpiration.Contract_Expiration_Date);
+        this.setState({ endDate: ExpirationDate.toISOString().substring(0, 10) });
+    }
+
     render() {
 
         const { classes } = this.props;
@@ -752,8 +758,9 @@ class WorkOrdersForm extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 name="endDate"
+                                                disabled={this.state.sameContractDate}
                                                 onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
+                                                value={this.state.endDate}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
