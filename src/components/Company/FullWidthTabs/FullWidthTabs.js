@@ -100,19 +100,6 @@ class CustomizedTabs extends React.Component {
 				);
 			case 1:
 				return (
-					<ContactCompanyForm
-						idCompany={this.state.idCompany}
-						handleOpenSnackbar={this.props.handleOpenSnackbar}
-						item={this.state.item}
-						next={this.nextHandleChange}
-						back={this.backHandleChange}
-						valueTab={this.state.value}
-						showStepper={this.state.showStepper}
-						toggleStepper={this.toggleStepper}
-					/>
-				);
-			case 2:
-				return (
 					<DepartmentsCompanyForm
 						idCompany={this.state.idCompany}
 						idManagement={this.state.idManagement}
@@ -125,6 +112,20 @@ class CustomizedTabs extends React.Component {
 						toggleStepper={this.toggleStepper}
 					/>
 				);
+			case 2:
+				return (
+					<ContactCompanyForm
+						idCompany={this.state.idCompany}
+						handleOpenSnackbar={this.props.handleOpenSnackbar}
+						item={this.state.item}
+						next={this.nextHandleChange}
+						back={this.backHandleChange}
+						valueTab={this.state.value}
+						showStepper={this.state.showStepper}
+						toggleStepper={this.toggleStepper}
+					/>
+				);
+
 				{/*case 3:
 				return (
 					<TitleCompanyForm
@@ -186,13 +187,13 @@ class CustomizedTabs extends React.Component {
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Department Contact"
+							label="Department"
 							disabled={!this.state.activateTabs}
 						/>
 						<Tab
 							disableRipple
 							classes={{ root: "Tab-item", selected: "Tab-selected" }}
-							label="Department"
+							label="Department Contact"
 							disabled={!this.state.activateTabs}
 						/>
 						{/*<Tab
