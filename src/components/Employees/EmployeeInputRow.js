@@ -110,6 +110,10 @@ class EmployeeInputRow extends Component {
             });
     };
 
+    componentWillMount(){
+        this.fetchDepartments()
+    }
+
     fetchDepartments = (id) => {
         console.log("fetchDepartments ", id);
         this.props.client
@@ -225,6 +229,10 @@ class EmployeeInputRow extends Component {
                             });
                             this.props.onchange(department, null);
                             this.props.onchange(contactTitle, null);
+                            this.setState({
+                                department: "",
+                                contactTitle: "",
+                            });
 
                             this.fetchDepartments(e.target.value);
                             //this.fetchTitles(e.target.value);
@@ -245,10 +253,14 @@ class EmployeeInputRow extends Component {
                 <div className="col">
                     <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
                     <select
+                        value={this.state.department}
                         name="department"
                         id="department"
                         className="form-control"
                         onChange={(e) => {
+                            this.setState({
+                                department: e.target.value
+                            });
                             console.info("Department ID: ", e.target.value);
                             this.props.onchange(department, e.target.value);
                         }}
@@ -288,7 +300,12 @@ class EmployeeInputRow extends Component {
                         id="contactTitle"
                         name="contactTitle"
                         className="form-control"
+                        value={this.state.contactTitle}
                         onChange={(e) => {
+                            this.setState({
+                                contactTitle: e.target.value
+                            });
+
                             console.info("Contact Title ID: ", e.target.value);
                             this.props.onchange(contactTitle, e.target.value);
                         }}
