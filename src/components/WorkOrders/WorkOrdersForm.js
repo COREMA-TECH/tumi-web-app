@@ -118,6 +118,7 @@ class WorkOrdersForm extends Component {
         Sunday: 'SU,',
         dayWeek: '',
         DateContract: '',
+        departmentId: 0
 
     };
 
@@ -153,6 +154,7 @@ class WorkOrdersForm extends Component {
                     endShift: nextProps.item.endShift,
                     startDate: nextProps.item.startDate,
                     endDate: nextProps.item.endDate,
+                    sameContractDate: nextProps.item.endDate,
                     needExperience: nextProps.item.needExperience,
                     needEnglish: nextProps.item.needEnglish,
                     comment: nextProps.item.comment,
@@ -215,10 +217,7 @@ class WorkOrdersForm extends Component {
         });
     }
 
-
-
     componentWillMount() {
-
         this.props.client
             .query({
                 query: GET_HOTEL_QUERY
@@ -281,7 +280,6 @@ class WorkOrdersForm extends Component {
                     quantity: this.state.quantity,
                     workOrder: {
                         IdEntity: this.state.IdEntity,
-                        //contactId: this.state.contactId
                         date: this.state.date,
                         quantity: this.state.quantity,
                         status: 1,
@@ -306,7 +304,8 @@ class WorkOrdersForm extends Component {
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        departmentId: this.state.departmentId
 
                     }
                 }
@@ -361,7 +360,8 @@ class WorkOrdersForm extends Component {
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        departmentId: this.state.departmentId
                     }
                 }
             })
@@ -450,7 +450,8 @@ class WorkOrdersForm extends Component {
         if (name === 'contactId') {
             request = this.state.contacts.find((item) => { return item.Id == value })
             this.setState({
-                Electronic_Address: request != null ? request.Electronic_Address : ''
+                Electronic_Address: request != null ? request.Electronic_Address : '',
+                departmentId: request != null ? request.Id_Deparment : 0
             });
         }
 
@@ -592,7 +593,7 @@ class WorkOrdersForm extends Component {
 
     handleTimeChange = (name) => (text) => {
         this.setState({
-            [name]: moment(text, "HH:mm:ss").format("HH:mm A")
+            [name]: moment(text, "HH:mm:ss").format("hh:mm A")
         }, () => {
             this.calculateHours()
         })
@@ -758,7 +759,7 @@ class WorkOrdersForm extends Component {
                                                 type="date"
                                                 className="form-control"
                                                 name="endDate"
-                                                disabled={this.state.sameContractDate}
+                                                // disabled={this.state.sameContractDate}
                                                 onChange={this.handleChange}
                                                 value={this.state.endDate}
                                                 onBlur={this.handleValidate}
