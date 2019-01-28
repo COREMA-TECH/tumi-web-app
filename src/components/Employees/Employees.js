@@ -1456,11 +1456,15 @@ class Employees extends Component {
                                                     contactTitleEdit: "",
                                                 });
 
-                                                this.fetchDepartments(e.target.value);
+                                                if(e.target.value == "null") {
+                                                    this.fetchDepartments();
+                                                } else {
+                                                    this.fetchDepartments(e.target.value);
+                                                }
                                             }}
                                             value={this.state.hotelEdit}
                                         >
-                                            <option>Select a option</option>
+                                            <option value="null">Select a option</option>
                                             {
                                                 this.state.hotels.map(item => {
                                                     return (

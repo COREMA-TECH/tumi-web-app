@@ -234,13 +234,17 @@ class EmployeeInputRow extends Component {
                                 contactTitle: "",
                             });
 
-                            this.fetchDepartments(e.target.value);
+                            if(e.target.value == "null") {
+                                this.fetchDepartments();
+                            } else {
+                                this.fetchDepartments(e.target.value);
+                            }
                             //this.fetchTitles(e.target.value);
                             //console.log("Hotelassssssss ", e.target.value)
                         }}
                         value={this.state.hotelEdit}
                     >
-                        <option>Select a option</option>
+                        <option value="null">Select a option</option>
                         {
                             this.props.hotels.map(item => {
                                 return (
