@@ -313,7 +313,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.setState({ openModal: false, saving: false });
-                window.location.reload();
+                //window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true });
@@ -593,7 +593,7 @@ class WorkOrdersForm extends Component {
 
     handleTimeChange = (name) => (text) => {
         this.setState({
-            [name]: moment(text, "HH:mm:ss").format("hh:mm A")
+            [name]: moment(text, "HH:mm:ss").format("HH:mm")
         }, () => {
             this.calculateHours()
         })
@@ -730,10 +730,10 @@ class WorkOrdersForm extends Component {
                                         </div>
                                         <div className="col-md-6">
                                             <label htmlFor="">Shift Start</label>
-                                            <Datetime dateFormat={false} value={this.state.shift} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
+                                            <Datetime dateFormat={false} value={moment(this.state.shift, "HH:mm").format("hh:mm A")} inputProps={{ name: "shift", required: true }} onChange={this.handleTimeChange('shift')} />
                                             {/* <TimeField required name="shift" style={{ width: '100%' }} className="form-control" value={this.state.shift} onBlur={this.handleValidate} onChange={this.handleTimeChange('shift')} /> */}
                                             <label htmlFor="">Shift End</label>
-                                            <Datetime dateFormat={false} value={this.state.endShift} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
+                                            <Datetime dateFormat={false} value={moment(this.state.endShift, "HH:mm").format("hh:mm A")} inputProps={{ name: "endShift", required: true }} onChange={this.handleTimeChange('endShift')} />
                                             {/* <TimeField required name="endShift" style={{ width: '100%' }} className="form-control" value={this.state.endShift} onBlur={this.handleValidate} onChange={this.handleTimeChange('endShift')} /> */}
                                         </div>
                                         <div className="col-md-6">
@@ -761,7 +761,7 @@ class WorkOrdersForm extends Component {
                                                 name="endDate"
                                                 // disabled={this.state.sameContractDate}
                                                 onChange={this.handleChange}
-                                                value={this.state.endDate}
+                                                value={this.state.endDate.substring(0, 10)}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
