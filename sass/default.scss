@@ -18,6 +18,9 @@
 //Reset
 @import "base/reset";
 
+//Helpers
+@import "helpers/placeholders";
+
 //Base
 @import "base/bootstrap_modify.scss";
 @import "base/buttons";
@@ -67,6 +70,9 @@
 
 //Boards 
 @import "boards/columns";
+
+//Region
+@import "region/region";
 
 //Schedules
 @import "schedules/schedules";

@@ -321,7 +321,6 @@ class GeneralInfoProperty extends Component {
 					linearProgress: true
 				},
 				() => {
-					console.log("Id Parent:::", id)
 					this.props.client
 						.mutate({
 							// Pass the mutation structure
@@ -381,7 +380,6 @@ class GeneralInfoProperty extends Component {
 							}
 						})
 						.then(({ data }) => {
-							console.log("data::::", data)
 							this.props.updateIdProperty(parseInt(data.insbusinesscompanies.Id), parseInt(data.insbusinesscompanies.Id_Parent));
 
 							this.setState({
@@ -468,7 +466,6 @@ class GeneralInfoProperty extends Component {
 	`;
 
 	updateCompany = (companyId, updatedId, buttonName) => {
-		console.log({ companyId, updatedId, buttonName })
 		var NewIdRegion = 0;
 		// Show a Circular progress
 
@@ -635,7 +632,6 @@ class GeneralInfoProperty extends Component {
 	};
 
 	handleFormSubmit = (buttonName) => (event) => {
-		console.log("Props:::", this.props)
 		event.preventDefault();
 		let invalidInputs = document.querySelectorAll('input[required]'),
 			i,

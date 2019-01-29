@@ -78,7 +78,6 @@ class EmployeeInputRow extends Component {
     }
 
     fetchTitles = (id) => {
-        console.log("fetchTitles ", id);
         this.props.client
             .query({
                 query: GET_ALL_POSITIONS_QUERY,
@@ -107,7 +106,6 @@ class EmployeeInputRow extends Component {
     }
 
     fetchDepartments = (id) => {
-        console.log("fetchDepartments ", id);
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
