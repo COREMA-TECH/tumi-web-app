@@ -268,7 +268,7 @@ class WorkOrdersTable extends Component {
                             <TableRow>
                                 <CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>No.</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
+                                <CustomTableCell className={"Table-head"}>Property</CustomTableCell>
                                 <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
                                 <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>

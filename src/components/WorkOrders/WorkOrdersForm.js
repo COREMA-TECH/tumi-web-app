@@ -56,7 +56,7 @@ const CustomTableCell = withStyles((theme) => ({
         color: theme.palette.common.white
     },
     body: {
-        fontSize: 14
+        fontSize: 12
     }
 }))(TableCell);
 
@@ -659,7 +659,7 @@ class WorkOrdersForm extends Component {
             document.getElementById("materialUnchecked").checked = false
         } else {
             if (DateExpiration.Contract_Expiration_Date == null) {
-                this.props.handleOpenSnackbar('error', 'The property does not have a contract active, please create');
+                this.props.handleOpenSnackbar('error', 'The property does not have a contract active, please create a contract');
                 document.getElementById("materialUnchecked").checked = false
             } else {
                 if (document.getElementById("materialUnchecked").checked) {
@@ -794,10 +794,9 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
-                                        <div className="col-md-12">
-                                            <label htmlFor="">* To Date </label><div ></div>
-                                        </div>
+
                                         <div className="col-md-6">
+                                            <label htmlFor="">* To Date </label>
                                             <input
                                                 required
                                                 type="date"
@@ -811,6 +810,20 @@ class WorkOrdersForm extends Component {
                                             <input type="checkbox" id="materialUnchecked" onClick={(e) => { this.TakeDateContract(); }} />
                                             <label htmlFor="">  <font color="grey">&nbsp; Same as contract end date?</font> </label>
                                         </div>
+
+                                        <div className="col-md-6">
+                                            <label htmlFor="">&nbsp;&nbsp;Workdays</label>
+                                            <div className="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
@@ -881,28 +894,7 @@ class WorkOrdersForm extends Component {
                                 </div>
                             </div>
                             <div className='row'>
-                                <div className="col-md-12">
-                                    <div className="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
-                                        <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
-                                        <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
-                                        <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
-                                        <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
-                                        <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
-                                        <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
-                                    </div>
 
-                                    {/*<div className="btn-group" role="group" aria-label="Basic example">
-                                        <button id="Monday" type="button" className={this.state.Monday == 'MO,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>MO</button>
-                                        <button id="Tuesday" type="button" className={this.state.Tuesday == 'TU,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>TU</button>
-                                        <button id="Wednesday" type="button" className={this.state.Wednesday == 'WE,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>WE</button>
-                                        <button id="Thursday" type="button" className={this.state.Thursday == 'TH,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>TH</button>
-                                        <button id="Friday" type="button" className={this.state.Friday == 'FR,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>FR</button>
-                                        <button id="Saturday" type="button" className={this.state.Saturday == 'SA,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>SA</button>
-                                        <button id="Sunday" type="button" className={this.state.Sunday == 'SU,' ? "btn btn-success" : "btn btn-outline-success"} onClick={(e) => { this.UpdateState(e.target); }}>SU</button>
-                                    </div> */}
-
-                                </div>
                             </div>
 
 
