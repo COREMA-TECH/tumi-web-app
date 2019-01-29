@@ -160,6 +160,7 @@ class EmployeesTable extends React.Component {
         if (this.props.data.toString() !== nextProps.data.toString() || this.props.loading !== nextProps.loading) {
             return true;
         }
+
         if (
             this.state.page !== nextState.page ||
             this.state.rowsPerPage !== nextState.rowsPerPage //||
@@ -277,7 +278,7 @@ class EmployeesTable extends React.Component {
                                                 {
                                                     this.props.titles.map(item => {
                                                         if (item.Id === row.Contact_Title) {
-                                                            return item.Name.trim()
+                                                            return item.Position.trim()
                                                         }
                                                     })
                                                 }

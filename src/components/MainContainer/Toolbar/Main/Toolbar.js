@@ -66,7 +66,7 @@ class Toolbar extends Component {
 		return (
 			<div className="toolbar__main">
 				<ul className="RightMenu-list">
-					<span className="main-container__title">Hi, {localStorage.getItem('FullName').trim() == '' ? localStorage.getItem('CodeUser').trim() : localStorage.getItem('FullName').trim()}</span>
+					<span className="main-container__title">Hi, {localStorage.getItem('FullName') ? (localStorage.getItem('FullName').trim() == '' ? localStorage.getItem('CodeUser').trim() : localStorage.getItem('FullName').trim()) : ''}</span>
 					<li className="RightMenu-item">
 						<a href="" onClick={this.changeLanguage} className="Language-en">
 							<img src={`/languages/${this.state.languageIcon}.png`} className="Language-icon" />

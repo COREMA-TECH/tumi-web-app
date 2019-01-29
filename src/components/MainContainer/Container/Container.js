@@ -155,7 +155,7 @@ class Container extends Component {
 				<Route exact path="/home/company/edit" component={CreateCompany} />
 				<Route exact path="/home/company/add" component={CreateCompany} />
 				<Route exact path="/Reset" component={ResetPassword} />
-				<Route exact path="/home/signature" component={Signature} />
+				{/*<Route exact path="/home/signature" component={Signature} />*/}
 				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 				<Route exact path="/home/region" component={Region} />
 			</div>

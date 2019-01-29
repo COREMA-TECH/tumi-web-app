@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT } from './queries';
+import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT,GET_WORKORDERS_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -217,6 +217,21 @@ class WorkOrdersForm extends Component {
         });
     }
 
+    getWorkOrders = () => {
+        this.props.client
+            .query({
+                query: GET_WORKORDERS_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                this.setState({
+                    data: data.workOrder
+                });
+            })
+            .catch();
+    }
+
+
     componentWillMount() {
         this.props.client
             .query({
@@ -313,6 +328,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
                 this.setState({ openModal: false, saving: false });
+                this.getWorkOrders();
                 window.location.reload();
             })
             .catch((error) => {
@@ -368,7 +384,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
-                window.location.reload();
+               // window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true, converting: false });

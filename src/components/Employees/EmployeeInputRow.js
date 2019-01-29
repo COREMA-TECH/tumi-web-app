@@ -1,21 +1,13 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { withStyles } from "@material-ui/core";
+import {withStyles} from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "Generic/Global";
 import green from "@material-ui/core/colors/green";
 
 import InputMask from "react-input-mask";
-import AutosuggestInput from "../ui-components/AutosuggestInput/AutosuggestInput";
-import AutoComplete from "./AutoComplete";
-import {
-    GET_CONTACTS_IN_USER_DIALOG,
-    GET_DEPARTMENTS_QUERY,
-    GET_EMAILS_USER,
-    GET_HOTELS_QUERY,
-    GET_ROLES_QUERY,
-    GET_TYPES_QUERY
-} from "../ApplyForm/Application/ProfilePreview/Queries";
+import {GET_DEPARTMENTS_QUERY} from "../ApplyForm/Application/ProfilePreview/Queries";
+import {GET_ALL_POSITIONS_QUERY} from "./Queries";
 
 const styles = theme => ({
     container: {
@@ -88,14 +80,14 @@ class EmployeeInputRow extends Component {
     fetchTitles = (id) => {
         this.props.client
             .query({
-                query: GET_TYPES_QUERY,
-                variables: { Id_Entity: id },
+                query: GET_ALL_POSITIONS_QUERY,
+                variables: {Id_Entity: id},
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
-                if (data.data.getcatalogitem != null) {
+                if (data.data.getposition != null) {
                     this.setState({
-                        arraytitles: data.data.getcatalogitem,
+                        arraytitles: data.data.getposition,
                     }, () => {
                         // this.getHotels()
                     });
@@ -117,7 +109,7 @@ class EmployeeInputRow extends Component {
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
-                variables: { Id_Entity: id },
+                variables: {Id_Entity: id},
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -146,10 +138,11 @@ class EmployeeInputRow extends Component {
         const phoneNumber = `phoneNumber${this.props.index}`;
         const department = `department${this.props.index}`;
         const contactTitle = `contactTitle${this.props.index}`;
+        const idEntity = `idEntity${this.props.index}`;
 
         return (
 
-            < div className="row Employees-row" >
+            < div className="row Employees-row">
                 <div className="col">
                     <label htmlFor="" className="d-xs-block d-sm-block d-lg-none d-xl-none">* First Name</label>
                     <input
@@ -225,6 +218,10 @@ class EmployeeInputRow extends Component {
                             this.setState({
                                 hotelEdit: e.target.value
                             });
+
+                            this.props.onchange(idEntity, e.target.value);
+
+
                             this.props.onchange(department, null);
                             this.props.onchange(contactTitle, null);
                             this.setState({
@@ -314,9 +311,13 @@ class EmployeeInputRow extends Component {
                     >
                         <option value="">Select a option</option>
                         {
-                            this.state.arraytitles.map(item => (
-                                <option value={item.Id}>{item.Name.trim()}</option>
-                            ))
+                            this.state.arraytitles.map(item => {
+                                if (this.state.hotelEdit == item.Id_Entity) {
+                                    return (
+                                        <option value={item.Id}>{item.Position.trim()}</option>
+                                    )
+                                }
+                            })
                         }
                     </select>
                     {/*<AutoComplete*/}
@@ -341,7 +342,7 @@ class EmployeeInputRow extends Component {
                     {/*}}*/}
                     {/*/>*/}
                 </div>
-            </div >
+            </div>
         );
     }
 }
