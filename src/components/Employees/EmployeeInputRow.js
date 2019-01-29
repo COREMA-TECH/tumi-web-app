@@ -86,7 +86,6 @@ class EmployeeInputRow extends Component {
     }
 
     fetchTitles = (id) => {
-        console.log("fetchTitles ", id);
         this.props.client
             .query({
                 query: GET_TYPES_QUERY,
@@ -110,12 +109,11 @@ class EmployeeInputRow extends Component {
             });
     };
 
-    componentWillMount(){
+    componentWillMount() {
         this.fetchDepartments()
     }
 
     fetchDepartments = (id) => {
-        console.log("fetchDepartments ", id);
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
@@ -234,7 +232,7 @@ class EmployeeInputRow extends Component {
                                 contactTitle: "",
                             });
 
-                            if(e.target.value == "null") {
+                            if (e.target.value == "null") {
                                 this.fetchDepartments();
                             } else {
                                 this.fetchDepartments(e.target.value);
@@ -277,25 +275,25 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                     {/*<AutoComplete*/}
-                        {/*id="department"*/}
-                        {/*name="department"*/}
-                        {/*value={this.state.department}*/}
-                        {/*data={this.state.arrayDepartment}*/}
-                        {/*//data={this.props.departments}*/}
-                        {/*onChange={(value) => {*/}
-                            {/*console.log("Department Title: ",value);*/}
-                            {/*this.props.onchange(department, value);*/}
-                            {/*this.setState({*/}
-                                {/*department: value*/}
-                            {/*})*/}
-                        {/*}}*/}
-                        {/*onSelect={(value) => {*/}
-                            {/*console.log("Department Title: ",value);*/}
-                            {/*this.props.onchange(department, value);*/}
-                            {/*this.setState({*/}
-                                {/*department: value*/}
-                            {/*})*/}
-                        {/*}}*/}
+                    {/*id="department"*/}
+                    {/*name="department"*/}
+                    {/*value={this.state.department}*/}
+                    {/*data={this.state.arrayDepartment}*/}
+                    {/*//data={this.props.departments}*/}
+                    {/*onChange={(value) => {*/}
+                    {/*console.log("Department Title: ",value);*/}
+                    {/*this.props.onchange(department, value);*/}
+                    {/*this.setState({*/}
+                    {/*department: value*/}
+                    {/*})*/}
+                    {/*}}*/}
+                    {/*onSelect={(value) => {*/}
+                    {/*console.log("Department Title: ",value);*/}
+                    {/*this.props.onchange(department, value);*/}
+                    {/*this.setState({*/}
+                    {/*department: value*/}
+                    {/*})*/}
+                    {/*}}*/}
                     {/*/>*/}
                 </div>
                 <div className="col">
@@ -322,25 +320,25 @@ class EmployeeInputRow extends Component {
                         }
                     </select>
                     {/*<AutoComplete*/}
-                        {/*id="contactTitle"*/}
-                        {/*name="contactTitle"*/}
-                        {/*value={this.state.contactTitle}*/}
-                        {/*//data={this.props.titles}*/}
-                        {/*data={this.state.arraytitles}*/}
-                        {/*onChange={(value) => {*/}
-                            {/*console.log("Contact Title: ",value);*/}
-                            {/*this.props.onchange(contactTitle, value);*/}
-                            {/*this.setState({*/}
-                                {/*contactTitle: value*/}
-                            {/*})*/}
-                        {/*}}*/}
-                        {/*onSelect={(value) => {*/}
-                            {/*console.log("Contact Title: ",value);*/}
-                            {/*this.props.onchange(contactTitle, value);*/}
-                            {/*this.setState({*/}
-                                {/*contactTitle: value*/}
-                            {/*})*/}
-                        {/*}}*/}
+                    {/*id="contactTitle"*/}
+                    {/*name="contactTitle"*/}
+                    {/*value={this.state.contactTitle}*/}
+                    {/*//data={this.props.titles}*/}
+                    {/*data={this.state.arraytitles}*/}
+                    {/*onChange={(value) => {*/}
+                    {/*console.log("Contact Title: ",value);*/}
+                    {/*this.props.onchange(contactTitle, value);*/}
+                    {/*this.setState({*/}
+                    {/*contactTitle: value*/}
+                    {/*})*/}
+                    {/*}}*/}
+                    {/*onSelect={(value) => {*/}
+                    {/*console.log("Contact Title: ",value);*/}
+                    {/*this.props.onchange(contactTitle, value);*/}
+                    {/*this.setState({*/}
+                    {/*contactTitle: value*/}
+                    {/*})*/}
+                    {/*}}*/}
                     {/*/>*/}
                 </div>
             </div >

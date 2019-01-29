@@ -8167,6 +8167,14 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield; }
 
+.RegionForm-header, .MasterShiftHeader {
+  background: #e6e6e6;
+  border-bottom: solid 1px #bdbdbd;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 30px;
+  padding-right: 30px; }
+
 label:not(.custom-file-label):not(.form-check-label) {
   margin-bottom: 0 !important;
   margin-top: 0.5rem; }
@@ -9492,28 +9500,39 @@ tbody[class^="MuiTableBody-"] .btn {
         margin-top: 1rem; } }
 
 .HotelCard-item {
-  background: -webkit-gradient(linear, right top, left top, from(#3ca2c8), to(#254151));
-  background: -webkit-linear-gradient(right, #3ca2c8, #254151);
-  background: -o-linear-gradient(right, #3ca2c8, #254151);
-  background: linear-gradient(to left, #3ca2c8, #254151);
-  border-radius: 5px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  background: -webkit-gradient(linear, right top, left top, from(#dddddd), color-stop(#FFF), color-stop(#FFF), color-stop(#FFF), to(#dddddd));
+  background: -webkit-linear-gradient(right, #dddddd, #FFF, #FFF, #FFF, #dddddd);
+  background: -o-linear-gradient(right, #dddddd, #FFF, #FFF, #FFF, #dddddd);
+  background: linear-gradient(to left, #dddddd, #FFF, #FFF, #FFF, #dddddd);
+  border-radius: 5px;
+  border: solid 3px #dbeef5;
+  color: #7e7e7e;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   margin-top: 1rem;
   padding: 1rem; }
+  .HotelCard-item.bg-gd-danger {
+    background: -webkit-gradient(linear, right top, left top, from(#ffc2d8), color-stop(#FFF), color-stop(#FFF), color-stop(#FFF), to(#ffc2d8));
+    background: -webkit-linear-gradient(right, #ffc2d8, #FFF, #FFF, #FFF, #ffc2d8);
+    background: -o-linear-gradient(right, #ffc2d8, #FFF, #FFF, #FFF, #ffc2d8);
+    background: linear-gradient(to left, #ffc2d8, #FFF, #FFF, #FFF, #ffc2d8);
+    border-color: #ffc2d8; }
 
 .HotelCard-controls {
   position: absolute;
-  top: 0;
-  right: 0; }
+  top: -15px;
+  right: -15px; }
   .HotelCard-controls .btn {
+    background: #f50057;
     color: #FFF;
+    height: 35px;
     padding-left: 5px;
-    padding-right: 5px; }
+    padding-right: 5px;
+    width: 35px; }
 
 .HotelCard-img {
   background: url(https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png) center center;
@@ -9538,7 +9557,7 @@ tbody[class^="MuiTableBody-"] .btn {
     width: auto; }
 
 .HotelCard-title {
-  color: #FFF;
+  color: #7e7e7e;
   font-weight: 700; }
 
 .HotelCard-wrapper {
@@ -10977,29 +10996,36 @@ button.rbc-input::-moz-focus-inner {
 .smooth-dnd-container.vertical {
   min-height: 225px; }
 
-.MasterShiftHeader {
-  background: #e6e6e6;
-  border-bottom: solid 1px #bdbdbd;
-  margin-left: -15px;
-  margin-right: -15px;
-  padding-left: 30px;
-  padding-right: 30px; }
-  .MasterShiftHeader-controls .my-full {
-    margin-top: 0 !important;
-    float: right;
-    width: 134px; }
-  .MasterShiftHeader .btn-publish {
-    float: right;
-    margin-right: 5px; }
-  .MasterShiftHeader .btn-default {
-    background: #d2d2d2; }
-  @media (max-width: 767.98px) {
-    .MasterShiftHeader-controlLeft .btn {
-      margin-bottom: 5px;
-      width: 100%; } }
-  @media (max-width: 991.98px) {
-    .MasterShiftHeader-controlRight {
-      margin-top: 1rem; } }
+.PropertiesTags-item .btn, .PropertiesTags-item .form-control {
+  background-color: #dddddd;
+  border-color: #dddddd;
+  color: #7e7e7e; }
+
+.PropertiesTags-item .form-control {
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  font-weight: 700 !important; }
+
+.MasterShiftHeader-controls .my-full {
+  margin-top: 0 !important;
+  float: right;
+  width: 134px; }
+
+.MasterShiftHeader .btn-publish {
+  float: right;
+  margin-right: 5px; }
+
+.MasterShiftHeader .btn-default {
+  background: #d2d2d2; }
+
+@media (max-width: 767.98px) {
+  .MasterShiftHeader-controlLeft .btn {
+    margin-bottom: 5px;
+    width: 100%; } }
+
+@media (max-width: 991.98px) {
+  .MasterShiftHeader-controlRight {
+    margin-top: 1rem; } }
 
 .MasterShiftForm {
   background: #eee;

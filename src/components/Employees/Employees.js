@@ -993,210 +993,212 @@ class Employees extends Component {
                     </div>
                 </DialogTitle>
                 <DialogContent style={{ minWidth: 600 }}>
-                    <div className="row">
-                        <div className="col-lg-7">
-                            <div className="row">
-                                <div className="col-md-12 col-lg-6">
-                                    <label>* Username</label>
-                                    <InputForm
-                                        id="username"
-                                        name="username"
-                                        maxLength="15"
-                                        value={this.state.username}
-                                        error={!this.state.usernameValid}
-                                        change={(value) => this.onChangeHandler(value, 'username')}
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-6">
-                                    <label>* Email</label>
-                                    <InputForm
-                                        id="email"
-                                        name="email"
-                                        maxLength="50"
-                                        value={this.state.email}
-                                        error={!this.state.emailValid}
-                                        change={(value) => this.onChangeHandler(value, 'email')}
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-6">
-                                    <label>* Phone Number</label>
-                                    <InputMask
-                                        id="number"
-                                        name="number"
-                                        mask="+(999) 999-9999"
-                                        maskChar=" "
-                                        value={this.state.number}
-                                        className={
-                                            this.state.numberValid ? 'form-control' : 'form-control _invalid'
-                                        }
-                                        onChange={(e) => {
-                                            this.onChangeHandler(e.target.value, 'number');
-                                        }}
-                                        placeholder="+(999) 999-9999"
-                                    />
-                                </div>
-                                <div className="col-md-12 col-lg-6">
-                                    <label>* Role</label>
-                                    <select
-                                        name="idRol"
-                                        className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
-                                            ' '
-                                        )}
-                                        disabled={this.state.loadingRoles}
-                                        onChange={(event) => {
-                                            this.updateSelect(event.target.value, 'idRol');
-                                        }}
-                                        value={this.state.idRol}
-                                    >
-                                        <option value="">Select a role</option>
-                                        {this.state.roles.map((item) => (
-                                            <option key={item.Id} value={item.Id}>
-                                                {item.Name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="col-md-12 col-lg-12">
-                                    <label>* Language</label>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-lg-7">
+                                <div className="row">
+                                    <div className="col-md-12 col-lg-6">
+                                        <label>* Username</label>
+                                        <InputForm
+                                            id="username"
+                                            name="username"
+                                            maxLength="15"
+                                            value={this.state.username}
+                                            error={!this.state.usernameValid}
+                                            change={(value) => this.onChangeHandler(value, 'username')}
+                                        />
+                                    </div>
+                                    <div className="col-md-12 col-lg-6">
+                                        <label>* Email</label>
+                                        <InputForm
+                                            id="email"
+                                            name="email"
+                                            maxLength="50"
+                                            value={this.state.email}
+                                            error={!this.state.emailValid}
+                                            change={(value) => this.onChangeHandler(value, 'email')}
+                                        />
+                                    </div>
+                                    <div className="col-md-12 col-lg-6">
+                                        <label>* Phone Number</label>
+                                        <InputMask
+                                            id="number"
+                                            name="number"
+                                            mask="+(999) 999-9999"
+                                            maskChar=" "
+                                            value={this.state.number}
+                                            className={
+                                                this.state.numberValid ? 'form-control' : 'form-control _invalid'
+                                            }
+                                            onChange={(e) => {
+                                                this.onChangeHandler(e.target.value, 'number');
+                                            }}
+                                            placeholder="+(999) 999-9999"
+                                        />
+                                    </div>
+                                    <div className="col-md-12 col-lg-6">
+                                        <label>* Role</label>
+                                        <select
+                                            name="idRol"
+                                            className={['form-control', this.state.idRolValid ? '' : '_invalid'].join(
+                                                ' '
+                                            )}
+                                            disabled={this.state.loadingRoles}
+                                            onChange={(event) => {
+                                                this.updateSelect(event.target.value, 'idRol');
+                                            }}
+                                            value={this.state.idRol}
+                                        >
+                                            <option value="">Select a role</option>
+                                            {this.state.roles.map((item) => (
+                                                <option key={item.Id} value={item.Id}>
+                                                    {item.Name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-12 col-lg-12">
+                                        <label>* Language</label>
 
-                                    <select
-                                        name="idLanguage"
-                                        className={[
-                                            'form-control',
-                                            this.state.idLanguageValid ? '' : '_invalid'
-                                        ].join(' ')}
-                                        disabled={this.state.loadingLanguages}
-                                        onChange={(event) => {
-                                            this.updateSelect(event.target.value, 'idLanguage');
-                                        }}
-                                        value={this.state.idLanguage}
-                                    >
-                                        <option value="">Select a language</option>
-                                        {this.state.languages.map((item) => (
-                                            <option key={item.Id} value={item.Id}>
-                                                {item.Name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                        <select
+                                            name="idLanguage"
+                                            className={[
+                                                'form-control',
+                                                this.state.idLanguageValid ? '' : '_invalid'
+                                            ].join(' ')}
+                                            disabled={this.state.loadingLanguages}
+                                            onChange={(event) => {
+                                                this.updateSelect(event.target.value, 'idLanguage');
+                                            }}
+                                            value={this.state.idLanguage}
+                                        >
+                                            <option value="">Select a language</option>
+                                            {this.state.languages.map((item) => (
+                                                <option key={item.Id} value={item.Id}>
+                                                    {item.Name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
 
-                                <div className="col-md-9 col-lg-9">
+                                    <div className="col-md-9 col-lg-9">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-lg-5">
-                            <div className="card">
-                                <div className="card-header info">Permissions</div>
-                                <div className="card-body p-0">
-                                    <ul className="row w-100 bg-light CardPermissions">
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Active?</label>
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.IsActive}
-                                                    name="IsActive"
-                                                    onChange={this.handleCheckedChange('IsActive')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="IsActive"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Admin?</label>
+                            <div className="col-lg-5">
+                                <div className="card">
+                                    <div className="card-header info">Permissions</div>
+                                    <div className="card-body p-0">
+                                        <ul className="row w-100 bg-light CardPermissions">
+                                            <li className="col-md-4 col-sm-4 col-lg-6">
+                                                <label>Active?</label>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={this.state.IsActive}
+                                                        name="IsActive"
+                                                        onChange={this.handleCheckedChange('IsActive')}
+                                                        className="onoffswitch-checkbox"
+                                                        id="IsActive"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="IsActive">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            <li className="col-md-4 col-sm-4 col-lg-6">
+                                                <label>Admin?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.isAdmin}
-                                                    name="isAdmin"
-                                                    onChange={this.handleCheckedChange('isAdmin')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="isAdmin"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Insert?</label>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={this.state.isAdmin}
+                                                        name="isAdmin"
+                                                        onChange={this.handleCheckedChange('isAdmin')}
+                                                        className="onoffswitch-checkbox"
+                                                        id="isAdmin"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="isAdmin">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            <li className="col-md-4 col-sm-4 col-lg-6">
+                                                <label>Insert?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowInsert}
-                                                    name="allowInsert"
-                                                    onChange={this.handleCheckedChange('allowInsert')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowInsert"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Edit?</label>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={this.state.allowInsert}
+                                                        name="allowInsert"
+                                                        onChange={this.handleCheckedChange('allowInsert')}
+                                                        className="onoffswitch-checkbox"
+                                                        id="allowInsert"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="allowInsert">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            <li className="col-md-4 col-sm-4 col-lg-6">
+                                                <label>Edit?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowEdit}
-                                                    name="allowEdit"
-                                                    onChange={this.handleCheckedChange('allowEdit')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowEdit"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Delete?</label>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={this.state.allowEdit}
+                                                        name="allowEdit"
+                                                        onChange={this.handleCheckedChange('allowEdit')}
+                                                        className="onoffswitch-checkbox"
+                                                        id="allowEdit"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="allowEdit">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            <li className="col-md-4 col-sm-4 col-lg-6">
+                                                <label>Delete?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowDelete}
-                                                    name="allowDelete"
-                                                    onChange={this.handleCheckedChange('allowDelete')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowDelete"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li className="col-md-4 col-sm-4 col-lg-6">
-                                            <label>Export?</label>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={this.state.allowDelete}
+                                                        name="allowDelete"
+                                                        onChange={this.handleCheckedChange('allowDelete')}
+                                                        className="onoffswitch-checkbox"
+                                                        id="allowDelete"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="allowDelete">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            <li className="col-md-4 col-sm-4 col-lg-6">
+                                                <label>Export?</label>
 
-                                            <div className="onoffswitch">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={this.state.allowExport}
-                                                    name="allowExport"
-                                                    onChange={this.handleCheckedChange('allowExport')}
-                                                    className="onoffswitch-checkbox"
-                                                    id="allowExport"
-                                                />
-                                                <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
-                                                </label>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                                <div className="onoffswitch">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={this.state.allowExport}
+                                                        name="allowExport"
+                                                        onChange={this.handleCheckedChange('allowExport')}
+                                                        className="onoffswitch-checkbox"
+                                                        id="allowExport"
+                                                    />
+                                                    <label className="onoffswitch-label" htmlFor="allowExport">
+                                                        <span className="onoffswitch-inner" />
+                                                        <span className="onoffswitch-switch" />
+                                                    </label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1333,7 +1335,6 @@ class Employees extends Component {
                 <Dialog
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
-                    aria-labelledby="responsive-dialog-title"
                     maxWidth="xl"
                 >
                     <form
@@ -1456,7 +1457,7 @@ class Employees extends Component {
                                                     contactTitleEdit: "",
                                                 });
 
-                                                if(e.target.value == "null") {
+                                                if (e.target.value == "null") {
                                                     this.fetchDepartments();
                                                 } else {
                                                     this.fetchDepartments(e.target.value);
