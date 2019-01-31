@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT,GET_WORKORDERS_QUERY } from './queries';
+import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
 import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 //import ShiftsData from '../../data/shitfs.json';
@@ -56,28 +56,11 @@ const CustomTableCell = withStyles((theme) => ({
         color: theme.palette.common.white
     },
     body: {
-        fontSize: 14
+        fontSize: 12
     }
 }))(TableCell);
 
-/*const Date = React.createClass({
-    render: function () {
-        return <input type="text" className="datepicker" />;
-    }
-});
-
-const Calendar = React.createClass({
-    componentDidMount: function () {
-        $('.datepicker').datepicker();
-    },
-    render: function () {
-        return (
-            <form>
-                <Date />
-            </form>
-        )
-    }
-});*/
+const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
 class WorkOrdersForm extends Component {
     _states = {
@@ -118,7 +101,8 @@ class WorkOrdersForm extends Component {
         Sunday: 'SU,',
         dayWeek: '',
         DateContract: '',
-        departmentId: 0
+        departmentId: 0,
+        dayWeeks: "",
 
     };
 
@@ -162,13 +146,14 @@ class WorkOrdersForm extends Component {
                     openModal: nextProps.openModal,
                     EspecialComment: nextProps.item.EspecialComment,
                     PositionName: nextProps.item.position.Position,
-                    Monday: nextProps.item.dayWeek.indexOf('MO') != -1 ? 'MO,' : '',
-                    Tuesday: nextProps.item.dayWeek.indexOf('TU') != -1 ? 'TU,' : '',
-                    Wednesday: nextProps.item.dayWeek.indexOf('WE') != -1 ? 'WE,' : '',
-                    Thursday: nextProps.item.dayWeek.indexOf('TH') != -1 ? 'TH,' : '',
-                    Friday: nextProps.item.dayWeek.indexOf('FR') != -1 ? 'FR,' : '',
-                    Saturday: nextProps.item.dayWeek.indexOf('SA') != -1 ? 'SA,' : '',
-                    Sunday: nextProps.item.dayWeek.indexOf('SU') != -1 ? 'SU,' : '',
+                    dayWeeks: nextProps.item.dayWeek
+                    /* Monday: nextProps.item.dayWeek.indexOf('MO') != -1 ? 'MO,' : '',
+                     Tuesday: nextProps.item.dayWeek.indexOf('TU') != -1 ? 'TU,' : '',
+                     Wednesday: nextProps.item.dayWeek.indexOf('WE') != -1 ? 'WE,' : '',
+                     Thursday: nextProps.item.dayWeek.indexOf('TH') != -1 ? 'TH,' : '',
+                     Friday: nextProps.item.dayWeek.indexOf('FR') != -1 ? 'FR,' : '',
+                     Saturday: nextProps.item.dayWeek.indexOf('SA') != -1 ? 'SA,' : '',
+                     Sunday: nextProps.item.dayWeek.indexOf('SU') != -1 ? 'SU,' : '',*/
 
 
                 },
@@ -309,7 +294,8 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         contactId: this.state.contactId,
                         userId: this.state.userId,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+                        dayWeek: this.state.dayWeeks
+                        //  dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -319,7 +305,8 @@ class WorkOrdersForm extends Component {
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        //dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        dayWeek: this.state.dayWeeks,
                         departmentId: this.state.departmentId
 
                     }
@@ -366,7 +353,8 @@ class WorkOrdersForm extends Component {
                         PositionRateId: this.state.PositionRateId,
                         userId: this.state.userId,
                         contactId: this.state.contactId,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
+                        dayWeek: this.state.dayWeeks
+                        //   dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -376,7 +364,8 @@ class WorkOrdersForm extends Component {
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
-                        dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
+                        dayWeek: this.state.dayWeeks,
+                        // dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
                         departmentId: this.state.departmentId
                     }
                 }
@@ -384,7 +373,7 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
-               // window.location.reload();
+                // window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true, converting: false });
@@ -407,11 +396,6 @@ class WorkOrdersForm extends Component {
                     departmentId: request != null ? request.Id_Deparment : 0
                 });
 
-
-                /*this.setState({
-                    contacts: data.getcontacts
-                    departmentId
-                });*/
             })
             .catch();
     };
@@ -505,7 +489,6 @@ class WorkOrdersForm extends Component {
                 this.setState({
                     positions: data.getposition,
                     PositionRateId: PositionId
-                    //EspecialComment: data.getposition[0].Comment
                 });
             })
             .catch();
@@ -526,9 +509,8 @@ class WorkOrdersForm extends Component {
             .catch();
     };
 
-    getEmployees = () => {//= (func = () => { }) => {
+    getEmployees = () => {
         this.setState({ employees: [] })
-        //console.log("entro al metodo de empleado ", this.state.id)
         this.props.client
             .query({
                 query: GET_SHIFTS,
@@ -539,8 +521,6 @@ class WorkOrdersForm extends Component {
                 let employeeIdTemp = 0;
 
                 data.ShiftWorkOrder.map((item) => {
-                    //       console.log("entro al ShiftWorkOrder ", item)
-                    //this.getDetailShift(item.WorkOrderId, item.ShiftId);
                     this.props.client
                         .query({
                             query: GET_DETAIL_SHIFT,
@@ -549,7 +529,6 @@ class WorkOrdersForm extends Component {
                         .then(({ data }) => {
                             data.ShiftDetailbyShift.sort().map((itemDetails) => {
                                 if (itemDetails.detailEmployee != null) {
-                                    //if (employeesList.Value != item.detailEmployee.EmployeeId) {
                                     if (itemDetails.detailEmployee.EmployeeId != employeeIdTemp) {
                                         employeesList.push({
                                             WorkOrderId: item.WorkOrderId,
@@ -591,7 +570,7 @@ class WorkOrdersForm extends Component {
             });
     };
 
-    UpdateState = (e) => {
+    /*UpdateState = (e) => {
         if (e.id == 'Monday') { if (this.state.Monday == 'MO,') { this.setState({ Monday: '' }); } else { this.setState({ Monday: 'MO,' }); } }
         if (e.id == 'Tuesday') { if (this.state.Tuesday == 'TU,') { this.setState({ Tuesday: '' }); } else { this.setState({ Tuesday: 'TU,' }); } }
         if (e.id == 'Wednesday') { if (this.state.Wednesday == 'WE,') { this.setState({ Wednesday: '' }); } else { this.setState({ Wednesday: 'WE,' }); } }
@@ -599,7 +578,7 @@ class WorkOrdersForm extends Component {
         if (e.id == 'Friday') { if (this.state.Friday == 'FR,') { this.setState({ Friday: '' }); } else { this.setState({ Friday: 'FR,' }); } }
         if (e.id == 'Saturday') { if (this.state.Saturday == 'SA,') { this.setState({ Saturday: '' }); } else { this.setState({ Saturday: 'SA,' }); } }
         if (e.id == 'Sunday') { if (this.state.Sunday == 'SU,') { this.setState({ Sunday: '' }); } else { this.setState({ Sunday: 'SU,' }); } }
-    }
+    }*/
 
     validateInvalidInput = () => {
         if (document.addEventListener) {
@@ -612,9 +591,6 @@ class WorkOrdersForm extends Component {
             );
         }
     };
-
-
-
 
     handleTimeChange = (name) => (text) => {
         this.setState({
@@ -636,13 +612,10 @@ class WorkOrdersForm extends Component {
     handleCalculatedByDuration = (event) => {
         const target = event.target;
         const value = target.value;
-
         const startHour = this.state.shift;
-
 
         var endHour = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(parseFloat(value), 'hours').format('HH:mm');
         var _moment = moment(new Date("01/01/1990 " + startHour), "HH:mm:ss").add(8, 'hours').format('HH:mm');
-
         var _endHour = (value == 0) ? _moment : endHour;
 
         this.setState({
@@ -663,10 +636,38 @@ class WorkOrdersForm extends Component {
         });
     }
 
+    getWeekDayStyle = (dayName) => {
+        console.log("this.state.dayWeeks ", this.state.dayWeeks)
+        return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
+    }
+
+    selectWeekDay = (dayName) => {
+        if (this.state.dayWeeks.includes(dayName))
+            this.setState((prevState) => {
+                return { dayWeeks: prevState.dayWeeks.replace(dayName, '') }
+            })
+        else
+            this.setState((prevState) => {
+                return { dayWeeks: prevState.dayWeeks.concat(dayName) }
+            })
+    }
+
     TakeDateContract = () => {
         const DateExpiration = this.state.hotels.find((item) => { return item.Id == this.state.IdEntity })
-        var ExpirationDate = new Date(DateExpiration.Contract_Expiration_Date);
-        this.setState({ endDate: ExpirationDate.toISOString().substring(0, 10) });
+        if (this.state.IdEntity == 0) {
+            this.props.handleOpenSnackbar('error', 'Please, select one property');
+            document.getElementById("materialUnchecked").checked = false
+        } else {
+            if (DateExpiration.Contract_Expiration_Date == null) {
+                this.props.handleOpenSnackbar('error', 'The property does not have a contract active, please create a contract');
+                document.getElementById("materialUnchecked").checked = false
+            } else {
+                if (document.getElementById("materialUnchecked").checked) {
+                    var ExpirationDate = new Date(DateExpiration.Contract_Expiration_Date);
+                    this.setState({ endDate: ExpirationDate.toISOString().substring(0, 10) });
+                } else { this.setState({ endDate: "" }); }
+            }
+        }
     }
 
     render() {
@@ -688,7 +689,7 @@ class WorkOrdersForm extends Component {
                                 <div className="col-md-7 col-7">
                                     <div className="row">
                                         <div className="col-md-6">
-                                            <label htmlFor="">* Hotel</label>
+                                            <label htmlFor="">* Property</label>
                                             <select
                                                 required
                                                 name="IdEntity"
@@ -699,7 +700,7 @@ class WorkOrdersForm extends Component {
                                                 disabled={!isAdmin}
                                                 onBlur={this.handleValidate}
                                             >
-                                                <option value={0}>Select a Hotel</option>
+                                                <option value={0}>Select a Property</option>
                                                 {this.state.hotels.map((hotel) => (
                                                     <option value={hotel.Id}>{hotel.Name}</option>
                                                 ))}
@@ -766,6 +767,7 @@ class WorkOrdersForm extends Component {
                                             <input type="text" className="MasterShiftForm-hour" name="duration" value={this.state.duration} onChange={this.handleCalculatedByDuration} />
                                         </div>
                                         <div className="col-md-6">
+
                                             <label htmlFor="">* From Date</label>
                                             <input
                                                 required
@@ -774,19 +776,6 @@ class WorkOrdersForm extends Component {
                                                 name="startDate"
                                                 onChange={this.handleChange}
                                                 value={this.state.startDate.substring(0, 10)}
-                                                onBlur={this.handleValidate}
-                                            />
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* To Date</label>
-                                            <input
-                                                required
-                                                type="date"
-                                                className="form-control"
-                                                name="endDate"
-                                                // disabled={this.state.sameContractDate}
-                                                onChange={this.handleChange}
-                                                value={this.state.endDate.substring(0, 10)}
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
@@ -805,6 +794,36 @@ class WorkOrdersForm extends Component {
                                                 onBlur={this.handleValidate}
                                             />
                                         </div>
+
+                                        <div className="col-md-6">
+                                            <label htmlFor="">* To Date </label>
+                                            <input
+                                                required
+                                                type="date"
+                                                className="form-control"
+                                                name="endDate"
+                                                disabled={this.state.sameContractDate}
+                                                onChange={this.handleChange}
+                                                value={this.state.endDate.substring(0, 10)}
+                                                onBlur={this.handleValidate}
+                                            />
+                                            <input type="checkbox" id="materialUnchecked" onClick={(e) => { this.TakeDateContract(); }} />
+                                            <label htmlFor="">  <font color="grey">&nbsp; Same as contract end date?</font> </label>
+                                        </div>
+
+                                        <div className="col-md-6">
+                                            <label htmlFor="">&nbsp;&nbsp;Workdays</label>
+                                            <div className="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(WEDNESDAY)} onClick={() => this.selectWeekDay(WEDNESDAY)}>{WEDNESDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(THURSDAY)} onClick={() => this.selectWeekDay(THURSDAY)}>{THURSDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(FRIDAY)} onClick={() => this.selectWeekDay(FRIDAY)}>{FRIDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(SATURDAY)} onClick={() => this.selectWeekDay(SATURDAY)}>{SATURDAY}</button>
+                                                <button type="button" className={this.getWeekDayStyle(SUNDAY)} onClick={() => this.selectWeekDay(SUNDAY)}>{SUNDAY}</button>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div className="col-md-5 col-5">
@@ -875,17 +894,7 @@ class WorkOrdersForm extends Component {
                                 </div>
                             </div>
                             <div className='row'>
-                                <div className="col-md-12">
-                                    <div className="btn-group" role="group" aria-label="Basic example">
-                                        <button id="Monday" type="button" className={this.state.Monday == 'MO,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>MO</button>
-                                        <button id="Tuesday" type="button" className={this.state.Tuesday == 'TU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>TU</button>
-                                        <button id="Wednesday" type="button" className={this.state.Wednesday == 'WE,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>WE</button>
-                                        <button id="Thursday" type="button" className={this.state.Thursday == 'TH,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>TH</button>
-                                        <button id="Friday" type="button" className={this.state.Friday == 'FR,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>FR</button>
-                                        <button id="Saturday" type="button" className={this.state.Saturday == 'SA,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>SA</button>
-                                        <button id="Sunday" type="button" className={this.state.Sunday == 'SU,' ? "btn btn-primary" : "btn btn-outline-primary"} onClick={(e) => { this.UpdateState(e.target); }}>SU</button>
-                                    </div>
-                                </div>
+
                             </div>
 
 

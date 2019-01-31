@@ -177,7 +177,6 @@ class EmployeesTable extends React.Component {
         let items = this.props.data;
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-        console.log("Render Table")
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
@@ -259,15 +258,7 @@ class EmployeesTable extends React.Component {
                                             <CustomTableCell>{row.mobileNumber}</CustomTableCell>
                                             <CustomTableCell>
                                                 {
-                                                    console.log("ID Department is: ", row.Id_Deparment)
-                                                }
-                                                {
-                                                    console.table(this.props.departments)
-                                                }
-                                                {
                                                     this.props.departments.map(item => {
-                                                        console.log("Row ID is: ", row.Id_Deparment);
-                                                        console.log("Row ID comparation: ", item.Id === row.Id_Deparment);
                                                         if (item.Id === row.Id_Deparment) {
                                                             return item.Name.trim()
                                                         }
