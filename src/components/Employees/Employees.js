@@ -7,14 +7,14 @@ import green from "@material-ui/core/colors/green";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE } from "./Mutations";
+import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY } from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
 import { Query } from "react-apollo";
 import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, GET_ALL_TITLES_QUERY, LIST_EMPLOYEES } from "./Queries";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, GET_ALL_TITLES_QUERY, LIST_EMPLOYEES, SEND_EMAIL } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -26,7 +26,6 @@ import {
     GET_EMAILS_USER,
     GET_HOTELS_QUERY,
     GET_ROLES_QUERY,
-    GET_TYPES_QUERY
 } from "../ApplyForm/Application/ProfilePreview/Queries";
 import { GET_LANGUAGES_QUERY } from "../ApplyForm-Recruiter/Queries";
 
@@ -171,7 +170,7 @@ class Employees extends Component {
      * To open modal updating the state
      */
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({ ...this.DEFAULT_STATE, openModal: true });
     };
 
     /**
@@ -506,7 +505,6 @@ class Employees extends Component {
      * To get a list od departments
      */
     fetchDepartments = (id) => {
-        console.log("fetchDepartments ", id);
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
@@ -752,13 +750,6 @@ class Employees extends Component {
         });
     };
 
-    INSERT_USER_QUERY = gql`
-        mutation insusers($input: iUsers!) {
-            insusers(input: $input) {
-                Id
-            }
-        }
-    `;
 
     /**
      * Insert a user with general information and permissions
@@ -766,46 +757,48 @@ class Employees extends Component {
     insertUser = () => {
         this.setState(
             {
-                finishLoading: false
+                finishLoading: false,
+                savingUser: true
             },
             () => {
                 this.props.client
                     .mutate({
-                        mutation: this.INSERT_USER_QUERY,
+                        mutation: INSERT_USER_QUERY,
                         variables: {
                             input: {
-                                Id: null,
                                 Id_Entity: 1,
-                                Id_Contact: null,
                                 Id_Roles: this.state.idRol,
-                                Code_User: `'${this.state.username}'`,
-                                Full_Name: `'${this.state.fullname}'`,
-                                Electronic_Address: `'${this.state.email}'`,
-                                Phone_Number: `'${this.state.number}'`,
+                                Code_User: this.state.username,
+                                Full_Name: this.state.fullname,
+                                Electronic_Address: this.state.email,
+                                Phone_Number: this.state.number,
                                 Id_Language: this.state.idLanguage,
                                 IsAdmin: this.state.isAdmin ? 1 : 0,
                                 AllowDelete: this.state.allowDelete ? 1 : 0,
                                 AllowInsert: this.state.allowInsert ? 1 : 0,
                                 AllowEdit: this.state.allowEdit ? 1 : 0,
                                 AllowExport: this.state.allowExport ? 1 : 0,
-                                IdSchedulesEmployees: null,
-                                IdSchedulesManager: null,
                                 IsRecruiter: false,
-                                IdRegion: null,
                                 IsActive: this.state.IsActive ? 1 : 0,
                                 User_Created: 1,
                                 User_Updated: 1,
-                                Date_Created: "'2018-08-14 16:10:25+00'",
-                                Date_Updated: "'2018-08-14 16:10:25+00'",
-                                idEmployee: this.state.employeeId
-                            }
+                                Date_Created: new Date().toISOString(),
+                                Date_Updated: new Date().toISOString()
+                            },
+                            idEmployee: this.state.employeeId
                         }
                     })
-                    .then((data) => {
+                    .then(({ data }) => {
+                        var user = data.addUser;
+                        console.log({ usuario: user.Code_User, email: user.Electronic_Address })
+
+                        this.sendMail(user.Code_User, user.Electronic_Address);
+
                         this.props.handleOpenSnackbar('success', 'User Inserted!');
 
                         this.setState({
-                            finishLoading: true
+                            finishLoading: true,
+                            savingUser: false
                         });
                         this.setState({
                             createdProfile: true
@@ -820,13 +813,33 @@ class Employees extends Component {
                             'error', 'Error: Inserting User: ' + error
                         );
                         this.setState({
-                            loading: false
+                            loading: false,
+                            savingUser: false
                         });
                     });
             }
         );
     };
 
+    sendMail = (username, email) => {
+        this.props.client
+            .query({
+                query: SEND_EMAIL,
+                variables: {
+                    username,
+                    password: `TEMP`,
+                    email,
+                    title: `Credential Information`
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Credential has been sent to this employee!');
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Sending Credentials: ' + error);
+            });
+
+    };
     validateAllFields(func) {
         let idContactValid = this.state.idContact !== -1 && this.state.idContact !== '';
         let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
@@ -1142,149 +1155,128 @@ class Employees extends Component {
                                     </select>
                                 </div>
 
-                                <select
-                                    name="idLanguage"
-                                    className={[
-                                        'form-control',
-                                        this.state.idLanguageValid ? '' : '_invalid'
-                                    ].join(' ')}
-                                    disabled={this.state.loadingLanguages}
-                                    onChange={(event) => {
-                                        this.updateSelect(event.target.value, 'idLanguage');
-                                    }}
-                                    value={this.state.idLanguage}
-                                >
-                                    <option value="">Select a language</option>
-                                    {this.state.languages.map((item) => (
-                                        <option key={item.Id} value={item.Id}>
-                                            {item.Name}
-                                        </option>
-                                    ))}
-                                </select>
                             </div>
 
-                            <div className="col-md-9 col-lg-9">
-                            </div>
                         </div>
-                    </div>
-                    <div className="col-lg-5">
-                        <div className="card">
-                            <div className="card-header info">Permissions</div>
-                            <div className="card-body p-0">
-                                <ul className="row w-100 bg-light CardPermissions">
-                                    <li className="col-md-4 col-sm-4 col-lg-6">
-                                        <label>Active?</label>
-                                        <div className="onoffswitch">
-                                            <input
-                                                type="checkbox"
-                                                checked={this.state.IsActive}
-                                                name="IsActive"
-                                                onChange={this.handleCheckedChange('IsActive')}
-                                                className="onoffswitch-checkbox"
-                                                id="IsActive"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="IsActive">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li className="col-md-4 col-sm-4 col-lg-6">
-                                        <label>Admin?</label>
+                        <div className="col-lg-5">
+                            <div className="card">
+                                <div className="card-header info">Permissions</div>
+                                <div className="card-body p-0">
+                                    <ul className="row w-100 bg-light CardPermissions">
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Active?</label>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.IsActive}
+                                                    name="IsActive"
+                                                    onChange={this.handleCheckedChange('IsActive')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="IsActive"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="IsActive">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Admin?</label>
 
-                                        <div className="onoffswitch">
-                                            <input
-                                                type="checkbox"
-                                                checked={this.state.isAdmin}
-                                                name="isAdmin"
-                                                onChange={this.handleCheckedChange('isAdmin')}
-                                                className="onoffswitch-checkbox"
-                                                id="isAdmin"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li className="col-md-4 col-sm-4 col-lg-6">
-                                        <label>Insert?</label>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.isAdmin}
+                                                    name="isAdmin"
+                                                    onChange={this.handleCheckedChange('isAdmin')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="isAdmin"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="isAdmin">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Insert?</label>
 
-                                        <div className="onoffswitch">
-                                            <input
-                                                type="checkbox"
-                                                checked={this.state.allowInsert}
-                                                name="allowInsert"
-                                                onChange={this.handleCheckedChange('allowInsert')}
-                                                className="onoffswitch-checkbox"
-                                                id="allowInsert"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li className="col-md-4 col-sm-4 col-lg-6">
-                                        <label>Edit?</label>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowInsert}
+                                                    name="allowInsert"
+                                                    onChange={this.handleCheckedChange('allowInsert')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowInsert"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowInsert">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Edit?</label>
 
-                                        <div className="onoffswitch">
-                                            <input
-                                                type="checkbox"
-                                                checked={this.state.allowEdit}
-                                                name="allowEdit"
-                                                onChange={this.handleCheckedChange('allowEdit')}
-                                                className="onoffswitch-checkbox"
-                                                id="allowEdit"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li className="col-md-4 col-sm-4 col-lg-6">
-                                        <label>Delete?</label>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowEdit}
+                                                    name="allowEdit"
+                                                    onChange={this.handleCheckedChange('allowEdit')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowEdit"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowEdit">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Delete?</label>
 
-                                        <div className="onoffswitch">
-                                            <input
-                                                type="checkbox"
-                                                checked={this.state.allowDelete}
-                                                name="allowDelete"
-                                                onChange={this.handleCheckedChange('allowDelete')}
-                                                className="onoffswitch-checkbox"
-                                                id="allowDelete"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
-                                    </li>
-                                    <li className="col-md-4 col-sm-4 col-lg-6">
-                                        <label>Export?</label>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowDelete}
+                                                    name="allowDelete"
+                                                    onChange={this.handleCheckedChange('allowDelete')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowDelete"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowDelete">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li className="col-md-4 col-sm-4 col-lg-6">
+                                            <label>Export?</label>
 
-                                        <div className="onoffswitch">
-                                            <input
-                                                type="checkbox"
-                                                checked={this.state.allowExport}
-                                                name="allowExport"
-                                                onChange={this.handleCheckedChange('allowExport')}
-                                                className="onoffswitch-checkbox"
-                                                id="allowExport"
-                                            />
-                                            <label className="onoffswitch-label" htmlFor="allowExport">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
-                                            </label>
-                                        </div>
-                                    </li>
-                                </ul>
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.allowExport}
+                                                    name="allowExport"
+                                                    onChange={this.handleCheckedChange('allowExport')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="allowExport"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="allowExport">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{ margin: '16px 10px', borderTop: '1px solid #eee' }}>
+                <DialogActions style={{ paddingTop: "10px", margin: '16px 10px', borderTop: '1px solid #eee' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <div>
@@ -1292,7 +1284,7 @@ class Employees extends Component {
                                     className="btn btn-success"
                                     onClick={this.addUserHandler}
                                 >
-                                    Save
+                                    Save  {this.state.savingUser && <i class="fas fa-spinner fa-spin" />}
                                 </button>
                             </div>
                         </div>
@@ -1550,7 +1542,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.hotelEdit}
                                         >
-                                            <option value="null">Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
                                                 this.state.hotels.map(item => {
                                                     return (
@@ -1571,11 +1563,10 @@ class Employees extends Component {
                                                     departmentEdit: e.target.value
                                                 })
 
-                                                console.log("ID DEPARTMENT EDIT: ", e.target.value)
                                             }}
                                             value={this.state.departmentEdit}
                                         >
-                                            <option>Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
 
                                                 this.state.departments.map(item => {
@@ -1598,7 +1589,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.contactTitleEdit}
                                         >
-                                            <option>Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
                                                 this.state.titles.map(item => {
                                                     if (this.state.hotelEdit == item.Id_Entity) {
@@ -1720,7 +1711,6 @@ class Employees extends Component {
                                                             }
                                                         });
 
-                                                        console.table(row);
                                                     }}
                                                     handleClickOpenUserModal={this.handleClickOpenUserModal}
                                                     departments={this.state.allDepartments}

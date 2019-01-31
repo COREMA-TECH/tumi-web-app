@@ -35,4 +35,13 @@ export const UPDATE_EMPLOYEE = gql`
     }
 `;
 
+export const INSERT_USER_QUERY = gql`
+    mutation insusers($input: inputInsertUser, $idEmployee: Int) {
+        addUser(user: $input, idEmployee: $idEmployee) {
+            Id
+            Code_User
+            Electronic_Address
+        }
+    }
+`;
 
