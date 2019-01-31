@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import Select from 'react-select';
+import makeAnimated from 'react-select/lib/animated';
+import Query from 'react-apollo/Query';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -111,6 +115,15 @@ class RegionForm extends Component {
 
     };
 
+    handleValidate = (event) => {
+        let selfHtml = event.currentTarget;
+        if (selfHtml.value == "" || selfHtml.value == 0 || selfHtml.value == null)
+            selfHtml.classList.add("is-invalid");
+        else
+            selfHtml.classList.remove("is-invalid");
+
+    }
+
     render() {
         return (
             <form action="">
@@ -119,11 +132,29 @@ class RegionForm extends Component {
                         <div className="row">
                             <div className="col-md-4">
                                 <label htmlFor="">* Region's Name</label>
-                                <input type="text" className="form-control" />
+                                <input
+                                    required
+                                    type="text"
+                                    className="form-control"
+                                    name="name"
+                                    onChange={this.handleChange}
+                                    value={this.state.name}
+                                    maxLength="80"
+                                    onBlur={this.handleValidate}
+                                />
                             </div>
                             <div className="col-md-4">
                                 <label htmlFor="">* Region's Code</label>
-                                <input type="text" className="form-control" />
+                                <input
+                                    required
+                                    type="text"
+                                    className="form-control"
+                                    name="code"
+                                    onChange={this.handleChange}
+                                    value={this.state.code}
+                                    maxLength="10"
+                                    onBlur={this.handleValidate}
+                                />
                             </div>
                         </div>
                     </div>
@@ -186,17 +217,38 @@ class RegionForm extends Component {
                             <div className="row">
                                 <div className="col-md-4">
                                     <label htmlFor="">Property Name</label>
-                                    <div class="input-group">
-                                        <input type="text" className="form-control" placeholder="Enter Name/Code" aria-label="Recipient's username" aria-describedby="basic-addon2" />
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="basic-addon2">
-                                                <i className="fa fa-search"></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                                    <Query query={GET_HOTEL_QUERY}>
+                                        {({ loading, error, data, refetch, networkStatus }) => {
+                                            //if (networkStatus === 4) return <LinearProgress />;
+                                            if (error) return <p>Error </p>;
+                                            if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+                                                let options = [];
+                                                data.getbusinesscompanies.map((item) => (
+                                                    options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
+                                                ));
+
+                                                return (
+                                                    <div style={{
+                                                        paddingTop: '0px',
+                                                        paddingBottom: '2px',
+                                                    }}>
+                                                        <Select
+                                                            options={options}
+                                                            value={this.state.positionsTags}
+                                                            onChange={this.handleChangePositionTag}
+                                                            closeMenuOnSelect={false}
+                                                            components={makeAnimated()}
+                                                            isMulti
+                                                        />
+                                                    </div>
+                                                );
+                                            }
+                                            return <SelectNothingToDisplay />;
+                                        }}
+                                    </Query>
                                 </div>
                             </div>
-                            <div className="PropertiesTags">
+                            {/*<div className="PropertiesTags">
                                 <ul className="row">
                                     <li className="col-md-2 PropertiesTags-item">
                                         <div class="input-group">
@@ -211,7 +263,7 @@ class RegionForm extends Component {
                                         </div>
                                     </li>
                                 </ul>
-                            </div>
+                            </div>*/}
                         </div>
                         <div className="card-footer">
                             <button type="button" className="btn btn-danger float-right">Cancel</button>
