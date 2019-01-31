@@ -180,6 +180,7 @@ class Catalogs extends React.Component {
                 AllowExport
                 AllowEdit
                 IsRecruiter
+                isEmployee
                 IdRegion
                 IsActive
                 IdSchedulesEmployees
@@ -248,6 +249,7 @@ class Catalogs extends React.Component {
         allowDelete: false,
         allowExport: false,
         IsRecruiter: false,
+        isEmployee: false,
         IdRegionValid: true,
         RegionName: '',
         IsActive: 1,
@@ -871,6 +873,7 @@ class Catalogs extends React.Component {
                                 AllowEdit: this.state.allowEdit ? 1 : 0,
                                 AllowExport: this.state.allowExport ? 1 : 0,
                                 IsRecruiter: this.state.IsRecruiter,
+                                isEmployee: this.state.isEmployee,
                                 IdRegion: this.state.IdRegion,
                                 IsActive: this.state.IsActive ? 1 : 0,
                                 User_Created: 1,
@@ -1255,7 +1258,26 @@ class Catalogs extends React.Component {
                                             </div>
                                         </div>
 
-                                        <div className="col-md-9 col-lg-9">
+                                        <div className="col-md-3 col-lg-3">
+                                            <label>Is Field Employees?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.isEmployee}
+                                                    name="isEmployee"
+                                                    onChange={this.handleCheckedChange('isEmployee')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="isEmployee"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="isEmployee">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div className="col-md-9 col-lg-6">
                                             <label>{this.state.IsRecruiter ? '* ' : ''}Region</label>
                                             <AutosuggestInput
                                                 id="IdRegion"

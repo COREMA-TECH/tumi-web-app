@@ -72,6 +72,7 @@ class Toolbar extends Component {
 							<img src={`/languages/${this.state.languageIcon}.png`} className="Language-icon" />
 						</a>
 					</li>
+
 					<li className="RightMenu-item">
 						<div className="dropdown">
 							<button
@@ -87,54 +88,58 @@ class Toolbar extends Component {
 							</button>
 							<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<div className="row app-shortcuts">
-									<a className="col-4 app-shortcuts__item" href="/home/work-orders">
-										<i className="fas fa-briefcase" />
-										<small>Work Orders</small>
-										<span className="app-shortcuts__helper bg-gd-danger" />
-									</a>
-									<a className="col-4 app-shortcuts__item" href="" onClick={(e) => {
-										e.preventDefault();
-										document.getElementById('dropdownMenuButton').click();
-										this.props.history.push({
-											pathname: '/home/company/add',
-											state: { idCompany: 0, idContract: 0 }
-										});
-									}}
-									>
-										<i className="fas fa-warehouse" />
-										<small>Add Management</small>
-										<span className="app-shortcuts__helper bg-gd-primary" />
-									</a>
-									<a className="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
-										<i className="fas fa-building" />
-										<small>Add New Property</small>
-										<span className="app-shortcuts__helper bg-gd-primary" />
-									</a>
-									<a
-										className="col-4 app-shortcuts__item"
-										href=""
-										onClick={(e) => {
-											e.preventDefault();
-											document.getElementById('dropdownMenuButton').click();
-											this.props.history.push({
-												pathname: '/home/contract/add',
-												state: { contract: 0 }
-											});
-										}}
-									>
-										<i className="far fa-handshake" />
-										<small>Add Contract</small>
-										<span className="app-shortcuts__helper bg-gd-info" />
-									</a>
+									{localStorage.getItem('showMenu') ?
+										<React.Fragment>
+											<a className="col-4 app-shortcuts__item" href="/home/work-orders">
+												<i className="fas fa-briefcase" />
+												<small>Work Orders</small>
+												<span className="app-shortcuts__helper bg-gd-danger" />
+											</a>
+											<a className="col-4 app-shortcuts__item" href="" onClick={(e) => {
+												e.preventDefault();
+												document.getElementById('dropdownMenuButton').click();
+												this.props.history.push({
+													pathname: '/home/company/add',
+													state: { idCompany: 0, idContract: 0 }
+												});
+											}}
+											>
+												<i className="fas fa-warehouse" />
+												<small>Add Management</small>
+												<span className="app-shortcuts__helper bg-gd-primary" />
+											</a>
+											<a className="col-4 app-shortcuts__item" href="" onClick={(e) => this.handleClickOpen(e)}>
+												<i className="fas fa-building" />
+												<small>Add New Property</small>
+												<span className="app-shortcuts__helper bg-gd-primary" />
+											</a>
+											<a
+												className="col-4 app-shortcuts__item"
+												href=""
+												onClick={(e) => {
+													e.preventDefault();
+													document.getElementById('dropdownMenuButton').click();
+													this.props.history.push({
+														pathname: '/home/contract/add',
+														state: { contract: 0 }
+													});
+												}}
+											>
+												<i className="far fa-handshake" />
+												<small>Add Contract</small>
+												<span className="app-shortcuts__helper bg-gd-info" />
+											</a>
+											<a className="col-4 app-shortcuts__item" href="/reset">
+												<i className="fas fa-retweet" />
+												<small>Reset Password</small>
+												<span className="app-shortcuts__helper bg-gd-danger" />
+											</a>
+										</React.Fragment>
+										: ('')}
 									<a className="col-4 app-shortcuts__item" href="" onClick={this.handleLogout}>
 										<i className="fas fa-sign-out-alt" />
 										<small>LogOut</small>
 										<span className="app-shortcuts__helper bg-gd-info" />
-									</a>
-									<a className="col-4 app-shortcuts__item" href="/reset">
-										<i className="fas fa-retweet" />
-										<small>Reset Password</small>
-										<span className="app-shortcuts__helper bg-gd-danger" />
 									</a>
 								</div>
 							</div>
