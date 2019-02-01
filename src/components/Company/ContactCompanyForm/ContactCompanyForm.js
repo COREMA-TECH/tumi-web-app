@@ -887,15 +887,12 @@ class ContactcontactForm extends React.Component {
 			return obj.Name.trim().toLowerCase() === this.state.titleName.trim().toLowerCase();
 		});
 
-		console.log("Esto es el deparment ", department)
-		console.log("Esto es el title ", title)
+
 		let insdepartmentAsync = async () => {
 
 			if (department) {
 				IdDeparment = department.Id;
 			} else {
-				//const InsertDepartmentNew =
-				//if (department != undefined) {
 				await this.props.client
 					.mutate({
 						mutation: this.INSERT_DEPARTMENTS_QUERY,

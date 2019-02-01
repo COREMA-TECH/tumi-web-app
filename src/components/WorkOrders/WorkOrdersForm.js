@@ -63,7 +63,7 @@ const CustomTableCell = withStyles((theme) => ({
 const MONDAY = "MO", TUESDAY = "TU", WEDNESDAY = "WE", THURSDAY = "TH", FRIDAY = "FR", SATURDAY = "SA", SUNDAY = "SU"
 
 class WorkOrdersForm extends Component {
-    _states = {
+    DEFAULT_STATE = {
         id: null,
         hotel: 0,
         IdEntity: null,
@@ -102,21 +102,22 @@ class WorkOrdersForm extends Component {
         dayWeek: '',
         DateContract: '',
         departmentId: 0,
-        dayWeeks: "",
+        dayWeeks: '',
+        openModal: false,
 
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            openModal: false,
+
             hotels: [],
             positions: [],
             recruiters: [],
             contacts: [],
             Shift: [],
 
-            ...this._states
+            ...this.DEFAULT_STATE
         };
 
     }
@@ -124,7 +125,7 @@ class WorkOrdersForm extends Component {
     ReceiveStatus = false;
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.item && !this.state.openModal) {
+        if (nextProps.item && nextProps.openModal) {
 
             this.setState(
                 {
@@ -147,15 +148,6 @@ class WorkOrdersForm extends Component {
                     EspecialComment: nextProps.item.EspecialComment,
                     PositionName: nextProps.item.position.Position,
                     dayWeeks: nextProps.item.dayWeek
-                    /* Monday: nextProps.item.dayWeek.indexOf('MO') != -1 ? 'MO,' : '',
-                     Tuesday: nextProps.item.dayWeek.indexOf('TU') != -1 ? 'TU,' : '',
-                     Wednesday: nextProps.item.dayWeek.indexOf('WE') != -1 ? 'WE,' : '',
-                     Thursday: nextProps.item.dayWeek.indexOf('TH') != -1 ? 'TH,' : '',
-                     Friday: nextProps.item.dayWeek.indexOf('FR') != -1 ? 'FR,' : '',
-                     Saturday: nextProps.item.dayWeek.indexOf('SA') != -1 ? 'SA,' : '',
-                     Sunday: nextProps.item.dayWeek.indexOf('SU') != -1 ? 'SU,' : '',*/
-
-
                 },
                 () => {
                     this.getEmployees();
@@ -167,7 +159,7 @@ class WorkOrdersForm extends Component {
                     this.ReceiveStatus = true;
                 }
             );
-        } else if (!this.state.openModal) {
+        } else if (!nextProps.openModal) {
             this.setState({
                 IdEntity: 0,
                 date: new Date().toISOString().substring(0, 10),
@@ -193,7 +185,9 @@ class WorkOrdersForm extends Component {
                 Saturday: 'SA,',
                 Sunday: 'SU,',
                 dayWeek: '',
-                duration: '8'
+                duration: '8',
+                openModal: false,
+
 
             });
         }
@@ -218,6 +212,7 @@ class WorkOrdersForm extends Component {
 
 
     componentWillMount() {
+
         this.props.client
             .query({
                 query: GET_HOTEL_QUERY
@@ -247,7 +242,8 @@ class WorkOrdersForm extends Component {
             this.state.startDate == '' ||
             this.state.endDate == '' ||
             this.state.contactId == 0 ||
-            this.state.contactId == null
+            this.state.contactId == null ||
+            this.state.dayWeeks == ''
         ) {
 
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
@@ -314,8 +310,11 @@ class WorkOrdersForm extends Component {
             })
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Inserted!');
+                //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
                 this.setState({ openModal: false, saving: false });
-                this.getWorkOrders();
+                //this.getWorkOrders();
+                //                this.props.handleCloseModal
+                //this.props.toggleRefresh();
                 window.location.reload();
             })
             .catch((error) => {
@@ -325,8 +324,6 @@ class WorkOrdersForm extends Component {
     };
 
     update = (status = 1) => {
-        //  console.log(this.state.employees)
-        //if (this.state.employees.detailEmployee!=null) {
         this.props.client
             .mutate({
                 mutation: UPDATE_WORKORDER,
@@ -354,7 +351,6 @@ class WorkOrdersForm extends Component {
                         userId: this.state.userId,
                         contactId: this.state.contactId,
                         dayWeek: this.state.dayWeeks
-                        //   dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday
                     },
                     shift: {
                         entityId: this.state.IdEntity,
@@ -365,7 +361,6 @@ class WorkOrdersForm extends Component {
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
                         dayWeek: this.state.dayWeeks,
-                        // dayWeek: this.state.Monday + this.state.Tuesday + this.state.Wednesday + this.state.Thursday + this.state.Friday + this.state.Saturday + this.state.Sunday,
                         departmentId: this.state.departmentId
                     }
                 }
@@ -373,7 +368,8 @@ class WorkOrdersForm extends Component {
             .then((data) => {
                 this.props.handleOpenSnackbar('success', 'Record Updated!');
                 this.setState({ openModal: false, saving: false, converting: false });
-                // window.location.reload();
+                //this.setState({ ...this.DEFAULT_STATE }, this.props.toggleRefresh)
+                window.location.reload();
             })
             .catch((error) => {
                 this.setState({ saving: true, converting: false });
@@ -414,7 +410,8 @@ class WorkOrdersForm extends Component {
             this.state.shift == '' ||
             this.state.shift == 0 ||
             this.state.endShift == '' ||
-            this.state.endShift == 0
+            this.state.endShift == 0 ||
+            this.state.dayWeeks == ''
         ) {
             this.props.handleOpenSnackbar('error', 'Error all fields are required');
         } else {
@@ -570,15 +567,6 @@ class WorkOrdersForm extends Component {
             });
     };
 
-    /*UpdateState = (e) => {
-        if (e.id == 'Monday') { if (this.state.Monday == 'MO,') { this.setState({ Monday: '' }); } else { this.setState({ Monday: 'MO,' }); } }
-        if (e.id == 'Tuesday') { if (this.state.Tuesday == 'TU,') { this.setState({ Tuesday: '' }); } else { this.setState({ Tuesday: 'TU,' }); } }
-        if (e.id == 'Wednesday') { if (this.state.Wednesday == 'WE,') { this.setState({ Wednesday: '' }); } else { this.setState({ Wednesday: 'WE,' }); } }
-        if (e.id == 'Thursday') { if (this.state.Thursday == 'TH,') { this.setState({ Thursday: '' }); } else { this.setState({ Thursday: 'TH,' }); } }
-        if (e.id == 'Friday') { if (this.state.Friday == 'FR,') { this.setState({ Friday: '' }); } else { this.setState({ Friday: 'FR,' }); } }
-        if (e.id == 'Saturday') { if (this.state.Saturday == 'SA,') { this.setState({ Saturday: '' }); } else { this.setState({ Saturday: 'SA,' }); } }
-        if (e.id == 'Sunday') { if (this.state.Sunday == 'SU,') { this.setState({ Sunday: '' }); } else { this.setState({ Sunday: 'SU,' }); } }
-    }*/
 
     validateInvalidInput = () => {
         if (document.addEventListener) {
@@ -810,9 +798,11 @@ class WorkOrdersForm extends Component {
                                             <input type="checkbox" id="materialUnchecked" onClick={(e) => { this.TakeDateContract(); }} />
                                             <label htmlFor="">  <font color="grey">&nbsp; Same as contract end date?</font> </label>
                                         </div>
+                                        <div className="col-md-6">
+                                        </div>
 
                                         <div className="col-md-6">
-                                            <label htmlFor="">&nbsp;&nbsp;Workdays</label>
+                                            <label htmlFor="">* Workdays</label>
                                             <div className="btn-group" role="group" aria-label="Basic example">
                                                 <button type="button" className={this.getWeekDayStyle(MONDAY)} onClick={() => this.selectWeekDay(MONDAY)}>{MONDAY}</button>
                                                 <button type="button" className={this.getWeekDayStyle(TUESDAY)} onClick={() => this.selectWeekDay(TUESDAY)}>{TUESDAY}</button>
@@ -893,9 +883,6 @@ class WorkOrdersForm extends Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className='row'>
-
-                            </div>
 
 
                             <div className='row'>
@@ -971,26 +958,26 @@ class WorkOrdersForm extends Component {
                                     </div>
 
                                 )}
+
+
                                 <div className="col-md-12">
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            <button
-                                                type="button"
-                                                className="btn btn-danger ml-1 float-right"
-                                                onClick={this.props.handleCloseModal}
-                                            >
-                                                Cancel<i className="fas fa-ban ml-2" />
-                                            </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger ml-1 float-right"
+                                        onClick={this.props.handleCloseModal}
+                                    >
+                                        Cancel<i className="fas fa-ban ml-2" />
+                                    </button>
 
-                                            <button className="btn btn-success ml-1 float-right" type="submit">
-                                                Save {!this.state.saving && <i className="fas fa-save ml2" />}
-                                                {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
-                                            </button>
+                                    <button className="btn btn-success ml-1 float-right" type="submit">
+                                        Save {!this.state.saving && <i className="fas fa-save ml2" />}
+                                        {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}
+                                    </button>
 
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
+
+
                         </form >
                     </DialogContent >
                 </Dialog >

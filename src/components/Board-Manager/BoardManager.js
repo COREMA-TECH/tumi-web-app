@@ -323,8 +323,6 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
-
-
         if (laneId.trim() == "lane1") {
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -350,45 +348,41 @@ class BoardManager extends Component {
             }
         }
 
-        if (laneId.trim() == "Positions") {
-
-            console.log("esta es la info Positions ");
-
-            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-            let anotherCards = document.querySelectorAll("article[data-id]");
-
-            anotherCards.forEach((anotherCard) => {
-                anotherCard.classList.remove("CardBoard-selected");
-            });
-            cardSelected[0].classList.add("CardBoard-selected");
-
-            this.setState(
-                {
-                    Intopening: cardId
-                })
-
-            this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
-
-            this.getWorkOrderPosition(cardId)
-            console.log("esta es la info del work ordeer ", this.state.workOrders);
-            if (sessionStorage.getItem('NewFilterLead') === 'true') {
-
-                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
-            } else {
-                this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
-            }
-        }
+        /*  if (laneId.trim() == "Positions") {
+  
+              console.log("esta es la info Positions ");
+  
+              let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+              let anotherCards = document.querySelectorAll("article[data-id]");
+  
+              anotherCards.forEach((anotherCard) => {
+                  anotherCard.classList.remove("CardBoard-selected");
+              });
+              cardSelected[0].classList.add("CardBoard-selected");
+  
+              this.setState(
+                  {
+                      Intopening: cardId
+                  })
+  
+              this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
+  
+              this.getWorkOrderPosition(cardId)
+              console.log("esta es la info del work ordeer ", this.state.workOrders);
+              if (sessionStorage.getItem('NewFilterLead') === 'true') {
+  
+                  this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
+              } else {
+                  this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
+              }
+          }*/
 
 
     }
 
     getWorkOrderPosition = async (WorkOrderId) => {
-        let getworkOrders = [];
         let getworkOrdersPosition = [];
-        let datas = [];
-        let datapositions = [];
         this.setState({ workOrdersPositions: [] });
-
 
         await this.props.client.query({ query: GET_WORK_ORDERS, variables: { id: WorkOrderId } }).then(({ data }) => {
             data.workOrder.forEach((wo) => {
@@ -398,6 +392,8 @@ class BoardManager extends Component {
                 const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
 
                 var currentQ = 1;
+
+                this.clearArray();
 
                 while (currentQ <= wo.quantity) {
 
@@ -421,7 +417,6 @@ class BoardManager extends Component {
                 }
 
             })
-            this.setState({ workOrdersPositions: getworkOrdersPosition });
         })
 
         this.setState(
@@ -439,7 +434,7 @@ class BoardManager extends Component {
                         id: 'Positions',
                         title: 'Positions',
                         label: ' ',
-                        cards: this.state.workOrdersPositions,
+                        cards: getworkOrdersPosition,
                         laneStyle: { borderRadius: 50, marginBottom: 15 }
                     },
                     {
@@ -472,6 +467,54 @@ class BoardManager extends Component {
             });
     }
 
+    clearArray() {
+        this.setState(
+            {
+                workOrder: this.state.workOrders,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Work Orders',
+                        label: ' ',
+                        cards: this.state.workOrders,
+                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Positions',
+                        title: 'Positions',
+                        label: ' ',
+                        cards: [],
+                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Matches',
+                        title: 'Matches',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Notify',
+                        title: 'Notify',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Accepted',
+                        title: 'Accepted',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Schedule',
+                        title: 'Add to Schedule',
+                        label: ' ',
+                        cards: []
+                    }
+                ],
+                loading: false
+
+            });
+    }
     //getMatches = async (language, experience, location, laneId) => {
     getMatches = async (language, experience, location, laneId, PositionId) => {
         let getmatches = [];
@@ -764,7 +807,7 @@ class BoardManager extends Component {
 
                 this.setState({
                     workOrders: getworkOrders,
-                    workOrdersPositions: getworkOrdersPosition
+                    // workOrdersPositions: getworkOrdersPosition
                 });
 
             }).catch(error => { })
