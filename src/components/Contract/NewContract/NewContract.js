@@ -446,6 +446,7 @@ class NewContract extends Component {
                                     Electronic_Address: `'${this.state.Electronic_Address}'`,
                                     Primary_Email: `'${this.state.Primary_Email}'`,
                                     legalName: `'${this.state.Legal_Name}'`
+                                    
                                 }
                             }
                         })
