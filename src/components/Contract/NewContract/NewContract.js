@@ -61,6 +61,7 @@ const styles = (theme) => ({
 class NewContract extends Component {
     DEFAULT_STATE = {
         Contract_NameValid: true,
+        Legal_NameValid: true,
         Contrat_OwnerValid: true,
         Id_Contract_TemplateValid: true,
         Id_EntityValid: true,
@@ -112,6 +113,7 @@ class NewContract extends Component {
             Company_Signed: 0,
             Company_Signed_Date: this.getNewDate(),
 
+            Legal_Name: '',
             Id_User_Billing_Contact: '',
             Billing_Street: '',
             Billing_City: 0,
@@ -308,6 +310,7 @@ class NewContract extends Component {
                 Client_Signature
                 Company_Signature
                 Contract_Expiration_Date
+                legalName
             }
         }
     `;
@@ -361,6 +364,7 @@ class NewContract extends Component {
                         Date_Created: data.getcontracts[0].Date_Created,
                         Date_Updated: data.getcontracts[0].Date_Updated,
                         CompanySignedName: this.getString(data.getcontracts[0].Company_Signed),
+                        Legal_Name: data.getcontracts[0].legalName,
                         loaded: false
                     },
                     () => {
@@ -440,7 +444,8 @@ class NewContract extends Component {
                                     Date_Created: "'2018-08-14'",
                                     Date_Updated: "'2018-08-14'",
                                     Electronic_Address: `'${this.state.Electronic_Address}'`,
-                                    Primary_Email: `'${this.state.Primary_Email}'`
+                                    Primary_Email: `'${this.state.Primary_Email}'`,
+                                    legalName: `'${this.state.Legal_Name}'`
                                 }
                             }
                         })
@@ -522,7 +527,8 @@ class NewContract extends Component {
                                     Date_Created: "'2018-08-14'",
                                     Date_Updated: "'2018-08-14'",
                                     Electronic_Address: `'${this.state.Electronic_Address}'`,
-                                    Primary_Email: `'${this.state.Primary_Email}'`
+                                    Primary_Email: `'${this.state.Primary_Email}'`,
+                                    legalName: `'${this.state.Legal_Name}'`
                                 }
                             }
                         })
@@ -907,6 +913,7 @@ class NewContract extends Component {
 
     validateField(fieldName, value) {
         let Contract_NameValid = this.state.Contract_NameValid;
+        let Legal_NameValid = this.state.Legal_NameValid;
         let Contrat_OwnerValid = this.state.Contrat_OwnerValid;
         let Id_Contract_TemplateValid = this.state.Id_Contract_TemplateValid;
         let Id_EntityValid = this.state.Id_EntityValid;
@@ -933,6 +940,9 @@ class NewContract extends Component {
         switch (fieldName) {
             case 'Contract_Name':
                 Contract_NameValid = value.trim().length >= 5;
+                break;
+            case 'Legal_Name':
+                Legal_NameValid = value.trim().length >= 5;
                 break;
             case 'Contrat_Owner':
                 Contrat_OwnerValid = value.trim().length >= 5;
@@ -1005,6 +1015,7 @@ class NewContract extends Component {
         this.setState(
             {
                 Contract_NameValid,
+                Legal_NameValid,
                 Contrat_OwnerValid,
                 Id_Contract_TemplateValid,
                 Id_EntityValid,
@@ -1032,6 +1043,7 @@ class NewContract extends Component {
     /*Validations */
     validateAllFields(fun) {
         let Contract_NameValid = this.state.Contract_Name.trim().length >= 5;
+        let Legal_NameValid = this.state.Legal_Name.trim().length >= 5;
         let Contrat_OwnerValid = this.state.Contrat_Owner.trim().length >= 5;
         let Id_Contract_TemplateValid =
             this.state.Id_Contract_Template !== null &&
@@ -1071,6 +1083,7 @@ class NewContract extends Component {
         this.setState(
             {
                 Contract_NameValid,
+                Legal_NameValid,
                 Contrat_OwnerValid,
                 Id_Contract_TemplateValid,
                 Id_EntityValid,
@@ -1103,6 +1116,7 @@ class NewContract extends Component {
             {
                 formValid:
                     this.state.Contract_NameValid &&
+                    this.state.Legal_NameValid &&
                     this.state.Contrat_OwnerValid &&
                     this.state.Id_Contract_TemplateValid &&
                     this.state.Id_EntityValid &&
@@ -1119,8 +1133,7 @@ class NewContract extends Component {
                     this.state.Company_Signed_DateValid &&
                     this.state.Id_User_Billing_ContactValid &&
                     this.state.Billing_StreetValid &&
-                    // this.state.Billing_StateValid &&
-                    //this.state.Billing_CityValid &&
+
                     this.state.Billing_Zip_CodeValid
             },
             func
@@ -1251,6 +1264,23 @@ class NewContract extends Component {
                                                         );
                                                     }}
                                                     error={!this.state.Contract_NameValid}
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-6">
+                                                <label>* Legal Name</label>
+                                                <InputForm
+                                                    value={this.state.Legal_Name}
+                                                    change={(text) => {
+                                                        this.setState(
+                                                            {
+                                                                Legal_Name: text
+                                                            },
+                                                            () => {
+                                                                this.validateField('Legal_Name', text);
+                                                            }
+                                                        );
+                                                    }}
+                                                    error={!this.state.Legal_NameValid}
                                                 />
                                             </div>
                                             <div className="col-md-6 col-lg-6">
