@@ -18,6 +18,9 @@ import TablePagination from '@material-ui/core/TablePagination/TablePagination';
 import Paper from '@material-ui/core/Paper/Paper';
 import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import withApollo from 'react-apollo/withApollo';
+import { GET_REGION_QUERY } from './queries';
+import ConfirmDialog from 'material-ui/ConfirmDialog';
+import { DELETE_CATALOG_ITEM_QUERY } from './mutations';
 
 const uuidv4 = require('uuid/v4');
 const actionsStyles = (theme) => ({
@@ -141,12 +144,21 @@ const styles = (theme) => ({
 
 let id = 0;
 
-class EmployeesTable extends React.Component {
-    state = {
-        page: 0,
-        rowsPerPage: 7,
-        loadingRemoving: false,
-    };
+class RegionTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            page: 0,
+            rowsPerPage: 7,
+            loadingRemoving: false,
+            regions: [],
+            openConfirm: false,
+            idToDelete: 0,
+            loadingConfirm: false,
+            showCircularLoading: false
+        };
+    }
+
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -155,29 +167,31 @@ class EmployeesTable extends React.Component {
         this.setState({ rowsPerPage: event.target.value });
     };
 
-    shouldComponentUpdate(nextProps, nextState) {
-
-        if (this.props.data.toString() !== nextProps.data.toString() || this.props.loading !== nextProps.loading) {
-            return true;
-        }
-
-        if (
-            this.state.page !== nextState.page //||
-            //this.state.rowsPerPage !== nextState.rowsPerPage //||
-            //	this.state.order !== nextState.order ||
-            //this.state.orderBy !== nextState.orderBy
-        ) {
-            return true;
-        }
-        return false;
-    }
+    handleDelete = (id) => {
+        this.props.client
+            .mutate({
+                mutation: DELETE_CATALOG_ITEM_QUERY,
+                variables: {
+                    Id: id
+                }
+            })
+            .then((data) => {
+                this.setState({ openConfirm: false, removing: false });
+                this.props.toggleRefresh();
+                this.props.handleOpenSnackbar('success', 'Region was deleted!');
+            })
+            .catch((error) => {
+                this.setState({ removing: false })
+                this.props.handleOpenSnackbar('error', 'Error: Deleting region: ' + error);
+            });
+    };
 
     render() {
         const { classes } = this.props;
-        let items = this.props.data;
+        let items = this.props.dataRegions;
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
-        console.log("Render Table")
+
         if (this.state.loadingRemoving) {
             return <LinearProgress />;
         }
@@ -190,12 +204,8 @@ class EmployeesTable extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>First Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Phone Number</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Department</CustomTableCell>
-                                    <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Region's Code</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Region's Name</CustomTableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -205,9 +215,6 @@ class EmployeesTable extends React.Component {
                                             hover
                                             className={classes.row}
                                             key={uuidv4()}
-                                            onClick={() => {
-                                                this.props.update(row.id, row)
-                                            }}
                                         >
                                             <CustomTableCell>
                                                 <Tooltip title="Edit">
@@ -215,7 +222,8 @@ class EmployeesTable extends React.Component {
                                                         className="btn btn-success float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
-                                                            this.props.update(row.id, row);
+                                                            e.stopPropagation();
+                                                            this.props.onEditHandler({ ...row });
                                                         }}
                                                     >
                                                         <i class="fas fa-pen"></i>
@@ -227,62 +235,16 @@ class EmployeesTable extends React.Component {
                                                         className="btn btn-danger float-left ml-1"
                                                         disabled={this.props.loading}
                                                         onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            return this.props.delete(row.id);
+                                                            e.preventDefault();
+                                                            this.setState({ openConfirm: true, idToDelete: row.Id });
                                                         }}
                                                     >
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </Tooltip>
-                                                {
-                                                    row.idUsers == null ? (
-                                                        <Tooltip title="Assign Role">
-                                                            <button
-                                                                className="btn btn-outline-info float-left ml-1"
-                                                                disabled={this.props.loading}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    e.preventDefault();
-
-                                                                    this.props.handleClickOpenUserModal(row.electronicAddress, row.mobileNumber, row.id);
-                                                                }}
-                                                            >
-                                                                <i className="fas fa-plus"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                    ) : ''
-                                                }
                                             </CustomTableCell>
-                                            <CustomTableCell>{row.firstName}</CustomTableCell>
-                                            <CustomTableCell>{row.lastName}</CustomTableCell>
-                                            <CustomTableCell>{row.electronicAddress}</CustomTableCell>
-                                            <CustomTableCell>{row.mobileNumber}</CustomTableCell>
-                                            <CustomTableCell>
-                                                {
-                                                    console.log("ID Department is: ", row.Id_Deparment)
-                                                }
-                                                {
-                                                    console.table(this.props.departments)
-                                                }
-                                                {
-                                                    this.props.departments.map(item => {
-                                                        console.log("Row ID is: ", row.Id_Deparment);
-                                                        console.log("Row ID comparation: ", item.Id === row.Id_Deparment);
-                                                        if (item.Id === row.Id_Deparment) {
-                                                            return item.Name.trim()
-                                                        }
-                                                    })
-                                                }
-                                            </CustomTableCell>
-                                            <CustomTableCell>
-                                                {
-                                                    this.props.titles.map(item => {
-                                                        if (item.Id === row.Contact_Title) {
-                                                            return item.Position.trim()
-                                                        }
-                                                    })
-                                                }
-                                            </CustomTableCell>
+                                            <CustomTableCell>{row.Name}</CustomTableCell>
+                                            <CustomTableCell>{row.DisplayLabel}</CustomTableCell>
                                         </TableRow>
                                     );
                                 })}
@@ -309,6 +271,17 @@ class EmployeesTable extends React.Component {
                                 </TableRow>
                             </TableFooter>
                         </Table>
+                        <ConfirmDialog
+                            open={this.state.openConfirm}
+                            closeAction={() => {
+                                this.setState({ openConfirm: false });
+                            }}
+                            confirmAction={() => {
+                                this.handleDelete(this.state.idToDelete);
+                            }}
+                            title={'are you sure you want to cancel this record?'}
+                            loading={this.state.removing}
+                        />
                     </Paper>
                 )}
             />
@@ -316,8 +289,8 @@ class EmployeesTable extends React.Component {
     }
 }
 
-EmployeesTable.propTypes = {
+RegionTable.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(withApollo(EmployeesTable));
+export default withStyles(styles)(withApollo(RegionTable));

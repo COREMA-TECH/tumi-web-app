@@ -212,8 +212,8 @@ class PositionsTable extends React.Component {
 		if (
 			this.props.data !== nextProps.data ||
 			this.props.departments !== nextProps.departments ||
-			this.props.loading !== nextProps.loading ||
-			this.props.shifts !== nextProps.shifts
+			this.props.loading !== nextProps.loading //||
+			//this.props.shifts !== nextProps.shifts
 		) {
 			return true;
 		}
@@ -264,9 +264,9 @@ class PositionsTable extends React.Component {
 							{this.props.showPayRate && (
 								<CustomTableCell className={'Table-head'}>Pay Rate</CustomTableCell>
 							)}
-							<CustomTableCell padding="none" className={'Table-head'}>
+							{/*<CustomTableCell padding="none" className={'Table-head'}>
 								Shift
-							</CustomTableCell>
+							</CustomTableCell>*/}
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -333,6 +333,7 @@ class PositionsTable extends React.Component {
 											$ {row.Pay_Rate}
 										</CustomTableCell>
 									)}
+									{/*
 									<CustomTableCell padding="none">
 										<Select
 											id="shift"
@@ -349,7 +350,7 @@ class PositionsTable extends React.Component {
 												</MenuItem>
 											))}
 										</Select>
-									</CustomTableCell>
+											</CustomTableCell>*/}
 								</TableRow>
 							);
 						})}

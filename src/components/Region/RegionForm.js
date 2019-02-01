@@ -10,10 +10,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import { withApollo } from 'react-apollo';
-import { GET_HOTEL_QUERY, GET_POSITION_BY_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONTACT_BY_QUERY, GET_SHIFTS, GET_DETAIL_SHIFT, GET_WORKORDERS_QUERY } from './queries';
-import { CREATE_WORKORDER, UPDATE_WORKORDER, CONVERT_TO_OPENING, DELETE_EMPLOYEE } from './mutations';
-import ShiftsData from '../../data/shitfsWorkOrder.json';
-//import ShiftsData from '../../data/shitfs.json';
 import { parse } from 'path';
 import { bool } from 'prop-types';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
@@ -29,6 +25,10 @@ import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
 
+import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY } from './queries';
+import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY } from './mutations';
+
+
 const styles = (theme) => ({
     wrapper: {
         margin: theme.spacing.unit,
@@ -36,7 +36,6 @@ const styles = (theme) => ({
     },
     buttonSuccess: {},
     buttonProgress: {
-        //color: ,
         position: 'absolute',
         top: '50%',
         left: '50%',
@@ -61,11 +60,59 @@ class RegionForm extends Component {
         this.state = {
             recruiters: [],
             employees: [],
+            positionsTags: [],
+            hotelsTags: [],
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
-            IdRecruiter: 0
+            IdRecruiter: 0,
+            code: '',
+            name: '',
+            id: 0,
+            formValid: true,
+            loading: false,
+            openModal: false,
+            saving: false
         };
 
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.item && nextProps.openModal) {
+            console.log("nextProps.item ", nextProps.item)
+            this.setState(
+                {
+                    id: nextProps.item.Id,
+                    code: nextProps.item.Name.trim(),
+                    name: nextProps.item.DisplayLabel.trim(),
+                    openModal: nextProps.item.openModal,
+                },
+                () => {
+                    this.getRecruiter();
+                    this.getEmployeesWithoutEntity();
+                }
+            );
+        } else if (!nextProps.openModal) {
+            this.setState(
+                {
+                    recruiters: [],
+                    employees: [],
+                    IdRegionalManager: 0,
+                    IdRegionalDirector: 0,
+                    IdRecruiter: 0,
+                    code: '',
+                    name: '',
+                    id: 0,
+                    formValid: true,
+                    loading: false,
+                    openModal: false,
+                    saving: false
+                }
+            );
+        }
+
+        this.setState({
+            openModal: nextProps.openModal
+        });
     }
 
     componentWillMount() {
@@ -104,11 +151,12 @@ class RegionForm extends Component {
     };
 
     handleChange = (event) => {
+        console.log("entro al event ", event);
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
+        console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
@@ -124,157 +172,272 @@ class RegionForm extends Component {
 
     }
 
+    getObjectToInsertAndUpdate = () => {
+        let id = 0;
+        let query = INSERT_CATALOG_ITEM_QUERY;
+        const isEdition = this.state.id == 0 ? false : true;
+
+        if (isEdition) {
+            query = UPDATE_CATALOG_ITEM_QUERY;
+        }
+
+        return { isEdition: isEdition, query: query, id: this.state.id };
+    };
+    insertCatalogItem = () => {
+        //  console.log("aqui estoy ", this.state.hotelsTags)
+        const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: query,
+                        variables: {
+                            input: {
+                                Id: id,
+                                Id_Catalog: 4,
+                                Id_Parent: 0,
+                                Name: `'${this.state.code}'`,
+                                DisplayLabel: `'${this.state.name}'`,
+                                Description: `'${this.state.name}'`,
+                                Value: `''`,
+                                Value01: `''`,
+                                Value02: `''`,
+                                Value03: `''`,
+                                Value04: `''`,
+                                IsActive: 1,
+                                User_Created: 1,
+                                User_Updated: 1,
+                                Date_Created: "'2018-08-14 16:10:25+00'",
+                                Date_Updated: "'2018-08-14 16:10:25+00'"
+                            }
+                        }
+                    })
+                    .then((data) => {
+                        this.addConfig();
+                        this.props.toggleRefresh();
+                        this.props.handleCloseModal();
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+                        );
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            isEdition
+                                ? 'Error: Updating Catalog Item: ' + error
+                                : 'Error: Inserting Catalog Item: ' + error
+                        );
+                        this.setState({
+                            loading: false
+                        });
+                    });
+            }
+        );
+    };
+
+    addConfig = () => {
+        console.log("addConfig ")
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: INSERT_CONFIG_REGIONS_QUERY,
+                        variables: {
+                            configregions: {
+                                regionId: this.state.id,
+                                regionalManagerId: this.state.IdRegionalManager,
+                                regionalDirectorId: this.state.IdRegionalDirector,
+                                regionalRecruiterId: this.state.IdRecruiter
+                            }
+                        }
+                    })
+                    .then((data) => {
+                        console.log("INSERT_CONFIG_REGIONS_QUERY ", data)
+                    })
+                    .catch((error) => {
+                        console.log("INSERT_CONFIG_REGIONS_QUERY error ", error)
+                        this.props.handleOpenSnackbar(
+                            'error', 'Error: Inserting Catalog Item: ' + error
+                        );
+                        this.setState({
+                            loading: false
+                        });
+                    });
+            }
+        );
+    }
+
+    handleChangePositionTag = (hotelsTags) => {
+        this.setState({ hotelsTags });
+    };
+
     render() {
         return (
-            <form action="">
-                <header className="RegionForm-header">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-4">
-                                <label htmlFor="">* Region's Name</label>
-                                <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    name="name"
-                                    onChange={this.handleChange}
-                                    value={this.state.name}
-                                    maxLength="80"
-                                    onBlur={this.handleValidate}
-                                />
-                            </div>
-                            <div className="col-md-4">
-                                <label htmlFor="">* Region's Code</label>
-                                <input
-                                    required
-                                    type="text"
-                                    className="form-control"
-                                    name="code"
-                                    onChange={this.handleChange}
-                                    value={this.state.code}
-                                    maxLength="10"
-                                    onBlur={this.handleValidate}
-                                />
-                            </div>
-                        </div>
+            <Dialog maxWidth="md" open={this.state.openModal} onClose={this.props.handleCloseModal}>
+                <DialogTitle style={{ padding: '0px' }}>
+                    <div className="modal-header">
+                        <h5 className="modal-title">Region's Configurations</h5>
                     </div>
-                </header>
-                <div className="container-fluid">
-                    <div className="card">
-                        <div className="card-header">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <label htmlFor="">Regional Manager</label>
-                                    <select
-                                        required
-                                        name="IdRegionalManager"
-                                        className="form-control"
-                                        id=""
-                                        onChange={this.handleChange}
-                                        value={this.state.IdRegionalManager}
-                                    >
-                                        <option value={0}>Select a Regional Manager</option>
-                                        {this.state.employees.map((recruiter) => (
-                                            <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="col-md-4">
-                                    <label htmlFor="">Regional Director</label>
-                                    <select
-                                        required
-                                        name="IdRegionalDirector"
-                                        className="form-control"
-                                        id=""
-                                        onChange={this.handleChange}
-                                        value={this.state.IdRegionalDirector}
-                                    >
-                                        <option value={0}>Select a Regional Director</option>
-                                        {this.state.employees.map((recruiter) => (
-                                            <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="col-md-4">
-                                    <label htmlFor="">Regional Recruiter</label>
-                                    <select
-                                        required
-                                        name="IdRecruiter"
-                                        className="form-control"
-                                        id=""
-                                        onChange={this.handleChange}
-                                        value={this.state.IdRecruiter}
-                                    >
-                                        <option value={0}>Select a Recruiter</option>
-                                        {this.state.recruiters.map((recruiter) => (
-                                            <option value={recruiter.Id}>{recruiter.Full_Name}</option>
-                                        ))}
-                                    </select>
+                </DialogTitle>
+                <DialogContent>
+                    <form action="">
+                        <header className="RegionForm-header">
+                            <div className="container-fluid">
+                                <div className="row">
+                                    <div className="col-md-4">
+                                        <label htmlFor="">* Region's Name</label>
+                                        <input
+                                            required
+                                            type="text"
+                                            className="form-control"
+                                            id="name"
+                                            name="name"
+                                            onChange={this.handleChange}
+                                            value={this.state.name}
+                                            maxLength="80"
+                                            onBlur={this.handleValidate}
+                                        />
+                                    </div>
+                                    <div className="col-md-4">
+                                        <label htmlFor="">* Region's Code</label>
+                                        <input
+                                            required
+                                            type="text"
+                                            className="form-control"
+                                            id="code"
+                                            name="code"
+                                            onChange={this.handleChange}
+                                            value={this.state.code}
+                                            maxLength="10"
+                                            onBlur={this.handleValidate}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-4">
-                                    <label htmlFor="">Property Name</label>
-                                    <Query query={GET_HOTEL_QUERY}>
-                                        {({ loading, error, data, refetch, networkStatus }) => {
-                                            //if (networkStatus === 4) return <LinearProgress />;
-                                            if (error) return <p>Error </p>;
-                                            if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-                                                let options = [];
-                                                data.getbusinesscompanies.map((item) => (
-                                                    options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
-                                                ));
-
-                                                return (
-                                                    <div style={{
-                                                        paddingTop: '0px',
-                                                        paddingBottom: '2px',
-                                                    }}>
-                                                        <Select
-                                                            options={options}
-                                                            value={this.state.positionsTags}
-                                                            onChange={this.handleChangePositionTag}
-                                                            closeMenuOnSelect={false}
-                                                            components={makeAnimated()}
-                                                            isMulti
-                                                        />
-                                                    </div>
-                                                );
-                                            }
-                                            return <SelectNothingToDisplay />;
-                                        }}
-                                    </Query>
-                                </div>
-                            </div>
-                            {/*<div className="PropertiesTags">
-                                <ul className="row">
-                                    <li className="col-md-2 PropertiesTags-item">
-                                        <div class="input-group">
-                                            <span className="form-control">
-                                                Este es el property
-                                            </span>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="button">
-                                                    <i className="fa fa-times"></i>
-                                                </button>
-                                            </div>
+                        </header>
+                        <div className="container-fluid">
+                            <div className="card">
+                                <div className="card-header">
+                                    <div className="row">
+                                        <div className="col-md-4">
+                                            <label htmlFor="">Regional Manager</label>
+                                            <select
+                                                required
+                                                name="IdRegionalManager"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.IdRegionalManager}
+                                            >
+                                                <option value={0}>Select a Regional Manager</option>
+                                                {this.state.employees.map((recruiter) => (
+                                                    <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
+                                                ))}
+                                            </select>
                                         </div>
-                                    </li>
-                                </ul>
-                            </div>*/}
+                                        <div className="col-md-4">
+                                            <label htmlFor="">Regional Director</label>
+                                            <select
+                                                required
+                                                name="IdRegionalDirector"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.IdRegionalDirector}
+                                            >
+                                                <option value={0}>Select a Regional Director</option>
+                                                {this.state.employees.map((recruiter) => (
+                                                    <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-4">
+                                            <label htmlFor="">Regional Recruiter</label>
+                                            <select
+                                                required
+                                                name="IdRecruiter"
+                                                className="form-control"
+                                                id=""
+                                                onChange={this.handleChange}
+                                                value={this.state.IdRecruiter}
+                                            >
+                                                <option value={0}>Select a Recruiter</option>
+                                                {this.state.recruiters.map((recruiter) => (
+                                                    <option value={recruiter.Id}>{recruiter.Full_Name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="col-md-4">
+                                            <label htmlFor="">Property Name</label>
+                                            <Query query={GET_HOTEL_QUERY}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+                                                        let options = [];
+                                                        data.getbusinesscompanies.map((item) => (
+                                                            options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
+                                                        ));
+
+                                                        return (
+                                                            <div style={{
+                                                                paddingTop: '0px',
+                                                                paddingBottom: '2px',
+                                                            }}>
+                                                                <Select
+                                                                    options={options}
+                                                                    value={this.state.hotelsTags}
+                                                                    onChange={this.handleChangePositionTag}
+                                                                    closeMenuOnSelect={false}
+                                                                    components={makeAnimated()}
+                                                                    isMulti
+                                                                />
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
+                                                }}
+                                            </Query>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div className="card-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger ml-1 float-right"
+                                        onClick={this.props.handleCloseModal}
+                                    >
+                                        Cancel<i className="fas fa-ban ml-2" />
+                                    </button>
+                                    <button type="button" className="btn btn-success float-right mr-1"
+                                        onClick={() => { this.insertCatalogItem(); }}>
+                                        Save {!this.state.saving && <i className="fas fa-save ml2" />}
+                                        {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}</button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="card-footer">
-                            <button type="button" className="btn btn-danger float-right">Cancel</button>
-                            <button type="submit" className="btn btn-success float-right mr-1">Save</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+                    </form>
+                </DialogContent >
+            </Dialog >
         );
     }
 
 }
+
+RegionForm.propTypes = {
+    classes: PropTypes.object.isRequired
+};
 
 export default withStyles(styles)(withApollo(RegionForm));
