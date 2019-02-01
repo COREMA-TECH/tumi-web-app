@@ -94,6 +94,7 @@ class Login extends Component {
 				Id_Roles
 				IdSchedulesEmployees
 				IdSchedulesManager
+				isEmployee
 			}
 		}
 	`;
@@ -155,6 +156,7 @@ class Login extends Component {
 							localStorage.setItem('IdRoles', user.Id_Roles);
 							localStorage.setItem('IdSchedulesEmployees', user.IdSchedulesEmployees);
 							localStorage.setItem('IdSchedulesManager', user.IdSchedulesManager);
+							localStorage.setItem('isEmployee', user.isEmployee);
 
 
 							if (user.IsAdmin == 1) {

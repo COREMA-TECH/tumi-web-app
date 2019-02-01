@@ -314,6 +314,15 @@ class Shifts extends Component {
         );
     }
 
+    buildParamsEmployees = () => {
+        var params;
+        var idEntity = this.props.location;
+        params.push(idEntity);
+        if (this.props.idUsers)
+            params
+        return params;
+    }
+
     getEmployees = () => {
         this.props.client
             .query({

@@ -16,6 +16,17 @@ if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('
 	localStorage.setItem('languageForm', 'en');
 }
 
+var authorizedPath = [
+	'/home',
+	'/home/application',
+	'/home/application/info'
+];
+
+if (localStorage.getItem('isEmployee') == true && !authorizedPath.includes(window.location.pathname)) {
+	localStorage.setItem('showMenu', false);
+	window.location.href = '/home';
+} else
+	localStorage.setItem('showMenu', true);
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */

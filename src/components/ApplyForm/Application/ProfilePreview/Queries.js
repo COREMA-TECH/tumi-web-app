@@ -12,16 +12,26 @@ export const GET_APPLICATION_PROFILE_INFO = gql`
             cellPhone
             isLead
             Urlphoto
-			position{
-				id
-				position {
-						  Position
-					  }
+            position{
+                id
+                position {
+                    Position
+                }
 				BusinessCompany {
-						  Id
-						  Code
-					  }
-			  }
+                    Id
+                    Code
+                }
+            }
+            employee {       
+                id       
+                Employees       
+                {         
+                    id         
+                    firstName                 
+                    idUsers         
+                    idEntity       
+                }     
+            }   
         }
     }
 `;

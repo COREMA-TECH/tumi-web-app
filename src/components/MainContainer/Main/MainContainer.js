@@ -25,9 +25,11 @@ class MainContainer extends Component {
 		if (localStorage.getItem('LoginId'))
 			return <div>
 				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" />
-				<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
-					<i className="fas fa-bars" />
-				</label>
+				{localStorage.getItem('showMenu') ?
+					<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
+						<i className="fas fa-bars" />
+					</label> : ('')
+				}
 				<MobileMenu />
 				<div className="MenuMobile-overlay" onClick={this.props.handleCloseMenu} />
 				<div className="main-container--header">
