@@ -149,8 +149,6 @@ class Schedules extends Component {
         this.setState({
             employees: myEmployees,
             selectedEmployee: { ...DEFAULT_EMPLOYEE }
-        }, () => {
-            console.log("employees:::", employees)
         })
     }
 

@@ -8167,6 +8167,9 @@ input[type="date"]::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield; }
 
+optgroup {
+  font-weight: 700; }
+
 .RegionForm-header, .MasterShiftHeader {
   background: #e6e6e6;
   border-bottom: solid 1px #bdbdbd;

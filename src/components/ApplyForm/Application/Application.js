@@ -401,6 +401,13 @@ class Application extends Component {
 
     };
 
+
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.editing !== nextProps.editing) {
+            return true;
+        }
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;

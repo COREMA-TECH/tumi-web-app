@@ -123,7 +123,6 @@ class Application extends Component {
 
     handleChangePositionTag = (positionsTags) => {
         this.setState({ positionsTags });
-        console.log(`Option selected:`, positionsTags);
     };
 
     handleChange = (positionsTags) => {
@@ -159,7 +158,7 @@ class Application extends Component {
         });
     };
 
-    UNSAFE_componentWillMount() {
+    componentWillMount() {
 
     }
 

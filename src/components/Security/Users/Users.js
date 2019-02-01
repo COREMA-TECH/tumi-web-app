@@ -117,11 +117,14 @@ class Catalogs extends React.Component {
 
     GET_CONTACTS_QUERY = gql`
         {
-            getsupervisor(IsActive: 1, Id_Entity: 0, Id: 0) {
+            catalogitem(Id_Catalog:8,IsActive:1){
                 Id
-                Name: Full_Name
-                Electronic_Address
-                Phone_Number
+                Name
+                DisplayLabel
+                contacts{
+                  First_Name
+                  Middle_Name
+                }
             }
             getcatalogitem(Id_Catalog: 4) {
                 Id
@@ -372,14 +375,12 @@ class Catalogs extends React.Component {
                 [name]: id
             },
             () => {
-                console.log("Id de la fila ", id);
                 this.validateField(name, id);
             }
         );
     };
 
     SelectContac = (id) => {
-        console.log("entro al select");
         this.props.client
             .query({
                 query: this.GET_CONTACTS_QUERY_BY_ID,
@@ -388,19 +389,14 @@ class Catalogs extends React.Component {
                 }
             })
             .then((data) => {
-                console.log("este es el data ", data.data.getcontacts[0].Electronic_Address);
-
                 if (data.data.getcontacts != null) {
+                    this.setState({
 
-                    this.setState(
-                        {
-
-                            email: data.data.getcontacts[0].Electronic_Address,
-                            number: data.data.getcontacts[0].Phone_Number,
-                            fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
-                        },
+                        email: data.data.getcontacts[0].Electronic_Address,
+                        number: data.data.getcontacts[0].Phone_Number,
+                        fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
+                    },
                     );
-                    console.log("Full Name str ", this.state.fullname);
                 }
             })
             .catch((error) => {
@@ -660,7 +656,6 @@ class Catalogs extends React.Component {
                     buttonTitle: this.TITLE_EDIT
                 },
                 this.focusTextInput,
-                console.log("este es el contacto ", this.state.idContact)
             );
         });
     };
@@ -729,11 +724,11 @@ class Catalogs extends React.Component {
                     fetchPolicy: 'no-cache'
                 })
                 .then((data) => {
-                    if (data.data.getsupervisor != null && data.data.getcatalogitem) {
-
+                    if (data.data.catalogitem != null && data.data.getcatalogitem) {
+                        console.log(data.data.catalogitem)
                         this.setState(
                             {
-                                contacts: data.data.getsupervisor,
+                                contacts: data.data.catalogitem,
                                 regions: data.data.getcatalogitem,
                                 RegionName: data.data.getcatalogitem[0].Name,
                                 //email: data.data.Electronic_Address,
@@ -1149,9 +1144,13 @@ class Catalogs extends React.Component {
                                             >
                                                 <option value={undefined}>Select a contact</option>
                                                 {this.state.contacts.map((item) => (
-                                                    <option key={item.Id} value={item.Id}>
-                                                        {item.Name}
-                                                    </option>
+                                                    <optgroup label={item.DisplayLabel}>
+                                                        {item.contacts.map((contact) => (
+                                                            <option key={contact.Id} value={contact.Id}>
+                                                                {contact.First_Name + ' ' + contact.Middle_Name}
+                                                            </option>
+                                                        ))}
+                                                    </optgroup>
                                                 ))}
                                             </select>
                                         </div>
@@ -1252,6 +1251,23 @@ class Catalogs extends React.Component {
                                                     id="IsRecruiter"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsRecruiter">
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
+                                                </label>
+                                            </div>
+
+                                            <label>Manage app?</label>
+
+                                            <div className="onoffswitch">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={this.state.isEmployee}
+                                                    name="manageApp"
+                                                    onChange={this.handleCheckedChange('manageApp')}
+                                                    className="onoffswitch-checkbox"
+                                                    id="manageApp"
+                                                />
+                                                <label className="onoffswitch-label" htmlFor="manageApp">
                                                     <span className="onoffswitch-inner" />
                                                     <span className="onoffswitch-switch" />
                                                 </label>
@@ -1505,7 +1521,7 @@ class Catalogs extends React.Component {
                                     <Tooltip title={'Cancel Operation'}>
                                         <div>
                                             <button className="btn btn-warning" onClick={this.resetPasswordHandler}>
-                                                Reset Password {!this.state.resetPassword && <i class="fas fa-sync-alt" />}
+                                                Reset Password {!this.state.resetPassword && <i className="fas fa-sync-alt" />}
                                                 {this.state.resetPassword && <i className="fas fa-spinner fa-spin ml-1" />}
                                             </button>
                                         </div>
