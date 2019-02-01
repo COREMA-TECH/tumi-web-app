@@ -161,7 +161,6 @@ class Application extends Component {
         });
     };
 
-
     /**
      * To update and insert a application by id
      */
