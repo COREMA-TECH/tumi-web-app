@@ -1183,9 +1183,7 @@ class NewContract extends Component {
     updateEntity = (id) => {
         console.log("este es el id ", id)
         this.getBusinessCompaniesbyId(id);
-        this.setState({
-            Id_Entity: id
-        });
+
     }
 
     updateAddress = () => {
@@ -1452,7 +1450,10 @@ class NewContract extends Component {
                                                                 required
                                                                 className="form-control"
                                                                 onChange={(e) => {
-                                                                    this.updateEntity();
+                                                                    this.setState({
+                                                                        Id_Entity: e.target.value
+                                                                    });
+                                                                    this.updateEntity(e.target.value);
                                                                 }}
                                                                 error={this.state.Id_HotelValid}
                                                                 value={this.state.Id_Entity}
