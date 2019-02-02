@@ -30,3 +30,10 @@ mutation addConfigRegions($configregions: [inputConfigRegionsQuery])
   {regionId}
 }
 `;
+
+export const UPDATE_CONFIG_REGIONS_QUERY = gql`
+mutation updateConfigRegions($configregions: inputUpdateConfigRegions)
+{updateConfigRegions(configregions: $configregions)
+  {regionId}
+}
+`;

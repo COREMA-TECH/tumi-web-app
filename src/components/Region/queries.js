@@ -35,9 +35,20 @@ export const GET_RECRUITER = gql`
 			Id_Contact
 			Full_Name
         }
-       
     }
 	`;
+
+export const GET_CONFIGREGIONS = gql`
+	query configregions($regionId:Int){
+		configregions(regionId:$regionId) {
+		  id
+		  regionId
+		  regionalManagerId
+		  regionalDirectorId
+		} 
+	  }
+	`;
+
 
 export const GET_EMPLOYEES_WITHOUT_ENTITY = gql`
 	query employees{
