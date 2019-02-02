@@ -144,6 +144,16 @@ class NewContract extends Component {
             loadingInsert: false,
             loadingUpdate: false,
             cityFinal: 0,
+            address: '',
+            zipCode: '',
+            state: 0,
+            city: 0,
+            Disable_Billing_Zip_Code: false,
+            Disable_Billing_Street: false,
+            Old_Billing_City: 0,
+            Old_Billing_State: 0,
+            Old_Billing_Street: '',
+            Old_Billing_Zip_Code: '',
             ...this.DEFAULT_STATE
         };
     }
@@ -368,8 +378,8 @@ class NewContract extends Component {
                         loaded: false
                     },
                     () => {
-                        // this.getBusinessCompaniesbyId(this.state.Id_Entity);
-                        console.log("aqui tenemos el idmanagement ", this.state.IdManagement);
+                        this.getBusinessCompaniesbyId(this.state.Id_Entity);
+
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
                             {
@@ -655,6 +665,8 @@ class NewContract extends Component {
                 Name
                 Id_Parent
                 Parent
+                Zipcode
+                Location
             }
         }
     `;
@@ -666,6 +678,8 @@ class NewContract extends Component {
                 Name
                 Id_Parent
                 Parent
+                Zipcode
+                Location
             }
         }
     `;
@@ -677,6 +691,10 @@ class NewContract extends Component {
             Name
             Id_Parent
             Parent
+            Zipcode
+            Location
+            State
+            City
         }
     }
 `;
@@ -794,7 +812,7 @@ class NewContract extends Component {
     };
 
     getBusinessCompaniesbyId = (id) => {
-        console.log("valido el id ", id);
+        console.log("estes es el getBusinessCompaniesbyId ", id)
         this.props.client
             .query({
                 query: this.getbusinesscompaniesbyIdQuery,
@@ -803,10 +821,15 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("esta al by ID::::;", data);
+
                 this.setState({
-                    IdManagement: (data.getbusinesscompanies[0].Id_Parent),
-                    Management: this.getString(data.getbusinesscompanies[0].Parent)
+                    // IdManagement: (data.getbusinesscompanies[0].Id_Parent),
+                    // Management: this.getString(data.getbusinesscompanies[0].Parent),
+                    address: this.getString(data.getbusinesscompanies[0].Location),
+                    zipCode: this.getString(data.getbusinesscompanies[0].Zipcode),
+                    state: data.getbusinesscompanies[0].State,
+                    city: data.getbusinesscompanies[0].City,
+
                 }, () => { console.log("este es el idmanaghemente ", this.state.IdManagement) });
             })
             .catch((error) => {
@@ -1158,12 +1181,46 @@ class NewContract extends Component {
 
     }
 
+    updateEntity = (id) => {
+        console.log("este es el id ", id)
+        this.getBusinessCompaniesbyId(id);
+
+    }
+
+    updateAddress = () => {
+        if (document.getElementById("correctAddress").checked) {
+            this.setState({
+                Old_Billing_City: this.state.city,
+                Old_Billing_State: this.state.state,
+                Old_Billing_Street: this.state.address,
+                Old_Billing_Zip_Code: this.state.zipCode,
+
+                Billing_City: this.state.city,
+                Billing_State: this.state.state,
+                Billing_Street: this.state.address,
+                Billing_Zip_Code: this.state.zipCode,
+                Disable_Billing_Street: true,
+                Disable_Billing_Zip_Code: true
+
+            });
+        } else {
+            this.setState({
+                Billing_City: this.state.Old_Billing_City,
+                Billing_State: this.state.Old_Billing_State,
+                Billing_Street: this.state.Old_Billing_Street,
+                Billing_Zip_Code: this.state.Old_Billing_Zip_Code,
+                Disable_Billing_Street: false,
+                Disable_Billing_Zip_Code: false
+
+            });
+        }
+    }
+
     /*End of Validations*/
 
     render() {
         const { classes } = this.props;
-        console.log("Render:::::", this.props)
-        console.log("Render:::::", this.state)
+
         if (this.state.loadingCompanies) {
             return <LinearProgress />;
         }
@@ -1385,25 +1442,19 @@ class NewContract extends Component {
                                                     variables={{ Id_Parent: (this.state.IdManagement === 0 ? 919191 : this.state.IdManagement) }}
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
-                                                        // if (networkStatus === 4) return <LinearProgress />;
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
-                                                        //if (
-                                                        //  data.getbusinesscompanies != null &&
-                                                        // data.getbusinesscompanies.length > 0
-                                                        //) 
-                                                        //  {
                                                         return (
                                                             <select
                                                                 name="hotel"
                                                                 id="hotel"
                                                                 required
                                                                 className="form-control"
-                                                                //disabled={!this.state.editing}
                                                                 onChange={(e) => {
                                                                     this.setState({
                                                                         Id_Entity: e.target.value
                                                                     });
+                                                                    this.updateEntity(e.target.value);
                                                                 }}
                                                                 error={this.state.Id_HotelValid}
                                                                 value={this.state.Id_Entity}
@@ -1670,8 +1721,13 @@ class NewContract extends Component {
                                     </div>
                                     <div className="col-md-6 col-lg-4">
                                         <label>* Billing Street</label>
+                                        <span className="float-right">
+                                            <input type="checkbox" id="correctAddress" name="correctAddress" onChange={() => { this.updateAddress() }} />
+                                            <label htmlFor="">&nbsp; Same as mailing address?</label>
+                                        </span>
                                         <InputForm
                                             value={this.state.Billing_Street}
+                                            disabled={this.state.Disable_Billing_Street}
                                             error={!this.state.Billing_StreetValid}
                                             change={(text) => {
                                                 this.setState(
@@ -1712,6 +1768,7 @@ class NewContract extends Component {
                                             id="Billing_Zip_Code"
                                             name="Billing_Zip_Code"
                                             maxLength="5"
+                                            disabled={this.state.Disable_Billing_Zip_Code}
                                             error={!this.state.Billing_Zip_CodeValid}
                                         />
                                     </div>
