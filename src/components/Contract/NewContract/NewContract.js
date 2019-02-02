@@ -87,7 +87,6 @@ class NewContract extends Component {
     };
 
     constructor(props) {
-        console.log("aqui esta todos los props", props);
         super(props);
         this.state = {
             Id: '',
@@ -344,7 +343,6 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("este es la data del contrato ", data);
                 this.setState(
                     {
 
@@ -562,7 +560,6 @@ class NewContract extends Component {
     };
 
     renewalContract = () => {
-        console.table(this.state);
         this.setState(
             {
                 loadingInsert: true
@@ -790,7 +787,6 @@ class NewContract extends Component {
     };
 
     getBusinessCompanies = (id) => {
-        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesQuery,
@@ -811,7 +807,6 @@ class NewContract extends Component {
     };
 
     getBusinessCompaniesbyId = (id) => {
-        console.log("estes es el getBusinessCompaniesbyId ", id)
         this.props.client
             .query({
                 query: this.getbusinesscompaniesbyIdQuery,
@@ -829,7 +824,7 @@ class NewContract extends Component {
                     state: data.getbusinesscompanies[0].State,
                     city: data.getbusinesscompanies[0].City,
 
-                }, () => { console.log("este es el idmanaghemente ", this.state.IdManagement) });
+                }, () => { });
             })
             .catch((error) => {
                 console.log(error);
@@ -1181,7 +1176,7 @@ class NewContract extends Component {
     }
 
     updateEntity = (id) => {
-        console.log("este es el id ", id)
+
         this.getBusinessCompaniesbyId(id);
 
     }

@@ -790,7 +790,6 @@ class Employees extends Component {
                     })
                     .then(({ data }) => {
                         var user = data.addUser;
-                        console.log({ usuario: user.Code_User, email: user.Electronic_Address })
 
                         this.sendMail(user.Code_User, user.Electronic_Address);
 

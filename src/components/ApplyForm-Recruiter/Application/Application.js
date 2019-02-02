@@ -130,10 +130,6 @@ class Application extends Component {
     };
 
     handleTextChange = (event) => {
-        console.log("aqui handleTextChange ", event.target)
-        console.log("aqui handleTextChange type ", event.target.type)
-        console.log("aqui handleTextChange name ", event.target.name)
-        console.log("aqui handleTextChange value ", event.target.value)
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -509,13 +505,6 @@ class Application extends Component {
         });
 
     };
-
-    /*shouldComponentUpdate(nextProps, nextState) {
-        console.log("nextProps ", nextProps, "nextState ", nextState);
-        console.log("this.props ", this.props, "this.state ", this.state);
-
-        return false;
-    }*/
 
     render() {
         return (
