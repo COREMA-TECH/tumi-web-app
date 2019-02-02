@@ -56,7 +56,7 @@ class Region extends Component {
 
 
     getRegions = () => {
-        console.log("entroe en al geteregions ")
+
         this.props.client
             .query({
                 query: GET_REGION_QUERY,
@@ -90,7 +90,7 @@ class Region extends Component {
     };
 
     onEditHandler = (item) => {
-        console.log("onEditHandler Index.js ")
+
         this.setState({
             openModal: true,
             item: item
