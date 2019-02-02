@@ -561,7 +561,10 @@ class NewContract extends Component {
     };
 
     renewalContract = () => {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d049d878ea3ff8b62a1b656870e4413b06d1370
         this.setState(
             {
                 loadingInsert: true
@@ -1178,6 +1181,10 @@ class NewContract extends Component {
     }
 
     updateEntity = (id) => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8d049d878ea3ff8b62a1b656870e4413b06d1370
         this.getBusinessCompaniesbyId(id);
     }
 
