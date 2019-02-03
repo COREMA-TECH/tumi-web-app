@@ -59,11 +59,12 @@ class WorkOrdersTable extends Component {
             saving: false,
             recruiters: [],
             contactId: null,
-            filterValue: 0
+            filterValue: 0,
+            startDate: '',
+            endDate: '',
+            endDateDisabled: true
         }
     }
-
-
 
     componentWillMount() {
         this.getWorkOrders();
@@ -72,11 +73,25 @@ class WorkOrdersTable extends Component {
 
     }
 
+    getDateFilters = (startDate, endDate) => {
+        if (startDate != "" && endDate != "") {
+            return {
+                startDate: this.state.startDate,
+                endDate: this.state.endDate
+            }
+        } else {
+            return null;
+        }
+    }
+
     getWorkOrders = () => {
         this.props.client
             .query({
                 query: GET_WORKORDERS_QUERY,
-                fetchPolicy: 'no-cache'
+                fetchPolicy: 'no-cache',
+                variables: {
+                    ...this.getDateFilters(this.state.startDate, this.state.endDate)
+                }
             })
             .then(({ data }) => {
                 this.setState({
@@ -133,8 +148,6 @@ class WorkOrdersTable extends Component {
             this.props.handleOpenSnackbar('error', 'Recruiter fields is required');
         }
     }
-
-
 
     handleChange = (event, key) => {
         const target = event.target;
@@ -244,6 +257,39 @@ class WorkOrdersTable extends Component {
         })
     }
 
+    handleChangeDate = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value,
+            endDateDisabled: false
+        });
+    }
+
+    handleEndDate = (event) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        }, () => {
+            this.getWorkOrders()
+        });
+    }
+
+    clearInputDates = () => {
+        this.setState({
+            startDate: '',
+            endDate: '',
+            endDateDisabled: true
+        }, () => {
+            this.getWorkOrders();
+        })
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
@@ -251,119 +297,59 @@ class WorkOrdersTable extends Component {
 
 
         return (
-            <div>
-                <Paper style={{ overflowX: 'auto' }}>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>No.</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Property</CustomTableCell>
-                                <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
-                                <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
-                                {this.props.showRecruiter && <CustomTableCell className={"Table-head text-center"}>Assign to</CustomTableCell>}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                let backgroundColor = row.status === 0 ? '#ddd' : '#fff';
-                                if (this.state.filterValue === 0) {
-                                    return (
-                                        <TableRow style={{ background: backgroundColor }}>
-                                            <CustomTableCell className={'text-center'}>
-                                                <Tooltip title="Life Cycle">
-                                                    <button
-                                                        className="btn btn-success mr-1 float-left"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            this.props.onLifeHandler({ ...row });
-                                                            // return this.props.onEditHandler({ ...row });
-                                                        }}
-                                                    >
-                                                        <i class="fas fa-info"></i>
-                                                    </button>
-                                                </Tooltip>
-                                                <Tooltip title="Edit">
-                                                    <button
-                                                        className="btn btn-success mr-1 float-left"
-                                                        disabled={this.props.loading}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            return this.props.onEditHandler({ ...row });
-                                                        }}
-                                                    >
-                                                        <i className="fas fa-pen"></i>
-                                                    </button>
-                                                </Tooltip>
-                                                {
-                                                    row.status != 0 ? (
-                                                        <Tooltip title="Cancel">
-                                                            <button
-                                                                className="btn btn-danger float-left"
-                                                                disabled={this.props.loading}
-                                                                // onClick={(e) => {
-                                                                //     e.stopPropagation();
-                                                                //     return this.props.onDeleteHandler({ ...row });
-                                                                // }}
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    this.setState({ openConfirm: true, idToDelete: row.id });
-                                                                }}
-                                                            >
-                                                                <i className="fas fa-ban"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                    ) : (
-                                                            ''
-                                                        )
-                                                }
-                                            </CustomTableCell>
-                                            <CustomTableCell>{row.id}</CustomTableCell>
-                                            <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
-                                            <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
-                                            <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
-                                            <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
-                                            <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
-                                            <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
-                                            {this.props.showRecruiter &&
-                                                <CustomTableCell>
-                                                    <div className="input-group">
-                                                        <select
-                                                            required
-                                                            name={`RecruiterId`}
-                                                            className="form-control"
-                                                            id=""
-                                                            onChange={(e) => { this.handleChange(e, row.id) }}
-                                                            value={this.state.RecruiterId}
-                                                            onBlur={this.handleValidate}
-                                                        >
-                                                            <option value="0">Select a Recruiter</option>
-                                                            {this.state.recruiters.map((recruiter) => (
-                                                                <option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                            ))}
-                                                        </select>
-                                                        <Tooltip title="Convert to Opening">
-                                                            <button
-                                                                className="btn btn-link float-left ml-1"
-                                                                disabled={this.props.loading}
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    this.handleConvertToOpening(e, { ...row });
-                                                                }}
-                                                            >
-                                                                <i class="fas fa-exchange-alt text-info"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                    </div>
-                                                </CustomTableCell>}
-                                        </TableRow>
-                                    );
-                                } else if (this.state.filterValue == 1) {
-                                    if (row.status == 0) {
+            <div className="card">
+                <div className="card-header bg-light">
+                    <div className="row">
+                        <div className="col-md-6">
+                            <label> Start Date</label>
+                            <div class="input-group mb-3">
+                                <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">To</span>
+                                </div>
+                                <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
+                                        <i class="fas fa-ban"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-6">
+                            <label> Status</label>
+                            <select name="" id="" className="form-control" onChange={(e) => {
+                                this.setState({
+                                    filterValue: parseInt(e.target.value)
+                                })
+                            }}>
+                                <option value="0">All</option>
+                                <option value="1">Canceled Work Orders</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div className="card-body">
+
+                    <Paper style={{ overflowX: 'auto' }}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <CustomTableCell className={"Table-head text-center"}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>No.</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Property</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Position</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Quantity</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Shift</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Needs Experience?</CustomTableCell>
+                                    <CustomTableCell className={"Table-head text-center"}>Needs to Speak English?</CustomTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {items.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                    let backgroundColor = row.status === 0 ? '#ddd' : '#fff';
+                                    if (this.state.filterValue === 0) {
                                         return (
                                             <TableRow style={{ background: backgroundColor }}>
                                                 <CustomTableCell className={'text-center'}>
@@ -422,71 +408,134 @@ class WorkOrdersTable extends Component {
                                                 <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
                                                 <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
-                                                {this.props.showRecruiter &&
-                                                    <CustomTableCell>
-                                                        <div className="input-group">
-                                                            <select
-                                                                required
-                                                                name={`RecruiterId`}
-                                                                className="form-control"
-                                                                id=""
-                                                                onChange={(e) => { this.handleChange(e, row.id) }}
-                                                                value={this.state.RecruiterId}
-                                                                onBlur={this.handleValidate}
-                                                            >
-                                                                <option value="0">Select a Recruiter</option>
-                                                                {this.state.recruiters.map((recruiter) => (
-                                                                    <option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                                ))}
-                                                            </select>
-                                                            <Tooltip title="Convert to Opening">
-                                                                <button
-                                                                    className="btn btn-link float-left ml-1"
-                                                                    disabled={this.props.loading}
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        this.handleConvertToOpening(e, { ...row });
-                                                                    }}
-                                                                >
-                                                                    <i class="fas fa-exchange-alt text-info"></i>
-                                                                </button>
-                                                            </Tooltip>
-                                                        </div>
-                                                    </CustomTableCell>}
                                             </TableRow>
                                         );
+                                    } else if (this.state.filterValue == 1) {
+                                        if (row.status == 0) {
+                                            return (
+                                                <TableRow style={{ background: backgroundColor }}>
+                                                    <CustomTableCell className={'text-center'}>
+                                                        <Tooltip title="Life Cycle">
+                                                            <button
+                                                                className="btn btn-success mr-1 float-left"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    this.props.onLifeHandler({ ...row });
+                                                                    // return this.props.onEditHandler({ ...row });
+                                                                }}
+                                                            >
+                                                                <i class="fas fa-info"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                        <Tooltip title="Edit">
+                                                            <button
+                                                                className="btn btn-success mr-1 float-left"
+                                                                disabled={this.props.loading}
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    return this.props.onEditHandler({ ...row });
+                                                                }}
+                                                            >
+                                                                <i className="fas fa-pen"></i>
+                                                            </button>
+                                                        </Tooltip>
+                                                        {
+                                                            row.status != 0 ? (
+                                                                <Tooltip title="Cancel">
+                                                                    <button
+                                                                        className="btn btn-danger float-left"
+                                                                        disabled={this.props.loading}
+                                                                        // onClick={(e) => {
+                                                                        //     e.stopPropagation();
+                                                                        //     return this.props.onDeleteHandler({ ...row });
+                                                                        // }}
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            this.setState({ openConfirm: true, idToDelete: row.id });
+                                                                        }}
+                                                                    >
+                                                                        <i className="fas fa-ban"></i>
+                                                                    </button>
+                                                                </Tooltip>
+                                                            ) : (
+                                                                    ''
+                                                                )
+                                                        }
+                                                    </CustomTableCell>
+                                                    <CustomTableCell>{row.id}</CustomTableCell>
+                                                    <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
+                                                    <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
+                                                    <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
+                                                    <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
+                                                    <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
+                                                    <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
+                                                    {this.props.showRecruiter &&
+                                                        <CustomTableCell>
+                                                            <div className="input-group">
+                                                                <select
+                                                                    required
+                                                                    name={`RecruiterId`}
+                                                                    className="form-control"
+                                                                    id=""
+                                                                    onChange={(e) => { this.handleChange(e, row.id) }}
+                                                                    value={this.state.RecruiterId}
+                                                                    onBlur={this.handleValidate}
+                                                                >
+                                                                    <option value="0">Select a Recruiter</option>
+                                                                    {this.state.recruiters.map((recruiter) => (
+                                                                        <option value={recruiter.Id} > {recruiter.Full_Name}</option>
+                                                                    ))}
+                                                                </select>
+                                                                <Tooltip title="Convert to Opening">
+                                                                    <button
+                                                                        className="btn btn-link float-left ml-1"
+                                                                        disabled={this.props.loading}
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            this.handleConvertToOpening(e, { ...row });
+                                                                        }}
+                                                                    >
+                                                                        <i class="fas fa-exchange-alt text-info"></i>
+                                                                    </button>
+                                                                </Tooltip>
+                                                            </div>
+                                                        </CustomTableCell>}
+                                                </TableRow>
+                                            );
+                                        }
                                     }
-                                }
-                            })}
-                        </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                {items.length > 0 && (
-                                    <TablePagination
-                                        colSpan={3}
-                                        count={items.length}
-                                        rowsPerPage={rowsPerPage}
-                                        page={page}
-                                        onChangePage={this.handleChangePage}
-                                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                                        ActionsComponent={TablePaginationActionsWrapped}
-                                    />
-                                )}
-                            </TableRow>
-                        </TableFooter>
-                    </Table>
-                    <ConfirmDialog
-                        open={this.state.openConfirm}
-                        closeAction={() => {
-                            this.setState({ openConfirm: false });
-                        }}
-                        confirmAction={() => {
-                            this.handleDelete(this.state.idToDelete);
-                        }}
-                        title={'are you sure you want to cancel this record?'}
-                        loading={this.state.removing}
-                    />
-                </Paper>
+                                })}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    {items.length > 0 && (
+                                        <TablePagination
+                                            colSpan={3}
+                                            count={items.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            onChangePage={this.handleChangePage}
+                                            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                                            ActionsComponent={TablePaginationActionsWrapped}
+                                        />
+                                    )}
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                        <ConfirmDialog
+                            open={this.state.openConfirm}
+                            closeAction={() => {
+                                this.setState({ openConfirm: false });
+                            }}
+                            confirmAction={() => {
+                                this.handleDelete(this.state.idToDelete);
+                            }}
+                            title={'are you sure you want to cancel this record?'}
+                            loading={this.state.removing}
+                        />
+                    </Paper>
+                </div>
             </div >
         );
     }

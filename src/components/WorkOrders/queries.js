@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_WORKORDERS_QUERY = gql`
-	query workOrder($id: Int) {
-		workOrder(id: $id) {
+query workOrder($id: Int, $startDate: Date, $endDate: Date) {
+	workOrder(id: $id, startDate: $startDate, endDate: $endDate) {
 			id
 			quantity
 			shift
