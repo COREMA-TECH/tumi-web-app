@@ -25,8 +25,8 @@ import ConfirmDialog from 'material-ui/ConfirmDialog';
 import moment from 'moment';
 import Datetime from 'react-datetime';
 
-import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY } from './queries';
-import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY } from './mutations';
+import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
+import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY } from './mutations';
 
 
 const styles = (theme) => ({
@@ -61,6 +61,8 @@ class RegionForm extends Component {
             recruiters: [],
             employees: [],
             positionsTags: [],
+            recruitersTags: [],
+            ConfigRegions: [],
             hotelsTags: [],
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
@@ -89,6 +91,7 @@ class RegionForm extends Component {
                 () => {
                     this.getRecruiter();
                     this.getEmployeesWithoutEntity();
+                    this.getConfigRegions();
                 }
             );
         } else if (!nextProps.openModal) {
@@ -108,16 +111,15 @@ class RegionForm extends Component {
                     saving: false
                 }
             );
+
         }
 
+        this.getRecruiter();
+        this.getEmployeesWithoutEntity();
+        this.getConfigRegions();
         this.setState({
             openModal: nextProps.openModal
         });
-    }
-
-    componentWillMount() {
-        this.getRecruiter();
-        this.getEmployeesWithoutEntity();
     }
 
     getRecruiter = () => {
@@ -134,6 +136,26 @@ class RegionForm extends Component {
             })
             .catch();
     };
+
+    getConfigRegions = () => {
+        console.log("Estoy aqui")
+        this.props.client
+            .query({
+                query: GET_CONFIGREGIONS,
+                variables: { regionId: this.state.id }
+            })
+            .then(({ data }) => {
+                console.log("ConfigRegions: data.configregions ", data.configregions)
+                this.setState({
+                    ConfigRegions: data.configregions,
+                    IdRegionalManager: data.configregions[0].regionalManagerId,
+                    IdRegionalDirector: data.configregions[0].regionalDirectorId,
+                });
+            })
+            .catch();
+    };
+
+
 
     getEmployeesWithoutEntity = () => {
         this.props.client
@@ -186,6 +208,7 @@ class RegionForm extends Component {
     insertCatalogItem = () => {
         //  console.log("aqui estoy ", this.state.hotelsTags)
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
+
         this.setState(
             {
                 loading: true
@@ -216,7 +239,7 @@ class RegionForm extends Component {
                         }
                     })
                     .then((data) => {
-                        this.addConfig();
+                        this.addConfig(isEdition, data.data.inscatalogitem.Id);
                         this.props.toggleRefresh();
                         this.props.handleCloseModal();
                         this.props.handleOpenSnackbar(
@@ -239,8 +262,13 @@ class RegionForm extends Component {
         );
     };
 
-    addConfig = () => {
-        console.log("addConfig ")
+    addConfig = (isEdition, regionId) => {
+        let query = INSERT_CONFIG_REGIONS_QUERY;
+
+        if (isEdition) {
+            query = UPDATE_CONFIG_REGIONS_QUERY;
+        }
+
         this.setState(
             {
                 loading: true
@@ -248,13 +276,12 @@ class RegionForm extends Component {
             () => {
                 this.props.client
                     .mutate({
-                        mutation: INSERT_CONFIG_REGIONS_QUERY,
+                        mutation: query,
                         variables: {
                             configregions: {
-                                regionId: this.state.id,
+                                regionId: regionId,
                                 regionalManagerId: this.state.IdRegionalManager,
-                                regionalDirectorId: this.state.IdRegionalDirector,
-                                regionalRecruiterId: this.state.IdRecruiter
+                                regionalDirectorId: this.state.IdRegionalDirector
                             }
                         }
                     })
@@ -276,6 +303,10 @@ class RegionForm extends Component {
 
     handleChangePositionTag = (hotelsTags) => {
         this.setState({ hotelsTags });
+    };
+
+    handleChangerecruiterTag = (recruitersTags) => {
+        this.setState({ recruitersTags });
     };
 
     render() {
@@ -358,26 +389,40 @@ class RegionForm extends Component {
                                                 ))}
                                             </select>
                                         </div>
+
                                         <div className="col-md-4">
                                             <label htmlFor="">Regional Recruiter</label>
-                                            <select
-                                                required
-                                                name="IdRecruiter"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdRecruiter}
-                                            >
-                                                <option value={0}>Select a Recruiter</option>
-                                                {this.state.recruiters.map((recruiter) => (
-                                                    <option value={recruiter.Id}>{recruiter.Full_Name}</option>
-                                                ))}
-                                            </select>
+                                            <Query query={GET_RECRUITER}>
+                                                {({ loading, error, data, refetch, networkStatus }) => {
+                                                    //if (networkStatus === 4) return <LinearProgress />;
+                                                    if (error) return <p>Error </p>;
+                                                    if (data.getusers != null && data.getusers.length > 0) {
+                                                        let options = [];
+                                                        data.getusers.map((item) => (
+                                                            options.push({ value: item.Id, label: item.Full_Name })
+                                                        ));
+
+                                                        return (
+                                                            <div style={{
+                                                                paddingTop: '0px',
+                                                                paddingBottom: '2px',
+                                                            }}>
+                                                                <Select
+                                                                    options={options}
+                                                                    value={this.state.recruitersTags}
+                                                                    onChange={this.handleChangerecruiterTag}
+                                                                    closeMenuOnSelect={false}
+                                                                    components={makeAnimated()}
+                                                                    isMulti
+                                                                />
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return <SelectNothingToDisplay />;
+                                                }}
+                                            </Query>
                                         </div>
-                                    </div>
-                                </div>
-                                <div className="card-body">
-                                    <div className="row">
+
                                         <div className="col-md-4">
                                             <label htmlFor="">Property Name</label>
                                             <Query query={GET_HOTEL_QUERY}>
@@ -411,8 +456,13 @@ class RegionForm extends Component {
                                             </Query>
                                         </div>
                                     </div>
-
                                 </div>
+
+                                <div className="card-body">
+                                    <div className="row">
+                                    </div>
+                                </div>
+
                                 <div className="card-footer">
                                     <button
                                         type="button"

@@ -240,40 +240,7 @@ class GeneralInformation extends Component {
     }
 	`;
 
-	/*getHotels = () => {
-		this.props.client.query({
-			query: this.getCompaniesQuery,
-			variables: {}
-			//fetchPolicy: 'no-cache'
-		}).then(({ data }) => {
-			this.setState({
-				hotels: data.getbusinesscompanies
-			});
-		}).catch();
-	}
-		getHotels = (func = () => { }) => {
-			console.log("aqui estoy getHotels")
-			this.setState(
-				{
-					loading: true
-				},
-				() => {
-			this.props.client.query({
-				query: this.GET_COMPANY_CHILD_QUERY,
-				variables: {}
-				//fetchPolicy: 'no-cache'
-			}).then(({ data }) => {
-				console.log("esta es la data ", data)
-				this.setState({
-					hotels: data.getbusinesscompanies,
-					loading: false
-									},
-									func
-				);
-			}).catch();
-		}
-		);
-		};*/
+	
 	getHotels = (func = () => { }) => {
 		this.setState({
 			loadingCompanyProperties: true

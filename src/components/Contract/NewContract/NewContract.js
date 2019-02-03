@@ -61,6 +61,7 @@ const styles = (theme) => ({
 class NewContract extends Component {
     DEFAULT_STATE = {
         Contract_NameValid: true,
+        Legal_NameValid: true,
         Contrat_OwnerValid: true,
         Id_Contract_TemplateValid: true,
         Id_EntityValid: true,
@@ -86,7 +87,6 @@ class NewContract extends Component {
     };
 
     constructor(props) {
-        console.log("aqui esta todos los props", props);
         super(props);
         this.state = {
             Id: '',
@@ -112,6 +112,7 @@ class NewContract extends Component {
             Company_Signed: 0,
             Company_Signed_Date: this.getNewDate(),
 
+            Legal_Name: '',
             Id_User_Billing_Contact: '',
             Billing_Street: '',
             Billing_City: 0,
@@ -142,6 +143,16 @@ class NewContract extends Component {
             loadingInsert: false,
             loadingUpdate: false,
             cityFinal: 0,
+            address: '',
+            zipCode: '',
+            state: 0,
+            city: 0,
+            Disable_Billing_Zip_Code: false,
+            Disable_Billing_Street: false,
+            Old_Billing_City: 0,
+            Old_Billing_State: 0,
+            Old_Billing_Street: '',
+            Old_Billing_Zip_Code: '',
             ...this.DEFAULT_STATE
         };
     }
@@ -308,6 +319,7 @@ class NewContract extends Component {
                 Client_Signature
                 Company_Signature
                 Contract_Expiration_Date
+                legalName
             }
         }
     `;
@@ -331,7 +343,6 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("este es la data del contrato ", data);
                 this.setState(
                     {
 
@@ -361,11 +372,12 @@ class NewContract extends Component {
                         Date_Created: data.getcontracts[0].Date_Created,
                         Date_Updated: data.getcontracts[0].Date_Updated,
                         CompanySignedName: this.getString(data.getcontracts[0].Company_Signed),
+                        Legal_Name: data.getcontracts[0].legalName,
                         loaded: false
                     },
                     () => {
-                        // this.getBusinessCompaniesbyId(this.state.Id_Entity);
-                        console.log("aqui tenemos el idmanagement ", this.state.IdManagement);
+                        this.getBusinessCompaniesbyId(this.state.Id_Entity);
+
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
                             {
@@ -440,7 +452,9 @@ class NewContract extends Component {
                                     Date_Created: "'2018-08-14'",
                                     Date_Updated: "'2018-08-14'",
                                     Electronic_Address: `'${this.state.Electronic_Address}'`,
-                                    Primary_Email: `'${this.state.Primary_Email}'`
+                                    Primary_Email: `'${this.state.Primary_Email}'`,
+                                    legalName: `'${this.state.Legal_Name}'`
+
                                 }
                             }
                         })
@@ -522,7 +536,8 @@ class NewContract extends Component {
                                     Date_Created: "'2018-08-14'",
                                     Date_Updated: "'2018-08-14'",
                                     Electronic_Address: `'${this.state.Electronic_Address}'`,
-                                    Primary_Email: `'${this.state.Primary_Email}'`
+                                    Primary_Email: `'${this.state.Primary_Email}'`,
+                                    legalName: `'${this.state.Legal_Name}'`
                                 }
                             }
                         })
@@ -546,7 +561,6 @@ class NewContract extends Component {
     };
 
     renewalContract = () => {
-        console.table(this.state);
         this.setState(
             {
                 loadingInsert: true
@@ -648,6 +662,8 @@ class NewContract extends Component {
                 Name
                 Id_Parent
                 Parent
+                Zipcode
+                Location
             }
         }
     `;
@@ -659,6 +675,8 @@ class NewContract extends Component {
                 Name
                 Id_Parent
                 Parent
+                Zipcode
+                Location
             }
         }
     `;
@@ -670,6 +688,10 @@ class NewContract extends Component {
             Name
             Id_Parent
             Parent
+            Zipcode
+            Location
+            State
+            City
         }
     }
 `;
@@ -766,7 +788,6 @@ class NewContract extends Component {
     };
 
     getBusinessCompanies = (id) => {
-        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesQuery,
@@ -787,7 +808,6 @@ class NewContract extends Component {
     };
 
     getBusinessCompaniesbyId = (id) => {
-        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesbyIdQuery,
@@ -796,11 +816,16 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("esta al by ID::::;", data);
+
                 this.setState({
-                    IdManagement: (data.getbusinesscompanies[0].Id_Parent),
-                    Management: this.getString(data.getbusinesscompanies[0].Parent)
-                }, () => { console.log("este es el idmanaghemente ", this.state.IdManagement) });
+                    // IdManagement: (data.getbusinesscompanies[0].Id_Parent),
+                    // Management: this.getString(data.getbusinesscompanies[0].Parent),
+                    address: this.getString(data.getbusinesscompanies[0].Location),
+                    zipCode: this.getString(data.getbusinesscompanies[0].Zipcode),
+                    state: data.getbusinesscompanies[0].State,
+                    city: data.getbusinesscompanies[0].City,
+
+                }, () => { });
             })
             .catch((error) => {
                 console.log(error);
@@ -907,6 +932,7 @@ class NewContract extends Component {
 
     validateField(fieldName, value) {
         let Contract_NameValid = this.state.Contract_NameValid;
+        let Legal_NameValid = this.state.Legal_NameValid;
         let Contrat_OwnerValid = this.state.Contrat_OwnerValid;
         let Id_Contract_TemplateValid = this.state.Id_Contract_TemplateValid;
         let Id_EntityValid = this.state.Id_EntityValid;
@@ -933,6 +959,9 @@ class NewContract extends Component {
         switch (fieldName) {
             case 'Contract_Name':
                 Contract_NameValid = value.trim().length >= 5;
+                break;
+            case 'Legal_Name':
+                Legal_NameValid = value.trim().length >= 5;
                 break;
             case 'Contrat_Owner':
                 Contrat_OwnerValid = value.trim().length >= 5;
@@ -1005,6 +1034,7 @@ class NewContract extends Component {
         this.setState(
             {
                 Contract_NameValid,
+                Legal_NameValid,
                 Contrat_OwnerValid,
                 Id_Contract_TemplateValid,
                 Id_EntityValid,
@@ -1032,6 +1062,7 @@ class NewContract extends Component {
     /*Validations */
     validateAllFields(fun) {
         let Contract_NameValid = this.state.Contract_Name.trim().length >= 5;
+        let Legal_NameValid = this.state.Legal_Name.trim().length >= 5;
         let Contrat_OwnerValid = this.state.Contrat_Owner.trim().length >= 5;
         let Id_Contract_TemplateValid =
             this.state.Id_Contract_Template !== null &&
@@ -1071,6 +1102,7 @@ class NewContract extends Component {
         this.setState(
             {
                 Contract_NameValid,
+                Legal_NameValid,
                 Contrat_OwnerValid,
                 Id_Contract_TemplateValid,
                 Id_EntityValid,
@@ -1103,6 +1135,7 @@ class NewContract extends Component {
             {
                 formValid:
                     this.state.Contract_NameValid &&
+                    this.state.Legal_NameValid &&
                     this.state.Contrat_OwnerValid &&
                     this.state.Id_Contract_TemplateValid &&
                     this.state.Id_EntityValid &&
@@ -1119,8 +1152,7 @@ class NewContract extends Component {
                     this.state.Company_Signed_DateValid &&
                     this.state.Id_User_Billing_ContactValid &&
                     this.state.Billing_StreetValid &&
-                    // this.state.Billing_StateValid &&
-                    //this.state.Billing_CityValid &&
+
                     this.state.Billing_Zip_CodeValid
             },
             func
@@ -1144,12 +1176,44 @@ class NewContract extends Component {
 
     }
 
+    updateEntity = (id) => {
+        this.getBusinessCompaniesbyId(id);
+    }
+
+    updateAddress = () => {
+        if (document.getElementById("correctAddress").checked) {
+            this.setState({
+                Old_Billing_City: this.state.city,
+                Old_Billing_State: this.state.state,
+                Old_Billing_Street: this.state.address,
+                Old_Billing_Zip_Code: this.state.zipCode,
+
+                Billing_City: this.state.city,
+                Billing_State: this.state.state,
+                Billing_Street: this.state.address,
+                Billing_Zip_Code: this.state.zipCode,
+                Disable_Billing_Street: true,
+                Disable_Billing_Zip_Code: true
+
+            });
+        } else {
+            this.setState({
+                Billing_City: this.state.Old_Billing_City,
+                Billing_State: this.state.Old_Billing_State,
+                Billing_Street: this.state.Old_Billing_Street,
+                Billing_Zip_Code: this.state.Old_Billing_Zip_Code,
+                Disable_Billing_Street: false,
+                Disable_Billing_Zip_Code: false
+
+            });
+        }
+    }
+
     /*End of Validations*/
 
     render() {
         const { classes } = this.props;
-        console.log("Render:::::", this.props)
-        console.log("Render:::::", this.state)
+
         if (this.state.loadingCompanies) {
             return <LinearProgress />;
         }
@@ -1254,6 +1318,23 @@ class NewContract extends Component {
                                                 />
                                             </div>
                                             <div className="col-md-6 col-lg-6">
+                                                <label>* Legal Name</label>
+                                                <InputForm
+                                                    value={this.state.Legal_Name}
+                                                    change={(text) => {
+                                                        this.setState(
+                                                            {
+                                                                Legal_Name: text
+                                                            },
+                                                            () => {
+                                                                this.validateField('Legal_Name', text);
+                                                            }
+                                                        );
+                                                    }}
+                                                    error={!this.state.Legal_NameValid}
+                                                />
+                                            </div>
+                                            <div className="col-md-6 col-lg-6">
                                                 <label>* Contract Owner</label>
                                                 <InputForm
                                                     value={this.state.Contrat_Owner}
@@ -1354,25 +1435,19 @@ class NewContract extends Component {
                                                     variables={{ Id_Parent: (this.state.IdManagement === 0 ? 919191 : this.state.IdManagement) }}
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
-                                                        // if (networkStatus === 4) return <LinearProgress />;
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
-                                                        //if (
-                                                        //  data.getbusinesscompanies != null &&
-                                                        // data.getbusinesscompanies.length > 0
-                                                        //) 
-                                                        //  {
                                                         return (
                                                             <select
                                                                 name="hotel"
                                                                 id="hotel"
                                                                 required
                                                                 className="form-control"
-                                                                //disabled={!this.state.editing}
                                                                 onChange={(e) => {
                                                                     this.setState({
                                                                         Id_Entity: e.target.value
                                                                     });
+                                                                    this.updateEntity(e.target.value);
                                                                 }}
                                                                 error={this.state.Id_HotelValid}
                                                                 value={this.state.Id_Entity}
@@ -1639,8 +1714,13 @@ class NewContract extends Component {
                                     </div>
                                     <div className="col-md-6 col-lg-4">
                                         <label>* Billing Street</label>
+                                        <span className="float-right">
+                                            <input type="checkbox" id="correctAddress" name="correctAddress" onChange={() => { this.updateAddress() }} />
+                                            <label htmlFor="">&nbsp; Same as mailing address?</label>
+                                        </span>
                                         <InputForm
                                             value={this.state.Billing_Street}
+                                            disabled={this.state.Disable_Billing_Street}
                                             error={!this.state.Billing_StreetValid}
                                             change={(text) => {
                                                 this.setState(
@@ -1681,6 +1761,7 @@ class NewContract extends Component {
                                             id="Billing_Zip_Code"
                                             name="Billing_Zip_Code"
                                             maxLength="5"
+                                            disabled={this.state.Disable_Billing_Zip_Code}
                                             error={!this.state.Billing_Zip_CodeValid}
                                         />
                                     </div>
