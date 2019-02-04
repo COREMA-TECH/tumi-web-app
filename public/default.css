@@ -8572,6 +8572,15 @@ label:not(.custom-file-label):not(.form-check-label) {
   padding-top: 0 !important;
   padding-bottom: 0 !important; }
 
+.select-animated {
+  position: relative;
+  width: 100%; }
+  .select-animated-icon {
+    position: absolute;
+    bottom: 12px;
+    right: 6px;
+    background: #e5eaf0; }
+
 .link {
   color: #3ca2c8; }
 
