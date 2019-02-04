@@ -137,9 +137,6 @@ class RegionForm extends Component {
             .catch();
     };
 
-
-
-
     getConfigRegions = () => {
         this.props.client
             .query({
