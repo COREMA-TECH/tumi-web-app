@@ -26,7 +26,7 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 
 import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
-import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY } from './mutations';
+import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY, UPDATE_REGION_BUSINESSCOMPANY_QUERY, UPDATE_REGION_USERS_QUERY } from './mutations';
 
 
 const styles = (theme) => ({
@@ -67,6 +67,7 @@ class RegionForm extends Component {
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
             IdRecruiter: 0,
+            IdConfigRegion: 0,
             code: '',
             name: '',
             id: 0,
@@ -80,7 +81,6 @@ class RegionForm extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.item && nextProps.openModal) {
-            console.log("nextProps.item ", nextProps.item)
             this.setState(
                 {
                     id: nextProps.item.Id,
@@ -138,16 +138,15 @@ class RegionForm extends Component {
     };
 
     getConfigRegions = () => {
-        console.log("Estoy aqui")
         this.props.client
             .query({
                 query: GET_CONFIGREGIONS,
                 variables: { regionId: this.state.id }
             })
             .then(({ data }) => {
-                console.log("ConfigRegions: data.configregions ", data.configregions)
                 this.setState({
                     ConfigRegions: data.configregions,
+                    IdConfigRegion: data.configregions[0].id,
                     IdRegionalManager: data.configregions[0].regionalManagerId,
                     IdRegionalDirector: data.configregions[0].regionalDirectorId,
                 });
@@ -173,12 +172,10 @@ class RegionForm extends Component {
     };
 
     handleChange = (event) => {
-        console.log("entro al event ", event);
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
 
-        console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
@@ -206,7 +203,7 @@ class RegionForm extends Component {
         return { isEdition: isEdition, query: query, id: this.state.id };
     };
     insertCatalogItem = () => {
-        //  console.log("aqui estoy ", this.state.hotelsTags)
+        console.log("aqui estoy ", this.state.hotelsTags)
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
         this.setState(
@@ -239,7 +236,11 @@ class RegionForm extends Component {
                         }
                     })
                     .then((data) => {
-                        this.addConfig(isEdition, data.data.inscatalogitem.Id);
+                        console.log("Actualizo y estoy aqui ", data)
+
+                        if (isEdition) { this.addConfig(isEdition, id); }
+                        else { this.addConfig(isEdition, data.data.inscatalogitem.Id); }
+
                         this.props.toggleRefresh();
                         this.props.handleCloseModal();
                         this.props.handleOpenSnackbar(
@@ -263,11 +264,15 @@ class RegionForm extends Component {
     };
 
     addConfig = (isEdition, regionId) => {
+        console.log("aqui estoy addConfig ", isEdition, regionId)
+
         let query = INSERT_CONFIG_REGIONS_QUERY;
 
         if (isEdition) {
             query = UPDATE_CONFIG_REGIONS_QUERY;
         }
+
+        console.log("aqui estoy query ", query)
 
         this.setState(
             {
@@ -279,6 +284,7 @@ class RegionForm extends Component {
                         mutation: query,
                         variables: {
                             configregions: {
+                                id: this.state.IdConfigRegion,
                                 regionId: regionId,
                                 regionalManagerId: this.state.IdRegionalManager,
                                 regionalDirectorId: this.state.IdRegionalDirector
@@ -286,7 +292,9 @@ class RegionForm extends Component {
                         }
                     })
                     .then((data) => {
-                        console.log("INSERT_CONFIG_REGIONS_QUERY ", data)
+                        /*this.state.hotelsTags.forEach(function (element) {
+                            console.log(element);
+                        });*/
                     })
                     .catch((error) => {
                         console.log("INSERT_CONFIG_REGIONS_QUERY error ", error)
@@ -300,6 +308,38 @@ class RegionForm extends Component {
             }
         );
     }
+
+    /* updRegionBusinessCompany = (regionId, IdBusiness) => {
+         this.setState(
+             {
+                 loading: true
+             },
+             () => {
+                 this.props.client
+                     .mutate({
+                         mutation: UPDATE_REGION_BUSINESSCOMPANY_QUERY,
+                         variables: {
+                             args: {
+                                 Region: regionId,
+                                 Id: IdBusiness
+                             }
+                         }
+                     })
+                     .then((data) => {
+                         console.log("INSERT_CONFIG_REGIONS_QUERY ", data)
+                     })
+                     .catch((error) => {
+                         console.log("INSERT_CONFIG_REGIONS_QUERY error ", error)
+                         this.props.handleOpenSnackbar(
+                             'error', 'Error: Inserting Catalog Item: ' + error
+                         );
+                         this.setState({
+                             loading: false
+                         });
+                     });
+             }
+         );
+     }*/
 
     handleChangePositionTag = (hotelsTags) => {
         this.setState({ hotelsTags });
