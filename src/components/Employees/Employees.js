@@ -636,8 +636,12 @@ class Employees extends Component {
                 if (data.data.getcatalogitem != null) {
                     this.setState({
                         languages: data.data.getcatalogitem,
-                        loadingLanguages: false
+                        loadingLanguages: false,
                     }, () => {
+                        this.setState({
+                            idLanguage: this.state.languages[0].Id
+                        });
+
                         this.fetchEmails();
                     });
                 }
@@ -1133,7 +1137,6 @@ class Employees extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-12">
                                     <label>* Language</label>
-
                                     <select
                                         name="idLanguage"
                                         className={[
@@ -1146,7 +1149,6 @@ class Employees extends Component {
                                         }}
                                         value={this.state.idLanguage}
                                     >
-                                        <option value="">Select a language</option>
                                         {this.state.languages.map((item) => (
                                             <option key={item.Id} value={item.Id}>
                                                 {item.Name}

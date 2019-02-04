@@ -806,6 +806,7 @@ class Catalogs extends React.Component {
                         this.setState(
                             {
                                 languages: data.data.getcatalogitem,
+                                idLanguage: data.data.getcatalogitem[0].Id,
                                 loadingLanguages: false
                             },
                             func
