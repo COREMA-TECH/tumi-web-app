@@ -122,6 +122,7 @@ class Catalogs extends React.Component {
                 Name
                 DisplayLabel
                 contacts{
+                    Id
                   First_Name
                   Middle_Name
                 }
@@ -1261,7 +1262,7 @@ class Catalogs extends React.Component {
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
-                                                    checked={this.state.isEmployee}
+                                                    checked={this.state.manageApp}
                                                     name="manageApp"
                                                     onChange={this.handleCheckedChange('manageApp')}
                                                     className="onoffswitch-checkbox"

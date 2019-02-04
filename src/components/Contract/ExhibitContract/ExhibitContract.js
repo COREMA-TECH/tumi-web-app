@@ -457,22 +457,8 @@ class ExhibitContract extends Component {
                 <div className="">
                     <div className="">
                         <div className="row">
-                            {/*<div
-								className="contract-next-button"
-								onClick={() => {
-									// Insert Exhibits
-									this.insertExhibit();
-								}}
-							>
-								Save
-							</div>*/}
                             <div className="col-md-12">
-
-                                <button
-                                    className={'btn btn-info mt-1'}
-                                    onClick={this.handleClickOpenModal}
-                                    disabled={this.state.loadingContract}
-                                >
+                                <button className={'btn btn-info mt-1'} onClick={this.handleClickOpenModal} disabled={this.state.loadingContract}>
                                     Create Contract {this.state.loadingContract && <i class="fas fa-spinner fa-spin  ml-1" />}
                                 </button>
 
