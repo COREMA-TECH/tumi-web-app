@@ -137,6 +137,9 @@ class RegionForm extends Component {
             .catch();
     };
 
+
+
+
     getConfigRegions = () => {
         console.log("Estoy aqui")
         this.props.client
