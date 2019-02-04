@@ -19,7 +19,6 @@ class Filters extends Component {
 
 
     handleChange = (event) => {
-
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;

@@ -122,8 +122,9 @@ class Catalogs extends React.Component {
                 Name
                 DisplayLabel
                 contacts{
-                  First_Name
-                  Middle_Name
+                    Id
+                    First_Name
+                    Middle_Name
                 }
             }
             getcatalogitem(Id_Catalog: 4) {

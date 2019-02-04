@@ -468,7 +468,7 @@ class Employees extends Component {
         this.setState({
             username: '',
             idRol: null,
-            idLanguage: null,
+            idLanguage: this.state.defaultLanguage,
             usernameValid: true,
             email: "",
             number: "",
@@ -639,7 +639,10 @@ class Employees extends Component {
                         loadingLanguages: false,
                     }, () => {
                         this.setState({
-                            idLanguage: this.state.languages[0].Id
+                            idLanguage: this.state.languages[0].Id,
+                            defaultLanguage: this.state.languages[0].Id
+                        }, () => {
+                            console.log("ID Language: ", this.state.idLanguage)
                         });
 
                         this.fetchEmails();
@@ -740,6 +743,8 @@ class Employees extends Component {
 
 
     addUserHandler = () => {
+        console.log("ID Language: ", this.state.idLanguage);
+
         this.validateAllFields(() => {
             if (this.state.formValid) this.insertUser();
             else {
@@ -1139,10 +1144,7 @@ class Employees extends Component {
                                     <label>* Language</label>
                                     <select
                                         name="idLanguage"
-                                        className={[
-                                            'form-control',
-                                            this.state.idLanguageValid ? '' : '_invalid'
-                                        ].join(' ')}
+                                        className={'form-control'}
                                         disabled={this.state.loadingLanguages}
                                         onChange={(event) => {
                                             this.updateSelect(event.target.value, 'idLanguage');

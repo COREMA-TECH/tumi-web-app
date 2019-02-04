@@ -18,49 +18,49 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-query getlead ( $positionApplyingFor: Int ) {
-	applications(id: 75,isActive: true , positionApplyingFor: $positionApplyingFor) {
-		id
-	firstName
-	lastName
-	cellPhone
-	homePhone
-	car
-	city
-	isLead
-	zipCode
-	idealJobs
-    {
-      id
-	  description
-	  idPosition 
-    }
-	applicationPhases   {
-		id
-		StageId
-		ApplicationId
-		WorkOrderId
-		createdAt
-	  } 
-	cityInfo{
-		DisplayLabel
-	  }
-	state	
-	stateInfo{
-		DisplayLabel
-	  }
-	  generalComment
- languages
-{
-language
-}
-employments
-{
-  id
-}
-	}
+    query getlead  {
+        applications(isActive: true) {
+            id
+            firstName
+            lastName
+            cellPhone
+            homePhone
+            car
+            city
+            isLead
+            zipCode
+            idealJobs
+            {
+                id
+                description
+                idPosition
+            }
+            applicationPhases   {
+                id
+                StageId
+                ApplicationId
+                WorkOrderId
+                createdAt
+            }
+            cityInfo{
+                DisplayLabel
+            }
+            state
+            stateInfo{
+                DisplayLabel
+            }
+            generalComment
+            languages
+            {
+                language
+            }
+            employments
+            {
+                id
+            }
+        }
 
-}
+    }
 	`;
 
 export const GET_COORDENADAS = gql`
