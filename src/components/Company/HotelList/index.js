@@ -91,7 +91,8 @@ class HotelList extends Component {
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
             this.setState({
-                hotels: data.getbusinesscompanies
+                hotels: data.getbusinesscompanies,
+                allHotels: data.getbusinesscompanies
             });
         }).catch();
     }
@@ -138,13 +139,28 @@ class HotelList extends Component {
         let hotelFind = [];
 
         if (value != "") {
-            this.state.hotels.forEach(hotel => {
-                if (hotel.Name.includes(value)) {
-                    hotelFind.push(hotel);
+            let dataEmployees = this.state.allHotels.filter((_, i) => {
+                if (value === "") {
+                    return true;
+                }
+
+                if (
+                    _.Name.indexOf(value) > -1 ||
+                    _.Name.toLocaleLowerCase().indexOf(value.toLowerCase()) > -1 ||
+                    _.Name.toLocaleUpperCase().indexOf(value.toUpperCase()) > -1
+                ) {
+                    return true;
                 }
             });
+
+            // this.state.hotels.forEach(hotel => {
+            //     if (hotel.Name.includes(value.toLowerCase()) || hotel.Name.includes(value.toUpperCase())) {
+            //         hotelFind.push(hotel);
+            //     }
+            // });
+
             this.setState({
-                hotels: hotelFind
+                hotels: dataEmployees
             });
         } else {
             this.getHotels(-1);
