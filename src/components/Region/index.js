@@ -56,7 +56,6 @@ class Region extends Component {
 
 
     getRegions = () => {
-
         this.props.client
             .query({
                 query: GET_REGION_QUERY,

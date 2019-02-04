@@ -26,7 +26,7 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 
 import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
-import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY, UPDATE_REGION_BUSINESSCOMPANY_QUERY, UPDATE_REGION_USERS_QUERY } from './mutations';
+import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY } from './mutations';
 
 
 const styles = (theme) => ({
@@ -67,7 +67,6 @@ class RegionForm extends Component {
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
             IdRecruiter: 0,
-            IdConfigRegion: 0,
             code: '',
             name: '',
             id: 0,
@@ -80,6 +79,7 @@ class RegionForm extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        console.log("Comienzo en el props ")
         if (nextProps.item && nextProps.openModal) {
             this.setState(
                 {
@@ -89,9 +89,12 @@ class RegionForm extends Component {
                     openModal: nextProps.item.openModal,
                 },
                 () => {
+                    console.log("Ya parseamos los props ", this.state)
+
+                    this.getConfigRegions();
                     this.getRecruiter();
                     this.getEmployeesWithoutEntity();
-                    this.getConfigRegions();
+
                 }
             );
         } else if (!nextProps.openModal) {
@@ -114,9 +117,9 @@ class RegionForm extends Component {
 
         }
 
+        this.getConfigRegions();
         this.getRecruiter();
         this.getEmployeesWithoutEntity();
-        this.getConfigRegions();
         this.setState({
             openModal: nextProps.openModal
         });
@@ -138,15 +141,16 @@ class RegionForm extends Component {
     };
 
     getConfigRegions = () => {
+        console.log("getConfigRegions ", this.state.id);
         this.props.client
             .query({
                 query: GET_CONFIGREGIONS,
                 variables: { regionId: this.state.id }
             })
             .then(({ data }) => {
+                console.log("estoy en la data del getConfigRegions", data)
                 this.setState({
                     ConfigRegions: data.configregions,
-                    IdConfigRegion: data.configregions[0].id,
                     IdRegionalManager: data.configregions[0].regionalManagerId,
                     IdRegionalDirector: data.configregions[0].regionalDirectorId,
                 });
@@ -203,7 +207,6 @@ class RegionForm extends Component {
         return { isEdition: isEdition, query: query, id: this.state.id };
     };
     insertCatalogItem = () => {
-        console.log("aqui estoy ", this.state.hotelsTags)
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
         this.setState(
@@ -236,17 +239,16 @@ class RegionForm extends Component {
                         }
                     })
                     .then((data) => {
-                        console.log("Actualizo y estoy aqui ", data)
-
-                        if (isEdition) { this.addConfig(isEdition, id); }
-                        else { this.addConfig(isEdition, data.data.inscatalogitem.Id); }
+                        if (isEdition) {
+                            this.addConfig(isEdition, id);
+                        } else { this.addConfig(isEdition, data.data.inscatalogitem.Id); }
 
                         this.props.toggleRefresh();
                         this.props.handleCloseModal();
-                        this.props.handleOpenSnackbar(
+                        /*this.props.handleOpenSnackbar(
                             'success',
                             isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
-                        );
+                        );*/
                     })
                     .catch((error) => {
                         this.props.handleOpenSnackbar(
@@ -264,16 +266,13 @@ class RegionForm extends Component {
     };
 
     addConfig = (isEdition, regionId) => {
-        console.log("aqui estoy addConfig ", isEdition, regionId)
-
         let query = INSERT_CONFIG_REGIONS_QUERY;
 
         if (isEdition) {
             query = UPDATE_CONFIG_REGIONS_QUERY;
         }
 
-        console.log("aqui estoy query ", query)
-
+        console.log("addConfig ", query)
         this.setState(
             {
                 loading: true
@@ -283,18 +282,15 @@ class RegionForm extends Component {
                     .mutate({
                         mutation: query,
                         variables: {
-                            configregions: {
-                                id: this.state.IdConfigRegion,
-                                regionId: regionId,
-                                regionalManagerId: this.state.IdRegionalManager,
-                                regionalDirectorId: this.state.IdRegionalDirector
-                            }
+
+                            regionId: regionId,
+                            regionalManagerId: this.state.IdRegionalManager,
+                            regionalDirectorId: this.state.IdRegionalDirector
+
                         }
                     })
                     .then((data) => {
-                        /*this.state.hotelsTags.forEach(function (element) {
-                            console.log(element);
-                        });*/
+                        console.log("INSERT_CONFIG_REGIONS_QUERY ", data)
                     })
                     .catch((error) => {
                         console.log("INSERT_CONFIG_REGIONS_QUERY error ", error)
@@ -308,38 +304,6 @@ class RegionForm extends Component {
             }
         );
     }
-
-    /* updRegionBusinessCompany = (regionId, IdBusiness) => {
-         this.setState(
-             {
-                 loading: true
-             },
-             () => {
-                 this.props.client
-                     .mutate({
-                         mutation: UPDATE_REGION_BUSINESSCOMPANY_QUERY,
-                         variables: {
-                             args: {
-                                 Region: regionId,
-                                 Id: IdBusiness
-                             }
-                         }
-                     })
-                     .then((data) => {
-                         console.log("INSERT_CONFIG_REGIONS_QUERY ", data)
-                     })
-                     .catch((error) => {
-                         console.log("INSERT_CONFIG_REGIONS_QUERY error ", error)
-                         this.props.handleOpenSnackbar(
-                             'error', 'Error: Inserting Catalog Item: ' + error
-                         );
-                         this.setState({
-                             loading: false
-                         });
-                     });
-             }
-         );
-     }*/
 
     handleChangePositionTag = (hotelsTags) => {
         this.setState({ hotelsTags });

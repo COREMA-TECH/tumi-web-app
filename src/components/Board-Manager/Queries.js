@@ -18,8 +18,8 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-query getlead ( $positionApplyingFor: Int ) {
-	applications(id: 75,isActive: true , positionApplyingFor: $positionApplyingFor) {
+query getlead  {
+	applications(isActive: true) {
 		id
 	firstName
 	lastName
