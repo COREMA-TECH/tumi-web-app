@@ -117,7 +117,11 @@ class HotelList extends Component {
     };
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({
+            open: false
+        }, () => {
+            this.getHotels(-1);
+        });
     };
 
     handleClickOpenEdit = (boolValue, id, rate, idCompany) => (event) => {
