@@ -44,7 +44,7 @@ class WorkOrdersTable extends Component {
             IdEntity: null,
             date: '',
             quantity: 0,
-            status: 1,
+            status: "",
             shift: '',
             startDate: '',
             endDate: '',
@@ -73,15 +73,30 @@ class WorkOrdersTable extends Component {
 
     }
 
-    getDateFilters = (startDate, endDate) => {
-        if (startDate != "" && endDate != "") {
-            return {
+    getDateFilters = () => {
+        var variables;
+        variables = null;
+        if (this.state.startDate != "" && this.state.endDate != "") {
+            variables = {
                 startDate: this.state.startDate,
-                endDate: this.state.endDate
+                endDate: this.state.endDate,
+                ...variables
             }
-        } else {
-            return null;
         }
+        if (this.state.status != "") {
+            variables = {
+                status: this.state.status,
+                ...variables,
+            }
+        } 
+        if (this.state.id != null) {
+            variables = {
+                id: this.state.id,
+                ...variables,
+            }
+        }
+
+        return variables;
     }
 
     getWorkOrders = () => {
@@ -90,7 +105,7 @@ class WorkOrdersTable extends Component {
                 query: GET_WORKORDERS_QUERY,
                 fetchPolicy: 'no-cache',
                 variables: {
-                    ...this.getDateFilters(this.state.startDate, this.state.endDate)
+                    ...this.getDateFilters()
                 }
             })
             .then(({ data }) => {
@@ -290,6 +305,32 @@ class WorkOrdersTable extends Component {
         })
     }
 
+    handleFilterValue = (event) => {
+        const target = event.target;
+        var value = target.value;
+        const name = target.name;
+
+        if (value == 3)
+            value = "";
+
+        this.setState({
+            status: value
+        }, () => {
+            this.getWorkOrders()
+        });
+    }
+
+    handleChangeId = (event) => {
+        const target = event.target;
+        var value = target.value;
+
+        this.setState({
+            id: value == "" ? null : value
+        }, () => {
+            this.getWorkOrders()
+        });
+    }
+
     render() {
         let items = this.state.data;
         const { rowsPerPage, page } = this.state;
@@ -300,33 +341,51 @@ class WorkOrdersTable extends Component {
             <div className="card">
                 <div className="card-header bg-light">
                     <div className="row">
-                        <div className="col-md-6">
-                            <label> Start Date</label>
-                            <div class="input-group mb-3">
-                                <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">To</span>
-                                </div>
-                                <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
-                                        <i class="fas fa-ban"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6">
-                            <label> Status</label>
+                        <div className="col-md-2">
                             <select name="" id="" className="form-control" onChange={(e) => {
                                 this.setState({
                                     filterValue: parseInt(e.target.value)
                                 })
                             }}>
-                                <option value="0">All</option>
+                                <option value="0">State</option>
                                 <option value="1">Canceled Work Orders</option>
                             </select>
                         </div>
-
+                        <div className="col-md-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">From</span>
+                                </div>
+                                <input type="date" className="form-control" placeholder="2018-10-30" value={this.state.startDate} name="startDate" onChange={this.handleChangeDate} />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">To</span>
+                                </div>
+                                <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
+                            </div>
+                        </div>
+                        <div className="col-md-1">
+                            <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
+                                <i class="fas fa-ban"></i> Clear
+                            </button>
+                        </div>
+                        <div className="col-md-2 offset-md-2">
+                            <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue}>
+                                <option value="3">Status (All)</option>
+                                <option value="1">Open</option>
+                                <option value="2">Completed</option>
+                                <option value="0">Canceled</option>
+                            </select>
+                        </div>
+                        <div className="col-md-2">
+                            <div class="input-group">
+                                <input type="text" name="id" className="form-control" placeholder="Prop.Code / WO.No" onChange={this.handleChangeId} />
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -384,10 +443,6 @@ class WorkOrdersTable extends Component {
                                                                 <button
                                                                     className="btn btn-danger float-left"
                                                                     disabled={this.props.loading}
-                                                                    // onClick={(e) => {
-                                                                    //     e.stopPropagation();
-                                                                    //     return this.props.onDeleteHandler({ ...row });
-                                                                    // }}
                                                                     onClick={(e) => {
                                                                         e.preventDefault();
                                                                         this.setState({ openConfirm: true, idToDelete: row.id });
@@ -410,100 +465,6 @@ class WorkOrdersTable extends Component {
                                                 <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
                                             </TableRow>
                                         );
-                                    } else if (this.state.filterValue == 1) {
-                                        if (row.status == 0) {
-                                            return (
-                                                <TableRow style={{ background: backgroundColor }}>
-                                                    <CustomTableCell className={'text-center'}>
-                                                        <Tooltip title="Life Cycle">
-                                                            <button
-                                                                className="btn btn-success mr-1 float-left"
-                                                                disabled={this.props.loading}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    this.props.onLifeHandler({ ...row });
-                                                                    // return this.props.onEditHandler({ ...row });
-                                                                }}
-                                                            >
-                                                                <i class="fas fa-info"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                        <Tooltip title="Edit">
-                                                            <button
-                                                                className="btn btn-success mr-1 float-left"
-                                                                disabled={this.props.loading}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    return this.props.onEditHandler({ ...row });
-                                                                }}
-                                                            >
-                                                                <i className="fas fa-pen"></i>
-                                                            </button>
-                                                        </Tooltip>
-                                                        {
-                                                            row.status != 0 ? (
-                                                                <Tooltip title="Cancel">
-                                                                    <button
-                                                                        className="btn btn-danger float-left"
-                                                                        disabled={this.props.loading}
-                                                                        // onClick={(e) => {
-                                                                        //     e.stopPropagation();
-                                                                        //     return this.props.onDeleteHandler({ ...row });
-                                                                        // }}
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            this.setState({ openConfirm: true, idToDelete: row.id });
-                                                                        }}
-                                                                    >
-                                                                        <i className="fas fa-ban"></i>
-                                                                    </button>
-                                                                </Tooltip>
-                                                            ) : (
-                                                                    ''
-                                                                )
-                                                        }
-                                                    </CustomTableCell>
-                                                    <CustomTableCell>{row.id}</CustomTableCell>
-                                                    <CustomTableCell>{row.BusinessCompany != null ? row.BusinessCompany.Name : ''}</CustomTableCell>
-                                                    <CustomTableCell>{row.position != null ? row.position.Position : ''}</CustomTableCell>
-                                                    <CustomTableCell className={'text-center'}>{row.quantity}</CustomTableCell>
-                                                    <CustomTableCell className={'text-center'}>{row.shift + '-' + row.endShift}</CustomTableCell>
-                                                    <CustomTableCell className={'text-center'}>{row.needExperience == false ? 'No' : 'Yes'}</CustomTableCell>
-                                                    <CustomTableCell className={'text-center'}>{row.needEnglish == false ? 'No' : 'Yes'}</CustomTableCell>
-                                                    {this.props.showRecruiter &&
-                                                        <CustomTableCell>
-                                                            <div className="input-group">
-                                                                <select
-                                                                    required
-                                                                    name={`RecruiterId`}
-                                                                    className="form-control"
-                                                                    id=""
-                                                                    onChange={(e) => { this.handleChange(e, row.id) }}
-                                                                    value={this.state.RecruiterId}
-                                                                    onBlur={this.handleValidate}
-                                                                >
-                                                                    <option value="0">Select a Recruiter</option>
-                                                                    {this.state.recruiters.map((recruiter) => (
-                                                                        <option value={recruiter.Id} > {recruiter.Full_Name}</option>
-                                                                    ))}
-                                                                </select>
-                                                                <Tooltip title="Convert to Opening">
-                                                                    <button
-                                                                        className="btn btn-link float-left ml-1"
-                                                                        disabled={this.props.loading}
-                                                                        onClick={(e) => {
-                                                                            e.preventDefault();
-                                                                            this.handleConvertToOpening(e, { ...row });
-                                                                        }}
-                                                                    >
-                                                                        <i class="fas fa-exchange-alt text-info"></i>
-                                                                    </button>
-                                                                </Tooltip>
-                                                            </div>
-                                                        </CustomTableCell>}
-                                                </TableRow>
-                                            );
-                                        }
                                     }
                                 })}
                             </TableBody>
