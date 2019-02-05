@@ -55,34 +55,33 @@ class Region extends Component {
     }
 
 
-    getRegions = () => {
+    /* getRegions = () => {
+         this.props.client
+             .query({
+                 query: GET_REGION_QUERY,
+                 variables: {},
+                 fetchPolicy: 'no-cache'
+             })
+             .then(({ data }) => {
+                 this.setState({
+                     data: data.getcatalogitem
+ 
+                 });
+             })
+             .catch();
+     };*/
 
-        this.props.client
-            .query({
-                query: GET_REGION_QUERY,
-                variables: {},
-                fetchPolicy: 'no-cache'
-            })
-            .then(({ data }) => {
-                this.setState({
-                    data: data.getcatalogitem
 
-                });
-            })
-            .catch();
-    };
-
-
-    componentWillMount() {
+    /*componentWillMount() {
         this.getRegions();
-    }
+    }*/
 
     handleClickOpenModal = () => {
         this.setState({ openModal: true, item: null });
     };
 
     handleCloseModal = (event) => {
-        event.preventDefault();
+        // event.preventDefault();
         this.setState({
             openModal: false
 
@@ -97,15 +96,18 @@ class Region extends Component {
         });
     };
 
-    toggleRefresh = () => {
+    /*toggleRefresh = () => {
         this.getRegions();
         this.setState({
             openModal: false
 
         });
-        // this.setState((prevState) => { return { refresh: !prevState.refresh } })
+        this.setState((prevState) => { return { refresh: !prevState.refresh } })
+    }*/
+    toggleRefresh = () => {
+        console.log("Aqui estamos en el toggle")
+        this.setState((prevState) => { return { refresh: !prevState.refresh } })
     }
-
 
     render() {
         return (
@@ -124,7 +126,8 @@ class Region extends Component {
                             onEditHandler={this.onEditHandler}
                             handleOpenSnackbar={this.props.handleOpenSnackbar}
                             toggleRefresh={this.toggleRefresh}
-                            dataRegions={this.state.data}
+                            handleCloseModal={this.handleCloseModal}
+                        //dataRegions={this.state.data}
                         />
                     </div>
                 </div>
@@ -140,5 +143,6 @@ class Region extends Component {
     }
 
 }
-//export default withGlobalContent(Region);
-export default withStyles(styles)(withApollo(Region));
+
+export default withGlobalContent(Region);
+//export default withStyles(styles)(withApollo(Region));

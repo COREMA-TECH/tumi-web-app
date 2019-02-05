@@ -18,47 +18,47 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-    query getlead  {
-        applications(isActive: true) {
-            id
-            firstName
-            lastName
-            cellPhone
-            homePhone
-            car
-            city
-            isLead
-            zipCode
-            idealJobs
-            {
-                id
-                description
-                idPosition
-            }
-            applicationPhases   {
-                id
-                StageId
-                ApplicationId
-                WorkOrderId
-                createdAt
-            }
-            cityInfo{
-                DisplayLabel
-            }
-            state
-            stateInfo{
-                DisplayLabel
-            }
-            generalComment
-            languages
-            {
-                language
-            }
-            employments
-            {
-                id
-            }
-        }
+query getlead  {
+	applications(isActive: true) {
+		id
+	firstName
+	lastName
+	cellPhone
+	homePhone
+	car
+	city
+	isLead
+	zipCode
+	idealJobs
+    {
+      id
+	  description
+	  idPosition 
+    }
+	applicationPhases   {
+		id
+		StageId
+		ApplicationId
+		WorkOrderId
+		createdAt
+	  } 
+	cityInfo{
+		DisplayLabel
+	  }
+	state	
+	stateInfo{
+		DisplayLabel
+	  }
+	  generalComment
+ languages
+{
+language
+}
+employments
+{
+  id
+}
+	}
 
     }
 	`;
