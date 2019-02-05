@@ -117,11 +117,11 @@ class RegionForm extends Component {
 
         } else {
 
-            this.getConfigRegions();
-            this.getRecruiter();
-            this.getEmployeesWithoutEntity();
-            this.gethotelbyregion();
-            this.getrecruiterbyregion();
+            /* this.getConfigRegions();
+             this.getRecruiter();
+             this.getEmployeesWithoutEntity();
+             this.gethotelbyregion();
+             this.getrecruiterbyregion();*/
         }
         this.setState({
             openModal: nextProps.openModal,
@@ -225,7 +225,6 @@ class RegionForm extends Component {
             .then(({ data }) => {
                 this.setState({
                     recruiters: data.getusers
-
                 });
             })
             .catch();
@@ -239,12 +238,13 @@ class RegionForm extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("estoy en la data del getConfigRegions", data)
-                this.setState({
-                    ConfigRegions: data.configregions,
-                    IdRegionalManager: data.configregions[0].regionalManagerId,
-                    IdRegionalDirector: data.configregions[0].regionalDirectorId,
-                });
+                if (data.configregions != null) {
+                    this.setState({
+                        ConfigRegions: data.configregions,
+                        IdRegionalManager: data.configregions[0].regionalManagerId,
+                        IdRegionalDirector: data.configregions[0].regionalDirectorId,
+                    });
+                }
             })
             .catch();
     };
