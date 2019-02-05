@@ -17,14 +17,40 @@ class LocationForm extends Component {
         states: [],
         cities: [],
     }
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             zipCode: '',
             changeCity: false,
-            ...this.INITIAL_STATE
+            ...this.INITIAL_STATE,
+            firstLoadStates: true,
+            firstLoadCities: true
         }
     }
+
+    loadFirstStates = (Id, city) => {
+        this.setState({ loadingStates: true },
+            () => {
+                this.props.client
+                    .query({
+                        query: GET_CATALOGS_QUERY,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            Id_Catalog: STATE_ID,
+                            Id
+                        }
+                    }).then(({ data: { catalogitem } }) => {
+                        this.setState(() => { return { states: catalogitem, loadingStates: false, state: Id } },
+                            () => {
+                                this.loadFirstCities(Id, city)
+                            })
+                    }).catch(error => {
+                        this.setState(() => { return { loadingStates: false } })
+                    })
+            })
+    }
+
+
 
     loadStates = () => {
         this.setState({ loadingStates: true },
@@ -41,13 +67,32 @@ class LocationForm extends Component {
                         this.setState({ states: catalogitem, loadingStates: false },
                             () => {
                                 if (catalogitem.length > 0)
-                                    this.setState({ state: catalogitem[0].Id },
-                                        () => {
-                                            this.loadCities();
-                                        })
+                                    this.setState({ state: catalogitem[0].Id }, () => {
+                                        this.props.onChangeState(this.state.state)
+                                        this.loadCities()
+                                    })
                             })
                     }).catch(error => {
                         this.setState({ loadingStates: false })
+                    })
+            })
+    }
+
+    loadFirstCities = (Id_Parent, Id) => {
+        this.setState({ loadingCities: true },
+            () => {
+                this.props.client
+                    .query({
+                        query: GET_CATALOGS_QUERY,
+                        fetchPolicy: 'no-cache',
+                        variables: {
+                            Id_Catalog: CITY_ID,
+                            Id_Parent
+                        }
+                    }).then(({ data: { catalogitem } }) => {
+                        this.setState(() => { return { cities: catalogitem, loadingCities: false, city: Id } })
+                    }).catch(error => {
+                        this.setState(() => { return { loadingCities: false } })
                     })
             })
     }
@@ -68,7 +113,7 @@ class LocationForm extends Component {
                             () => {
                                 var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
                                 if (selectedCity)
-                                    this.setState({ city: selectedCity.Id })
+                                    this.setState({ city: selectedCity.Id }, () => { this.props.onChangeCity(this.state.city) })
                             })
                     }).catch(error => {
                         this.setState({ loadingCities: false })
@@ -80,8 +125,18 @@ class LocationForm extends Component {
     onValueChange = (e) => {
         this.setState({ [e.target.name]: e.target.type == 'checkbox' ? e.target.checked : e.target.value })
 
+        if (e.target.name == 'city' && this.props.onChangeCity)
+            this.props.onChangeCity(e.target.value)
+        if (e.target.name == 'state' && this.props.onChangeState)
+            this.props.onChangeState(e.target.value)
+        if (e.target.name == 'zipCode' && this.props.onChageZipCode) {
+            this.props.onChageZipCode(e.target.value);
+            this.props.onChangeCity(0);
+            this.props.onChangeState(0);
+        }
+
         if (e.target.name == "zipCode") {
-            this.setState({ ...this.INITIAL_STATE });
+            this.setState({ ...this.INITIAL_STATE, firstLoadStates: false, firstLoadCities: false });
         }
     }
 
@@ -99,26 +154,62 @@ class LocationForm extends Component {
                         }
                         this.setState({ findingZipCode: false })
                     }).catch(error => { this.setState({ findingZipCode: false }) })
+            else
+                this.setState({ findingZipCode: false })
         })
 
     }
 
     handleOnKeyUp = (e) => {
-        if (e.keyCode == 13 || e.keyCode == 9)
-            this.findZipCode()
+         if (e.keyCode == 9)
+             this.findZipCode()
+    }
+
+    handleOnBlur = (e) => {
+         this.findZipCode()
+    }
+
+    componentWillReceiveProps(nextProps) {
+        //This is to load the datasource for States the first time that this component is loaded
+        if (this.state.firstLoadStates && this.state.firstLoadCities &&
+            this.props.state != nextProps.state && this.props.city != nextProps.city)
+            this.loadFirstStates(nextProps.state, nextProps.city);
+
+        this.setPropsToState(nextProps)
+    }
+
+    componentDidMount() {
+        //This is to load the datasource for States the first time that this component is loaded
+        if (this.state.firstLoadStates && this.state.firstLoadCities)
+            this.loadFirstStates(this.props.state);
+
+        this.setPropsToState(this.props)
+    }
+
+    setPropsToState = (props) => {
+        //Setting Props to Component State
+        this.setState(() => {
+            return {
+                state: props.state,
+                city: props.city,
+                zipCode: props.zipCode,
+                changeCity: props.changeCity
+            }
+        })
     }
 
     render() {
+        const loading = this.state.loadingCities || this.state.loadingStates || this.state.findingZipCode;
         return <React.Fragment>
-            <div className="col-md-6 col-lg-4">
+            <div className={this.props.cityColClass || "col-md-6 col-lg-4"}>
                 <label className="mr-1">* City</label>
                 <span className="float-right">
-                    <input type="checkbox" name="changeCity" onChange={this.onValueChange} />
+                    <input type="checkbox" name="changeCity" onChange={this.onValueChange} disabled={this.props.disabledCheck || loading} checked={this.state.changeCity} />
                     <label htmlFor="">Change selected city by zip code?</label>
                 </span>
                 <div className="select-animated">
-                    <select name="city" className='form-control' onChange={this.onValueChange} value={this.state.city}
-                        disabled={!this.state.changeCity || this.state.loadingStates} required>
+                    <select name="city" className={this.props.cityClass || 'form-control'} onChange={this.onValueChange} value={this.state.city}
+                        disabled={!this.state.changeCity || this.state.loadingCities || this.props.disabledCity} required>
                         <option value="">Select a city</option>
                         {this.state.cities.map(({ Id, Name }) => (
                             <option key={Id} value={Id}>{Name}</option>
@@ -127,10 +218,10 @@ class LocationForm extends Component {
                     <i className={`fa fa-spinner fa-spin select-animated-icon ${this.state.loadingCities || 'd-none'}`} />
                 </div>
             </div>
-            <div className="col-md-6 col-lg-4">
+            <div className={this.props.stateColClass || "col-md-6 col-lg-4"}>
                 <div className="select-animated">
                     <label>* State</label>
-                    <select name="state" className='form-control' onChange={this.onValueChange} value={this.state.state}
+                    <select name="state" className={this.props.stateClass || 'form-control'} onChange={this.onValueChange} value={this.state.state}
                         disabled required>
                         <option value="">Select a state</option>
                         {this.state.states.map(({ Id, Name }) => (
@@ -140,21 +231,23 @@ class LocationForm extends Component {
                     <i className={`fa fa-spinner fa-spin select-animated-icon ${this.state.loadingStates || 'd-none'}`} />
                 </div>
             </div>
-            <div className="col-md-6 col-lg-4">
+            <div className={this.props.zipCodeColClass || "col-md-6 col-lg-4"}>
                 <label>* Zip Code</label>
                 <InputMask
                     id="zipCode"
                     name="zipCode"
                     mask={this.props.mask || DEFAULT_MASK}
                     maskChar=""
-                    className="form-control"
+                    className={this.props.zipCodeClass || "form-control"}
                     onChange={this.onValueChange}
                     value={this.state.zipCode}
                     placeholder={this.props.placeholder || DEFAULT_PLACEHOLDER}
                     required
                     minLength="15"
-                    disabled={this.state.loadingCities || this.state.loadingStates || this.state.findingZipCode}
+                    disabled={loading || this.props.disabledZipCode}
                     onKeyDown={this.handleOnKeyUp}
+                    onBlur={this.handleOnBlur}
+
                 />
             </div>
         </React.Fragment>

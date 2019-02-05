@@ -29,8 +29,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
-import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import axios from 'axios';
+import LocationForm from '../../ui-components/LocationForm'
 
 const styles = (theme) => ({
 	wrapper: {
@@ -90,7 +90,8 @@ class GeneralInformation extends Component {
 		startDateValid: true,
 		otherNameEdit: false,
 		other01NameEdit: false,
-		formValid: true
+		formValid: true,
+		changeCity: false
 	};
 	/**
      *  QUERIES to get the countries, cities and states
@@ -104,29 +105,9 @@ class GeneralInformation extends Component {
 			}
 		}
 	`;
-
-	GET_STATES_QUERY = gql`
-		query States($parent: Int!, $Value: String) {
-			getcatalogitem(IsActive: 1, Id_Parent: $parent, Id_Catalog: 3, Value: $Value) {
-				Id
-				Name
-				IsActive
-			}
-		}
-	`;
 	GET_REGIONS_QUERY = gql`
 		query Regions {
 			getcatalogitem( IsActive: 1, Id_Catalog:4) {
-				Id
-				Name
-				IsActive
-			}
-		}
-	`;
-
-	GET_CITIES_QUERY = gql`
-		query Cities($parent: Int!) {
-			getcatalogitem( IsActive: 1, Id_Parent: $parent, Id_Catalog: 5) {
 				Id
 				Name
 				IsActive
@@ -240,40 +221,6 @@ class GeneralInformation extends Component {
     }
 	`;
 
-	/*getHotels = () => {
-		this.props.client.query({
-			query: this.getCompaniesQuery,
-			variables: {}
-			//fetchPolicy: 'no-cache'
-		}).then(({ data }) => {
-			this.setState({
-				hotels: data.getbusinesscompanies
-			});
-		}).catch();
-	}
-		getHotels = (func = () => { }) => {
-			console.log("aqui estoy getHotels")
-			this.setState(
-				{
-					loading: true
-				},
-				() => {
-			this.props.client.query({
-				query: this.GET_COMPANY_CHILD_QUERY,
-				variables: {}
-				//fetchPolicy: 'no-cache'
-			}).then(({ data }) => {
-				console.log("esta es la data ", data)
-				this.setState({
-					hotels: data.getbusinesscompanies,
-					loading: false
-									},
-									func
-				);
-			}).catch();
-		}
-		);
-		};*/
 	getHotels = (func = () => { }) => {
 		this.setState({
 			loadingCompanyProperties: true
@@ -407,17 +354,6 @@ class GeneralInformation extends Component {
 			}
 		);
 	};
-
-	/*updateRegionName = (value) => {
-		this.setState(
-			{
-				regionName: value
-			},
-			() => {
-				this.validateField('regionName', value);
-			}
-		);
-	};*/
 
 	handleOpenHotels = () => {
 		this.setState({ hotelModal: true });
@@ -757,48 +693,6 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadStates = (func = () => { }) => {
-		this.setState({
-			loadingStates: true
-		});
-		this.props.client
-			.query({
-				query: this.GET_STATES_QUERY,
-				variables: { parent: this.state.country },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState(
-						{
-							states: data.data.getcatalogitem,
-							loadingStates: false,
-							loading: false,
-							indexView: 1
-						},
-						func
-					);
-				} else {
-					this.setState({
-						loadingStates: false,
-						loading: false,
-						indexView: 2,
-						errorMessage: 'Error: Loading states: getcatalogitem not exists in query data',
-						firstLoad: false
-					});
-				}
-			})
-			.catch((error) => {
-				this.setState({
-					loadingStates: false,
-					loading: false,
-					indexView: 2,
-					errorMessage: 'Error: Loading states: ' + error,
-					firstLoad: false
-				});
-			});
-	};
-
 	loadRegions = (func = () => { }) => {
 		this.setState({
 			loadingRegions: true
@@ -841,47 +735,9 @@ class GeneralInformation extends Component {
 			});
 	};
 
-	loadCities = (func = () => { }) => {
-		this.setState({
-			loadingCities: true
-		});
-		this.props.client
-			.query({
-				query: this.GET_CITIES_QUERY,
-				variables: { parent: this.state.state },
-				fetchPolicy: 'no-cache'
-			})
-			.then((data) => {
-				if (data.data.getcatalogitem != null) {
-					this.setState(
-						{
-							cities: data.data.getcatalogitem,
-							loadingCities: false,
-							indexView: 1
-						},
-						func
-					);
-				} else {
-					this.setState({
-						loadingCities: false,
-						indexView: 2,
-						errorMessage: 'Error: Loading cities: getcatalogitem not exists in query data',
-						firstLoad: false
-					});
-				}
-			})
-			.catch((error) => {
-				this.setState({
-					loadingCities: false,
-					indexView: 2,
-					errorMessage: 'Error: Loading cities: ' + error,
-					firstLoad: false
-				});
-			});
-	};
 	/**
-     * Events of the component
-     */
+ * Events of the component
+ */
 	handleClickOpen = (scroll, boolValue, id, rate) => () => {
 		//if (!this.props.showStepper) return false;
 		this.setState(
@@ -916,16 +772,8 @@ class GeneralInformation extends Component {
 		if (this.props.idCompany == 0) {
 			this.props.toggleStepper();
 			this.setState({ firstLoad: true }, () => {
-				this.loadCountries(() => {
-					this.loadCities(() => {
-						this.loadStates(() => {
-							this.loadRegions(() => {
-								//this.loadCompanyProperties(() => {
-								this.setState({ indexView: 1, firstLoad: false });
-								//});
-							});
-						});
-					});
+				this.loadRegions(() => {
+					this.setState({ indexView: 1, firstLoad: false });
 				});
 			});
 		} else {
@@ -937,16 +785,9 @@ class GeneralInformation extends Component {
 					this.setState({ firstLoad: true }, () => {
 						this.getHotels(() => {
 							this.loadCompany(() => {
-								this.loadCountries(() => {
-									this.loadCities(() => {
-										this.loadStates(() => {
-											this.loadRegions(() => {
-
-												this.loadCompanyProperties(() => {
-													this.setState({ indexView: 1, firstLoad: false });
-												});
-											});
-										});
+								this.loadRegions(() => {
+									this.loadCompanyProperties(() => {
+										this.setState({ indexView: 1, firstLoad: false });
 									});
 								});
 							});
@@ -1001,7 +842,6 @@ class GeneralInformation extends Component {
 			variantSnackbar: 'info',
 			messageSnackbar: 'Dummy text!',
 			...this.DEFAULT_STATUS,
-			countries: [],
 			states: [],
 			cities: [],
 			regions: [],
@@ -1011,7 +851,6 @@ class GeneralInformation extends Component {
 			state: 0,
 			city: 0,
 			region: 0,
-			loadingCountries: false,
 			loadingCities: false,
 			loadingStates: false,
 			loadingRegions: false,
@@ -1039,22 +878,6 @@ class GeneralInformation extends Component {
 		};
 	}
 
-	updateCountry = (id) => {
-		this.setState(
-			{
-				country: id,
-				state: 0,
-				city: 0,
-				region: 0
-			},
-			() => {
-				this.validateField('country', id);
-				this.loadRegions();
-				this.loadStates();
-				this.loadCities();
-			}
-		);
-	};
 	updateState = (id) => {
 		this.setState(
 			{
@@ -1063,31 +886,16 @@ class GeneralInformation extends Component {
 			},
 			() => {
 				this.validateField('state', id);
-				this.loadCities();
 			}
 		);
 	};
 
 	updateRegion = (id) => {
-		this.setState(
-			{
-				region: id
-			},
-			() => {
-				this.validateField('region', id);
-			}
-		);
+		this.validateField('region', id);
 	};
 
 	updateCity = (id) => {
-		this.setState(
-			{
-				city: id
-			},
-			() => {
-				this.validateField('city', id);
-			}
-		);
+		this.validateField('city', id);
 	};
 
 	updateStartWeek = (id) => {
@@ -1124,54 +932,12 @@ class GeneralInformation extends Component {
 		);
 	};
 	updateInput = (text, name) => {
-		this.setState(
-			{
-				[name]: text
-			}, () => {
-				this.validateField(name, text);
-				if (name == "zipCode") {
-					const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
-					if (zipCode) {
-						axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
-							const cities = res.data;
-							if (!cities.error) {
-								this.findByZipCode(cities.state, cities.city.toLowerCase());
-							}
-						})
-					}
-				}
-			}
-		);
+		this.validateField(name, text);
 	};
-
-	findByZipCode = (zipCode = null, cityFinal = null) => {
-		if (!zipCode) {
-			return false;
-		}
-
-		this.props.client.query({
-			query: this.GET_STATES_QUERY,
-			variables: { parent: -1, Value: `'${zipCode}'` },
-			fetchPolicy: 'no-cache'
-		}).then((data) => {
-			this.updateState(data.data.getcatalogitem[0].Id);
-		}).then(() => {
-			this.loadCities(() => {
-				let citySelected = this.state.cities.filter(city => {
-					return city.Name.toLowerCase().includes(cityFinal);
-				});
-				if (citySelected.length > 0) {
-					this.updateCity(citySelected[0].Id);
-				}
-			});
-		});
-
-	}
 
 	validateAllFields(fun) {
 		let codeValid = this.state.Code.trim().length >= 2;
 		let nameValid = this.state.name.trim().length >= 5;
-		//	let descriptionValid = this.state.description.trim().length >= 10;
 		let addressValid = this.state.address.trim().length >= 5;
 
 		let startWeekValid = this.state.startWeek !== null && this.state.startWeek !== 0 && this.state.startWeek !== '';
@@ -1180,10 +946,6 @@ class GeneralInformation extends Component {
 		let zipCodeValid = this.state.zipCode.toString().trim().length >= 2;
 		let countryValid = this.state.country !== null && this.state.country !== 0 && this.state.country !== '';
 		let stateValid = this.state.state !== null && this.state.state !== 0 && this.state.state !== '';
-		// let regionValid = this.state.region !== null && this.state.region !== 0 && this.state.region !== '';
-
-		//let cityValid = this.state.city !== null && this.state.city !== 0 && this.state.city !== '';
-		//let suiteValid = parseInt(this.state.suite) >= 0;
 
 		let phoneNumberValid =
 			this.state.phoneNumber
@@ -1198,8 +960,6 @@ class GeneralInformation extends Component {
 
 		let phonePrefix = this.state.phonePrefix.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
 		let phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
-
-		let startDateValid = this.state.startDate.trim().length == 10;
 
 		this.setState(
 			{
@@ -1249,142 +1009,141 @@ class GeneralInformation extends Component {
 	}
 
 	validateField(fieldName, value) {
-		let codeValid = this.state.codeValid;
-		let nameValid = this.state.nameValid;
-		//let descriptionValid = this.state.descriptionValid;
-		let addressValid = this.state.addressValid;
 
-		let startWeekValid = this.state.startWeekValid;
-		let endWeekValid = this.state.endWeekValid;
-		let rateValid = this.state.rateValid;
-		let zipCodeValid = this.state.zipCodeValid;
-		let countryValid = this.state.countryValid;
-		let stateValid = this.state.stateValid;
-		// let regionValid = this.state.regionValid;
 
-		let cityValid = this.state.cityValid;
-		let suiteValid = this.state.suiteValid;
-		let phoneNumberValid = this.state.phoneNumberValid;
-		let phoneNumber2Valid = this.state.phoneNumber2Valid;
-		let faxValid = this.state.faxValid;
-		let startDateValid = this.state.startDateValid;
-		let phonePrefixValid = this.state.phonePrefixValid;
-
-		switch (fieldName) {
-			case 'Code':
-				codeValid = value.trim().length >= 2;
-
-				break;
-			case 'name':
-				nameValid = value.trim().length >= 5;
-
-				break;
-			//	case 'description':
-			//	descriptionValid = value.trim().length >= 10;
-
-			//	break;
-			case 'address':
-				addressValid = value.trim().length >= 5;
-
-				break;
-			case 'startWeek':
-				startWeekValid = value !== null && value !== 0 && value !== '';
-
-				break;
-			case 'endWeek':
-				endWeekValid = value !== null && value !== 0 && value !== '';
-
-				break;
-			case 'rate':
-				rateValid = parseInt(value) >= 0;
-
-				break;
-			case 'zipCode':
-				zipCodeValid = value.trim().length >= 2;
-
-				break;
-			case 'country':
-				countryValid = value !== null && value !== 0 && value !== '';
-
-				break;
-			case 'state':
-				stateValid = value !== null && value !== 0 && value !== '';
-
-				// case 'region':
-				// 	regionValid = value !== null && value !== 0 && value !== '';
-
-				break;
-			case 'city':
-				cityValid = value !== null && value !== 0 && value !== '';
-
-				break;
-			//case 'suite':
-			//suiteValid = value.trim()!='';
-
-			//	break;
-			case 'phoneNumber':
-				phoneNumberValid =
-					value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
-						.length == 10;
-				break;
-			case 'phonePrefix':
-				let phonePrefix = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
-				phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
-				break;
-			case 'fax':
-				let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
-				faxValid = fax.length == 10 || fax.length == 0;
-				break;
-			case 'startDate':
-				startDateValid = value.trim().length == 10;
-				break;
-			default:
-				break;
-		}
 		this.setState(
-			{
-				codeValid,
-				nameValid,
-				//descriptionValid,
-				addressValid,
-				startWeekValid,
-				endWeekValid,
-				rateValid,
-				zipCodeValid,
-				countryValid,
-				stateValid,
-				cityValid,
-				// regionValid,
-				//	suiteValid,
-				phoneNumberValid,
-				faxValid,
-				startDateValid,
-				phonePrefixValid
-			},
-			this.validateForm
-		);
+			(prevState) => {
+
+				let codeValid = prevState.codeValid;
+				let nameValid = prevState.nameValid;
+				let addressValid = prevState.addressValid;
+
+				let startWeekValid = prevState.startWeekValid;
+				let endWeekValid = prevState.endWeekValid;
+				let rateValid = prevState.rateValid;
+				let zipCodeValid = prevState.zipCodeValid;
+				let countryValid = prevState.countryValid;
+				let stateValid = prevState.stateValid;
+
+				let cityValid = prevState.cityValid;
+				let phoneNumberValid = prevState.phoneNumberValid;
+				let faxValid = prevState.faxValid;
+				let startDateValid = prevState.startDateValid;
+				let phonePrefixValid = prevState.phonePrefixValid;
+
+				switch (fieldName) {
+					case 'Code':
+						codeValid = value.trim().length >= 2;
+
+						break;
+					case 'name':
+						nameValid = value.trim().length >= 5;
+
+						break;
+					case 'address':
+						addressValid = value.trim().length >= 5;
+
+						break;
+					case 'startWeek':
+						startWeekValid = value !== null && value !== 0 && value !== '';
+
+						break;
+					case 'endWeek':
+						endWeekValid = value !== null && value !== 0 && value !== '';
+
+						break;
+					case 'rate':
+						rateValid = parseInt(value) >= 0;
+
+						break;
+					case 'zipCode':
+
+						zipCodeValid = value.trim().length >= 2;
+						break;
+					case 'country':
+						countryValid = value !== null && value !== 0 && value !== '';
+
+						break;
+					case 'state':
+						stateValid = value !== null && value !== 0 && value !== '';
+						break;
+					case 'city':
+						cityValid = value !== null && value !== 0 && value !== '';
+						break;
+					case 'phoneNumber':
+						phoneNumberValid =
+							value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '')
+								.length == 10;
+						break;
+					case 'phonePrefix':
+						let phonePrefix = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+						phonePrefixValid = phonePrefix.length == 10 || phonePrefix.length == 0;
+						break;
+					case 'fax':
+						let fax = value.replace(/-/g, '').replace(/ /g, '').replace('+', '').replace('(', '').replace(')', '');
+						faxValid = fax.length == 10 || fax.length == 0;
+						break;
+					case 'startDate':
+						startDateValid = value.trim().length == 10;
+						break;
+					default:
+						break;
+				}
+
+				return {
+
+					codeValid,
+					nameValid,
+					addressValid,
+					startWeekValid,
+					endWeekValid,
+					rateValid,
+					zipCodeValid,
+					countryValid,
+					stateValid,
+					cityValid,
+					phoneNumberValid,
+					faxValid,
+					startDateValid,
+					phonePrefixValid,
+					[fieldName]: value,
+					formValid:
+						codeValid &&
+						nameValid &&
+						addressValid &&
+						startWeekValid &&
+						endWeekValid &&
+						rateValid &&
+						zipCodeValid &&
+						countryValid &&
+						stateValid &&
+						phoneNumberValid &&
+						faxValid &&
+						phonePrefixValid
+
+				}
+			});
 	}
 
 	validateForm(func = () => { }) {
 		this.setState(
-			{
-				formValid:
-					this.state.codeValid &&
-					this.state.nameValid &&
-					this.state.descriptionValid &&
-					this.state.addressValid &&
-					this.state.startWeekValid &&
-					this.state.endWeekValid &&
-					this.state.rateValid &&
-					this.state.zipCodeValid &&
-					this.state.countryValid &&
-					this.state.stateValid &&
-					// this.state.regionValid &&
-					//this.state.suiteValid &&
-					this.state.phoneNumberValid &&
-					this.state.faxValid &&
-					this.state.phonePrefixValid
-				//this.state.startDateValid
+			(prevState) => {
+				return {
+					formValid:
+						this.state.codeValid &&
+						this.state.nameValid &&
+						this.state.descriptionValid &&
+						this.state.addressValid &&
+						this.state.startWeekValid &&
+						this.state.endWeekValid &&
+						this.state.rateValid &&
+						this.state.zipCodeValid &&
+						this.state.countryValid &&
+						this.state.stateValid &&
+						this.state.phoneNumberValid &&
+						this.state.faxValid &&
+						this.state.phonePrefixValid
+				}
 			},
 			func
 		);
@@ -1453,7 +1212,6 @@ class GeneralInformation extends Component {
 		let isLoading =
 			this.state.loading ||
 			this.state.loadingCities ||
-			this.state.loadingCountries ||
 			this.state.loadingStates ||
 			// this.state.loadingRegions ||
 			this.state.loadingCompanyProperties ||
@@ -1477,7 +1235,6 @@ class GeneralInformation extends Component {
 		return (
 			<div className="TabSelected-container">
 				{isLoading && <LinearProgress />}
-
 				<div className="row buttonsGroup">
 					<div className="col-md-12">
 						{this.props.idCompany != 0 ? (
@@ -1490,16 +1247,10 @@ class GeneralInformation extends Component {
 											this.setState({ firstLoad: true }, () => {
 												this.getHotels(() => {
 													this.loadCompany(() => {
-														this.loadCountries(() => {
-															this.loadCities(() => {
-																this.loadStates(() => {
-																	this.loadRegions(() => {
-																		this.loadCompanyProperties(() => {
-																			this.props.toggleStepper();
-																			this.setState({ indexView: 1, firstLoad: false });
-																		});
-																	});
-																});
+														this.loadRegions(() => {
+															this.loadCompanyProperties(() => {
+																this.props.toggleStepper();
+																this.setState({ indexView: 1, firstLoad: false });
 															});
 														});
 													});
@@ -1542,16 +1293,10 @@ class GeneralInformation extends Component {
 										this.setState({ firstLoad: true }, () => {
 											this.getHotels(() => {
 												this.loadCompany(() => {
-													this.loadCountries(() => {
-														this.loadCities(() => {
-															this.loadStates(() => {
-																this.loadRegions(() => {
-																	this.loadCompanyProperties(() => {
-																		this.props.toggleStepper();
-																		this.setState({ indexView: 1, firstLoad: false, isCorrectCity: true });
-																	});
-																});
-															});
+													this.loadRegions(() => {
+														this.loadCompanyProperties(() => {
+															this.props.toggleStepper();
+															this.setState({ indexView: 1, firstLoad: false, isCorrectCity: true });
 														});
 													});
 												});
@@ -1668,66 +1413,13 @@ class GeneralInformation extends Component {
 											className={'form-control'}
 										/>
 									</div>
-									<div className="col-md-6 col-lg-4">
-										<label className="mr-1">* City</label>
-										<span className="float-right">
-											<input disabled={!this.props.showStepper} type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
-											<label htmlFor="">Change selected city by zip code?</label>
-										</span>
-										<select
-											name="city"
-											className={'form-control'}
-											disabled={this.state.loadingCities}
-											onChange={(event) => {
-												this.updateCity(event.target.value);
-											}}
-											error={!this.state.cityValid}
-											value={this.state.city}
-											//	disabled={!this.props.showStepper}
-											disabled={this.state.isCorrectCity}
-											showNone={false}
-										>
-											<option value="">Select a city</option>
-											{this.state.cities.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
-											))}
-										</select>
-									</div>
-									<div className="col-md-6 col-lg-4">
-										<label>* State</label>
-										<select
-											name="state"
-											className={'form-control'}
-											disabled={this.state.loadingStates}
-											onChange={(event) => {
-												this.updateState(event.target.value);
-											}}
-											error={!this.state.stateValid}
-											value={this.state.state}
-											//disabled={!this.props.showStepper}
-											disabled={true}
-											showNone={false}
-										>
-											<option value="">Select a state</option>
-											{this.state.states.map((item) => (
-												<option value={item.Id}>{item.Name}</option>
-											))}
-										</select>
-									</div>
-									<div className="col-md-6 col-lg-4">
-										<label>* Zip Code</label>
-										<InputForm
-											value={this.state.zipCode}
-											change={(text) => {
-												this.updateInput(text, 'zipCode');
-											}}
-											error={!this.state.zipCodeValid}
-											maxLength="10"
-											min={0}
-											type="text"
-											disabled={!this.props.showStepper}
-										/>
-									</div>
+									<LocationForm disabledCheck={!this.props.showStepper} disabledCity={!this.props.showStepper} disabledZipCode={!this.props.showStepper}
+										onChangeCity={this.updateCity} onChangeState={this.updateState} onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
+										city={this.state.city} state={this.state.state} zipCode={this.state.zipCode} changeCity={this.state.changeCity}
+										cityClass={`form-control ${!this.state.cityValid && ' _invalid'}`}
+										stateClass={`form-control ${!this.state.stateValid && ' _invalid'}`}
+										zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
+										cityColClass="col-md-6 col-lg-4" stateColClass="col-md-6 col-lg-4" zipCodeColClass="col-md-6 col-lg-4" />
 
 									<div className="col-md-6 col-lg-4">
 										<label>* Phone Number</label>
@@ -1961,25 +1653,14 @@ class GeneralInformation extends Component {
 						</Toolbar>
 					</AppBar>
 					<DialogContent style={{ background: "#F5F7F9" }}>
-						{this.state.propertyClick ? (
-							//Si el click es en una property : pasar el id de esa property
-							<TabsInDialog
-								idCompany={this.props.idCompany}
-								idProperty={this.state.idProperty}
-								Markup={this.props.Markup}
-								handleClose={this.handleClose}
-								handleOpenSnackbar={this.props.handleOpenSnackbar}
-							/>
-						) : (
-								//Si el click no es en esa property : pasar el Id en nulo
-								//para que no cargue niguna información relacionada con ese Id
-								<TabsInDialog
-									idCompany={this.props.idCompany}
-									Markup={this.state.rate}
-									handleClose={this.handleClose}
-									handleOpenSnackbar={this.props.handleOpenSnackbar}
-								/>
-							)}
+						{this.state.open && <TabsInDialog
+							idCompany={this.props.idCompany}
+							idProperty={this.state.propertyClick ? this.state.idProperty : null}
+							Markup={this.props.Markup}
+							handleClose={this.handleClose}
+							handleOpenSnackbar={this.props.handleOpenSnackbar}
+						/>}
+
 					</DialogContent>
 				</Dialog>
 			</div>
