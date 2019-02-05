@@ -921,7 +921,6 @@ class BoardManager extends Component {
     };
 
     handleCloseModal = (event) => {
-        event.preventDefault();
         this.setState({ openModal: false });
     };
 

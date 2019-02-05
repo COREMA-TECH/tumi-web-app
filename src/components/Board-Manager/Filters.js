@@ -19,7 +19,6 @@ class Filters extends Component {
 
 
     handleChange = (event) => {
-
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -61,7 +60,7 @@ class Filters extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent>
-                        <form action="">
+                        <form>
                             <div className="row">
                                 <div className="col-md-6">
                                     <label>Needs Experience?</label>
@@ -119,10 +118,10 @@ class Filters extends Component {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <button className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
+                                            <button type="reset" className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
                                                 Reset Filters<i class="fas fa-ban ml-2" />
                                             </button>
-                                            <button className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
+                                            <button type="reset" className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
                                                 New Filter {!this.state.saving && <i class="fas fa-filter ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>

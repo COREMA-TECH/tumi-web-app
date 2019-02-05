@@ -60,7 +60,7 @@ employments
 }
 	}
 
-}
+    }
 	`;
 
 export const GET_COORDENADAS = gql`
