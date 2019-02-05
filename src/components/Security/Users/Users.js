@@ -123,13 +123,8 @@ class Catalogs extends React.Component {
                 DisplayLabel
                 contacts{
                     Id
-<<<<<<< HEAD
-                  First_Name
-                  Middle_Name
-=======
                     First_Name
                     Middle_Name
->>>>>>> 0e543028eccf4d754889b0b17d39d71d59ef5f17
                 }
             }
             getcatalogitem(Id_Catalog: 4) {
