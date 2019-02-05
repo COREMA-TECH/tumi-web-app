@@ -26,7 +26,7 @@ import moment from 'moment';
 import Datetime from 'react-datetime';
 
 import { GET_HOTEL_QUERY, GET_RECRUITER, GET_EMPLOYEES_WITHOUT_ENTITY, GET_CONFIGREGIONS } from './queries';
-import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY } from './mutations';
+import { INSERT_CATALOG_ITEM_QUERY, UPDATE_CATALOG_ITEM_QUERY, INSERT_CONFIG_REGIONS_QUERY, UPDATE_CONFIG_REGIONS_QUERY, UPDATE_RECRUITERS_BY_REGIONS_QUERY, UPDATE_HOTELS_BY_REGIONS_QUERY } from './mutations';
 
 
 const styles = (theme) => ({
@@ -62,8 +62,10 @@ class RegionForm extends Component {
             employees: [],
             positionsTags: [],
             recruitersTags: [],
+            Old_recruitersTags: [],
             ConfigRegions: [],
             hotelsTags: [],
+            Old_hotelsTags: [],
             IdRegionalManager: 0,
             IdRegionalDirector: 0,
             IdRecruiter: 0,
@@ -94,6 +96,8 @@ class RegionForm extends Component {
                     this.getConfigRegions();
                     this.getRecruiter();
                     this.getEmployeesWithoutEntity();
+                    this.gethotelbyregion();
+                    this.getrecruiterbyregion();
 
                 }
             );
@@ -115,15 +119,105 @@ class RegionForm extends Component {
                 }
             );
 
+        } else {
+            this.getConfigRegions();
+            this.getRecruiter();
+            this.getEmployeesWithoutEntity();
+            this.gethotelbyregion();
+            this.getrecruiterbyregion();
         }
-
-        this.getConfigRegions();
-        this.getRecruiter();
-        this.getEmployeesWithoutEntity();
         this.setState({
-            openModal: nextProps.openModal
+            openModal: nextProps.openModal,
+            hotelsTags: [],
+            Old_hotelsTags: [],
+            recruitersTags: [],
+            Old_recruitersTags: []
+
         });
+
     }
+
+    // get recruiters by regions
+    getrecruiterbyregion = () => {
+        this.props.client
+            .query({
+                query: GET_RECRUITER,
+                variables: {
+                    IdRegion: this.state.id
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                let dataAPI = data.getusers;
+
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        recruitersTags: [...prevState.recruitersTags, {
+                            value: item.Id,
+                            label: item.Full_Name
+                        }],
+                        Old_recruitersTags: [...prevState.recruitersTags, {
+                            value: item.Id,
+                            label: item.Full_Name
+                        }],
+
+                    }))
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
+
+    // get hotel by region
+    gethotelbyregion = () => {
+        this.props.client
+            .query({
+                query: GET_HOTEL_QUERY,
+                variables: {
+                    Region: this.state.id
+                },
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                let dataAPI = data.getbusinesscompanies;
+                let object;
+
+                dataAPI.map(item => {
+                    this.setState(prevState => ({
+                        hotelsTags: [...prevState.hotelsTags, {
+                            value: item.Id,
+                            label: item.Code + ' - ' + item.Name
+                        }],
+                        Old_hotelsTags: [...prevState.hotelsTags, {
+                            value: item.Id,
+                            label: item.Code + ' - ' + item.Name
+                        }],
+                    }))
+                }, () => {
+                    this.setState({
+                        loading: false
+                    })
+                });
+            })
+            .catch(error => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to show applicant information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            })
+    };
 
     getRecruiter = () => {
         this.props.client
@@ -145,7 +239,8 @@ class RegionForm extends Component {
         this.props.client
             .query({
                 query: GET_CONFIGREGIONS,
-                variables: { regionId: this.state.id }
+                variables: { regionId: this.state.id },
+                fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
                 console.log("estoy en la data del getConfigRegions", data)
@@ -157,7 +252,6 @@ class RegionForm extends Component {
             })
             .catch();
     };
-
 
 
     getEmployeesWithoutEntity = () => {
@@ -208,71 +302,97 @@ class RegionForm extends Component {
     };
     insertCatalogItem = () => {
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
+        if (
+            this.state.IdRegionalManager == 0 ||
+            this.state.IdRegionalDirector == 0 ||
+            this.state.code == '' ||
+            this.state.name == ''
+        ) {
+            console.log("Campos ", this.state.IdRegionalManager, this.state.IdRegionalDirector, this.state.IdRecruiter, this.state.code, this.state.name
+            )
 
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: query,
-                        variables: {
-                            input: {
-                                Id: id,
-                                Id_Catalog: 4,
-                                Id_Parent: 0,
-                                Name: `'${this.state.code}'`,
-                                DisplayLabel: `'${this.state.name}'`,
-                                Description: `'${this.state.name}'`,
-                                Value: `''`,
-                                Value01: `''`,
-                                Value02: `''`,
-                                Value03: `''`,
-                                Value04: `''`,
-                                IsActive: 1,
-                                User_Created: 1,
-                                User_Updated: 1,
-                                Date_Created: "'2018-08-14 16:10:25+00'",
-                                Date_Updated: "'2018-08-14 16:10:25+00'"
+            this.props.handleOpenSnackbar('warning', 'all fields are required');
+        } else {
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: query,
+                            variables: {
+                                input: {
+                                    Id: id,
+                                    Id_Catalog: 4,
+                                    Id_Parent: 0,
+                                    Name: `'${this.state.code}'`,
+                                    DisplayLabel: `'${this.state.name}'`,
+                                    Description: `'${this.state.name}'`,
+                                    Value: `''`,
+                                    Value01: `''`,
+                                    Value02: `''`,
+                                    Value03: `''`,
+                                    Value04: `''`,
+                                    IsActive: 1,
+                                    User_Created: 1,
+                                    User_Updated: 1,
+                                    Date_Created: "'2018-08-14 16:10:25+00'",
+                                    Date_Updated: "'2018-08-14 16:10:25+00'"
+                                }
                             }
-                        }
-                    })
-                    .then((data) => {
-                        if (isEdition) {
-                            this.addConfig(isEdition, id);
-                        } else { this.addConfig(isEdition, data.data.inscatalogitem.Id); }
+                        })
+                        .then((data) => {
 
-                        this.props.toggleRefresh();
-                        this.props.handleCloseModal();
-                        /*this.props.handleOpenSnackbar(
-                            'success',
-                            isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
-                        );*/
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            isEdition
-                                ? 'Error: Updating Catalog Item: ' + error
-                                : 'Error: Inserting Catalog Item: ' + error
-                        );
-                        this.setState({
-                            loading: false
+
+
+                            this.state.Old_hotelsTags.map((item) => {
+                                this.addregionbusinescompanies(0, item.value)
+                            });
+
+                            this.state.hotelsTags.map((item) => {
+                                this.addregionbusinescompanies(this.state.id, item.value)
+                            });
+
+                            this.state.Old_recruitersTags.map((itemrecruiter) => {
+                                console.log("this.state.Old_recruitersTags ", itemrecruiter.value)
+                                this.addregionusers(0, itemrecruiter.value)
+                            });
+
+                            this.state.recruitersTags.map((itemrecruiter) => {
+                                console.log("this.state.recruitersTags ", itemrecruiter)
+                                this.addregionusers(this.state.id, itemrecruiter.value)
+                            });
+
+                            if (isEdition) {
+                                this.addConfig(isEdition, id);
+                            } else {
+                                this.addConfig(isEdition, data.data.inscatalogitem.Id);
+                            }
+
+
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                isEdition
+                                    ? 'Error: Updating Catalog Item: ' + error
+                                    : 'Error: Inserting Catalog Item: ' + error
+                            );
+                            this.setState({
+                                loading: false
+                            });
                         });
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
     addConfig = (isEdition, regionId) => {
         let query = INSERT_CONFIG_REGIONS_QUERY;
-
         if (isEdition) {
             query = UPDATE_CONFIG_REGIONS_QUERY;
         }
-
-        console.log("addConfig ", query)
         this.setState(
             {
                 loading: true
@@ -282,18 +402,22 @@ class RegionForm extends Component {
                     .mutate({
                         mutation: query,
                         variables: {
-
                             regionId: regionId,
                             regionalManagerId: this.state.IdRegionalManager,
                             regionalDirectorId: this.state.IdRegionalDirector
-
                         }
                     })
                     .then((data) => {
-                        console.log("INSERT_CONFIG_REGIONS_QUERY ", data)
+                        // this.addregionbusinescompanies();
+                        this.props.toggleRefresh();
+                        this.props.handleCloseModal();
+                        this.props.handleOpenSnackbar(
+                            'success',
+                            isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+                        );
+
                     })
                     .catch((error) => {
-                        console.log("INSERT_CONFIG_REGIONS_QUERY error ", error)
                         this.props.handleOpenSnackbar(
                             'error', 'Error: Inserting Catalog Item: ' + error
                         );
@@ -303,6 +427,52 @@ class RegionForm extends Component {
                     });
             }
         );
+    }
+
+    addregionbusinescompanies = (idRegion, idhotel) => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_HOTELS_BY_REGIONS_QUERY,
+                        variables: {
+                            Id: idhotel,
+                            Region: idRegion
+                        }
+                    })
+                    .then((data) => {
+                        console.log(data)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            });
+    }
+
+    addregionusers = (idRegion, idRecruiter) => {
+        this.setState(
+            {
+                loading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_RECRUITERS_BY_REGIONS_QUERY,
+                        variables: {
+                            Id: idRecruiter,
+                            IdRegion: idRegion
+                        }
+                    })
+                    .then((data) => {
+                        console.log(data)
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    });
+            });
     }
 
     handleChangePositionTag = (hotelsTags) => {
@@ -361,8 +531,8 @@ class RegionForm extends Component {
                             <div className="card">
                                 <div className="card-header">
                                     <div className="row">
-                                        <div className="col-md-4">
-                                            <label htmlFor="">Regional Manager</label>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">* Regional Manager</label>
                                             <select
                                                 required
                                                 name="IdRegionalManager"
@@ -377,8 +547,8 @@ class RegionForm extends Component {
                                                 ))}
                                             </select>
                                         </div>
-                                        <div className="col-md-4">
-                                            <label htmlFor="">Regional Director</label>
+                                        <div className="col-md-6">
+                                            <label htmlFor="">* Regional Director</label>
                                             <select
                                                 required
                                                 name="IdRegionalDirector"
@@ -394,76 +564,77 @@ class RegionForm extends Component {
                                             </select>
                                         </div>
 
-                                        <div className="col-md-4">
-                                            <label htmlFor="">Regional Recruiter</label>
-                                            <Query query={GET_RECRUITER}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getusers != null && data.getusers.length > 0) {
-                                                        let options = [];
-                                                        data.getusers.map((item) => (
-                                                            options.push({ value: item.Id, label: item.Full_Name })
-                                                        ));
 
-                                                        return (
-                                                            <div style={{
-                                                                paddingTop: '0px',
-                                                                paddingBottom: '2px',
-                                                            }}>
-                                                                <Select
-                                                                    options={options}
-                                                                    value={this.state.recruitersTags}
-                                                                    onChange={this.handleChangerecruiterTag}
-                                                                    closeMenuOnSelect={false}
-                                                                    components={makeAnimated()}
-                                                                    isMulti
-                                                                />
-                                                            </div>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
+                                        <div className="card-body">
+                                            <div className="row">
+
+                                                <div className="col-md-6">
+                                                    <label htmlFor="">Regional Recruiter</label>
+                                                    <Query query={GET_RECRUITER}>
+                                                        {({ loading, error, data, refetch, networkStatus }) => {
+                                                            //if (networkStatus === 4) return <LinearProgress />;
+                                                            if (error) return <p>Error </p>;
+                                                            if (data.getusers != null && data.getusers.length > 0) {
+                                                                let options = [];
+                                                                data.getusers.map((item) => (
+                                                                    options.push({ value: item.Id, label: item.Full_Name })
+                                                                ));
+
+                                                                return (
+                                                                    <div style={{
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '2px',
+                                                                    }}>
+                                                                        <Select
+                                                                            options={options}
+                                                                            value={this.state.recruitersTags}
+                                                                            onChange={this.handleChangerecruiterTag}
+                                                                            closeMenuOnSelect={false}
+                                                                            components={makeAnimated()}
+                                                                            isMulti
+                                                                        />
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return <SelectNothingToDisplay />;
+                                                        }}
+                                                    </Query>
+                                                </div>
+
+                                                <div className="col-md-6">
+                                                    <label htmlFor="">Property Name</label>
+                                                    <Query query={GET_HOTEL_QUERY} >
+                                                        {({ loading, error, data, refetch, networkStatus }) => {
+                                                            //if (networkStatus === 4) return <LinearProgress />;
+                                                            if (error) return <p>Error </p>;
+                                                            if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+                                                                let options = [];
+                                                                data.getbusinesscompanies.map((item) => (
+                                                                    options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
+                                                                ));
+
+                                                                return (
+                                                                    <div style={{
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '2px',
+                                                                    }}>
+                                                                        <Select
+                                                                            options={options}
+                                                                            value={this.state.hotelsTags}
+                                                                            onChange={this.handleChangePositionTag}
+                                                                            closeMenuOnSelect={false}
+                                                                            components={makeAnimated()}
+                                                                            isMulti
+                                                                        />
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return <SelectNothingToDisplay />;
+                                                        }}
+                                                    </Query>
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        <div className="col-md-4">
-                                            <label htmlFor="">Property Name</label>
-                                            <Query query={GET_HOTEL_QUERY}>
-                                                {({ loading, error, data, refetch, networkStatus }) => {
-                                                    //if (networkStatus === 4) return <LinearProgress />;
-                                                    if (error) return <p>Error </p>;
-                                                    if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-                                                        let options = [];
-                                                        data.getbusinesscompanies.map((item) => (
-                                                            options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
-                                                        ));
-
-                                                        return (
-                                                            <div style={{
-                                                                paddingTop: '0px',
-                                                                paddingBottom: '2px',
-                                                            }}>
-                                                                <Select
-                                                                    options={options}
-                                                                    value={this.state.hotelsTags}
-                                                                    onChange={this.handleChangePositionTag}
-                                                                    closeMenuOnSelect={false}
-                                                                    components={makeAnimated()}
-                                                                    isMulti
-                                                                />
-                                                            </div>
-                                                        );
-                                                    }
-                                                    return <SelectNothingToDisplay />;
-                                                }}
-                                            </Query>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="card-body">
-                                    <div className="row">
                                     </div>
                                 </div>
 
@@ -476,9 +647,12 @@ class RegionForm extends Component {
                                         Cancel<i className="fas fa-ban ml-2" />
                                     </button>
                                     <button type="button" className="btn btn-success float-right mr-1"
-                                        onClick={() => { this.insertCatalogItem(); }}>
-                                        Save {!this.state.saving && <i className="fas fa-save ml2" />}
-                                        {this.state.saving && <i className="fas fa-spinner fa-spin  ml2" />}</button>
+                                        onClick={() => {
+                                            this.insertCatalogItem();
+                                            //  this.addregionbusinescompanies();
+                                        }}>
+                                        Save {!this.state.loading && <i className="fas fa-save ml2" />}
+                                        {this.state.loading && <i className="fas fa-spinner fa-spin  ml2" />}</button>
                                 </div>
                             </div>
                         </div>

@@ -37,3 +37,17 @@ mutation updateConfigRegions($regionId: Int, $regionalManagerId: Int,$regionalDi
   {regionId}
 }
 `;
+
+export const UPDATE_RECRUITERS_BY_REGIONS_QUERY = gql`
+mutation updregionusers($Id: Int, $IdRegion: Int)
+{  updregionusers(Id:$Id,IdRegion:$IdRegion)
+  {Id}
+}
+`;
+
+export const UPDATE_HOTELS_BY_REGIONS_QUERY = gql`
+mutation updregionbusinescompanies($Id: Int, $Region: Int)
+{  updregionbusinescompanies(Id:$Id,  Region:$Region)
+  {Id}
+}
+`;

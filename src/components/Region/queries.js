@@ -15,8 +15,8 @@ export const GET_REGION_QUERY = gql`
 
 
 export const GET_HOTEL_QUERY = gql`
-	query hotels($id: Int) {
-		getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
+	query hotels($Region: Int) {
+		getbusinesscompanies(Region: $Region, IsActive: 1, Contract_Status: "'C'", Id_Parent: -1) {
 			Id
 			Code
 			Name
@@ -29,8 +29,8 @@ export const GET_HOTEL_QUERY = gql`
 
 
 export const GET_RECRUITER = gql`
-    query getUsers {
-		getusers(Id: null,IsActive: 1 ,IsRecruiter:1) {
+    query getUsers($IdRegion:Int) {
+		getusers(Id: null,IsActive: 1 ,IsRecruiter:1, IdRegion:$IdRegion) {
             Id
 			Id_Contact
 			Full_Name
