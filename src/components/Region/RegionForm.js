@@ -91,21 +91,17 @@ class RegionForm extends Component {
                     openModal: nextProps.item.openModal,
                 },
                 () => {
-                    console.log("Ya parseamos los props ", this.state)
-
                     this.getConfigRegions();
                     this.getRecruiter();
                     this.getEmployeesWithoutEntity();
                     this.gethotelbyregion();
                     this.getrecruiterbyregion();
-
                 }
             );
         } else if (!nextProps.openModal) {
             this.setState(
                 {
-                    recruiters: [],
-                    employees: [],
+
                     IdRegionalManager: 0,
                     IdRegionalDirector: 0,
                     IdRecruiter: 0,
@@ -120,6 +116,7 @@ class RegionForm extends Component {
             );
 
         } else {
+
             this.getConfigRegions();
             this.getRecruiter();
             this.getEmployeesWithoutEntity();
@@ -235,7 +232,6 @@ class RegionForm extends Component {
     };
 
     getConfigRegions = () => {
-        console.log("getConfigRegions ", this.state.id);
         this.props.client
             .query({
                 query: GET_CONFIGREGIONS,
@@ -301,6 +297,7 @@ class RegionForm extends Component {
         return { isEdition: isEdition, query: query, id: this.state.id };
     };
     insertCatalogItem = () => {
+        let identificador = 0;
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
         if (
             this.state.IdRegionalManager == 0 ||
@@ -344,24 +341,26 @@ class RegionForm extends Component {
                         })
                         .then((data) => {
 
-
+                            if (isEdition) {
+                                identificador = id;
+                            } else {
+                                identificador = data.data.inscatalogitem.Id;
+                            }
 
                             this.state.Old_hotelsTags.map((item) => {
                                 this.addregionbusinescompanies(0, item.value)
                             });
 
                             this.state.hotelsTags.map((item) => {
-                                this.addregionbusinescompanies(this.state.id, item.value)
+                                this.addregionbusinescompanies(identificador, item.value)
                             });
 
                             this.state.Old_recruitersTags.map((itemrecruiter) => {
-                                console.log("this.state.Old_recruitersTags ", itemrecruiter.value)
                                 this.addregionusers(0, itemrecruiter.value)
                             });
 
                             this.state.recruitersTags.map((itemrecruiter) => {
-                                console.log("this.state.recruitersTags ", itemrecruiter)
-                                this.addregionusers(this.state.id, itemrecruiter.value)
+                                this.addregionusers(identificador, itemrecruiter.value)
                             });
 
                             if (isEdition) {
@@ -389,44 +388,80 @@ class RegionForm extends Component {
     };
 
     addConfig = (isEdition, regionId) => {
-        let query = INSERT_CONFIG_REGIONS_QUERY;
+        //let query = INSERT_CONFIG_REGIONS_QUERY;
         if (isEdition) {
-            query = UPDATE_CONFIG_REGIONS_QUERY;
-        }
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: query,
-                        variables: {
-                            regionId: regionId,
-                            regionalManagerId: this.state.IdRegionalManager,
-                            regionalDirectorId: this.state.IdRegionalDirector
-                        }
-                    })
-                    .then((data) => {
-                        // this.addregionbusinescompanies();
-                        this.props.toggleRefresh();
-                        this.props.handleCloseModal();
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
-                        );
+            //query = UPDATE_CONFIG_REGIONS_QUERY;
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: UPDATE_CONFIG_REGIONS_QUERY,
+                            variables: {
+                                regionId: regionId,
+                                regionalManagerId: this.state.IdRegionalManager,
+                                regionalDirectorId: this.state.IdRegionalDirector
+                            }
+                        })
+                        .then((data) => {
+                            this.props.toggleRefresh();
+                            this.props.handleCloseModal();
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+                            );
 
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error', 'Error: Inserting Catalog Item: ' + error
-                        );
-                        this.setState({
-                            loading: false
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error', 'Error: Inserting Catalog Item: ' + error
+                            );
+                            this.setState({
+                                loading: false
+                            });
                         });
-                    });
-            }
-        );
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: INSERT_CONFIG_REGIONS_QUERY,
+                            variables: {
+                                configregions: {
+                                    regionId: regionId,
+                                    regionalManagerId: this.state.IdRegionalManager,
+                                    regionalDirectorId: this.state.IdRegionalDirector
+                                }
+                            }
+                        })
+                        .then((data) => {
+                            this.props.toggleRefresh();
+                            this.props.handleCloseModal();
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+                            );
+
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error', 'Error: Inserting Catalog Item: ' + error
+                            );
+                            this.setState({
+                                loading: false
+                            });
+                        });
+                }
+            );
+        }
+
     }
 
     addregionbusinescompanies = (idRegion, idhotel) => {
