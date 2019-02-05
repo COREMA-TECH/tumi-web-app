@@ -28,7 +28,7 @@ class LocationForm extends Component {
         }
     }
 
-    loadFirstStates = (Id, city) => {
+    loadFirstStates = (Id, city, code) => {
         this.setState({ loadingStates: true },
             () => {
                 this.props.client
@@ -64,7 +64,7 @@ class LocationForm extends Component {
                             Value: this.state.stateCode || DEFAULT_STATE_CODE
                         }
                     }).then(({ data: { catalogitem } }) => {
-                        this.setState({ states: catalogitem, loadingStates: false },
+                        this.setState({ states: catalogitem, loadingStates: false,findingZipCode:false },
                             () => {
                                 if (catalogitem.length > 0)
                                     this.setState({ state: catalogitem[0].Id }, () => {
@@ -73,7 +73,7 @@ class LocationForm extends Component {
                                     })
                             })
                     }).catch(error => {
-                        this.setState({ loadingStates: false })
+                        this.setState({ loadingStates: false,findingZipCode:false })
                     })
             })
     }
@@ -109,14 +109,14 @@ class LocationForm extends Component {
                             Id_Parent: this.state.state || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
-                        this.setState({ cities: catalogitem, loadingCities: false },
+                        this.setState({ cities: catalogitem, loadingCities: false,findingZipCode:false },
                             () => {
                                 var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
                                 if (selectedCity)
                                     this.setState({ city: selectedCity.Id }, () => { this.props.onChangeCity(this.state.city) })
                             })
                     }).catch(error => {
-                        this.setState({ loadingCities: false })
+                        this.setState({ loadingCities: false,findingZipCode:false })
                     })
             })
 
@@ -130,13 +130,17 @@ class LocationForm extends Component {
         if (e.target.name == 'state' && this.props.onChangeState)
             this.props.onChangeState(e.target.value)
         if (e.target.name == 'zipCode' && this.props.onChageZipCode) {
-            this.props.onChageZipCode(e.target.value);
-            this.props.onChangeCity(0);
-            this.props.onChangeState(0);
+            var value = e.target.value;
+            this.setState({ firstLoadStates: false, firstLoadCities: false }, () => {
+                this.props.onChageZipCode(value);
+                this.props.onChangeCity(0);
+                this.props.onChangeState(0);
+            })
+
         }
 
         if (e.target.name == "zipCode") {
-            this.setState({ ...this.INITIAL_STATE, firstLoadStates: false, firstLoadCities: false });
+            this.setState({ ...this.INITIAL_STATE });
         }
     }
 
@@ -145,15 +149,17 @@ class LocationForm extends Component {
         const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
         this.setState({ findingZipCode: true }, () => {
             if (zipCode)
-                axios.get(`https://ziptasticapi.com/${zipCode}`)
-                    .then(res => {
-                        const cities = res.data;
-                        if (!cities.error) {
-                            this.setState({ stateCode: cities.state, cityName: cities.city.toLowerCase() },
-                                () => { this.loadStates(); })
-                        }
-                        this.setState({ findingZipCode: false })
-                    }).catch(error => { this.setState({ findingZipCode: false }) })
+                this.setState({ loadingCities: true, loadingStates: true }, () => {
+                    axios.get(`https://ziptasticapi.com/${zipCode}`)
+                        .then(res => {
+                            const cities = res.data;
+                            if (!cities.error) {
+                                this.setState({ stateCode: cities.state, cityName: cities.city.toLowerCase() },
+                                    () => { this.loadStates(); })
+                            } else
+                                this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false })
+                        }).catch(error => { this.setState({ findingZipCode: false, loadingCities: false, loadingStates: false }) })
+                })
             else
                 this.setState({ findingZipCode: false })
         })
@@ -161,19 +167,19 @@ class LocationForm extends Component {
     }
 
     handleOnKeyUp = (e) => {
-         if (e.keyCode == 9)
-             this.findZipCode()
+        if (e.keyCode == 9)
+            this.findZipCode()
     }
 
     handleOnBlur = (e) => {
-         this.findZipCode()
+        this.findZipCode()
     }
 
     componentWillReceiveProps(nextProps) {
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities &&
             this.props.state != nextProps.state && this.props.city != nextProps.city)
-            this.loadFirstStates(nextProps.state, nextProps.city);
+            this.loadFirstStates(nextProps.state, nextProps.city, "WRP");
 
         this.setPropsToState(nextProps)
     }
@@ -181,7 +187,7 @@ class LocationForm extends Component {
     componentDidMount() {
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities)
-            this.loadFirstStates(this.props.state);
+            this.loadFirstStates(this.props.state, this.props.city, "DM");
 
         this.setPropsToState(this.props)
     }
@@ -199,6 +205,7 @@ class LocationForm extends Component {
     }
 
     render() {
+        console.log("state:::", this.state)
         const loading = this.state.loadingCities || this.state.loadingStates || this.state.findingZipCode;
         return <React.Fragment>
             <div className={this.props.cityColClass || "col-md-6 col-lg-4"}>
