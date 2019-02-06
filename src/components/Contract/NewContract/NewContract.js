@@ -797,6 +797,7 @@ class NewContract extends Component {
             })
             .catch((error) => {
                 console.log(error);
+
             });
     };
 
