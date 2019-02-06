@@ -1099,11 +1099,19 @@ class GeneralInfoProperty extends Component {
 											onChangeCity={this.onChangeCity}
 											onChangeState={this.onChangeState}
 											onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
-											city={this.state.city} state={this.state.state} zipCode={this.state.zipCode} changeCity={this.state.changeCity}
+											city={this.state.city}
+											state={this.state.state}
+											zipCode={this.state.zipCode}
+											changeCity={this.state.changeCity}
 											cityClass={`form-control ${this.state.validCity === '' && ' _invalid'}`}
 											stateClass={`form-control ${this.state.validState === '' && ' _invalid'}`}
 											zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-											cityColClass="col-md-6 col-lg-3" stateColClass="col-md-6 col-lg-2" zipCodeColClass="col-md-6 col-lg-2"
+											cityColClass="col-md-6 col-lg-3"
+											stateColClass="col-md-6 col-lg-2"
+											zipCodeColClass="col-md-6 col-lg-2"
+											requiredCity={true}
+											requiredState={true}
+											requiredZipCode={true}
 										/>
 
 

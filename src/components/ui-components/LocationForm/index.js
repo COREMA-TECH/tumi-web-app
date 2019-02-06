@@ -28,7 +28,7 @@ class LocationForm extends Component {
         }
     }
 
-    loadFirstStates = (Id, city, code) => {
+    loadFirstStates = (Id, city) => {
         this.setState({ loadingStates: true },
             () => {
                 this.props.client
@@ -64,7 +64,7 @@ class LocationForm extends Component {
                             Value: this.state.stateCode || DEFAULT_STATE_CODE
                         }
                     }).then(({ data: { catalogitem } }) => {
-                        this.setState({ states: catalogitem, loadingStates: false,findingZipCode:false },
+                        this.setState({ states: catalogitem, loadingStates: false, findingZipCode: false },
                             () => {
                                 if (catalogitem.length > 0)
                                     this.setState({ state: catalogitem[0].Id }, () => {
@@ -73,7 +73,7 @@ class LocationForm extends Component {
                                     })
                             })
                     }).catch(error => {
-                        this.setState({ loadingStates: false,findingZipCode:false })
+                        this.setState({ loadingStates: false, findingZipCode: false })
                     })
             })
     }
@@ -109,14 +109,14 @@ class LocationForm extends Component {
                             Id_Parent: this.state.state || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
-                        this.setState({ cities: catalogitem, loadingCities: false,findingZipCode:false },
+                        this.setState({ cities: catalogitem, loadingCities: false, findingZipCode: false },
                             () => {
                                 var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
                                 if (selectedCity)
                                     this.setState({ city: selectedCity.Id }, () => { this.props.onChangeCity(this.state.city) })
                             })
                     }).catch(error => {
-                        this.setState({ loadingCities: false,findingZipCode:false })
+                        this.setState({ loadingCities: false, findingZipCode: false })
                     })
             })
 
@@ -132,9 +132,12 @@ class LocationForm extends Component {
         if (e.target.name == 'zipCode' && this.props.onChageZipCode) {
             var value = e.target.value;
             this.setState({ firstLoadStates: false, firstLoadCities: false }, () => {
-                this.props.onChageZipCode(value);
-                this.props.onChangeCity(0);
-                this.props.onChangeState(0);
+                if (this.props.onChageZipCode)
+                    this.props.onChageZipCode(value);
+                if (this.props.onChangeCity)
+                    this.props.onChangeCity(0);
+                if (this.props.onChangeState)
+                    this.props.onChangeState(0);
             })
 
         }
@@ -179,7 +182,7 @@ class LocationForm extends Component {
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities &&
             this.props.state != nextProps.state && this.props.city != nextProps.city)
-            this.loadFirstStates(nextProps.state, nextProps.city, "WRP");
+            this.loadFirstStates(nextProps.state, nextProps.city);
 
         this.setPropsToState(nextProps)
     }
@@ -187,36 +190,35 @@ class LocationForm extends Component {
     componentDidMount() {
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities)
-            this.loadFirstStates(this.props.state, this.props.city, "DM");
+            this.loadFirstStates(this.props.state, this.props.city);
 
         this.setPropsToState(this.props)
     }
 
     setPropsToState = (props) => {
-        //Setting Props to Component State
-        this.setState(() => {
-            return {
-                state: props.state,
-                city: props.city,
-                zipCode: props.zipCode,
-                changeCity: props.changeCity
-            }
-        })
+        //Setting Props to Component State only if Props has been passed through
+        if (props.state != null)
+            this.setState(() => { return { state: props.state } })
+        if (props.city != null)
+            this.setState(() => { return { city: props.city } })
+        if (props.zipCode != null)
+            this.setState(() => { return { zipCode: props.zipCode } })
+        if (props.changeCity != null)
+            this.setState(() => { return { changeCity: props.changeCity } })
     }
 
     render() {
-        console.log("state:::", this.state)
         const loading = this.state.loadingCities || this.state.loadingStates || this.state.findingZipCode;
         return <React.Fragment>
             <div className={this.props.cityColClass || "col-md-6 col-lg-4"}>
-                <label className="mr-1">* City</label>
+                <label className={`mr-1 ${this.props.cssTitle || ''}`}>{this.props.cityTitle || "* City"}</label>
                 <span className="float-right">
                     <input type="checkbox" name="changeCity" onChange={this.onValueChange} disabled={this.props.disabledCheck || loading} checked={this.state.changeCity} />
-                    <label htmlFor="">Change selected city by zip code?</label>
+                    <label className={`${this.props.cssTitle || ''}`} htmlFor="">Change selected city by zip code?</label>
                 </span>
                 <div className="select-animated">
                     <select name="city" className={this.props.cityClass || 'form-control'} onChange={this.onValueChange} value={this.state.city}
-                        disabled={!this.state.changeCity || this.state.loadingCities || this.props.disabledCity} required>
+                        disabled={!this.state.changeCity || this.state.loadingCities || this.props.disabledCity} required={this.props.requiredCity}>
                         <option value="">Select a city</option>
                         {this.state.cities.map(({ Id, Name }) => (
                             <option key={Id} value={Id}>{Name}</option>
@@ -227,9 +229,9 @@ class LocationForm extends Component {
             </div>
             <div className={this.props.stateColClass || "col-md-6 col-lg-4"}>
                 <div className="select-animated">
-                    <label>* State</label>
+                    <label className={`${this.props.cssTitle || ''}`}>{this.props.stateTitle || "* State"}</label>
                     <select name="state" className={this.props.stateClass || 'form-control'} onChange={this.onValueChange} value={this.state.state}
-                        disabled required>
+                        disabled required={this.props.requiredState}>
                         <option value="">Select a state</option>
                         {this.state.states.map(({ Id, Name }) => (
                             <option key={Id} value={Id}>{Name}</option>
@@ -239,7 +241,7 @@ class LocationForm extends Component {
                 </div>
             </div>
             <div className={this.props.zipCodeColClass || "col-md-6 col-lg-4"}>
-                <label>* Zip Code</label>
+                <label className={`${this.props.cssTitle || ''}`}>{this.props.zipCodeTitle || "* Zip Code"}</label>
                 <InputMask
                     id="zipCode"
                     name="zipCode"
@@ -249,7 +251,7 @@ class LocationForm extends Component {
                     onChange={this.onValueChange}
                     value={this.state.zipCode}
                     placeholder={this.props.placeholder || DEFAULT_PLACEHOLDER}
-                    required
+                    required={this.props.requiredZipCode}
                     minLength="15"
                     disabled={loading || this.props.disabledZipCode}
                     onKeyDown={this.handleOnKeyUp}

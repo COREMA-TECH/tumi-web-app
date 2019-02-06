@@ -12,16 +12,11 @@ import '../index.css';
 import withApollo from "react-apollo/withApollo";
 import Application from "./Application";
 import Language from "./Languages/Language";
-import Education from "./Education/Education";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
-import MilitaryService from "./MilitaryService/MilitaryService";
 import Skills from "./skills/Skills";
 
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
-
-
-const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
     root: {
@@ -113,13 +108,13 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext}/>;
+                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext} />;
                 case 1:
-                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
+                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack} />;
                 case 2:
-                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
+                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack} />;
                 case 3:
-                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
+                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack} />;
                 default:
                     return 'Unknown step';
             }
@@ -163,22 +158,6 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-md-8 col-lg-10">
                         <div className="StepperForm-wrapper">
-                            {/*<select*/}
-                            {/*value={localStorage.getItem('languageForm')}*/}
-                            {/*onChange={(e) => {*/}
-                            {/*this.setState({*/}
-                            {/*languageSelected: e.target.value*/}
-                            {/*}, () => {*/}
-                            {/*localStorage.setItem('languageForm', this.state.language);*/}
-                            {/*alert(this.state.languageSelected);*/}
-                            {/*window.location.reload();*/}
-                            {/*});*/}
-
-                            {/*alert("Alert");*/}
-                            {/*}}>*/}
-                            {/*<option value="es">Spanish</option>*/}
-                            {/*<option value="en">English</option>*/}
-                            {/*</select>*/}
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
                             </Typography>

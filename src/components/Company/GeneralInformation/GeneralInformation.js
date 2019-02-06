@@ -29,7 +29,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Hotels from './hotels';
-import axios from 'axios';
 import LocationForm from '../../ui-components/LocationForm'
 
 const styles = (theme) => ({
@@ -1413,13 +1412,25 @@ class GeneralInformation extends Component {
 											className={'form-control'}
 										/>
 									</div>
-									<LocationForm disabledCheck={!this.props.showStepper} disabledCity={!this.props.showStepper} disabledZipCode={!this.props.showStepper}
-										onChangeCity={this.updateCity} onChangeState={this.updateState} onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
-										city={this.state.city} state={this.state.state} zipCode={this.state.zipCode} changeCity={this.state.changeCity}
+									<LocationForm
+										disabledCheck={!this.props.showStepper}
+										disabledCity={!this.props.showStepper}
+										disabledZipCode={!this.props.showStepper}
+										onChangeCity={this.updateCity}
+										onChangeState={this.updateState}
+										onChageZipCode={(text) => { this.updateInput(text, 'zipCode') }}
+										city={this.state.city}
+										state={this.state.state}
+										zipCode={this.state.zipCode} changeCity={this.state.changeCity}
 										cityClass={`form-control ${!this.state.cityValid && ' _invalid'}`}
 										stateClass={`form-control ${!this.state.stateValid && ' _invalid'}`}
 										zipCodeClass={`form-control ${!this.state.zipCodeValid && ' _invalid'}`}
-										cityColClass="col-md-6 col-lg-4" stateColClass="col-md-6 col-lg-4" zipCodeColClass="col-md-6 col-lg-4" />
+										cityColClass="col-md-6 col-lg-4"
+										stateColClass="col-md-6 col-lg-4"
+										zipCodeColClass="col-md-6 col-lg-4"
+										requiredCity ={true}
+                                        requiredState={true}
+                                        requiredZipCode={true} />
 
 									<div className="col-md-6 col-lg-4">
 										<label>* Phone Number</label>
