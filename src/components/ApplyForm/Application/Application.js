@@ -6,12 +6,9 @@ import withApollo from 'react-apollo/withApollo';
 import {
     GET_APPLICANT_IDEAL_JOBS,
     GET_APPLICATION_BY_ID,
-    GET_CITIES_QUERY,
     GET_POSITIONS_CATALOG,
     GET_POSITIONS_QUERY,
-    GET_STATES_QUERY
 } from '../Queries';
-import { updateApplicationInformation } from '../utils';
 import { RECREATE_IDEAL_JOB_LIST, UPDATE_APPLICATION } from '../Mutations';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -19,7 +16,7 @@ import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-import axios from "axios";
+import LocationForm from '../../ui-components/LocationForm'
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'es');
@@ -382,31 +379,64 @@ class Application extends Component {
         this.getApplicationById(this.props.applicationId);
     }
 
-    findByZipCode = (zipCode = null, cityFinal = null) => {
-        if (!zipCode) {
-            return false;
-        }
-
-        this.props.client.query({
-            query: GET_STATES_QUERY,
-            variables: { parent: -1, value: `'${zipCode}'` },
-            fetchPolicy: 'no-cache'
-        }).then((data) => {
-            this.setState({
-                state: data.data.getcatalogitem[0].Id,
-                cityFinal: cityFinal
-            });
-        });
-
-    };
-
-
     shouldComponentUpdate(nextProps, nextState) {
         if (this.state.editing !== nextProps.editing) {
             return true;
         }
     }
 
+    updateCity = (city) => {
+        this.setState(() => { return { city } });
+    };
+    updateState = (state) => {
+        this.setState(() => { return { state } });
+    };
+
+    updateZipCode = (zipCode) => {
+        this.setState(() => { return { zipCode } });
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!this.state.zipCode.trim().replace("-", ""))
+            this.props.handleOpenSnackbar(
+                'warning',
+                'ZipCode needed!',
+                'bottom',
+                'right'
+            );
+        else if (!this.state.city)
+            this.props.handleOpenSnackbar(
+                'warning',
+                'City needed!',
+                'bottom',
+                'right'
+            );
+        else if (!this.state.state)
+            this.props.handleOpenSnackbar(
+                'warning',
+                'State needed!',
+                'bottom',
+                'right'
+            );
+        else {
+            if (
+                this.state.homePhoneNumberValid ||
+                this.state.cellPhoneNumberValid
+            ) {
+                this.updateApplicationInformation(this.props.applicationId);
+            } else {
+                this.props.handleOpenSnackbar(
+                    'warning',
+                    'Complete all the fields and try again!',
+                    'bottom',
+                    'right'
+                );
+            }
+        }
+    }
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
@@ -417,24 +447,7 @@ class Application extends Component {
                     className="general-info-apply-form"
                     id="general-info-form"
                     autoComplete="off"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        if (
-                            this.state.homePhoneNumberValid ||
-                            this.state.cellPhoneNumberValid
-                        ) {
-                            this.updateApplicationInformation(this.props.applicationId);
-                        } else {
-                            this.props.handleOpenSnackbar(
-                                'warning',
-                                'Complete all the fields and try again!',
-                                'bottom',
-                                'right'
-                            );
-                        }
-                    }}
+                    onSubmit={this.handleSubmit}
                 >
                     <div className="">
                         <div className="applicant-card">
@@ -584,122 +597,31 @@ class Application extends Component {
                                                     minLength="5"
                                                 />
                                             </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[5].label}
-                                                </span>
-                                                <InputMask
-                                                    id="zipCode"
-                                                    name="zipCode"
-                                                    mask="99999-99999"
-                                                    maskChar=" "
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            zipCode: event.target.value
-                                                        }, () => {
-                                                            const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
-                                                            if (zipCode)
-                                                                axios.get(`https://ziptasticapi.com/${zipCode}`)
-                                                                    .then(res => {
-                                                                        const cities = res.data;
-                                                                        if (!cities.error) {
-                                                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                                        }
-                                                                    });
-                                                        });
 
-                                                    }}
-                                                    value={this.state.zipCode}
-                                                    placeholder="99999-99999"
-                                                    required
-                                                    minLength="15"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[6].label}
-                                                </span>
-                                                <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="state"
-                                                                    id="state"
-                                                                    required
-                                                                    className="form-control"
-                                                                    disabled={true}
-                                                                    onChange={(e) => {
-                                                                        this.setState({
-                                                                            state: e.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.state}
-                                                                >
-                                                                    <option value="">Select a state</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label skeleton">
-                                                    * {formSpanish[7].label}
-                                                </span>
-                                                <span className="float-right">
-                                                    <input disabled={!this.state.editing} type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
-                                                    <label Style={"margin-top:0"} htmlFor="">Change selected city by zip code?</label>
-                                                </span>
-                                                <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            var citySelected = null;
-                                                            citySelected = data.getcatalogitem.filter(city => {
-                                                                return city.Name.toLowerCase().includes(this.state.cityFinal);
-                                                            });
-                                                            if (citySelected.length != 0) {
-                                                                if ((citySelected[0].Id != this.state.city)) {
-                                                                    this.setState({
-                                                                        city: citySelected[0].Id
-                                                                    });
-                                                                }
-                                                            }
-                                                            return (
-                                                                <select
-                                                                    name="city"
-                                                                    id="city"
-                                                                    required
-                                                                    className="form-control"
-                                                                    disabled={this.state.isCorrectCity}
-                                                                    onChange={(e) => {
-                                                                        this.setState({
-                                                                            city: e.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.city}
-                                                                >
-                                                                    <option value="">Select a city</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
+                                            <LocationForm
+                                                disabledCheck={!this.state.editing}
+                                                disabledCity={!this.state.editing}
+                                                disabledZipCode={!this.state.editing}
+                                                onChangeCity={this.updateCity}
+                                                onChangeState={this.updateState}
+                                                onChageZipCode={this.updateZipCode}
+                                                city={this.state.city}
+                                                state={this.state.state}
+                                                zipCode={this.state.zipCode}
+                                                changeCity={this.state.changeCity}
+                                                cityColClass="col-md-6"
+                                                stateColClass="col-md-6"
+                                                zipCodeColClass="col-md-6"
+                                                zipCodeTitle={`* ${formSpanish[5].label}`}
+                                                stateTitle={`* ${formSpanish[6].label}`}
+                                                cityTitle={`* ${formSpanish[7].label}`}
+                                                cssTitle={"text-primary-application"}
+                                                placeholder="99999-99999"
+                                                mask="99999-99999"
+                                                requiredZipCode={true}
+                                                requiredCity={true}
+                                                requiredState={true} />
+
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
                                                     {formSpanish[9].label}
