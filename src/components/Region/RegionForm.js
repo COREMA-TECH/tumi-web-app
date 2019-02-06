@@ -117,11 +117,11 @@ class RegionForm extends Component {
 
         } else {
 
-            /* this.getConfigRegions();
-             this.getRecruiter();
-             this.getEmployeesWithoutEntity();
-             this.gethotelbyregion();
-             this.getrecruiterbyregion();*/
+            // this.getConfigRegions();
+            //this.getRecruiter();
+            this.getEmployeesWithoutEntity();
+            //this.gethotelbyregion();
+            this.getrecruiterbyregion();
         }
         this.setState({
             openModal: nextProps.openModal,
@@ -305,8 +305,6 @@ class RegionForm extends Component {
             this.state.code == '' ||
             this.state.name == ''
         ) {
-            console.log("Campos ", this.state.IdRegionalManager, this.state.IdRegionalDirector, this.state.IdRecruiter, this.state.code, this.state.name
-            )
 
             this.props.handleOpenSnackbar('warning', 'all fields are required');
         } else {
@@ -566,7 +564,7 @@ class RegionForm extends Component {
                             <div className="card">
                                 <div className="card-header">
                                     <div className="row">
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                             <label htmlFor="">* Regional Manager</label>
                                             <select
                                                 required
@@ -582,7 +580,7 @@ class RegionForm extends Component {
                                                 ))}
                                             </select>
                                         </div>
-                                        <div className="col-md-6">
+                                        <div className="col-md-4">
                                             <label htmlFor="">* Regional Director</label>
                                             <select
                                                 required
