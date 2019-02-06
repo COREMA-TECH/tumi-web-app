@@ -231,7 +231,7 @@ class LocationForm extends Component {
                 <div className="select-animated">
                     <label className={`${this.props.cssTitle || ''}`}>{this.props.stateTitle || "* State"}</label>
                     <select name="state" className={this.props.stateClass || 'form-control'} onChange={this.onValueChange} value={this.state.state}
-                        disabled required={this.props.requiredState}>
+                        disabled required={this.props.requiredState} >
                         <option value="">Select a state</option>
                         {this.state.states.map(({ Id, Name }) => (
                             <option key={Id} value={Id}>{Name}</option>

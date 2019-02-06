@@ -49,7 +49,7 @@ const styles = theme => ({
 
 function getSteps() {
     let steps = menuSpanish.map(item => {
-        if(item.id !== 7) {
+        if (item.id !== 7) {
             return item.label
         }
     });
@@ -157,22 +157,6 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-md-8 col-lg-10">
                         <div className="StepperForm-wrapper">
-                            {/*<select*/}
-                            {/*value={localStorage.getItem('languageForm')}*/}
-                            {/*onChange={(e) => {*/}
-                            {/*this.setState({*/}
-                            {/*languageSelected: e.target.value*/}
-                            {/*}, () => {*/}
-                            {/*localStorage.setItem('languageForm', this.state.language);*/}
-                            {/*alert(this.state.languageSelected);*/}
-                            {/*window.location.reload();*/}
-                            {/*});*/}
-
-                           
-                            {/*}}>*/}
-                            {/*<option value="es">Spanish</option>*/}
-                            {/*<option value="en">English</option>*/}
-                            {/*</select>*/}
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
                             </Typography>
