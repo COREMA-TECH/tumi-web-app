@@ -37,7 +37,7 @@ class LocationForm extends Component {
                         fetchPolicy: 'no-cache',
                         variables: {
                             Id_Catalog: STATE_ID,
-                            Id
+                            Id: Id || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
                         this.setState(() => { return { states: catalogitem, loadingStates: false, state: Id } },
@@ -87,7 +87,7 @@ class LocationForm extends Component {
                         fetchPolicy: 'no-cache',
                         variables: {
                             Id_Catalog: CITY_ID,
-                            Id_Parent
+                            Id_Parent: Id_Parent || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
                         this.setState(() => { return { cities: catalogitem, loadingCities: false, city: Id } })
