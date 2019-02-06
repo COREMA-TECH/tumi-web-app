@@ -39,6 +39,8 @@ import Property_Schedules from "../../ManagerHotel/Schedules"
 import SchedulesAccept from '../../Schedules/SchedulesAccept';
 import Region from "../../Region";
 import RegionTable from "../../Region/RegionTable";
+import LocationForm from '../../ui-components/LocationForm';
+
 class Container extends Component {
 	constructor(props) {
 		super(props);
@@ -159,6 +161,7 @@ class Container extends Component {
 				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 				<Route exact path="/home/region" component={Region} />
 				<Route exact path="/home/regiontable" component={RegionTable} />
+				<Route exact path='/home/location' component={LocationForm} />
 			</div>
 		);
 	}

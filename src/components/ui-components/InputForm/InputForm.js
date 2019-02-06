@@ -37,6 +37,7 @@ class InputForm extends Component {
 						}
 						this.props.change(event.target.value);
 					}}
+					required={this.props.required}
 				/>
 			);
 		}

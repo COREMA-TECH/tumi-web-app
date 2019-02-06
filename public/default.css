@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic);
 html,
 body {
@@ -8572,6 +8573,15 @@ label:not(.custom-file-label):not(.form-check-label) {
   padding-top: 0 !important;
   padding-bottom: 0 !important; }
 
+.select-animated {
+  position: relative;
+  width: 100%; }
+  .select-animated-icon {
+    position: absolute;
+    bottom: 12px;
+    right: 6px;
+    background: #e5eaf0; }
+
 .link {
   color: #3ca2c8; }
 
@@ -9747,6 +9757,12 @@ tbody[class^="MuiTableBody-"] .btn {
 
 .ApplyForm {
   background-color: #f5f7f9; }
+
+.text-primary-application {
+  color: #3ca2c8;
+  font-size: .80rem;
+  font-family: "Roboto", sans-serif;
+  font-weight: 100; }
 
 .Header {
   background-color: #3ca2c8;
