@@ -22,6 +22,7 @@ import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import { Route } from "react-router-dom";
 import axios from 'axios';
+import LocationForm from '../../ui-components/LocationForm';
 
 const styles = (theme) => ({
     wrapper: {
@@ -86,7 +87,6 @@ class NewContract extends Component {
     };
 
     constructor(props) {
-        console.log("aqui esta todos los props", props);
         super(props);
         this.state = {
             Id: '',
@@ -150,6 +150,7 @@ class NewContract extends Component {
         this.setState(
             {
                 Contract_Status: id
+
             },
             () => {
                 this.validateField('Contract_Status', id);
@@ -157,24 +158,35 @@ class NewContract extends Component {
         );
     };
 
-    updateProvidence = (id) => {
+    updateProvidence = (Billing_State) => {
         this.setState(
             {
-                Billing_State: id
+                Billing_State
             },
             () => {
-                this.validateField('Billing_State', id);
+                this.validateField('Billing_State', Billing_State);
             }
         );
     };
 
-    updateCity = (id) => {
+    updateCity = (Billing_City) => {
         this.setState(
             {
-                Billing_City: id
+                Billing_City
             },
             () => {
-                this.validateField('Billing_City', id);
+                this.validateField('Billing_City', Billing_City);
+            }
+        );
+    };
+
+    updateZipCode = (Billing_Zip_Code) => {
+        this.setState(
+            {
+                Billing_Zip_Code
+            },
+            () => {
+                this.validateField('Billing_Zip_Code', Billing_Zip_Code);
             }
         );
     };
@@ -331,7 +343,6 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("este es la data del contrato ", data);
                 this.setState(
                     {
 
@@ -365,7 +376,6 @@ class NewContract extends Component {
                     },
                     () => {
                         // this.getBusinessCompaniesbyId(this.state.Id_Entity);
-                        console.log("aqui tenemos el idmanagement ", this.state.IdManagement);
                         this.props.getContractName(this.state.Contract_Name);
                         this.setState(
                             {
@@ -766,7 +776,6 @@ class NewContract extends Component {
     };
 
     getBusinessCompanies = (id) => {
-        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesQuery,
@@ -787,7 +796,6 @@ class NewContract extends Component {
     };
 
     getBusinessCompaniesbyId = (id) => {
-        console.log("valido el id ", id);
         this.props.client
             .query({
                 query: this.getbusinesscompaniesbyIdQuery,
@@ -796,11 +804,10 @@ class NewContract extends Component {
                 }
             })
             .then(({ data }) => {
-                console.log("esta al by ID::::;", data);
                 this.setState({
                     IdManagement: (data.getbusinesscompanies[0].Id_Parent),
                     Management: this.getString(data.getbusinesscompanies[0].Parent)
-                }, () => { console.log("este es el idmanaghemente ", this.state.IdManagement) });
+                }, () => { });
             })
             .catch((error) => {
                 console.log(error);
@@ -923,8 +930,8 @@ class NewContract extends Component {
         let Company_Signed_DateValid = this.state.Company_Signed_DateValid;
         let Id_User_Billing_ContactValid = this.state.Id_User_Billing_ContactValid;
         let Billing_StreetValid = this.state.Billing_StreetValid;
-        // let Billing_StateValid = this.state.Billing_StateValid;
-        // let Billing_CityValid = this.state.Billing_CityValid;
+        let Billing_StateValid = this.state.Billing_StateValid;
+        let Billing_CityValid = this.state.Billing_CityValid;
         let Billing_Zip_CodeValid = this.state.Billing_Zip_CodeValid;
 
         let Id_ManagementValid = this.state.Id_ManagementValid;
@@ -984,12 +991,12 @@ class NewContract extends Component {
             case 'Billing_Street':
                 Billing_StreetValid = value !== null && value !== 0 && value !== '';
                 break;
-            /* case 'Billing_State':
-                 Billing_StateValid = value !== null && value !== 0 && value !== '';
-                 break;
-             case 'Billing_City':
-                 Billing_CityValid = value !== null && value !== 0 && value !== '';
-                 break;*/
+            case 'Billing_State':
+                Billing_StateValid = value !== null && value !== 0 && value !== '';
+                break;
+            case 'Billing_City':
+                Billing_CityValid = value !== null && value !== 0 && value !== '';
+                break;
             case 'IdManagement':
                 Id_ManagementValid = value !== null && value !== 0 && value !== '';
                 break;
@@ -1021,8 +1028,8 @@ class NewContract extends Component {
                 Company_Signed_DateValid,
                 Id_User_Billing_ContactValid,
                 Billing_StreetValid,
-                // Billing_StateValid,
-                // Billing_CityValid,
+                Billing_StateValid,
+                Billing_CityValid,
                 Billing_Zip_CodeValid
             },
             this.validateForm
@@ -1062,10 +1069,10 @@ class NewContract extends Component {
             this.state.Id_User_Billing_Contact !== '';
         let Billing_StreetValid =
             this.state.Billing_Street !== null && this.state.Billing_Street !== 0 && this.state.Billing_Street !== '';
-        /* let Billing_StateValid =
-             this.state.Billing_State !== null && this.state.Billing_State !== 0 && this.state.Billing_State !== '';
-         let Billing_CityValid =
-             this.state.Billing_City !== null && this.state.Billing_City !== 0 && this.state.Billing_City !== '';*/
+        let Billing_StateValid =
+            this.state.Billing_State !== null && this.state.Billing_State !== 0 && this.state.Billing_State !== '';
+        let Billing_CityValid =
+            this.state.Billing_City !== null && this.state.Billing_City !== 0 && this.state.Billing_City !== '';
         let Billing_Zip_CodeValid = this.state.Billing_Zip_Code.toString().trim().length == 5;
 
         this.setState(
@@ -1087,8 +1094,8 @@ class NewContract extends Component {
                 Company_Signed_DateValid,
                 Id_User_Billing_ContactValid,
                 Billing_StreetValid,
-                // Billing_StateValid,
-                // Billing_CityValid,
+                Billing_StateValid,
+                Billing_CityValid,
                 Billing_Zip_CodeValid
             },
             () => {
@@ -1119,8 +1126,8 @@ class NewContract extends Component {
                     this.state.Company_Signed_DateValid &&
                     this.state.Id_User_Billing_ContactValid &&
                     this.state.Billing_StreetValid &&
-                    // this.state.Billing_StateValid &&
-                    //this.state.Billing_CityValid &&
+                    this.state.Billing_StateValid &&
+                    this.state.Billing_CityValid &&
                     this.state.Billing_Zip_CodeValid
             },
             func
@@ -1148,8 +1155,6 @@ class NewContract extends Component {
 
     render() {
         const { classes } = this.props;
-        console.log("Render:::::", this.props)
-        console.log("Render:::::", this.state)
         if (this.state.loadingCompanies) {
             return <LinearProgress />;
         }
@@ -1654,103 +1659,25 @@ class NewContract extends Component {
                                             }}
                                         />
                                     </div>
-                                    <div className="col-md-6 col-lg-4">
-                                        <label>* Billing Zip Code</label>
-                                        <InputForm
-                                            value={this.state.Billing_Zip_Code}
-                                            change={(text) => {
-                                                this.setState(
-                                                    {
-                                                        Billing_Zip_Code: text
-                                                    },
-                                                    () => {
-                                                        this.validateField('Billing_Zip_Code', text);
-                                                        const zipCode = this.state.Billing_Zip_Code.trim().replace('-', '').substring(0, 5);
-                                                        if (zipCode) {
-                                                            axios.get(`https://ziptasticapi.com/${zipCode}`).then(res => {
-                                                                const cities = res.data;
-                                                                if (!cities.error) {
-                                                                    this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                                }
-                                                            })
-                                                        }
-                                                    }
-                                                );
-                                            }}
-
-                                            id="Billing_Zip_Code"
-                                            name="Billing_Zip_Code"
-                                            maxLength="5"
-                                            error={!this.state.Billing_Zip_CodeValid}
-                                        />
-                                    </div>
-                                    <div className="col-md-6 col-lg-4">
-                                        <label>* Billing State / Providence</label>
-
-                                        <Query query={this.getStatesQuery} variables={{ parent: 6 }}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress />;
-                                                if (error) return <p> </p>;
-                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    return (
-                                                        <SelectForm
-                                                            data={data.getcatalogitem}
-                                                            showNone={false}
-                                                            update={this.updateProvidence}
-                                                            value={this.state.Billing_State}
-                                                            disabled
-
-                                                        //error={!this.state.Billing_StateValid}
-                                                        />
-                                                    );
-                                                }
-                                                return <p>Nothing to display </p>;
-                                            }}
-                                        </Query>
-                                    </div>
-                                    <div className="col-md-6 col-lg-4">
-                                        <label>* Billing City</label>
-                                        <span className="float-right">
-                                            <input type="checkbox" name="isCorrectCity" onChange={() => { this.setState({ isCorrectCity: !this.state.isCorrectCity }) }} />
-                                            <label htmlFor="">Change selected city by zip code?</label>
-                                        </span>
-                                        <Query
-                                            query={this.getCitiesQuery}
-                                            variables={{ parent: this.state.Billing_State }}
-                                        >
-                                            {({ loading, error, data, refetch, networkStatus }) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
-                                                if (loading) return <LinearProgress />;
-                                                if (error) return <p>Select a City </p>;
-                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    var citySelected = null;
-                                                    citySelected = data.getcatalogitem.filter(city => {
-                                                        return city.Name.toLowerCase().includes(this.state.cityFinal);
-                                                    });
-                                                    if (citySelected.length != 0 && this.state.cityFinal != 0) {
-                                                        if ((citySelected[0].Id != this.state.city)) {
-                                                            this.setState({
-                                                                Billing_City: citySelected[0].Id,
-                                                                cityFinal: 0
-                                                            });
-                                                        }
-                                                    }
-                                                    return (
-                                                        <SelectForm
-                                                            data={data.getcatalogitem}
-                                                            update={this.updateCity}
-                                                            showNone={false}
-                                                            value={this.state.Billing_City}
-                                                            disabled={!this.state.isCorrectCity}
-                                                        //error={!this.state.Billing_CityValid}
-                                                        />
-                                                    );
-                                                }
-                                                return <SelectNothingToDisplay />;
-                                            }}
-                                        </Query>
-                                    </div>
+                                    <LocationForm
+                                        onChangeCity={this.updateCity}
+                                        onChangeState={this.updateProvidence}
+                                        onChageZipCode={this.updateZipCode}
+                                        city={this.state.Billing_City}
+                                        state={this.state.Billing_State}
+                                        zipCode={this.state.Billing_Zip_Code} changeCity={this.state.changeCity}
+                                        cityClass={`form-control ${!this.state.Billing_CityValid && ' _invalid'}`}
+                                        stateClass={`form-control ${!this.state.Billing_StateValid && ' _invalid'}`}
+                                        zipCodeClass={`form-control ${!this.state.Billing_Zip_CodeValid && ' _invalid'}`}
+                                        cityColClass="col-md-6 col-lg-4"
+                                        stateColClass="col-md-6 col-lg-4"
+                                        zipCodeColClass="col-md-6 col-lg-4"
+                                        zipCodeTitle="* Billing Zip Code"
+                                        stateTitle="* Billing State / Providence"
+                                        cityTitle="* Billing City"
+                                        requiredCity={true}
+                                        requiredState={true}
+                                        requiredZipCode={true} />
 
                                 </div>
                             </div>
