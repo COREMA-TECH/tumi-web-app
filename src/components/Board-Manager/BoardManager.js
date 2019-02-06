@@ -338,10 +338,11 @@ class BoardManager extends Component {
                 })
 
             this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
+
             this.getWorkOrderPosition(cardId)
             console.log("esta es la info del work ordeer ", this.state.workOrders);
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
-
+                console.log("sessionStorage.getItem('NewFilterLead') ", sessionStorage.getItem('NewFilterLead'))
                 this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
             } else {
                 this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
@@ -532,7 +533,9 @@ class BoardManager extends Component {
 
         console.log("Informacion de filtros ", language, " experience ", experience, " location", location, " laneId ", laneId, " PositionId ", PositionId);
         if (laneId == "lane1") {
+            console.log("entro a la validacion lane ");
             await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
+                console.log("esta es la info del GET_MATCH ", data);
                 data.applications.forEach((wo) => {
 
                     console.log("esta es la info del matches ", wo);
@@ -573,14 +576,14 @@ class BoardManager extends Component {
                         } else { position = 1 }
 
 
-
+                        console.log("SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1 ", SpeakEnglish, Employment, distances, position)
                         if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
-
+                            console.log("aqui estamos en los filtros")
                             if (typeof Phases == undefined || Phases == null) {
                                 varphase = 30469;
                             } else { varphase = Phases.StageId }
 
-
+                            console.log("aqui estamos en varphase ", varphase)
                             switch (varphase) {
                                 case 30469:
                                     // if (wo.isLead === false) {
@@ -918,7 +921,6 @@ class BoardManager extends Component {
     };
 
     handleCloseModal = (event) => {
-        event.preventDefault();
         this.setState({ openModal: false });
     };
 

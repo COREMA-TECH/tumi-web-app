@@ -159,6 +159,31 @@ class RegionTable extends React.Component {
         };
     }
 
+    getRegions = () => {
+        this.props.client
+            .query({
+                query: GET_REGION_QUERY,
+                fetchPolicy: 'no-cache'
+            })
+            .then(({ data }) => {
+                console.log("Informacion de las regiones ", data)
+                this.setState({
+                    regions: data.getcatalogitem
+
+                });
+            })
+            .catch();
+    };
+    componentWillReceiveProps(nextProps) {
+        console.log("Entro al componentWillReceiveProps del table")
+
+        this.getRegions();
+    }
+    componentWillMount() {
+        console.log("Entro al componentWillMount del table")
+        this.getRegions();
+    }
+
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -188,7 +213,8 @@ class RegionTable extends React.Component {
 
     render() {
         const { classes } = this.props;
-        let items = this.props.dataRegions;
+        //  let items = this.props.dataRegions;
+        let items = this.state.regions;
         const { rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, items.length - page * rowsPerPage);
 

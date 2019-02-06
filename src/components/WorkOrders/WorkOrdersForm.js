@@ -448,7 +448,6 @@ class WorkOrdersForm extends Component {
         let comments = '';
         let request = '';
 
-        // console.log("veamos el evento target ", target, " value ", value, " name ", name);
         this.setState({
             [name]: value
         });
@@ -625,7 +624,6 @@ class WorkOrdersForm extends Component {
     }
 
     getWeekDayStyle = (dayName) => {
-        console.log("this.state.dayWeeks ", this.state.dayWeeks)
         return `btn btn-secondary ${this.state.dayWeeks.includes(dayName) ? 'btn-success' : ''}`;
     }
 
@@ -725,7 +723,8 @@ class WorkOrdersForm extends Component {
                                             >
                                                 <option value="0">Select a Position</option>
                                                 {this.state.positions.map((position) => (
-                                                    <option value={position.Id}>{position.Position} - {position.Shift.trim() == 'A' ? '1st' : position.Shift.trim() == 'P' ? '2nd' : '3rd'} Shift</option>
+                                                    <option value={position.Id}>{position.Position} </option>
+                                                  
                                                 ))}
                                             </select>
                                         </div>

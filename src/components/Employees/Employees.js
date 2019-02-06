@@ -468,7 +468,7 @@ class Employees extends Component {
         this.setState({
             username: '',
             idRol: null,
-            idLanguage: null,
+            idLanguage: this.state.defaultLanguage,
             usernameValid: true,
             email: "",
             number: "",
@@ -636,8 +636,15 @@ class Employees extends Component {
                 if (data.data.getcatalogitem != null) {
                     this.setState({
                         languages: data.data.getcatalogitem,
-                        loadingLanguages: false
+                        loadingLanguages: false,
                     }, () => {
+                        this.setState({
+                            idLanguage: this.state.languages[0].Id,
+                            defaultLanguage: this.state.languages[0].Id
+                        }, () => {
+                            console.log("ID Language: ", this.state.idLanguage)
+                        });
+
                         this.fetchEmails();
                     });
                 }
@@ -736,6 +743,8 @@ class Employees extends Component {
 
 
     addUserHandler = () => {
+        console.log("ID Language: ", this.state.idLanguage);
+
         this.validateAllFields(() => {
             if (this.state.formValid) this.insertUser();
             else {
@@ -790,7 +799,6 @@ class Employees extends Component {
                     })
                     .then(({ data }) => {
                         var user = data.addUser;
-                        console.log({ usuario: user.Code_User, email: user.Electronic_Address })
 
                         this.sendMail(user.Code_User, user.Electronic_Address);
 
@@ -1133,20 +1141,15 @@ class Employees extends Component {
                                 </div>
                                 <div className="col-md-12 col-lg-12">
                                     <label>* Language</label>
-
                                     <select
                                         name="idLanguage"
-                                        className={[
-                                            'form-control',
-                                            this.state.idLanguageValid ? '' : '_invalid'
-                                        ].join(' ')}
+                                        className={'form-control'}
                                         disabled={this.state.loadingLanguages}
                                         onChange={(event) => {
                                             this.updateSelect(event.target.value, 'idLanguage');
                                         }}
                                         value={this.state.idLanguage}
                                     >
-                                        <option value="">Select a language</option>
                                         {this.state.languages.map((item) => (
                                             <option key={item.Id} value={item.Id}>
                                                 {item.Name}

@@ -1428,9 +1428,9 @@ class GeneralInformation extends Component {
 										cityColClass="col-md-6 col-lg-4"
 										stateColClass="col-md-6 col-lg-4"
 										zipCodeColClass="col-md-6 col-lg-4"
-										requiredCity ={true}
-                                        requiredState={true}
-                                        requiredZipCode={true} />
+										requiredCity={true}
+										requiredState={true}
+										requiredZipCode={true} />
 
 									<div className="col-md-6 col-lg-4">
 										<label>* Phone Number</label>

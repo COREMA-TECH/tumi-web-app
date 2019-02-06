@@ -159,135 +159,164 @@ class Application extends Component {
      * To update and insert a application by id
      */
     insertApplicationInformation = () => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: CREATE_APPLICATION,
-                        variables: {
-                            application: {
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                car: this.state.car,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment,
-                                generalComment: this.state.generalComment,
-                                isLead: true,
-                                idRecruiter: parseInt(this.state.idRecruiter)
+        if (
+            this.state.firstName == '' ||
+            this.state.lastName == ''
+        ) {
+            this.props.handleOpenSnackbar('warning', 'the first name and last name are required');
+        } else {
+            this.setState(
+                {
+                    insertDialogLoading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: CREATE_APPLICATION,
+                            variables: {
+                                application: {
+                                    firstName: this.state.firstName,
+                                    middleName: this.state.middleName,
+                                    lastName: this.state.lastName,
+                                    lastName2: this.state.lastName2,
+                                    date: this.state.date,
+                                    // streetAddress: this.state.streetAddress,
+                                    aptNumber: this.state.aptNumber,
+                                    city: this.state.city,
+                                    state: this.state.state,
+                                    zipCode: this.state.zipCode,
+                                    homePhone: this.state.homePhone,
+                                    cellPhone: this.state.cellPhone,
+                                    //socialSecurityNumber: this.state.socialSecurityNumber,
+                                    //birthDay: this.state.birthDay,
+                                    car: this.state.car,
+                                    // typeOfId: parseInt(this.state.typeOfId),
+                                    //   expireDateId: this.state.expireDateId,
+                                    emailAddress: this.state.emailAddress,
+                                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                    //dateAvailable: this.state.dateAvailable,
+                                    scheduleRestrictions: this.state.scheduleRestrictions,
+                                    scheduleExplain: this.state.scheduleExplain,
+                                    convicted: this.state.convicted,
+                                    convictedExplain: this.state.convictedExplain,
+                                    comment: this.state.comment,
+                                    generalComment: this.state.generalComment,
+                                    isLead: true,
+                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                }
                             }
-                        }
-                    })
-                    .then(({ data }) => {
-                        localStorage.setItem('idApplication', data.addApplication.id);
-                        this.setState({
-                            editing: false
-                        }, () => {
-                            let object = [];
-                            this.state.positionsTags.map(item => {
-                                object.push({
-                                    ApplicationId: parseInt(data.addApplication.id),
-                                    idPosition: item.value,
-                                    description: item.label
-                                })
+                        })
+                        .then(({ data }) => {
+                            localStorage.setItem('idApplication', data.addApplication.id);
+                            this.setState({
+                                editing: false
+                            }, () => {
+                                let object = [];
+                                this.state.positionsTags.map(item => {
+                                    object.push({
+                                        ApplicationId: parseInt(data.addApplication.id),
+                                        idPosition: item.value,
+                                        description: item.label
+                                    })
+                                });
+
+                                this.addApplicantJobs(object, parseInt(data.addApplication.id));
                             });
 
-                            this.addApplicantJobs(object, parseInt(data.addApplication.id));
-                        });
+                            this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
 
-                        this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to insert aplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
+                            // this.props.updateIdApplication(data.addAplication.id);
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to insert aplicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
+                        });
+                }
+            );
+        }
     };
 
     updateApplicationInformation = (id) => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: UPDATE_APPLICATION,
-                        variables: {
-                            application: {
-                                id: id,
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                car: this.state.car,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                generalComment: this.state.generalComment,
-                                isLead: true,
-                                idRecruiter: parseInt(this.state.idRecruiter)
+        if (
+            this.state.firstName == '' ||
+            this.state.lastName == ''
+        ) {
+            this.props.handleOpenSnackbar('warning', 'the first name and last name are required');
+        } else {
+            this.setState(
+                {
+                    insertDialogLoading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: UPDATE_APPLICATION,
+                            //mutation: CREATE_APPLICATION,
+                            variables: {
+                                application: {
+                                    id: id,
+                                    firstName: this.state.firstName,
+                                    middleName: this.state.middleName,
+                                    lastName: this.state.lastName,
+                                    lastName2: this.state.lastName2,
+                                    date: this.state.date,
+                                    //streetAddress: this.state.streetAddress,
+                                    aptNumber: this.state.aptNumber,
+                                    city: this.state.city,
+                                    state: this.state.state,
+                                    zipCode: this.state.zipCode,
+                                    homePhone: this.state.homePhone,
+                                    cellPhone: this.state.cellPhone,
+                                    //socialSecurityNumber: this.state.socialSecurityNumber,
+                                    car: this.state.car,
+                                    //typeOfId: parseInt(this.state.typeOfId),
+                                    //expireDateId: this.state.expireDateId,
+                                    emailAddress: this.state.emailAddress,
+                                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                    //dateAvailable: this.state.dateAvailable,
+                                    //scheduleRestrictions: this.state.scheduleRestrictions,
+                                    scheduleExplain: this.state.scheduleExplain,
+                                    convicted: this.state.convicted,
+                                    convictedExplain: this.state.convictedExplain,
+                                    generalComment: this.state.generalComment,
+                                    isLead: true,
+                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                }
                             }
-                        }
-                    })
-                    .then(({ data }) => {
-                        this.setState({
-                            editing: false
-                        }, () => {
-                            let object = [];
-                            this.state.positionsTags.map(item => {
-                                object.push({
-                                    ApplicationId: this.props.applicationId,
-                                    idPosition: item.value,
-                                    description: item.label
-                                })
+                        })
+                        .then(({ data }) => {
+                            this.setState({
+                                editing: false
+                            }, () => {
+                                let object = [];
+                                this.state.positionsTags.map(item => {
+                                    object.push({
+                                        ApplicationId: this.props.applicationId,
+                                        idPosition: item.value,
+                                        description: item.label
+                                    })
+                                });
+
+                                this.addApplicantJobs(object, this.props.applicationId);
                             });
 
-                            this.addApplicantJobs(object, this.props.applicationId);
+                            this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to update aaplicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
                         });
-
-                        this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to update aaplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
 
@@ -695,7 +724,7 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-6 ">
                                         <span className="primary applicant-card__label ">
-                                            * {formSpanish[10].label}
+                                            {formSpanish[10].label}
                                         </span>
                                         <InputMask
                                             id="cell-number"

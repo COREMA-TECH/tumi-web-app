@@ -169,8 +169,6 @@ class Contract extends React.Component {
 			return <LinearProgress />;
 		}
 
-		console.log("HREF: " + this.props.location.state.href);
-
 		return (
 			<div>
 				<MuiThemeProvider theme={theme}>

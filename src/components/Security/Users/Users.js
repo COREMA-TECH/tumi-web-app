@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import UsersTable from './UsersTable';
 import gql from 'graphql-tag';
 import green from '@material-ui/core/colors/green';
 import AlertDialogSlide from 'Generic/AlertDialogSlide';
-import { withApollo } from 'react-apollo';
+import {withApollo} from 'react-apollo';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
@@ -40,9 +40,9 @@ const styles = (theme) => ({
         margin: theme.spacing.unit
         //width: '100px'
     },
-    contactControl: { width: '535px', paddingRight: '0px' },
-    rolControl: { width: '260px', paddingRight: '0px' },
-    languageControl: { width: '260px', paddingRight: '0px' },
+    contactControl: {width: '535px', paddingRight: '0px'},
+    rolControl: {width: '260px', paddingRight: '0px'},
+    languageControl: {width: '260px', paddingRight: '0px'},
     usernameControl: {
         width: '150px'
     },
@@ -122,8 +122,9 @@ class Catalogs extends React.Component {
                 Name
                 DisplayLabel
                 contacts{
-                  First_Name
-                  Middle_Name
+                    Id
+                    First_Name
+                    Middle_Name
                 }
             }
             getcatalogitem(Id_Catalog: 4) {
@@ -292,9 +293,9 @@ class Catalogs extends React.Component {
         this.state = {
             data: [],
             contacts: [],
-            roles: [{ Id: 0, Name: 'Nothing' }],
-            languages: [{ Id: 0, Name: 'Nothing' }],
-            regions: [{ Id: 0, Name: 'Nothing' }],
+            roles: [{Id: 0, Name: 'Nothing'}],
+            languages: [{Id: 0, Name: 'Nothing'}],
+            regions: [{Id: 0, Name: 'Nothing'}],
             loadingData: false,
             loadingContacts: false,
             loadingRoles: false,
@@ -347,11 +348,11 @@ class Catalogs extends React.Component {
             return;
         }
 
-        this.setState({ open: false });
+        this.setState({open: false});
     };
 
     onChangeHandler(value, name) {
-        this.setState({ [name]: value }, this.validateField(name, value));
+        this.setState({[name]: value}, this.validateField(name, value));
     }
 
     onBlurHandler(e) {
@@ -363,7 +364,7 @@ class Catalogs extends React.Component {
     onSelectChangeHandler(e) {
         const name = e.target.name;
         const value = e.target.value;
-        this.setState({ [name]: value }, () => {
+        this.setState({[name]: value}, () => {
             this.validateField(name, value);
         });
     }
@@ -392,10 +393,10 @@ class Catalogs extends React.Component {
                 if (data.data.getcontacts != null) {
                     this.setState({
 
-                        email: data.data.getcontacts[0].Electronic_Address,
-                        number: data.data.getcontacts[0].Phone_Number,
-                        fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
-                    },
+                            email: data.data.getcontacts[0].Electronic_Address,
+                            number: data.data.getcontacts[0].Phone_Number,
+                            fullname: data.data.getcontacts[0].First_Name.trim() + ' ' + data.data.getcontacts[0].Last_Name.trim()
+                        },
                     );
                 }
             })
@@ -585,33 +586,33 @@ class Catalogs extends React.Component {
     }
 
     handleCloseAlertDialog = () => {
-        this.setState({ opendialog: false });
+        this.setState({opendialog: false});
     };
     handleConfirmAlertDialog = () => {
         this.deleteUser();
     };
     onEditHandler = ({
-        Id,
-        Id_Contact,
-        Id_Roles,
-        Code_User,
-        Full_Name,
-        Electronic_Address,
-        Phone_Number,
-        Password,
-        Id_Language,
-        IsAdmin,
-        AllowDelete,
-        AllowInsert,
-        AllowExport,
-        AllowEdit,
-        IsRecruiter,
-        IdRegion,
-        IsActive,
-        IdSchedulesEmployees,
-        IdSchedulesManager,
-    }) => {
-        this.setState({ showCircularLoading: false }, () => {
+                         Id,
+                         Id_Contact,
+                         Id_Roles,
+                         Code_User,
+                         Full_Name,
+                         Electronic_Address,
+                         Phone_Number,
+                         Password,
+                         Id_Language,
+                         IsAdmin,
+                         AllowDelete,
+                         AllowInsert,
+                         AllowExport,
+                         AllowEdit,
+                         IsRecruiter,
+                         IdRegion,
+                         IsActive,
+                         IdSchedulesEmployees,
+                         IdSchedulesManager,
+                     }) => {
+        this.setState({showCircularLoading: false}, () => {
             this.setState(
                 {
                     idToEdit: Id,
@@ -661,16 +662,16 @@ class Catalogs extends React.Component {
     };
 
     onDeleteHandler = (idSearch) => {
-        this.setState({ idToDelete: idSearch, opendialog: true, showCircularLoading: false });
+        this.setState({idToDelete: idSearch, opendialog: true, showCircularLoading: false});
     };
 
     componentWillMount() {
-        this.setState({ firstLoad: true }, () => {
+        this.setState({firstLoad: true}, () => {
             this.loadUsers(() => {
                 this.loadContacts(() => {
                     this.loadRoles(() => {
                         this.loadLanguages(() => {
-                            this.setState({ indexView: 1, firstLoad: false });
+                            this.setState({indexView: 1, firstLoad: false});
                         });
                     });
                 });
@@ -680,7 +681,7 @@ class Catalogs extends React.Component {
 
     loadUsers = (func = () => {
     }) => {
-        this.setState({ loadingData: true }, () => {
+        this.setState({loadingData: true}, () => {
             this.props.client
                 .query({
                     query: this.GET_USERS_QUERY,
@@ -717,7 +718,7 @@ class Catalogs extends React.Component {
 
     loadContacts = (func = () => {
     }) => {
-        this.setState({ loadingContacts: true }, () => {
+        this.setState({loadingContacts: true}, () => {
             this.props.client
                 .query({
                     query: this.GET_CONTACTS_QUERY,
@@ -758,7 +759,7 @@ class Catalogs extends React.Component {
     };
     loadRoles = (func = () => {
     }) => {
-        this.setState({ loadingRoles: true }, () => {
+        this.setState({loadingRoles: true}, () => {
             this.props.client
                 .query({
                     query: this.GET_ROLES_QUERY,
@@ -795,7 +796,7 @@ class Catalogs extends React.Component {
 
     loadLanguages = (func = () => {
     }) => {
-        this.setState({ loadingLanguages: true }, () => {
+        this.setState({loadingLanguages: true}, () => {
             this.props.client
                 .query({
                     query: this.GET_LANGUAGES_QUERY,
@@ -806,6 +807,7 @@ class Catalogs extends React.Component {
                         this.setState(
                             {
                                 languages: data.data.getcatalogitem,
+                                idLanguage: data.data.getcatalogitem[0].Id,
                                 loadingLanguages: false
                             },
                             func
@@ -839,10 +841,10 @@ class Catalogs extends React.Component {
             query = this.UPDATE_USER_QUERY;
         }
 
-        return { isEdition: isEdition, query: query, id: this.state.idToEdit };
+        return {isEdition: isEdition, query: query, id: this.state.idToEdit};
     };
     insertUser = () => {
-        const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
+        const {isEdition, query, id} = this.getObjectToInsertAndUpdate();
         this.setState(
             {
                 loading: true
@@ -886,7 +888,7 @@ class Catalogs extends React.Component {
                         }
                         this.props.handleOpenSnackbar('success', isEdition ? 'User Updated!' : 'User Inserted!');
 
-                        this.setState({ openModal: false, showCircularLoading: true }, () => {
+                        this.setState({openModal: false, showCircularLoading: true}, () => {
                             this.loadUsers(() => {
                                 this.loadContacts(() => {
                                     this.loadRoles(() => {
@@ -924,14 +926,14 @@ class Catalogs extends React.Component {
                     .then((data) => {
                         this.props.handleOpenSnackbar('success', 'user Deleted!');
                         this.setState(
-                            { openModal: false, firstLoad: true, showCircularLoading: true, opendialog: false },
+                            {openModal: false, firstLoad: true, showCircularLoading: true, opendialog: false},
                             () => {
                                 this.loadUsers(() => {
                                     this.loadContacts(() => {
                                         this.loadRoles(() => {
                                             this.loadLanguages(() => {
                                                 this.resetState(() => {
-                                                    this.setState({ indexView: 1, firstLoad: false });
+                                                    this.setState({indexView: 1, firstLoad: false});
                                                 });
                                             });
                                         });
@@ -1039,7 +1041,7 @@ class Catalogs extends React.Component {
     };
 
     handleCheckedChange = (name) => (event) => {
-        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({IdRegion: 0, IdRegionValid: true});
         if (name == 'isAdmin' && event.target.checked)
             this.setState(
                 {
@@ -1051,20 +1053,20 @@ class Catalogs extends React.Component {
                 },
                 this.validateForm
             );
-        else this.setState({ [name]: event.target.checked }, this.validateForm);
+        else this.setState({[name]: event.target.checked}, this.validateForm);
     };
     handleClickOpenModal = () => {
-        this.setState({ openModal: true });
+        this.setState({openModal: true});
     };
 
     handleCloseModal = () => {
-        this.setState({ openModal: false });
+        this.setState({openModal: false});
     };
 
     render() {
-        const { loading, success } = this.state;
-        const { classes } = this.props;
-        const { fullScreen } = this.props;
+        const {loading, success} = this.state;
+        const {classes} = this.props;
+        const {fullScreen} = this.props;
 
         const isLoading =
             this.state.loadingData ||
@@ -1075,12 +1077,12 @@ class Catalogs extends React.Component {
             this.state.firstLoad;
 
         if (this.state.indexView == 0) {
-            return <React.Fragment>{isLoading && <LinearProgress />}</React.Fragment>;
+            return <React.Fragment>{isLoading && <LinearProgress/>}</React.Fragment>;
         }
         if (this.state.indexView == 2) {
             return (
                 <React.Fragment>
-                    {isLoading && <LinearProgress />}
+                    {isLoading && <LinearProgress/>}
                     <NothingToDisplay
                         title="Oops!"
                         message={this.state.errorMessage}
@@ -1092,7 +1094,7 @@ class Catalogs extends React.Component {
         }
         return (
             <div className="users_tab">
-                {isLoading && <LinearProgress />}
+                {isLoading && <LinearProgress/>}
 
                 <AlertDialogSlide
                     handleClose={this.handleCloseAlertDialog}
@@ -1108,20 +1110,20 @@ class Catalogs extends React.Component {
                     aria-labelledby="responsive-dialog-title"
                     maxWidth="md"
                 >
-                    <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
+                    <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
                         <div className="modal-header">
                             <h5 className="modal-title">
                                 {this.state.idToEdit != null &&
-                                    this.state.idToEdit != '' &&
-                                    this.state.idToEdit != 0 ? (
-                                        'Edit  User'
-                                    ) : (
-                                        'Create User'
-                                    )}
+                                this.state.idToEdit != '' &&
+                                this.state.idToEdit != 0 ? (
+                                    'Edit  User'
+                                ) : (
+                                    'Create User'
+                                )}
                             </h5>
                         </div>
                     </DialogTitle>
-                    <DialogContent style={{ minWidth: 600, padding: '0px' }}>
+                    <DialogContent style={{minWidth: 600, padding: '0px'}}>
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-lg-8">
@@ -1229,9 +1231,11 @@ class Catalogs extends React.Component {
                                                 }}
                                                 value={this.state.idLanguage}
                                             >
-                                                <option value="">Select a language</option>
                                                 {this.state.languages.map((item) => (
-                                                    <option key={item.Id} value={item.Id}>
+                                                    <option
+                                                        key={item.Id}
+                                                        value={item.Id}
+                                                    >
                                                         {item.Name}
                                                     </option>
                                                 ))}
@@ -1251,8 +1255,8 @@ class Catalogs extends React.Component {
                                                     id="IsRecruiter"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsRecruiter">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
 
@@ -1261,15 +1265,15 @@ class Catalogs extends React.Component {
                                             <div className="onoffswitch">
                                                 <input
                                                     type="checkbox"
-                                                    checked={this.state.isEmployee}
+                                                    checked={this.state.manageApp}
                                                     name="manageApp"
                                                     onChange={this.handleCheckedChange('manageApp')}
                                                     className="onoffswitch-checkbox"
                                                     id="manageApp"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="manageApp">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </div>
@@ -1287,8 +1291,8 @@ class Catalogs extends React.Component {
                                                     id="isEmployee"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="isEmployee">
-                                                    <span className="onoffswitch-inner" />
-                                                    <span className="onoffswitch-switch" />
+                                                    <span className="onoffswitch-inner"/>
+                                                    <span className="onoffswitch-switch"/>
                                                 </label>
                                             </div>
                                         </div>
@@ -1351,8 +1355,8 @@ class Catalogs extends React.Component {
                                                             id="IsActive"
                                                         />
                                                         <label className="onoffswitch-label" htmlFor="IsActive">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
+                                                            <span className="onoffswitch-inner"/>
+                                                            <span className="onoffswitch-switch"/>
                                                         </label>
                                                     </div>
                                                 </li>
@@ -1369,8 +1373,8 @@ class Catalogs extends React.Component {
                                                             id="isAdmin"
                                                         />
                                                         <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
+                                                            <span className="onoffswitch-inner"/>
+                                                            <span className="onoffswitch-switch"/>
                                                         </label>
                                                     </div>
                                                 </li>
@@ -1387,8 +1391,8 @@ class Catalogs extends React.Component {
                                                             id="allowInsert"
                                                         />
                                                         <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
+                                                            <span className="onoffswitch-inner"/>
+                                                            <span className="onoffswitch-switch"/>
                                                         </label>
                                                     </div>
                                                 </li>
@@ -1405,8 +1409,8 @@ class Catalogs extends React.Component {
                                                             id="allowEdit"
                                                         />
                                                         <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
+                                                            <span className="onoffswitch-inner"/>
+                                                            <span className="onoffswitch-switch"/>
                                                         </label>
                                                     </div>
                                                 </li>
@@ -1423,8 +1427,8 @@ class Catalogs extends React.Component {
                                                             id="allowDelete"
                                                         />
                                                         <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
+                                                            <span className="onoffswitch-inner"/>
+                                                            <span className="onoffswitch-switch"/>
                                                         </label>
                                                     </div>
                                                 </li>
@@ -1441,15 +1445,15 @@ class Catalogs extends React.Component {
                                                             id="allowExport"
                                                         />
                                                         <label className="onoffswitch-label" htmlFor="allowExport">
-                                                            <span className="onoffswitch-inner" />
-                                                            <span className="onoffswitch-switch" />
+                                                            <span className="onoffswitch-inner"/>
+                                                            <span className="onoffswitch-switch"/>
                                                         </label>
                                                     </div>
                                                 </li>
-                                                <br /><br />
+                                                <br/><br/>
                                                 <li className="col-md-4 col-sm-12 col-lg-12">
                                                     <label>Employees can see schedules for:</label>
-                                                    <br />
+                                                    <br/>
                                                     <select
                                                         value={this.state.IdSchedulesEmployees}
                                                         onChange={e => {
@@ -1466,7 +1470,7 @@ class Catalogs extends React.Component {
                                                 </li>
                                                 <li className="col-md-6 col-sm-12 col-lg-12">
                                                     <label>Managers can add, edit or delete shifts for:</label>
-                                                    <br />
+                                                    <br/>
                                                     <select
                                                         value={this.state.IdSchedulesManager}
                                                         onChange={e => {
@@ -1487,18 +1491,18 @@ class Catalogs extends React.Component {
                             </div>
                         </div>
                     </DialogContent>
-                    <DialogActions style={{ margin: '16px 10px' }}>
+                    <DialogActions style={{margin: '16px 10px'}}>
                         <div className={classes.root}>
                             <div className={classes.wrapper}>
                                 <Tooltip
                                     title={
                                         this.state.idToEdit != null &&
-                                            this.state.idToEdit != '' &&
-                                            this.state.idToEdit != 0 ? (
-                                                'Save Changes'
-                                            ) : (
-                                                'Insert Record'
-                                            )
+                                        this.state.idToEdit != '' &&
+                                        this.state.idToEdit != 0 ? (
+                                            'Save Changes'
+                                        ) : (
+                                            'Insert Record'
+                                        )
                                     }
                                 >
                                     <div>
@@ -1507,8 +1511,8 @@ class Catalogs extends React.Component {
                                             className="btn btn-success"
                                             onClick={this.addUserHandler}
                                         >
-                                            Save {!isLoading && <i className="fas fa-save ml-1" />}
-                                            {isLoading && <i className="fas fa-spinner fa-spin ml-1" />}
+                                            Save {!isLoading && <i className="fas fa-save ml-1"/>}
+                                            {isLoading && <i className="fas fa-spinner fa-spin ml-1"/>}
                                         </button>
                                     </div>
                                 </Tooltip>
@@ -1521,8 +1525,10 @@ class Catalogs extends React.Component {
                                     <Tooltip title={'Cancel Operation'}>
                                         <div>
                                             <button className="btn btn-warning" onClick={this.resetPasswordHandler}>
-                                                Reset Password {!this.state.resetPassword && <i className="fas fa-sync-alt" />}
-                                                {this.state.resetPassword && <i className="fas fa-spinner fa-spin ml-1" />}
+                                                Reset Password {!this.state.resetPassword &&
+                                            <i className="fas fa-sync-alt"/>}
+                                                {this.state.resetPassword &&
+                                                <i className="fas fa-spinner fa-spin ml-1"/>}
                                             </button>
                                         </div>
                                     </Tooltip>
@@ -1533,7 +1539,7 @@ class Catalogs extends React.Component {
                                 <Tooltip title={'Cancel Operation'}>
                                     <div>
                                         <button className="btn btn-danger" onClick={this.cancelUserHandler}>
-                                            Cancel <i className="fas fa-ban ml-1" />
+                                            Cancel <i className="fas fa-ban ml-1"/>
                                         </button>
                                     </div>
                                 </Tooltip>
@@ -1544,7 +1550,7 @@ class Catalogs extends React.Component {
 
                 <div className="users__header">
                     <button className="btn btn-success mr-1" onClick={this.handleClickOpenModal} disabled={isLoading}>
-                        Add User<i className="fas fa-plus ml-2" />
+                        Add User<i className="fas fa-plus ml-2"/>
                     </button>
                 </div>
                 <div className="row">
