@@ -1090,11 +1090,15 @@ class BoardManager extends Component {
                                             </select>
                                         </div>
                                         <div className="col-md-2">
-                                            <button className="btn btn-success" type="submit" onClick={() => {
+                                            <a
+                                                className="link-board"  onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+
                                                 this.setState({openModal: true})
                                             }}>
-                                                Filter<i className="fas fa-filter ml2"/>
-                                            </button>
+                                                Advanced
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

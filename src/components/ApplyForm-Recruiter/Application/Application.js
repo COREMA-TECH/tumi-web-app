@@ -139,6 +139,8 @@ class Application extends Component {
 
     };
 
+    // BUG
+
     // To handle the stepper
     handleNext = () => {
         this.setState((state) => ({
