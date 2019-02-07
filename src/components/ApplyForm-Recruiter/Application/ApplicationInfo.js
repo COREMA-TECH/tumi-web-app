@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
@@ -97,9 +97,9 @@ class VerticalLinearStepper extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         const steps = getSteps();
-        const { activeStep } = this.state;
+        const {activeStep} = this.state;
 
         if (this.state.applicationId == 0) {
             this.state.applicationId = localStorage.getItem('idApplication');
@@ -108,13 +108,16 @@ class VerticalLinearStepper extends Component {
         let getStepContent = (step) => {
             switch (step) {
                 case 0:
-                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext} />;
+                    return <Application applicationId={this.state.applicationId} handleNext={this.handleNext}/>;
                 case 1:
-                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack} />;
+                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext}
+                                     handleBack={this.handleBack}/>;
                 case 2:
-                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack} />;
+                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext}
+                                               handleBack={this.handleBack}/>;
                 case 3:
-                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack} />;
+                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext}
+                                   handleBack={this.handleBack}/>;
                 default:
                     return 'Unknown step';
             }
@@ -123,19 +126,30 @@ class VerticalLinearStepper extends Component {
         return (
             <div className="main-stepper-container">
                 <div className="row">
+                    <div className="col-md-12">
+                        <button
+                            className="btn btn-info"
+                            onClick={() => {
+                                this.props.history.goBack();
+                            }}>
+                            Go Back
+                        </button>
+                    </div>
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header">
                                 <h2 className="applicant-card__title">Steps</h2>
                             </div>
-                            <Stepper activeStep={activeStep} orientation="vertical" className="" >
+                            <Stepper activeStep={activeStep} orientation="vertical" className="">
                                 {steps.map((label, index) => {
-                                    if (this.state.applicationId == 0) { this.state.activeStep = 0; }
+                                    if (this.state.applicationId == 0) {
+                                        this.state.activeStep = 0;
+                                    }
                                     return (
                                         <div
                                             key={label}
                                             onClick={() => {
-                                                this.setState({ activeStep: index })
+                                                this.setState({activeStep: index})
                                             }}
                                             className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item '}
                                         >
@@ -151,7 +165,7 @@ class VerticalLinearStepper extends Component {
                                     <Typography>All steps completed - you&quot;re finished</Typography>
                                     <Button onClick={this.handleReset} className={classes.button}>
                                         Reset
-                              </Button>
+                                    </Button>
                                 </Paper>
                             )}
                         </div>
