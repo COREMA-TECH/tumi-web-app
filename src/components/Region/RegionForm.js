@@ -529,7 +529,7 @@ class RegionForm extends Component {
                         <header className="RegionForm-header">
                             <div className="container-fluid">
                                 <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label htmlFor="">* Region's Name</label>
                                         <input
                                             required
@@ -543,7 +543,7 @@ class RegionForm extends Component {
                                             onBlur={this.handleValidate}
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label htmlFor="">* Region's Code</label>
                                         <input
                                             required
@@ -557,49 +557,50 @@ class RegionForm extends Component {
                                             onBlur={this.handleValidate}
                                         />
                                     </div>
+                                    <div className="col-md-4">
+                                        <label htmlFor="">* Regional Director</label>
+                                        <select
+                                            required
+                                            name="IdRegionalDirector"
+                                            className="form-control"
+                                            id="IdRegionalDirector"
+                                            onChange={this.handleChange}
+                                            value={this.state.IdRegionalDirector}
+                                        >
+                                            <option value={0}>Select a Regional Director</option>
+                                            {this.state.employees.map((recruiter) => (
+                                                <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </header>
                         <div className="container-fluid">
                             <div className="card">
                                 <div className="card-header">
-                                    <div className="row">
-                                        <div className="col-md-4">
-                                            <label htmlFor="">* Regional Manager</label>
-                                            <select
-                                                required
-                                                name="IdRegionalManager"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdRegionalManager}
-                                            >
-                                                <option value={0}>Select a Regional Manager</option>
-                                                {this.state.employees.map((recruiter) => (
-                                                    <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-4">
-                                            <label htmlFor="">* Regional Director</label>
-                                            <select
-                                                required
-                                                name="IdRegionalDirector"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdRegionalDirector}
-                                            >
-                                                <option value={0}>Select a Regional Director</option>
-                                                {this.state.employees.map((recruiter) => (
-                                                    <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div className="card-body">
                                         <div className="row">
-                                            <div className="col-lg-6">
+                                            <div className="col-md-6">
+                                                <label htmlFor="">* Regional Manager</label>
+                                                <select
+                                                    required
+                                                    name="IdRegionalManager"
+                                                    className="form-control"
+                                                    id="IdRegionalManager"
+                                                    onChange={this.handleChange}
+                                                    value={this.state.IdRegionalManager}
+                                                >
+                                                    <option value={0}>Select a Regional Manager</option>
+                                                    {this.state.employees.map((recruiter) => (
+                                                        <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-lg-12">
                                                 <label htmlFor="">Regional Recruiter</label>
                                                 <Query query={GET_RECRUITER}>
                                                     {({ loading, error, data, refetch, networkStatus }) => {
@@ -634,7 +635,7 @@ class RegionForm extends Component {
 
                                         </div>
                                         <div className="row">
-                                            <div className="col-md-6">
+                                            <div className="col-lg-12">
                                                 <label htmlFor="">Property Name</label>
                                                 <Query query={GET_HOTEL_QUERY} >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
