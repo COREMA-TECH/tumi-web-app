@@ -985,7 +985,7 @@ class BoardRecruiter extends Component {
                                         </div>
                                         <div className="col-md-1">
                                             <button
-                                                className="btn btn-info"
+                                                className="btn btn-outline-success"
                                                 onClick={() => {
                                                     this.props.history.push({
                                                         pathname: '/home/application/Form',

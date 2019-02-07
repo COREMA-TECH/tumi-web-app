@@ -126,13 +126,16 @@ class VerticalLinearStepper extends Component {
         return (
             <div className="main-stepper-container">
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-12 pl-3 mb-2">
                         <button
-                            className="btn btn-info"
+                            className="btn btn-outline-success"
                             onClick={() => {
-                                this.props.history.goBack();
+                                this.props.history.push({
+                                    pathname: '/home/board/recruiter',
+                                    state: { ApplicationId: 0 }
+                                });
                             }}>
-                            Go Back
+                            <i className="fas fa-chevron-left"/> Go To Board
                         </button>
                     </div>
                     <div className="col-md-4 col-lg-2">
