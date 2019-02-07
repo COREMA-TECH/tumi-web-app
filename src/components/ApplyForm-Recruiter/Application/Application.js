@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './index.css';
 import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import {
     GET_APPLICATION_BY_ID,
-    GET_CITIES_QUERY,
-    GET_POSITIONS_QUERY,
     GET_POSITIONS_CATALOG,
+    GET_POSITIONS_QUERY,
     GET_STATES_QUERY,
     getCompaniesQuery
 } from '../Queries';
 
-import { CREATE_APPLICATION, UPDATE_APPLICATION } from '../Mutations';
+import {CREATE_APPLICATION, UPDATE_APPLICATION} from '../Mutations';
 
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import Query from 'react-apollo/Query';
@@ -19,9 +18,8 @@ import withGlobalContent from '../../Generic/Global';
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
-import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
-import axios from "axios";
+import {RECREATE_IDEAL_JOB_LIST} from "../../ApplyForm/Mutations";
+import {GET_APPLICANT_IDEAL_JOBS} from "../../ApplyForm/Queries";
 import LocationForm from '../../ui-components/LocationForm'
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -123,11 +121,11 @@ class Application extends Component {
 
 
     handleChangePositionTag = (positionsTags) => {
-        this.setState({ positionsTags });
+        this.setState({positionsTags});
     };
 
     handleChange = (positionsTags) => {
-        this.setState({ positionsTags });
+        this.setState({positionsTags});
     };
 
     handleTextChange = (event) => {
@@ -209,7 +207,7 @@ class Application extends Component {
                                 }
                             }
                         })
-                        .then(({ data }) => {
+                        .then(({data}) => {
                             localStorage.setItem('idApplication', data.addApplication.id);
                             this.setState({
                                 editing: false
@@ -291,7 +289,7 @@ class Application extends Component {
                                 }
                             }
                         })
-                        .then(({ data }) => {
+                        .then(({data}) => {
                             this.setState({
                                 editing: false
                             }, () => {
@@ -339,12 +337,12 @@ class Application extends Component {
     }) => {
         this.props.client.query({
             query: getCompaniesQuery,
-            variables: { Id_Parent: -1 },
+            variables: {Id_Parent: -1},
             fetchPolicy: 'no-cache'
-        }).then(({ data }) => {
+        }).then(({data}) => {
             this.setState({
-                hotels: data.getbusinesscompanies
-            },
+                    hotels: data.getbusinesscompanies
+                },
                 func);
         }).catch();
     };
@@ -365,7 +363,7 @@ class Application extends Component {
                             id: id
                         }
                     })
-                    .then(({ data }) => {
+                    .then(({data}) => {
                         if (data.applications != null && data.applications.length > 0) {
                             let applicantData = data.applications[0];
                             this.setState(
@@ -418,7 +416,7 @@ class Application extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({ data }) => {
+            .then(({data}) => {
                 let dataAPI = data.applicantIdealJob;
                 let object;
 
@@ -490,7 +488,7 @@ class Application extends Component {
 
         this.props.client.query({
             query: GET_STATES_QUERY,
-            variables: { parent: -1, value: `'${zipCode}'` },
+            variables: {parent: -1, value: `'${zipCode}'`},
             fetchPolicy: 'no-cache'
         }).then((data) => {
             this.setState({
@@ -502,14 +500,20 @@ class Application extends Component {
     };
 
     updateCity = (city) => {
-        this.setState(() => { return { city } });
+        this.setState(() => {
+            return {city}
+        });
     };
     updateState = (state) => {
-        this.setState(() => { return { state } });
+        this.setState(() => {
+            return {state}
+        });
     };
 
     updateZipCode = (zipCode) => {
-        this.setState(() => { return { zipCode } });
+        this.setState(() => {
+            return {zipCode}
+        });
     }
 
     render() {
@@ -522,19 +526,19 @@ class Application extends Component {
                         {this.state.editing ? (
                             ''
                         ) : (
-                                <button
-                                    className="applicant-card__edit-button"
-                                    onClick={() => {
-                                        this.setState({
-                                            editing: true
-                                        });
-                                    }}
-                                >
-                                    {spanishActions[1].label} <i className="far fa-edit" />
-                                </button>
-                            )}
+                            <button
+                                className="applicant-card__edit-button"
+                                onClick={() => {
+                                    this.setState({
+                                        editing: true
+                                    });
+                                }}
+                            >
+                                {spanishActions[1].label} <i className="far fa-edit"/>
+                            </button>
+                        )}
                     </div>
-                    <br />
+                    <br/>
                     <div className="card-body">
                         <div className="row">
                             <div className="col-md-12 col-lg-6 form-section-1">
@@ -544,7 +548,7 @@ class Application extends Component {
                                             {formSpanish[16].label}
                                         </span>
                                         <Query query={GET_POSITIONS_QUERY}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
+                                            {({loading, error, data, refetch, networkStatus}) => {
                                                 if (error) return <p>Error </p>;
                                                 if (data.workOrder != null && data.workOrder.length > 0) {
                                                     return (
@@ -569,7 +573,7 @@ class Application extends Component {
                                                         </select>
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay />;
+                                                return <SelectNothingToDisplay/>;
                                             }}
                                         </Query>
                                     </div>
@@ -578,12 +582,12 @@ class Application extends Component {
                                             {formSpanish[17].label}
                                         </span>
                                         <Query query={GET_POSITIONS_CATALOG}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
+                                            {({loading, error, data, refetch, networkStatus}) => {
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     let options = [];
                                                     data.getcatalogitem.map((item) => (
-                                                        options.push({ value: item.Id, label: item.Description })
+                                                        options.push({value: item.Id, label: item.Description})
                                                     ));
 
                                                     return (
@@ -603,7 +607,7 @@ class Application extends Component {
                                                         </div>
                                                     );
                                                 }
-                                                return <SelectNothingToDisplay />;
+                                                return <SelectNothingToDisplay/>;
                                             }}
                                         </Query>
                                     </div>
@@ -696,7 +700,7 @@ class Application extends Component {
                                         cityTitle={`${formSpanish[7].label}`}
                                         cssTitle={"text-primary-application"}
                                         placeholder="99999-99999"
-                                        mask="99999-99999" />
+                                        mask="99999-99999"/>
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -717,8 +721,8 @@ class Application extends Component {
                                                 minLength="10"
                                             />
                                             <label className="onoffswitch-label" htmlFor="carSwitch">
-                                                <span className="onoffswitch-inner" />
-                                                <span className="onoffswitch-switch" />
+                                                <span className="onoffswitch-inner"/>
+                                                <span className="onoffswitch-switch"/>
                                             </label>
                                         </div>
                                     </div>
@@ -815,42 +819,42 @@ class Application extends Component {
                                 {spanishActions[2].label}
                             </button>
                             <button type="submit"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    if (this.props.applicationId == 0) {
-                                        this.insertApplicationInformation();
-                                    } else {
-                                        this.updateApplicationInformation(this.props.applicationId);
-                                    }
-                                }}
-                                className="applicant-card__save-button">
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        if (this.props.applicationId == 0) {
+                                            this.insertApplicationInformation();
+                                        } else {
+                                            this.updateApplicationInformation(this.props.applicationId);
+                                        }
+                                    }}
+                                    className="applicant-card__save-button">
                                 {spanishActions[4].label}
                             </button>
                         </div>
                     ) : (
-                            <div className="applicant-card__footer">
-                                <button
-                                    className="applicant-card__cancel-button"
-                                    onClick={() => {
-                                        window.location.href = '/home/Recruiter'
-                                    }}
-                                >
-                                    {spanishActions[9].label}
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        this.props.handleNext();
-                                    }}
-                                    className="applicant-card__save-button">
-                                    {spanishActions[8].label}
-                                </button>
-                            </div>
-                        )}
+                        <div className="applicant-card__footer">
+                            <button
+                                className="applicant-card__cancel-button"
+                                onClick={() => {
+                                    window.location.href = '/home/Recruiter'
+                                }}
+                            >
+                                {spanishActions[9].label}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    this.props.handleNext();
+                                }}
+                                className="applicant-card__save-button">
+                                {spanishActions[8].label}
+                            </button>
+                        </div>
+                    )}
                 </div>
 
 
-            </div >
+            </div>
         );
     }
 }

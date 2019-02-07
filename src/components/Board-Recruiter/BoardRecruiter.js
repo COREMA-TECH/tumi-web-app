@@ -989,9 +989,10 @@ class BoardRecruiter extends Component {
                                                 onClick={() => {
                                                     this.props.history.push({
                                                         pathname: '/home/application/Form',
-                                                        state: { ApplicationId: 0 }
+                                                        state: {ApplicationId: 0}
                                                     });
-                                                }}>New Lead</button>
+                                                }}>New Lead
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
