@@ -107,7 +107,8 @@ class BoardRecruiter extends Component {
             longitud1: 0,
             latitud2: 0,
             longitud2: 0,
-            distance: 0
+            distance: 0,
+            ShiftId: 0
         }
     }
 
@@ -198,15 +199,6 @@ class BoardRecruiter extends Component {
                         loading: false
                     });
             }
-
-            // if (targetLaneId == "Applied") {
-
-            // this.addApplicationPhase(cardId, IdLane);
-            // }
-            // if ((sourceLaneId == "Candidate" && targetLaneId == "Applied") || (sourceLaneId == "Candidate" && targetLaneId == "Leads")) {
-            /*  if (targetLaneId == "Leads") {
-                  this.updateApplicationInformation(cardId, true, 'Candidate now is a Lead ');
-              }*/
         }
 
     }
@@ -268,6 +260,7 @@ class BoardRecruiter extends Component {
                     Comment: " ",
                     UserId: parseInt(this.state.userId),
                     WorkOrderId: this.state.Intopening,
+                    ShiftId: this.state.ShiftId,
                     ReasonId: this.state.ReasonId,
                     ApplicationId: id,
                     StageId: laneId
@@ -404,18 +397,6 @@ class BoardRecruiter extends Component {
         );
     };
 
-    /* updateCity = (id) => {
-         this.setState(
-             {
-                 city: id
-             },
-             () => {
-                 // this.validateField('city', id);
-             }
-         );
-     };*/
-
-
     validateInvalidInput = () => {
     };
 
@@ -425,7 +406,50 @@ class BoardRecruiter extends Component {
     handleCardAdd = (card, laneId) => {
     }
 
+    clearArray() {
+        this.setState({
+
+            Opening: this.state.Openings,
+            lane: [
+                {
+                    id: 'lane1',
+                    title: 'Openings',
+                    label: ' ',
+                    cards: this.state.Openings
+                },
+                {
+                    id: 'Leads',
+                    title: 'Leads',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Applied',
+                    title: 'Sent to Interview',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Candidate',
+                    title: 'Candidate',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Placement',
+                    title: 'Placement',
+                    label: ' ',
+                    cards: []
+                }
+            ],
+            loading: false
+        });
+    }
+
     onCardClick = (cardId, metadata, laneId) => {
+        let needEnglish, needExperience, Position;
+        this.clearArray();
+
         if (laneId == "lane1") {
 
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
@@ -438,28 +462,24 @@ class BoardRecruiter extends Component {
 
             this.setState(
                 {
-                    Intopening: cardId
+                    Intopening: this.state.Openings.find((item) => { return item.id == cardId }).WorkOrderId,
+                    ShiftId: cardId
                 })
 
-            this.getLatLongHotel(1, this.state.Openings.find((item) => {
-                return item.id == cardId
-            }).Zipcode);
+            needEnglish = this.state.Openings.find((item) => { return item.id == cardId }).needEnglish;
+            needExperience = this.state.Openings.find((item) => { return item.id == cardId }).needExperience;
+            Position = this.state.Openings.find((item) => { return item.id == cardId }).Position;
+
+            console.log(this.state.Openings.find((item) => { return item.id == cardId }))
+
+            this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
 
 
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
                 console.log("Estoy aqui con los nuevos filtros");
-                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).PositionApplyfor);
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
             } else {
-                console.log("Estoy aqui con los viejos filtros");
-                this.getMatches(this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).needEnglish, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).needExperience, 30, laneId, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).PositionApplyfor);
+                this.getMatches(needEnglish, needExperience, 30, laneId, Position);
             }
         }
     }
@@ -576,16 +596,16 @@ class BoardRecruiter extends Component {
         console.log("language, experience, location, laneId, PositionId ", language, experience, location, laneId, PositionId)
 
         if (laneId == "lane1") {
-            /*positionApplyingFor: PositionId  */
             await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
                     console.log("data.applications.forEach((wo) ", wo)
 
+                    console.log("this.state.Intopening ", this.state.Intopening)
 
                     const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
                     //const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
-                    const IdealJob = wo.idealJobs.find((item) => { return item.description.includes(PositionId) });
+                    const IdealJob = wo.idealJobs.find((item) => { return item.description.toUpperCase().includes(PositionId.toUpperCase()) });
 
                     console.log("Phases,IdealJob  ", Phases, IdealJob)
 
@@ -736,10 +756,8 @@ class BoardRecruiter extends Component {
                 });
 
             }).catch(error => { })
-
-
-
         }
+
     };
 
     getDataFilters = () => {
@@ -771,33 +789,19 @@ class BoardRecruiter extends Component {
             variables: { ...this.getDataFilters() }
         }).then(({ data }) => {
             data.ShiftBoard.forEach((ShiftBoard) => {
-                // const Hotel = data.getbusinesscompanies.find((item) => {
-                //     return item.Id == wo.IdEntity
-                // });
-                // const Shift = ShiftsData.find((item) => {
-                //     return item.Id == wo.shift
-                // });
-                // const Users = data.getusers.find((item) => {
-                //     return item.Id == wo.userId
-                // });
-                // const Contacts = data.getcontacts.find((item) => {
-                //     return item.Id == (Users != null ? Users.Id_Contact : 10)
-                // });
-
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
                     dueOn: 'Q: ' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
-                    //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                    //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
                     cardStyle: { borderRadius: 6, marginBottom: 15 },
                     needExperience: ShiftBoard.needExperience,
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
-                    Position: ShiftBoard.Position,
-                    Zipcode: ShiftBoard.zipCode
+                    Position: ShiftBoard.positionName,
+                    Zipcode: ShiftBoard.zipCode,
+                    WorkOrderId: ShiftBoard.workOrderId
                 };
                 getOpenings.push(datas);
 
