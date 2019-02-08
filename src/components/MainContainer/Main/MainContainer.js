@@ -14,8 +14,14 @@ class MainContainer extends Component {
 	setTitle = (str) => {
 		var pathname = str.split('/');
 		var title;
-		if (pathname[3] != undefined) title = pathname[3] + ' ' + pathname[2];
-		else title = pathname[2];
+		if (pathname[3] != undefined) {
+			if (pathname[3] == "manager")
+				pathname[3] = "Operation Manager";
+			if (pathname[3] == "hotel")
+				pathname[3] = "Hotel Manager";
+			title = pathname[3] + ' ' + pathname[2];
+		} else
+			title = pathname[2];
 
 		title = title == 'Company' ? 'Management' : title;
 		return title;

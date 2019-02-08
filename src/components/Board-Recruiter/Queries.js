@@ -62,6 +62,22 @@ export const GET_LEAD = gql`
 		}
 		`;
 
+export const GET_BOARD_SHIFT = gql`
+query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
+	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity)  {
+		id,
+		title,
+		quantity,
+		workOrderId,
+		CompanyName,
+		needExperience,
+		needEnglish,
+		zipCode,
+		Id_positionApplying,
+		positionName
+	}
+}
+`;
 /*export const GET_LEAD = gql`
 query getlead {
 	applications(isActive: true ) {
