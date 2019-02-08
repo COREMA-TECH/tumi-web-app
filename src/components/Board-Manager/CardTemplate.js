@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import { CONVERT_TO_OPENING } from './Mutations';
 
 class CardTemplate extends Component {
     constructor(props) {
@@ -17,6 +18,10 @@ class CardTemplate extends Component {
 
     showConfirmDialog = () => {
         this.setState(() => { return { showConfirm: true } })
+    }
+
+    convertToOpening = () => {
+
     }
 
     printDialogConfirm = () => {
@@ -51,6 +56,7 @@ class CardTemplate extends Component {
     }
 
     render() {
+        console.log("this.props:::", this.props)
         return <div>
             <header
                 style={{

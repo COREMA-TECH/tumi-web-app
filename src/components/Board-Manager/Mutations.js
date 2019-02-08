@@ -26,3 +26,14 @@ export const ADD_APPLICATION_PHASES = gql`
 		}
 	}
 `;
+
+export const CONVERT_TO_OPENING = gql`
+	mutation convertShiftToOpening($shiftWorkOrder:filterShiftWOConvertToOpening, $shift: filterShiftConvertToOpening ){
+		convertShiftToOpening(shiftWorkOrder:$shiftWorkOrder, shift:$shift ){
+		id
+		entityId
+		title
+		color
+		}
+	}
+`;
