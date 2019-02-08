@@ -5,7 +5,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
 import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
-import { GET_CITIES_QUERY, GET_COORDENADAS, GET_HOTEL_QUERY, GET_LEAD, GET_OPENING, GET_STATES_QUERY } from "./Queries";
+import { GET_CITIES_QUERY, GET_COORDENADAS, GET_HOTEL_QUERY, GET_LEAD, GET_OPENING, GET_STATES_QUERY, GET_BOARD_SHIFT } from "./Queries";
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
 import ShiftsData from '../../data/shitfsWorkOrder.json';
@@ -740,175 +740,110 @@ class BoardRecruiter extends Component {
         }
     };
 
+    getDataFilters = () => {
+        var variables;
+        variables = {
+            shift: {
+                status: 2
+            },
+        };
+        if (this.state.hotel != 0) {
+            variables = {
+                shiftEntity: {
+                    Id: this.state.hotel
+                },
+                ...variables
+            }
+        }
+        return variables;
+    }
+
     getOpenings = async () => {
         let datas = [];
         let getleads = [];
         let getOpenings = [];
 
-        console.log("this.state.hotel  ", this.state.hotel)
 
-        if (this.state.hotel == 0) {
-            await this.props.client.query({
-                query: GET_OPENING,
-                variables: { status: this.state.status }
-            }).then(({ data }) => {
-                data.workOrder.forEach((wo) => {
-                    const Hotel = data.getbusinesscompanies.find((item) => {
-                        return item.Id == wo.IdEntity
-                    });
-                    const Shift = ShiftsData.find((item) => {
-                        return item.Id == wo.shift
-                    });
-                    const Users = data.getusers.find((item) => {
-                        return item.Id == wo.userId
-                    });
-                    const Contacts = data.getcontacts.find((item) => {
-                        return item.Id == (Users != null ? Users.Id_Contact : 10)
-                    });
+        await this.props.client.query({
+            query: GET_BOARD_SHIFT,
+            variables: { ...this.getDataFilters() }
+        }).then(({ data }) => {
+            data.ShiftBoard.forEach((ShiftBoard) => {
+                // const Hotel = data.getbusinesscompanies.find((item) => {
+                //     return item.Id == wo.IdEntity
+                // });
+                // const Shift = ShiftsData.find((item) => {
+                //     return item.Id == wo.shift
+                // });
+                // const Users = data.getusers.find((item) => {
+                //     return item.Id == wo.userId
+                // });
+                // const Contacts = data.getcontacts.find((item) => {
+                //     return item.Id == (Users != null ? Users.Id_Contact : 10)
+                // });
 
-                    datas = {
-                        id: wo.id,
-                        name: 'Title: ' + wo.position.Position,
-                        dueOn: 'Q: ' + wo.quantity,
-                        subTitle: 'ID: 000' + wo.id,
-                        body: wo.BusinessCompany.Name,
-                        escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                        escalationTextRight: Shift.Name + '-Shift',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 },
-                        needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish,
-                        PositionApplyfor: wo.position.Id_positionApplying,
-                        Position: wo.position.Position,
-                        Zipcode: wo.BusinessCompany.Zipcode
-                        /* id: wo.id,
-                         name: 'Title: ' + wo.position.Position,
-                         dueOn: 'Q: ' + wo.quantity,
-                         //subTitle: wo.comment,
-                         subTitle: 'ID: 000' + wo.id,
-                         body: wo.BusinessCompany.Name,
-                         //escalationTextLeft: Hotel.Name,
-                         escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                         //escalationTextRight: Shift.Name + '-Shift',
-                         cardStyle: { borderRadius: 6, marginBottom: 15 },
-                         needExperience: wo.needExperience,
-                         needEnglish: wo.needEnglish,
-                         PositionApplyfor: wo.position.Id_positionApplying,
-                         Zipcode: wo.BusinessCompany.Zipcode// Hotel.Zipcode*/
-                    };
-                    getOpenings.push(datas);
-                    console.log("Informacion del data sssssss ", getOpenings)
+                datas = {
+                    id: ShiftBoard.id,
+                    name: 'Title: ' + ShiftBoard.title,
+                    dueOn: 'Q: ' + ShiftBoard.quantity,
+                    subTitle: 'ID: 000' + ShiftBoard.workOrderId,
+                    body: ShiftBoard.CompanyName,
+                    //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                    //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                    needExperience: ShiftBoard.needExperience,
+                    needEnglish: ShiftBoard.needEnglish,
+                    PositionApplyfor: ShiftBoard.Id_positionApplying,
+                    Position: ShiftBoard.Position,
+                    Zipcode: ShiftBoard.zipCode
+                };
+                getOpenings.push(datas);
 
-                });
-
-                console.log("Informacion del data ", getOpenings)
-
-                this.setState({
-                    Openings: getOpenings
-                });
-            }).catch(error => {
-            })
-        } else {
-            await this.props.client.query({
-                query: GET_OPENING,
-                variables: { IdEntity: this.state.hotel, status: this.state.status }
-            }).then(({ data }) => {
-                data.workOrder.forEach((wo) => {
-                    // console.log("esta es la data del wo ", wo.position);
-                    const Hotel = data.getbusinesscompanies.find((item) => {
-                        return item.Id == wo.IdEntity
-                    });
-                    const Shift = ShiftsData.find((item) => {
-                        return item.Id == wo.shift
-                    });
-                    const Users = data.getusers.find((item) => {
-                        return item.Id == wo.userId
-                    });
-                    const Contacts = data.getcontacts.find((item) => {
-                        return item.Id == (Users != null ? Users.Id_Contact : 10)
-                    });
-
-                    // console.log("Hotel california ", Hotel);
-                    datas = {
-                        /* id: wo.id,
-                         name: 'Title: ' + wo.position.Position,
-                         dueOn: 'Q: ' + wo.quantity,
-                         //subTitle: wo.comment,
-                         subTitle: 'ID: 000' + wo.id,
-                         body: Hotel.Name,
-                         //escalationTextLeft: Hotel.Name,
-                         escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
-                         escalationTextRight: Shift.Name + '-Shift',
-                         cardStyle: { borderRadius: 6, marginBottom: 15 },
-                         needExperience: wo.needExperience,
-                         needEnglish: wo.needEnglish,
-                         PositionApplyfor: wo.position.Id_positionApplying,
-                         Zipcode: Hotel.Zipcode*/
-                        id: wo.id,
-                        name: 'Title: ' + wo.position.Position,
-                        dueOn: 'Q: ' + wo.quantity,
-                        subTitle: 'ID: 000' + wo.id,
-                        body: Hotel.Name,
-                        //escalationTextLeft: Hotel.Name,
-                        escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
-                        escalationTextRight: Shift.Name + '-Shift',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 },
-                        needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish,
-                        PositionApplyfor: wo.position.Id_positionApplying,
-                        Position: wo.position.Position,
-                        Zipcode: wo.BusinessCompany.Zipcode
-                    };
-                    getOpenings.push(datas);
-                });
-
-                this.setState({
-                    Openings: getOpenings
-
-                });
-            }).catch(error => {
-            })
-        }
-
-        console.log("esta es la set ", this.state.Openings)
-
-        this.setState(
-            {
-
-                Opening: this.state.Openings,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Openings',
-                        label: ' ',
-                        cards: this.state.Openings
-                    },
-                    {
-                        id: 'Leads',
-                        title: 'Leads',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Applied',
-                        title: 'Sent to Interview',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Candidate',
-                        title: 'Candidate',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Placement',
-                        title: 'Placement',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
             });
+
+            this.setState({
+                Openings: getOpenings
+            });
+        }).catch(error => {
+        })
+
+        this.setState({
+
+            Opening: this.state.Openings,
+            lane: [
+                {
+                    id: 'lane1',
+                    title: 'Openings',
+                    label: ' ',
+                    cards: this.state.Openings
+                },
+                {
+                    id: 'Leads',
+                    title: 'Leads',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Applied',
+                    title: 'Sent to Interview',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Candidate',
+                    title: 'Candidate',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Placement',
+                    title: 'Placement',
+                    label: ' ',
+                    cards: []
+                }
+            ],
+            loading: false
+        });
     };
 
     handleSwitchView = (event) => {

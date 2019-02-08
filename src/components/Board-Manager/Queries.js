@@ -147,8 +147,8 @@ query Cities($parent: Int!) {
 `;
 
 export const GET_BOARD_SHIFT = gql`
-query ShiftBoard($shiftEntity: inputShiftBoardCompany) {
-	ShiftBoard(shiftEntity: $shiftEntity)  {
+query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
+	ShiftBoard(shift: $shift, shiftEntity: $shiftEntity)  {
 		id,
 		title,
 		quantity,

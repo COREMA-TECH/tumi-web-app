@@ -815,7 +815,11 @@ class BoardManager extends Component {
 
     getDataFilters = () => {
         var variables;
-        variables = null;
+        variables = {
+            shift: {
+                status: 1
+            },
+        };
         if (this.state.hotel != 0) {
             variables = {
                 shiftEntity: {
