@@ -146,6 +146,23 @@ query Cities($id: Int) {
 }
 `;
 
+export const GET_BOARD_SHIFT = gql`
+query ShiftBoard($shiftEntity: inputShiftBoardCompany) {
+	ShiftBoard(shiftEntity: $shiftEntity)  {
+		id,
+		title,
+		quantity,
+		workOrderId,
+		CompanyName,
+		needExperience,
+		needEnglish,
+		zipCode,
+		Id_positionApplying,
+		positionName
+	}
+}
+`;
+
 export const GET_COMPANY_QUERY = gql`
 		query getCompany($id: Int!) {
 			getbusinesscompanies(Id: $id, IsActive: 1, Contract_Status: "'C'") {
