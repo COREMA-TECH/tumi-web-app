@@ -16,10 +16,55 @@ export const GET_POSTIONS_QUERY = gql`
 			}
 		}
     `;
-
 export const GET_LEAD = gql`
-query getlead ( $positionApplyingFor: Int ) {
-	applications(isActive: true , positionApplyingFor: $positionApplyingFor) {
+	query getlead  {
+		applications(isActive: true) {
+			id
+		firstName
+		lastName
+		cellPhone
+		homePhone
+		car
+		city
+		isLead
+		zipCode
+		idealJobs
+		{
+		  id
+		  description
+		  idPosition 
+		}
+		applicationPhases   {
+			id
+			StageId
+			ApplicationId
+			WorkOrderId
+			createdAt
+		  } 
+		cityInfo{
+			DisplayLabel
+		  }
+		state	
+		stateInfo{
+			DisplayLabel
+		  }
+		  generalComment
+	 languages
+	{
+	language
+	}
+	employments
+	{
+	  id
+	}
+		}
+	
+		}
+		`;
+
+/*export const GET_LEAD = gql`
+query getlead {
+	applications(isActive: true ) {
 		id
 	firstName
 	lastName
@@ -61,7 +106,7 @@ employments
 	}
 
 }
-	`;
+	`;*/
 
 export const GET_COORDENADAS = gql`
 	query coordenadas($Zipcode:String){
@@ -73,7 +118,48 @@ export const GET_COORDENADAS = gql`
 	  }
 
 `;
+
 export const GET_OPENING = gql`
+query workorder ($IdEntity: Int, $status: Int,$id: Int)  {
+	workOrder(IdEntity:$IdEntity, status:$status,id:$id){
+		id
+		IdEntity
+		userId
+		date
+		quantity
+		shift
+		startDate
+		endDate
+		needExperience
+		needEnglish
+		PositionRateId
+		position{
+			Position
+			Id_positionApplying
+		  }
+		BusinessCompany
+		  {
+			   Id
+				  Name
+				  Zipcode
+			
+		  }
+		comment
+}
+	getusers(Id: null,IsActive: 1) {
+		Id
+		Id_Contact
+	}
+	getcontacts(Id: null,IsActive: 1) {
+		Id
+		First_Name
+		Last_Name
+	}
+}
+    `;
+
+
+/*export const GET_OPENING = gql`
 query workorder ($IdEntity: Int, $status: Int)  {
 	workOrder(IdEntity:$IdEntity, status:$status){
 		id
@@ -108,7 +194,7 @@ query workorder ($IdEntity: Int, $status: Int)  {
 		Last_Name
 	}
 }
-    `;
+    `;*/
 
 
 export const GET_HOTEL_QUERY = gql`
