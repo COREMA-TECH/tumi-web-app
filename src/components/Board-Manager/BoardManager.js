@@ -195,24 +195,27 @@ class BoardManager extends Component {
             .then(({data}) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
+                }, () => {
+                    this.loadStates();
                 });
             })
             .catch();
-    }
+    };
 
     loadStates = () => {
         this.props.client
             .query({
                 query: GET_STATES_QUERY,
                 variables: {
-                    id: this.state.state,
-                    parent: this.state.country
+                    parent: 6
                 },
                 fetchPolicy: 'no-cache'
             })
             .then(({data}) => {
                 this.setState({
                     states: data.getcatalogitem
+                }, () => {
+                    this.loadCities();
                 });
             })
             .catch();
@@ -223,7 +226,6 @@ class BoardManager extends Component {
             .query({
                 query: GET_CITIES_QUERY,
                 variables: {
-                    id: this.state.city,
                     parent: this.state.state
                 },
                 fetchPolicy: 'no-cache'
@@ -237,17 +239,16 @@ class BoardManager extends Component {
     };
 
     updateHotel = (id) => {
-
         if (id != 0) {
             this.setState(
                 {
                     hotel: id,
-                    state: this.state.hotels.find((item) => {
-                        return item.Id == id
-                    }).State,
-                    city: this.state.hotels.find((item) => {
-                        return item.Id == id
-                    }).City,
+                    // state: this.state.hotels.find((item) => {
+                    //     return item.Id == id
+                    // }).State,
+                    // city: this.state.hotels.find((item) => {
+                    //     return item.Id == id
+                    // }).City,
                     matches: []
                 },
                 () => {
@@ -1015,91 +1016,99 @@ class BoardManager extends Component {
                         <div className="col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header info">
-
                                     <div className="row">
-                                        <div className="col-md-3">
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={(event) => {
-                                                    this.updateHotel(event.target.value);
-                                                }}
-                                                value={this.state.IdEntity}
-                                                //disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Hotel</option>
-                                                {this.state.hotels.map((hotel) => (
+                                        <div className="col-md-8">
+                                            <div className="row">
+                                                <div className="col-md-3">
+                                                    <select
+                                                        required
+                                                        name="IdEntity"
+                                                        className="form-control"
+                                                        id=""
+                                                        onChange={(event) => {
+                                                            this.updateHotel(event.target.value);
+                                                        }}
+                                                        value={this.state.IdEntity}
+                                                        //disabled={!isAdmin}
+                                                        onBlur={this.handleValidate}
+                                                    >
+                                                        <option value={0}>Select a Hotel</option>
+                                                        {this.state.hotels.map((hotel) => (
 
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                                            <option value={hotel.Id}>{hotel.Name}</option>
 
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="state"
-                                                className={'form-control'}
-                                                /* onChange={(event) => {
-                                                     this.updateState(event.target.value);
-                                                 }}*/
-                                                value={this.state.state}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a state</option>
-                                                {this.state.states.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="city"
-                                                className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                /* onChange={(event) => {
-                                                     this.updateCity(event.target.value);
-                                                 }}*/
-                                                //error={!this.state.cityValid}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a city</option>
-                                                {this.state.cities.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="city"
-                                                className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                onChange={(event) => {
-                                                    this.updateStatus(event.target.value);
-                                                }}
-                                                //error={!this.state.cityValid}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
-                                                <option value={0}>Active work orders</option>
-                                                <option value={1}>Closed work orders</option>
-                                                <option value={2}>All work orders</option>
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <a
-                                                className="link-board"  onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="state"
+                                                        className={'form-control'}
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                state: event.target.value
+                                                            }, () => {
+                                                                this.loadCities()
+                                                            })
+                                                        }}
+                                                        value={this.state.state}
+                                                    >
+                                                        <option value="">Select a state</option>
+                                                        {this.state.states.map((item) => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="city"
+                                                        className={'form-control'}
+                                                        disabled={this.state.loadingCities}
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                city: event.target.value
+                                                            })
+                                                        }}
+                                                        //error={!this.state.cityValid}
+                                                        value={this.state.city}
+                                                    >
+                                                        <option value="">Select a city</option>
+                                                        {this.state.cities.map((item) => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="city"
+                                                        className={'form-control'}
+                                                        // disabled={this.state.loadingCities}
+                                                        onChange={(event) => {
+                                                            this.updateStatus(event.target.value);
+                                                        }}
+                                                        //error={!this.state.cityValid}
+                                                        value={this.state.city}
+                                                        showNone={false}
+                                                    >
+                                                        <option value={0}>Active work orders</option>
+                                                        <option value={1}>Closed work orders</option>
+                                                        <option value={2}>All work orders</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <a
+                                                        className="link-board"  onClick={(e) => {
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
 
-                                                this.setState({openModal: true})
-                                            }}>
-                                                Advanced
-                                            </a>
+                                                        this.setState({openModal: true})
+                                                    }}>
+                                                        Advanced
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div className="col-12 col-md-4"></div>
                                     </div>
                                 </div>
                             </div>
