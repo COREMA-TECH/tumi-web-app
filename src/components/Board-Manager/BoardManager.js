@@ -4,72 +4,13 @@ import withGlobalContent from '../Generic/Global';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
-import { UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE, ADD_APPLICATION_PHASES } from "./Mutations";
+import { UPDATE_APPLICANT } from "./Mutations";
 import { GET_STATES_QUERY, GET_CITIES_QUERY, GET_WORK_ORDERS, GET_MATCH, GET_HOTEL_QUERY, GET_COORDENADAS } from "./Queries";
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save';
-//import Board from 'react-trello'
 import { Board } from 'react-trello'
 import ShiftsData from '../../data/shitfs.json';
-import { InputLabel } from '@material-ui/core';
-import Query from 'react-apollo/Query';
-import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
-
 import Filters from './Filters';
+import CardTemplate from './CardTemplate';
 
-
-const CustomCard = props => {
-    return (
-        <div>
-            <header
-                style={{
-                    borderBottom: '1px solid #eee',
-                    paddingBottom: 0,
-                    marginBottom: 0,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    color: props.cardColor
-                }}>
-                <div style={{ margin: 2, fontSize: 14, fontWeight: 'bold', color: '#3CA2C8' }}>{props.name}</div>
-                <div style={{ margin: 2, fontWeight: 'bold', fontSize: 12 }}>{props.dueOn}</div>
-            </header>
-            <div style={{ fontSize: 12, color: '#4C4C4C' }}>
-                <div style={{ margin: 2, color: '#4C4C4C', fontWeight: 'bold' }}>{props.subTitle}</div>
-                <div style={{ margin: 5, padding: '0px 0px' }}><i>{props.body}</i>
-                </div>
-                <header
-                    style={{
-                        paddingBottom: 0,
-                        marginBottom: 0,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        color: props.cardColor
-                    }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeft}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenter}</div>
-                    <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}>{props.escalationTextRight}  </div>
-                </header>
-                <header
-                    style={{
-                        paddingBottom: 0,
-                        marginBottom: 0,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        color: props.cardColor
-                    }}>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
-                    <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
-                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
-                </header>
-            </div>
-        </div>
-    )
-}
-
-//const { getDistance } = this.context
 
 class BoardManager extends Component {
     constructor(props) {
@@ -111,7 +52,8 @@ class BoardManager extends Component {
             longitud1: 0,
             latitud2: 0,
             longitud2: 0,
-            distance: 0
+            distance: 0,
+            showConfirm: true
 
         }
     }
@@ -924,6 +866,8 @@ class BoardManager extends Component {
         this.setState({ openModal: false });
     };
 
+
+
     render() {
         /*   const { getDistance } = this.context;
            const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
@@ -1041,7 +985,7 @@ class BoardManager extends Component {
                         }}
 
                         customCardLayout>
-                        <CustomCard />
+                        <CardTemplate />
 
                     </Board>
                 </div>
