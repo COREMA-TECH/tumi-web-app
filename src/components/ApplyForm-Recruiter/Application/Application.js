@@ -138,6 +138,8 @@ class Application extends Component {
 
     };
 
+    // BUG
+
     // To handle the stepper
     handleNext = () => {
         this.setState((state) => ({
@@ -481,14 +483,20 @@ class Application extends Component {
     }
 
     updateCity = (city) => {
-        this.setState(() => { return { city } });
+        this.setState(() => {
+            return { city }
+        });
     };
     updateState = (state) => {
-        this.setState(() => { return { state } });
+        this.setState(() => {
+            return { state }
+        });
     };
 
     updateZipCode = (zipCode) => {
-        this.setState(() => { return { zipCode } });
+        this.setState(() => {
+            return { zipCode }
+        });
     }
 
     render() {
@@ -829,7 +837,7 @@ class Application extends Component {
                 </div>
 
 
-            </div >
+            </div>
         );
     }
 }

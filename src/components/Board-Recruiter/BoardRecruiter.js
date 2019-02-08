@@ -4,17 +4,11 @@ import withGlobalContent from "../Generic/Global";
 import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
-import { UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE, ADD_APPLICATION_PHASES } from "./Mutations";
-import { GET_POSTIONS_QUERY, GET_COMPANY_QUERY, GET_OPENING, GET_LEAD, GET_HOTEL_QUERY, GET_STATES_QUERY, GET_CITIES_QUERY, GET_COORDENADAS } from "./Queries";
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save';
+import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
+import { GET_CITIES_QUERY, GET_COORDENADAS, GET_HOTEL_QUERY, GET_LEAD, GET_OPENING, GET_STATES_QUERY } from "./Queries";
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
-//import ShiftsData from '../../data/shitfsWorkOrder.json';
-import ShiftsData from '../../data/shitfs.json';
-import { InputLabel } from '@material-ui/core';
-import Query from 'react-apollo/Query';
-import SelectNothingToDisplay from '../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
+import ShiftsData from '../../data/shitfsWorkOrder.json';
 import Filters from './Filters';
 import ApplicationPhasesForm from './ApplicationPhasesForm';
 
@@ -63,7 +57,8 @@ const CustomCard = props => {
                     }}>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextLeftLead}</div>
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{props.escalationTextCenterLead}</div>
-                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
+                    {props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i
+                        class="fas fa-car-side"></i>{props.escalationTextRightLead}  </div>}
                 </header>
             </div>
         </div>
@@ -360,8 +355,12 @@ class BoardRecruiter extends Component {
             this.setState(
                 {
                     hotel: id,
-                    state: this.state.hotels.find((item) => { return item.Id == id }).State,
-                    city: this.state.hotels.find((item) => { return item.Id == id }).City,
+                    state: this.state.hotels.find((item) => {
+                        return item.Id == id
+                    }).State,
+                    city: this.state.hotels.find((item) => {
+                        return item.Id == id
+                    }).City,
                     matches: []
                 },
                 () => {
@@ -442,17 +441,25 @@ class BoardRecruiter extends Component {
                     Intopening: cardId
                 })
 
-            console.log(" Zipcode del hotel ", this.state.Openings.find((item) => { return item.id == cardId }).Zipcode)
-            this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
+            this.getLatLongHotel(1, this.state.Openings.find((item) => {
+                return item.id == cardId
+            }).Zipcode);
 
 
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
                 console.log("Estoy aqui con los nuevos filtros");
-                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).Position);
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).PositionApplyfor);
             } else {
-                console.log("Estoy aqui con los viejos filtros ", this.state.Openings.find((item) => { return item.id == cardId }));
-
-                this.getMatches(this.state.Openings.find((item) => { return item.id == cardId }).needEnglish, this.state.Openings.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.Openings.find((item) => { return item.id == cardId }).Position);
+                console.log("Estoy aqui con los viejos filtros");
+                this.getMatches(this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).needEnglish, this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).needExperience, 30, laneId, this.state.Openings.find((item) => {
+                    return item.id == cardId
+                }).PositionApplyfor);
             }
         }
     }
@@ -535,17 +542,20 @@ class BoardRecruiter extends Component {
                 latitud1: data.zipcode[0].Lat,
                 longitud1: data.zipcode[0].Long
             });
-        }).catch(error => { })
+        }).catch(error => {
+        })
     };
 
-    getLatLong = async (op, zipcode, fnc = () => { }) => {
+    getLatLong = async (op, zipcode, fnc = () => {
+    }) => {
         await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
             this.setState({
                 latitud2: data.zipcode[0].Lat,
                 longitud2: data.zipcode[0].Long
             }, fnc);
 
-        }).catch(error => { })
+        }).catch(error => {
+        })
     };
 
     getMatches = async (language, experience, location, laneId, PositionId) => {
@@ -570,20 +580,14 @@ class BoardRecruiter extends Component {
             await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
-                    console.log("data.applications.forEach((wo) ", wo)
-
-
-                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
-                    //const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
-                    const IdealJob = wo.idealJobs.find((item) => { return item.description.includes(PositionId) });
-
-                    console.log("Phases,IdealJob  ", Phases, IdealJob)
-
-                    console.log(" Zipcode del empleado ", wo.zipCode)
+                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
+                        return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id
+                    });
+                    const IdealJob = wo.idealJobs.find((item) => {
+                        return item.idPosition == PositionId
+                    });
 
                     this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-
-                        console.log(" wo.zipCode.substring(0, 5) ", wo.zipCode.substring(0, 5))
 
                         const { getDistance } = this.context;
                         const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
@@ -592,7 +596,9 @@ class BoardRecruiter extends Component {
                         console.log("la distance  es ", distance)
 
                         if (language == 'true') {
-                            SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
+                            SpeakEnglish = wo.languages.find((item) => {
+                                return item.language == 194
+                            }) != null ? 1 : 0;
                         } else {
                             SpeakEnglish = 1;
                         }
@@ -613,9 +619,9 @@ class BoardRecruiter extends Component {
                         }
                         if (typeof IdealJob == undefined || IdealJob == null) {
                             position = 0;
-                        } else { position = 1 }
-
-                        console.log("SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position   ", SpeakEnglish, Employment, distances, position)
+                        } else {
+                            position = 1
+                        }
 
 
                         if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
@@ -623,24 +629,26 @@ class BoardRecruiter extends Component {
 
                             if (typeof Phases == undefined || Phases == null) {
                                 varphase = 30460;
-                            } else { varphase = Phases.StageId }
+                            } else {
+                                varphase = Phases.StageId
+                            }
 
 
                             console.log(" switch (varphase) { ", varphase)
 
                             switch (varphase) {
                                 case 30460:
-                                    // if (wo.isLead === true) {
-                                    getleads.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    //}
+                                    if (wo.isLead === true) {
+                                        getleads.push({
+                                            id: wo.id,
+                                            name: wo.firstName + ' ' + wo.lastName,
+                                            subTitle: wo.cellPhone,
+                                            body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                            escalationTextLeftLead: wo.generalComment,
+                                            escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                            cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                        });
+                                    }
                                     break;
                                 case 30461:
                                     getApplied.push({
@@ -725,8 +733,8 @@ class BoardRecruiter extends Component {
                     });
                 });
 
-            }).catch(error => { })
-
+            }).catch(error => {
+            })
 
 
         }
@@ -740,20 +748,23 @@ class BoardRecruiter extends Component {
         console.log("this.state.hotel  ", this.state.hotel)
 
         if (this.state.hotel == 0) {
-            console.log("entro al cero ")
-            await this.props.client.query({ query: GET_OPENING, variables: { status: this.state.status } }).then(({ data }) => {
+            await this.props.client.query({
+                query: GET_OPENING,
+                variables: { status: this.state.status }
+            }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
-
-                    console.log("entro al GET_OPENING ", wo)
-
-                    // const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                    const Shift = wo.shift//ShiftsData.find((item) => { return item.Id == wo.shift });
-                    console.log("Informacion del Shift ", Shift)
-                    const Users = data.getusers.find((item) => { return item.Id == wo.userId });
-                    console.log("Informacion del Users ", Users)
-                    const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
-                    console.log("Informacion del Contacts ", Contacts)
-
+                    const Hotel = data.getbusinesscompanies.find((item) => {
+                        return item.Id == wo.IdEntity
+                    });
+                    const Shift = ShiftsData.find((item) => {
+                        return item.Id == wo.shift
+                    });
+                    const Users = data.getusers.find((item) => {
+                        return item.Id == wo.userId
+                    });
+                    const Contacts = data.getcontacts.find((item) => {
+                        return item.Id == (Users != null ? Users.Id_Contact : 10)
+                    });
 
                     datas = {
                         id: wo.id,
@@ -762,7 +773,7 @@ class BoardRecruiter extends Component {
                         subTitle: 'ID: 000' + wo.id,
                         body: wo.BusinessCompany.Name,
                         escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                        escalationTextRight: Shift.Name + '-Shift',
                         cardStyle: { borderRadius: 6, marginBottom: 15 },
                         needExperience: wo.needExperience,
                         needEnglish: wo.needEnglish,
@@ -794,15 +805,27 @@ class BoardRecruiter extends Component {
                 this.setState({
                     Openings: getOpenings
                 });
-            }).catch(error => { })
+            }).catch(error => {
+            })
         } else {
-            await this.props.client.query({ query: GET_OPENING, variables: { IdEntity: this.state.hotel, status: this.state.status } }).then(({ data }) => {
+            await this.props.client.query({
+                query: GET_OPENING,
+                variables: { IdEntity: this.state.hotel, status: this.state.status }
+            }).then(({ data }) => {
                 data.workOrder.forEach((wo) => {
                     // console.log("esta es la data del wo ", wo.position);
-                    const Hotel = data.getbusinesscompanies.find((item) => { return item.Id == wo.IdEntity });
-                    const Shift = ShiftsData.find((item) => { return item.Id == wo.shift });
-                    const Users = data.getusers.find((item) => { return item.Id == wo.userId });
-                    const Contacts = data.getcontacts.find((item) => { return item.Id == (Users != null ? Users.Id_Contact : 10) });
+                    const Hotel = data.getbusinesscompanies.find((item) => {
+                        return item.Id == wo.IdEntity
+                    });
+                    const Shift = ShiftsData.find((item) => {
+                        return item.Id == wo.shift
+                    });
+                    const Users = data.getusers.find((item) => {
+                        return item.Id == wo.userId
+                    });
+                    const Contacts = data.getcontacts.find((item) => {
+                        return item.Id == (Users != null ? Users.Id_Contact : 10)
+                    });
 
                     // console.log("Hotel california ", Hotel);
                     datas = {
@@ -824,9 +847,10 @@ class BoardRecruiter extends Component {
                         name: 'Title: ' + wo.position.Position,
                         dueOn: 'Q: ' + wo.quantity,
                         subTitle: 'ID: 000' + wo.id,
-                        body: wo.BusinessCompany.Name,
-                        escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                        body: Hotel.Name,
+                        //escalationTextLeft: Hotel.Name,
+                        escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
+                        escalationTextRight: Shift.Name + '-Shift',
                         cardStyle: { borderRadius: 6, marginBottom: 15 },
                         needExperience: wo.needExperience,
                         needEnglish: wo.needEnglish,
@@ -841,7 +865,8 @@ class BoardRecruiter extends Component {
                     Openings: getOpenings
 
                 });
-            }).catch(error => { })
+            }).catch(error => {
+            })
         }
 
         console.log("esta es la set ", this.state.Openings)
@@ -1007,6 +1032,17 @@ class BoardRecruiter extends Component {
                                                 Filter<i className="fas fa-filter ml2" />
                                             </button>
                                         </div>
+                                        <div className="col-md-1">
+                                            <button
+                                                className="btn btn-outline-success"
+                                                onClick={() => {
+                                                    this.props.history.push({
+                                                        pathname: '/home/application/Form',
+                                                        state: { ApplicationId: 0 }
+                                                    });
+                                                }}>New Lead
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1048,6 +1084,7 @@ class BoardRecruiter extends Component {
      
          />*/
     }
+
     static contextTypes = {
         getDistance: PropTypes.func,
     };
