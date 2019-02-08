@@ -37,7 +37,7 @@ class LocationForm extends Component {
                         fetchPolicy: 'no-cache',
                         variables: {
                             Id_Catalog: STATE_ID,
-                            Id
+                            Id: Id || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
                         this.setState(() => { return { states: catalogitem, loadingStates: false, state: Id } },
@@ -87,7 +87,7 @@ class LocationForm extends Component {
                         fetchPolicy: 'no-cache',
                         variables: {
                             Id_Catalog: CITY_ID,
-                            Id_Parent
+                            Id_Parent: Id_Parent || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
                         this.setState(() => { return { cities: catalogitem, loadingCities: false, city: Id } })
@@ -231,7 +231,7 @@ class LocationForm extends Component {
                 <div className="select-animated">
                     <label className={`${this.props.cssTitle || ''}`}>{this.props.stateTitle || "* State"}</label>
                     <select name="state" className={this.props.stateClass || 'form-control'} onChange={this.onValueChange} value={this.state.state}
-                        disabled required={this.props.requiredState}>
+                        disabled required={this.props.requiredState} >
                         <option value="">Select a state</option>
                         {this.state.states.map(({ Id, Name }) => (
                             <option key={Id} value={Id}>{Name}</option>

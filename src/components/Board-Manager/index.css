@@ -1,4 +1,10 @@
 @media (min-width: 320px) {
+    .link-board {
+        color: #0092bd !important;
+        text-decoration: underline !important;
+        cursor: pointer !important;
+    }
+
     .reset-password-container {
         width: 100%;
         height: 100vh;

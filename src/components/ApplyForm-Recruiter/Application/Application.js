@@ -4,10 +4,8 @@ import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import {
     GET_APPLICATION_BY_ID,
-    GET_CITIES_QUERY,
     GET_POSITIONS_QUERY,
     GET_POSITIONS_CATALOG,
-    GET_STATES_QUERY,
     getCompaniesQuery
 } from '../Queries';
 
@@ -21,7 +19,6 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
-import axios from "axios";
 import LocationForm from '../../ui-components/LocationForm'
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
@@ -140,6 +137,8 @@ class Application extends Component {
         });
 
     };
+
+    // BUG
 
     // To handle the stepper
     handleNext = () => {
@@ -483,33 +482,21 @@ class Application extends Component {
         }
     }
 
-    findByZipCode = (zipCode = null, cityFinal = null) => {
-        if (!zipCode) {
-            return false;
-        }
-
-        this.props.client.query({
-            query: GET_STATES_QUERY,
-            variables: { parent: -1, value: `'${zipCode}'` },
-            fetchPolicy: 'no-cache'
-        }).then((data) => {
-            this.setState({
-                state: data.data.getcatalogitem[0].Id,
-                cityFinal: cityFinal
-            });
-        });
-
-    };
-
     updateCity = (city) => {
-        this.setState(() => { return { city } });
+        this.setState(() => {
+            return { city }
+        });
     };
     updateState = (state) => {
-        this.setState(() => { return { state } });
+        this.setState(() => {
+            return { state }
+        });
     };
 
     updateZipCode = (zipCode) => {
-        this.setState(() => { return { zipCode } });
+        this.setState(() => {
+            return { zipCode }
+        });
     }
 
     render() {
@@ -850,7 +837,7 @@ class Application extends Component {
                 </div>
 
 
-            </div >
+            </div>
         );
     }
 }

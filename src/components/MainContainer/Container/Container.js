@@ -161,7 +161,6 @@ class Container extends Component {
 				<Route exact path="/home/schedules-accept/:accept/:id" component={SchedulesAccept} />
 				<Route exact path="/home/region" component={Region} />
 				<Route exact path="/home/regiontable" component={RegionTable} />
-				<Route exact path='/home/location' component={LocationForm} />
 			</div>
 		);
 	}

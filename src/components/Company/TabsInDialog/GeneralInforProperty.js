@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
 import { gql } from 'apollo-boost';
-import { Route } from 'react-router-dom';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import SelectForm from 'ui-components/SelectForm/SelectForm';
-import Query from 'react-apollo/Query';
 import days from '../../../data/days.json';
 import withApollo from 'react-apollo/withApollo';
 import InputValid from '../../ui-components/InputWithValidation/InputValid';
 import InputMask from 'react-input-mask';
 import FileUpload from 'ui-components/FileUpload/FileUpload';
-import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import ImageUpload from 'ui-components/ImageUpload/ImageUpload';
 import PropTypes from 'prop-types';
 import './valid.css';
 import AutosuggestInput from 'ui-components/AutosuggestInput/AutosuggestInput';
 import ConfirmDialog from 'material-ui/ConfirmDialog';
-import axios from 'axios';
 import LocationForm from '../../ui-components/LocationForm';
 
 class GeneralInfoProperty extends Component {
