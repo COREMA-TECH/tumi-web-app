@@ -76,6 +76,15 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		Id_positionApplying,
 		positionName
 	}
+	getusers(Id: null,IsActive: 1) {
+		Id
+		Id_Contact
+	}
+	getcontacts(Id: null,IsActive: 1) {
+		Id
+		First_Name
+		Last_Name
+	}
 }
 `;
 /*export const GET_LEAD = gql`
