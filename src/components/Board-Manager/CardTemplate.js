@@ -3,14 +3,20 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import { CONVERT_TO_OPENING } from './Mutations';
+import withApollo from 'react-apollo/withApollo';
+
+const ONE_ITEM_MESSAGE = "Send ONLY this item", ALL_ITEM_MESSAGE = "Send All Items on this Work Order"
 
 class CardTemplate extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showConfirm: false
+            showConfirm: false,
+            convertingOneItem: false,
+            convertingAllItems: false
         }
     }
+
 
     handleCloseConfirmDialog = () => {
         this.setState(() => { return { showConfirm: false } })
@@ -20,23 +26,60 @@ class CardTemplate extends Component {
         this.setState(() => { return { showConfirm: true } })
     }
 
-    convertToOpening = () => {
-
+    handleConvertAllItem = ({ WorkOrderId }) => {
+        this.convertToOpening({ shiftWorkOrder: { WorkOrderId } }, ALL_ITEM_MESSAGE, this.updateProgressAllItems)
     }
 
-    printDialogConfirm = () => {
+    handleConvertThisItem = ({ id }) => {
+        this.convertToOpening({ shift: { id } }, ONE_ITEM_MESSAGE, this.updateProgressOneItem)
+    }
+
+    updateProgressAllItems = (status) => {
+        this.setState(() => { return { convertingAllItems: status } })
+    }
+    updateProgressOneItem = (status) => {
+        this.setState(() => { return { convertingOneItem: status } })
+    }
+    convertToOpening = (args, message, fncUpdateProgress) => {
+        fncUpdateProgress(true);
+        this.props.client
+            .mutate({
+                mutation: CONVERT_TO_OPENING,
+                variables: { ...args }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', `${message} successful`, 'bottom', 'right');
+                fncUpdateProgress(false);
+                this.setState(() => { return { showConfirm: false } }, () => {
+                    this.props.getWorkOrders("Esto es desde Card Template");
+                })
+
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    `Error to with operation [${message}]. Please, try again!`,
+                    'bottom',
+                    'right'
+                );
+                fncUpdateProgress(false);
+            });
+    }
+
+
+    printDialogConfirm = ({ id, WorkOrderId }) => {
         return <Dialog maxWidth="sm" open={this.state.showConfirm} onClose={this.handleCloseConfirmDialog}>
             <DialogContent>
-                <h2>Do you want convert this Work Order to Opening?</h2>
+                <h2 className="text-center">Send Work Order to a recruiter</h2>
             </DialogContent>
             <DialogActions>
-                <button className="btn btn-success btn-not-rounded mr-1" type="button">
-                    Convert whole Work Order
-            </button>
-                <button className="btn btn-default btn-not-rounded" type="button">
-                    Convert this Record
-            </button>
-                <button className="btn btn-danger btn-not-rounded mr-1" type="button" onClick={this.handleCloseConfirmDialog}>
+                <button className="btn btn-success btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItem({ WorkOrderId })}>
+                    {ALL_ITEM_MESSAGE}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-info btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItem({ id })}>
+                    {ONE_ITEM_MESSAGE}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialog}>
                     Cancel
             </button>
             </DialogActions>
@@ -56,7 +99,6 @@ class CardTemplate extends Component {
     }
 
     render() {
-        console.log("this.props:::", this.props)
         return <div>
             <header
                 style={{
@@ -103,8 +145,8 @@ class CardTemplate extends Component {
                 </header>
                 {this.printButtons(this.props)}
             </div>
-            {this.printDialogConfirm()}
+            {this.printDialogConfirm(this.props)}
         </div>
     }
 }
-export default CardTemplate;
+export default withApollo(CardTemplate);

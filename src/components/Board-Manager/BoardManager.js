@@ -831,14 +831,12 @@ class BoardManager extends Component {
         return variables;
     }
 
-    getWorkOrders = async () => {
+    getWorkOrders = (vare = "primera") => {
         let getworkOrders = [];
-        let getworkOrdersPosition = [];
         let datas = [];
-        let datapositions = [];
-
-        await this.props.client.query({
+        this.props.client.query({
             query: GET_BOARD_SHIFT,
+            fetchPolicy: "no-cache",
             variables: { ...this.getDataFilters() }
         }).then(({ data }) => {
             data.ShiftBoard.forEach((ShiftBoard) => {
@@ -855,61 +853,61 @@ class BoardManager extends Component {
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
                     Position: ShiftBoard.Position,
-                    Zipcode: ShiftBoard.zipCode
+                    Zipcode: ShiftBoard.zipCode,
+                    WorkOrderId: ShiftBoard.workOrderId,
+                    shiftStatus: ShiftBoard.status
                 };
                 getworkOrders.push(datas);
             });
             this.setState({
                 workOrders: getworkOrders,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Work Orders',
+                        label: ' ',
+                        cards: getworkOrders,
+                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Positions',
+                        title: 'Positions',
+                        label: ' ',
+                        cards: [],
+                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Matches',
+                        title: 'Matches',
+                        label: ' ',
+                        cards: this.state.matches
+                    },
+                    {
+                        id: 'Notify',
+                        title: 'Notify',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Accepted',
+                        title: 'Accepted',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Schedule',
+                        title: 'Add to Schedule',
+                        label: ' ',
+                        cards: []
+                    }
+                ],
+                loading: false
             });
 
         }).catch(error => {
         })
 
-        this.setState({
-            workOrder: this.state.workOrders,
-            lane: [
-                {
-                    id: 'lane1',
-                    title: 'Work Orders',
-                    label: ' ',
-                    cards: this.state.workOrders,
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                },
-                {
-                    id: 'Positions',
-                    title: 'Positions',
-                    label: ' ',
-                    cards: [],
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                },
-                {
-                    id: 'Matches',
-                    title: 'Matches',
-                    label: ' ',
-                    cards: this.state.matches
-                },
-                {
-                    id: 'Notify',
-                    title: 'Notify',
-                    label: ' ',
-                    cards: []
-                },
-                {
-                    id: 'Accepted',
-                    title: 'Accepted',
-                    label: ' ',
-                    cards: []
-                },
-                {
-                    id: 'Schedule',
-                    title: 'Add to Schedule',
-                    label: ' ',
-                    cards: []
-                }
-            ],
-            loading: false
-        });
+
     };
 
     handleCloseModal = (event) => {
@@ -1047,7 +1045,7 @@ class BoardManager extends Component {
                         }}
 
                         customCardLayout>
-                        <CardTemplate />
+                        <CardTemplate handleOpenSnackbar={this.props.handleOpenSnackbar} getWorkOrders={this.getWorkOrders} />
 
                     </Board>
                 </div>
