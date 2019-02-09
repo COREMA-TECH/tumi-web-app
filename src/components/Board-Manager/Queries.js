@@ -160,6 +160,7 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		Id_positionApplying,
 		positionName
 		status
+		isOpening
 	}
 }
 `;

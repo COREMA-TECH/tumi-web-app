@@ -817,7 +817,7 @@ class BoardManager extends Component {
         var variables;
         variables = {
             shift: {
-                status: 1
+                status: [1, 2]
             },
         };
         if (this.state.hotel != 0) {
@@ -839,11 +839,23 @@ class BoardManager extends Component {
             fetchPolicy: "no-cache",
             variables: { ...this.getDataFilters() }
         }).then(({ data }) => {
+            let _id = data.ShiftBoard[0].workOrderId;
+            let count = 1;
+            let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
+                if (_id == ShiftBoard.workOrderId)
+                    count++;
+                else {
+                    count = 1;
+                }
+
+                if (begin) count = 1;
+
+                _id = ShiftBoard.workOrderId;
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + ShiftBoard.quantity,
+                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
                     //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
@@ -855,9 +867,10 @@ class BoardManager extends Component {
                     Position: ShiftBoard.Position,
                     Zipcode: ShiftBoard.zipCode,
                     WorkOrderId: ShiftBoard.workOrderId,
-                    shiftStatus: ShiftBoard.status
+                    isOpening: ShiftBoard.isOpening
                 };
                 getworkOrders.push(datas);
+                begin = false;
             });
             this.setState({
                 workOrders: getworkOrders,
