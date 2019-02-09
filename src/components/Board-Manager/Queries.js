@@ -159,6 +159,8 @@ query ShiftBoard($shift: inputShiftQuery,$shiftEntity: inputShiftBoardCompany) {
 		zipCode,
 		Id_positionApplying,
 		positionName
+		status
+		isOpening
 	}
 }
 `;

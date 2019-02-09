@@ -2,53 +2,166 @@ import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import { CONVERT_TO_OPENING } from './Mutations';
+import withApollo from 'react-apollo/withApollo';
+
+const ONE_ITEM_MESSAGE_OPENING = "Send ONLY this item", ALL_ITEM_MESSAGE_OPENING = "Send All Items on this Work Order"
+const ONE_ITEM_MESSAGE_WORK_ORDER = "Recall Only this Item", ALL_ITEM_MESSAGE_WORK_ORDER = "Recall All Items on this Work Order"
+
 
 class CardTemplate extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showConfirm: false
+            showConfirmToOpening: false,
+            showConfirmToWorkOrder: false,
+            convertingOneItem: false,
+            convertingAllItems: false,
+            currentStatus: props.isOpening,
+            prevStatus: props.isOpening
         }
     }
 
-    handleCloseConfirmDialog = () => {
-        this.setState(() => { return { showConfirm: false } })
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isOpening != this.props.isOpening)
+            this.setState(() => {
+                return {
+                    currentStatus: nextProps.isOpening,
+                    prevStatus: nextProps.isOpening
+                }
+            })
     }
 
-    showConfirmDialog = () => {
-        this.setState(() => { return { showConfirm: true } })
+    //This is for Opening
+    handleCloseConfirmDialogToOpening = () => {
+        this.setState((prevState) => { return { showConfirmToOpening: false, currentStatus: prevState.prevStatus } })
     }
 
-    printDialogConfirm = () => {
-        return <Dialog maxWidth="sm" open={this.state.showConfirm} onClose={this.handleCloseConfirmDialog}>
+    handleConvertAllItemToOpening = ({ WorkOrderId }) => {
+        this.convertToOpeningOrWorkOrder({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 1, targetStatus: 2 }, ALL_ITEM_MESSAGE_OPENING, this.updateProgressAllItems)
+    }
+
+    handleConvertThisItemToOpening = ({ id }) => {
+        this.convertToOpeningOrWorkOrder({ shift: { id }, sourceStatus: 1, targetStatus: 2 }, ONE_ITEM_MESSAGE_OPENING, this.updateProgressOneItem)
+    }
+    //-------------------------------------
+
+    //Tthis is for Work Order
+    handleCloseConfirmDialogToWorkOrder = () => {
+        this.setState((prevState) => { return { showConfirmToWorkOrder: false, currentStatus: prevState.prevStatus } })
+    }
+
+    handleConvertAllItemToWorkOrder = ({ WorkOrderId }) => {
+        this.convertToOpeningOrWorkOrder({ shiftWorkOrder: { WorkOrderId }, sourceStatus: 2, targetStatus: 1 }, ALL_ITEM_MESSAGE_WORK_ORDER, this.updateProgressAllItems)
+    }
+
+    handleConvertThisItemToWorkOrder = ({ id }) => {
+        this.convertToOpeningOrWorkOrder({ shift: { id }, sourceStatus: 2, targetStatus: 1 }, ONE_ITEM_MESSAGE_WORK_ORDER, this.updateProgressOneItem)
+    }
+
+    //-----------------------------------------------
+
+    updateProgressAllItems = (status) => {
+        this.setState(() => { return { convertingAllItems: status } })
+    }
+
+    updateProgressOneItem = (status) => {
+        this.setState(() => { return { convertingOneItem: status } })
+    }
+
+    convertToOpeningOrWorkOrder = (args, message, fncUpdateProgress) => {
+        fncUpdateProgress(true);
+        this.props.client
+            .mutate({
+                mutation: CONVERT_TO_OPENING,
+                variables: { ...args }
+            })
+            .then(({ data }) => {
+                this.props.handleOpenSnackbar('success', `${message} successful`, 'bottom', 'right');
+                fncUpdateProgress(false);
+                this.setState(() => { return { showConfirmToOpening: false, showConfirmToWorkOrder: false } }, () => {
+                    this.props.getWorkOrders("Esto es desde Card Template");
+                })
+
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar(
+                    'error',
+                    `Error to with operation [${message}]. Please, try again!`,
+                    'bottom',
+                    'right'
+                );
+                fncUpdateProgress(false);
+            });
+    }
+
+
+    printDialogConfirmConvertToOpening = ({ id, WorkOrderId }) => {
+        return <Dialog maxWidth="xl" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialogToOpening}>
             <DialogContent>
-                <h2>Do you want convert this Work Order to Opening?</h2>
+                <h2 className="text-center">Send Work Order to a recruiter</h2>
             </DialogContent>
             <DialogActions>
-                <button className="btn btn-success btn-not-rounded mr-1" type="button">
-                    Convert whole Work Order
-            </button>
-                <button className="btn btn-default btn-not-rounded" type="button">
-                    Convert this Record
-            </button>
-                <button className="btn btn-danger btn-not-rounded mr-1" type="button" onClick={this.handleCloseConfirmDialog}>
+                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToOpening({ WorkOrderId })}>
+                    {ALL_ITEM_MESSAGE_OPENING}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToOpening({ id })}>
+                    {ONE_ITEM_MESSAGE_OPENING}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToOpening}>
                     Cancel
             </button>
             </DialogActions>
         </Dialog>
     }
 
-    printButtons = ({ laneId }) => {
-        if (laneId == "lane1")
-            return <button
-                className="btn btn-info"
-                title="Convert to opening"
-                onClick={this.showConfirmDialog}
-                type="button"
-            >
-                <i class="fas fa-sync-alt"></i>
+    printDialogConfirmConvertToWO = ({ id, WorkOrderId }) => {
+        return <Dialog maxWidth="xl" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
+            <DialogContent>
+                <h2 className="text-center">Send Opening to a Operation Manager</h2>
+            </DialogContent>
+            <DialogActions>
+                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToWorkOrder({ WorkOrderId })}>
+                    {ALL_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToWorkOrder({ id })}>
+                    {ONE_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
+                </button>
+                <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToWorkOrder}>
+                    Cancel
             </button>
+            </DialogActions>
+        </Dialog>
     }
+
+    printButtons = ({ id, laneId }) => {
+        if (laneId == "lane1")
+            return <div className="onoffswitch">
+                <input
+                    id={`chkConvert${id}`}
+                    className="onoffswitch-checkbox"
+                    onChange={this.handleCheckedChange}
+                    checked={this.state.currentStatus}
+                    type="checkbox"
+                />
+                <label className="onoffswitch-label" htmlFor={`chkConvert${id}`}>
+                    <span className="onoffswitch-inner" />
+                    <span className="onoffswitch-switch" />
+                </label>
+            </div>
+    }
+
+    handleCheckedChange = (event) => {
+        const target = event.target;
+        this.setState((prevState) => {
+            return {
+                currentStatus: target.checked,
+                prevStatus: prevState.currentStatus,
+                showConfirmToOpening: target.checked,
+                showConfirmToWorkOrder: !target.checked
+            }
+        });
+    };
 
     render() {
         return <div>
@@ -95,10 +208,13 @@ class CardTemplate extends Component {
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{this.props.escalationTextCenterLead}</div>
                     {this.props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{this.props.escalationTextRightLead}  </div>}
                 </header>
-                {this.printButtons(this.props)}
+                <right>
+                    {this.printButtons(this.props)}
+                </right>
             </div>
-            {this.printDialogConfirm()}
+            {this.printDialogConfirmConvertToOpening(this.props)}
+            {this.printDialogConfirmConvertToWO(this.props)}
         </div>
     }
 }
-export default CardTemplate;
+export default withApollo(CardTemplate);

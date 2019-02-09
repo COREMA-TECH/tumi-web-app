@@ -817,7 +817,7 @@ class BoardManager extends Component {
         var variables;
         variables = {
             shift: {
-                status: 1
+                status: [1, 2]
             },
         };
         if (this.state.hotel != 0) {
@@ -831,21 +831,31 @@ class BoardManager extends Component {
         return variables;
     }
 
-    getWorkOrders = async () => {
+    getWorkOrders = (vare = "primera") => {
         let getworkOrders = [];
-        let getworkOrdersPosition = [];
         let datas = [];
-        let datapositions = [];
-
-        await this.props.client.query({
+        this.props.client.query({
             query: GET_BOARD_SHIFT,
+            fetchPolicy: "no-cache",
             variables: { ...this.getDataFilters() }
         }).then(({ data }) => {
+            let _id = data.ShiftBoard[0].workOrderId;
+            let count = 1;
+            let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
+                if (_id == ShiftBoard.workOrderId)
+                    count++;
+                else {
+                    count = 1;
+                }
+
+                if (begin) count = 1;
+
+                _id = ShiftBoard.workOrderId;
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + ShiftBoard.quantity,
+                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
                     //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
@@ -855,61 +865,62 @@ class BoardManager extends Component {
                     needEnglish: ShiftBoard.needEnglish,
                     PositionApplyfor: ShiftBoard.Id_positionApplying,
                     Position: ShiftBoard.Position,
-                    Zipcode: ShiftBoard.zipCode
+                    Zipcode: ShiftBoard.zipCode,
+                    WorkOrderId: ShiftBoard.workOrderId,
+                    isOpening: ShiftBoard.isOpening
                 };
                 getworkOrders.push(datas);
+                begin = false;
             });
             this.setState({
                 workOrders: getworkOrders,
+                lane: [
+                    {
+                        id: 'lane1',
+                        title: 'Work Orders',
+                        label: ' ',
+                        cards: getworkOrders,
+                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Positions',
+                        title: 'Positions',
+                        label: ' ',
+                        cards: [],
+                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                    },
+                    {
+                        id: 'Matches',
+                        title: 'Matches',
+                        label: ' ',
+                        cards: this.state.matches
+                    },
+                    {
+                        id: 'Notify',
+                        title: 'Notify',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Accepted',
+                        title: 'Accepted',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Schedule',
+                        title: 'Add to Schedule',
+                        label: ' ',
+                        cards: []
+                    }
+                ],
+                loading: false
             });
 
         }).catch(error => {
         })
 
-        this.setState({
-            workOrder: this.state.workOrders,
-            lane: [
-                {
-                    id: 'lane1',
-                    title: 'Work Orders',
-                    label: ' ',
-                    cards: this.state.workOrders,
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                },
-                {
-                    id: 'Positions',
-                    title: 'Positions',
-                    label: ' ',
-                    cards: [],
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                },
-                {
-                    id: 'Matches',
-                    title: 'Matches',
-                    label: ' ',
-                    cards: this.state.matches
-                },
-                {
-                    id: 'Notify',
-                    title: 'Notify',
-                    label: ' ',
-                    cards: []
-                },
-                {
-                    id: 'Accepted',
-                    title: 'Accepted',
-                    label: ' ',
-                    cards: []
-                },
-                {
-                    id: 'Schedule',
-                    title: 'Add to Schedule',
-                    label: ' ',
-                    cards: []
-                }
-            ],
-            loading: false
-        });
+
     };
 
     handleCloseModal = (event) => {
@@ -1047,7 +1058,7 @@ class BoardManager extends Component {
                         }}
 
                         customCardLayout>
-                        <CardTemplate />
+                        <CardTemplate handleOpenSnackbar={this.props.handleOpenSnackbar} getWorkOrders={this.getWorkOrders} />
 
                     </Board>
                 </div>

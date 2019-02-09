@@ -788,11 +788,21 @@ class BoardRecruiter extends Component {
             query: GET_BOARD_SHIFT,
             variables: { ...this.getDataFilters() }
         }).then(({ data }) => {
+            let _id = data.ShiftBoard[0].workOrderId;
+            let count = 1;
+            let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
+                if (_id == ShiftBoard.workOrderId)
+                    count++;
+                else {
+                    count = 1;
+                }
+
+                if (begin) count = 1;
                 datas = {
                     id: ShiftBoard.id,
                     name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + ShiftBoard.quantity,
+                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
                     subTitle: 'ID: 000' + ShiftBoard.workOrderId,
                     body: ShiftBoard.CompanyName,
                     cardStyle: { borderRadius: 6, marginBottom: 15 },

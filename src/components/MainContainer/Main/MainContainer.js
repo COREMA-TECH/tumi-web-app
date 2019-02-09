@@ -31,7 +31,7 @@ class MainContainer extends Component {
 		if (localStorage.getItem('LoginId'))
 			return <div>
 				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" />
-				{localStorage.getItem('showMenu') ?
+				{localStorage.getItem('showMenu') == 'true' ?
 					<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
 						<i className="fas fa-bars" />
 					</label> : ('')
