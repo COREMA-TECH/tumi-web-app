@@ -97,15 +97,15 @@ class CardTemplate extends Component {
 
 
     printDialogConfirmConvertToOpening = ({ id, WorkOrderId }) => {
-        return <Dialog maxWidth="sm" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialogToOpening}>
+        return <Dialog maxWidth="xl" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialogToOpening}>
             <DialogContent>
                 <h2 className="text-center">Send Work Order to a recruiter</h2>
             </DialogContent>
             <DialogActions>
-                <button className="btn btn-success btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToOpening({ WorkOrderId })}>
+                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToOpening({ WorkOrderId })}>
                     {ALL_ITEM_MESSAGE_OPENING}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
                 </button>
-                <button className="btn btn-info btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToOpening({ id })}>
+                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToOpening({ id })}>
                     {ONE_ITEM_MESSAGE_OPENING}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
                 </button>
                 <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToOpening}>
@@ -116,15 +116,15 @@ class CardTemplate extends Component {
     }
 
     printDialogConfirmConvertToWO = ({ id, WorkOrderId }) => {
-        return <Dialog maxWidth="sm" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
+        return <Dialog maxWidth="xl" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
             <DialogContent>
                 <h2 className="text-center">Send Opening to a Operation Manager</h2>
             </DialogContent>
             <DialogActions>
-                <button className="btn btn-success btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToWorkOrder({ WorkOrderId })}>
+                <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToWorkOrder({ WorkOrderId })}>
                     {ALL_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingAllItems && <i class="fas fa-spinner fa-spin ml-1" />}
                 </button>
-                <button className="btn btn-info btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToWorkOrder({ id })}>
+                <button className="btn btn-info  btn-not-rounded mb-2" type="button" onClick={() => this.handleConvertThisItemToWorkOrder({ id })}>
                     {ONE_ITEM_MESSAGE_WORK_ORDER}{this.state.convertingOneItem && <i class="fas fa-spinner fa-spin ml-1" />}
                 </button>
                 <button className="btn btn-danger btn-not-rounded mr-2 mb-2" type="button" onClick={this.handleCloseConfirmDialogToWorkOrder}>
@@ -208,7 +208,9 @@ class CardTemplate extends Component {
                     <div style={{ margin: 1, fontSize: 12, fontWeight: 'bold' }}>{this.props.escalationTextCenterLead}</div>
                     {this.props.escalationTextRightLead && <div style={{ margin: 1, fontWeight: 'bold', fontSize: 12 }}><i class="fas fa-car-side"></i>{this.props.escalationTextRightLead}  </div>}
                 </header>
-                {this.printButtons(this.props)}
+                <right>
+                    {this.printButtons(this.props)}
+                </right>
             </div>
             {this.printDialogConfirmConvertToOpening(this.props)}
             {this.printDialogConfirmConvertToWO(this.props)}
