@@ -817,7 +817,7 @@ class BoardManager extends Component {
         var variables;
         variables = {
             shift: {
-                status: 1
+                status: [1,2]
             },
         };
         if (this.state.hotel != 0) {

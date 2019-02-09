@@ -11,19 +11,17 @@ class CardTemplate extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            showConfirm: false,
+            showConfirmToOpening: false,
             convertingOneItem: false,
-            convertingAllItems: false
+            convertingAllItems: false,
+            currentStatus: props.shiftStatus == 2,
+            prevStatus: props.shiftStatus == 2
         }
     }
 
 
     handleCloseConfirmDialog = () => {
-        this.setState(() => { return { showConfirm: false } })
-    }
-
-    showConfirmDialog = () => {
-        this.setState(() => { return { showConfirm: true } })
+        this.setState((prevState) => { return { showConfirmToOpening: false, currentStatus: prevState.prevStatus } })
     }
 
     handleConvertAllItem = ({ WorkOrderId }) => {
@@ -50,7 +48,7 @@ class CardTemplate extends Component {
             .then(({ data }) => {
                 this.props.handleOpenSnackbar('success', `${message} successful`, 'bottom', 'right');
                 fncUpdateProgress(false);
-                this.setState(() => { return { showConfirm: false } }, () => {
+                this.setState(() => { return { showConfirmToOpening: false } }, () => {
                     this.props.getWorkOrders("Esto es desde Card Template");
                 })
 
@@ -68,7 +66,7 @@ class CardTemplate extends Component {
 
 
     printDialogConfirm = ({ id, WorkOrderId }) => {
-        return <Dialog maxWidth="sm" open={this.state.showConfirm} onClose={this.handleCloseConfirmDialog}>
+        return <Dialog maxWidth="sm" open={this.state.showConfirmToOpening} onClose={this.handleCloseConfirmDialog}>
             <DialogContent>
                 <h2 className="text-center">Send Work Order to a recruiter</h2>
             </DialogContent>
@@ -86,17 +84,36 @@ class CardTemplate extends Component {
         </Dialog>
     }
 
-    printButtons = ({ laneId }) => {
+    printButtons = ({ id,laneId }) => {
         if (laneId == "lane1")
-            return <button
-                className="btn btn-info"
-                title="Convert to opening"
-                onClick={this.showConfirmDialog}
-                type="button"
-            >
-                <i class="fas fa-sync-alt"></i>
-            </button>
+            return <div className="onoffswitch">
+                <input
+                    id="carSwitch"
+                    className="onoffswitch-checkbox"
+                    onChange={this.handleCheckedChange(id)}
+                    checked={this.state.currentStatus}
+                    name="currentStatus"
+                    type="checkbox"
+                />
+                <label className="onoffswitch-label" htmlFor="carSwitch">
+                    <span className="onoffswitch-inner" />
+                    <span className="onoffswitch-switch" />
+                </label>
+            </div>
     }
+
+    handleCheckedChange = (id) => (event) => {
+        const target = event.target;
+        this.setState((prevState) => {
+            alert(`${this.props.id} -- ${id}`)
+            return {
+                currentStatus: target.checked,
+                prevStatus: prevState.currentStatus,
+                showConfirmToOpening: target.checked,
+                showConfirmToWorkOrder: !target.checked
+            }
+        });
+    };
 
     render() {
         return <div>
