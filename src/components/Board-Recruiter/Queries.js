@@ -18,7 +18,7 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 export const GET_LEAD = gql`
 	query getlead  {
-		applications(isActive: true) {
+		applications(isActive: true,isLead:true ) {
 			id
 		firstName
 		lastName
@@ -39,6 +39,7 @@ export const GET_LEAD = gql`
 			StageId
 			ApplicationId
 			WorkOrderId
+			ShiftId
 			createdAt
 		  } 
 		cityInfo{

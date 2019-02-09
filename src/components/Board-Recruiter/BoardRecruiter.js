@@ -147,11 +147,10 @@ class BoardRecruiter extends Component {
         }
 
         if (targetLaneId != sourceLaneId) {
-            // this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
             this.addApplicationPhase(cardId, IdLane);
+
             if (targetLaneId != "Leads") {
-                //this.addApplicationPhase(cardId, IdLane);
-                this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                this.updateApplicationInformation(cardId, true, 'candidate was updated!');
             }
 
             if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
@@ -448,9 +447,10 @@ class BoardRecruiter extends Component {
 
     onCardClick = (cardId, metadata, laneId) => {
         let needEnglish, needExperience, Position;
-        this.clearArray();
+
 
         if (laneId == "lane1") {
+            this.clearArray();
 
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -498,8 +498,8 @@ class BoardRecruiter extends Component {
                             id: id,
                             isLead: isLead,
                             idRecruiter: this.state.userId,
-                            idWorkOrder: this.state.Intopening
-
+                            idWorkOrder: this.state.Intopening,
+                            positionApplyingFor: this.state.Intopening
                         }
                     })
                     .then(({ data }) => {
@@ -601,9 +601,9 @@ class BoardRecruiter extends Component {
 
                     console.log("data.applications.forEach((wo) ", wo)
 
-                    console.log("this.state.Intopening ", this.state.Intopening)
+                    console.log("this.state.Intopening ", this.state.Intopening, " Shift ")
 
-                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id });
+                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
                     //const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
                     const IdealJob = wo.idealJobs.find((item) => { return item.description.toUpperCase().includes(PositionId.toUpperCase()) });
 
