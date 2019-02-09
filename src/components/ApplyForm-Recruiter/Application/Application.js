@@ -163,9 +163,10 @@ class Application extends Component {
     insertApplicationInformation = () => {
         if (
             this.state.firstName == '' ||
-            this.state.lastName == ''
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
         ) {
-            this.props.handleOpenSnackbar('warning', 'the first name and last name are required');
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
             this.setState(
                 {
@@ -182,21 +183,15 @@ class Application extends Component {
                                     lastName: this.state.lastName,
                                     lastName2: this.state.lastName2,
                                     date: this.state.date,
-                                    // streetAddress: this.state.streetAddress,
                                     aptNumber: this.state.aptNumber,
                                     city: this.state.city,
                                     state: this.state.state,
                                     zipCode: this.state.zipCode,
                                     homePhone: this.state.homePhone,
                                     cellPhone: this.state.cellPhone,
-                                    //socialSecurityNumber: this.state.socialSecurityNumber,
-                                    //birthDay: this.state.birthDay,
                                     car: this.state.car,
-                                    // typeOfId: parseInt(this.state.typeOfId),
-                                    //   expireDateId: this.state.expireDateId,
                                     emailAddress: this.state.emailAddress,
                                     positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                    //dateAvailable: this.state.dateAvailable,
                                     scheduleRestrictions: this.state.scheduleRestrictions,
                                     scheduleExplain: this.state.scheduleExplain,
                                     convicted: this.state.convicted,
@@ -245,9 +240,10 @@ class Application extends Component {
     updateApplicationInformation = (id) => {
         if (
             this.state.firstName == '' ||
-            this.state.lastName == ''
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
         ) {
-            this.props.handleOpenSnackbar('warning', 'the first name and last name are required');
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
             this.setState(
                 {
@@ -678,7 +674,7 @@ class Application extends Component {
                                         cityColClass="col-md-6"
                                         stateColClass="col-md-6"
                                         zipCodeColClass="col-md-6"
-                                        zipCodeTitle={`${formSpanish[5].label}`}
+                                        zipCodeTitle={`* ${formSpanish[5].label}`}
                                         stateTitle={`${formSpanish[6].label}`}
                                         cityTitle={`${formSpanish[7].label}`}
                                         cssTitle={"text-primary-application"}

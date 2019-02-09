@@ -69,7 +69,7 @@ class Application extends Component {
             convictedExplain: '',
             socialNetwork: '',
             comment: '',
-
+            isLead: '',
             // Languages array
             languages: [],
 
@@ -177,7 +177,7 @@ class Application extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
-                                isLead: false
+                                isLead: this.state.isLead
                             }
                         }
                     })
@@ -292,7 +292,8 @@ class Application extends Component {
                                 tags: applicantData.idealJob
                                     ? applicantData.idealJob.split(',').map((d) => d.trim())
                                     : [],
-                                idealJob: applicantData.idealJob
+                                idealJob: applicantData.idealJob,
+                                isLead: applicantData.isLead
                             },
                             () => {
                                 this.getIdealJobsByApplicationId();
@@ -902,10 +903,10 @@ class Application extends Component {
                                                                     onChange={(event) => {
                                                                         this.setState({
                                                                             // Fixme: repair this
-                                                                            idealJob: event.target.value
+                                                                            positionApplyingFor: event.target.value
                                                                         });
                                                                     }}
-                                                                    value={this.state.idealJob}
+                                                                    value={this.state.positionApplyingFor}
                                                                     className="form-control"
                                                                     disabled={!this.state.editing}
                                                                 >

@@ -31,7 +31,7 @@ export const GET_CITIES_QUERY = gql`
  */
 export const GET_POSITIONS_QUERY = gql`
 	{
-        workOrder(status: 2) {
+        workOrder {
             id
             position {
                 Position
@@ -98,6 +98,7 @@ export const GET_APPLICATION_BY_ID = gql`
 			convictedExplain
 			comment
 			idealJob
+			isLead
 		}
 	}
 `;
