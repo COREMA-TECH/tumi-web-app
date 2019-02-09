@@ -817,7 +817,7 @@ class BoardManager extends Component {
         var variables;
         variables = {
             shift: {
-                status: [1,2]
+                status: [1, 2]
             },
         };
         if (this.state.hotel != 0) {
@@ -855,7 +855,7 @@ class BoardManager extends Component {
                     Position: ShiftBoard.Position,
                     Zipcode: ShiftBoard.zipCode,
                     WorkOrderId: ShiftBoard.workOrderId,
-                    shiftStatus: ShiftBoard.status
+                    isOpening: ShiftBoard.isOpening
                 };
                 getworkOrders.push(datas);
             });

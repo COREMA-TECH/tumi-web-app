@@ -17,17 +17,19 @@ class CardTemplate extends Component {
             showConfirmToWorkOrder: false,
             convertingOneItem: false,
             convertingAllItems: false,
-            currentStatus: props.shiftStatus == 2,
-            prevStatus: props.shiftStatus == 2
+            currentStatus: props.isOpening,
+            prevStatus: props.isOpening
         }
     }
-    componentDidMount() {
-        this.setState(() => {
-            return {
-                currentStatus: this.props.shiftStatus == 2,
-                prevStatus: this.props.shiftStatus == 2
-            }
-        })
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isOpening != this.props.isOpening)
+            this.setState(() => {
+                return {
+                    currentStatus: nextProps.isOpening,
+                    prevStatus: nextProps.isOpening
+                }
+            })
     }
 
     //This is for Opening
