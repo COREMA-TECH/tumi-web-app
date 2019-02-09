@@ -820,13 +820,30 @@ class BoardManager extends Component {
                 status: [1, 2]
             },
         };
+        var shiftEntity = {};
         if (this.state.hotel != 0) {
-            variables = {
-                shiftEntity: {
-                    Id: this.state.hotel
-                },
-                ...variables
+            shiftEntity = {
+                Id: this.state.hotel,
+                ...shiftEntity
             }
+        }
+        if (this.state.state != 0) {
+            shiftEntity = {
+                State: this.state.state,
+                ...shiftEntity
+            }
+        }
+        if (this.state.city != 0) {
+            shiftEntity = {
+                City: this.state.city,
+                ...shiftEntity
+            }
+        }
+        if (this.state.hotel != 0 || this.state.state != 0 || this.state.city != 0) {
+            variables = {
+                shiftEntity,
+                ...variables
+            };
         }
         return variables;
     }
@@ -977,6 +994,7 @@ class BoardManager extends Component {
                                                                 state: event.target.value
                                                             }, () => {
                                                                 this.loadCities()
+                                                                this.getWorkOrders()
                                                             })
                                                         }}
                                                         value={this.state.state}
@@ -995,6 +1013,8 @@ class BoardManager extends Component {
                                                         onChange={(event) => {
                                                             this.setState({
                                                                 city: event.target.value
+                                                            }, () => {
+                                                                this.getWorkOrders()
                                                             })
                                                         }}
                                                         //error={!this.state.cityValid}
