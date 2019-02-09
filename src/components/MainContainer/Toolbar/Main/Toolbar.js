@@ -88,7 +88,7 @@ class Toolbar extends Component {
 							</button>
 							<div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<div className="row app-shortcuts">
-									{localStorage.getItem('showMenu') ?
+									{localStorage.getItem('showMenu') == "true" ?
 										<React.Fragment>
 											<a className="col-4 app-shortcuts__item" href="/home/work-orders">
 												<i className="fas fa-briefcase" />

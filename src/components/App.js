@@ -22,11 +22,18 @@ var authorizedPath = [
 	'/home/application/info'
 ];
 
-if (localStorage.getItem('isEmployee') == true && !authorizedPath.includes(window.location.pathname)) {
+if (localStorage.getItem('isEmployee') == 'true' && !authorizedPath.includes(window.location.pathname)) {
 	localStorage.setItem('showMenu', false);
-	window.location.href = '/home';
-} else
+	window.location.href = '/home/application';
+}
+
+if (localStorage.getItem('isEmployee') == 'false') {
 	localStorage.setItem('showMenu', true);
+}
+
+if (localStorage.getItem('isEmployee') == 'true' && window.location.pathname == "/home") {
+	window.location.href = '/home/application';
+}
 /**
  *  CONFIGURATION OF APOLLO CLIENT
  */
