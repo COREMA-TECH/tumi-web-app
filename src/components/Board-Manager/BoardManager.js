@@ -884,7 +884,7 @@ class BoardManager extends Component {
                     Position: ShiftBoard.Position,
                     Zipcode: ShiftBoard.zipCode,
                     WorkOrderId: ShiftBoard.workOrderId,
-                    shiftStatus: ShiftBoard.status
+                    isOpening: ShiftBoard.isOpening
                 };
                 getworkOrders.push(datas);
                 begin = false;
