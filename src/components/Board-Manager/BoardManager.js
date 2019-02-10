@@ -283,9 +283,10 @@ class BoardManager extends Component {
     };
 
     updateStatus = (id) => {
+        console.log(id);
         this.setState(
             {
-                state: id
+                status: id
             },
             () => {
                 this.getWorkOrders();
@@ -815,11 +816,20 @@ class BoardManager extends Component {
 
     getDataFilters = () => {
         var variables;
-        variables = {
-            shift: {
-                status: [1, 2]
-            },
-        };
+
+        if(this.state.status !== null) {
+            variables = {
+                shift: {
+                    status: [this.state.status]
+                },
+            };
+        } else {
+            variables = {
+                shift: {
+                    status: [1, 2]
+                },
+            };
+        }
         var shiftEntity = {};
         if (this.state.hotel != 0) {
             shiftEntity = {
@@ -1096,9 +1106,10 @@ class BoardManager extends Component {
                                                             this.updateStatus(event.target.value);
                                                         }}
                                                         //error={!this.state.cityValid}
-                                                        value={this.state.city}
+                                                        value={this.state.status}
                                                         showNone={false}
                                                     >
+                                                        <option value={null}>Select a status</option>
                                                         <option value={0}>Active work orders</option>
                                                         <option value={1}>Closed work orders</option>
                                                         <option value={2}>All work orders</option>
