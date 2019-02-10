@@ -91,21 +91,17 @@ class RegionForm extends Component {
                     openModal: nextProps.item.openModal,
                 },
                 () => {
-                    console.log("Ya parseamos los props ", this.state)
-
                     this.getConfigRegions();
                     this.getRecruiter();
                     this.getEmployeesWithoutEntity();
                     this.gethotelbyregion();
                     this.getrecruiterbyregion();
-
                 }
             );
         } else if (!nextProps.openModal) {
             this.setState(
                 {
-                    recruiters: [],
-                    employees: [],
+
                     IdRegionalManager: 0,
                     IdRegionalDirector: 0,
                     IdRecruiter: 0,
@@ -120,10 +116,11 @@ class RegionForm extends Component {
             );
 
         } else {
-            this.getConfigRegions();
-            this.getRecruiter();
+
+            // this.getConfigRegions();
+            //this.getRecruiter();
             this.getEmployeesWithoutEntity();
-            this.gethotelbyregion();
+            //this.gethotelbyregion();
             this.getrecruiterbyregion();
         }
         this.setState({
@@ -228,14 +225,12 @@ class RegionForm extends Component {
             .then(({ data }) => {
                 this.setState({
                     recruiters: data.getusers
-
                 });
             })
             .catch();
     };
 
     getConfigRegions = () => {
-        console.log("getConfigRegions ", this.state.id);
         this.props.client
             .query({
                 query: GET_CONFIGREGIONS,
@@ -243,12 +238,13 @@ class RegionForm extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                console.log("estoy en la data del getConfigRegions", data)
-                this.setState({
-                    ConfigRegions: data.configregions,
-                    IdRegionalManager: data.configregions[0].regionalManagerId,
-                    IdRegionalDirector: data.configregions[0].regionalDirectorId,
-                });
+                if (data.configregions != null) {
+                    this.setState({
+                        ConfigRegions: data.configregions,
+                        IdRegionalManager: data.configregions[0].regionalManagerId,
+                        IdRegionalDirector: data.configregions[0].regionalDirectorId,
+                    });
+                }
             })
             .catch();
     };
@@ -301,6 +297,7 @@ class RegionForm extends Component {
         return { isEdition: isEdition, query: query, id: this.state.id };
     };
     insertCatalogItem = () => {
+        let identificador = 0;
         const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
         if (
             this.state.IdRegionalManager == 0 ||
@@ -308,8 +305,6 @@ class RegionForm extends Component {
             this.state.code == '' ||
             this.state.name == ''
         ) {
-            console.log("Campos ", this.state.IdRegionalManager, this.state.IdRegionalDirector, this.state.IdRecruiter, this.state.code, this.state.name
-            )
 
             this.props.handleOpenSnackbar('warning', 'all fields are required');
         } else {
@@ -344,24 +339,26 @@ class RegionForm extends Component {
                         })
                         .then((data) => {
 
-
+                            if (isEdition) {
+                                identificador = id;
+                            } else {
+                                identificador = data.data.inscatalogitem.Id;
+                            }
 
                             this.state.Old_hotelsTags.map((item) => {
                                 this.addregionbusinescompanies(0, item.value)
                             });
 
                             this.state.hotelsTags.map((item) => {
-                                this.addregionbusinescompanies(this.state.id, item.value)
+                                this.addregionbusinescompanies(identificador, item.value)
                             });
 
                             this.state.Old_recruitersTags.map((itemrecruiter) => {
-                                console.log("this.state.Old_recruitersTags ", itemrecruiter.value)
                                 this.addregionusers(0, itemrecruiter.value)
                             });
 
                             this.state.recruitersTags.map((itemrecruiter) => {
-                                console.log("this.state.recruitersTags ", itemrecruiter)
-                                this.addregionusers(this.state.id, itemrecruiter.value)
+                                this.addregionusers(identificador, itemrecruiter.value)
                             });
 
                             if (isEdition) {
@@ -389,44 +386,80 @@ class RegionForm extends Component {
     };
 
     addConfig = (isEdition, regionId) => {
-        let query = INSERT_CONFIG_REGIONS_QUERY;
+        //let query = INSERT_CONFIG_REGIONS_QUERY;
         if (isEdition) {
-            query = UPDATE_CONFIG_REGIONS_QUERY;
-        }
-        this.setState(
-            {
-                loading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: query,
-                        variables: {
-                            regionId: regionId,
-                            regionalManagerId: this.state.IdRegionalManager,
-                            regionalDirectorId: this.state.IdRegionalDirector
-                        }
-                    })
-                    .then((data) => {
-                        // this.addregionbusinescompanies();
-                        this.props.toggleRefresh();
-                        this.props.handleCloseModal();
-                        this.props.handleOpenSnackbar(
-                            'success',
-                            isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
-                        );
+            //query = UPDATE_CONFIG_REGIONS_QUERY;
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: UPDATE_CONFIG_REGIONS_QUERY,
+                            variables: {
+                                regionId: regionId,
+                                regionalManagerId: this.state.IdRegionalManager,
+                                regionalDirectorId: this.state.IdRegionalDirector
+                            }
+                        })
+                        .then((data) => {
+                            this.props.toggleRefresh();
+                            this.props.handleCloseModal();
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+                            );
 
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error', 'Error: Inserting Catalog Item: ' + error
-                        );
-                        this.setState({
-                            loading: false
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error', 'Error: Inserting Catalog Item: ' + error
+                            );
+                            this.setState({
+                                loading: false
+                            });
                         });
-                    });
-            }
-        );
+                }
+            );
+        } else {
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: INSERT_CONFIG_REGIONS_QUERY,
+                            variables: {
+                                configregions: {
+                                    regionId: regionId,
+                                    regionalManagerId: this.state.IdRegionalManager,
+                                    regionalDirectorId: this.state.IdRegionalDirector
+                                }
+                            }
+                        })
+                        .then((data) => {
+                            this.props.toggleRefresh();
+                            this.props.handleCloseModal();
+                            this.props.handleOpenSnackbar(
+                                'success',
+                                isEdition ? 'Catalog Item Updated!' : 'Catalog Item Inserted!'
+                            );
+
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error', 'Error: Inserting Catalog Item: ' + error
+                            );
+                            this.setState({
+                                loading: false
+                            });
+                        });
+                }
+            );
+        }
+
     }
 
     addregionbusinescompanies = (idRegion, idhotel) => {
@@ -524,118 +557,119 @@ class RegionForm extends Component {
                                             onBlur={this.handleValidate}
                                         />
                                     </div>
+                                    <div className="col-md-4">
+                                        <label htmlFor="">* Regional Director</label>
+                                        <select
+                                            required
+                                            name="IdRegionalDirector"
+                                            className="form-control"
+                                            id="IdRegionalDirector"
+                                            onChange={this.handleChange}
+                                            value={this.state.IdRegionalDirector}
+                                        >
+                                            <option value={0}>Select a Regional Director</option>
+                                            {this.state.employees.map((recruiter) => (
+                                                <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </header>
                         <div className="container-fluid">
                             <div className="card">
                                 <div className="card-header">
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Regional Manager</label>
-                                            <select
-                                                required
-                                                name="IdRegionalManager"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdRegionalManager}
-                                            >
-                                                <option value={0}>Select a Regional Manager</option>
-                                                {this.state.employees.map((recruiter) => (
-                                                    <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <label htmlFor="">* Regional Director</label>
-                                            <select
-                                                required
-                                                name="IdRegionalDirector"
-                                                className="form-control"
-                                                id=""
-                                                onChange={this.handleChange}
-                                                value={this.state.IdRegionalDirector}
-                                            >
-                                                <option value={0}>Select a Regional Director</option>
-                                                {this.state.employees.map((recruiter) => (
-                                                    <option value={recruiter.id}>{recruiter.firstName} - {recruiter.lastName}</option>
-                                                ))}
-                                            </select>
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <label htmlFor="">* Regional Manager</label>
+                                                <select
+                                                    required
+                                                    name="IdRegionalManager"
+                                                    className="form-control"
+                                                    id="IdRegionalManager"
+                                                    onChange={this.handleChange}
+                                                    value={this.state.IdRegionalManager}
+                                                >
+                                                    <option value={0}>Select a Regional Manager</option>
+                                                    {this.state.employees.map((recruiter) => (
+                                                        <option value={recruiter.id}>{recruiter.firstName} {recruiter.lastName}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
                                         </div>
 
+                                        <div className="row">
+                                            <div className="col-lg-12">
+                                                <label htmlFor="">Regional Recruiter</label>
+                                                <Query query={GET_RECRUITER}>
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getusers != null && data.getusers.length > 0) {
+                                                            let options = [];
+                                                            data.getusers.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Full_Name })
+                                                            ));
 
-                                        <div className="card-body">
-                                            <div className="row">
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        options={options}
+                                                                        value={this.state.recruitersTags}
+                                                                        onChange={this.handleChangerecruiterTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                        isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
+                                            </div>
 
-                                                <div className="col-md-6">
-                                                    <label htmlFor="">Regional Recruiter</label>
-                                                    <Query query={GET_RECRUITER}>
-                                                        {({ loading, error, data, refetch, networkStatus }) => {
-                                                            //if (networkStatus === 4) return <LinearProgress />;
-                                                            if (error) return <p>Error </p>;
-                                                            if (data.getusers != null && data.getusers.length > 0) {
-                                                                let options = [];
-                                                                data.getusers.map((item) => (
-                                                                    options.push({ value: item.Id, label: item.Full_Name })
-                                                                ));
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-lg-12">
+                                                <label htmlFor="">Property Name</label>
+                                                <Query query={GET_HOTEL_QUERY} >
+                                                    {({ loading, error, data, refetch, networkStatus }) => {
+                                                        //if (networkStatus === 4) return <LinearProgress />;
+                                                        if (error) return <p>Error </p>;
+                                                        if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
+                                                            let options = [];
+                                                            data.getbusinesscompanies.map((item) => (
+                                                                options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
+                                                            ));
 
-                                                                return (
-                                                                    <div style={{
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '2px',
-                                                                    }}>
-                                                                        <Select
-                                                                            options={options}
-                                                                            value={this.state.recruitersTags}
-                                                                            onChange={this.handleChangerecruiterTag}
-                                                                            closeMenuOnSelect={false}
-                                                                            components={makeAnimated()}
-                                                                            isMulti
-                                                                        />
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return <SelectNothingToDisplay />;
-                                                        }}
-                                                    </Query>
-                                                </div>
-
-                                                <div className="col-md-6">
-                                                    <label htmlFor="">Property Name</label>
-                                                    <Query query={GET_HOTEL_QUERY} >
-                                                        {({ loading, error, data, refetch, networkStatus }) => {
-                                                            //if (networkStatus === 4) return <LinearProgress />;
-                                                            if (error) return <p>Error </p>;
-                                                            if (data.getbusinesscompanies != null && data.getbusinesscompanies.length > 0) {
-                                                                let options = [];
-                                                                data.getbusinesscompanies.map((item) => (
-                                                                    options.push({ value: item.Id, label: item.Code + ' - ' + item.Name })
-                                                                ));
-
-                                                                return (
-                                                                    <div style={{
-                                                                        paddingTop: '0px',
-                                                                        paddingBottom: '2px',
-                                                                    }}>
-                                                                        <Select
-                                                                            options={options}
-                                                                            value={this.state.hotelsTags}
-                                                                            onChange={this.handleChangePositionTag}
-                                                                            closeMenuOnSelect={false}
-                                                                            components={makeAnimated()}
-                                                                            isMulti
-                                                                        />
-                                                                    </div>
-                                                                );
-                                                            }
-                                                            return <SelectNothingToDisplay />;
-                                                        }}
-                                                    </Query>
-                                                </div>
+                                                            return (
+                                                                <div style={{
+                                                                    paddingTop: '0px',
+                                                                    paddingBottom: '2px',
+                                                                }}>
+                                                                    <Select
+                                                                        options={options}
+                                                                        value={this.state.hotelsTags}
+                                                                        onChange={this.handleChangePositionTag}
+                                                                        closeMenuOnSelect={false}
+                                                                        components={makeAnimated()}
+                                                                        isMulti
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }
+                                                        return <SelectNothingToDisplay />;
+                                                    }}
+                                                </Query>
                                             </div>
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <div className="card-footer">

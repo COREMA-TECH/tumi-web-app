@@ -81,3 +81,10 @@
 .ApplyForm {
     background-color: $light-gray;
 }
+
+.text-primary-application {
+    color:$brand-primary;
+    font-size: .80rem;
+    font-family: $font-family-application;
+    font-weight: 100;
+}

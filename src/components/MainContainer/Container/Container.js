@@ -39,6 +39,8 @@ import Property_Schedules from "../../ManagerHotel/Schedules"
 import SchedulesAccept from '../../Schedules/SchedulesAccept';
 import Region from "../../Region";
 import RegionTable from "../../Region/RegionTable";
+import LocationForm from '../../ui-components/LocationForm';
+
 class Container extends Component {
 	constructor(props) {
 		super(props);

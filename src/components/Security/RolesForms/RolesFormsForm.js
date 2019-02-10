@@ -514,7 +514,7 @@ class RolesForm extends React.Component {
 							id="description"
 							name="description"
 							inputProps={{
-								maxLength: 15,
+								maxLength: 30,
 								classes: {
 									input: classes.descriptionControl
 								}

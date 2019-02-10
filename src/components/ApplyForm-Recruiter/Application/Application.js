@@ -4,10 +4,8 @@ import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import {
     GET_APPLICATION_BY_ID,
-    GET_CITIES_QUERY,
     GET_POSITIONS_QUERY,
     GET_POSITIONS_CATALOG,
-    GET_STATES_QUERY,
     getCompaniesQuery
 } from '../Queries';
 
@@ -21,7 +19,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
-import axios from "axios";
+import LocationForm from '../../ui-components/LocationForm'
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -140,6 +138,8 @@ class Application extends Component {
 
     };
 
+    // BUG
+
     // To handle the stepper
     handleNext = () => {
         this.setState((state) => ({
@@ -157,155 +157,164 @@ class Application extends Component {
         });
     };
 
-
     /**
      * To update and insert a application by id
      */
     insertApplicationInformation = () => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: CREATE_APPLICATION,
-                        variables: {
-                            application: {
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                // streetAddress: this.state.streetAddress,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                //socialSecurityNumber: this.state.socialSecurityNumber,
-                                //birthDay: this.state.birthDay,
-                                car: this.state.car,
-                                // typeOfId: parseInt(this.state.typeOfId),
-                                //   expireDateId: this.state.expireDateId,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                //dateAvailable: this.state.dateAvailable,
-                                scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment,
-                                generalComment: this.state.generalComment,
-                                isLead: true,
-                                idRecruiter: parseInt(this.state.idRecruiter)
+        if (
+            this.state.firstName == '' ||
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
+        ) {
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
+        } else {
+            this.setState(
+                {
+                    insertDialogLoading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: CREATE_APPLICATION,
+                            variables: {
+                                application: {
+                                    firstName: this.state.firstName,
+                                    middleName: this.state.middleName,
+                                    lastName: this.state.lastName,
+                                    lastName2: this.state.lastName2,
+                                    date: this.state.date,
+                                    aptNumber: this.state.aptNumber,
+                                    city: this.state.city,
+                                    state: this.state.state,
+                                    zipCode: this.state.zipCode,
+                                    homePhone: this.state.homePhone,
+                                    cellPhone: this.state.cellPhone,
+                                    car: this.state.car,
+                                    emailAddress: this.state.emailAddress,
+                                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                    scheduleRestrictions: this.state.scheduleRestrictions,
+                                    scheduleExplain: this.state.scheduleExplain,
+                                    convicted: this.state.convicted,
+                                    convictedExplain: this.state.convictedExplain,
+                                    comment: this.state.comment,
+                                    generalComment: this.state.generalComment,
+                                    isLead: true,
+                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                }
                             }
-                        }
-                    })
-                    .then(({ data }) => {
-                        localStorage.setItem('idApplication', data.addApplication.id);
-                        this.setState({
-                            editing: false
-                        }, () => {
-                            let object = [];
-                            this.state.positionsTags.map(item => {
-                                object.push({
-                                    ApplicationId: parseInt(data.addApplication.id),
-                                    idPosition: item.value,
-                                    description: item.label
-                                })
+                        })
+                        .then(({ data }) => {
+                            localStorage.setItem('idApplication', data.addApplication.id);
+                            this.setState({
+                                editing: false
+                            }, () => {
+                                let object = [];
+                                this.state.positionsTags.map(item => {
+                                    object.push({
+                                        ApplicationId: parseInt(data.addApplication.id),
+                                        idPosition: item.value,
+                                        description: item.label
+                                    })
+                                });
+
+                                this.addApplicantJobs(object, parseInt(data.addApplication.id));
                             });
 
-                            this.addApplicantJobs(object, parseInt(data.addApplication.id));
+                            this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
+
+                            // this.props.updateIdApplication(data.addAplication.id);
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to insert aplicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
                         });
-
-                        this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
-
-                        // this.props.updateIdApplication(data.addAplication.id);
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to insert aplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
     updateApplicationInformation = (id) => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: UPDATE_APPLICATION,
-                        //mutation: CREATE_APPLICATION,
-                        variables: {
-                            application: {
-                                id: id,
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                //streetAddress: this.state.streetAddress,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                //socialSecurityNumber: this.state.socialSecurityNumber,
-                                car: this.state.car,
-                                //typeOfId: parseInt(this.state.typeOfId),
-                                //expireDateId: this.state.expireDateId,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                //dateAvailable: this.state.dateAvailable,
-                                //scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                generalComment: this.state.generalComment,
-                                isLead: true,
-                                idRecruiter: parseInt(this.state.idRecruiter)
+        if (
+            this.state.firstName == '' ||
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
+        ) {
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
+        } else {
+            this.setState(
+                {
+                    insertDialogLoading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: UPDATE_APPLICATION,
+                            //mutation: CREATE_APPLICATION,
+                            variables: {
+                                application: {
+                                    id: id,
+                                    firstName: this.state.firstName,
+                                    middleName: this.state.middleName,
+                                    lastName: this.state.lastName,
+                                    lastName2: this.state.lastName2,
+                                    date: this.state.date,
+                                    //streetAddress: this.state.streetAddress,
+                                    aptNumber: this.state.aptNumber,
+                                    city: this.state.city,
+                                    state: this.state.state,
+                                    zipCode: this.state.zipCode,
+                                    homePhone: this.state.homePhone,
+                                    cellPhone: this.state.cellPhone,
+                                    //socialSecurityNumber: this.state.socialSecurityNumber,
+                                    car: this.state.car,
+                                    //typeOfId: parseInt(this.state.typeOfId),
+                                    //expireDateId: this.state.expireDateId,
+                                    emailAddress: this.state.emailAddress,
+                                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                    //dateAvailable: this.state.dateAvailable,
+                                    //scheduleRestrictions: this.state.scheduleRestrictions,
+                                    scheduleExplain: this.state.scheduleExplain,
+                                    convicted: this.state.convicted,
+                                    convictedExplain: this.state.convictedExplain,
+                                    generalComment: this.state.generalComment,
+                                    isLead: true,
+                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                }
                             }
-                        }
-                    })
-                    .then(({ data }) => {
-                        this.setState({
-                            editing: false
-                        }, () => {
-                            let object = [];
-                            this.state.positionsTags.map(item => {
-                                object.push({
-                                    ApplicationId: this.props.applicationId,
-                                    idPosition: item.value,
-                                    description: item.label
-                                })
+                        })
+                        .then(({ data }) => {
+                            this.setState({
+                                editing: false
+                            }, () => {
+                                let object = [];
+                                this.state.positionsTags.map(item => {
+                                    object.push({
+                                        ApplicationId: this.props.applicationId,
+                                        idPosition: item.value,
+                                        description: item.label
+                                    })
+                                });
+
+                                this.addApplicantJobs(object, this.props.applicationId);
                             });
 
-                            this.addApplicantJobs(object, this.props.applicationId);
+                            this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to update aaplicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
                         });
-
-                        this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to update aaplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
 
@@ -318,20 +327,13 @@ class Application extends Component {
                     applicationIdealJob: idealJobArrayObject
                 }
             })
-            .then(({ data }) => {
-                console.log("DEBUG");
-            })
-            .catch(error => {
-                console.log("DEBUG ERROR");
-            })
     };
 
 
     getHotels = (func = () => {
     }) => {
-        // getHotels = (idParent) => {
         this.props.client.query({
-            query: getCompaniesQuery, //this.getCompaniesQuery,
+            query: getCompaniesQuery,
             variables: { Id_Parent: -1 },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
@@ -367,26 +369,14 @@ class Application extends Component {
                                     middleName: applicantData.middleName,
                                     lastName: applicantData.lastName,
                                     lastName2: applicantData.lastName2,
-
-                                    //date: applicantData.date.substring(0, 10),
-                                    // streetAddress: applicantData.streetAddress,
                                     emailAddress: applicantData.emailAddress,
-                                    //aptNumber: applicantData.aptNumber,
                                     city: applicantData.city,
                                     state: applicantData.state,
                                     zipCode: applicantData.zipCode,
                                     homePhone: applicantData.homePhone,
                                     cellPhone: applicantData.cellPhone,
-                                    //socialSecurityNumber: applicantData.socialSecurityNumber,
                                     positionApplyingFor: applicantData.positionApplyingFor,
                                     car: applicantData.car,
-                                    //typeOfId: applicantData.typeOfId,
-                                    //expireDateId: applicantData.expireDateId.substring(0, 10),
-                                    //dateAvailable: applicantData.dateAvailable.substring(0, 10),
-                                    //scheduleRestrictions: applicantData.scheduleRestrictions,
-                                    //scheduleExplain: applicantData.scheduleExplain,
-                                    //convicted: applicantData.convicted,
-                                    //convictedExplain: applicantData.convictedExplain,
                                     generalComment: applicantData.generalComment,
                                     editing: false
                                 },
@@ -488,23 +478,22 @@ class Application extends Component {
         }
     }
 
-    findByZipCode = (zipCode = null, cityFinal = null) => {
-        if (!zipCode) {
-            return false;
-        }
-
-        this.props.client.query({
-            query: GET_STATES_QUERY,
-            variables: { parent: -1, value: `'${zipCode}'` },
-            fetchPolicy: 'no-cache'
-        }).then((data) => {
-            this.setState({
-                state: data.data.getcatalogitem[0].Id,
-                cityFinal: cityFinal
-            });
+    updateCity = (city) => {
+        this.setState(() => {
+            return { city }
         });
-
     };
+    updateState = (state) => {
+        this.setState(() => {
+            return { state }
+        });
+    };
+
+    updateZipCode = (zipCode) => {
+        this.setState(() => {
+            return { zipCode }
+        });
+    }
 
     render() {
         return (
@@ -519,7 +508,6 @@ class Application extends Component {
                                 <button
                                     className="applicant-card__edit-button"
                                     onClick={() => {
-                                        //alert(this.props.applicationId);
                                         this.setState({
                                             editing: true
                                         });
@@ -540,7 +528,6 @@ class Application extends Component {
                                         </span>
                                         <Query query={GET_POSITIONS_QUERY}>
                                             {({ loading, error, data, refetch, networkStatus }) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
                                                 if (data.workOrder != null && data.workOrder.length > 0) {
                                                     return (
@@ -575,7 +562,6 @@ class Application extends Component {
                                         </span>
                                         <Query query={GET_POSITIONS_CATALOG}>
                                             {({ loading, error, data, refetch, networkStatus }) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
                                                 if (error) return <p>Error </p>;
                                                 if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
                                                     let options = [];
@@ -611,11 +597,6 @@ class Application extends Component {
                                             * {formSpanish[0].label}
                                         </span>
                                         <input
-                                            /*onChange={(event) => {
-                                                this.setState({
-                                                    firstName: event.target.value
-                                                });
-                                            }}*/
                                             onChange={this.handleTextChange}
                                             value={this.state.firstName}
                                             name="firstName"
@@ -633,11 +614,6 @@ class Application extends Component {
                                             {formSpanish[1].label}
                                         </span>
                                         <input
-                                            /*   onChange={(event) => {
-                                                   this.setState({
-                                                       middleName: event.target.value
-                                                   });
-                                               }}*/
                                             onChange={this.handleTextChange}
                                             value={this.state.middleName}
                                             name="middleName"
@@ -654,11 +630,6 @@ class Application extends Component {
                                             * {formSpanish[2].label}
                                         </span>
                                         <input
-                                            /* onChange={(event) => {
-                                                 this.setState({
-                                                     lastName: event.target.value
-                                                 });
-                                             }}*/
                                             onChange={this.handleTextChange}
                                             value={this.state.lastName}
                                             name="lastName"
@@ -676,11 +647,6 @@ class Application extends Component {
                                             {formSpanish[24].label}
                                         </span>
                                         <input
-                                            /*onChange={(event) => {
-                                                this.setState({
-                                                    lastName2: event.target.value
-                                                });
-                                            }}*/
                                             onChange={this.handleTextChange}
                                             value={this.state.lastName2}
                                             id="lastName2"
@@ -694,119 +660,26 @@ class Application extends Component {
                                             minLength="3"
                                         />
                                     </div>
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            * {formSpanish[5].label}
-                                        </span>
-                                        <InputMask
-                                            id="zipCode"
-                                            name="zipCode"
-                                            mask="99999-99999"
-                                            maskChar=" "
-                                            className="form-control"
-                                            disabled={!this.state.editing}
-                                            onChange={(event) => {
-                                                this.setState({
-                                                    zipCode: event.target.value
-                                                }, () => {
-
-                                                    const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
-                                                    if (zipCode)
-                                                        axios.get(`https://ziptasticapi.com/${zipCode}`)
-                                                            .then(res => {
-                                                                const cities = res.data;
-                                                                if (!cities.error) {
-                                                                    this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                                }
-                                                            });
-                                                });
-                                            }}
-                                            value={this.state.zipCode}
-                                            placeholder="99999-99999"
-                                            required
-                                            minLength="15"
-                                        />
-                                    </div>
-                                    <div className="col-md-6 ">
-                                        <span className="primary applicant-card__label ">
-                                            * {formSpanish[6].label}
-                                        </span>
-                                        <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
-                                                if (error) return <p>Error </p>;
-                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    return (
-                                                        <select
-                                                            name="state"
-                                                            id="state"
-                                                            required
-                                                            className="form-control"
-                                                            disabled
-                                                            onChange={(e) => {
-                                                                this.setState({
-                                                                    state: e.target.value
-                                                                });
-                                                            }}
-                                                            value={this.state.state}
-                                                        >
-                                                            <option value="">Select a state</option>
-                                                            {data.getcatalogitem.map((item) => (
-                                                                <option value={item.Id}>{item.Name}</option>
-                                                            ))}
-                                                        </select>
-                                                    );
-                                                }
-                                                return <SelectNothingToDisplay />;
-                                            }}
-                                        </Query>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <span className="primary applicant-card__label ">
-                                            * {formSpanish[7].label}
-                                        </span>
-                                        <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
-                                            {({ loading, error, data, refetch, networkStatus }) => {
-                                                //if (networkStatus === 4) return <LinearProgress />;
-                                                if (error) return <p>Error </p>;
-                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                    var citySelected = null;
-                                                    citySelected = data.getcatalogitem.filter(city => {
-                                                        return city.Name.toLowerCase().includes(this.state.cityFinal);
-                                                    });
-                                                    if (citySelected.length != 0) {
-                                                        if ((citySelected[0].Id != this.state.city)) {
-                                                            this.setState({
-                                                                city: citySelected[0].Id
-                                                            });
-                                                        }
-                                                    }
-                                                    return (
-                                                        <select
-                                                            name="city"
-                                                            id="city"
-                                                            required
-                                                            className="form-control"
-                                                            disabled
-                                                            onChange={(e) => {
-                                                                this.setState({
-                                                                    city: e.target.value
-                                                                });
-                                                            }}
-                                                            value={this.state.city}
-                                                        >
-                                                            <option value="">Select a city</option>
-                                                            {data.getcatalogitem.map((item) => (
-                                                                <option value={item.Id}>{item.Name}</option>
-                                                            ))}
-                                                        </select>
-                                                    );
-                                                }
-                                                return <SelectNothingToDisplay />;
-                                            }}
-                                        </Query>
-                                    </div>
-
+                                    <LocationForm
+                                        disabledCheck={!this.state.editing}
+                                        disabledCity={!this.state.editing}
+                                        disabledZipCode={!this.state.editing}
+                                        onChangeCity={this.updateCity}
+                                        onChangeState={this.updateState}
+                                        onChageZipCode={this.updateZipCode}
+                                        city={this.state.city}
+                                        state={this.state.state}
+                                        zipCode={this.state.zipCode}
+                                        changeCity={this.state.changeCity}
+                                        cityColClass="col-md-6"
+                                        stateColClass="col-md-6"
+                                        zipCodeColClass="col-md-6"
+                                        zipCodeTitle={`* ${formSpanish[5].label}`}
+                                        stateTitle={`${formSpanish[6].label}`}
+                                        cityTitle={`${formSpanish[7].label}`}
+                                        cssTitle={"text-primary-application"}
+                                        placeholder="99999-99999"
+                                        mask="99999-99999" />
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -816,11 +689,6 @@ class Application extends Component {
                                             <input
                                                 id="carSwitch"
                                                 className="onoffswitch-checkbox"
-                                                /* onChange={(event) => {
-                                                     this.setState({
-                                                         car: event.target.checked
-                                                     });
-                                                 }}*/
                                                 onChange={this.handleTextChange}
                                                 checked={this.state.car}
                                                 value={this.state.car}
@@ -853,11 +721,6 @@ class Application extends Component {
                                             value={this.state.homePhone}
                                             className="form-control"
                                             disabled={!this.state.editing}
-                                            /*onChange={(event) => {
-                                                this.setState({
-                                                    homePhone: event.target.value
-                                                });
-                                            }}*/
                                             onChange={this.handleTextChange}
                                             placeholder="+(999) 999-9999"
                                             minLength="15"
@@ -865,7 +728,7 @@ class Application extends Component {
                                     </div>
                                     <div className="col-md-6 ">
                                         <span className="primary applicant-card__label ">
-                                            * {formSpanish[10].label}
+                                            {formSpanish[10].label}
                                         </span>
                                         <InputMask
                                             id="cell-number"
@@ -875,11 +738,6 @@ class Application extends Component {
                                             value={this.state.cellPhone}
                                             className="form-control"
                                             disabled={!this.state.editing}
-                                            /* onChange={(event) => {
-                                                 this.setState({
-                                                     cellPhone: event.target.value
-                                                 });
-                                             }}*/
                                             onChange={this.handleTextChange}
                                             placeholder="+(999) 999-9999"
                                             minLength="15"
@@ -890,17 +748,11 @@ class Application extends Component {
                                             {formSpanish[13].label}
                                         </span>
                                         <input
-                                            /* onChange={(event) => {
-                                                 this.setState({
-                                                     emailAddress: event.target.value
-                                                 });
-                                             }}*/
                                             onChange={this.handleTextChange}
                                             value={this.state.emailAddress}
                                             name="emailAddress"
                                             type="email"
                                             className="form-control"
-                                            //required
                                             disabled={!this.state.editing}
                                             min="0"
                                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
@@ -913,11 +765,6 @@ class Application extends Component {
                                             {formSpanish[21].label}
                                         </span>
                                         <textarea
-                                            /*onChange={(event) => {
-                                                this.setState({
-                                                    generalComment: event.target.value
-                                                });
-                                            }}*/
                                             name="generalComment"
                                             id="generalComment"
                                             onChange={this.handleTextChange}
@@ -986,7 +833,7 @@ class Application extends Component {
                 </div>
 
 
-            </div >
+            </div>
         );
     }
 }

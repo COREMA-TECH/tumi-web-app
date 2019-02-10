@@ -218,7 +218,7 @@ class ApplicationTable extends React.Component {
 															return this.props.onDeleteHandler(row.id);
 														}}
 													>
-														<i class="fas fa-trash"></i>
+														<i className="fas fa-trash"></i>
 													</button>
 												</Tooltip>
 											</CustomTableCell>

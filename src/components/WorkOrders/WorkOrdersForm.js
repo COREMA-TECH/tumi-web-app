@@ -297,7 +297,7 @@ class WorkOrdersForm extends Component {
                         entityId: this.state.IdEntity,
                         title: this.state.PositionName,
                         color: '#96989A',
-                        status: 0,
+                        status: 1,
                         idPosition: this.state.PositionRateId,
                         startDate: this.state.startDate,
                         endDate: this.state.endDate,
@@ -724,7 +724,7 @@ class WorkOrdersForm extends Component {
                                                 <option value="0">Select a Position</option>
                                                 {this.state.positions.map((position) => (
                                                     <option value={position.Id}>{position.Position} </option>
-                                                  
+
                                                 ))}
                                             </select>
                                         </div>
