@@ -901,98 +901,106 @@ class BoardRecruiter extends Component {
                         <div className="col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header info">
-
                                     <div className="row">
-                                        <div className="col-md-3">
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={(event) => {
-                                                    this.updateHotel(event.target.value);
-                                                }}
-                                                value={this.state.IdEntity}
-                                                //disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Hotel</option>
-                                                {this.state.hotels.map((hotel) => (
+                                        <div className="col-md-9 col-lg-10">
+                                            <div className="row">
+                                                <div className="col-md-2">
+                                                    <select
+                                                        required
+                                                        name="IdEntity"
+                                                        className="form-control"
+                                                        id=""
+                                                        onChange={(event) => {
+                                                            this.updateHotel(event.target.value);
+                                                        }}
+                                                        value={this.state.IdEntity}
+                                                        //disabled={!isAdmin}
+                                                        onBlur={this.handleValidate}
+                                                    >
+                                                        <option value={0}>Select a Hotel</option>
+                                                        {this.state.hotels.map((hotel) => (
 
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                                            <option value={hotel.Id}>{hotel.Name}</option>
 
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="state"
-                                                className={'form-control'}
-                                                /* onChange={(event) => {
-                                                     this.updateState(event.target.value);
-                                                 }}*/
-                                                value={this.state.state}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a state</option>
-                                                {this.state.states.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="city"
-                                                className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                /* onChange={(event) => {
-                                                     this.updateCity(event.target.value);
-                                                 }}*/
-                                                //error={!this.state.cityValid}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a city</option>
-                                                {this.state.cities.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="city"
-                                                className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                onChange={(event) => {
-                                                    this.updateStatus(event.target.value);
-                                                }}
-                                                //error={!this.state.cityValid}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="state"
+                                                        className={'form-control'}
+                                                        /* onChange={(event) => {
+                                                             this.updateState(event.target.value);
+                                                         }}*/
+                                                        value={this.state.state}
+                                                        showNone={false}
+                                                    >
+                                                        <option value="">Select a state</option>
+                                                        {this.state.states.map((item) => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="city"
+                                                        className={'form-control'}
+                                                        // disabled={this.state.loadingCities}
+                                                        /* onChange={(event) => {
+                                                             this.updateCity(event.target.value);
+                                                         }}*/
+                                                        //error={!this.state.cityValid}
+                                                        value={this.state.city}
+                                                        showNone={false}
+                                                    >
+                                                        <option value="">Select a city</option>
+                                                        {this.state.cities.map((item) => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="city"
+                                                        className={'form-control'}
+                                                        // disabled={this.state.loadingCities}
+                                                        onChange={(event) => {
+                                                            this.updateStatus(event.target.value);
+                                                        }}
+                                                        //error={!this.state.cityValid}
+                                                        value={this.state.city}
+                                                        showNone={false}
+                                                    >
 
-                                                <option value={0}>Active work orders</option>
-                                                <option value={1}>Closed work orders</option>
-                                                <option value={2}>All work orders</option>
-                                            </select>
+                                                        <option value={0}>Active work orders</option>
+                                                        <option value={1}>Closed work orders</option>
+                                                        <option value={2}>All work orders</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <button className="btn btn-success" type="submit" onClick={() => {
+                                                        this.setState({ openModal: true })
+                                                    }}>
+                                                        Filter<i className="fas fa-filter ml2" />
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="col-md-2">
-                                            <button className="btn btn-success" type="submit" onClick={() => {
-                                                this.setState({ openModal: true })
-                                            }}>
-                                                Filter<i className="fas fa-filter ml2" />
-                                            </button>
-                                        </div>
-                                        <div className="col-md-1">
-                                            <button
-                                                className="btn btn-outline-success"
-                                                onClick={() => {
-                                                    this.props.history.push({
-                                                        pathname: '/home/application/Form',
-                                                        state: { ApplicationId: 0 }
-                                                    });
-                                                }}>New Lead
-                                            </button>
+                                        <div className="col-md-3 col-lg-2">
+                                            <div className="row">
+                                                <div className="col-sm-0 col-md-2 col-lg-1"></div>
+                                                <div className="col-sm-12 col-md-10 col-lg-11">
+                                                    <button
+                                                        className="btn btn-outline-info btn-sm"
+                                                        onClick={() => {
+                                                            this.props.history.push({
+                                                                pathname: '/home/application/Form',
+                                                                state: { ApplicationId: 0 }
+                                                            });
+                                                        }}>New Lead
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
