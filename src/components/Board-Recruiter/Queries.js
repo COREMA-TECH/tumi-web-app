@@ -236,8 +236,8 @@ export const GET_HOTEL_QUERY = gql`
 `;
 
 export const GET_STATES_QUERY = gql`
-query States($id: Int,$parent: Int!) {
-	getcatalogitem(Id: $id, IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
+query States($parent: Int!) {
+	getcatalogitem(IsActive: 1, Id_Parent: $parent, Id_Catalog: 3) {
 		Id
 		Name
 		IsActive
@@ -247,8 +247,8 @@ query States($id: Int,$parent: Int!) {
 
 
 export const GET_CITIES_QUERY = gql`
-query Cities($id: Int) {
-	getcatalogitem(Id: $id, IsActive: 1,  Id_Catalog: 5) {
+query Cities($parent: Int!) {
+	getcatalogitem(IsActive: 1,  Id_Catalog: 5, Id_Parent: $parent) {
 		Id
 		Name
 		IsActive
