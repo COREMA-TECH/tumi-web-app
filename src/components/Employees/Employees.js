@@ -792,7 +792,8 @@ class Employees extends Component {
                                 User_Created: 1,
                                 User_Updated: 1,
                                 Date_Created: new Date().toISOString(),
-                                Date_Updated: new Date().toISOString()
+                                Date_Updated: new Date().toISOString(),
+                                isEmployee: true
                             },
                             idEmployee: this.state.employeeId
                         }
