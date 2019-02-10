@@ -3,6 +3,8 @@ import WorkOrdersPositionTable from 'WorkOrdersPosition/WorkOrdersPositionTable'
 import { Bar } from 'react-chartjs-2';
 import WorkOrdersPositionForm from 'WorkOrdersPosition/WorkOrdersPositionForm';
 import withGlobalContent from 'Generic/Global';
+import { timeElapsed } from '../HotelManager/Queries';
+import withApollo from "react-apollo/withApollo";
 
 const data = {
 	datasets: [
@@ -88,7 +90,6 @@ const plugins = [
 	{
 		afterDraw: (chartInstance, easing) => {
 			const ctx = chartInstance.chart.ctx;
-			//	ctx.fillText('This text drawn by a plugin', 100, 100);
 		}
 	}
 ];
@@ -98,7 +99,8 @@ class DashboardRecruiter extends React.Component {
 		super(props);
 		this.state = {
 			showAll: false,
-			openModal: false
+			openModal: false,
+			timeElapsed: []
 		};
 	}
 
@@ -116,6 +118,26 @@ class DashboardRecruiter extends React.Component {
 			item: item
 		});
 	};
+
+	componentWillMount() {
+		this.getElapsed();
+	}
+
+	getElapsed = () => {
+		this.props.client.query({
+			query: timeElapsed,
+			fetchPolicy: "no-cache",
+		}).then(({ data }) => {
+			this.setState({
+				timeElapsed: data.timeElapsed
+			});
+		}).catch(error => {
+			this.setState({
+				loading: false
+			})
+		})
+	}
+
 	render() {
 		return (
 			<div className="row WorkOrder">
@@ -123,36 +145,6 @@ class DashboardRecruiter extends React.Component {
 					<div className="card">
 						<div className="card-body">
 							<div className="row">
-								{/*
-							<div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xl-2">
-									<div className="row p-0">
-										<div className="col-12">
-											<div className="border-right">
-												<label>Show All?</label>
-												<div className="onoffswitch">
-													<input
-														type="checkbox"
-														name="showAll"
-														onChange={(e) => {
-															this.setState({
-																showAll: e.target.checked
-															});
-														}}
-														className="onoffswitch-checkbox"
-														id="showAll"
-														checked={this.state.showAll}
-													/>
-													<label className="onoffswitch-label" htmlFor="showAll">
-														<span className="onoffswitch-inner" />
-														<span className="onoffswitch-switch" />
-													</label>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							*/}
-
 								<div className="col-xs-7 col-sm-7 col-md-7 col-lg-7 col-xl-8">
 									<div className="row p-0">
 										<div className="col-sm-6 col-xs-12">
@@ -191,11 +183,11 @@ class DashboardRecruiter extends React.Component {
 						handleOpenSnackbar={this.props.handleOpenSnackbar}
 					/>
 				</div>
-				<div className="col-md-12 col-lg-7">
+
+				<div className="col-md-12 col-lg-4">
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
 						<div className="row">
-
 							<div className="col-md-2 col-lg-2">
 								<a href="/home/board/recruiter" className="text-center d-block">
 									<img src="/icons/actions/notepad-3.svg" alt="" className="w-50" />
@@ -205,31 +197,30 @@ class DashboardRecruiter extends React.Component {
 						</div>
 					</div>
 				</div>
-				{/*
-				<div className="col-md-12 col-lg-7">
-					<div className="card">
-						<div className="card-header info">Quick Access</div>
-						<div className="row">
-							<div className="col-md-4 col-lg-6">
-								<a href="/home/board/recruiter" className="card bg-gd-info QuickButton">
-									<div className="card-body">
-										<div>
-											<i className="fas fa-tv fa-5x" />
-										</div>
-										<span>Go to board</span>
-									</div>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				*/}
 
 				<div className="col-md-12 col-lg-5">
 					<div className="card">
 						<div className="card-header danger">Chart</div>
 						<div className="card-body">
 							<Bar data={data} width={100} height={200} plugins={plugins} options={options} />
+						</div>
+					</div>
+				</div>
+
+				<div className="col-lg-3">
+					<div className="card">
+						<div className="card-header info">FULFILLMENT STATS</div>
+						<div className="card-body">
+							<ul className="list-group list-group-flush">
+								{this.state.timeElapsed.slice(0, 5).map((timeElapsed) => {
+									return (
+										<li className="list-group-item d-flex justify-content-between align-items-center">
+											<span className="font-weight-bold">{timeElapsed.WorkOrderId}</span>	{timeElapsed.Full_Name}
+											<span class="badge badge-primary"> {timeElapsed.TimeElapsed}</span>
+										</li>
+									)
+								})}
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -244,4 +235,4 @@ class DashboardRecruiter extends React.Component {
 	}
 }
 
-export default withGlobalContent(DashboardRecruiter);
+export default withApollo(withGlobalContent(DashboardRecruiter));

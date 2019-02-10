@@ -283,9 +283,10 @@ class BoardManager extends Component {
     };
 
     updateStatus = (id) => {
+        console.log(id);
         this.setState(
             {
-                state: id
+                status: id
             },
             () => {
                 this.getWorkOrders();
@@ -815,18 +816,44 @@ class BoardManager extends Component {
 
     getDataFilters = () => {
         var variables;
-        variables = {
-            shift: {
-                status: [1, 2]
-            },
-        };
-        if (this.state.hotel != 0) {
+
+        if (this.state.status !== null) {
             variables = {
-                shiftEntity: {
-                    Id: this.state.hotel
+                shift: {
+                    status: [this.state.status]
                 },
-                ...variables
+            };
+        } else {
+            variables = {
+                shift: {
+                    status: [1, 2]
+                },
+            };
+        }
+        var shiftEntity = {};
+        if (this.state.hotel != 0) {
+            shiftEntity = {
+                Id: this.state.hotel,
+                ...shiftEntity
             }
+        }
+        if (this.state.state != 0) {
+            shiftEntity = {
+                State: this.state.state,
+                ...shiftEntity
+            }
+        }
+        if (this.state.city != 0) {
+            shiftEntity = {
+                City: this.state.city,
+                ...shiftEntity
+            }
+        }
+        if (this.state.hotel != 0 || this.state.state != 0 || this.state.city != 0) {
+            variables = {
+                shiftEntity,
+                ...variables
+            };
         }
         return variables;
     }
@@ -834,93 +861,148 @@ class BoardManager extends Component {
     getWorkOrders = (vare = "primera") => {
         let getworkOrders = [];
         let datas = [];
-        this.props.client.query({
-            query: GET_BOARD_SHIFT,
-            fetchPolicy: "no-cache",
-            variables: { ...this.getDataFilters() }
-        }).then(({ data }) => {
-            let _id = data.ShiftBoard[0].workOrderId;
-            let count = 1;
-            let begin = true;
-            data.ShiftBoard.forEach((ShiftBoard) => {
-                if (_id == ShiftBoard.workOrderId)
-                    count++;
-                else {
-                    count = 1;
+
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client.query({
+                query: GET_BOARD_SHIFT,
+                fetchPolicy: "no-cache",
+                variables: { ...this.getDataFilters() }
+            }).then(({ data }) => {
+                if (data.ShiftBoard.length === 0) {
+                    this.setState({
+                        workOrders: [],
+                        lane: [
+                            {
+                                id: 'lane1',
+                                title: 'Work Orders',
+                                label: ' ',
+                                cards: getworkOrders,
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Positions',
+                                title: 'Positions',
+                                label: ' ',
+                                cards: [],
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Matches',
+                                title: 'Matches',
+                                label: ' ',
+                                cards: this.state.matches
+                            },
+                            {
+                                id: 'Notify',
+                                title: 'Notify',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Accepted',
+                                title: 'Accepted',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Schedule',
+                                title: 'Add to Schedule',
+                                label: ' ',
+                                cards: []
+                            }
+                        ],
+                        loading: false
+                    });
+                } else {
+                    let _id = data.ShiftBoard[0].workOrderId;
+                    let count = 1;
+                    let begin = true;
+
+
+                    data.ShiftBoard.forEach((ShiftBoard) => {
+
+                        if (_id == ShiftBoard.workOrderId)
+                            count++;
+                        else {
+                            count = 1;
+                        }
+
+                        if (begin) count = 1;
+
+                        _id = ShiftBoard.workOrderId;
+                        datas = {
+                            id: ShiftBoard.id,
+                            name: 'Title: ' + ShiftBoard.title,
+                            dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                            subTitle: 'ID: 000' + ShiftBoard.workOrderId,
+                            body: ShiftBoard.CompanyName,
+                            //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                            //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                            cardStyle: { borderRadius: 6, marginBottom: 15 },
+                            needExperience: ShiftBoard.needExperience,
+                            needEnglish: ShiftBoard.needEnglish,
+                            PositionApplyfor: ShiftBoard.Id_positionApplying,
+                            Position: ShiftBoard.Position,
+                            Zipcode: ShiftBoard.zipCode,
+                            WorkOrderId: ShiftBoard.workOrderId,
+                            isOpening: ShiftBoard.isOpening
+                        };
+                        getworkOrders.push(datas);
+                        begin = false;
+                    });
+                    this.setState({
+                        workOrders: getworkOrders,
+                        lane: [
+                            {
+                                id: 'lane1',
+                                title: 'Work Orders',
+                                label: ' ',
+                                cards: getworkOrders,
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Positions',
+                                title: 'Positions',
+                                label: ' ',
+                                cards: [],
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Matches',
+                                title: 'Matches',
+                                label: ' ',
+                                cards: this.state.matches
+                            },
+                            {
+                                id: 'Notify',
+                                title: 'Notify',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Accepted',
+                                title: 'Accepted',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Schedule',
+                                title: 'Add to Schedule',
+                                label: ' ',
+                                cards: []
+                            }
+                        ],
+                        loading: false
+                    });
                 }
-
-                if (begin) count = 1;
-
-                _id = ShiftBoard.workOrderId;
-                datas = {
-                    id: ShiftBoard.id,
-                    name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
-                    subTitle: 'ID: 000' + ShiftBoard.workOrderId,
-                    body: ShiftBoard.CompanyName,
-                    //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                    //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                    cardStyle: { borderRadius: 6, marginBottom: 15 },
-                    needExperience: ShiftBoard.needExperience,
-                    needEnglish: ShiftBoard.needEnglish,
-                    PositionApplyfor: ShiftBoard.Id_positionApplying,
-                    Position: ShiftBoard.Position,
-                    Zipcode: ShiftBoard.zipCode,
-                    WorkOrderId: ShiftBoard.workOrderId,
-                    isOpening: ShiftBoard.isOpening
-                };
-                getworkOrders.push(datas);
-                begin = false;
-            });
-            this.setState({
-                workOrders: getworkOrders,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Work Orders',
-                        label: ' ',
-                        cards: getworkOrders,
-                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                    },
-                    {
-                        id: 'Positions',
-                        title: 'Positions',
-                        label: ' ',
-                        cards: [],
-                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                    },
-                    {
-                        id: 'Matches',
-                        title: 'Matches',
-                        label: ' ',
-                        cards: this.state.matches
-                    },
-                    {
-                        id: 'Notify',
-                        title: 'Notify',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Accepted',
-                        title: 'Accepted',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Schedule',
-                        title: 'Add to Schedule',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
-            });
-
-        }).catch(error => {
-        })
-
-
+            }).catch(error => {
+                this.setState({
+                    loading: false
+                })
+            })
+        });
     };
 
     handleCloseModal = (event) => {
@@ -933,8 +1015,8 @@ class BoardManager extends Component {
         /*   const { getDistance } = this.context;
            const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
            const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
-   
-   
+
+
            console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
    */
         return (
@@ -974,9 +1056,13 @@ class BoardManager extends Component {
                                                         className={'form-control'}
                                                         onChange={(event) => {
                                                             this.setState({
-                                                                state: event.target.value
+                                                                state: event.target.value,
+                                                                city: 0,
+                                                                cities: []
                                                             }, () => {
-                                                                this.loadCities()
+                                                                this.loadCities();
+                                                                this.getWorkOrders();
+                                                                this.getMatches();
                                                             })
                                                         }}
                                                         value={this.state.state}
@@ -995,6 +1081,9 @@ class BoardManager extends Component {
                                                         onChange={(event) => {
                                                             this.setState({
                                                                 city: event.target.value
+                                                            }, () => {
+                                                                this.getWorkOrders();
+                                                                this.getMatches();
                                                             })
                                                         }}
                                                         //error={!this.state.cityValid}
@@ -1012,15 +1101,19 @@ class BoardManager extends Component {
                                                         className={'form-control'}
                                                         // disabled={this.state.loadingCities}
                                                         onChange={(event) => {
-                                                            this.updateStatus(event.target.value);
+                                                            if (event.target.value == "null") {
+                                                                this.updateStatus(null);
+                                                            } else {
+                                                                this.updateStatus(event.target.value);
+                                                            }
                                                         }}
                                                         //error={!this.state.cityValid}
-                                                        value={this.state.city}
+                                                        value={this.state.status}
                                                         showNone={false}
                                                     >
-                                                        <option value={0}>Active work orders</option>
-                                                        <option value={1}>Closed work orders</option>
-                                                        <option value={2}>All work orders</option>
+                                                        <option value={"null"}>All work orders</option>
+                                                        <option value={"null"}>Active work orders</option>
+                                                        <option value={3}>Closed work orders</option>
                                                     </select>
                                                 </div>
                                                 <div className="col-md-2">

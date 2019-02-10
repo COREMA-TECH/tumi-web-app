@@ -40,7 +40,7 @@ query getposition {
 `;*/
 export const GET_POSITIONS_QUERY = gql`
     {
-        workOrder(status: 2) {
+        workOrder {
             id
             position {
                 Position

@@ -11015,6 +11015,12 @@ button.rbc-input::-moz-focus-inner {
 .smooth-dnd-container.vertical {
   min-height: 225px; }
 
+.board-switch .onoffswitch-inner::before {
+  content: " "; }
+
+.board-switch .onoffswitch-inner::after {
+  content: " "; }
+
 .PropertiesTags-item .btn, .PropertiesTags-item .form-control {
   background-color: #dddddd;
   border-color: #dddddd;

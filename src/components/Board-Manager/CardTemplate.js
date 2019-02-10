@@ -136,7 +136,7 @@ class CardTemplate extends Component {
 
     printButtons = ({ id, laneId }) => {
         if (laneId == "lane1")
-            return <div className="onoffswitch">
+            return <div className="onoffswitch mb-1 board-switch" style={{ marginLeft: "auto", zoom: 0.5 }} >
                 <input
                     id={`chkConvert${id}`}
                     className="onoffswitch-checkbox"
