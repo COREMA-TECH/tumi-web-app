@@ -118,7 +118,7 @@ class CardTemplate extends Component {
     printDialogConfirmConvertToWO = ({ id, WorkOrderId }) => {
         return <Dialog maxWidth="xl" open={this.state.showConfirmToWorkOrder} onClose={this.handleCloseConfirmDialogToWorkOrder}>
             <DialogContent>
-                <h2 className="text-center">Send Opening to a Operation Manager</h2>
+                <h2 className="text-center">Recall Work Order From Recruiting</h2>
             </DialogContent>
             <DialogActions>
                 <button className="btn btn-success  btn-not-rounded mr-1 ml-2 mb-2" type="button" onClick={() => this.handleConvertAllItemToWorkOrder({ WorkOrderId })}>
