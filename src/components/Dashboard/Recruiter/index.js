@@ -3,6 +3,8 @@ import WorkOrdersPositionTable from 'WorkOrdersPosition/WorkOrdersPositionTable'
 import { Bar } from 'react-chartjs-2';
 import WorkOrdersPositionForm from 'WorkOrdersPosition/WorkOrdersPositionForm';
 import withGlobalContent from 'Generic/Global';
+import { timeElapsed } from '../HotelManager/Queries';
+import withApollo from "react-apollo/withApollo";
 
 const data = {
 	datasets: [
@@ -97,7 +99,8 @@ class DashboardRecruiter extends React.Component {
 		super(props);
 		this.state = {
 			showAll: false,
-			openModal: false
+			openModal: false,
+			timeElapsed: []
 		};
 	}
 
@@ -115,6 +118,26 @@ class DashboardRecruiter extends React.Component {
 			item: item
 		});
 	};
+
+	componentWillMount() {
+		this.getElapsed();
+	}
+
+	getElapsed = () => {
+		this.props.client.query({
+			query: timeElapsed,
+			fetchPolicy: "no-cache",
+		}).then(({ data }) => {
+			this.setState({
+				timeElapsed: data.timeElapsed
+			});
+		}).catch(error => {
+			this.setState({
+				loading: false
+			})
+		})
+	}
+
 	render() {
 		return (
 			<div className="row WorkOrder">
@@ -161,7 +184,7 @@ class DashboardRecruiter extends React.Component {
 					/>
 				</div>
 
-				<div className="col-md-12 col-lg-">
+				<div className="col-md-12 col-lg-4">
 					<div className="card">
 						<div className="card-header info">Quick Access</div>
 						<div className="row">
@@ -183,6 +206,24 @@ class DashboardRecruiter extends React.Component {
 						</div>
 					</div>
 				</div>
+
+				<div className="col-lg-3">
+					<div className="card">
+						<div className="card-header info">FULFILLMENT STATS</div>
+						<div className="card-body">
+							<ul className="list-group list-group-flush">
+								{this.state.timeElapsed.slice(0, 5).map((timeElapsed) => {
+									return (
+										<li className="list-group-item d-flex justify-content-between align-items-center">
+											<span className="font-weight-bold">{timeElapsed.WorkOrderId}</span>	{timeElapsed.Full_Name}
+											<span class="badge badge-primary"> {timeElapsed.TimeElapsed}</span>
+										</li>
+									)
+								})}
+							</ul>
+						</div>
+					</div>
+				</div>
 				<WorkOrdersPositionForm
 					item={this.state.item}
 					handleOpenSnackbar={this.props.handleOpenSnackbar}
@@ -194,4 +235,4 @@ class DashboardRecruiter extends React.Component {
 	}
 }
 
-export default withGlobalContent(DashboardRecruiter);
+export default withApollo(withGlobalContent(DashboardRecruiter));

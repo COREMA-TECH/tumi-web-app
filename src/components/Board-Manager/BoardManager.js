@@ -817,7 +817,7 @@ class BoardManager extends Component {
     getDataFilters = () => {
         var variables;
 
-        if(this.state.status !== null) {
+        if (this.state.status !== null) {
             variables = {
                 shift: {
                     status: [this.state.status]
@@ -870,8 +870,7 @@ class BoardManager extends Component {
                 fetchPolicy: "no-cache",
                 variables: { ...this.getDataFilters() }
             }).then(({ data }) => {
-                console.log("Length: ", data.ShiftBoard.length);
-                if(data.ShiftBoard.length === 0){
+                if (data.ShiftBoard.length === 0) {
                     this.setState({
                         workOrders: [],
                         lane: [
@@ -923,7 +922,6 @@ class BoardManager extends Component {
 
 
                     data.ShiftBoard.forEach((ShiftBoard) => {
-                        console.log("Elements");
 
                         if (_id == ShiftBoard.workOrderId)
                             count++;
@@ -1103,7 +1101,7 @@ class BoardManager extends Component {
                                                         className={'form-control'}
                                                         // disabled={this.state.loadingCities}
                                                         onChange={(event) => {
-                                                            if(event.target.value == "null") {
+                                                            if (event.target.value == "null") {
                                                                 this.updateStatus(null);
                                                             } else {
                                                                 this.updateStatus(event.target.value);
