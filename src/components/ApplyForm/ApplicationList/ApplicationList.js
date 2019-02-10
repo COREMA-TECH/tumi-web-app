@@ -47,28 +47,28 @@ class ApplicationList extends Component {
 	};
 
 	GET_APPLICATION_QUERY = gql`
-	{
-		applications(isActive: true) {
-			id
-			firstName
-			middleName
-			lastName
-			socialSecurityNumber
-			emailAddress
-			cellPhone
-            isLead
-			position{
+		query applicationsByUser($idUsers: Int){
+			applicationsByUser(idUsers: $idUsers) {
 				id
-				position {
-						  Position
-					  }
-				BusinessCompany {
-						  Id
-						  Code
-					  }
-			  }
+				firstName
+				middleName
+				lastName
+				socialSecurityNumber
+				emailAddress
+				cellPhone
+				isLead
+				position{
+					id
+					position {
+							Position
+						}
+					BusinessCompany {
+							Id
+							Code
+						}
+				}
+			}
 		}
-	}
 	`;
 	DELETE_APPLICATION_QUERY = gql`
 		mutation disableApplication($id: Int!) {
@@ -116,7 +116,13 @@ class ApplicationList extends Component {
 	};
 
 	render() {
+
 		const { classes } = this.props;
+
+		var variables = null;
+		if (localStorage.getItem('isEmployee') == 'true') {
+			variables = { idUsers: localStorage.getItem('LoginId') }
+		}
 		// If contracts query is loading, show a progress component
 		if (this.state.loadingContracts) {
 			return <LinearProgress />;
@@ -152,7 +158,7 @@ class ApplicationList extends Component {
 						/>
 					</div>
 				</div>
-				<div className="col-md-6">
+				{localStorage.getItem('isEmployee') == 'false' && <div className="col-md-6">
 					<button
 						className="btn btn-success float-right"
 						onClick={() => {
@@ -161,11 +167,12 @@ class ApplicationList extends Component {
 					>
 						Add Application
 						</button>
-				</div>
+				</div>}
 			</div>
 		);
 
 		return (
+
 			<div className="main-application">
 				<AlertDialogSlide
 					handleClose={this.handleCloseAlertDialog}
@@ -176,7 +183,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} pollInterval={300}>
+					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -191,8 +198,8 @@ class ApplicationList extends Component {
 										icon="danger"
 									/>
 								);
-							if (data.applications != null && data.applications.length > 0) {
-								let dataApplication = data.applications.filter((_, i) => {
+							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
+								let dataApplication = data.applicationsByUser.filter((_, i) => {
 									if (this.state.filterText === '') {
 										return true;
 									}
