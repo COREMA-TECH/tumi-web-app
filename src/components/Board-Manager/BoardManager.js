@@ -851,93 +851,150 @@ class BoardManager extends Component {
     getWorkOrders = (vare = "primera") => {
         let getworkOrders = [];
         let datas = [];
-        this.props.client.query({
-            query: GET_BOARD_SHIFT,
-            fetchPolicy: "no-cache",
-            variables: { ...this.getDataFilters() }
-        }).then(({ data }) => {
-            let _id = data.ShiftBoard[0].workOrderId;
-            let count = 1;
-            let begin = true;
-            data.ShiftBoard.forEach((ShiftBoard) => {
-                if (_id == ShiftBoard.workOrderId)
-                    count++;
-                else {
-                    count = 1;
+
+        this.setState({
+            loading: true
+        }, () => {
+            this.props.client.query({
+                query: GET_BOARD_SHIFT,
+                fetchPolicy: "no-cache",
+                variables: { ...this.getDataFilters() }
+            }).then(({ data }) => {
+                console.log("Length: ", data.ShiftBoard.length);
+                if(data.ShiftBoard.length === 0){
+                    this.setState({
+                        workOrders: [],
+                        lane: [
+                            {
+                                id: 'lane1',
+                                title: 'Work Orders',
+                                label: ' ',
+                                cards: getworkOrders,
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Positions',
+                                title: 'Positions',
+                                label: ' ',
+                                cards: [],
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Matches',
+                                title: 'Matches',
+                                label: ' ',
+                                cards: this.state.matches
+                            },
+                            {
+                                id: 'Notify',
+                                title: 'Notify',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Accepted',
+                                title: 'Accepted',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Schedule',
+                                title: 'Add to Schedule',
+                                label: ' ',
+                                cards: []
+                            }
+                        ],
+                        loading: false
+                    });
+                } else {
+                    let _id = data.ShiftBoard[0].workOrderId;
+                    let count = 1;
+                    let begin = true;
+
+
+                    data.ShiftBoard.forEach((ShiftBoard) => {
+                        console.log("Elements");
+
+                        if (_id == ShiftBoard.workOrderId)
+                            count++;
+                        else {
+                            count = 1;
+                        }
+
+                        if (begin) count = 1;
+
+                        _id = ShiftBoard.workOrderId;
+                        datas = {
+                            id: ShiftBoard.id,
+                            name: 'Title: ' + ShiftBoard.title,
+                            dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                            subTitle: 'ID: 000' + ShiftBoard.workOrderId,
+                            body: ShiftBoard.CompanyName,
+                            //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                            //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                            cardStyle: { borderRadius: 6, marginBottom: 15 },
+                            needExperience: ShiftBoard.needExperience,
+                            needEnglish: ShiftBoard.needEnglish,
+                            PositionApplyfor: ShiftBoard.Id_positionApplying,
+                            Position: ShiftBoard.Position,
+                            Zipcode: ShiftBoard.zipCode,
+                            WorkOrderId: ShiftBoard.workOrderId,
+                            isOpening: ShiftBoard.isOpening
+                        };
+                        getworkOrders.push(datas);
+                        begin = false;
+                    });
+                    this.setState({
+                        workOrders: getworkOrders,
+                        lane: [
+                            {
+                                id: 'lane1',
+                                title: 'Work Orders',
+                                label: ' ',
+                                cards: getworkOrders,
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Positions',
+                                title: 'Positions',
+                                label: ' ',
+                                cards: [],
+                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                            },
+                            {
+                                id: 'Matches',
+                                title: 'Matches',
+                                label: ' ',
+                                cards: this.state.matches
+                            },
+                            {
+                                id: 'Notify',
+                                title: 'Notify',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Accepted',
+                                title: 'Accepted',
+                                label: ' ',
+                                cards: []
+                            },
+                            {
+                                id: 'Schedule',
+                                title: 'Add to Schedule',
+                                label: ' ',
+                                cards: []
+                            }
+                        ],
+                        loading: false
+                    });
                 }
-
-                if (begin) count = 1;
-
-                _id = ShiftBoard.workOrderId;
-                datas = {
-                    id: ShiftBoard.id,
-                    name: 'Title: ' + ShiftBoard.title,
-                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
-                    subTitle: 'ID: 000' + ShiftBoard.workOrderId,
-                    body: ShiftBoard.CompanyName,
-                    //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                    //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                    cardStyle: { borderRadius: 6, marginBottom: 15 },
-                    needExperience: ShiftBoard.needExperience,
-                    needEnglish: ShiftBoard.needEnglish,
-                    PositionApplyfor: ShiftBoard.Id_positionApplying,
-                    Position: ShiftBoard.Position,
-                    Zipcode: ShiftBoard.zipCode,
-                    WorkOrderId: ShiftBoard.workOrderId,
-                    isOpening: ShiftBoard.isOpening
-                };
-                getworkOrders.push(datas);
-                begin = false;
-            });
-            this.setState({
-                workOrders: getworkOrders,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Work Orders',
-                        label: ' ',
-                        cards: getworkOrders,
-                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                    },
-                    {
-                        id: 'Positions',
-                        title: 'Positions',
-                        label: ' ',
-                        cards: [],
-                        laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                    },
-                    {
-                        id: 'Matches',
-                        title: 'Matches',
-                        label: ' ',
-                        cards: this.state.matches
-                    },
-                    {
-                        id: 'Notify',
-                        title: 'Notify',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Accepted',
-                        title: 'Accepted',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Schedule',
-                        title: 'Add to Schedule',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
-            });
-
-        }).catch(error => {
-        })
-
-
+            }).catch(error => {
+                this.setState({
+                    loading: false
+                })
+            })
+        });
     };
 
     handleCloseModal = (event) => {
@@ -950,8 +1007,8 @@ class BoardManager extends Component {
         /*   const { getDistance } = this.context;
            const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
            const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
-   
-   
+
+
            console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
    */
         return (
@@ -993,8 +1050,9 @@ class BoardManager extends Component {
                                                             this.setState({
                                                                 state: event.target.value
                                                             }, () => {
-                                                                this.loadCities()
-                                                                this.getWorkOrders()
+                                                                this.loadCities();
+                                                                this.getWorkOrders();
+                                                                this.getMatches();
                                                             })
                                                         }}
                                                         value={this.state.state}
@@ -1014,7 +1072,8 @@ class BoardManager extends Component {
                                                             this.setState({
                                                                 city: event.target.value
                                                             }, () => {
-                                                                this.getWorkOrders()
+                                                                this.getWorkOrders();
+                                                                this.getMatches();
                                                             })
                                                         }}
                                                         //error={!this.state.cityValid}
