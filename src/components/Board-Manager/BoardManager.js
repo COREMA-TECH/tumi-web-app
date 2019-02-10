@@ -1103,16 +1103,19 @@ class BoardManager extends Component {
                                                         className={'form-control'}
                                                         // disabled={this.state.loadingCities}
                                                         onChange={(event) => {
-                                                            this.updateStatus(event.target.value);
+                                                            if(event.target.value == "null") {
+                                                                this.updateStatus(null);
+                                                            } else {
+                                                                this.updateStatus(event.target.value);
+                                                            }
                                                         }}
                                                         //error={!this.state.cityValid}
                                                         value={this.state.status}
                                                         showNone={false}
                                                     >
-                                                        <option value={null}>Select a status</option>
-                                                        <option value={0}>Active work orders</option>
-                                                        <option value={1}>Closed work orders</option>
-                                                        <option value={2}>All work orders</option>
+                                                        <option value={"null"}>All work orders</option>
+                                                        <option value={1}>Active work orders</option>
+                                                        <option value={2}>Closed work orders</option>
                                                     </select>
                                                 </div>
                                                 <div className="col-md-2">
