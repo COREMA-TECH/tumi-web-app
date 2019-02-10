@@ -198,7 +198,7 @@ class DashboardRecruiter extends React.Component {
 					</div>
 				</div>
 
-				<div className="col-md-12 col-lg-5">
+				<div className="col-md-12 col-lg-4">
 					<div className="card">
 						<div className="card-header danger">Chart</div>
 						<div className="card-body">
@@ -207,7 +207,7 @@ class DashboardRecruiter extends React.Component {
 					</div>
 				</div>
 
-				<div className="col-lg-3">
+				<div className="col-lg-4">
 					<div className="card">
 						<div className="card-header info">FULFILLMENT STATS</div>
 						<div className="card-body">
