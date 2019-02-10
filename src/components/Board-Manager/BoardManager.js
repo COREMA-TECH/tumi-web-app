@@ -1115,7 +1115,7 @@ class BoardManager extends Component {
                                                     >
                                                         <option value={"null"}>All work orders</option>
                                                         <option value={1}>Active work orders</option>
-                                                        <option value={2}>Closed work orders</option>
+                                                        <option value={3}>Closed work orders</option>
                                                     </select>
                                                 </div>
                                                 <div className="col-md-2">
