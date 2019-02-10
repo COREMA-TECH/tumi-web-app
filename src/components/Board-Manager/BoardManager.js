@@ -1048,7 +1048,9 @@ class BoardManager extends Component {
                                                         className={'form-control'}
                                                         onChange={(event) => {
                                                             this.setState({
-                                                                state: event.target.value
+                                                                state: event.target.value,
+                                                                city: 0,
+                                                                cities: []
                                                             }, () => {
                                                                 this.loadCities();
                                                                 this.getWorkOrders();
