@@ -188,7 +188,7 @@ class EmployeesTable extends React.Component {
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell className={"Table-head"}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>First Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Last Name</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Email</CustomTableCell>
