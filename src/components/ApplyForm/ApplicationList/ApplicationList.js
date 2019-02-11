@@ -46,9 +46,33 @@ class ApplicationList extends Component {
 		});
 	};
 
-	GET_APPLICATION_QUERY = gql`
+	/*GET_APPLICATION_QUERY = gql`
 		query applicationsByUser($idUsers: Int){
 			applicationsByUser(idUsers: $idUsers) {
+				id
+				firstName
+				middleName
+				lastName
+				socialSecurityNumber
+				emailAddress
+				cellPhone
+				isLead
+				position{
+					id
+					position {
+							Position
+						}
+					BusinessCompany {
+							Id
+							Code
+						}
+				}
+			}
+		}
+	`;*/
+	GET_APPLICATION_QUERY = gql`
+	query applications{
+		applications(isActive: true) {
 				id
 				firstName
 				middleName
@@ -183,7 +207,7 @@ class ApplicationList extends Component {
 				/>
 				<div className="">{renderHeaderContent()}</div>
 				<div className="main-contract__content">
-					<Query query={this.GET_APPLICATION_QUERY} variables={variables} pollInterval={300}>
+					<Query query={this.GET_APPLICATION_QUERY} pollInterval={300}>
 						{({ loading, error, data, refetch, networkStatus }) => {
 							if (this.state.filterText === '') {
 								if (loading && !this.state.opendialog) return <LinearProgress />;
@@ -198,8 +222,8 @@ class ApplicationList extends Component {
 										icon="danger"
 									/>
 								);
-							if (data.applicationsByUser != null && data.applicationsByUser.length > 0) {
-								let dataApplication = data.applicationsByUser.filter((_, i) => {
+							if (data.applications != null && data.applications.length > 0) {
+								let dataApplication = data.applications.filter((_, i) => {
 									if (this.state.filterText === '') {
 										return true;
 									}

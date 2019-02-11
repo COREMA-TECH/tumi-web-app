@@ -659,6 +659,13 @@ class VerticalLinearStepper extends Component {
     updateZipCode = (zipCode) => {
         this.setState(() => { return { zipCode, validZipCode: zipCode.trim().replace('-', '') && true } });
     }
+
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -806,7 +813,8 @@ class VerticalLinearStepper extends Component {
                         zipCodeColClass="col-md-3"
                         cssTitle={"primary"}
                         placeholder="99999-99999"
-                        mask="99999-99999" />
+                        mask="99999-99999"
+                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
                     <div className="col-md-3">
                         <span className="primary"> Home Phone</span>
                         <InputMask
@@ -1263,9 +1271,9 @@ class VerticalLinearStepper extends Component {
                     <Button disabled={activeStep === 0} onClick={this.handleBack} className={classes.button}>
                         Back
                     </Button>
-                    <Button type="submit" variant="contained" color="primary" className={classes.button}>
+                    {!this.state.searchigZipcode && <Button type="submit" variant="contained" color="primary" className={classes.button}>
                         {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-                    </Button>
+                    </Button>}
                 </div>
             </div>
         );
