@@ -12,6 +12,7 @@ import '../stepper.css';
 import '../../index.css';
 import withApollo from "react-apollo/withApollo";
 import General from "./General";
+import Shifts from '../../../Schedules/Shifts';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -22,6 +23,7 @@ import { UDPATE_PROFILE_PICTURE } from './Mutations';
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import { ProfilePicture } from 'ui-components/ProfilePicture/'
 import GenericContent from 'Generic/Global'
+import Schedules from '../../../Schedules';
 const menuSpanish = require(`../languagesJSON/${localStorage.getItem('languageForm')}/profileMenu`);
 
 
@@ -79,7 +81,8 @@ class VerticalLinearStepper extends Component {
             openModal: false,
             value: 0,
             username: '',
-            Urlphoto: ''
+            Urlphoto: '',
+            employee: []
         }
     }
 
@@ -126,10 +129,9 @@ class VerticalLinearStepper extends Component {
             .then(({ data }) => {
                 this.setState({
                     username: data.applications[0].firstName + ' ' + data.applications[0].lastName,
-                    Urlphoto: data.applications[0].Urlphoto
+                    Urlphoto: data.applications[0].Urlphoto,
+                    employee: data.applications[0].employee
                 }, () => {
-                    console.log(this.state.username);
-                    console.log(this.state.Urlphoto);
                     this.setState({
                         loading: false
                     })
@@ -145,7 +147,6 @@ class VerticalLinearStepper extends Component {
 
 
     updateImage = (url) => {
-        console.log("Calling Update Image")
         this.props.client
             .mutate({
                 mutation: UDPATE_PROFILE_PICTURE,
@@ -158,7 +159,6 @@ class VerticalLinearStepper extends Component {
                 this.props.handleOpenSnackbar('success', 'Profile picture updated!', 'bottom', 'right');
             })
             .catch(error => {
-                console.log(":Errrordsfasdfsd", error)
                 this.props.handleOpenSnackbar(
                     'error',
                     'Error updating profile picture. Please, try again!',
@@ -197,6 +197,17 @@ class VerticalLinearStepper extends Component {
             switch (step) {
                 case 0:
                     return <General applicationId={this.props.applicationId} />;
+                case 1:
+                    return <div className="card mt-0">
+                        <Shifts
+                            saveTemplateShift={() => { }}
+                            openEditConfirm={() => { }}
+                            handleOpenSnackbar={this.props.handleOpenSnackbar}
+                            location={this.state.employee.Employees.idEntity}
+                            deparment={this.state.employee.Employees.Id_Department}
+                            selectedEmployee={this.state.employee.Employees.id}
+                        />
+                    </div>
             }
         };
 

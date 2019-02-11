@@ -763,7 +763,6 @@ class Catalogs extends React.Component {
 	};
 
 	addCatalogItemHandler = () => {
-		console.log("Hola Milton")
 		this.setState(
 			{
 				loading: true,

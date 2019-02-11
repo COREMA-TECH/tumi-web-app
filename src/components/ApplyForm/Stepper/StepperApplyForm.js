@@ -41,8 +41,7 @@ import SignatureForm from "../SignatureForm/SignatureForm";
 import 'react-tagsinput/react-tagsinput.css'; // If using WebPack and style-loader.
 import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
-import axios from 'axios';
-
+import LocationForm from '../../ui-components/LocationForm';
 
 const spanishActions = require(`../Application/languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 
@@ -166,6 +165,9 @@ class VerticalLinearStepper extends Component {
 
             // React tag input with suggestions
             positionsTags: [],
+            validCity: true,
+            validState: true,
+            validZipCode: true
         };
     }
 
@@ -647,24 +649,16 @@ class VerticalLinearStepper extends Component {
         this.getLanguagesList();
     }
 
-    findByZipCode = (zipCode = null, cityFinal = null) => {
-        if (!zipCode) {
-            return false;
-        }
+    updateCity = (city) => {
+        this.setState(() => { return { city, validCity: city && true } });
+    };
+    updateState = (state) => {
+        this.setState(() => { return { state, validState: state && true } });
+    };
 
-        this.props.client.query({
-            query: GET_STATES_QUERY,
-             variables: { parent: -1, value: `'${zipCode}'` },
-            fetchPolicy: 'no-cache'
-        }).then((data) => {
-            this.setState({
-                state: data.data.getcatalogitem[0].Id,
-                cityFinal: cityFinal
-            });
-        });
-
+    updateZipCode = (zipCode) => {
+        this.setState(() => { return { zipCode, validZipCode: zipCode.trim().replace('-', '') && true } });
     }
-
     render() {
         const { classes } = this.props;
         const steps = getSteps();
@@ -792,113 +786,27 @@ class VerticalLinearStepper extends Component {
                         />
                     </div>
                 </div>
+
+
                 <div className="row">
-                    <div className="col-md-3">
-                        <span className="primary">* Zip Code</span>
-                        <div className="input-container--validated">
-                            <InputMask
-                                id="zipCode"
-                                name="zipCode"
-                                mask="99999-99999"
-                                maskChar=" "
-                                className="form-control"
-                                onChange={(event) => {
-                                    this.setState({
-                                        zipCode: event.target.value
-                                    }, () => {
-                                        const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5)
-                                        if (zipCode)
-                                            axios.get(`https://ziptasticapi.com/${zipCode}`)
-                                                .then(res => {
-                                                    const cities = res.data;
-                                                    if (!cities.error) {
-                                                        this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                    }
-                                                })
-                                    });
-                                }}
-                                value={this.state.zipCode}
-                                placeholder="99999-99999"
-                                required
-                                minLength="15"
-                            />
+                    <LocationForm
+                        onChangeCity={this.updateCity}
+                        onChangeState={this.updateState}
+                        onChageZipCode={this.updateZipCode}
+                        city={this.state.city}
+                        state={this.state.state}
+                        zipCode={this.state.zipCode}
+                        changeCity={this.state.changeCity}
+                        cityClass={`form-control ${!this.state.validCity && ' _invalid'}`}
+                        stateClass={`form-control ${!this.state.validState && ' _invalid'}`}
+                        zipCodeClass={`form-control ${!this.state.validZipCode && ' _invalid'}`}
 
-                        </div>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* State</span>
-                        <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (loading) return <LinearProgress />;
-                                if (error) return <p>Nothing To Display</p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    return (
-                                        <select
-                                            name="state"
-                                            id="state"
-                                            required
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    state: e.target.value
-                                                });
-                                            }}
-                                            value={this.state.state}
-                                        >
-                                            <option value="">Select a state</option>
-                                            {data.getcatalogitem.map((item) => (
-                                                <option value={item.Id}>{item.Name}</option>
-                                            ))}
-                                        </select>
-                                    );
-                                }
-                                return <SelectNothingToDisplay />;
-                            }}
-                        </Query>
-                    </div>
-                    <div className="col-md-3">
-                        <span className="primary">* City</span>
-                        <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
-                            {({ loading, error, data, refetch, networkStatus }) => {
-                                //if (networkStatus === 4) return <LinearProgress />;
-                                if (error) return <p>Nothing To Display </p>;
-                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                    var citySelected = null;
-                                    citySelected = data.getcatalogitem.filter(city => {
-                                        return city.Name.toLowerCase().includes(this.state.cityFinal);
-                                    });
-                                    if (citySelected.length != 0) {
-                                        if ((citySelected[0].Id != this.state.city)) {
-                                            this.setState({
-                                                city: citySelected[0].Id
-                                            });
-                                        }
-                                    }
-                                    return (
-                                        <select
-                                            name="city"
-                                            id="city"
-                                            required
-                                            className="form-control"
-                                            onChange={(e) => {
-                                                this.setState({
-                                                    city: e.target.value
-                                                })
-                                            }}
-                                            value={this.state.city}>
-                                            <option value="">Select a city</option>
-                                            {data.getcatalogitem.map((item) => (
-                                                <option value={item.Id}>{item.Name}</option>
-                                            ))}
-                                        </select>
-                                    );
-                                }
-                                return <SelectNothingToDisplay />;
-                            }}
-                        </Query>
-                    </div>
-
+                        cityColClass="col-md-3"
+                        stateColClass="col-md-3"
+                        zipCodeColClass="col-md-3"
+                        cssTitle={"primary"}
+                        placeholder="99999-99999"
+                        mask="99999-99999" />
                     <div className="col-md-3">
                         <span className="primary"> Home Phone</span>
                         <InputMask
@@ -1068,36 +976,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-6">
                         <span className="primary"> * Position Applying For</span>
-                        {/*<Query query={GET_POSITIONS_CATALOG}>*/}
-                        {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                        {/*if (error) return <p>Error </p>;*/}
-                        {/*if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {*/}
-                        {/*return (*/}
-                        {/*<select*/}
-                        {/*name="positionApply"*/}
-                        {/*id="positionApply"*/}
-                        {/*onChange={(event) => {*/}
-                        {/*this.setState({*/}
-                        {/*idealJob: event.target.value*/}
-                        {/*});*/}
-                        {/*}}*/}
-                        {/*value={this.state.idealJob}*/}
-                        {/*className="form-control"*/}
-                        {/*required*/}
-                        {/*>*/}
-                        {/*<option value="">Select a position</option>*/}
-                        {/*<option value="0">Open Position</option>*/}
-                        {/*{data.getcatalogitem.map((item) => (*/}
-                        {/*<option*/}
-                        {/*value={item.Id}>{item.Description}</option>*/}
-                        {/*))}*/}
-                        {/*</select>*/}
-                        {/*);*/}
-                        {/*}*/}
-                        {/*return <SelectNothingToDisplay />;*/}
-                        {/*}}*/}
-                        {/*</Query>*/}
+
                         <Query query={GET_POSITIONS_QUERY}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
@@ -1130,35 +1009,7 @@ class VerticalLinearStepper extends Component {
                     </div>
                     <div className="col-md-6">
                         <span className="primary">Willing to work as</span>
-                        {/*<Query query={GET_POSITIONS_QUERY}>*/}
-                        {/*{({ loading, error, data, refetch, networkStatus }) => {*/}
-                        {/*//if (networkStatus === 4) return <LinearProgress />;*/}
-                        {/*if (error) return <p>Error </p>;*/}
-                        {/*if (data.workOrder != null && data.workOrder.length > 0) {*/}
-                        {/*let options = [];*/}
-                        {/*data.workOrder.map((item) => (*/}
-                        {/*options.push({ value: item.id, label: item.position.Position + (item.BusinessCompany.Code.trim()) })*/}
-                        {/*));*/}
 
-                        {/*return (*/}
-                        {/*<div style={{*/}
-                        {/*paddingTop: '0px',*/}
-                        {/*paddingBottom: '2px',*/}
-                        {/*}}>*/}
-                        {/*<Select*/}
-                        {/*options={options}*/}
-                        {/*value={this.state.positionsTags}*/}
-                        {/*onChange={this.handleChangePositionTag}*/}
-                        {/*closeMenuOnSelect={false}*/}
-                        {/*components={makeAnimated()}*/}
-                        {/*isMulti*/}
-                        {/*/>*/}
-                        {/*</div>*/}
-                        {/*);*/}
-                        {/*}*/}
-                        {/*return <SelectNothingToDisplay />;*/}
-                        {/*}}*/}
-                        {/*</Query>*/}
                         <Query query={GET_POSITIONS_CATALOG}>
                             {({ loading, error, data, refetch, networkStatus }) => {
                                 //if (networkStatus === 4) return <LinearProgress />;
@@ -1208,48 +1059,6 @@ class VerticalLinearStepper extends Component {
                             />
                         </div>
                     </div>
-                    {/*<form*/}
-                    {/*id="ideal-job-form"*/}
-                    {/*className="col-md-12 ideal-job-form"*/}
-                    {/*onSubmit={(e) => {*/}
-                    {/*e.stopPropagation();*/}
-                    {/*e.preventDefault();*/}
-
-                    {/*let item = {*/}
-                    {/*description: document.getElementById('idealJob').value,*/}
-                    {/*uuid: uuidv4()*/}
-                    {/*};*/}
-
-                    {/*this.setState(*/}
-                    {/*(prevState) => ({*/}
-                    {/*idealJobs: [...prevState.idealJobs, item]*/}
-                    {/*}),*/}
-                    {/*() => {*/}
-                    {/*document.getElementById('idealJob').value = '';*/}
-                    {/*}*/}
-                    {/*);*/}
-                    {/*}}*/}
-                    {/*>*/}
-                    {/*<span className="primary">Ideal Job</span>*/}
-                    {/*<div className="row">*/}
-                    {/*<div className="col-md-12">*/}
-                    {/*<div className="input-container--validated input-container--ideal-job">*/}
-                    {/*<input*/}
-                    {/*id="idealJob"*/}
-                    {/*name="idealJob"*/}
-                    {/*type="text"*/}
-                    {/*className="form-control ideal-job-form-input"*/}
-                    {/*min="0"*/}
-                    {/*minLength="3"*/}
-                    {/*maxLength="50"*/}
-                    {/*/>*/}
-                    {/*<button type="submit" form="ideal-job-form" className="add-ideal-job">*/}
-                    {/*Add*/}
-                    {/*</button>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-                    {/*</div>*/}
-                    {/*</form>*/}
                     <div className="col-md-12">
                         {this.state.idealJobs.map((idealJobItem) => (
                             <span className="idealJobItem">
@@ -2657,12 +2466,29 @@ class VerticalLinearStepper extends Component {
                                             onSubmit={(e) => {
                                                 // To cancel the default submit event
                                                 e.preventDefault();
-                                                // Call mutation to create a application
-                                                if (this.state.applicationId === null) {
-                                                    this.insertApplicationInformation(history);
-                                                } else {
-                                                    this.updateApplicationInformation();
-                                                }
+                                                this.setState(() => {
+                                                    return {
+                                                        validCity: this.state.city && true,
+                                                        validState: this.state.state && true,
+                                                        validZipCode: this.state.zipCode.trim().replace('-', '') && true
+                                                    }
+                                                }, () => {
+                                                    if (!this.state.validCity)
+                                                        this.props.handleOpenSnackbar('warning', 'City needed');
+                                                    else if (!this.state.validState)
+                                                        this.props.handleOpenSnackbar('warning', 'State needed');
+                                                    else if (!this.state.validZipCode)
+                                                        this.props.handleOpenSnackbar('warning', 'ZipCode needed');
+                                                    else {
+                                                        // Call mutation to create a application
+                                                        if (this.state.applicationId === null) {
+                                                            this.insertApplicationInformation(history);
+                                                        } else {
+                                                            this.updateApplicationInformation();
+                                                        }
+                                                    }
+                                                });
+
                                             }}
                                         >
                                             {getStepContent(this.state.activeStep, history)}

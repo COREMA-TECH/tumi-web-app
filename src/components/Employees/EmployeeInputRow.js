@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "Generic/Global";
 import green from "@material-ui/core/colors/green";
 
 import InputMask from "react-input-mask";
-import {GET_DEPARTMENTS_QUERY} from "../ApplyForm/Application/ProfilePreview/Queries";
-import {GET_ALL_POSITIONS_QUERY} from "./Queries";
+import { GET_DEPARTMENTS_QUERY } from "../ApplyForm/Application/ProfilePreview/Queries";
+import { GET_ALL_POSITIONS_QUERY } from "./Queries";
 
 const styles = theme => ({
     container: {
@@ -78,11 +78,10 @@ class EmployeeInputRow extends Component {
     }
 
     fetchTitles = (id) => {
-        console.log("fetchTitles ", id);
         this.props.client
             .query({
                 query: GET_ALL_POSITIONS_QUERY,
-                variables: {Id_Entity: id},
+                variables: { Id_Entity: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -107,11 +106,10 @@ class EmployeeInputRow extends Component {
     }
 
     fetchDepartments = (id) => {
-        console.log("fetchDepartments ", id);
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
-                variables: {Id_Entity: id},
+                variables: { Id_Entity: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -236,8 +234,6 @@ class EmployeeInputRow extends Component {
                             } else {
                                 this.fetchDepartments(e.target.value);
                             }
-                            //this.fetchTitles(e.target.value);
-                            //console.log("Hotelassssssss ", e.target.value)
                         }}
                         value={this.state.hotelEdit}
                     >

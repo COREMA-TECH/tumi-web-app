@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import renderHTML from 'react-render-html';
-import {CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO} from "./Queries";
-import {GET_APPLICANT_INFO} from "../ConductCode/Queries";
-import {ADD_WORKER_COMPENSATION} from "./Mutations";
+import { CREATE_DOCUMENTS_PDF_QUERY, GET_CITY_NAME, GET_STATE_NAME, GET_WORKER_COMPENSATION_INFO } from "./Queries";
+import { GET_APPLICANT_INFO } from "../ConductCode/Queries";
+import { ADD_WORKER_COMPENSATION } from "./Mutations";
 import withApollo from "react-apollo/withApollo";
 import withGlobalContent from "../../../Generic/Global";
 import SignatureForm from "../../SignatureForm/SignatureForm";
@@ -77,12 +77,12 @@ class WorkerCompensation extends Component {
                         'error',
                         'Error: Loading agreement: createdocumentspdf not exists in query data'
                     );
-                    this.setState({loadingData: false, downloading: false});
+                    this.setState({ loadingData: false, downloading: false });
                 }
             })
             .catch((error) => {
                 this.props.handleOpenSnackbar('error', 'Error: Loading Create Documents in PDF: ' + error);
-                this.setState({loadingData: false, downloading: false});
+                this.setState({ loadingData: false, downloading: false });
             });
     };
 
@@ -90,7 +90,7 @@ class WorkerCompensation extends Component {
     downloadDocumentsHandler = () => {
         var url = this.context.baseUrl + '/public/Documents/' + "WorkerCompensation-" + this.state.applicantName + '.pdf';
         window.open(url, '_blank');
-        this.setState({downloading: false});
+        this.setState({ downloading: false });
 
     };
 
@@ -110,7 +110,7 @@ class WorkerCompensation extends Component {
                     workerCompensation: workerCompensationObject
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 // Show a snackbar with a success message
                 this.props.handleOpenSnackbar(
                     'success',
@@ -140,7 +140,7 @@ class WorkerCompensation extends Component {
                     id: id
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0] !== null) {
                     this.setState({
                         applicantName: data.applications[0].firstName + " " + data.applications[0].middleName + " " + data.applications[0].lastName,
@@ -167,7 +167,7 @@ class WorkerCompensation extends Component {
                 },
                 fetchPolicy: 'no-cache'
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 if (data.applications[0].workerCompensation !== null) {
                     this.setState({
                         id: data.applications[0].workerCompensation.id,
@@ -209,7 +209,7 @@ class WorkerCompensation extends Component {
                     parent: 6
                 }
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     applicantState: data.getcatalogitem[0].Name.trim()
                 }, () => {
@@ -221,7 +221,7 @@ class WorkerCompensation extends Component {
                                 parent: stateId
                             }
                         })
-                        .then(({data}) => {
+                        .then(({ data }) => {
                             this.setState({
                                 applicantCity: data.getcatalogitem[0].Name
                             });
@@ -265,7 +265,7 @@ class WorkerCompensation extends Component {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    if(this.state.signature === '') {
+                    if (this.state.signature === '') {
                         this.props.handleOpenSnackbar(
                             'warning',
                             'Please sign!',
@@ -380,8 +380,8 @@ class WorkerCompensation extends Component {
                             <div className="row">
                                 <div className="col-12">
                                     <SignatureForm applicationId={this.state.applicationId}
-                                                   signatureValue={this.handleSignature}
-                                                   showSaveIcon={true}
+                                        signatureValue={this.handleSignature}
+                                        showSaveIcon={true}
                                     />
                                 </div>
                             </div>
@@ -389,9 +389,9 @@ class WorkerCompensation extends Component {
                     </DialogContent>
                     <div className="applicant-card__footer worker-compensation-footer">
                         <button className="applicant-card__cancel-button" type="reset"
-                                onClick={() => {
-                                    this.setState({openSignature: false})
-                                }}>
+                            onClick={() => {
+                                this.setState({ openSignature: false })
+                            }}>
                             {spanishActions[2].label}
                         </button>
                         <button className="applicant-card__save-button" type="submit" form="worker-compensation-form">
@@ -413,33 +413,33 @@ class WorkerCompensation extends Component {
                                     this.state.id === '' ? (
                                         ''
                                     ) : (
-                                        <div>
-                                            {
-                                                this.state.id !== null ? (
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.createDocumentsPDF();
-                                                        this.sleep().then(() => {
-                                                            this.downloadDocumentsHandler();
-                                                        }).catch(error => {
-                                                            this.setState({downloading: false})
-                                                        })
-                                                    }}>{this.state.downloading && (
-                                                        <React.Fragment>Downloading <i class="fas fa-spinner fa-spin"/></React.Fragment>)}
-                                                        {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
-                                                            className="fas fa-download"/></React.Fragment>)}
+                                            <div>
+                                                {
+                                                    this.state.id !== null ? (
+                                                        <button className="applicant-card__edit-button" onClick={() => {
+                                                            this.createDocumentsPDF();
+                                                            this.sleep().then(() => {
+                                                                this.downloadDocumentsHandler();
+                                                            }).catch(error => {
+                                                                this.setState({ downloading: false })
+                                                            })
+                                                        }}>{this.state.downloading && (
+                                                            <React.Fragment>Downloading <i class="fas fa-spinner fa-spin" /></React.Fragment>)}
+                                                            {!this.state.downloading && (<React.Fragment>{actions[9].label} <i
+                                                                className="fas fa-download" /></React.Fragment>)}
 
-                                                    </button>
-                                                ) : (
-                                                    <button className="applicant-card__edit-button" onClick={() => {
-                                                        this.setState({
-                                                            openSignature: true
-                                                        })
-                                                    }}>{actions[8].label} <i className="far fa-edit"></i>
-                                                    </button>
-                                                )
-                                            }
-                                        </div>
-                                    )
+                                                        </button>
+                                                    ) : (
+                                                            <button className="applicant-card__edit-button" onClick={() => {
+                                                                this.setState({
+                                                                    openSignature: true
+                                                                })
+                                                            }}>{actions[8].label} <i className="far fa-edit"></i>
+                                                            </button>
+                                                        )
+                                                }
+                                            </div>
+                                        )
                                 }
                             </div>
                             <div className="row pdf-container">
@@ -472,10 +472,10 @@ class WorkerCompensation extends Component {
 <p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">I live at:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantAddress + `</u></p>
 <p style="margin: 0in 78.05pt 0.0001pt 83pt; text-align: justify; text-indent: -1in; line-height: 105%; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Street Address</p>
 <p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><u>` + this.state.applicantCity + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.applicantState + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.applicantZipCode + `</u></p>
-<p style="margin: 0in 0in 0.0001pt 83pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Time New Roman, sans-serif;">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Code</p>
+<p style="margin: 0.1pt 0in 0.0001pt 1in; text-align: justify; text-indent: 11pt; font-size: 11pt; font-family: Time New Roman, sans-serif;"><u>` + this.state.applicantCity + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.applicantState + `</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>` + this.state.applicantZipCode + `</u></p>
+<p style="margin: 0in 0in 0.0001pt 83pt; text-align: justify; line-height: 12.3pt; font-size: 11pt; font-family: Time New Roman, sans-serif;">City&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; State&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Zip Code</p>
 <p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">Name of Employer: <u>` + this.state.applicantName + `</u></p>
+<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">Name of Employer: <u>TUMI STAFFING INC.</u></p>
 <p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">&nbsp;</p>
 <p style="margin: 2.95pt 0in 0.0001pt 11pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;">Name of Network: <em>Texas Star Network</em>&reg;</p>
 <p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 11pt; font-family: Time New Roman, sans-serif;"><span style="font-size: 12.0pt;">&nbsp;</span></p>

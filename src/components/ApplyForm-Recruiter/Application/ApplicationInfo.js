@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
@@ -12,16 +12,11 @@ import '../index.css';
 import withApollo from "react-apollo/withApollo";
 import Application from "./Application";
 import Language from "./Languages/Language";
-import Education from "./Education/Education";
 import PreviousEmployment from "./PreviousEmployment/PreviousEmployment";
-import MilitaryService from "./MilitaryService/MilitaryService";
 import Skills from "./skills/Skills";
 
 
 const menuSpanish = require(`./languagesJSON/${localStorage.getItem('languageForm')}/menuSpanish`);
-
-
-const uuidv4 = require('uuid/v4');
 
 const styles = theme => ({
     root: {
@@ -102,9 +97,9 @@ class VerticalLinearStepper extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const {classes} = this.props;
         const steps = getSteps();
-        const { activeStep } = this.state;
+        const {activeStep} = this.state;
 
         if (this.state.applicationId == 0) {
             this.state.applicationId = localStorage.getItem('idApplication');
@@ -115,11 +110,14 @@ class VerticalLinearStepper extends Component {
                 case 0:
                     return <Application applicationId={this.state.applicationId} handleNext={this.handleNext}/>;
                 case 1:
-                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
+                    return <Language applicationId={this.state.applicationId} handleNext={this.handleNext}
+                                     handleBack={this.handleBack}/>;
                 case 2:
-                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
+                    return <PreviousEmployment applicationId={this.state.applicationId} handleNext={this.handleNext}
+                                               handleBack={this.handleBack}/>;
                 case 3:
-                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext} handleBack={this.handleBack}/>;
+                    return <Skills applicationId={this.state.applicationId} handleNext={this.handleNext}
+                                   handleBack={this.handleBack}/>;
                 default:
                     return 'Unknown step';
             }
@@ -128,19 +126,33 @@ class VerticalLinearStepper extends Component {
         return (
             <div className="main-stepper-container">
                 <div className="row">
+                    <div className="col-md-12 pl-3 mb-2">
+                        <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => {
+                                this.props.history.push({
+                                    pathname: '/home/board/recruiter',
+                                    state: {ApplicationId: 0}
+                                });
+                            }}>
+                            <i className="fas fa-chevron-left"/> Go To Board
+                        </button>
+                    </div>
                     <div className="col-md-4 col-lg-2">
                         <div className="Stepper-wrapper">
                             <div className="applicant-card__header">
                                 <h2 className="applicant-card__title">Steps</h2>
                             </div>
-                            <Stepper activeStep={activeStep} orientation="vertical" className="" >
+                            <Stepper activeStep={activeStep} orientation="vertical" className="">
                                 {steps.map((label, index) => {
-                                    if (this.state.applicationId == 0) { this.state.activeStep = 0; }
+                                    if (this.state.applicationId == 0) {
+                                        this.state.activeStep = 0;
+                                    }
                                     return (
                                         <div
                                             key={label}
                                             onClick={() => {
-                                                this.setState({ activeStep: index })
+                                                this.setState({activeStep: index})
                                             }}
                                             className={this.state.activeStep === index ? 'MenuStep-item selected' : 'MenuStep-item '}
                                         >
@@ -156,29 +168,13 @@ class VerticalLinearStepper extends Component {
                                     <Typography>All steps completed - you&quot;re finished</Typography>
                                     <Button onClick={this.handleReset} className={classes.button}>
                                         Reset
-                              </Button>
+                                    </Button>
                                 </Paper>
                             )}
                         </div>
                     </div>
                     <div className="col-md-8 col-lg-10">
                         <div className="StepperForm-wrapper">
-                            {/*<select*/}
-                            {/*value={localStorage.getItem('languageForm')}*/}
-                            {/*onChange={(e) => {*/}
-                            {/*this.setState({*/}
-                            {/*languageSelected: e.target.value*/}
-                            {/*}, () => {*/}
-                            {/*localStorage.setItem('languageForm', this.state.language);*/}
-                            {/*alert(this.state.languageSelected);*/}
-                            {/*window.location.reload();*/}
-                            {/*});*/}
-
-                            {/*alert("Alert");*/}
-                            {/*}}>*/}
-                            {/*<option value="es">Spanish</option>*/}
-                            {/*<option value="en">English</option>*/}
-                            {/*</select>*/}
                             <Typography className="">
                                 {getStepContent(this.state.activeStep)}
                             </Typography>

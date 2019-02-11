@@ -4,10 +4,8 @@ import InputMask from 'react-input-mask';
 import withApollo from 'react-apollo/withApollo';
 import {
     GET_APPLICATION_BY_ID,
-    GET_CITIES_QUERY,
     GET_POSITIONS_QUERY,
     GET_POSITIONS_CATALOG,
-    GET_STATES_QUERY,
     getCompaniesQuery
 } from '../Queries';
 
@@ -21,7 +19,7 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/lib/animated';
 import { RECREATE_IDEAL_JOB_LIST } from "../../ApplyForm/Mutations";
 import { GET_APPLICANT_IDEAL_JOBS } from "../../ApplyForm/Queries";
-import axios from "axios";
+import LocationForm from '../../ui-components/LocationForm'
 
 if (localStorage.getItem('languageForm') === undefined || localStorage.getItem('languageForm') == null) {
     localStorage.setItem('languageForm', 'en');
@@ -123,12 +121,24 @@ class Application extends Component {
 
     handleChangePositionTag = (positionsTags) => {
         this.setState({ positionsTags });
-        console.log(`Option selected:`, positionsTags);
     };
 
     handleChange = (positionsTags) => {
         this.setState({ positionsTags });
     };
+
+    handleTextChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+
+    };
+
+    // BUG
 
     // To handle the stepper
     handleNext = () => {
@@ -147,158 +157,164 @@ class Application extends Component {
         });
     };
 
-    UNSAFE_componentWillMount() {
-
-    }
-
     /**
      * To update and insert a application by id
      */
     insertApplicationInformation = () => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: CREATE_APPLICATION,
-                        variables: {
-                            application: {
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                // streetAddress: this.state.streetAddress,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                //socialSecurityNumber: this.state.socialSecurityNumber,
-                                //birthDay: this.state.birthDay,
-                                car: this.state.car,
-                                // typeOfId: parseInt(this.state.typeOfId),
-                                //   expireDateId: this.state.expireDateId,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                //dateAvailable: this.state.dateAvailable,
-                                scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                comment: this.state.comment,
-                                generalComment: this.state.generalComment,
-                                isLead: true,
-                                idRecruiter: parseInt(this.state.idRecruiter)
+        if (
+            this.state.firstName == '' ||
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
+        ) {
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
+        } else {
+            this.setState(
+                {
+                    insertDialogLoading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: CREATE_APPLICATION,
+                            variables: {
+                                application: {
+                                    firstName: this.state.firstName,
+                                    middleName: this.state.middleName,
+                                    lastName: this.state.lastName,
+                                    lastName2: this.state.lastName2,
+                                    date: this.state.date,
+                                    aptNumber: this.state.aptNumber,
+                                    city: this.state.city,
+                                    state: this.state.state,
+                                    zipCode: this.state.zipCode,
+                                    homePhone: this.state.homePhone,
+                                    cellPhone: this.state.cellPhone,
+                                    car: this.state.car,
+                                    emailAddress: this.state.emailAddress,
+                                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                    scheduleRestrictions: this.state.scheduleRestrictions,
+                                    scheduleExplain: this.state.scheduleExplain,
+                                    convicted: this.state.convicted,
+                                    convictedExplain: this.state.convictedExplain,
+                                    comment: this.state.comment,
+                                    generalComment: this.state.generalComment,
+                                    isLead: true,
+                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                }
                             }
-                        }
-                    })
-                    .then(({ data }) => {
-                        localStorage.setItem('idApplication', data.addApplication.id);
-                        this.setState({
-                            editing: false
-                        }, () => {
-                            let object = [];
-                            this.state.positionsTags.map(item => {
-                                object.push({
-                                    ApplicationId: parseInt(data.addApplication.id),
-                                    idPosition: item.value,
-                                    description: item.label
-                                })
+                        })
+                        .then(({ data }) => {
+                            localStorage.setItem('idApplication', data.addApplication.id);
+                            this.setState({
+                                editing: false
+                            }, () => {
+                                let object = [];
+                                this.state.positionsTags.map(item => {
+                                    object.push({
+                                        ApplicationId: parseInt(data.addApplication.id),
+                                        idPosition: item.value,
+                                        description: item.label
+                                    })
+                                });
+
+                                this.addApplicantJobs(object, parseInt(data.addApplication.id));
                             });
 
-                            this.addApplicantJobs(object, parseInt(data.addApplication.id));
+                            this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
+
+                            // this.props.updateIdApplication(data.addAplication.id);
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to insert aplicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
                         });
-
-                        this.props.handleOpenSnackbar('success', 'Successfully inserted', 'bottom', 'right');
-
-                        // this.props.updateIdApplication(data.addAplication.id);
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to insert aplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
     updateApplicationInformation = (id) => {
-        this.setState(
-            {
-                insertDialogLoading: true
-            },
-            () => {
-                this.props.client
-                    .mutate({
-                        mutation: UPDATE_APPLICATION,
-                        //mutation: CREATE_APPLICATION,
-                        variables: {
-                            application: {
-                                id: id,
-                                firstName: this.state.firstName,
-                                middleName: this.state.middleName,
-                                lastName: this.state.lastName,
-                                lastName2: this.state.lastName2,
-                                date: this.state.date,
-                                //streetAddress: this.state.streetAddress,
-                                aptNumber: this.state.aptNumber,
-                                city: this.state.city,
-                                state: this.state.state,
-                                zipCode: this.state.zipCode,
-                                homePhone: this.state.homePhone,
-                                cellPhone: this.state.cellPhone,
-                                //socialSecurityNumber: this.state.socialSecurityNumber,
-                                car: this.state.car,
-                                //typeOfId: parseInt(this.state.typeOfId),
-                                //expireDateId: this.state.expireDateId,
-                                emailAddress: this.state.emailAddress,
-                                positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                //dateAvailable: this.state.dateAvailable,
-                                //scheduleRestrictions: this.state.scheduleRestrictions,
-                                scheduleExplain: this.state.scheduleExplain,
-                                convicted: this.state.convicted,
-                                convictedExplain: this.state.convictedExplain,
-                                generalComment: this.state.generalComment,
-                                isLead: true,
-                                idRecruiter: parseInt(this.state.idRecruiter)
+        if (
+            this.state.firstName == '' ||
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
+        ) {
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
+        } else {
+            this.setState(
+                {
+                    insertDialogLoading: true
+                },
+                () => {
+                    this.props.client
+                        .mutate({
+                            mutation: UPDATE_APPLICATION,
+                            //mutation: CREATE_APPLICATION,
+                            variables: {
+                                application: {
+                                    id: id,
+                                    firstName: this.state.firstName,
+                                    middleName: this.state.middleName,
+                                    lastName: this.state.lastName,
+                                    lastName2: this.state.lastName2,
+                                    date: this.state.date,
+                                    //streetAddress: this.state.streetAddress,
+                                    aptNumber: this.state.aptNumber,
+                                    city: this.state.city,
+                                    state: this.state.state,
+                                    zipCode: this.state.zipCode,
+                                    homePhone: this.state.homePhone,
+                                    cellPhone: this.state.cellPhone,
+                                    //socialSecurityNumber: this.state.socialSecurityNumber,
+                                    car: this.state.car,
+                                    //typeOfId: parseInt(this.state.typeOfId),
+                                    //expireDateId: this.state.expireDateId,
+                                    emailAddress: this.state.emailAddress,
+                                    positionApplyingFor: parseInt(this.state.positionApplyingFor),
+                                    //dateAvailable: this.state.dateAvailable,
+                                    //scheduleRestrictions: this.state.scheduleRestrictions,
+                                    scheduleExplain: this.state.scheduleExplain,
+                                    convicted: this.state.convicted,
+                                    convictedExplain: this.state.convictedExplain,
+                                    generalComment: this.state.generalComment,
+                                    isLead: true,
+                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                }
                             }
-                        }
-                    })
-                    .then(({ data }) => {
-                        this.setState({
-                            editing: false
-                        }, () => {
-                            let object = [];
-                            this.state.positionsTags.map(item => {
-                                object.push({
-                                    ApplicationId: this.props.applicationId,
-                                    idPosition: item.value,
-                                    description: item.label
-                                })
+                        })
+                        .then(({ data }) => {
+                            this.setState({
+                                editing: false
+                            }, () => {
+                                let object = [];
+                                this.state.positionsTags.map(item => {
+                                    object.push({
+                                        ApplicationId: this.props.applicationId,
+                                        idPosition: item.value,
+                                        description: item.label
+                                    })
+                                });
+
+                                this.addApplicantJobs(object, this.props.applicationId);
                             });
 
-                            this.addApplicantJobs(object, this.props.applicationId);
+                            this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
+                        })
+                        .catch((error) => {
+                            this.props.handleOpenSnackbar(
+                                'error',
+                                'Error to update aaplicant information. Please, try again!',
+                                'bottom',
+                                'right'
+                            );
                         });
-
-                        this.props.handleOpenSnackbar('success', 'Successfully updated', 'bottom', 'right');
-                    })
-                    .catch((error) => {
-                        this.props.handleOpenSnackbar(
-                            'error',
-                            'Error to update aaplicant information. Please, try again!',
-                            'bottom',
-                            'right'
-                        );
-                    });
-            }
-        );
+                }
+            );
+        }
     };
 
 
@@ -311,20 +327,13 @@ class Application extends Component {
                     applicationIdealJob: idealJobArrayObject
                 }
             })
-            .then(({ data }) => {
-                console.log("DEBUG");
-            })
-            .catch(error => {
-                console.log("DEBUG ERROR");
-            })
     };
 
 
     getHotels = (func = () => {
     }) => {
-        // getHotels = (idParent) => {
         this.props.client.query({
-            query: getCompaniesQuery, //this.getCompaniesQuery,
+            query: getCompaniesQuery,
             variables: { Id_Parent: -1 },
             fetchPolicy: 'no-cache'
         }).then(({ data }) => {
@@ -338,7 +347,7 @@ class Application extends Component {
      * To get applications by id
      */
     getApplicationById = (id) => {
-        console.log("Ya sali del hotel ahora estoy en application ", this.state.hotels);
+
         this.setState(
             {
                 loading: true
@@ -360,26 +369,14 @@ class Application extends Component {
                                     middleName: applicantData.middleName,
                                     lastName: applicantData.lastName,
                                     lastName2: applicantData.lastName2,
-
-                                    //date: applicantData.date.substring(0, 10),
-                                    // streetAddress: applicantData.streetAddress,
                                     emailAddress: applicantData.emailAddress,
-                                    //aptNumber: applicantData.aptNumber,
                                     city: applicantData.city,
                                     state: applicantData.state,
                                     zipCode: applicantData.zipCode,
                                     homePhone: applicantData.homePhone,
                                     cellPhone: applicantData.cellPhone,
-                                    //socialSecurityNumber: applicantData.socialSecurityNumber,
                                     positionApplyingFor: applicantData.positionApplyingFor,
                                     car: applicantData.car,
-                                    //typeOfId: applicantData.typeOfId,
-                                    //expireDateId: applicantData.expireDateId.substring(0, 10),
-                                    //dateAvailable: applicantData.dateAvailable.substring(0, 10),
-                                    //scheduleRestrictions: applicantData.scheduleRestrictions,
-                                    //scheduleExplain: applicantData.scheduleExplain,
-                                    //convicted: applicantData.convicted,
-                                    //convictedExplain: applicantData.convictedExplain,
                                     generalComment: applicantData.generalComment,
                                     editing: false
                                 },
@@ -468,9 +465,7 @@ class Application extends Component {
 
     componentWillMount() {
         if (this.props.applicationId > 0) {
-            //this.getHotels(-1);
             this.getHotels(() => {
-                console.log("esta aqui");
                 this.getApplicationById(this.props.applicationId);
             });
         }
@@ -483,504 +478,361 @@ class Application extends Component {
         }
     }
 
-    findByZipCode = (zipCode = null, cityFinal = null) => {
-        if (!zipCode) {
-            return false;
-        }
-
-        this.props.client.query({
-            query: GET_STATES_QUERY,
-             variables: { parent: -1, value: `'${zipCode}'` },
-            fetchPolicy: 'no-cache'
-        }).then((data) => {
-            this.setState({
-                state: data.data.getcatalogitem[0].Id,
-                cityFinal: cityFinal
-            });
+    updateCity = (city) => {
+        this.setState(() => {
+            return { city }
         });
-
     };
+    updateState = (state) => {
+        this.setState(() => {
+            return { state }
+        });
+    };
+
+    updateZipCode = (zipCode) => {
+        this.setState(() => {
+            return { zipCode }
+        });
+    }
 
     render() {
         return (
-            <div className="Apply-container--application">
-                <form
-                    className="general-info-apply-form"
-                    id="general-info-form"
-                    autoComplete="off"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (this.props.applicationId == 0) {
-                            this.insertApplicationInformation();
-                        } else {
-                            this.updateApplicationInformation(this.props.applicationId);
-                        }
-                    }}
-                >
-                    <div className="">
-                        <div className="applicant-card">
-                            <div className="applicant-card__header">
-                                <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                                {this.state.editing ? (
-                                    ''
-                                ) : (
-                                        <button
-                                            className="applicant-card__edit-button"
-                                            onClick={() => {
-                                                //alert(this.props.applicationId);
-                                                this.setState({
-                                                    editing: true
-                                                });
-                                            }}
-                                        >
-                                            {spanishActions[1].label} <i className="far fa-edit" />
-                                        </button>
-                                    )}
-                            </div>
-                            <br />
-                            <div className="card-body">
+            <div className="Apply-container-application">
+
+                <div className="applicant-card">
+                    <div className="applicant-card__header">
+                        <span className="applicant-card__title">{menuSpanish[0].label}</span>
+                        {this.state.editing ? (
+                            ''
+                        ) : (
+                                <button
+                                    className="applicant-card__edit-button"
+                                    onClick={() => {
+                                        this.setState({
+                                            editing: true
+                                        });
+                                    }}
+                                >
+                                    {spanishActions[1].label} <i className="far fa-edit" />
+                                </button>
+                            )}
+                    </div>
+                    <br />
+                    <div className="card-body">
+                        <div className="row">
+                            <div className="col-md-12 col-lg-6 form-section-1">
                                 <div className="row">
-                                    <div className="col-md-12 col-lg-6 form-section-1">
-                                        <div className="row">
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label">
-                                                    {formSpanish[16].label}
-                                                </span>
-                                                <Query query={GET_POSITIONS_QUERY}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.workOrder != null && data.workOrder.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="positionApply"
-                                                                    id="positionApply"
-                                                                    onChange={(event) => {
-                                                                        this.setState({
-                                                                            positionApplyingFor: event.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.positionApplyingFor}
-                                                                    className="form-control"
-                                                                    disabled={!this.state.editing}
-                                                                >
-                                                                    <option value="">Select a position</option>
-                                                                    <option value="0">Open Position</option>
-                                                                    {data.workOrder.map((item) => (
-                                                                        <option
-                                                                            value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label">
-                                                    {formSpanish[17].label}
-                                                </span>
-                                                <Query query={GET_POSITIONS_CATALOG}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            let options = [];
-                                                            data.getcatalogitem.map((item) => (
-                                                                options.push({ value: item.Id, label: item.Description })
-                                                            ));
-
-                                                            return (
-                                                                <div style={{
-                                                                    paddingTop: '0px',
-                                                                    paddingBottom: '2px',
-                                                                }}>
-                                                                    <Select
-                                                                        isDisabled={!this.state.editing}
-                                                                        options={options}
-                                                                        value={this.state.positionsTags}
-                                                                        onChange={this.handleChangePositionTag}
-                                                                        closeMenuOnSelect={false}
-                                                                        components={makeAnimated()}
-                                                                        isMulti
-                                                                    />
-                                                                </div>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label ">
-                                                    * {formSpanish[0].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            firstName: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.firstName}
-                                                    name="firstName"
-                                                    type="text"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    required
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="3"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    {formSpanish[1].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            middleName: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.middleName}
-                                                    name="midleName"
-                                                    type="text"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="1"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    * {formSpanish[2].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            lastName: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.lastName}
-                                                    name="lastName"
-                                                    type="text"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    required
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="3"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    {formSpanish[24].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            lastName2: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.lastName2}
-                                                    name="lastName2"
-                                                    type="text"
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-
-                                                    min="0"
-                                                    maxLength="50"
-                                                    minLength="3"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    * {formSpanish[5].label}
-                                                </span>
-                                                <InputMask
-                                                    id="zipCode"
-                                                    name="zipCode"
-                                                    mask="99999-99999"
-                                                    maskChar=" "
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            zipCode: event.target.value
-                                                        }, () => {
-                                                            // fetch(`https://ziptasticapi.com/${this.state.zipCode.substring(0, 5)}`).then((response) => {
-                                                            //     return response.json()
-                                                            // }).then((cities) => {
-                                                            //     if (!cities.error) {
-                                                            //         this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                            //     }
-                                                            // });
-
-                                                            const zipCode = this.state.zipCode.trim().replace('-', '').substring(0, 5);
-                                                            if (zipCode)
-                                                                axios.get(`https://ziptasticapi.com/${zipCode}`)
-                                                                    .then(res => {
-                                                                        const cities = res.data;
-                                                                        if (!cities.error) {
-                                                                            this.findByZipCode(cities.state, cities.city.toLowerCase());
-                                                                        }
-                                                                    });
-                                                        });
-                                                    }}
-                                                    value={this.state.zipCode}
-                                                    placeholder="99999-99999"
-                                                    required
-                                                    minLength="15"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    * {formSpanish[6].label}
-                                                </span>
-                                                <Query query={GET_STATES_QUERY} variables={{ parent: 6 }}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            return (
-                                                                <select
-                                                                    name="state"
-                                                                    id="state"
-                                                                    required
-                                                                    className="form-control"
-                                                                    disabled
-                                                                    onChange={(e) => {
-                                                                        this.setState({
-                                                                            state: e.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.state}
-                                                                >
-                                                                    <option value="">Select a state</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label ">
-                                                    * {formSpanish[7].label}
-                                                </span>
-                                                <Query query={GET_CITIES_QUERY} variables={{ parent: this.state.state }}>
-                                                    {({ loading, error, data, refetch, networkStatus }) => {
-                                                        //if (networkStatus === 4) return <LinearProgress />;
-                                                        if (error) return <p>Error </p>;
-                                                        if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
-                                                            var citySelected = null;
-                                                            citySelected = data.getcatalogitem.filter(city => {
-                                                                return city.Name.toLowerCase().includes(this.state.cityFinal);
-                                                            });
-                                                            if (citySelected.length != 0) {
-                                                                if ((citySelected[0].Id != this.state.city)) {
-                                                                    this.setState({
-                                                                        city: citySelected[0].Id
-                                                                    });
-                                                                }
-                                                            }
-                                                            return (
-                                                                <select
-                                                                    name="city"
-                                                                    id="city"
-                                                                    required
-                                                                    className="form-control"
-                                                                    disabled
-                                                                    onChange={(e) => {
-                                                                        this.setState({
-                                                                            city: e.target.value
-                                                                        });
-                                                                    }}
-                                                                    value={this.state.city}
-                                                                >
-                                                                    <option value="">Select a city</option>
-                                                                    {data.getcatalogitem.map((item) => (
-                                                                        <option value={item.Id}>{item.Name}</option>
-                                                                    ))}
-                                                                </select>
-                                                            );
-                                                        }
-                                                        return <SelectNothingToDisplay />;
-                                                    }}
-                                                </Query>
-                                            </div>
-
-                                            <div className="col-md-6">
-                                                <span className="primary applicant-card__label ">
-                                                    {formSpanish[23].label}
-                                                </span>
-
-                                                <div className="onoffswitch">
-                                                    <input
-                                                        id="carSwitch"
-                                                        className="onoffswitch-checkbox"
-                                                        onChange={(event) => {
-                                                            this.setState({
-                                                                car: event.target.checked
-                                                            });
-                                                        }}
-                                                        checked={this.state.car}
-                                                        value={this.state.car}
-                                                        name="car"
-                                                        type="checkbox"
-                                                        disabled={!this.state.editing}
-                                                        min="0"
-                                                        maxLength="50"
-                                                        minLength="10"
-                                                    />
-                                                    <label className="onoffswitch-label" htmlFor="carSwitch">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div className="col-md-6">
+                                        <span className="primary applicant-card__label">
+                                            {formSpanish[16].label}
+                                        </span>
+                                        <Query query={GET_POSITIONS_QUERY}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
+                                                if (error) return <p>Error </p>;
+                                                if (data.workOrder != null && data.workOrder.length > 0) {
+                                                    return (
+                                                        <select
+                                                            name="positionApply"
+                                                            id="positionApply"
+                                                            onChange={(event) => {
+                                                                this.setState({
+                                                                    positionApplyingFor: event.target.value
+                                                                });
+                                                            }}
+                                                            value={this.state.positionApplyingFor}
+                                                            className="form-control"
+                                                            disabled={!this.state.editing}
+                                                        >
+                                                            <option value="">Select a position</option>
+                                                            <option value="0">Open Position</option>
+                                                            {data.workOrder.map((item) => (
+                                                                <option
+                                                                    value={item.id}>{item.position.Position} ({item.BusinessCompany.Code.trim()})</option>
+                                                            ))}
+                                                        </select>
+                                                    );
+                                                }
+                                                return <SelectNothingToDisplay />;
+                                            }}
+                                        </Query>
                                     </div>
-                                    <div className="col-md-12 col-lg-6 form-section-2">
-                                        <div className="row">
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    {formSpanish[9].label}
-                                                </span>
-                                                <InputMask
-                                                    id="home-number"
-                                                    name="homePhone"
-                                                    mask="+(999) 999-9999"
-                                                    maskChar=" "
-                                                    value={this.state.homePhone}
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            homePhone: event.target.value
-                                                        });
-                                                    }}
-                                                    placeholder="+(999) 999-9999"
-                                                    minLength="15"
-                                                />
-                                            </div>
-                                            <div className="col-md-6 ">
-                                                <span className="primary applicant-card__label ">
-                                                    * {formSpanish[10].label}
-                                                </span>
-                                                <InputMask
-                                                    id="cell-number"
-                                                    name="cellPhone"
-                                                    mask="+(999) 999-9999"
-                                                    maskChar=" "
-                                                    value={this.state.cellPhone}
-                                                    className="form-control"
-                                                    disabled={!this.state.editing}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            cellPhone: event.target.value
-                                                        });
-                                                    }}
-                                                    placeholder="+(999) 999-9999"
-                                                    minLength="15"
-                                                />
-                                            </div>
-                                            <div className="col-md-12">
-                                                <span className="primary applicant-card__label ">
-                                                    {formSpanish[13].label}
-                                                </span>
-                                                <input
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            emailAddress: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.emailAddress}
-                                                    name="emailAddress"
-                                                    type="email"
-                                                    className="form-control"
-                                                    //required
-                                                    disabled={!this.state.editing}
-                                                    min="0"
-                                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-                                                    maxLength="50"
-                                                    minLength="8"
-                                                />
-                                            </div>
-                                            <div className="col-md-12">
-                                                <span className="primary applicant-card__label ">
-                                                    {formSpanish[21].label}
-                                                </span>
-                                                <textarea
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            generalComment: event.target.value
-                                                        });
-                                                    }}
-                                                    value={this.state.generalComment}
-                                                    name="form-control"
-                                                    cols="60"
-                                                    rows="3"
-                                                    disabled={!this.state.editing}
-                                                    className="form-control textarea-apply-form"
-                                                />
-                                            </div>
+                                    <div className="col-md-6">
+                                        <span className="primary applicant-card__label">
+                                            {formSpanish[17].label}
+                                        </span>
+                                        <Query query={GET_POSITIONS_CATALOG}>
+                                            {({ loading, error, data, refetch, networkStatus }) => {
+                                                if (error) return <p>Error </p>;
+                                                if (data.getcatalogitem != null && data.getcatalogitem.length > 0) {
+                                                    let options = [];
+                                                    data.getcatalogitem.map((item) => (
+                                                        options.push({ value: item.Id, label: item.Description })
+                                                    ));
+
+                                                    return (
+                                                        <div style={{
+                                                            paddingTop: '0px',
+                                                            paddingBottom: '2px',
+                                                        }}>
+                                                            <Select
+                                                                isDisabled={!this.state.editing}
+                                                                options={options}
+                                                                value={this.state.positionsTags}
+                                                                onChange={this.handleChangePositionTag}
+                                                                closeMenuOnSelect={false}
+                                                                components={makeAnimated()}
+                                                                isMulti
+                                                            />
+                                                        </div>
+                                                    );
+                                                }
+                                                return <SelectNothingToDisplay />;
+                                            }}
+                                        </Query>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <span className="primary applicant-card__label ">
+                                            * {formSpanish[0].label}
+                                        </span>
+                                        <input
+                                            onChange={this.handleTextChange}
+                                            value={this.state.firstName}
+                                            name="firstName"
+                                            type="text"
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                            required
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
+                                    </div>
+                                    <div className="col-md-6 ">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[1].label}
+                                        </span>
+                                        <input
+                                            onChange={this.handleTextChange}
+                                            value={this.state.middleName}
+                                            name="middleName"
+                                            type="text"
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="1"
+                                        />
+                                    </div>
+                                    <div className="col-md-6 ">
+                                        <span className="primary applicant-card__label ">
+                                            * {formSpanish[2].label}
+                                        </span>
+                                        <input
+                                            onChange={this.handleTextChange}
+                                            value={this.state.lastName}
+                                            name="lastName"
+                                            type="text"
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                            required
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
+                                    </div>
+                                    <div className="col-md-6 ">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[24].label}
+                                        </span>
+                                        <input
+                                            onChange={this.handleTextChange}
+                                            value={this.state.lastName2}
+                                            id="lastName2"
+                                            name="lastName2"
+                                            type="text"
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+
+                                            min="0"
+                                            maxLength="50"
+                                            minLength="3"
+                                        />
+                                    </div>
+                                    <LocationForm
+                                        disabledCheck={!this.state.editing}
+                                        disabledCity={!this.state.editing}
+                                        disabledZipCode={!this.state.editing}
+                                        onChangeCity={this.updateCity}
+                                        onChangeState={this.updateState}
+                                        onChageZipCode={this.updateZipCode}
+                                        city={this.state.city}
+                                        state={this.state.state}
+                                        zipCode={this.state.zipCode}
+                                        changeCity={this.state.changeCity}
+                                        cityColClass="col-md-6"
+                                        stateColClass="col-md-6"
+                                        zipCodeColClass="col-md-6"
+                                        zipCodeTitle={`* ${formSpanish[5].label}`}
+                                        stateTitle={`${formSpanish[6].label}`}
+                                        cityTitle={`${formSpanish[7].label}`}
+                                        cssTitle={"text-primary-application"}
+                                        placeholder="99999-99999"
+                                        mask="99999-99999" />
+                                    <div className="col-md-6">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[23].label}
+                                        </span>
+
+                                        <div className="onoffswitch">
+                                            <input
+                                                id="carSwitch"
+                                                className="onoffswitch-checkbox"
+                                                onChange={this.handleTextChange}
+                                                checked={this.state.car}
+                                                value={this.state.car}
+                                                name="car"
+                                                type="checkbox"
+                                                disabled={!this.state.editing}
+                                                min="0"
+                                                maxLength="50"
+                                                minLength="10"
+                                            />
+                                            <label className="onoffswitch-label" htmlFor="carSwitch">
+                                                <span className="onoffswitch-inner" />
+                                                <span className="onoffswitch-switch" />
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {this.state.editing ? (
-                                <div className="applicant-card__footer">
-                                    <button
-                                        className="applicant-card__cancel-button"
-                                        onClick={() => {
-                                            if (this.props.applicationId == 0) {
-                                                window.location.href = '/home/Recruiter'
-                                            }
-
-                                            this.removeSkeletonAnimation();
-                                            this.setState({
-                                                loading: false, editing: false
-                                            });
-                                        }}
-                                    >
-
-                                        {spanishActions[2].label}
-                                    </button>
-                                    <button type="submit" className="applicant-card__save-button">
-                                        {spanishActions[4].label}
-                                    </button>
-                                </div>
-                            ) : (
-                                    <div className="applicant-card__footer">
-                                        <button
-                                            className="applicant-card__cancel-button"
-                                            onClick={() => {
-                                                window.location.href = '/home/Recruiter'
-                                            }}
-                                        >
-                                            {spanishActions[9].label}
-                                        </button>
-                                        <button
-                                            onClick={() => {
-                                                this.props.handleNext();
-                                            }}
-                                            className="applicant-card__save-button">
-                                            {spanishActions[8].label}
-                                        </button>
+                            <div className="col-md-12 col-lg-6 form-section-2">
+                                <div className="row">
+                                    <div className="col-md-6 ">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[9].label}
+                                        </span>
+                                        <InputMask
+                                            id="home-number"
+                                            name="homePhone"
+                                            mask="+(999) 999-9999"
+                                            maskChar=" "
+                                            value={this.state.homePhone}
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                            onChange={this.handleTextChange}
+                                            placeholder="+(999) 999-9999"
+                                            minLength="15"
+                                        />
                                     </div>
-                                )}
+                                    <div className="col-md-6 ">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[10].label}
+                                        </span>
+                                        <InputMask
+                                            id="cell-number"
+                                            name="cellPhone"
+                                            mask="+(999) 999-9999"
+                                            maskChar=" "
+                                            value={this.state.cellPhone}
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                            onChange={this.handleTextChange}
+                                            placeholder="+(999) 999-9999"
+                                            minLength="15"
+                                        />
+                                    </div>
+                                    <div className="col-md-12">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[13].label}
+                                        </span>
+                                        <input
+                                            onChange={this.handleTextChange}
+                                            value={this.state.emailAddress}
+                                            name="emailAddress"
+                                            type="email"
+                                            className="form-control"
+                                            disabled={!this.state.editing}
+                                            min="0"
+                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                                            maxLength="50"
+                                            minLength="8"
+                                        />
+                                    </div>
+                                    <div className="col-md-12">
+                                        <span className="primary applicant-card__label ">
+                                            {formSpanish[21].label}
+                                        </span>
+                                        <textarea
+                                            name="generalComment"
+                                            id="generalComment"
+                                            onChange={this.handleTextChange}
+                                            value={this.state.generalComment}
+                                            cols="60"
+                                            rows="3"
+                                            disabled={!this.state.editing}
+                                            className="form-control textarea-apply-form"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
+                    {this.state.editing ? (
+                        <div className="applicant-card__footer">
+                            <button
+                                className="applicant-card__cancel-button"
+                                onClick={() => {
+                                    if (this.props.applicationId == 0) {
+                                        window.location.href = '/home/Recruiter'
+                                    }
+
+                                    this.removeSkeletonAnimation();
+                                    this.setState({
+                                        loading: false, editing: false
+                                    });
+                                }}
+                            >
+
+                                {spanishActions[2].label}
+                            </button>
+                            <button type="submit"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    if (this.props.applicationId == 0) {
+                                        this.insertApplicationInformation();
+                                    } else {
+                                        this.updateApplicationInformation(this.props.applicationId);
+                                    }
+                                }}
+                                className="applicant-card__save-button">
+                                {spanishActions[4].label}
+                            </button>
+                        </div>
+                    ) : (
+                            <div className="applicant-card__footer">
+                                <button
+                                    className="applicant-card__cancel-button"
+                                    onClick={() => {
+                                        window.location.href = '/home/Recruiter'
+                                    }}
+                                >
+                                    {spanishActions[9].label}
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        this.props.handleNext();
+                                    }}
+                                    className="applicant-card__save-button">
+                                    {spanishActions[8].label}
+                                </button>
+                            </div>
+                        )}
+                </div>
+
+
             </div>
         );
     }

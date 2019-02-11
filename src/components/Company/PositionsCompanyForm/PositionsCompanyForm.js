@@ -194,14 +194,14 @@ query getposition ($Id_Entity:Int){
 		positionValid: true,
 		billrateValid: true,
 		payrateValid: true,
-		shiftValid: true,
+		//shiftValid: true,
 
 		idDepartmentHasValue: false,
 		departmentNameHasValue: false,
 		positionHasValue: false,
 		billrateHasValue: false,
 		payrateHasValue: false,
-		shiftHasValue: false,
+		//shiftHasValue: false,
 
 		formValid: true,
 		opendialog: false,
@@ -386,17 +386,17 @@ query getposition ($Id_Entity:Int){
 		let positionHasValue = this.state.position != '';
 		let billrateHasValue = this.state.billrate != 0;
 		let payrateHasValue = this.state.payrate != 0;
-		let shiftHasValue = this.state.shift != '';
+		//let shiftHasValue = this.state.shift != '';
 		let idDepartmentHasValue = this.state.idDepartment !== null && this.state.idDepartment !== '';
 
-		return positionHasValue || billrateHasValue || payrateHasValue || idDepartmentHasValue || shiftHasValue;
+		return positionHasValue || billrateHasValue || payrateHasValue || idDepartmentHasValue;//|| shiftHasValue;
 	};
 
 	validateAllFields(func) {
 		let positionValid = this.state.position.trim().length >= 3;
 		let billrateValid = this.state.billrate != 0 && this.state.billrate != '';
 		let payrateValid = this.state.payrate != 0 && this.state.payrate != '';
-		let shiftValid = this.state.shift != '';
+		//let shiftValid = this.state.shift != '';
 		let departmentNameValid = this.state.departmentName.trim().length >= 2;
 		let idDepartmentValid =
 			this.state.idDepartment !== null && this.state.idDepartment !== 0 && this.state.idDepartment !== '';
@@ -407,7 +407,7 @@ query getposition ($Id_Entity:Int){
 				billrateValid,
 				payrateValid,
 				//idDepartmentValid,
-				shiftValid,
+				//shiftValid,
 				departmentNameValid
 			},
 			() => {
@@ -421,14 +421,14 @@ query getposition ($Id_Entity:Int){
 		let payrateValid = this.state.payrateValid;
 		let billrateValid = this.state.billrateValid;
 		let idDepartmentValid = this.state.idDepartmentValid;
-		let shiftValid = this.state.shiftValid;
+		//	let shiftValid = this.state.shiftValid;
 		let departmentNameValid = this.state.departmentNameValid;
 
 		let positionHasValue = this.state.postionHasValue;
 		let payrateHasValue = this.state.payrateHasValue;
 		let billrateHasValue = this.state.billrateHasValue;
 		let idDepartmentHasValue = this.state.departmentHasValue;
-		let shiftHasValue = this.state.shiftHasValue;
+		//	let shiftHasValue = this.state.shiftHasValue;
 		let departmentNameHasValue = this.state.departmentName;
 
 		switch (fieldName) {
@@ -452,10 +452,10 @@ query getposition ($Id_Entity:Int){
 				departmentNameValid = value.trim().length >= 2;
 				departmentNameHasValue = value != '';
 				break;
-			case 'shift':
+			/*case 'shift':
 				shiftValid = value != '';
 				shiftHasValue = value != '';
-				break;
+				break;*/
 			default:
 				break;
 		}
@@ -465,14 +465,14 @@ query getposition ($Id_Entity:Int){
 				payrateValid,
 				billrateValid,
 				//	idDepartmentValid,
-				shiftValid,
+				//shiftValid,
 				departmentNameValid,
 				positionHasValue,
 				payrateHasValue,
 				billrateHasValue,
 				idDepartmentHasValue,
 				departmentNameHasValue,
-				shiftHasValue
+				//shiftHasValue
 			},
 			this.validateForm
 		);
@@ -486,15 +486,15 @@ query getposition ($Id_Entity:Int){
 					this.state.payrateValid &&
 					this.state.billrateValid &&
 					//	this.state.idDepartmentValid &&
-					this.state.departmentNameValid &&
-					this.state.shiftValid,
+					this.state.departmentNameValid,
+				//this.state.shiftValid,
 				enableCancelButton:
 					this.state.positionHasValue ||
 					this.state.payrateHasValue ||
 					this.state.billrateHasValue ||
 					//	this.state.idDepartmentHasValue ||
-					this.state.departmentName ||
-					this.state.shiftHasValue
+					this.state.departmentName
+				//this.state.shiftHasValue
 			},
 			func
 		);
@@ -520,7 +520,7 @@ query getposition ($Id_Entity:Int){
 					departmentName: department ? department.Name.trim() : '',
 					billrate: Bill_Rate,
 					payrate: Pay_Rate,
-					shift: Shift,
+					//shift: Shift,
 					Comment: Comment,
 					formValid: true,
 					positionValid: true,
@@ -528,14 +528,14 @@ query getposition ($Id_Entity:Int){
 					departmentNameValid: true,
 					billrateValid: true,
 					payrateValid: true,
-					shiftValid: true,
+					//shiftValid: true,
 
 					enableCancelButton: true,
 					positionHasValue: true,
 					idDepartmentHasValue: true,
 					billrateHasValue: true,
 					payrateHasValue: true,
-					shiftHasValue: true,
+					//	shiftHasValue: true,
 					departmentNameHasValue: true,
 					buttonTitle: this.TITLE_EDIT,
 					openModal: true,
@@ -658,9 +658,11 @@ query getposition ($Id_Entity:Int){
 
 		return { isEdition: isEdition, query: query, id: this.state.idToEdit };
 	};
-	insertPosition = (idDepartment) => {
-		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 
+
+	insertPosition = (idDepartment) => {
+		console.log("dentro del insertposition ", idDepartment)
+		const { isEdition, query, id } = this.getObjectToInsertAndUpdate();
 		this.props.client
 			.mutate({
 				mutation: query,
@@ -674,7 +676,7 @@ query getposition ($Id_Entity:Int){
 						Position: `'${this.state.position}'`,
 						Bill_Rate: this.state.billrate,
 						Pay_Rate: this.state.payrate,
-						Shift: `'${this.state.shift}'`,
+						Shift: `'A'`,
 						Comment: `'${this.state.Comment}'`,
 						IsActive: 1,
 						User_Created: this.state.userId,
@@ -717,43 +719,54 @@ query getposition ($Id_Entity:Int){
 			return obj.Name.trim().toLowerCase() === this.state.departmentName.trim().toLowerCase();
 		});
 
-		if (department) {
-			this.insertPosition(department.Id);
-		} else {
-			this.props.client
-				.mutate({
-					mutation: this.INSERT_DEPARTMENTS_QUERY,
-					variables: {
-						input: {
-							Id: 0,
-							Id_Catalog: 8,
-							Id_Parent: 0,
-							Name: `''`,
-							DisplayLabel: `'${this.state.departmentName}'`,
-							Description: `'${this.state.departmentName}'`,
-							Value: null,
-							Value01: null,
-							Value02: null,
-							Value03: null,
-							Value04: null,
-							IsActive: 1,
-							User_Created: 1,
-							User_Updated: 1,
-							Date_Created: "'2018-09-20 08:10:25+00'",
-							Date_Updated: "'2018-09-20 08:10:25+00'"
+		console.log("estoy en el insert ", department)
+
+		let insdepartmentAsync = async () => {
+			if (department) {
+				this.insertPosition(department.Id);
+			} else {
+				await this.props.client
+					.mutate({
+						mutation: this.INSERT_DEPARTMENTS_QUERY,
+						variables: {
+							input: {
+								Id: 0,
+								Id_Catalog: 8,
+								Id_Parent: 0,
+
+								Name: `''`,
+								DisplayLabel: `'${this.state.departmentName}'`,
+								Description: `'${this.state.departmentName}'`,
+								Value: null,
+								Value01: null,
+								Value02: null,
+								Value03: null,
+								Value04: null,
+								IsActive: 1,
+								User_Created: 1,
+								User_Updated: 1,
+								Date_Created: "'2018-09-20 08:10:25+00'",
+								Date_Updated: "'2018-09-20 08:10:25+00'",
+								Id_Entity: this.props.idCompany
+							}
 						}
-					}
-				})
-				.then((data) => {
-					this.insertPosition(data.data.inscatalogitem.Id);
-				})
-				.catch((error) => {
-					this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
-					this.setState({
-						saving: false
+					})
+					.then((data) => {
+						console.log("estoy en el insertPosition ", data.data.inscatalogitem.Id)
+
+						this.insertPosition(data.data.inscatalogitem.Id);
+					})
+					.catch((error) => {
+						this.props.handleOpenSnackbar('error', 'Error: Inserting Department: ' + error);
+						this.setState({
+							saving: false
+						});
 					});
-				});
-		}
+			}
+
+		};
+
+		insdepartmentAsync();
 	};
 
 	deletePostion = (id) => {
@@ -1046,7 +1059,7 @@ query getposition ($Id_Entity:Int){
 									change={(text) => this.onNumberChangeHandler(text, 'billrate')}
 								/>
 							</div>
-
+							{/* 
 							<div className="col-md-12 col-lg-6">
 								<label>* Shift</label>
 								<SelectForm
@@ -1061,6 +1074,7 @@ query getposition ($Id_Entity:Int){
 									value={this.state.shift}
 								/>
 							</div>
+							*/}
 							<div className="col-md-12 col-lg-12">
 								<label htmlFor="">Special Comments</label>
 								<textarea

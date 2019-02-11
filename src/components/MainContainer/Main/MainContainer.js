@@ -14,8 +14,14 @@ class MainContainer extends Component {
 	setTitle = (str) => {
 		var pathname = str.split('/');
 		var title;
-		if (pathname[3] != undefined) title = pathname[3] + ' ' + pathname[2];
-		else title = pathname[2];
+		if (pathname[3] != undefined) {
+			if (pathname[3] == "manager")
+				pathname[3] = "Operation Manager";
+			if (pathname[3] == "hotel")
+				pathname[3] = "Hotel Manager";
+			title = pathname[3] + ' ' + pathname[2];
+		} else
+			title = pathname[2];
 
 		title = title == 'Company' ? 'Management' : title;
 		return title;
@@ -25,9 +31,11 @@ class MainContainer extends Component {
 		if (localStorage.getItem('LoginId'))
 			return <div>
 				<input type="checkbox" className="MenuMobile-callback" id="MenuMobile-callback" />
-				<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
-					<i className="fas fa-bars" />
-				</label>
+				{localStorage.getItem('showMenu') == 'true' ?
+					<label className="Header-mobileMenu" htmlFor="MenuMobile-callback">
+						<i className="fas fa-bars" />
+					</label> : ('')
+				}
 				<MobileMenu />
 				<div className="MenuMobile-overlay" onClick={this.props.handleCloseMenu} />
 				<div className="main-container--header">

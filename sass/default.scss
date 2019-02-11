@@ -2,7 +2,7 @@
 // Fonts
 @import "https://use.fontawesome.com/releases/v5.3.1/css/all.css";
 @import "https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,900";
-
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
 //External
 
 
@@ -17,6 +17,9 @@
 
 //Reset
 @import "base/reset";
+
+//Helpers
+@import "helpers/placeholders";
 
 //Base
 @import "base/bootstrap_modify.scss";
@@ -67,6 +70,9 @@
 
 //Boards 
 @import "boards/columns";
+
+//Region
+@import "region/region";
 
 //Schedules
 @import "schedules/schedules";

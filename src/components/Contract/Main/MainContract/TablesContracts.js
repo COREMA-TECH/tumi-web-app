@@ -230,7 +230,6 @@ class DepartmentsTable extends React.Component {
 														className="btn btn-success ml-1 float-left"
 														disabled={this.props.loading}
 														onClick={(e) => {
-															//console.log(this.props);
 															e.stopPropagation();
 															return this.props.delete(row.Id);
 														}}

@@ -1,20 +1,20 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions/DialogActions";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import green from "@material-ui/core/colors/green";
 import PropTypes from "prop-types";
-import {withStyles} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import withApollo from "react-apollo/withApollo";
-import {ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE} from "./Mutations";
+import { ADD_EMPLOYEES, DELETE_EMPLOYEE, UPDATE_EMPLOYEE, INSERT_USER_QUERY } from "./Mutations";
 import EmployeeInputRow from "./EmployeeInputRow";
 import EmployeesTable from "./EmployeesTable";
 import LinearProgress from "@material-ui/core/LinearProgress/LinearProgress";
 import ErrorMessageComponent from "../ui-components/ErrorMessageComponent/ErrorMessageComponent";
-import {Query} from "react-apollo";
+import { Query } from "react-apollo";
 import NothingToDisplay from "ui-components/NothingToDisplay/NothingToDisplay";
-import {GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, GET_ALL_TITLES_QUERY, LIST_EMPLOYEES} from "./Queries";
+import { GET_ALL_DEPARTMENTS_QUERY, GET_ALL_POSITIONS_QUERY, GET_ALL_TITLES_QUERY, LIST_EMPLOYEES, SEND_EMAIL } from "./Queries";
 import AlertDialogSlide from "Generic/AlertDialogSlide";
 import withGlobalContent from "Generic/Global";
 import InputMask from "react-input-mask";
@@ -26,9 +26,8 @@ import {
     GET_EMAILS_USER,
     GET_HOTELS_QUERY,
     GET_ROLES_QUERY,
-    GET_TYPES_QUERY
 } from "../ApplyForm/Application/ProfilePreview/Queries";
-import {GET_LANGUAGES_QUERY} from "../ApplyForm-Recruiter/Queries";
+import { GET_LANGUAGES_QUERY } from "../ApplyForm-Recruiter/Queries";
 
 const styles = theme => ({
     container: {
@@ -171,7 +170,7 @@ class Employees extends Component {
      * To open modal updating the state
      */
     handleClickOpenModal = () => {
-        this.setState({openModal: true});
+        this.setState({ ...this.DEFAULT_STATE, openModal: true });
     };
 
     /**
@@ -194,7 +193,7 @@ class Employees extends Component {
      * To open modal updating the state
      */
     handleClickOpenModalEdit = () => {
-        this.setState({openModalEdit: true});
+        this.setState({ openModalEdit: true });
     };
 
     /**
@@ -322,7 +321,7 @@ class Employees extends Component {
                             Employees: employeesArrays
                         }
                     })
-                    .then(({data}) => {
+                    .then(({ data }) => {
                         this.props.handleOpenSnackbar("success", "Employees Saved!");
                         // Hide dialog
                         this.handleCloseModal();
@@ -420,7 +419,7 @@ class Employees extends Component {
     };
 
     handleCloseAlertDialog = () => {
-        this.setState({opendialog: false});
+        this.setState({ opendialog: false });
     };
     handleConfirmAlertDialog = () => {
         this.deleteEmployee();
@@ -443,7 +442,7 @@ class Employees extends Component {
      * To open the user modal
      */
     handleClickOpenUserModal = (email, phoneNumber, idEmployee) => {
-        this.setState({openUserModal: true});
+        this.setState({ openUserModal: true });
         this.setState({
             email: email,
             number: phoneNumber,
@@ -490,7 +489,7 @@ class Employees extends Component {
             .query({
                 query: GET_HOTELS_QUERY
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
                 }, () => {
@@ -506,11 +505,10 @@ class Employees extends Component {
      * To get a list od departments
      */
     fetchDepartments = (id) => {
-        console.log("fetchDepartments ", id);
         this.props.client
             .query({
                 query: GET_DEPARTMENTS_QUERY,
-                variables: {Id_Entity: id},
+                variables: { Id_Entity: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -662,7 +660,7 @@ class Employees extends Component {
             .query({
                 query: GET_EMAILS_USER
             })
-            .then(({data}) => {
+            .then(({ data }) => {
                 this.setState({
                     dataEmail: data.getusers
                 }, () => {
@@ -684,7 +682,7 @@ class Employees extends Component {
         this.props.client
             .query({
                 query: GET_ALL_POSITIONS_QUERY,
-                variables: {Id_Entity: id},
+                variables: { Id_Entity: id },
                 fetchPolicy: 'no-cache'
             })
             .then((data) => {
@@ -706,7 +704,7 @@ class Employees extends Component {
 
 
     handleCheckedChange = (name) => (event) => {
-        if (name == 'IsRecruiter' && !event.target.checked) this.setState({IdRegion: 0, IdRegionValid: true});
+        if (name == 'IsRecruiter' && !event.target.checked) this.setState({ IdRegion: 0, IdRegionValid: true });
         if (name == 'isAdmin' && event.target.checked)
             this.setState(
                 {
@@ -718,11 +716,11 @@ class Employees extends Component {
                 },
                 this.validateForm
             );
-        else this.setState({[name]: event.target.checked}, this.validateForm);
+        else this.setState({ [name]: event.target.checked }, this.validateForm);
     };
 
     onChangeHandler(value, name) {
-        this.setState({[name]: value}, this.validateField(name, value));
+        this.setState({ [name]: value }, this.validateField(name, value));
     }
 
     updateSelect = (id, name) => {
@@ -752,13 +750,6 @@ class Employees extends Component {
         });
     };
 
-    INSERT_USER_QUERY = gql`
-        mutation insusers($input: iUsers!) {
-            insusers(input: $input) {
-                Id
-            }
-        }
-    `;
 
     /**
      * Insert a user with general information and permissions
@@ -766,51 +757,53 @@ class Employees extends Component {
     insertUser = () => {
         this.setState(
             {
-                finishLoading: false
+                finishLoading: false,
+                savingUser: true
             },
             () => {
                 this.props.client
                     .mutate({
-                        mutation: this.INSERT_USER_QUERY,
+                        mutation: INSERT_USER_QUERY,
                         variables: {
                             input: {
-                                Id: null,
                                 Id_Entity: 1,
-                                Id_Contact: null,
                                 Id_Roles: this.state.idRol,
-                                Code_User: `'${this.state.username}'`,
-                                Full_Name: `'${this.state.fullname}'`,
-                                Electronic_Address: `'${this.state.email}'`,
-                                Phone_Number: `'${this.state.number}'`,
+                                Code_User: this.state.username,
+                                Full_Name: this.state.fullname,
+                                Electronic_Address: this.state.email,
+                                Phone_Number: this.state.number,
                                 Id_Language: this.state.idLanguage,
                                 IsAdmin: this.state.isAdmin ? 1 : 0,
                                 AllowDelete: this.state.allowDelete ? 1 : 0,
                                 AllowInsert: this.state.allowInsert ? 1 : 0,
                                 AllowEdit: this.state.allowEdit ? 1 : 0,
                                 AllowExport: this.state.allowExport ? 1 : 0,
-                                IdSchedulesEmployees: null,
-                                IdSchedulesManager: null,
                                 IsRecruiter: false,
-                                IdRegion: null,
                                 IsActive: this.state.IsActive ? 1 : 0,
                                 User_Created: 1,
                                 User_Updated: 1,
-                                Date_Created: "'2018-08-14 16:10:25+00'",
-                                Date_Updated: "'2018-08-14 16:10:25+00'",
-                                idEmployee: this.state.employeeId
-                            }
+                                Date_Created: new Date().toISOString(),
+                                Date_Updated: new Date().toISOString(),
+                                isEmployee: true
+                            },
+                            idEmployee: this.state.employeeId
                         }
                     })
-                    .then((data) => {
+                    .then(({ data }) => {
+                        var user = data.addUser;
+
+                        this.sendMail(user.Code_User, user.Electronic_Address);
+
                         this.props.handleOpenSnackbar('success', 'User Inserted!');
 
                         this.setState({
-                            finishLoading: true
+                            finishLoading: true,
+                            savingUser: false
                         });
                         this.setState({
                             createdProfile: true
                         }, () => {
-                            this.setState({openUserModal: false, showCircularLoading: true, loading: false});
+                            this.setState({ openUserModal: false, showCircularLoading: true, loading: false });
                             this.resetUserModalState();
                         });
 
@@ -820,13 +813,33 @@ class Employees extends Component {
                             'error', 'Error: Inserting User: ' + error
                         );
                         this.setState({
-                            loading: false
+                            loading: false,
+                            savingUser: false
                         });
                     });
             }
         );
     };
 
+    sendMail = (username, email) => {
+        this.props.client
+            .query({
+                query: SEND_EMAIL,
+                variables: {
+                    username,
+                    password: `TEMP`,
+                    email,
+                    title: `Credential Information`
+                }
+            })
+            .then((data) => {
+                this.props.handleOpenSnackbar('success', 'Credential has been sent to this employee!');
+            })
+            .catch((error) => {
+                this.props.handleOpenSnackbar('error', 'Error: Sending Credentials: ' + error);
+            });
+
+    };
     validateAllFields(func) {
         let idContactValid = this.state.idContact !== -1 && this.state.idContact !== '';
         let usernameValid = this.state.username.trim().length >= 3 && this.state.username.trim().indexOf(' ') < 0;
@@ -992,10 +1005,10 @@ class Employees extends Component {
 
     render() {
 
-        const {classes} = this.props;
-        const {fullScreen} = this.props;
+        const { classes } = this.props;
+        const { fullScreen } = this.props;
 
-        if (this.state.loading) return <LinearProgress/>;
+        if (this.state.loading) return <LinearProgress />;
 
         let renderHeaderContent = () => (
             <div className="row">
@@ -1003,7 +1016,7 @@ class Employees extends Component {
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">
-                                <i className="fa fa-search icon"/>
+                                <i className="fa fa-search icon" />
                             </span>
                         </div>
                         <input
@@ -1041,20 +1054,20 @@ class Employees extends Component {
                 aria-labelledby="responsive-dialog-title"
                 maxWidth="md"
             >
-                <DialogTitle id="responsive-dialog-title" style={{padding: '0px'}}>
+                <DialogTitle id="responsive-dialog-title" style={{ padding: '0px' }}>
                     <div className="modal-header">
                         <h5 className="modal-title">
                             {this.state.idToEdit != null &&
-                            this.state.idToEdit != '' &&
-                            this.state.idToEdit != 0 ? (
-                                'Edit  User'
-                            ) : (
-                                'Create User'
-                            )}
+                                this.state.idToEdit != '' &&
+                                this.state.idToEdit != 0 ? (
+                                    'Edit  User'
+                                ) : (
+                                    'Create User'
+                                )}
                         </h5>
                     </div>
                 </DialogTitle>
-                <DialogContent style={{minWidth: 600}}>
+                <DialogContent style={{ minWidth: 600 }}>
                     <div className="row">
                         <div className="col-lg-7">
                             <div className="row">
@@ -1142,9 +1155,8 @@ class Employees extends Component {
                                     </select>
                                 </div>
 
-                                <div className="col-md-9 col-lg-9">
-                                </div>
                             </div>
+
                         </div>
                         <div className="col-lg-5">
                             <div className="card">
@@ -1163,8 +1175,8 @@ class Employees extends Component {
                                                     id="IsActive"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="IsActive">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1181,8 +1193,8 @@ class Employees extends Component {
                                                     id="isAdmin"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="isAdmin">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1199,8 +1211,8 @@ class Employees extends Component {
                                                     id="allowInsert"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowInsert">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1217,8 +1229,8 @@ class Employees extends Component {
                                                     id="allowEdit"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowEdit">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1235,8 +1247,8 @@ class Employees extends Component {
                                                     id="allowDelete"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowDelete">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1253,8 +1265,8 @@ class Employees extends Component {
                                                     id="allowExport"
                                                 />
                                                 <label className="onoffswitch-label" htmlFor="allowExport">
-                                                    <span className="onoffswitch-inner"/>
-                                                    <span className="onoffswitch-switch"/>
+                                                    <span className="onoffswitch-inner" />
+                                                    <span className="onoffswitch-switch" />
                                                 </label>
                                             </div>
                                         </li>
@@ -1264,7 +1276,7 @@ class Employees extends Component {
                         </div>
                     </div>
                 </DialogContent>
-                <DialogActions style={{margin: '16px 10px', borderTop: '1px solid #eee'}}>
+                <DialogActions style={{ paddingTop: "10px", margin: '16px 10px', borderTop: '1px solid #eee' }}>
                     <div className={classes.root}>
                         <div className={classes.wrapper}>
                             <div>
@@ -1272,7 +1284,7 @@ class Employees extends Component {
                                     className="btn btn-success"
                                     onClick={this.addUserHandler}
                                 >
-                                    Save
+                                    Save  {this.state.savingUser && <i class="fas fa-spinner fa-spin" />}
                                 </button>
                             </div>
                         </div>
@@ -1281,13 +1293,13 @@ class Employees extends Component {
                         <div className={classes.wrapper}>
                             <div>
                                 <button className="btn btn-danger" onClick={this.handleCloseUserModal}>
-                                    Cancel <i className="fas fa-ban ml-1"/>
+                                    Cancel <i className="fas fa-ban ml-1" />
                                 </button>
                             </div>
                         </div>
                     </div>
                 </DialogActions>
-            </Dialog>
+            </Dialog >
         );
 
         let renderNewEmployeeDialog = () => (
@@ -1299,7 +1311,7 @@ class Employees extends Component {
                 maxWidth="xl"
             >
                 <form id="employee-form" onSubmit={this.handleSubmit}>
-                    <DialogTitle style={{padding: "0px"}}>
+                    <DialogTitle style={{ padding: "0px" }}>
                         <div className="modal-header">
                             <h5 class="modal-title">New Employees</h5>
                         </div>
@@ -1345,7 +1357,7 @@ class Employees extends Component {
                             })}
                         </div>
                     </DialogContent>
-                    <DialogActions style={{margin: "20px 20px"}}>
+                    <DialogActions style={{ margin: "20px 20px" }}>
                         <div className={[classes.root]}>
                             <div className={classes.wrapper}>
                                 {this.state.rowsInput.length > 1 && <button
@@ -1353,8 +1365,8 @@ class Employees extends Component {
                                     variant="fab"
                                     className="btn btn-success"
                                 >
-                                    Save {!this.state.progressNewEmployee && <i class="fas fa-save"/>}
-                                    {this.state.progressNewEmployee && <i class="fas fa-spinner fa-spin"/>}
+                                    Save {!this.state.progressNewEmployee && <i class="fas fa-save" />}
+                                    {this.state.progressNewEmployee && <i class="fas fa-spinner fa-spin" />}
                                 </button>}
                             </div>
                         </div>
@@ -1373,7 +1385,7 @@ class Employees extends Component {
                                         });
                                     }}
                                 >
-                                    Cancel <i class="fas fa-ban"/>
+                                    Cancel <i class="fas fa-ban" />
                                 </button>
                             </div>
                         </div>
@@ -1395,14 +1407,13 @@ class Employees extends Component {
                 <Dialog
                     open={this.state.openModalEdit}
                     onClose={this.handleCloseModalEdit}
-                    aria-labelledby="responsive-dialog-title"
                     maxWidth="xl"
                 >
                     <form
                         id="employee-edit-form"
                         onSubmit={this.handleSubmitEmployeeEdit}
                     >
-                        <DialogTitle style={{padding: "0px"}}>
+                        <DialogTitle style={{ padding: "0px" }}>
                             <div className="modal-header">
                                 <h5 class="modal-title">Edit Employee</h5>
                             </div>
@@ -1511,7 +1522,7 @@ class Employees extends Component {
                                     </div>
                                     <div className="col">
                                         <label htmlFor=""
-                                               className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotelsss</label>
+                                            className="d-xs-block d-sm-block d-lg-none d-xl-none">Hotelsss</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1531,7 +1542,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.hotelEdit}
                                         >
-                                            <option value="null">Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
                                                 this.state.hotels.map(item => {
                                                     return (
@@ -1543,7 +1554,7 @@ class Employees extends Component {
                                     </div>
                                     <div className="col">
                                         <label htmlFor=""
-                                               className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
+                                            className="d-xs-block d-sm-block d-lg-none d-xl-none">Department</label>
                                         <select
                                             name="departmentEmployee"
                                             className="form-control"
@@ -1552,11 +1563,10 @@ class Employees extends Component {
                                                     departmentEdit: e.target.value
                                                 })
 
-                                                console.log("ID DEPARTMENT EDIT: ", e.target.value)
                                             }}
                                             value={this.state.departmentEdit}
                                         >
-                                            <option>Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
 
                                                 this.state.departments.map(item => {
@@ -1569,7 +1579,7 @@ class Employees extends Component {
                                     </div>
                                     <div className="col">
                                         <label htmlFor=""
-                                               className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
+                                            className="d-xs-block d-sm-block d-lg-none d-xl-none">Position</label>
                                         <select
                                             className="form-control"
                                             onChange={(e) => {
@@ -1579,7 +1589,7 @@ class Employees extends Component {
                                             }}
                                             value={this.state.contactTitleEdit}
                                         >
-                                            <option>Select a option</option>
+                                            <option value="">Select a option</option>
                                             {
                                                 this.state.titles.map(item => {
                                                     if (this.state.hotelEdit == item.Id_Entity) {
@@ -1590,18 +1600,18 @@ class Employees extends Component {
                                                 })
                                             }
                                             {/*{*/}
-                                                {/*this.state.titles.map(item => {*/}
-                                                    {/*return (*/}
-                                                        {/*<option value={item.Id}>{item.Position.trim()}</option>*/}
-                                                    {/*)*/}
-                                                {/*})*/}
+                                            {/*this.state.titles.map(item => {*/}
+                                            {/*return (*/}
+                                            {/*<option value={item.Id}>{item.Position.trim()}</option>*/}
+                                            {/*)*/}
+                                            {/*})*/}
                                             {/*}*/}
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </DialogContent>
-                        <DialogActions style={{margin: "20px 20px"}}>
+                        <DialogActions style={{ margin: "20px 20px" }}>
                             <div className={[classes.root]}>
                                 <div className={classes.wrapper}>
                                     <button
@@ -1609,8 +1619,8 @@ class Employees extends Component {
                                         variant="fab"
                                         className="btn btn-success"
                                     >
-                                        Save {!this.state.progressEditEmployee && <i class="fas fa-save"/>}
-                                        {this.state.progressEditEmployee && <i class="fas fa-spinner fa-spin"/>}
+                                        Save {!this.state.progressEditEmployee && <i class="fas fa-save" />}
+                                        {this.state.progressEditEmployee && <i class="fas fa-spinner fa-spin" />}
                                     </button>
                                 </div>
                             </div>
@@ -1621,7 +1631,7 @@ class Employees extends Component {
                                         className="btn btn-danger"
                                         onClick={this.handleCloseModalEdit}
                                     >
-                                        Cancel <i class="fas fa-ban"/>
+                                        Cancel <i class="fas fa-ban" />
                                     </button>
                                 </div>
                             </div>
@@ -1631,7 +1641,7 @@ class Employees extends Component {
                 {renderNewEmployeeDialog()}
                 {renderUserDialog()}
                 <Query query={LIST_EMPLOYEES}>
-                    {({loading, error, data, refetch, networkStatus}) => {
+                    {({ loading, error, data, refetch, networkStatus }) => {
                         if (this.state.finishLoading) {
                             refetch();
                             this.setState(prevState => ({
@@ -1641,7 +1651,7 @@ class Employees extends Component {
 
 
                         if (this.state.filterText === "") {
-                            if (loading) return <LinearProgress/>;
+                            if (loading) return <LinearProgress />;
                         }
 
                         if (error)
@@ -1701,7 +1711,6 @@ class Employees extends Component {
                                                             }
                                                         });
 
-                                                        console.table(row);
                                                     }}
                                                     handleClickOpenUserModal={this.handleClickOpenUserModal}
                                                     departments={this.state.allDepartments}

@@ -41,3 +41,8 @@ export const GET_ALL_POSITIONS_QUERY = gql`
     }
 `;
 
+export const SEND_EMAIL = gql`
+    query sendemail($username: String,$password: String,$email: String,$title:String) {
+        sendemail(username:$username,password:$password,email:$email,title:$title)
+    }
+`;
