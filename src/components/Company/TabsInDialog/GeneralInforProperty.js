@@ -1031,6 +1031,12 @@ class GeneralInfoProperty extends Component {
         });
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
     render() {
         this.changeStylesInCompletedInputs();
 
@@ -1068,17 +1074,16 @@ class GeneralInfoProperty extends Component {
                             )}
 
 
-                        {
-                            !this.state.nextButton ? (
-                                <button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')}>
-                                    Save<i className="fas fa-save ml-2" />
-                                </button>
-                            ) : (
-                                    <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next">
-                                        Next <i className="fas fa-chevron-right"></i>
-                                    </button>
-                                )
+
+                        {(!this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" className="btn btn-success" name="save" id="save" onClick={this.handleFormSubmit('save')}>
+                            Save<i className="fas fa-save ml-2" />
+                        </button>
                         }
+
+                        {(this.state.nextButton && !this.state.searchigZipcode) && <button type="submit" onClick={this.handleFormSubmit('next')} className="btn btn-success" name="next" id="next">
+                            Next <i className="fas fa-chevron-right"></i>
+                        </button>}
+
                     </div>
                 </div>
             </div>
@@ -1198,6 +1203,7 @@ class GeneralInfoProperty extends Component {
                                             requiredCity={true}
                                             requiredState={true}
                                             requiredZipCode={true}
+                                            updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
                                         />
 
 

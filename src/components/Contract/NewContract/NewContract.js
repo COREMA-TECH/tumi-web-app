@@ -1224,6 +1224,11 @@ class NewContract extends Component {
         }
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
     /*End of Validations*/
 
     render() {
@@ -1268,7 +1273,7 @@ class NewContract extends Component {
                             )}
                         />
 
-                        <button
+                   { !this.state.searchigZipcode &&    <button
                             style={{
                                 margin: '5px'
                             }}
@@ -1284,7 +1289,7 @@ class NewContract extends Component {
                             disabled={this.state.loadingInsert || this.state.loadingUpdate}
                         >
                             Save <i className="fas fa-save" />
-                        </button>
+                        </button>}
 
 
 
@@ -1766,7 +1771,9 @@ class NewContract extends Component {
                                         cityTitle="* Billing City"
                                         requiredCity={true}
                                         requiredState={true}
-                                        requiredZipCode={true} />
+                                        requiredZipCode={true}
+                                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
+                                    />
 
                                 </div>
                             </div>
