@@ -176,7 +176,6 @@ class BoardManager extends Component {
         try {
             let card = document.getElementsByClassName('smooth-dnd-container');
             let elements = Array.from(card);
-            console.log(elements);
 
             elements[0].classList.remove('smooth-dnd-container');
 
@@ -283,7 +282,6 @@ class BoardManager extends Component {
     };
 
     updateStatus = (id) => {
-        console.log(id);
         this.setState(
             {
                 status: id
