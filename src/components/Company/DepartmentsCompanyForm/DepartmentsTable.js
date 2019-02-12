@@ -190,7 +190,7 @@ class DepartmentsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}> Actions </CustomTableCell>
+							<CustomTableCell className={"Table-head"}>Actions </CustomTableCell>
 							<CustomTableCell className={"company-th Table-head"}>Department Code</CustomTableCell>
 							<CustomTableCell className={"company-th Table-head"}>Department Name</CustomTableCell>
 						</TableRow>
@@ -206,7 +206,7 @@ class DepartmentsTable extends React.Component {
 										return this.props.onEditHandler({ ...row });
 									}}
 								>
-									<CustomTableCell component="th" style={{ width: '50px' }}>
+									<CustomTableCell component="th">
 										<Tooltip title="Edit">
 											<button
 												className="btn btn-success float-left ml-1"

@@ -495,6 +495,12 @@ class Application extends Component {
         });
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
     render() {
         return (
             <div className="Apply-container-application">
@@ -502,20 +508,18 @@ class Application extends Component {
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                        {this.state.editing ? (
-                            ''
-                        ) : (
-                                <button
-                                    className="applicant-card__edit-button"
-                                    onClick={() => {
-                                        this.setState({
-                                            editing: true
-                                        });
-                                    }}
-                                >
-                                    {spanishActions[1].label} <i className="far fa-edit" />
-                                </button>
-                            )}
+                        {!this.state.editing && <button
+                            className="applicant-card__edit-button"
+                            onClick={() => {
+                                this.setState({
+                                    editing: true
+                                });
+                            }}
+                            disabled={this.state.searchigZipcode}
+                        >
+                            {spanishActions[1].label} <i className="far fa-edit" />
+                        </button>
+                        }
                     </div>
                     <br />
                     <div className="card-body">
@@ -679,7 +683,8 @@ class Application extends Component {
                                         cityTitle={`${formSpanish[7].label}`}
                                         cssTitle={"text-primary-application"}
                                         placeholder="99999-99999"
-                                        mask="99999-99999" />
+                                        mask="99999-99999"
+                                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -797,7 +802,7 @@ class Application extends Component {
 
                                 {spanishActions[2].label}
                             </button>
-                            <button type="submit"
+                            {!this.state.searchigZipcode && <button type="submit"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -809,7 +814,7 @@ class Application extends Component {
                                 }}
                                 className="applicant-card__save-button">
                                 {spanishActions[4].label}
-                            </button>
+                            </button>}
                         </div>
                     ) : (
                             <div className="applicant-card__footer">

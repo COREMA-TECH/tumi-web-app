@@ -287,6 +287,7 @@ class BoardRecruiter extends Component {
                 loading: true
             }, () => {
                 this.loadhotel();
+                this.loadStates();
                 this.getOpenings();
 
             });
@@ -762,18 +763,44 @@ class BoardRecruiter extends Component {
 
     getDataFilters = () => {
         var variables;
-        variables = {
-            shift: {
-                status: 2
-            },
-        };
-        if (this.state.hotel != 0) {
+
+        if (this.state.status !== null) {
             variables = {
-                shiftEntity: {
-                    Id: this.state.hotel
+                shift: {
+                    status: [this.state.status]
                 },
-                ...variables
+            };
+        } else {
+            variables = {
+                shift: {
+                    status: [1, 2]
+                },
+            };
+        }
+        var shiftEntity = {};
+        if (this.state.hotel != 0) {
+            shiftEntity = {
+                Id: this.state.hotel,
+                ...shiftEntity
             }
+        }
+        if (this.state.state != 0) {
+            shiftEntity = {
+                State: this.state.state,
+                ...shiftEntity
+            }
+        }
+        if (this.state.city != 0) {
+            shiftEntity = {
+                City: this.state.city,
+                ...shiftEntity
+            }
+        }
+        if (this.state.hotel != 0 || this.state.state != 0 || this.state.city != 0) {
+            variables = {
+                shiftEntity,
+                ...variables
+            };
         }
         return variables;
     }
@@ -788,7 +815,7 @@ class BoardRecruiter extends Component {
             query: GET_BOARD_SHIFT,
             variables: { ...this.getDataFilters() }
         }).then(({ data }) => {
-            let _id = data.ShiftBoard[0].workOrderId;
+            let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
             let count = 1;
             let begin = true;
             data.ShiftBoard.forEach((ShiftBoard) => {
@@ -821,6 +848,7 @@ class BoardRecruiter extends Component {
                 Openings: getOpenings
             });
         }).catch(error => {
+            console.log(error)
         })
 
         this.setState({
@@ -929,9 +957,17 @@ class BoardRecruiter extends Component {
                                                     <select
                                                         name="state"
                                                         className={'form-control'}
-                                                        /* onChange={(event) => {
-                                                             this.updateState(event.target.value);
-                                                         }}*/
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                state: event.target.value,
+                                                                city: 0,
+                                                                cities: []
+                                                            }, () => {
+                                                                this.loadCities();
+                                                                this.getOpenings();
+                                                                this.getMatches();
+                                                            })
+                                                        }}
                                                         value={this.state.state}
                                                         showNone={false}
                                                     >
@@ -946,9 +982,14 @@ class BoardRecruiter extends Component {
                                                         name="city"
                                                         className={'form-control'}
                                                         // disabled={this.state.loadingCities}
-                                                        /* onChange={(event) => {
-                                                             this.updateCity(event.target.value);
-                                                         }}*/
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                city: event.target.value
+                                                            }, () => {
+                                                                this.getOpenings();
+                                                                this.getMatches();
+                                                            })
+                                                        }}
                                                         //error={!this.state.cityValid}
                                                         value={this.state.city}
                                                         showNone={false}
@@ -965,7 +1006,11 @@ class BoardRecruiter extends Component {
                                                         className={'form-control'}
                                                         // disabled={this.state.loadingCities}
                                                         onChange={(event) => {
-                                                            this.updateStatus(event.target.value);
+                                                            if (event.target.value == "null") {
+                                                                this.updateStatus(null);
+                                                            } else {
+                                                                this.updateStatus(event.target.value);
+                                                            }
                                                         }}
                                                         //error={!this.state.cityValid}
                                                         value={this.state.city}

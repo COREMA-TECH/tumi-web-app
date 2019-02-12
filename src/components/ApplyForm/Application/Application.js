@@ -438,6 +438,13 @@ class Application extends Component {
             }
         }
     }
+
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
@@ -454,20 +461,19 @@ class Application extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                                {this.state.editing ? (
-                                    ''
-                                ) : (
-                                        <button
-                                            className="applicant-card__edit-button"
-                                            onClick={() => {
-                                                this.setState({
-                                                    editing: true
-                                                });
-                                            }}
-                                        >
-                                            {spanishActions[1].label} <i className="far fa-edit" />
-                                        </button>
-                                    )}
+                                {!this.state.editing &&
+                                    <button
+                                        className="applicant-card__edit-button"
+                                        onClick={() => {
+                                            this.setState({
+                                                editing: true
+                                            });
+                                        }}
+                                        disabled={this.state.searchigZipcode}
+                                    >
+                                        {spanishActions[1].label} <i className="far fa-edit" />
+                                    </button>
+                                }
                             </div>
                             <br />
                             <div className="card-body">
@@ -621,7 +627,8 @@ class Application extends Component {
                                                 mask="99999-99999"
                                                 requiredZipCode={true}
                                                 requiredCity={true}
-                                                requiredState={true} />
+                                                requiredState={true}
+                                                updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
 
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
@@ -655,7 +662,6 @@ class Application extends Component {
                                                                     .replace('(', '')
                                                                     .replace(')', '').length === 0;
 
-                                                            console.log(phoneNumberValid);
                                                             this.setState({
                                                                 homePhoneNumberValid: phoneNumberValid
                                                             })
@@ -1056,7 +1062,7 @@ class Application extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {this.state.editing ? (
+                            {this.state.editing && !this.state.searchigZipcode ? (
                                 <div className="applicant-card__footer">
                                     <button
                                         className="applicant-card__cancel-button"

@@ -1200,6 +1200,12 @@ class GeneralInformation extends Component {
 			);
 		}
 	};
+
+	updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
 	/**
      * Return the component
      *
@@ -1266,7 +1272,7 @@ class GeneralInformation extends Component {
 							)}
 						{this.props.showStepper ? (
 							<div className="form-actions float-right">
-								<button
+								{!this.state.searchigZipcode && <button
 									className="btn btn-success"
 									onClick={() => {
 										this.props.idCompany != 0
@@ -1277,7 +1283,7 @@ class GeneralInformation extends Component {
 									disabled={isLoading}
 								>
 									Save <i class="fas fa-save" />
-								</button>
+								</button>}
 								{this.state.loadingUpdate && (
 									<CircularProgress size={24} className={classes.buttonProgress} />
 								)}
@@ -1430,7 +1436,8 @@ class GeneralInformation extends Component {
 										zipCodeColClass="col-md-6 col-lg-4"
 										requiredCity={true}
 										requiredState={true}
-										requiredZipCode={true} />
+										requiredZipCode={true}
+										updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}	/>
 
 									<div className="col-md-6 col-lg-4">
 										<label>* Phone Number</label>

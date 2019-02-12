@@ -22,8 +22,6 @@ var authorizedPath = [
 	'/home/application/info'
 ];
 
-console.log(localStorage.getItem('isEmployee'))
-
 if (localStorage.getItem('isEmployee') == 'true' && !authorizedPath.includes(window.location.pathname)) {
 	localStorage.setItem('showMenu', false);
 	window.location.href = '/home/application';
