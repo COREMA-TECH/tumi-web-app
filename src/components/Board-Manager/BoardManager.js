@@ -582,7 +582,7 @@ class BoardManager extends Component {
         console.log("Informacion de filtros ", language, " experience ", experience, " location", location, " laneId ", laneId, " PositionId ", PositionId);
         if (laneId == "lane1") {
             console.log("entro a la validacion lane ");
-            await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
+            await this.props.client.query({ query: GET_MATCH, fetchPolicy: 'no-cache', variables: {} }).then(({ data }) => {
                 console.log("esta es la info del GET_MATCH ", data);
                 data.applications.forEach((wo) => {
 
