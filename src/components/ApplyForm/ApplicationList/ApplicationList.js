@@ -81,6 +81,10 @@ class ApplicationList extends Component {
 				emailAddress
 				cellPhone
 				isLead
+				idWorkOrder
+				recruiter{
+					Full_Name
+				}
 				position{
 					id
 					position {
@@ -89,6 +93,7 @@ class ApplicationList extends Component {
 					BusinessCompany {
 							Id
 							Code
+							Name
 						}
 				}
 			}
@@ -152,13 +157,6 @@ class ApplicationList extends Component {
 			return <LinearProgress />;
 		}
 
-		/*	if (this.state.loadingRemoving) {
-			return (
-				<div className="nothing-container">
-					<CircularProgress size={150} />
-				</div>
-			);
-		}*/
 		// To render the content of the header
 		let renderHeaderContent = () => (
 			<div className="row">
@@ -233,6 +231,9 @@ class ApplicationList extends Component {
 											_.middleName +
 											_.lastName +
 											(_.position ? _.position.position.Position.trim() : 'Open Position') +
+											(_.idWorkOrder ? `000000${_.idWorkOrder}`.slice(-6) : '') +
+											(_.position ? _.position.BusinessCompany.Name : '') +
+											(_.recruiter ? _.recruiter.Full_Name : '') +
 											_.emailAddress)
 											.toLocaleLowerCase()
 											.indexOf(this.state.filterText.toLocaleLowerCase()) > -1

@@ -229,7 +229,7 @@ class RegionTable extends React.Component {
                         <Table className={classes.table}>
                             <TableHead>
                                 <TableRow>
-                                    <CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
+                                    <CustomTableCell padding="none" className={"Table-head"}>Actions</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Region's Code</CustomTableCell>
                                     <CustomTableCell className={"Table-head"}>Region's Name</CustomTableCell>
                                 </TableRow>

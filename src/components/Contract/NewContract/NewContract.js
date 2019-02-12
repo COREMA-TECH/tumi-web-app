@@ -9,7 +9,6 @@ import withApollo from 'react-apollo/withApollo';
 import InputDateForm from 'ui-components/InputForm/InputDateForm';
 import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 import Query from 'react-apollo/Query';
-import AccountDialog from 'ui-components/AccountDialog/AccountDialog';
 import ContactDialog from 'ui-components/AccountDialog/ContactDialog';
 import SelectFormContractTemplate from 'ui-components/SelectForm/SelectFormContractTemplate';
 import withGlobalContent from 'Generic/Global';
@@ -21,7 +20,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import SelectNothingToDisplay from '../../ui-components/NothingToDisplay/SelectNothingToDisplay/SelectNothingToDisplay';
 import { Route } from "react-router-dom";
-import axios from 'axios';
 import LocationForm from '../../ui-components/LocationForm';
 
 const styles = (theme) => ({
@@ -1224,6 +1222,11 @@ class NewContract extends Component {
         }
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
     /*End of Validations*/
 
     render() {
@@ -1268,7 +1271,7 @@ class NewContract extends Component {
                             )}
                         />
 
-                        <button
+                        {!this.state.searchigZipcode && <button
                             style={{
                                 margin: '5px'
                             }}
@@ -1284,7 +1287,7 @@ class NewContract extends Component {
                             disabled={this.state.loadingInsert || this.state.loadingUpdate}
                         >
                             Save <i className="fas fa-save" />
-                        </button>
+                        </button>}
 
 
 
@@ -1426,7 +1429,8 @@ class NewContract extends Component {
                                                                     disabled={!this.state.editing}
                                                                     onChange={(e) => {
                                                                         this.setState({
-                                                                            IdManagement: e.target.value
+                                                                            IdManagement: e.target.value,
+                                                                            Id_Entity: 0
                                                                         });
                                                                     }}
                                                                     value={this.props.Id_Parent !== undefined ? this.props.Id_Parent : this.state.IdManagement}
@@ -1446,11 +1450,12 @@ class NewContract extends Component {
                                                 <label>* Hotel</label>
                                                 <Query
                                                     query={this.getbusinesscompaniesQuery}
-                                                    variables={{ Id_Parent: (this.state.IdManagement === 0 ? 919191 : this.state.IdManagement) }}
+                                                    variables={{ Id_Parent: this.state.IdManagement != "0" ? this.state.IdManagement : 919191 }}
                                                 >
                                                     {({ loading, error, data, refetch, networkStatus }) => {
                                                         if (loading) return <LinearProgress />;
                                                         if (error) return <p> Select a Hotel </p>;
+
                                                         return (
                                                             <select
                                                                 name="hotel"
@@ -1467,7 +1472,8 @@ class NewContract extends Component {
                                                                 value={this.state.Id_Entity}
                                                             >
                                                                 <option value="0">Select a Hotel</option>
-                                                                {data.getbusinesscompanies.map((item) => (
+
+                                                                {data.getbusinesscompanies && data.getbusinesscompanies.map((item) => (
                                                                     <option value={item.Id}>{item.Name}</option>
                                                                 ))}
                                                             </select>
@@ -1766,7 +1772,9 @@ class NewContract extends Component {
                                         cityTitle="* Billing City"
                                         requiredCity={true}
                                         requiredState={true}
-                                        requiredZipCode={true} />
+                                        requiredZipCode={true}
+                                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress}
+                                    />
 
                                 </div>
                             </div>

@@ -153,6 +153,7 @@ class Container extends Component {
 				<Route exact path="/home/recruiter" component={ApplicationRecruiter} />
 				<Route exact path="/home/application/Form" component={ApplicationInfoFast} />
 				<Route exact path="/home/contract/add" component={Contract} />
+				<Route exact path="/home/contract/edit" component={Contract} />
 				<Route exact path="/home/dashboard/hotel" component={DashboardHotel} />
 				<Route exact path="/home/company/edit" component={CreateCompany} />
 				<Route exact path="/home/company/add" component={CreateCompany} />

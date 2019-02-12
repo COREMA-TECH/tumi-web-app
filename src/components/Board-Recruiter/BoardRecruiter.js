@@ -200,10 +200,11 @@ class BoardRecruiter extends Component {
             }
         }
 
-    }
+    };
 
-    handleCloseModal = (event) => {
-        event.preventDefault();
+    handleCloseModal = () => {
+        this.setState({ openModal: false });
+
 
         this.setState(
             {
@@ -270,11 +271,11 @@ class BoardRecruiter extends Component {
                 editing: false
             });
 
-            this.props.handleOpenSnackbar('success', "Message", 'bottom', 'right');
+            this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(
                 'error',
-                'Error to Add applicant information. Please, try again!',
+                'Error to Add applicant Phase information. Please, try again!',
                 'bottom',
                 'right'
             );

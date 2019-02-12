@@ -88,7 +88,7 @@ class WorkOrdersTable extends Component {
                 status: this.state.status,
                 ...variables,
             }
-        } 
+        }
         if (this.state.id != null) {
             variables = {
                 id: this.state.id,
@@ -363,12 +363,12 @@ class WorkOrdersTable extends Component {
                                 <input type="date" className="form-control" name="endDate" value={this.state.endDate} disabled={this.state.endDateDisabled ? true : false} placeholder="2018-10-30" onChange={this.handleEndDate} />
                             </div>
                         </div>
-                        <div className="col-md-1">
+                        <div className="col-md-2">
                             <button class="btn btn-outline-secondary btn-not-rounded" type="button" onClick={this.clearInputDates}>
-                                <i class="fas fa-ban"></i> Clear
+                                <i class="fas fa-filter"></i> Clear
                             </button>
                         </div>
-                        <div className="col-md-2 offset-md-2">
+                        <div className="col-md-2 offset-md-1">
                             <select name="filterValue" id="" className="form-control" onChange={this.handleFilterValue}>
                                 <option value="3">Status (All)</option>
                                 <option value="1">Open</option>

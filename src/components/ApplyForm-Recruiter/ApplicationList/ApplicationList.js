@@ -57,16 +57,23 @@ class ApplicationList extends Component {
 				lastName
 				socialSecurityNumber
 				emailAddress
+				cellPhone
+				isLead
+				idWorkOrder
+				recruiter{
+					Full_Name
+				}
 				position{
 					id
 					position {
-							  Position
-						  }
+							Position
+						}
 					BusinessCompany {
-							  Id
-							  Code
-						  }
-				  }
+							Id
+							Code
+							Name
+						}
+				}
 			}
 		}
 	`;

@@ -8256,7 +8256,6 @@ label:not(.custom-file-label):not(.form-check-label) {
       color: #FFF; }
 
 .btn {
-  border-radius: 50px;
   padding-left: 1.5rem;
   padding-right: 1.5rem; }
   .btn-empty {
@@ -8963,14 +8962,19 @@ td.rdtMonth:hover, td.rdtYear:hover {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
   right: 0px; }
 
+table {
+  table-layout: auto;
+  width: 100%; }
+
 .Table {
   border-radius: 5px;
   overflow: hidden; }
   .Table-head {
     background-color: #3ca2c8 !important;
+    color: #FFF !important;
     font-size: 0.9rem !important;
     font-weight: 300 !important;
-    min-width: 200px; }
+    padding: 4px 5px 4px 5px !important; }
     .Table-head:first-child {
       border-radius: 5px 0 0 0; }
     .Table-head:last-child {
@@ -8999,6 +9003,9 @@ tbody[class^="MuiTableBody-"] .btn {
   tbody[class^="MuiTableBody-"] .btn .fa, tbody[class^="MuiTableBody-"] .btn .fas {
     font-weight: 900;
     font-size: 10px; }
+
+tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
+  padding: 4px 5px 4px 5px !important; }
 
 .login-container {
   width: 100%;
