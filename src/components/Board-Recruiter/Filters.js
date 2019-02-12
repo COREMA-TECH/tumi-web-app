@@ -17,9 +17,15 @@ class Filters extends Component {
         }
     }
 
+    resetState = () => {
+        this.setState({
+            needExperience: false,
+            needEnglish: false,
+            distance: 0
+        })
+    };
 
     handleChange = (event) => {
-
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -30,14 +36,15 @@ class Filters extends Component {
     };
 
     CloseWin = () => {
+        this.resetState();
 
         sessionStorage.setItem('NewFilterLead', false);
         sessionStorage.setItem('needExperienceLead', false);
         sessionStorage.setItem('needEnglishLead', false);
-        sessionStorage.setItem('distances', 30);
+        sessionStorage.setItem('distances', 0);
 
         this.props.handleCloseModal()
-    }
+    };
 
     NewFilters = () => {
         sessionStorage.setItem('NewFilterLead', true);
@@ -61,7 +68,7 @@ class Filters extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent>
-                        <form action="">
+                        <div>
                             <div className="row">
                                 <div className="col-md-6">
                                     <label>Needs Experience?</label>
@@ -130,7 +137,7 @@ class Filters extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </DialogContent>
                 </Dialog>
 
