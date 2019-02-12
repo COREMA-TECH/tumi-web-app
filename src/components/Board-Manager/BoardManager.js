@@ -90,7 +90,7 @@ class BoardManager extends Component {
             matches: [],
             notify: [],
             accepted: [],
-            schedule: [],
+            interview: [],
             workOrders: [],
             workOrdersPositions: [],
             Position: '',
@@ -116,7 +116,9 @@ class BoardManager extends Component {
             latitud2: 0,
             longitud2: 0,
             distance: 0,
-            showConfirm: true
+            showConfirm: true,
+            ShiftId: 0,
+            Intopening: 0
 
         }
     }
@@ -138,8 +140,8 @@ class BoardManager extends Component {
                 case "Accepted":
                     IdLane = 30465
                     break;
-                case "Add to Schedule":
-                    IdLane = 30466
+                case "Interview":
+                    IdLane = 30461
                     break;
                 case "Matches":
                     IdLane = 30469
@@ -172,22 +174,22 @@ class BoardManager extends Component {
             });
     }
 
-    componentDidMount() {
-        try {
-            let card = document.getElementsByClassName('smooth-dnd-container');
-            let elements = Array.from(card);
-
-            elements[0].classList.remove('smooth-dnd-container');
-
-            elements[1].classList.add('smooth-dnd-container');
-            elements[2].classList.add('smooth-dnd-container');
-            elements[3].classList.add('smooth-dnd-container');
-            elements[4].classList.add('smooth-dnd-container');
-
-        } catch (e) {
-            console.log("Error: ", e);
-        }
-    }
+    /* componentDidMount() {
+         try {
+             let card = document.getElementsByClassName('smooth-dnd-container');
+             let elements = Array.from(card);
+ 
+             elements[0].classList.remove('smooth-dnd-container');
+ 
+             elements[1].classList.add('smooth-dnd-container');
+             elements[2].classList.add('smooth-dnd-container');
+             elements[3].classList.add('smooth-dnd-container');
+             elements[4].classList.add('smooth-dnd-container');
+ 
+         } catch (e) {
+             console.log("Error: ", e);
+         }
+     }*/
 
     loadhotel = () => {
         this.props.client
@@ -353,7 +355,12 @@ class BoardManager extends Component {
 
 
     onCardClick = (cardId, metadata, laneId) => {
+        let needEnglish, needExperience, Position;
+
+
         if (laneId.trim() == "lane1") {
+            this.clearArray();
+
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
 
@@ -364,14 +371,20 @@ class BoardManager extends Component {
 
             this.setState(
                 {
-                    Intopening: cardId
+                    Intopening: this.state.workOrders.find((item) => { return item.id == cardId }).WorkOrderId,
+                    ShiftId: cardId
                 })
+
+
+            needEnglish = this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish;
+            needExperience = this.state.workOrders.find((item) => { return item.id == cardId }).needExperience;
+            Position = this.state.workOrders.find((item) => { return item.id == cardId }).Position;
+
 
             this.getLatLongHotel(1, this.state.workOrders.find((item) => {
                 return item.id == cardId
             }).Zipcode);
 
-            this.getWorkOrderPosition(cardId)
             console.log("esta es la info del work ordeer ", this.state.workOrders);
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
                 console.log("sessionStorage.getItem('NewFilterLead') ", sessionStorage.getItem('NewFilterLead'))
@@ -379,140 +392,17 @@ class BoardManager extends Component {
                     return item.id == cardId
                 }).Position);
             } else {
-                this.getMatches(this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).needEnglish, this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).needExperience, 30, laneId, this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).Position);
+                /* this.getMatches(this.state.workOrders.find((item) => {
+                     return item.id == cardId
+                 }).needEnglish, this.state.workOrders.find((item) => {
+                     return item.id == cardId
+                 }).needExperience, 30, laneId, this.state.workOrders.find((item) => {
+                     return item.id == cardId
+                 }).Position);*/
+
+                this.getMatches(needEnglish, needExperience, 30, laneId, Position);
             }
         }
-
-        /*  if (laneId.trim() == "Positions") {
-  
-              console.log("esta es la info Positions ");
-  
-              let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-              let anotherCards = document.querySelectorAll("article[data-id]");
-  
-              anotherCards.forEach((anotherCard) => {
-                  anotherCard.classList.remove("CardBoard-selected");
-              });
-              cardSelected[0].classList.add("CardBoard-selected");
-  
-              this.setState(
-                  {
-                      Intopening: cardId
-                  })
-  
-              this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
-  
-              this.getWorkOrderPosition(cardId)
-              console.log("esta es la info del work ordeer ", this.state.workOrders);
-              if (sessionStorage.getItem('NewFilterLead') === 'true') {
-  
-                  this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
-              } else {
-                  this.getMatches(this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish, this.state.workOrders.find((item) => { return item.id == cardId }).needExperience, 30, laneId, this.state.workOrders.find((item) => { return item.id == cardId }).Position);
-              }
-          }*/
-
-
-    }
-
-    getWorkOrderPosition = async (WorkOrderId) => {
-        let getworkOrdersPosition = [];
-        this.setState({ workOrdersPositions: [] });
-
-        await this.props.client.query({ query: GET_WORK_ORDERS, variables: { id: WorkOrderId } }).then(({ data }) => {
-            data.workOrder.forEach((wo) => {
-
-                const Shift = ShiftsData.find((item) => {
-                    return item.Id == wo.shift
-                });
-                const Users = data.getusers.find((item) => {
-                    return item.Id == wo.userId
-                });
-                const Contacts = data.getcontacts.find((item) => {
-                    return item.Id == (Users != null ? Users.Id_Contact : 10)
-                });
-
-                var currentQ = 1;
-
-                this.clearArray();
-
-                while (currentQ <= wo.quantity) {
-
-                    currentQ = currentQ + 1;
-                    getworkOrdersPosition.push({
-                        //datapositions = {
-                        id: wo.id,
-                        name: 'Title: ' + wo.position.Position,
-                        dueOn: 'Q: ' + 1,
-                        subTitle: 'ID: 000' + wo.id,
-                        body: wo.BusinessCompany.Name,
-                        escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                        escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 },
-                        needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish,
-                        PositionApplyfor: wo.position.Id_positionApplying,
-                        Position: wo.position.Position,
-                        Zipcode: wo.BusinessCompany.Zipcode
-                    });
-                }
-
-            })
-        })
-
-        this.setState(
-            {
-                workOrder: this.state.workOrders,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Work Orders',
-                        label: ' ',
-                        cards: this.state.workOrders,
-                        laneStyle: { borderRadius: 50, marginBottom: 15 },
-
-                    },
-                    {
-                        id: 'Positions',
-                        title: 'Positions',
-                        label: ' ',
-                        cards: getworkOrdersPosition,
-                        laneStyle: { borderRadius: 50, marginBottom: 15 }
-                    },
-                    {
-                        id: 'Matches',
-                        title: 'Matches',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Notify',
-                        title: 'Notify',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Accepted',
-                        title: 'Accepted',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Schedule',
-                        title: 'Add to Schedule',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
-
-            });
     }
 
     clearArray() {
@@ -528,15 +418,14 @@ class BoardManager extends Component {
                         laneStyle: { borderRadius: 50, marginBottom: 15 }
                     },
                     {
-                        id: 'Positions',
-                        title: 'Positions',
-                        label: ' ',
-                        cards: [],
-                        laneStyle: { borderRadius: 50, marginBottom: 15 }
-                    },
-                    {
                         id: 'Matches',
                         title: 'Matches',
+                        label: ' ',
+                        cards: []
+                    },
+                    {
+                        id: 'Interview',
+                        title: 'Interview',
                         label: ' ',
                         cards: []
                     },
@@ -551,12 +440,6 @@ class BoardManager extends Component {
                         title: 'Accepted',
                         label: ' ',
                         cards: []
-                    },
-                    {
-                        id: 'Schedule',
-                        title: 'Add to Schedule',
-                        label: ' ',
-                        cards: []
                     }
                 ],
                 loading: false
@@ -565,7 +448,7 @@ class BoardManager extends Component {
     }
 
     //getMatches = async (language, experience, location, laneId) => {
-    getMatches = async (language, experience, location, laneId, PositionId) => {
+    /*getMatches = async (language, experience, location, laneId, PositionId) => {
         let getmatches = [];
         let getnotify = [];
         let getaccepted = [];
@@ -750,17 +633,16 @@ class BoardManager extends Component {
                                         laneStyle: { borderRadius: 50, marginBottom: 15 }
                                     },
                                     {
-                                        id: 'Positions',
-                                        title: 'Positions',
-                                        label: ' ',
-                                        cards: this.state.workOrdersPositions,
-                                        laneStyle: { borderRadius: 50, marginBottom: 15 }
-                                    },
-                                    {
                                         id: 'Matches',
                                         title: 'Matches',
                                         label: ' ',
                                         cards: this.state.matches
+                                    },
+                                    {
+                                        id: 'Interview',
+                                        title: 'Interview',
+                                        label: ' ',
+                                        cards: []
                                     },
                                     {
                                         id: 'Notify',
@@ -773,12 +655,6 @@ class BoardManager extends Component {
                                         title: 'Accepted',
                                         label: ' ',
                                         cards: this.state.accepted
-                                    },
-                                    {
-                                        id: 'Schedule',
-                                        title: 'Add to Schedule',
-                                        label: ' ',
-                                        cards: this.state.schedule
                                     }
                                 ],
                                 loading: false
@@ -789,7 +665,171 @@ class BoardManager extends Component {
             }).catch(error => {
             })
         }
+    };*/
+
+    getMatches = async (language, experience, location, laneId, PositionId) => {
+        let getmatches = [];
+        let getnotify = [];
+        let getaccepted = [];
+        let getinterview = [];
+
+        let SpeakEnglish;
+        let Employment;
+        let distances;
+        let position;
+        let varphase;
+
+        // { getDistance } = this.context;
+        //let distance;
+
+        if (laneId == "lane1") {
+            await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
+                console.log("esta es la data ", data)
+                data.applications.forEach((wo) => {
+
+                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
+                    const IdealJob = wo.idealJobs.find((item) => { return item.description.toUpperCase().includes(PositionId.toUpperCase()) });
+
+                    this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                        //distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                        const { getDistance } = this.context;
+                        const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+
+
+                        console.log("esta es la distancia de ", wo.id, " nombre ", wo.firstName + ' ' + wo.lastName, " distancias ", distance, " fase ", Phases, " IdealJob ", IdealJob)
+
+                        if (language == 'true') {
+                            SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
+                        } else {
+                            SpeakEnglish = 1;
+                        }
+
+                        if (experience == 'true') {
+                            Employment = wo.employments.length;
+                        } else {
+                            Employment = 1;
+                        }
+
+                        if (distance >= location) {
+                            distances = 0;
+                        } else {
+                            distances = 1;
+                        }
+                        if (typeof IdealJob == undefined || IdealJob == null) {
+                            position = 0;
+                        } else { position = 1 }
+
+                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
+
+                            if (typeof Phases == undefined || Phases == null) {
+                                varphase = 30469;
+                            } else { varphase = Phases.StageId }
+
+                            switch (varphase) {
+                                case 30469:
+                                    //if (wo.isLead === false) {
+                                    getmatches.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    // }
+                                    break;
+                                case 30461:
+                                    getinterview.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    break;
+                                case 30464:
+
+                                    getnotify.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                case 30465:
+                                    getaccepted.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    break;
+                            }
+                        }
+
+                        this.setState({
+                            matches: getmatches,
+                            notify: getnotify,
+                            interview: getinterview,
+                            accepted: getaccepted
+                        });
+
+                        console.log()
+
+                        this.setState(
+                            {
+                                lane: [
+                                    {
+                                        id: 'lane1',
+                                        title: 'Work Orders',
+                                        label: ' ',
+                                        cards: this.state.workOrders,
+                                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                                    },
+                                    {
+                                        id: 'Matches',
+                                        title: 'Matches',
+                                        label: ' ',
+                                        cards: this.state.matches
+                                    },
+                                    {
+                                        id: 'Interview',
+                                        title: 'Interview',
+                                        label: ' ',
+                                        cards: this.state.interview
+                                    },
+                                    {
+                                        id: 'Notify',
+                                        title: 'Notify',
+                                        label: ' ',
+                                        cards: this.state.notify
+                                    },
+                                    {
+                                        id: 'Accepted',
+                                        title: 'Accepted',
+                                        label: ' ',
+                                        cards: this.state.accepted
+                                    }
+                                ],
+                                loading: false
+
+                            });
+                    });
+                });
+
+            }).catch(error => { })
+        }
     };
+
+
     getLatLongHotel = async (op, zipcode) => {
         await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
             this.setState({
@@ -856,150 +896,222 @@ class BoardManager extends Component {
         return variables;
     }
 
-    getWorkOrders = (vare = "primera") => {
+    /* getWorkOrders = (vare = "primera") => {
+         let getworkOrders = [];
+         let datas = [];
+ 
+         this.setState({
+             loading: true
+         }, () => {
+             this.props.client.query({
+                 query: GET_BOARD_SHIFT,
+                 fetchPolicy: "no-cache",
+                 variables: { ...this.getDataFilters() }
+             }).then(({ data }) => {
+                 if (data.ShiftBoard.length === 0) {
+                     this.setState({
+                         workOrders: [],
+                         lane: [
+                             {
+                                 id: 'lane1',
+                                 title: 'Work Orders',
+                                 label: ' ',
+                                 cards: getworkOrders,
+                                 laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                             },
+                             {
+                                 id: 'Matches',
+                                 title: 'Matches',
+                                 label: ' ',
+                                 cards: []
+                             },
+                             {
+                                 id: 'Interview',
+                                 title: 'Interview',
+                                 label: ' ',
+                                 cards: []
+                             },
+                             {
+                                 id: 'Notify',
+                                 title: 'Notify',
+                                 label: ' ',
+                                 cards: []
+                             },
+                             {
+                                 id: 'Accepted',
+                                 title: 'Accepted',
+                                 label: ' ',
+                                 cards: []
+                             }
+                         ],
+                         loading: false
+                     });
+                 } else {
+                     let _id = data.ShiftBoard[0].workOrderId;
+                     let count = 1;
+                     let begin = true;
+ 
+ 
+                     data.ShiftBoard.forEach((ShiftBoard) => {
+ 
+                         if (_id == ShiftBoard.workOrderId)
+                             count++;
+                         else {
+                             count = 1;
+                         }
+ 
+                         if (begin) count = 1;
+ 
+                         _id = ShiftBoard.workOrderId;
+                         datas = {
+                             id: ShiftBoard.id,
+                             name: 'Title: ' + ShiftBoard.title,
+                             dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                             subTitle: 'ID: 000' + ShiftBoard.workOrderId,
+                             body: ShiftBoard.CompanyName,
+                             //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
+                             //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
+                             cardStyle: { borderRadius: 6, marginBottom: 15 },
+                             needExperience: ShiftBoard.needExperience,
+                             needEnglish: ShiftBoard.needEnglish,
+                             PositionApplyfor: ShiftBoard.Id_positionApplying,
+                             Position: ShiftBoard.positionName,
+                             Zipcode: ShiftBoard.zipCode,
+                             WorkOrderId: ShiftBoard.workOrderId,
+                             isOpening: ShiftBoard.isOpening
+                         };
+                         getworkOrders.push(datas);
+                         begin = false;
+                     });
+                     this.setState({
+                         workOrders: getworkOrders,
+                         lane: [
+                             {
+                                 id: 'lane1',
+                                 title: 'Work Orders',
+                                 label: ' ',
+                                 cards: getworkOrders,
+                                 laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                             },
+                             {
+                                 id: 'Matches',
+                                 title: 'Matches',
+                                 label: ' ',
+                                 cards: this.state.matches
+                             },
+                             {
+                                 id: 'Interview',
+                                 title: 'Interview',
+                                 label: ' ',
+                                 cards: []
+                             },
+                             {
+                                 id: 'Notify',
+                                 title: 'Notify',
+                                 label: ' ',
+                                 cards: []
+                             },
+                             {
+                                 id: 'Accepted',
+                                 title: 'Accepted',
+                                 label: ' ',
+                                 cards: []
+                             }
+                         ],
+                         loading: false
+                     });
+                 }
+             }).catch(error => {
+                 this.setState({
+                     loading: false
+                 })
+             })
+         });
+     };*/
+
+    getWorkOrders = async () => {
         let getworkOrders = [];
         let datas = [];
 
-        this.setState({
-            loading: true
-        }, () => {
-            this.props.client.query({
-                query: GET_BOARD_SHIFT,
-                fetchPolicy: "no-cache",
-                variables: { ...this.getDataFilters() }
-            }).then(({ data }) => {
-                if (data.ShiftBoard.length === 0) {
-                    this.setState({
-                        workOrders: [],
-                        lane: [
-                            {
-                                id: 'lane1',
-                                title: 'Work Orders',
-                                label: ' ',
-                                cards: getworkOrders,
-                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                            },
-                            {
-                                id: 'Positions',
-                                title: 'Positions',
-                                label: ' ',
-                                cards: [],
-                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                            },
-                            {
-                                id: 'Matches',
-                                title: 'Matches',
-                                label: ' ',
-                                cards: this.state.matches
-                            },
-                            {
-                                id: 'Notify',
-                                title: 'Notify',
-                                label: ' ',
-                                cards: []
-                            },
-                            {
-                                id: 'Accepted',
-                                title: 'Accepted',
-                                label: ' ',
-                                cards: []
-                            },
-                            {
-                                id: 'Schedule',
-                                title: 'Add to Schedule',
-                                label: ' ',
-                                cards: []
-                            }
-                        ],
-                        loading: false
-                    });
-                } else {
-                    let _id = data.ShiftBoard[0].workOrderId;
-                    let count = 1;
-                    let begin = true;
 
-
-                    data.ShiftBoard.forEach((ShiftBoard) => {
-
-                        if (_id == ShiftBoard.workOrderId)
-                            count++;
-                        else {
-                            count = 1;
-                        }
-
-                        if (begin) count = 1;
-
-                        _id = ShiftBoard.workOrderId;
-                        datas = {
-                            id: ShiftBoard.id,
-                            name: 'Title: ' + ShiftBoard.title,
-                            dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
-                            subTitle: 'ID: 000' + ShiftBoard.workOrderId,
-                            body: ShiftBoard.CompanyName,
-                            //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                            //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                            cardStyle: { borderRadius: 6, marginBottom: 15 },
-                            needExperience: ShiftBoard.needExperience,
-                            needEnglish: ShiftBoard.needEnglish,
-                            PositionApplyfor: ShiftBoard.Id_positionApplying,
-                            Position: ShiftBoard.Position,
-                            Zipcode: ShiftBoard.zipCode,
-                            WorkOrderId: ShiftBoard.workOrderId,
-                            isOpening: ShiftBoard.isOpening
-                        };
-                        getworkOrders.push(datas);
-                        begin = false;
-                    });
-                    this.setState({
-                        workOrders: getworkOrders,
-                        lane: [
-                            {
-                                id: 'lane1',
-                                title: 'Work Orders',
-                                label: ' ',
-                                cards: getworkOrders,
-                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                            },
-                            {
-                                id: 'Positions',
-                                title: 'Positions',
-                                label: ' ',
-                                cards: [],
-                                laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                            },
-                            {
-                                id: 'Matches',
-                                title: 'Matches',
-                                label: ' ',
-                                cards: this.state.matches
-                            },
-                            {
-                                id: 'Notify',
-                                title: 'Notify',
-                                label: ' ',
-                                cards: []
-                            },
-                            {
-                                id: 'Accepted',
-                                title: 'Accepted',
-                                label: ' ',
-                                cards: []
-                            },
-                            {
-                                id: 'Schedule',
-                                title: 'Add to Schedule',
-                                label: ' ',
-                                cards: []
-                            }
-                        ],
-                        loading: false
-                    });
+        await this.props.client.query({
+            query: GET_BOARD_SHIFT,
+            variables: { ...this.getDataFilters() }
+        }).then(({ data }) => {
+            let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
+            let count = 1;
+            let begin = true;
+            data.ShiftBoard.forEach((ShiftBoard) => {
+                if (_id == ShiftBoard.workOrderId)
+                    count++;
+                else {
+                    count = 1;
                 }
-            }).catch(error => {
-                this.setState({
-                    loading: false
-                })
-            })
+
+                if (begin) count = 1;
+                datas = {
+                    id: ShiftBoard.id,
+                    name: 'Title: ' + ShiftBoard.title,
+                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                    subTitle: 'ID: 000' + ShiftBoard.workOrderId,
+                    body: ShiftBoard.CompanyName,
+                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                    needExperience: ShiftBoard.needExperience,
+                    needEnglish: ShiftBoard.needEnglish,
+                    PositionApplyfor: ShiftBoard.Id_positionApplying,
+                    Position: ShiftBoard.positionName,
+                    Zipcode: ShiftBoard.zipCode,
+                    WorkOrderId: ShiftBoard.workOrderId,
+                    isOpening: ShiftBoard.isOpening
+                };
+                getworkOrders.push(datas);
+
+            });
+
+            this.setState({
+                workOrders: getworkOrders,
+            });
+        }).catch(error => {
+            console.log(error)
+        })
+
+        this.setState({
+
+            // workOrders: getworkOrders,
+            lane: [
+                {
+                    id: 'lane1',
+                    title: 'Work Orders',
+                    label: ' ',
+                    cards: getworkOrders,
+                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                },
+                {
+                    id: 'Matches',
+                    title: 'Matches',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Interview',
+                    title: 'Interview',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Notify',
+                    title: 'Notify',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Accepted',
+                    title: 'Accepted',
+                    label: ' ',
+                    cards: []
+                }
+            ],
+            loading: false
         });
     };
 
@@ -1013,10 +1125,10 @@ class BoardManager extends Component {
         /*   const { getDistance } = this.context;
            const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
            const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
-
-
+     
+     
            console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
-   */
+    */
         return (
             <div className="App">
                 <div className="App-header">

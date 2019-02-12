@@ -451,7 +451,7 @@ class BoardRecruiter extends Component {
         let needEnglish, needExperience, Position;
 
 
-        if (laneId == "lane1") {
+        if (laneId.trim() == "lane1") {
             this.clearArray();
 
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
@@ -638,7 +638,7 @@ class BoardRecruiter extends Component {
                         console.log("if (distance > location) {   ", distance, location)
 
 
-                        if (distance > location) {
+                        if (distance >= location) {
                             distances = 0;
                         } else {
                             distances = 1;
@@ -759,7 +759,6 @@ class BoardRecruiter extends Component {
 
             }).catch(error => { })
         }
-
     };
 
     getDataFilters = () => {
