@@ -205,7 +205,7 @@ class DepartmentsTable extends React.Component {
 											key={uuidv4()}
 											onClick={() => {
 												history.push({
-													pathname: '/home/contract/add',
+													pathname: '/home/contract/edit',
 													state: { contract: row.Id }
 												});
 											}}
@@ -217,7 +217,7 @@ class DepartmentsTable extends React.Component {
 														disabled={this.props.loading}
 														onClick={() => {
 															history.push({
-																pathname: '/home/contract/add',
+																pathname: '/home/contract/edit',
 																state: { contract: row.Id }
 															});
 														}}
