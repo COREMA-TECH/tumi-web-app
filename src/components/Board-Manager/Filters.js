@@ -17,6 +17,13 @@ class Filters extends Component {
         }
     }
 
+    resetState = () => {
+        this.setState({
+            needExperience: false,
+            needEnglish: false,
+            distance: 0
+        })
+    };
 
     handleChange = (event) => {
         const target = event.target;
@@ -29,14 +36,15 @@ class Filters extends Component {
     };
 
     CloseWin = () => {
+        this.resetState();
 
         sessionStorage.setItem('NewFilterLead', false);
         sessionStorage.setItem('needExperienceLead', false);
         sessionStorage.setItem('needEnglishLead', false);
-        sessionStorage.setItem('distances', 30);
+        sessionStorage.setItem('distances', 0);
 
         this.props.handleCloseModal()
-    }
+    };
 
     NewFilters = () => {
         sessionStorage.setItem('NewFilterLead', true);
@@ -60,7 +68,7 @@ class Filters extends Component {
                         </div>
                     </DialogTitle>
                     <DialogContent>
-                        <form>
+                        <div>
                             <div className="row">
                                 <div className="col-md-6">
                                     <label>Needs Experience?</label>
@@ -118,10 +126,11 @@ class Filters extends Component {
                                 <div className="col-md-12">
                                     <div className="row">
                                         <div className="col-md-12">
-                                            <button type="reset" className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
+                                            <button
+                                                type="reset" className="btn btn-danger ml-1 float-right" onClick={this.CloseWin}>
                                                 Reset Filters<i class="fas fa-ban ml-2" />
                                             </button>
-                                            <button type="reset" className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
+                                            <button className="btn btn-success ml-1 float-right" onClick={this.NewFilters}>
                                                 New Filter {!this.state.saving && <i class="fas fa-filter ml2" />}
                                                 {this.state.saving && <i class="fas fa-spinner fa-spin  ml2" />}
                                             </button>
@@ -129,7 +138,7 @@ class Filters extends Component {
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </DialogContent>
                 </Dialog>
 

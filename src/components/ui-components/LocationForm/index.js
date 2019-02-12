@@ -227,7 +227,6 @@ class LocationForm extends Component {
     }
 
     render() {
-        console.log("This is my render:::", this.state)
         const loading = this.state.loadingCities || this.state.loadingStates || this.state.findingZipCode;
         return <React.Fragment>
             <div className={this.props.cityColClass || "col-md-6 col-lg-4"}>
