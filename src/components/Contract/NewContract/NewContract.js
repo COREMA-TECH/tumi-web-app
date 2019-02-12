@@ -1491,7 +1491,7 @@ class NewContract extends Component {
                                                     valueSelected={this.state.Id_User_Signed}
                                                     handleOpenSnackbar={this.props.handleOpenSnackbar}
                                                     error={!this.state.Id_User_SignedValid}
-                                                    idCompany={this.state.Id_Entity}
+                                                    idCompany={this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity}
                                                     update={this.updateIdContact}
                                                     updateEmailContact={(email) => {
                                                         this.setState(
@@ -1714,7 +1714,7 @@ class NewContract extends Component {
                                             defaultValue=""
                                             valueSelected={this.state.Id_User_Billing_Contact}
                                             error={!this.state.Id_User_Billing_ContactValid}
-                                            idCompany={this.state.Id_Entity}
+                                            idCompany={this.state.Id_Entity == "0" ? this.state.IdManagement : this.state.Id_Entity}
                                             update={(id) => {
                                                 this.setState(
                                                     {

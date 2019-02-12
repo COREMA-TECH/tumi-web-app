@@ -4,7 +4,7 @@ import withGlobalContent from '../Generic/Global';
 import withApollo from 'react-apollo/withApollo';
 import PropTypes from 'prop-types';
 
-import { UPDATE_APPLICANT } from "./Mutations";
+import { UPDATE_APPLICANT, ADD_APPLICATION_PHASES, UPDATE_APPLICATION_STAGE } from "./Mutations";
 import {
     GET_CITIES_QUERY,
     GET_COORDENADAS,
@@ -118,7 +118,9 @@ class BoardManager extends Component {
             distance: 0,
             showConfirm: true,
             ShiftId: 0,
-            Intopening: 0
+            Intopening: 0,
+            userId: localStorage.getItem('LoginId'),
+            ReasonId: 30471,
 
         }
     }
@@ -146,11 +148,14 @@ class BoardManager extends Component {
                 case "Matches":
                     IdLane = 30469
                 default:
-                    IdLane = 30460
+                    IdLane = 30469
             }
+
             if (targetLaneId != sourceLaneId) {
+                this.addApplicationPhase(cardId, IdLane);
+
                 if (targetLaneId != "Leads") {
-                    this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                    this.updateApplicationInformation(cardId, true, 'candidate was updated!');
                 }
 
                 if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
@@ -159,12 +164,106 @@ class BoardManager extends Component {
                         openReason: true
                     }, () => {
                     });
+
+                    this.setState(
+                        {
+                            lane: [
+                                {
+                                    id: 'lane1',
+                                    title: 'Work Orders',
+                                    label: ' ',
+                                    cards: this.state.workOrders,
+                                    laneStyle: { borderRadius: 50, marginBottom: 15 }
+                                },
+                                {
+                                    id: 'Matches',
+                                    title: 'Matches',
+                                    label: ' ',
+                                    cards: this.state.matches
+                                },
+                                {
+                                    id: 'Interview',
+                                    title: 'Interview',
+                                    label: ' ',
+                                    cards: this.state.interview
+                                },
+                                {
+                                    id: 'Notify',
+                                    title: 'Notify',
+                                    label: ' ',
+                                    cards: this.state.notify
+                                },
+                                {
+                                    id: 'Accepted',
+                                    title: 'Accepted',
+                                    label: ' ',
+                                    cards: this.state.accepted
+                                }
+                            ],
+                            loading: false
+                        });
                 }
             }
+
+            /*   if (targetLaneId != sourceLaneId) {
+                   if (targetLaneId != "Leads") {
+                       this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                   }
+   
+                   if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
+                       this.setState({
+                           ApplicationId: cardId,
+                           openReason: true
+                       }, () => {
+                       });
+                   }
+               }*/
         }
     }
 
-    componentWillMount() {
+    addApplicationPhase = (id, laneId) => {
+        this.props.client.mutate({
+            mutation: ADD_APPLICATION_PHASES,
+            variables: {
+                applicationPhases: {
+                    Comment: " ",
+                    UserId: parseInt(this.state.userId),
+                    WorkOrderId: this.state.Intopening,
+                    ShiftId: this.state.ShiftId,
+                    ReasonId: this.state.ReasonId,
+                    ApplicationId: id,
+                    StageId: laneId
+                }
+            }
+        }).then(({ data }) => {
+            this.setState({
+                editing: false
+            });
+
+            this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
+        }).catch((error) => {
+            this.props.handleOpenSnackbar(
+                'error',
+                'Error to Add applicant Phase information. Please, try again!',
+                'bottom',
+                'right'
+            );
+        });
+    }
+
+    UNSAFE_componentWillMount() {
+        this.setState(
+            {
+                loading: true
+            }, () => {
+                this.loadhotel();
+                this.loadStates();
+                this.getWorkOrders();
+
+            });
+    }
+
+    /*componentWillMount() {
         this.setState(
             {
                 loading: true
@@ -172,7 +271,7 @@ class BoardManager extends Component {
                 this.loadhotel();
                 this.getWorkOrders();
             });
-    }
+    }*/
 
     /* componentDidMount() {
          try {
@@ -199,12 +298,10 @@ class BoardManager extends Component {
             .then(({ data }) => {
                 this.setState({
                     hotels: data.getbusinesscompanies
-                }, () => {
-                    this.loadStates();
                 });
             })
             .catch();
-    };
+    }
 
     loadStates = () => {
         this.props.client
@@ -408,7 +505,7 @@ class BoardManager extends Component {
     clearArray() {
         this.setState(
             {
-                workOrder: this.state.workOrders,
+                // workOrder: this.state.workOrders,
                 lane: [
                     {
                         id: 'lane1',
@@ -829,6 +926,40 @@ class BoardManager extends Component {
         }
     };
 
+    updateApplicationStages = (id, idStages, Message) => {
+        this.setState(
+            {
+                insertDialogLoading: true
+            },
+            () => {
+                this.props.client
+                    .mutate({
+                        mutation: UPDATE_APPLICATION_STAGE,
+                        variables: {
+
+                            id: id,
+                            idStages: idStages
+
+                        }
+                    })
+                    .then(({ data }) => {
+                        this.setState({
+                            editing: false
+                        });
+
+
+                    })
+                    .catch((error) => {
+                        this.props.handleOpenSnackbar(
+                            'error',
+                            'Error to update applicant information. Please, try again!',
+                            'bottom',
+                            'right'
+                        );
+                    });
+            }
+        );
+    };
 
     getLatLongHotel = async (op, zipcode) => {
         await this.props.client.query({ query: GET_COORDENADAS, variables: { Zipcode: zipcode } }).then(({ data }) => {
