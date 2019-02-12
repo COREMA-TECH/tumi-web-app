@@ -189,8 +189,8 @@ class DepartmentsTable extends React.Component {
 						<Table className={classes.table}>
 							<TableHead>
 								<TableRow>
-									<CustomTableCell padding="none" className={"Table-head text-center"} >Actions</CustomTableCell>
-									<CustomTableCell className={"Table-head"}>Contract Name</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Actions</CustomTableCell>
+									< CustomTableCell className={"Table-head"}>Contract Name</CustomTableCell>
 									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Owner</CustomTableCell>
 									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Status</CustomTableCell>
 									<CustomTableCell style={{ textAlign: 'center' }} className={"Table-head"}>Contract Expiration Date</CustomTableCell>
@@ -210,7 +210,7 @@ class DepartmentsTable extends React.Component {
 												});
 											}}
 										>
-											<CustomTableCell component="th" style={{ textAlign: 'center', width: '50px' }}>
+											<CustomTableCell component="th">
 												<Tooltip title="Edit">
 													<button
 														className="btn btn-danger ml-1 float-left"

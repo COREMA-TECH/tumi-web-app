@@ -200,10 +200,11 @@ class BoardRecruiter extends Component {
             }
         }
 
-    }
+    };
 
-    handleCloseModal = (event) => {
-        event.preventDefault();
+    handleCloseModal = () => {
+        this.setState({ openModal: false });
+
 
         this.setState(
             {

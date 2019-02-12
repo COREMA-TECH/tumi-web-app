@@ -251,12 +251,10 @@ class PositionsTable extends React.Component {
 				<Table className={classes.table}>
 					<TableHead>
 						<TableRow>
-							<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }} >
+							<CustomTableCell className={"Table-head"}>
 								Actions
 							</CustomTableCell>
-							<CustomTableCell style={{
-								width: '25px'
-							}} className={'Table-head'}>Department</CustomTableCell>
+							<CustomTableCell className={'Table-head'}>Department</CustomTableCell>
 							<CustomTableCell className={'Table-head'}>Title</CustomTableCell>
 
 							<CustomTableCell className={'Table-head'}>Bill Rate</CustomTableCell>
@@ -281,7 +279,7 @@ class PositionsTable extends React.Component {
 									}}
 								>
 
-									<CustomTableCell component="th" style={{ width: '50px' }}>
+									<CustomTableCell component="th">
 										<Tooltip title="Edit">
 											<button
 												className="btn btn-success ml-1 float-left"
