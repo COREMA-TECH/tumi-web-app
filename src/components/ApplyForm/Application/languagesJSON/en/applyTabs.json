@@ -25,10 +25,14 @@
   },
   {
     "id": 6,
-    "label": "Documents"
+    "label": "I9"
   },
   {
     "id": 7,
+    "label": "Documents"
+  },
+  {
+    "id": 8,
     "label": "Profile"
   }
 ]
