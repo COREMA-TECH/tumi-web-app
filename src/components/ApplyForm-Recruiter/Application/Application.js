@@ -199,7 +199,8 @@ class Application extends Component {
                                     comment: this.state.comment,
                                     generalComment: this.state.generalComment,
                                     isLead: true,
-                                    idRecruiter: parseInt(this.state.idRecruiter)
+                                    idRecruiter: parseInt(this.state.idRecruiter),
+                                    UserId: localStorage.getItem('LoginId')
                                 }
                             }
                         })
