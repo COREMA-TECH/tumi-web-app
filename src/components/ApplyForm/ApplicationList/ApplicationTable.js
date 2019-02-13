@@ -188,7 +188,10 @@ class ApplicationTable extends React.Component {
 							<TableHead>
 								<TableRow>
 									<CustomTableCell padding="none" className={"Table-head text-center"} style={{ width: '50px' }}>Actions</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Work Order</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Position Applying For</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Hotel</CustomTableCell>
+									<CustomTableCell className={"Table-head"}>Recruiter</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Full Name</CustomTableCell>
 									<CustomTableCell className={"Table-head"}>Email Address</CustomTableCell>
 								</TableRow>
@@ -218,13 +221,16 @@ class ApplicationTable extends React.Component {
 															return this.props.onDeleteHandler(row.id);
 														}}
 													>
-														<i class="fas fa-trash"></i>
+														<i className="fas fa-trash"></i>
 													</button>
 												</Tooltip>
 											</CustomTableCell>
+											<CustomTableCell>{row.idWorkOrder ? `000000${row.idWorkOrder}`.slice(-6) : ''}</CustomTableCell>
 											<CustomTableCell>
 												{row.position ? row.position.position.Position.trim() + '(' + row.position.BusinessCompany.Code.trim() + ')' : 'Open Position'}
 											</CustomTableCell>
+											<CustomTableCell>{row.position ? row.position.BusinessCompany.Name : ''}</CustomTableCell>
+											<CustomTableCell>{row.recruiter ? row.recruiter.Full_Name : ''}</CustomTableCell>
 											<CustomTableCell>{row.firstName + ' ' + row.lastName}</CustomTableCell>
 											<CustomTableCell>{row.emailAddress}</CustomTableCell>
 										</TableRow>

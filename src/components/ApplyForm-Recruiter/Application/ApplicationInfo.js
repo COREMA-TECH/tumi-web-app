@@ -128,7 +128,7 @@ class VerticalLinearStepper extends Component {
                 <div className="row">
                     <div className="col-md-12 pl-3 mb-2">
                         <button
-                            className="btn btn-outline-success"
+                            className="btn btn-success btn-sm"
                             onClick={() => {
                                 this.props.history.push({
                                     pathname: '/home/board/recruiter',

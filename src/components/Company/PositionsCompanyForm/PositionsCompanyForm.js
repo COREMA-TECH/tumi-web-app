@@ -574,7 +574,7 @@ query getposition ($Id_Entity:Int){
 			this.props.client
 				.query({
 					query: this.GET_DEPARTMENTS_QUERY,
-					variables: { Id_Entity: this.state.idCompany },
+					variables: { Id_Entity: this.props.idCompany },
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
@@ -608,11 +608,12 @@ query getposition ($Id_Entity:Int){
 	};
 
 	loadPositions = (func = () => { }) => {
+		console.log(" loadPositions ", this.props.idCompany)
 		this.setState({ loadingData: true }, () => {
 			this.props.client
 				.query({
 					query: this.GET_POSTIONS_QUERY,
-					variables: { Id_Entity: this.state.idCompany },
+					variables: { Id_Entity: this.props.idCompany },
 					fetchPolicy: 'no-cache'
 				})
 				.then((data) => {
@@ -831,7 +832,7 @@ query getposition ($Id_Entity:Int){
 		this.props.client
 			.query({
 				query: this.GET_RATE_QUERY,
-				variables: { Id: this.state.idCompany },
+				variables: { Id: this.props.idCompany },
 				fetchPolicy: 'no-cache'
 			})
 			.then((data) => {
@@ -925,7 +926,7 @@ query getposition ($Id_Entity:Int){
 														pathname: '/home/contract/add',
 														state: {
 															contract: 0,
-															Id_Entity: this.state.idCompany,
+															Id_Entity: this.props.idCompany,
 															Id_Parent: this.props.idManagement,
 															idContract: this.props.idContract,
 															href: hrefValue

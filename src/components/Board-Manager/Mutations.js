@@ -11,6 +11,7 @@ export const UPDATE_APPLICANT = gql`
 	}
 `;
 
+
 export const UPDATE_APPLICATION_STAGE = gql`
 	mutation updateApplicationMoveStage($id: Int,$idStages: Int) {
 		updateApplicationMoveStage(id: $id,idStages: $idStages) {
@@ -20,9 +21,25 @@ export const UPDATE_APPLICATION_STAGE = gql`
 `;
 
 export const ADD_APPLICATION_PHASES = gql`
-	mutation addApplicantPhase($applicationPhases: [inputApplicantPhase]) {
+	mutation addApplicantPhase($applicationPhases: inputApplicantPhase) {
 		addApplicantPhase(applicationPhases: $applicationPhases) {
 			id
+		}
+	}
+`;
+
+export const CONVERT_TO_OPENING = gql`
+	mutation convertShiftToOpening($shiftWorkOrder:filterShiftWOConvertToOpening, 
+		$shift: filterShiftConvertToOpening, 
+		$sourceStatus: Int!,
+		$targetStatus: Int! ){
+		convertShiftToOpening(shiftWorkOrder:$shiftWorkOrder, shift:$shift, 
+			sourceStatus: $sourceStatus,
+			targetStatus: $targetStatus ){
+		id
+		entityId
+		title
+		color
 		}
 	}
 `;

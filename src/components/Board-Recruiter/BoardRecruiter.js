@@ -5,7 +5,7 @@ import withApollo from "react-apollo/withApollo";
 import PropTypes from 'prop-types';
 
 import { ADD_APPLICATION_PHASES, UPDATE_APPLICANT, UPDATE_APPLICATION_STAGE } from "./Mutations";
-import { GET_CITIES_QUERY, GET_COORDENADAS, GET_HOTEL_QUERY, GET_LEAD, GET_OPENING, GET_STATES_QUERY } from "./Queries";
+import { GET_CITIES_QUERY, GET_COORDENADAS, GET_HOTEL_QUERY, GET_LEAD, GET_OPENING, GET_STATES_QUERY, GET_BOARD_SHIFT } from "./Queries";
 //import Board from 'react-trello'
 import { Board } from 'react-trello'
 import ShiftsData from '../../data/shitfsWorkOrder.json';
@@ -107,7 +107,8 @@ class BoardRecruiter extends Component {
             longitud1: 0,
             latitud2: 0,
             longitud2: 0,
-            distance: 0
+            distance: 0,
+            ShiftId: 0
         }
     }
 
@@ -146,11 +147,10 @@ class BoardRecruiter extends Component {
         }
 
         if (targetLaneId != sourceLaneId) {
-            // this.updateApplicationStages(cardId, IdLane, 'Lead now is a Candidate');
             this.addApplicationPhase(cardId, IdLane);
+
             if (targetLaneId != "Leads") {
-                //this.addApplicationPhase(cardId, IdLane);
-                this.updateApplicationInformation(cardId, false, 'candidate was updated!');
+                this.updateApplicationInformation(cardId, true, 'candidate was updated!');
             }
 
             if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
@@ -198,21 +198,13 @@ class BoardRecruiter extends Component {
                         loading: false
                     });
             }
-
-            // if (targetLaneId == "Applied") {
-
-            // this.addApplicationPhase(cardId, IdLane);
-            // }
-            // if ((sourceLaneId == "Candidate" && targetLaneId == "Applied") || (sourceLaneId == "Candidate" && targetLaneId == "Leads")) {
-            /*  if (targetLaneId == "Leads") {
-                  this.updateApplicationInformation(cardId, true, 'Candidate now is a Lead ');
-              }*/
         }
 
-    }
+    };
 
-    handleCloseModal = (event) => {
-        event.preventDefault();
+    handleCloseModal = () => {
+        this.setState({ openModal: false });
+
 
         this.setState(
             {
@@ -268,6 +260,7 @@ class BoardRecruiter extends Component {
                     Comment: " ",
                     UserId: parseInt(this.state.userId),
                     WorkOrderId: this.state.Intopening,
+                    ShiftId: this.state.ShiftId,
                     ReasonId: this.state.ReasonId,
                     ApplicationId: id,
                     StageId: laneId
@@ -278,11 +271,11 @@ class BoardRecruiter extends Component {
                 editing: false
             });
 
-            this.props.handleOpenSnackbar('success', "Message", 'bottom', 'right');
+            this.props.handleOpenSnackbar('success', "Application Status Saved", 'bottom', 'right');
         }).catch((error) => {
             this.props.handleOpenSnackbar(
                 'error',
-                'Error to Add applicant information. Please, try again!',
+                'Error to Add applicant Phase information. Please, try again!',
                 'bottom',
                 'right'
             );
@@ -295,6 +288,7 @@ class BoardRecruiter extends Component {
                 loading: true
             }, () => {
                 this.loadhotel();
+                this.loadStates();
                 this.getOpenings();
 
             });
@@ -404,18 +398,6 @@ class BoardRecruiter extends Component {
         );
     };
 
-    /* updateCity = (id) => {
-         this.setState(
-             {
-                 city: id
-             },
-             () => {
-                 // this.validateField('city', id);
-             }
-         );
-     };*/
-
-
     validateInvalidInput = () => {
     };
 
@@ -425,8 +407,52 @@ class BoardRecruiter extends Component {
     handleCardAdd = (card, laneId) => {
     }
 
+    clearArray() {
+        this.setState({
+
+            Opening: this.state.Openings,
+            lane: [
+                {
+                    id: 'lane1',
+                    title: 'Openings',
+                    label: ' ',
+                    cards: this.state.Openings
+                },
+                {
+                    id: 'Leads',
+                    title: 'Leads',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Applied',
+                    title: 'Sent to Interview',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Candidate',
+                    title: 'Candidate',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Placement',
+                    title: 'Placement',
+                    label: ' ',
+                    cards: []
+                }
+            ],
+            loading: false
+        });
+    }
+
     onCardClick = (cardId, metadata, laneId) => {
-        if (laneId == "lane1") {
+        let needEnglish, needExperience, Position;
+
+
+        if (laneId.trim() == "lane1") {
+            this.clearArray();
 
             let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
             let anotherCards = document.querySelectorAll("article[data-id]");
@@ -438,28 +464,24 @@ class BoardRecruiter extends Component {
 
             this.setState(
                 {
-                    Intopening: cardId
+                    Intopening: this.state.Openings.find((item) => { return item.id == cardId }).WorkOrderId,
+                    ShiftId: cardId
                 })
 
-            this.getLatLongHotel(1, this.state.Openings.find((item) => {
-                return item.id == cardId
-            }).Zipcode);
+            needEnglish = this.state.Openings.find((item) => { return item.id == cardId }).needEnglish;
+            needExperience = this.state.Openings.find((item) => { return item.id == cardId }).needExperience;
+            Position = this.state.Openings.find((item) => { return item.id == cardId }).Position;
+
+            console.log(this.state.Openings.find((item) => { return item.id == cardId }))
+
+            this.getLatLongHotel(1, this.state.Openings.find((item) => { return item.id == cardId }).Zipcode);
 
 
             if (sessionStorage.getItem('NewFilterLead') === 'true') {
                 console.log("Estoy aqui con los nuevos filtros");
-                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).PositionApplyfor);
+                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.Openings.find((item) => { return item.id == cardId }).PositionApplyfor);
             } else {
-                console.log("Estoy aqui con los viejos filtros");
-                this.getMatches(this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).needEnglish, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).needExperience, 30, laneId, this.state.Openings.find((item) => {
-                    return item.id == cardId
-                }).PositionApplyfor);
+                this.getMatches(needEnglish, needExperience, 30, laneId, Position);
             }
         }
     }
@@ -478,8 +500,8 @@ class BoardRecruiter extends Component {
                             id: id,
                             isLead: isLead,
                             idRecruiter: this.state.userId,
-                            idWorkOrder: this.state.Intopening
-
+                            idWorkOrder: this.state.Intopening,
+                            positionApplyingFor: this.state.Intopening
                         }
                     })
                     .then(({ data }) => {
@@ -576,18 +598,24 @@ class BoardRecruiter extends Component {
         console.log("language, experience, location, laneId, PositionId ", language, experience, location, laneId, PositionId)
 
         if (laneId == "lane1") {
-            /*positionApplyingFor: PositionId  */
             await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
                 data.applications.forEach((wo) => {
 
-                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
-                        return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id
-                    });
-                    const IdealJob = wo.idealJobs.find((item) => {
-                        return item.idPosition == PositionId
-                    });
+                    console.log("data.applications.forEach((wo) ", wo)
+
+                    console.log("this.state.Intopening ", this.state.Intopening, " Shift ")
+
+                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
+                    //const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
+                    const IdealJob = wo.idealJobs.find((item) => { return item.description.toUpperCase().includes(PositionId.toUpperCase()) });
+
+                    console.log("Phases,IdealJob  ", Phases, IdealJob)
+
+                    console.log(" Zipcode del empleado ", wo.zipCode)
 
                     this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+
+                        console.log(" wo.zipCode.substring(0, 5) ", wo.zipCode.substring(0, 5))
 
                         const { getDistance } = this.context;
                         const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
@@ -596,9 +624,7 @@ class BoardRecruiter extends Component {
                         console.log("la distance  es ", distance)
 
                         if (language == 'true') {
-                            SpeakEnglish = wo.languages.find((item) => {
-                                return item.language == 194
-                            }) != null ? 1 : 0;
+                            SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
                         } else {
                             SpeakEnglish = 1;
                         }
@@ -612,16 +638,16 @@ class BoardRecruiter extends Component {
                         console.log("if (distance > location) {   ", distance, location)
 
 
-                        if (distance > location) {
+                        if (distance >= location) {
                             distances = 0;
                         } else {
                             distances = 1;
                         }
                         if (typeof IdealJob == undefined || IdealJob == null) {
                             position = 0;
-                        } else {
-                            position = 1
-                        }
+                        } else { position = 1 }
+
+                        console.log("SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position   ", SpeakEnglish, Employment, distances, position)
 
 
                         if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
@@ -629,26 +655,24 @@ class BoardRecruiter extends Component {
 
                             if (typeof Phases == undefined || Phases == null) {
                                 varphase = 30460;
-                            } else {
-                                varphase = Phases.StageId
-                            }
+                            } else { varphase = Phases.StageId }
 
 
                             console.log(" switch (varphase) { ", varphase)
 
                             switch (varphase) {
                                 case 30460:
-                                    if (wo.isLead === true) {
-                                        getleads.push({
-                                            id: wo.id,
-                                            name: wo.firstName + ' ' + wo.lastName,
-                                            subTitle: wo.cellPhone,
-                                            body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                            escalationTextLeftLead: wo.generalComment,
-                                            escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                            cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                        });
-                                    }
+                                    // if (wo.isLead === true) {
+                                    getleads.push({
+                                        id: wo.id,
+                                        name: wo.firstName + ' ' + wo.lastName,
+                                        subTitle: wo.cellPhone,
+                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                        escalationTextLeftLead: wo.generalComment,
+                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                    });
+                                    //}
                                     break;
                                 case 30461:
                                     getApplied.push({
@@ -733,182 +757,137 @@ class BoardRecruiter extends Component {
                     });
                 });
 
-            }).catch(error => {
-            })
-
-
+            }).catch(error => { })
         }
     };
+
+    getDataFilters = () => {
+        var variables;
+
+        if (this.state.status !== null) {
+            variables = {
+                shift: {
+                    status: [this.state.status]
+                },
+            };
+        } else {
+            variables = {
+                shift: {
+                    status: [1, 2]
+                },
+            };
+        }
+        var shiftEntity = {};
+        if (this.state.hotel != 0) {
+            shiftEntity = {
+                Id: this.state.hotel,
+                ...shiftEntity
+            }
+        }
+        if (this.state.state != 0) {
+            shiftEntity = {
+                State: this.state.state,
+                ...shiftEntity
+            }
+        }
+        if (this.state.city != 0) {
+            shiftEntity = {
+                City: this.state.city,
+                ...shiftEntity
+            }
+        }
+        if (this.state.hotel != 0 || this.state.state != 0 || this.state.city != 0) {
+            variables = {
+                shiftEntity,
+                ...variables
+            };
+        }
+        return variables;
+    }
 
     getOpenings = async () => {
         let datas = [];
         let getleads = [];
         let getOpenings = [];
 
-        console.log("this.state.hotel  ", this.state.hotel)
 
-        if (this.state.hotel == 0) {
-            await this.props.client.query({
-                query: GET_OPENING,
-                variables: { status: this.state.status }
-            }).then(({ data }) => {
-                data.workOrder.forEach((wo) => {
-                    const Hotel = data.getbusinesscompanies.find((item) => {
-                        return item.Id == wo.IdEntity
-                    });
-                    const Shift = ShiftsData.find((item) => {
-                        return item.Id == wo.shift
-                    });
-                    const Users = data.getusers.find((item) => {
-                        return item.Id == wo.userId
-                    });
-                    const Contacts = data.getcontacts.find((item) => {
-                        return item.Id == (Users != null ? Users.Id_Contact : 10)
-                    });
+        await this.props.client.query({
+            query: GET_BOARD_SHIFT,
+            variables: { ...this.getDataFilters() }
+        }).then(({ data }) => {
+            let _id = data.ShiftBoard.length === 0 ? 0 : data.ShiftBoard[0].workOrderId;
+            let count = 1;
+            let begin = true;
+            data.ShiftBoard.forEach((ShiftBoard) => {
+                if (_id == ShiftBoard.workOrderId)
+                    count++;
+                else {
+                    count = 1;
+                }
 
-                    datas = {
-                        id: wo.id,
-                        name: 'Title: ' + wo.position.Position,
-                        dueOn: 'Q: ' + wo.quantity,
-                        subTitle: 'ID: 000' + wo.id,
-                        body: wo.BusinessCompany.Name,
-                        escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                        escalationTextRight: Shift.Name + '-Shift',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 },
-                        needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish,
-                        PositionApplyfor: wo.position.Id_positionApplying,
-                        Position: wo.position.Position,
-                        Zipcode: wo.BusinessCompany.Zipcode
-                        /* id: wo.id,
-                         name: 'Title: ' + wo.position.Position,
-                         dueOn: 'Q: ' + wo.quantity,
-                         //subTitle: wo.comment,
-                         subTitle: 'ID: 000' + wo.id,
-                         body: wo.BusinessCompany.Name,
-                         //escalationTextLeft: Hotel.Name,
-                         escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                         //escalationTextRight: Shift.Name + '-Shift',
-                         cardStyle: { borderRadius: 6, marginBottom: 15 },
-                         needExperience: wo.needExperience,
-                         needEnglish: wo.needEnglish,
-                         PositionApplyfor: wo.position.Id_positionApplying,
-                         Zipcode: wo.BusinessCompany.Zipcode// Hotel.Zipcode*/
-                    };
-                    getOpenings.push(datas);
-                    console.log("Informacion del data sssssss ", getOpenings)
+                if (begin) count = 1;
+                datas = {
+                    id: ShiftBoard.id,
+                    name: 'Title: ' + ShiftBoard.title,
+                    dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
+                    subTitle: 'ID: 000' + ShiftBoard.workOrderId,
+                    body: ShiftBoard.CompanyName,
+                    cardStyle: { borderRadius: 6, marginBottom: 15 },
+                    needExperience: ShiftBoard.needExperience,
+                    needEnglish: ShiftBoard.needEnglish,
+                    PositionApplyfor: ShiftBoard.Id_positionApplying,
+                    Position: ShiftBoard.positionName,
+                    Zipcode: ShiftBoard.zipCode,
+                    WorkOrderId: ShiftBoard.workOrderId
+                };
+                getOpenings.push(datas);
 
-                });
-
-                console.log("Informacion del data ", getOpenings)
-
-                this.setState({
-                    Openings: getOpenings
-                });
-            }).catch(error => {
-            })
-        } else {
-            await this.props.client.query({
-                query: GET_OPENING,
-                variables: { IdEntity: this.state.hotel, status: this.state.status }
-            }).then(({ data }) => {
-                data.workOrder.forEach((wo) => {
-                    // console.log("esta es la data del wo ", wo.position);
-                    const Hotel = data.getbusinesscompanies.find((item) => {
-                        return item.Id == wo.IdEntity
-                    });
-                    const Shift = ShiftsData.find((item) => {
-                        return item.Id == wo.shift
-                    });
-                    const Users = data.getusers.find((item) => {
-                        return item.Id == wo.userId
-                    });
-                    const Contacts = data.getcontacts.find((item) => {
-                        return item.Id == (Users != null ? Users.Id_Contact : 10)
-                    });
-
-                    // console.log("Hotel california ", Hotel);
-                    datas = {
-                        /* id: wo.id,
-                         name: 'Title: ' + wo.position.Position,
-                         dueOn: 'Q: ' + wo.quantity,
-                         //subTitle: wo.comment,
-                         subTitle: 'ID: 000' + wo.id,
-                         body: Hotel.Name,
-                         //escalationTextLeft: Hotel.Name,
-                         escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
-                         escalationTextRight: Shift.Name + '-Shift',
-                         cardStyle: { borderRadius: 6, marginBottom: 15 },
-                         needExperience: wo.needExperience,
-                         needEnglish: wo.needEnglish,
-                         PositionApplyfor: wo.position.Id_positionApplying,
-                         Zipcode: Hotel.Zipcode*/
-                        id: wo.id,
-                        name: 'Title: ' + wo.position.Position,
-                        dueOn: 'Q: ' + wo.quantity,
-                        subTitle: 'ID: 000' + wo.id,
-                        body: Hotel.Name,
-                        //escalationTextLeft: Hotel.Name,
-                        escalationTextLeft: Contacts.First_Name + ' ' + Contacts.Last_Name,
-                        escalationTextRight: Shift.Name + '-Shift',
-                        cardStyle: { borderRadius: 6, marginBottom: 15 },
-                        needExperience: wo.needExperience,
-                        needEnglish: wo.needEnglish,
-                        PositionApplyfor: wo.position.Id_positionApplying,
-                        Position: wo.position.Position,
-                        Zipcode: wo.BusinessCompany.Zipcode
-                    };
-                    getOpenings.push(datas);
-                });
-
-                this.setState({
-                    Openings: getOpenings
-
-                });
-            }).catch(error => {
-            })
-        }
-
-        console.log("esta es la set ", this.state.Openings)
-
-        this.setState(
-            {
-
-                Opening: this.state.Openings,
-                lane: [
-                    {
-                        id: 'lane1',
-                        title: 'Openings',
-                        label: ' ',
-                        cards: this.state.Openings
-                    },
-                    {
-                        id: 'Leads',
-                        title: 'Leads',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Applied',
-                        title: 'Sent to Interview',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Candidate',
-                        title: 'Candidate',
-                        label: ' ',
-                        cards: []
-                    },
-                    {
-                        id: 'Placement',
-                        title: 'Placement',
-                        label: ' ',
-                        cards: []
-                    }
-                ],
-                loading: false
             });
+
+            this.setState({
+                Openings: getOpenings
+            });
+        }).catch(error => {
+            console.log(error)
+        })
+
+        this.setState({
+
+            Opening: this.state.Openings,
+            lane: [
+                {
+                    id: 'lane1',
+                    title: 'Openings',
+                    label: ' ',
+                    cards: this.state.Openings
+                },
+                {
+                    id: 'Leads',
+                    title: 'Leads',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Applied',
+                    title: 'Sent to Interview',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Candidate',
+                    title: 'Candidate',
+                    label: ' ',
+                    cards: []
+                },
+                {
+                    id: 'Placement',
+                    title: 'Placement',
+                    label: ' ',
+                    cards: []
+                }
+            ],
+            loading: false
+        });
     };
 
     handleSwitchView = (event) => {
@@ -950,98 +929,123 @@ class BoardRecruiter extends Component {
                         <div className="col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header info">
-
                                     <div className="row">
-                                        <div className="col-md-3">
-                                            <select
-                                                required
-                                                name="IdEntity"
-                                                className="form-control"
-                                                id=""
-                                                onChange={(event) => {
-                                                    this.updateHotel(event.target.value);
-                                                }}
-                                                value={this.state.IdEntity}
-                                                //disabled={!isAdmin}
-                                                onBlur={this.handleValidate}
-                                            >
-                                                <option value={0}>Select a Hotel</option>
-                                                {this.state.hotels.map((hotel) => (
+                                        <div className="col-md-9 col-lg-10">
+                                            <div className="row">
+                                                <div className="col-md-2">
+                                                    <select
+                                                        required
+                                                        name="IdEntity"
+                                                        className="form-control"
+                                                        id=""
+                                                        onChange={(event) => {
+                                                            this.updateHotel(event.target.value);
+                                                        }}
+                                                        value={this.state.IdEntity}
+                                                        //disabled={!isAdmin}
+                                                        onBlur={this.handleValidate}
+                                                    >
+                                                        <option value={0}>Select a Hotel</option>
+                                                        {this.state.hotels.map((hotel) => (
 
-                                                    <option value={hotel.Id}>{hotel.Name}</option>
+                                                            <option value={hotel.Id}>{hotel.Name}</option>
 
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="state"
-                                                className={'form-control'}
-                                                /* onChange={(event) => {
-                                                     this.updateState(event.target.value);
-                                                 }}*/
-                                                value={this.state.state}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a state</option>
-                                                {this.state.states.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="city"
-                                                className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                /* onChange={(event) => {
-                                                     this.updateCity(event.target.value);
-                                                 }}*/
-                                                //error={!this.state.cityValid}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
-                                                <option value="">Select a city</option>
-                                                {this.state.cities.map((item) => (
-                                                    <option value={item.Id}>{item.Name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="col-md-2">
-                                            <select
-                                                name="city"
-                                                className={'form-control'}
-                                                // disabled={this.state.loadingCities}
-                                                onChange={(event) => {
-                                                    this.updateStatus(event.target.value);
-                                                }}
-                                                //error={!this.state.cityValid}
-                                                value={this.state.city}
-                                                showNone={false}
-                                            >
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="state"
+                                                        className={'form-control'}
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                state: event.target.value,
+                                                                city: 0,
+                                                                cities: []
+                                                            }, () => {
+                                                                this.loadCities();
+                                                                this.getOpenings();
+                                                                this.getMatches();
+                                                            })
+                                                        }}
+                                                        value={this.state.state}
+                                                        showNone={false}
+                                                    >
+                                                        <option value="">Select a state</option>
+                                                        {this.state.states.map((item) => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="city"
+                                                        className={'form-control'}
+                                                        // disabled={this.state.loadingCities}
+                                                        onChange={(event) => {
+                                                            this.setState({
+                                                                city: event.target.value
+                                                            }, () => {
+                                                                this.getOpenings();
+                                                                this.getMatches();
+                                                            })
+                                                        }}
+                                                        //error={!this.state.cityValid}
+                                                        value={this.state.city}
+                                                        showNone={false}
+                                                    >
+                                                        <option value="">Select a city</option>
+                                                        {this.state.cities.map((item) => (
+                                                            <option value={item.Id}>{item.Name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <select
+                                                        name="city"
+                                                        className={'form-control'}
+                                                        // disabled={this.state.loadingCities}
+                                                        onChange={(event) => {
+                                                            if (event.target.value == "null") {
+                                                                this.updateStatus(null);
+                                                            } else {
+                                                                this.updateStatus(event.target.value);
+                                                            }
+                                                        }}
+                                                        //error={!this.state.cityValid}
+                                                        value={this.state.city}
+                                                        showNone={false}
+                                                    >
 
-                                                <option value={0}>Active work orders</option>
-                                                <option value={1}>Closed work orders</option>
-                                                <option value={2}>All work orders</option>
-                                            </select>
+                                                        <option value={0}>Active work orders</option>
+                                                        <option value={1}>Closed work orders</option>
+                                                        <option value={2}>All work orders</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-md-2">
+                                                    <button className="btn btn-success" type="submit" onClick={() => {
+                                                        this.setState({ openModal: true })
+                                                    }}>
+                                                        Filter<i className="fas fa-filter ml2" />
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="col-md-2">
-                                            <button className="btn btn-success" type="submit" onClick={() => {
-                                                this.setState({ openModal: true })
-                                            }}>
-                                                Filter<i className="fas fa-filter ml2" />
-                                            </button>
-                                        </div>
-                                        <div className="col-md-1">
-                                            <button
-                                                className="btn btn-outline-success"
-                                                onClick={() => {
-                                                    this.props.history.push({
-                                                        pathname: '/home/application/Form',
-                                                        state: { ApplicationId: 0 }
-                                                    });
-                                                }}>New Lead
-                                            </button>
+                                        <div className="col-md-3 col-lg-2">
+                                            <div className="row">
+                                                <div className="col-sm-0 col-md-2 col-lg-1"></div>
+                                                <div className="col-sm-12 col-md-10 col-lg-11">
+                                                    <button
+                                                        className="btn btn-outline-info btn-sm float-right"
+                                                        onClick={() => {
+                                                            this.props.history.push({
+                                                                pathname: '/home/application/Form',
+                                                                state: { ApplicationId: 0 }
+                                                            });
+                                                        }}>New Lead
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

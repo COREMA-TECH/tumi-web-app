@@ -20,3 +20,16 @@ export const GET_APPLICANTS_PHASES = gql`
     }
 `;
 
+export const timeElapsed = gql`
+query timeElapsed
+{
+  timeElapsed(StageId:30461)
+  {
+    Full_Name
+    TimeElapsed
+    RecruiterId
+    WorkOrderId
+    ShiftId
+  }
+}
+`;

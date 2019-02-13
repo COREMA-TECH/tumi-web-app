@@ -69,7 +69,7 @@ class Application extends Component {
             convictedExplain: '',
             socialNetwork: '',
             comment: '',
-
+            isLead: '',
             // Languages array
             languages: [],
 
@@ -177,7 +177,7 @@ class Application extends Component {
                                 convictedExplain: this.state.convictedExplain,
                                 comment: this.state.comment,
                                 idealJob: this.state.idealJob,
-                                isLead: false
+                                isLead: this.state.isLead
                             }
                         }
                     })
@@ -292,7 +292,8 @@ class Application extends Component {
                                 tags: applicantData.idealJob
                                     ? applicantData.idealJob.split(',').map((d) => d.trim())
                                     : [],
-                                idealJob: applicantData.idealJob
+                                idealJob: applicantData.idealJob,
+                                isLead: applicantData.isLead
                             },
                             () => {
                                 this.getIdealJobsByApplicationId();
@@ -437,6 +438,13 @@ class Application extends Component {
             }
         }
     }
+
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
     render() {
         //this.validateInvalidInput();
         const { tags, suggestions } = this.state;
@@ -453,20 +461,19 @@ class Application extends Component {
                         <div className="applicant-card">
                             <div className="applicant-card__header">
                                 <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                                {this.state.editing ? (
-                                    ''
-                                ) : (
-                                        <button
-                                            className="applicant-card__edit-button"
-                                            onClick={() => {
-                                                this.setState({
-                                                    editing: true
-                                                });
-                                            }}
-                                        >
-                                            {spanishActions[1].label} <i className="far fa-edit" />
-                                        </button>
-                                    )}
+                                {!this.state.editing &&
+                                    <button
+                                        className="applicant-card__edit-button"
+                                        onClick={() => {
+                                            this.setState({
+                                                editing: true
+                                            });
+                                        }}
+                                        disabled={this.state.searchigZipcode}
+                                    >
+                                        {spanishActions[1].label} <i className="far fa-edit" />
+                                    </button>
+                                }
                             </div>
                             <br />
                             <div className="card-body">
@@ -620,7 +627,8 @@ class Application extends Component {
                                                 mask="99999-99999"
                                                 requiredZipCode={true}
                                                 requiredCity={true}
-                                                requiredState={true} />
+                                                requiredState={true}
+                                                updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
 
                                             <div className="col-md-6 ">
                                                 <span className="primary applicant-card__label skeleton">
@@ -654,7 +662,6 @@ class Application extends Component {
                                                                     .replace('(', '')
                                                                     .replace(')', '').length === 0;
 
-                                                            console.log(phoneNumberValid);
                                                             this.setState({
                                                                 homePhoneNumberValid: phoneNumberValid
                                                             })
@@ -902,10 +909,10 @@ class Application extends Component {
                                                                     onChange={(event) => {
                                                                         this.setState({
                                                                             // Fixme: repair this
-                                                                            idealJob: event.target.value
+                                                                            positionApplyingFor: event.target.value
                                                                         });
                                                                     }}
-                                                                    value={this.state.idealJob}
+                                                                    value={this.state.positionApplyingFor}
                                                                     className="form-control"
                                                                     disabled={!this.state.editing}
                                                                 >
@@ -1055,7 +1062,7 @@ class Application extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {this.state.editing ? (
+                            {this.state.editing && !this.state.searchigZipcode ? (
                                 <div className="applicant-card__footer">
                                     <button
                                         className="applicant-card__cancel-button"

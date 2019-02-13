@@ -163,9 +163,10 @@ class Application extends Component {
     insertApplicationInformation = () => {
         if (
             this.state.firstName == '' ||
-            this.state.lastName == ''
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
         ) {
-            this.props.handleOpenSnackbar('warning', 'the first name and last name are required');
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
             this.setState(
                 {
@@ -182,21 +183,15 @@ class Application extends Component {
                                     lastName: this.state.lastName,
                                     lastName2: this.state.lastName2,
                                     date: this.state.date,
-                                    // streetAddress: this.state.streetAddress,
                                     aptNumber: this.state.aptNumber,
                                     city: this.state.city,
                                     state: this.state.state,
                                     zipCode: this.state.zipCode,
                                     homePhone: this.state.homePhone,
                                     cellPhone: this.state.cellPhone,
-                                    //socialSecurityNumber: this.state.socialSecurityNumber,
-                                    //birthDay: this.state.birthDay,
                                     car: this.state.car,
-                                    // typeOfId: parseInt(this.state.typeOfId),
-                                    //   expireDateId: this.state.expireDateId,
                                     emailAddress: this.state.emailAddress,
                                     positionApplyingFor: parseInt(this.state.positionApplyingFor),
-                                    //dateAvailable: this.state.dateAvailable,
                                     scheduleRestrictions: this.state.scheduleRestrictions,
                                     scheduleExplain: this.state.scheduleExplain,
                                     convicted: this.state.convicted,
@@ -245,9 +240,10 @@ class Application extends Component {
     updateApplicationInformation = (id) => {
         if (
             this.state.firstName == '' ||
-            this.state.lastName == ''
+            this.state.lastName == '' ||
+            this.state.zipCode == ''
         ) {
-            this.props.handleOpenSnackbar('warning', 'the first name and last name are required');
+            this.props.handleOpenSnackbar('warning', 'the first name, last name and Zipcode are required');
         } else {
             this.setState(
                 {
@@ -499,6 +495,12 @@ class Application extends Component {
         });
     }
 
+    updateSearchingZipCodeProgress = (searchigZipcode) => {
+        this.setState(() => {
+            return { searchigZipcode }
+        })
+    }
+
     render() {
         return (
             <div className="Apply-container-application">
@@ -506,20 +508,18 @@ class Application extends Component {
                 <div className="applicant-card">
                     <div className="applicant-card__header">
                         <span className="applicant-card__title">{menuSpanish[0].label}</span>
-                        {this.state.editing ? (
-                            ''
-                        ) : (
-                                <button
-                                    className="applicant-card__edit-button"
-                                    onClick={() => {
-                                        this.setState({
-                                            editing: true
-                                        });
-                                    }}
-                                >
-                                    {spanishActions[1].label} <i className="far fa-edit" />
-                                </button>
-                            )}
+                        {!this.state.editing && <button
+                            className="applicant-card__edit-button"
+                            onClick={() => {
+                                this.setState({
+                                    editing: true
+                                });
+                            }}
+                            disabled={this.state.searchigZipcode}
+                        >
+                            {spanishActions[1].label} <i className="far fa-edit" />
+                        </button>
+                        }
                     </div>
                     <br />
                     <div className="card-body">
@@ -678,12 +678,13 @@ class Application extends Component {
                                         cityColClass="col-md-6"
                                         stateColClass="col-md-6"
                                         zipCodeColClass="col-md-6"
-                                        zipCodeTitle={`${formSpanish[5].label}`}
+                                        zipCodeTitle={`* ${formSpanish[5].label}`}
                                         stateTitle={`${formSpanish[6].label}`}
                                         cityTitle={`${formSpanish[7].label}`}
                                         cssTitle={"text-primary-application"}
                                         placeholder="99999-99999"
-                                        mask="99999-99999" />
+                                        mask="99999-99999"
+                                        updateSearchingZipCodeProgress={this.updateSearchingZipCodeProgress} />
                                     <div className="col-md-6">
                                         <span className="primary applicant-card__label ">
                                             {formSpanish[23].label}
@@ -801,7 +802,7 @@ class Application extends Component {
 
                                 {spanishActions[2].label}
                             </button>
-                            <button type="submit"
+                            {!this.state.searchigZipcode && <button type="submit"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -813,7 +814,7 @@ class Application extends Component {
                                 }}
                                 className="applicant-card__save-button">
                                 {spanishActions[4].label}
-                            </button>
+                            </button>}
                         </div>
                     ) : (
                             <div className="applicant-card__footer">

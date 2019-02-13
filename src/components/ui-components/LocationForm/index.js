@@ -31,6 +31,7 @@ class LocationForm extends Component {
     loadFirstStates = (Id, city) => {
         this.setState({ loadingStates: true },
             () => {
+                this.props.updateSearchingZipCodeProgress(true)
                 this.props.client
                     .query({
                         query: GET_CATALOGS_QUERY,
@@ -42,10 +43,13 @@ class LocationForm extends Component {
                     }).then(({ data: { catalogitem } }) => {
                         this.setState(() => { return { states: catalogitem, loadingStates: false, state: Id } },
                             () => {
+                                this.props.updateSearchingZipCodeProgress(false)
                                 this.loadFirstCities(Id, city)
                             })
                     }).catch(error => {
-                        this.setState(() => { return { loadingStates: false } })
+                        this.setState(() => { return { loadingStates: false } }, () => {
+                            this.props.updateSearchingZipCodeProgress(false)
+                        })
                     })
             })
     }
@@ -55,6 +59,7 @@ class LocationForm extends Component {
     loadStates = () => {
         this.setState({ loadingStates: true },
             () => {
+                this.props.updateSearchingZipCodeProgress(true)
                 this.props.client
                     .query({
                         query: GET_CATALOGS_QUERY,
@@ -68,12 +73,15 @@ class LocationForm extends Component {
                             () => {
                                 if (catalogitem.length > 0)
                                     this.setState({ state: catalogitem[0].Id }, () => {
+                                        this.props.updateSearchingZipCodeProgress(false)
                                         this.props.onChangeState(this.state.state)
                                         this.loadCities()
                                     })
                             })
                     }).catch(error => {
-                        this.setState({ loadingStates: false, findingZipCode: false })
+                        this.setState({ loadingStates: false, findingZipCode: false }, () => {
+                            this.props.updateSearchingZipCodeProgress(false)
+                        })
                     })
             })
     }
@@ -81,6 +89,7 @@ class LocationForm extends Component {
     loadFirstCities = (Id_Parent, Id) => {
         this.setState({ loadingCities: true },
             () => {
+                this.props.updateSearchingZipCodeProgress(true)
                 this.props.client
                     .query({
                         query: GET_CATALOGS_QUERY,
@@ -90,9 +99,13 @@ class LocationForm extends Component {
                             Id_Parent: Id_Parent || 0
                         }
                     }).then(({ data: { catalogitem } }) => {
-                        this.setState(() => { return { cities: catalogitem, loadingCities: false, city: Id } })
+                        this.setState(() => { return { cities: catalogitem, loadingCities: false, city: Id } }, () => {
+                            this.props.updateSearchingZipCodeProgress(false)
+                        })
                     }).catch(error => {
-                        this.setState(() => { return { loadingCities: false } })
+                        this.setState(() => { return { loadingCities: false } }, () => {
+                            this.props.updateSearchingZipCodeProgress(false)
+                        })
                     })
             })
     }
@@ -100,6 +113,7 @@ class LocationForm extends Component {
     loadCities = () => {
         this.setState({ loadingCities: true },
             () => {
+                this.props.updateSearchingZipCodeProgress(true)
                 this.props.client
                     .query({
                         query: GET_CATALOGS_QUERY,
@@ -111,12 +125,16 @@ class LocationForm extends Component {
                     }).then(({ data: { catalogitem } }) => {
                         this.setState({ cities: catalogitem, loadingCities: false, findingZipCode: false },
                             () => {
+                                this.props.updateSearchingZipCodeProgress(false)
                                 var selectedCity = this.state.cities.find(item => item.Name.toLowerCase().trim().includes(this.state.cityName.toLowerCase().trim()))
-                                if (selectedCity)
-                                    this.setState({ city: selectedCity.Id }, () => { this.props.onChangeCity(this.state.city) })
+                                if (selectedCity) {
+                                    this.setState(() => { return { city: selectedCity.Id } }, () => { this.props.onChangeCity(selectedCity.Id) })
+                                }
                             })
                     }).catch(error => {
-                        this.setState({ loadingCities: false, findingZipCode: false })
+                        this.setState({ loadingCities: false, findingZipCode: false }, () => {
+                            this.props.updateSearchingZipCodeProgress(false)
+                        })
                     })
             })
 
@@ -131,6 +149,7 @@ class LocationForm extends Component {
             this.props.onChangeState(e.target.value)
         if (e.target.name == 'zipCode' && this.props.onChageZipCode) {
             var value = e.target.value;
+            this.props.updateSearchingZipCodeProgress(true);
             this.setState({ firstLoadStates: false, firstLoadCities: false }, () => {
                 if (this.props.onChageZipCode)
                     this.props.onChageZipCode(value);
