@@ -11,6 +11,7 @@ export const UPDATE_APPLICANT = gql`
 	}
 `;
 
+
 export const UPDATE_APPLICATION_STAGE = gql`
 	mutation updateApplicationMoveStage($id: Int,$idStages: Int) {
 		updateApplicationMoveStage(id: $id,idStages: $idStages) {
