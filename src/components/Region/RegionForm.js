@@ -238,7 +238,9 @@ class RegionForm extends Component {
                 fetchPolicy: 'no-cache'
             })
             .then(({ data }) => {
-                if (data.configregions != null) {
+                if (data.configregions != null &&
+                    data.configregions.length > 0) {
+                    console.log("ata.configregions", data.configregions)
                     this.setState({
                         ConfigRegions: data.configregions,
                         IdRegionalManager: data.configregions[0].regionalManagerId,
