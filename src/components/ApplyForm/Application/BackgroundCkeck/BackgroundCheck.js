@@ -663,10 +663,22 @@ class BackgroundCheck extends Component {
                                         }
                                     </div>
                                 </form>
-                                <div className="col-md-10">
-                                    <b>
-                                        In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.
-                                    </b>
+                                <div className="col-md-8 offset-md-2">
+                                    <br/><br/>
+                                    <h5>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</h5>
+                                    <br/><br/>
+                                    {/*{renderHTML(`*/}
+                                            {/*<p>&nbsp;</p>*/}
+                                            {/*<table style="border-collapse: collapse; width: 100%; height: 67px;" border="1">*/}
+                                                {/*<tbody>*/}
+                                                {/*<tr style="height: 67px;">*/}
+                                                    {/*<td style="width: 50%; height: 67px; text-align: left;">&nbsp;</td>*/}
+                                                    {/*<td style="width: 50%; height: 67px;">&nbsp;</td>*/}
+                                                {/*</tr>*/}
+                                                {/*</tbody>*/}
+                                            {/*</table>*/}
+                                            {/*<p>&nbsp;</p>*/}
+                                    {/*`)}*/}
                                 </div>
                             </div>
                         </div>
