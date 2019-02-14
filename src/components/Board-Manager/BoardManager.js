@@ -873,8 +873,9 @@ class BoardManager extends Component {
         return (
             <div className="App">
                 {isLoading && <LinearProgress />}
-
-                <div id="capaFondo1" className="App-header">
+                <div className={isLoading ? "overlay d-block" : "overlay d-none"} >
+                </div>
+                <div className="App-header">
                     <div className="row">
                         <div className="col-md-12 col-lg-12">
                             <div class="card">
