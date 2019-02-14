@@ -20,7 +20,7 @@ import ShiftsData from '../../data/shitfs.json';
 
 import Filters from './Filters';
 import CardTemplate from './CardTemplate';
-
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
 const CustomCard = props => {
     return (
@@ -121,18 +121,25 @@ class BoardManager extends Component {
             Intopening: 0,
             userId: localStorage.getItem('LoginId'),
             ReasonId: 30471,
+            LaneOrigen: 'lane1',
+            LaneDestino: ''
 
         }
     }
 
 
     handleDragStart = (cardId, laneId) => {
-        console.log('Card ID: ', cardId);
-        console.log('Lane ID: ', laneId);
     };
 
     handleDragEnd = (cardId, sourceLaneId, targetLaneId, position, cardDetails) => {
-        console.log("Target Lane ID: ", targetLaneId);
+        console.log("sourceLaneId ", sourceLaneId);
+        console.log("targetLaneId ", targetLaneId);
+
+        this.setState({
+            LaneOrigen: sourceLaneId,
+            LaneDestino: targetLaneId
+        });
+
         if (targetLaneId !== "lane1") {
             let IdLane;
             switch (targetLaneId) {
@@ -150,6 +157,8 @@ class BoardManager extends Component {
                 default:
                     IdLane = 30469
             }
+
+
 
             if (targetLaneId != sourceLaneId) {
                 this.addApplicationPhase(cardId, IdLane);
@@ -173,7 +182,10 @@ class BoardManager extends Component {
                                     title: 'Work Orders',
                                     label: ' ',
                                     cards: this.state.workOrders,
-                                    laneStyle: { borderRadius: 50, marginBottom: 15 }
+                                    laneStyle: { borderRadius: 50, marginBottom: 15 },
+                                    droppable: false,
+                                    draggable: false,
+                                    editable: false
                                 },
                                 {
                                     id: 'Matches',
@@ -204,20 +216,6 @@ class BoardManager extends Component {
                         });
                 }
             }
-
-            /*   if (targetLaneId != sourceLaneId) {
-                   if (targetLaneId != "Leads") {
-                       this.updateApplicationInformation(cardId, false, 'candidate was updated!');
-                   }
-   
-                   if (targetLaneId == "Leads") {// && sourceLaneId == "Applied"
-                       this.setState({
-                           ApplicationId: cardId,
-                           openReason: true
-                       }, () => {
-                       });
-                   }
-               }*/
         }
     }
 
@@ -263,32 +261,6 @@ class BoardManager extends Component {
             });
     }
 
-    /*componentWillMount() {
-        this.setState(
-            {
-                loading: true
-            }, () => {
-                this.loadhotel();
-                this.getWorkOrders();
-            });
-    }*/
-
-    /* componentDidMount() {
-         try {
-             let card = document.getElementsByClassName('smooth-dnd-container');
-             let elements = Array.from(card);
- 
-             elements[0].classList.remove('smooth-dnd-container');
- 
-             elements[1].classList.add('smooth-dnd-container');
-             elements[2].classList.add('smooth-dnd-container');
-             elements[3].classList.add('smooth-dnd-container');
-             elements[4].classList.add('smooth-dnd-container');
- 
-         } catch (e) {
-             console.log("Error: ", e);
-         }
-     }*/
 
     loadhotel = () => {
         this.props.client
@@ -344,19 +316,12 @@ class BoardManager extends Component {
             this.setState(
                 {
                     hotel: id,
-                    // state: this.state.hotels.find((item) => {
-                    //     return item.Id == id
-                    // }).State,
-                    // city: this.state.hotels.find((item) => {
-                    //     return item.Id == id
-                    // }).City,
                     matches: []
                 },
                 () => {
                     this.loadStates();
                     this.loadCities();
                     this.getWorkOrders();
-                    this.getMatches();
                 }
             );
 
@@ -372,7 +337,6 @@ class BoardManager extends Component {
                     this.getWorkOrders();
                     this.loadStates();
                     this.loadCities();
-                    this.getMatches();
                 }
             );
 
@@ -429,75 +393,58 @@ class BoardManager extends Component {
     };
 
     validateInvalidInput = () => {
-        //console.log("estoy en accion");
     };
 
     shouldReceiveNewData = nextData => {
-        //console.log('New card has been added')
-        //console.log(nextData)
     }
 
     handleCardAdd = (card, laneId) => {
-        //console.log(`New card added to lane ${laneId}`)
-        console.dir(card)
     }
 
     addCardLink = (cardId, metadata, laneId) => {
-
-        //console.log("cardId ", cardId);
-        //console.log("metadata ", metadata);
-
-        this.getMatches(true, true, true, laneId);
     }
 
 
     onCardClick = (cardId, metadata, laneId) => {
         let needEnglish, needExperience, Position;
+        console.log("Entro en el onCardClick ", this.state.LaneOrigen, " ", this.state.LaneDestino)
 
 
         if (laneId.trim() == "lane1") {
-            this.clearArray();
+            if (this.state.LaneDestino != "lane1") {
+                console.log("Entro en el diferente del click ")
+                this.clearArray();
 
-            let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
-            let anotherCards = document.querySelectorAll("article[data-id]");
+                let cardSelected = document.querySelectorAll("article[data-id='" + cardId + "']");
+                let anotherCards = document.querySelectorAll("article[data-id]");
 
-            anotherCards.forEach((anotherCard) => {
-                anotherCard.classList.remove("CardBoard-selected");
-            });
-            cardSelected[0].classList.add("CardBoard-selected");
+                anotherCards.forEach((anotherCard) => {
+                    anotherCard.classList.remove("CardBoard-selected");
+                });
+                cardSelected[0].classList.add("CardBoard-selected");
 
-            this.setState(
-                {
-                    Intopening: this.state.workOrders.find((item) => { return item.id == cardId }).WorkOrderId,
-                    ShiftId: cardId
-                })
-
-
-            needEnglish = this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish;
-            needExperience = this.state.workOrders.find((item) => { return item.id == cardId }).needExperience;
-            Position = this.state.workOrders.find((item) => { return item.id == cardId }).Position;
+                this.setState(
+                    {
+                        Intopening: this.state.workOrders.find((item) => { return item.id == cardId }).WorkOrderId,
+                        ShiftId: cardId
+                    })
 
 
-            this.getLatLongHotel(1, this.state.workOrders.find((item) => {
-                return item.id == cardId
-            }).Zipcode);
+                needEnglish = this.state.workOrders.find((item) => { return item.id == cardId }).needEnglish;
+                needExperience = this.state.workOrders.find((item) => { return item.id == cardId }).needExperience;
+                Position = this.state.workOrders.find((item) => { return item.id == cardId }).Position;
 
-            console.log("esta es la info del work ordeer ", this.state.workOrders);
-            if (sessionStorage.getItem('NewFilterLead') === 'true') {
-                console.log("sessionStorage.getItem('NewFilterLead') ", sessionStorage.getItem('NewFilterLead'))
-                this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => {
-                    return item.id == cardId
-                }).Position);
-            } else {
-                /* this.getMatches(this.state.workOrders.find((item) => {
-                     return item.id == cardId
-                 }).needEnglish, this.state.workOrders.find((item) => {
-                     return item.id == cardId
-                 }).needExperience, 30, laneId, this.state.workOrders.find((item) => {
-                     return item.id == cardId
-                 }).Position);*/
 
-                this.getMatches(needEnglish, needExperience, 30, laneId, Position);
+                this.getLatLongHotel(1, this.state.workOrders.find((item) => { return item.id == cardId }).Zipcode);
+
+                if (sessionStorage.getItem('NewFilterLead') === 'true') {
+                    console.log("sessionStorage.getItem('NewFilterLead') ", sessionStorage.getItem('NewFilterLead'))
+                    this.getMatches(sessionStorage.getItem('needEnglishLead'), sessionStorage.getItem('needExperienceLead'), sessionStorage.getItem('distances'), laneId, this.state.workOrders.find((item) => {
+                        return item.id == cardId
+                    }).Position);
+                } else {
+                    this.getMatches(needEnglish, needExperience, 30, laneId, Position);
+                }
             }
         }
     }
@@ -512,7 +459,10 @@ class BoardManager extends Component {
                         title: 'Work Orders',
                         label: ' ',
                         cards: this.state.workOrders,
-                        laneStyle: { borderRadius: 50, marginBottom: 15 }
+                        laneStyle: { borderRadius: 50, marginBottom: 15 },
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     },
                     {
                         id: 'Matches',
@@ -544,385 +494,157 @@ class BoardManager extends Component {
             });
     }
 
-    //getMatches = async (language, experience, location, laneId) => {
-    /*getMatches = async (language, experience, location, laneId, PositionId) => {
-        let getmatches = [];
-        let getnotify = [];
-        let getaccepted = [];
-        let getschedule = [];
-
-        let datas = [];
-        let SpeakEnglish;
-        let Employment;
-        let distances;
-        let position;
-        let Phases = [];
-        let varphase;
-
-        console.log("Informacion de filtros ", language, " experience ", experience, " location", location, " laneId ", laneId, " PositionId ", PositionId);
-        if (laneId == "lane1") {
-            console.log("entro a la validacion lane ");
-            await this.props.client.query({ query: GET_MATCH, fetchPolicy: 'no-cache', variables: {} }).then(({ data }) => {
-                console.log("esta es la info del GET_MATCH ", data);
-                data.applications.forEach((wo) => {
-
-                    console.log("esta es la info del matches ", wo);
-
-                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => {
-                        return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id
-                    });
-                    console.log("Phases ", Phases);
-
-                    const IdealJob = wo.idealJobs.find((item) => {
-                        return item.description.includes(PositionId)
-                    });
-                    console.log("IdealJob ", IdealJob);
-
-                    this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-
-                        console.log("entro y saco las lat  ", wo.id, this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2);
-
-                        const { getDistance } = this.context;
-                        const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
-
-                        console.log("distancias  ", distance);
-                        if (language == 'true') {
-                            SpeakEnglish = wo.languages.find((item) => {
-                                return item.language == 194
-                            }) != null ? 1 : 0;
-                        } else {
-                            SpeakEnglish = 1;
-                        }
-
-                        if (experience == 'true') {
-                            Employment = wo.employments.length;
-                        } else {
-                            Employment = 1;
-                        }
-
-                        if (distance > location) {
-                            distances = 0;
-                        } else {
-                            distances = 1;
-                        }
-                        if (typeof IdealJob == undefined || IdealJob == null) {
-                            position = 0;
-                        } else {
-                            position = 1
-                        }
-
-
-                        console.log("SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1 ", SpeakEnglish, Employment, distances, position)
-                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
-                            console.log("aqui estamos en los filtros")
-                            if (typeof Phases == undefined || Phases == null) {
-                                varphase = 30469;
-                            } else {
-                                varphase = Phases.StageId
-                            }
-
-                            console.log("aqui estamos en varphase ", varphase)
-                            switch (varphase) {
-                                case 30469:
-                                    // if (wo.isLead === false) {
-                                    getmatches.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    //   }
-                                    break;
-                                case 30461:
-                                    // if (wo.isLead === false) {
-                                    getmatches.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    //   }
-                                    break;
-                                case 30462:
-                                    // if (wo.isLead === false) {
-                                    getmatches.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    //   }
-                                    break;
-                                case 30463:
-                                    // if (wo.isLead === false) {
-                                    getmatches.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    //   }
-                                    break;
-                                case 30464:
-                                    getnotify.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break
-                                case 30465:
-                                    getaccepted.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break
-                                case 30466:
-                                    getschedule.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break
-                            }
-                        }
-
-                        this.setState({
-                            matches: getmatches,
-                            notify: getnotify,
-                            accepted: getaccepted,
-                            schedule: getschedule
-                        });
-
-                        this.setState(
-                            {
-                                workOrder: this.state.workOrders,
-                                lane: [
-                                    {
-                                        id: 'lane1',
-                                        title: 'Work Orders',
-                                        label: ' ',
-                                        cards: this.state.workOrders,
-                                        laneStyle: { borderRadius: 50, marginBottom: 15 }
-                                    },
-                                    {
-                                        id: 'Matches',
-                                        title: 'Matches',
-                                        label: ' ',
-                                        cards: this.state.matches
-                                    },
-                                    {
-                                        id: 'Interview',
-                                        title: 'Interview',
-                                        label: ' ',
-                                        cards: []
-                                    },
-                                    {
-                                        id: 'Notify',
-                                        title: 'Notify',
-                                        label: ' ',
-                                        cards: this.state.notify
-                                    },
-                                    {
-                                        id: 'Accepted',
-                                        title: 'Accepted',
-                                        label: ' ',
-                                        cards: this.state.accepted
-                                    }
-                                ],
-                                loading: false
-
-                            });
-                    });
-                });
-            }).catch(error => {
-            })
-        }
-    };*/
 
     getMatches = async (language, experience, location, laneId, PositionId) => {
         let getmatches = [];
         let getnotify = [];
         let getaccepted = [];
         let getinterview = [];
-
-        let SpeakEnglish;
-        let Employment;
         let distances;
-        let position;
         let varphase;
 
-        // { getDistance } = this.context;
-        //let distance;
-
         if (laneId == "lane1") {
-            await this.props.client.query({ query: GET_MATCH, variables: {} }).then(({ data }) => {
-                console.log("esta es la data ", data)
-                data.applications.forEach((wo) => {
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client.query({
+                        query: GET_MATCH, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
+                    }).then(({ data }) => {
+                        data.applicationsByMatches.forEach((wo) => {
 
-                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
-                    const IdealJob = wo.idealJobs.find((item) => { return item.description.toUpperCase().includes(PositionId.toUpperCase()) });
+                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
 
-                    this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-                        //distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
-                        const { getDistance } = this.context;
-                        const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
+                            this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                                const { getDistance } = this.context;
+                                const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
 
-                        console.log("esta es la distancia de ", wo.id, " nombre ", wo.firstName + ' ' + wo.lastName, " distancias ", distance, " fase ", Phases, " IdealJob ", IdealJob)
+                                console.log("esta es la distancia de ", wo.id, " nombre ", wo.firstName + ' ' + wo.lastName, " distancias ", distance, " fase ", Phases)
 
-                        if (language == 'true') {
-                            SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
-                        } else {
-                            SpeakEnglish = 1;
-                        }
+                                if (distance >= location) {
+                                    distances = 0;
+                                } else {
+                                    distances = 1;
+                                }
 
-                        if (experience == 'true') {
-                            Employment = wo.employments.length;
-                        } else {
-                            Employment = 1;
-                        }
+                                if (distances >= 1) {
 
-                        if (distance >= location) {
-                            distances = 0;
-                        } else {
-                            distances = 1;
-                        }
-                        if (typeof IdealJob == undefined || IdealJob == null) {
-                            position = 0;
-                        } else { position = 1 }
+                                    if (typeof Phases == undefined || Phases == null) {
+                                        varphase = 30469;
+                                    } else { varphase = Phases.StageId }
 
-                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
+                                    switch (varphase) {
+                                        case 30469:
+                                            if (wo.isLead === false) {
+                                                getmatches.push({
+                                                    id: wo.id,
+                                                    name: wo.firstName + ' ' + wo.lastName,
+                                                    subTitle: wo.cellPhone,
+                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: wo.generalComment,
+                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                });
+                                            }
+                                            break;
+                                        case 30461:
+                                            getinterview.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
+                                        case 30464:
 
-                            if (typeof Phases == undefined || Phases == null) {
-                                varphase = 30469;
-                            } else { varphase = Phases.StageId }
+                                            getnotify.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
+                                        case 30465:
+                                            getaccepted.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break;
+                                    }
+                                }
 
-                            switch (varphase) {
-                                case 30469:
-                                    //if (wo.isLead === false) {
-                                    getmatches.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                this.setState({
+                                    matches: getmatches,
+                                    notify: getnotify,
+                                    interview: getinterview,
+                                    accepted: getaccepted
+                                });
+
+                                console.log()
+
+                                this.setState(
+                                    {
+                                        lane: [
+                                            {
+                                                id: 'lane1',
+                                                title: 'Work Orders',
+                                                label: ' ',
+                                                cards: this.state.workOrders,
+                                                laneStyle: { borderRadius: 50, marginBottom: 15 },
+                                                droppable: false,
+                                                draggable: false,
+                                                editable: false
+                                            },
+                                            {
+                                                id: 'Matches',
+                                                title: 'Matches',
+                                                label: ' ',
+                                                cards: this.state.matches
+                                            },
+                                            {
+                                                id: 'Interview',
+                                                title: 'Interview',
+                                                label: ' ',
+                                                cards: this.state.interview
+                                            },
+                                            {
+                                                id: 'Notify',
+                                                title: 'Notify',
+                                                label: ' ',
+                                                cards: this.state.notify
+                                            },
+                                            {
+                                                id: 'Accepted',
+                                                title: 'Accepted',
+                                                label: ' ',
+                                                cards: this.state.accepted
+                                            }
+                                        ],
+                                        loading: false
+
                                     });
-                                    // }
-                                    break;
-                                case 30461:
-                                    getinterview.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break;
-                                case 30464:
-
-                                    getnotify.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                case 30465:
-                                    getaccepted.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break;
-                            }
-                        }
-
-                        this.setState({
-                            matches: getmatches,
-                            notify: getnotify,
-                            interview: getinterview,
-                            accepted: getaccepted
+                            });
                         });
 
-                        console.log()
-
-                        this.setState(
-                            {
-                                lane: [
-                                    {
-                                        id: 'lane1',
-                                        title: 'Work Orders',
-                                        label: ' ',
-                                        cards: this.state.workOrders,
-                                        laneStyle: { borderRadius: 50, marginBottom: 15 }
-                                    },
-                                    {
-                                        id: 'Matches',
-                                        title: 'Matches',
-                                        label: ' ',
-                                        cards: this.state.matches
-                                    },
-                                    {
-                                        id: 'Interview',
-                                        title: 'Interview',
-                                        label: ' ',
-                                        cards: this.state.interview
-                                    },
-                                    {
-                                        id: 'Notify',
-                                        title: 'Notify',
-                                        label: ' ',
-                                        cards: this.state.notify
-                                    },
-                                    {
-                                        id: 'Accepted',
-                                        title: 'Accepted',
-                                        label: ' ',
-                                        cards: this.state.accepted
-                                    }
-                                ],
-                                loading: false
-
-                            });
-                    });
+                    }).catch(error => {
+                        this.setState({
+                            loading: false,
+                        })
+                    })
                 });
-
-            }).catch(error => { })
         }
     };
 
@@ -1027,139 +749,6 @@ class BoardManager extends Component {
         return variables;
     }
 
-    /* getWorkOrders = (vare = "primera") => {
-         let getworkOrders = [];
-         let datas = [];
- 
-         this.setState({
-             loading: true
-         }, () => {
-             this.props.client.query({
-                 query: GET_BOARD_SHIFT,
-                 fetchPolicy: "no-cache",
-                 variables: { ...this.getDataFilters() }
-             }).then(({ data }) => {
-                 if (data.ShiftBoard.length === 0) {
-                     this.setState({
-                         workOrders: [],
-                         lane: [
-                             {
-                                 id: 'lane1',
-                                 title: 'Work Orders',
-                                 label: ' ',
-                                 cards: getworkOrders,
-                                 laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                             },
-                             {
-                                 id: 'Matches',
-                                 title: 'Matches',
-                                 label: ' ',
-                                 cards: []
-                             },
-                             {
-                                 id: 'Interview',
-                                 title: 'Interview',
-                                 label: ' ',
-                                 cards: []
-                             },
-                             {
-                                 id: 'Notify',
-                                 title: 'Notify',
-                                 label: ' ',
-                                 cards: []
-                             },
-                             {
-                                 id: 'Accepted',
-                                 title: 'Accepted',
-                                 label: ' ',
-                                 cards: []
-                             }
-                         ],
-                         loading: false
-                     });
-                 } else {
-                     let _id = data.ShiftBoard[0].workOrderId;
-                     let count = 1;
-                     let begin = true;
- 
- 
-                     data.ShiftBoard.forEach((ShiftBoard) => {
- 
-                         if (_id == ShiftBoard.workOrderId)
-                             count++;
-                         else {
-                             count = 1;
-                         }
- 
-                         if (begin) count = 1;
- 
-                         _id = ShiftBoard.workOrderId;
-                         datas = {
-                             id: ShiftBoard.id,
-                             name: 'Title: ' + ShiftBoard.title,
-                             dueOn: 'Q: ' + count + '/' + ShiftBoard.quantity,
-                             subTitle: 'ID: 000' + ShiftBoard.workOrderId,
-                             body: ShiftBoard.CompanyName,
-                             //escalationTextLeft: Contacts != null ? Contacts.First_Name.trim() + ' ' + Contacts.Last_Name.trim() : '',
-                             //escalationTextRight: Shift != null ? Shift.Name + '-Shift' : '',
-                             cardStyle: { borderRadius: 6, marginBottom: 15 },
-                             needExperience: ShiftBoard.needExperience,
-                             needEnglish: ShiftBoard.needEnglish,
-                             PositionApplyfor: ShiftBoard.Id_positionApplying,
-                             Position: ShiftBoard.positionName,
-                             Zipcode: ShiftBoard.zipCode,
-                             WorkOrderId: ShiftBoard.workOrderId,
-                             isOpening: ShiftBoard.isOpening
-                         };
-                         getworkOrders.push(datas);
-                         begin = false;
-                     });
-                     this.setState({
-                         workOrders: getworkOrders,
-                         lane: [
-                             {
-                                 id: 'lane1',
-                                 title: 'Work Orders',
-                                 label: ' ',
-                                 cards: getworkOrders,
-                                 laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
-                             },
-                             {
-                                 id: 'Matches',
-                                 title: 'Matches',
-                                 label: ' ',
-                                 cards: this.state.matches
-                             },
-                             {
-                                 id: 'Interview',
-                                 title: 'Interview',
-                                 label: ' ',
-                                 cards: []
-                             },
-                             {
-                                 id: 'Notify',
-                                 title: 'Notify',
-                                 label: ' ',
-                                 cards: []
-                             },
-                             {
-                                 id: 'Accepted',
-                                 title: 'Accepted',
-                                 label: ' ',
-                                 cards: []
-                             }
-                         ],
-                         loading: false
-                     });
-                 }
-             }).catch(error => {
-                 this.setState({
-                     loading: false
-                 })
-             })
-         });
-     };*/
-
     getWorkOrders = async () => {
         let getworkOrders = [];
         let datas = [];
@@ -1215,7 +804,10 @@ class BoardManager extends Component {
                     title: 'Work Orders',
                     label: ' ',
                     cards: getworkOrders,
-                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 }
+                    laneStyle: { backgroundColor: '#f0f8ff', borderRadius: 50, marginBottom: 15 },
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Matches',
@@ -1250,18 +842,39 @@ class BoardManager extends Component {
         this.setState({ openModal: false });
     };
 
+    abrirVentana() {
+        document.getElementById("capaFondo1").style.visibility = "visible";
+        /*   document.getElementById("capaFondo2").style.visibility = "visible";
+         document.getElementById("capaFondo3").style.visibility = "hidden";
+ 
+         document.getElementById("capaVentana").style.visibility = "visible";*/
+        // alert("abrirVentana")
 
+    }
+
+    cerrarVentana() {
+        document.getElementById("capaFondo1").style.visibility = "hidden";
+        /* document.getElementById("capaFondo2").style.visibility="hidden";
+         document.getElementById("capaFondo3").style.visibility="hidden";
+         document.getElementById("capaVentana").style.visibility="hidden";
+         document.formulario.bAceptar.blur();*/
+        // alert("cerrarVentana")
+    }
 
     render() {
-        /*   const { getDistance } = this.context;
-           const latitud1 = 25.485737, longitud1 = -80.546938, latitud2 = 25.458486, longitud2 = -80.475754;
-           const distance = getDistance(latitud1, longitud1, latitud2, longitud2, 'K')
-     
-     
-           console.log(`SW 219th Ave Zipcode [33030] and  South Dixie Highway Zipcode [33390] ${distance} Km`)
-    */
+        const { classes } = this.props;
+
+        let isLoading = this.state.loading
+
+        /* if (isLoading) {
+             this.abrirVentana()
+         }
+         else { this.cerrarVentana() }*/
         return (
             <div className="App">
+                {isLoading && <LinearProgress />}
+                <div className={isLoading ? "overlay d-block" : "overlay d-none"} >
+                </div>
                 <div className="App-header">
                     <div className="row">
                         <div className="col-md-12 col-lg-12">
@@ -1303,7 +916,6 @@ class BoardManager extends Component {
                                                             }, () => {
                                                                 this.loadCities();
                                                                 this.getWorkOrders();
-                                                                this.getMatches();
                                                             })
                                                         }}
                                                         value={this.state.state}
@@ -1324,7 +936,6 @@ class BoardManager extends Component {
                                                                 city: event.target.value
                                                             }, () => {
                                                                 this.getWorkOrders();
-                                                                this.getMatches();
                                                             })
                                                         }}
                                                         //error={!this.state.cityValid}
@@ -1380,13 +991,14 @@ class BoardManager extends Component {
                 <div className="App-intro">
                     <Board
                         data={{ lanes: this.state.lane }}
+                        editable={false}
                         draggable={true}
                         laneDraggable={false}
                         onDataChange={this.shouldReceiveNewData}
                         eventBusHandle={this.setEventBus}
                         handleDragStart={this.handleDragStart}
                         handleDragEnd={this.handleDragEnd}
-                        onCardClick={this.onCardClick}
+                        onCardClick={this.state.loading ? console.log("Esta bloquedo") : this.onCardClick}
                         style={{
                             backgroundColor: '#f5f7f9'
                         }}

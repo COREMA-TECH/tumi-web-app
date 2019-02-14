@@ -29,6 +29,7 @@ class LocationForm extends Component {
     }
 
     loadFirstStates = (Id, city) => {
+        console.log("loadFirstStates ", Id, " City ", city)
         this.setState({ loadingStates: true },
             () => {
                 this.props.updateSearchingZipCodeProgress(true)
@@ -44,7 +45,7 @@ class LocationForm extends Component {
                         this.setState(() => { return { states: catalogitem, loadingStates: false, state: Id } },
                             () => {
                                 this.props.updateSearchingZipCodeProgress(false)
-                                this.loadFirstCities(Id, city)
+                                //  this.loadFirstCities(Id, city)
                             })
                     }).catch(error => {
                         this.setState(() => { return { loadingStates: false } }, () => {
@@ -121,6 +122,7 @@ class LocationForm extends Component {
                         variables: {
                             Id_Catalog: CITY_ID,
                             Id_Parent: this.state.state || 0
+
                         }
                     }).then(({ data: { catalogitem } }) => {
                         this.setState({ cities: catalogitem, loadingCities: false, findingZipCode: false },
@@ -176,6 +178,7 @@ class LocationForm extends Component {
                         .then(res => {
                             const cities = res.data;
                             if (!cities.error) {
+                                console.log("Infor del api ", cities)
                                 this.setState({ stateCode: cities.state, cityName: cities.city.toLowerCase() },
                                     () => { this.loadStates(); })
                             } else
@@ -200,16 +203,20 @@ class LocationForm extends Component {
     componentWillReceiveProps(nextProps) {
         //This is to load the datasource for States the first time that this component is loaded
         if (this.state.firstLoadStates && this.state.firstLoadCities &&
-            this.props.state != nextProps.state && this.props.city != nextProps.city)
+            this.props.state != nextProps.state && this.props.city != nextProps.city) {
             this.loadFirstStates(nextProps.state, nextProps.city);
+            this.loadFirstCities(nextProps.state, nextProps.city);
+        }
 
         this.setPropsToState(nextProps)
     }
 
     componentDidMount() {
         //This is to load the datasource for States the first time that this component is loaded
-        if (this.state.firstLoadStates && this.state.firstLoadCities)
+        if (this.state.firstLoadStates && this.state.firstLoadCities) {
             this.loadFirstStates(this.props.state, this.props.city);
+            this.loadFirstCities(this.props.state, this.props.city)
+        }
 
         this.setPropsToState(this.props)
     }

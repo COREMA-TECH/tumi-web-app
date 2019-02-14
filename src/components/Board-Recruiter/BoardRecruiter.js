@@ -11,7 +11,7 @@ import { Board } from 'react-trello'
 import ShiftsData from '../../data/shitfsWorkOrder.json';
 import Filters from './Filters';
 import ApplicationPhasesForm from './ApplicationPhasesForm';
-
+import LinearProgress from '@material-ui/core/es/LinearProgress/LinearProgress';
 
 const CustomCard = props => {
     return (
@@ -595,169 +595,137 @@ class BoardRecruiter extends Component {
         let varphase;
 
 
-        console.log("language, experience, location, laneId, PositionId ", language, experience, location, laneId, PositionId)
-
         if (laneId == "lane1") {
-            await this.props.client.query({ query: GET_LEAD, variables: {} }).then(({ data }) => {
-                data.applications.forEach((wo) => {
+            this.setState(
+                {
+                    loading: true
+                },
+                () => {
+                    this.props.client.query({
+                        query: GET_LEAD, variables: { language: language, experience: experience, Position: PositionId, WorkOrderId: this.state.Intopening, ShiftId: this.state.ShiftId }
+                    }).then(({ data }) => {
+                        data.applicationsByMatches.forEach((wo) => {
 
-                    console.log("data.applications.forEach((wo) ", wo)
+                            const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
 
-                    console.log("this.state.Intopening ", this.state.Intopening, " Shift ")
+                            this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
+                                const { getDistance } = this.context;
+                                const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
 
-                    const Phases = wo.applicationPhases.sort().slice(-1).find((item) => { return item.WorkOrderId == this.state.Intopening && item.ApplicationId == wo.id && item.ShiftId == this.state.ShiftId });
-                    //const IdealJob = wo.idealJobs.find((item) => { return item.idPosition == PositionId });
-                    const IdealJob = wo.idealJobs.find((item) => { return item.description.toUpperCase().includes(PositionId.toUpperCase()) });
+                                if (distance >= location) {
+                                    distances = 0;
+                                } else {
+                                    distances = 1;
+                                }
 
-                    console.log("Phases,IdealJob  ", Phases, IdealJob)
+                                if (distances >= 1) {
 
-                    console.log(" Zipcode del empleado ", wo.zipCode)
+                                    if (typeof Phases == undefined || Phases == null) {
+                                        varphase = 30460;
+                                    } else { varphase = Phases.StageId }
 
-                    this.getLatLong(2, wo.zipCode.substring(0, 5), () => {
-
-                        console.log(" wo.zipCode.substring(0, 5) ", wo.zipCode.substring(0, 5))
-
-                        const { getDistance } = this.context;
-                        const distance = getDistance(this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2, 'M')
-                        console.log("this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2  ", this.state.latitud1, this.state.longitud1, this.state.latitud2, this.state.longitud2)
-
-                        console.log("la distance  es ", distance)
-
-                        if (language == 'true') {
-                            SpeakEnglish = wo.languages.find((item) => { return item.language == 194 }) != null ? 1 : 0;
-                        } else {
-                            SpeakEnglish = 1;
-                        }
-
-                        if (experience == 'true') {
-                            Employment = wo.employments.length;
-                        } else {
-                            Employment = 1;
-                        }
-
-                        console.log("if (distance > location) {   ", distance, location)
-
-
-                        if (distance >= location) {
-                            distances = 0;
-                        } else {
-                            distances = 1;
-                        }
-                        if (typeof IdealJob == undefined || IdealJob == null) {
-                            position = 0;
-                        } else { position = 1 }
-
-                        console.log("SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position   ", SpeakEnglish, Employment, distances, position)
-
-
-                        if (SpeakEnglish == 1 && Employment >= 1 && distances >= 1 && position >= 1) {
-                            console.log("entro a la validacion final  ", wo)
-
-                            if (typeof Phases == undefined || Phases == null) {
-                                varphase = 30460;
-                            } else { varphase = Phases.StageId }
-
-
-                            console.log(" switch (varphase) { ", varphase)
-
-                            switch (varphase) {
-                                case 30460:
-                                    // if (wo.isLead === true) {
-                                    getleads.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    //}
-                                    break;
-                                case 30461:
-                                    getApplied.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break
-                                case 30462:
-                                    getCandidate.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break
-                                case 30463:
-                                    getPlacement.push({
-                                        id: wo.id,
-                                        name: wo.firstName + ' ' + wo.lastName,
-                                        subTitle: wo.cellPhone,
-                                        body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
-                                        escalationTextLeftLead: wo.generalComment,
-                                        escalationTextRightLead: wo.car == true ? " Yes" : " No",
-                                        cardStyle: { borderRadius: 6, marginBottom: 15 }
-                                    });
-                                    break
-                            }
-                        }
-
-                        this.setState({
-                            leads: getleads,
-                            Applied: getApplied,
-                            Candidate: getCandidate,
-                            Placement: getPlacement
-                        });
-
-                        this.setState(
-                            {
-                                Opening: this.state.Openings,
-                                lane: [
-                                    {
-                                        id: 'lane1',
-                                        title: 'Openings',
-                                        label: ' ',
-                                        cards: this.state.Openings
-                                    },
-                                    {
-                                        id: 'Leads',
-                                        title: 'Leads',
-                                        label: ' ',
-                                        cards: getleads
-                                    },
-                                    {
-                                        id: 'Applied',
-                                        title: 'Sent to Interview',
-                                        label: ' ',
-                                        cards: getApplied
-                                    },
-                                    {
-                                        id: 'Candidate',
-                                        title: 'Candidate',
-                                        label: ' ',
-                                        cards: getCandidate
-                                    },
-                                    {
-                                        id: 'Placement',
-                                        title: 'Placement',
-                                        label: ' ',
-                                        cards: getPlacement
+                                    switch (varphase) {
+                                        case 30460:
+                                            if (wo.isLead === true) {
+                                                getleads.push({
+                                                    id: wo.id,
+                                                    name: wo.firstName + ' ' + wo.lastName,
+                                                    subTitle: wo.cellPhone,
+                                                    body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                    escalationTextLeftLead: wo.generalComment,
+                                                    escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                    cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                                });
+                                            }
+                                            break;
+                                        case 30461:
+                                            getApplied.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break
+                                        case 30462:
+                                            getCandidate.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break
+                                        case 30463:
+                                            getPlacement.push({
+                                                id: wo.id,
+                                                name: wo.firstName + ' ' + wo.lastName,
+                                                subTitle: wo.cellPhone,
+                                                body: wo.cityInfo.DisplayLabel.trim() + ', ' + wo.stateInfo.DisplayLabel.trim(),
+                                                escalationTextLeftLead: wo.generalComment,
+                                                escalationTextRightLead: wo.car == true ? " Yes" : " No",
+                                                cardStyle: { borderRadius: 6, marginBottom: 15 }
+                                            });
+                                            break
                                     }
-                                ],
-                                loading: false
-                            });
-                    });
-                });
+                                }
 
-            }).catch(error => { })
+                                this.setState({
+                                    leads: getleads,
+                                    Applied: getApplied,
+                                    Candidate: getCandidate,
+                                    Placement: getPlacement
+                                });
+
+                                this.setState(
+                                    {
+                                        Opening: this.state.Openings,
+                                        lane: [
+                                            {
+                                                id: 'lane1',
+                                                title: 'Openings',
+                                                label: ' ',
+                                                cards: this.state.Openings
+                                            },
+                                            {
+                                                id: 'Leads',
+                                                title: 'Leads',
+                                                label: ' ',
+                                                cards: getleads
+                                            },
+                                            {
+                                                id: 'Applied',
+                                                title: 'Sent to Interview',
+                                                label: ' ',
+                                                cards: getApplied
+                                            },
+                                            {
+                                                id: 'Candidate',
+                                                title: 'Candidate',
+                                                label: ' ',
+                                                cards: getCandidate
+                                            },
+                                            {
+                                                id: 'Placement',
+                                                title: 'Placement',
+                                                label: ' ',
+                                                cards: getPlacement
+                                            }
+                                        ],
+                                        loading: false
+                                    });
+                            });
+                        });
+                    }).catch(error => {
+                        this.setState({
+                            loading: false,
+                        })
+                    })
+                });
         }
     };
 
@@ -901,29 +869,12 @@ class BoardRecruiter extends Component {
     }
 
     render() {
+        const { classes } = this.props;
+
+        let isLoading = this.state.loading
         return (
             <div className="App">
-                {/*<div className="App-header">
-                    <div className="row">
-                        <div className="col-md-12">
-                            <label>View Like Recruiter?</label>
-                            <div className="onoffswitch">
-                                <input
-                                    checked={this.state.checked == true ? true : false}
-                                    type="checkbox"
-                                    name="needEnglishggg"
-                                    onChange={this.handleSwitchView}
-                                    className="onoffswitch-checkbox"
-                                    id="myonoffswitchSpeak1"
-                                />
-                                <label className="onoffswitch-label" htmlFor="myonoffswitchSpeak1">
-                                    <span className="onoffswitch-inner" />
-                                    <span className="onoffswitch-switch" />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
+                {isLoading && <LinearProgress />}
                 <div className="App-header">
                     <div className="row">
                         <div className="col-md-12 col-lg-12">

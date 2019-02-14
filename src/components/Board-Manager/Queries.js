@@ -18,8 +18,8 @@ export const GET_POSTIONS_QUERY = gql`
     `;
 
 export const GET_MATCH = gql`
-query getlead  {
-	applications(isActive: true) {
+query getlead($language: Boolean,	$experience: Boolean,  $Position: String,  $WorkOrderId: Int,	$ShiftId: Int)   {
+			applicationsByMatches(language: $language, experience: $experience,Position: $Position, WorkOrderId: $WorkOrderId, ShiftId: $ShiftId) {
 		id
 		firstName
 		lastName

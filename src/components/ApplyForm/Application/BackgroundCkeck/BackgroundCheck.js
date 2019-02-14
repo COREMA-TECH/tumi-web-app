@@ -15,6 +15,7 @@ import {GET_APPLICATION_CHECK_ID} from "./Queries";
 import withMobileDialog from "@material-ui/core/withMobileDialog/withMobileDialog";
 import Button from "@material-ui/core/es/Button/Button";
 import Toolbar from "@material-ui/core/Toolbar/Toolbar";
+import renderHTML from "react-render-html";
 
 const spanishActions = require(`../languagesJSON/${localStorage.getItem('languageForm')}/spanishActions`);
 const backgroundCheckJson = require(`../languagesJSON/${localStorage.getItem('languageForm')}/backgroundCheck`);
@@ -336,6 +337,18 @@ class BackgroundCheck extends Component {
                                 }
                             </div>
                             <div className="row">
+                                <div className="col-md-8 offset-md-2">
+                                    {renderHTML(`
+                                            <p dir="ltr">In connection with my application for employment, I understand that an investigative background inquiry is to be made on myself, including, but no limited to, identity and prior address(es) verification, criminal history, driving record, consumer credit history, education verification, prior employment verification and other references as well as other information.</p>
+                                            <br>
+                                            <p dir="ltr">I further understand that for the purposes of this background inquiry, various sources will be contacted to provide information, including but not limited to various Federal, State, County, municipal, corporate, private and other agencies, which may maintain records concerning my past activities relating to my criminal conduct, civil court litigation, driving record, and credit performance, as well as various other experiences.</p>
+                                            <br>
+                                            <p dir="ltr">I hereby authorize without reservation, any company, agency, party of other source contracted to furnish the above information as requested. I do hereby release, discharge and indemnify the prospective employer, it&rsquo;s agents and associates to the full extent permitted by law from any claims, damages, losses, liabilities, cost and expenses arising from the retrieving and reporting of the requested information.</p>
+                                            <br>
+                                            <p dir="ltr">I acknowledge that a photocopy of this authorization be accepted with the same authority as the original and this signed release expires one (1) year after the date of origination.</p>
+                                            <h3>&nbsp;</h3>
+                                    `)}
+                                </div>
                                 <form id="background-check-form" className="background-check-form"
                                       onSubmit={this.handleSubmit}>
                                     <div className="col-md-8 offset-md-2 form-section-1 loading-container">
@@ -376,46 +389,47 @@ class BackgroundCheck extends Component {
                                                                 }
                                                             });
 
-                                                            console.log( e.target.checked);
+                                                            console.log(e.target.checked);
                                                         }}
                                                         value={this.state.vehicleReportRequired}
                                                         checked={this.state.vehicleReportRequired}
                                                         disabled={this.state.editing}
                                                     />
-                                                    <label className="onoffswitch-label" htmlFor="vehicleReportRequired">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
+                                                    <label className="onoffswitch-label"
+                                                           htmlFor="vehicleReportRequired">
+                                                        <span className="onoffswitch-inner"/>
+                                                        <span className="onoffswitch-switch"/>
                                                     </label>
                                                 </div>
                                                 {/*<label className="switch">*/}
-                                                    {/*<input*/}
-                                                        {/*id="vehicleReportRequired"*/}
-                                                        {/*type="checkbox"*/}
-                                                        {/*className="form-control"*/}
-                                                        {/*min="0"*/}
-                                                        {/*maxLength="50"*/}
-                                                        {/*minLength="10"*/}
-                                                        {/*form="background-check-form"*/}
-                                                        {/*onChange={(e) => {*/}
-                                                            {/*this.setState({*/}
-                                                                {/*vehicleReportRequired: e.target.checked*/}
-                                                            {/*}, () => {*/}
-                                                                {/*if (this.state.vehicleReportRequired === false) {*/}
-                                                                    {/*this.setState({*/}
-                                                                        {/*vehicleReportRequired: false,*/}
-                                                                        {/*driverLicenseNumber: '',*/}
-                                                                        {/*commercialDriverLicense: false,*/}
-                                                                        {/*licenseState: "",*/}
-                                                                        {/*licenseExpiration: "",*/}
-                                                                    {/*})*/}
-                                                                {/*}*/}
-                                                            {/*})*/}
-                                                        {/*}}*/}
-                                                        {/*value={this.state.vehicleReportRequired}*/}
-                                                        {/*checked={this.state.vehicleReportRequired}*/}
-                                                        {/*disabled={this.state.editing}*/}
-                                                    {/*/>*/}
-                                                    {/*<p className="slider round"></p>*/}
+                                                {/*<input*/}
+                                                {/*id="vehicleReportRequired"*/}
+                                                {/*type="checkbox"*/}
+                                                {/*className="form-control"*/}
+                                                {/*min="0"*/}
+                                                {/*maxLength="50"*/}
+                                                {/*minLength="10"*/}
+                                                {/*form="background-check-form"*/}
+                                                {/*onChange={(e) => {*/}
+                                                {/*this.setState({*/}
+                                                {/*vehicleReportRequired: e.target.checked*/}
+                                                {/*}, () => {*/}
+                                                {/*if (this.state.vehicleReportRequired === false) {*/}
+                                                {/*this.setState({*/}
+                                                {/*vehicleReportRequired: false,*/}
+                                                {/*driverLicenseNumber: '',*/}
+                                                {/*commercialDriverLicense: false,*/}
+                                                {/*licenseState: "",*/}
+                                                {/*licenseExpiration: "",*/}
+                                                {/*})*/}
+                                                {/*}*/}
+                                                {/*})*/}
+                                                {/*}}*/}
+                                                {/*value={this.state.vehicleReportRequired}*/}
+                                                {/*checked={this.state.vehicleReportRequired}*/}
+                                                {/*disabled={this.state.editing}*/}
+                                                {/*/>*/}
+                                                {/*<p className="slider round"></p>*/}
                                                 {/*</label>*/}
                                             </div>
                                             <div className="col-md-12">
@@ -525,31 +539,32 @@ class BackgroundCheck extends Component {
                                                         disabled={this.state.editing || !this.state.vehicleReportRequired}
                                                         className="onoffswitch-checkbox"
                                                     />
-                                                    <label className="onoffswitch-label" htmlFor="commercialDriverLicense">
-                                                        <span className="onoffswitch-inner" />
-                                                        <span className="onoffswitch-switch" />
+                                                    <label className="onoffswitch-label"
+                                                           htmlFor="commercialDriverLicense">
+                                                        <span className="onoffswitch-inner"/>
+                                                        <span className="onoffswitch-switch"/>
                                                     </label>
                                                 </div>
                                                 {/*<label className="switch">*/}
-                                                    {/*<input*/}
-                                                        {/*id="commercialDriverLicense"*/}
-                                                        {/*type="checkbox"*/}
-                                                        {/*className="form-control"*/}
-                                                        {/*min="0"*/}
-                                                        {/*maxLength="50"*/}
-                                                        {/*minLength="10"*/}
-                                                        {/*form="background-check-form"*/}
-                                                        {/*onChange={(e) => {*/}
+                                                {/*<input*/}
+                                                {/*id="commercialDriverLicense"*/}
+                                                {/*type="checkbox"*/}
+                                                {/*className="form-control"*/}
+                                                {/*min="0"*/}
+                                                {/*maxLength="50"*/}
+                                                {/*minLength="10"*/}
+                                                {/*form="background-check-form"*/}
+                                                {/*onChange={(e) => {*/}
 
-                                                            {/*this.setState({*/}
-                                                                {/*commercialDriverLicense: e.target.checked*/}
-                                                            {/*})*/}
-                                                        {/*}}*/}
-                                                        {/*value={this.state.commercialDriverLicense}*/}
-                                                        {/*checked={this.state.commercialDriverLicense}*/}
-                                                        {/*disabled={this.state.editing || !this.state.vehicleReportRequired}*/}
-                                                    {/*/>*/}
-                                                    {/*<p className="slider round"></p>*/}
+                                                {/*this.setState({*/}
+                                                {/*commercialDriverLicense: e.target.checked*/}
+                                                {/*})*/}
+                                                {/*}}*/}
+                                                {/*value={this.state.commercialDriverLicense}*/}
+                                                {/*checked={this.state.commercialDriverLicense}*/}
+                                                {/*disabled={this.state.editing || !this.state.vehicleReportRequired}*/}
+                                                {/*/>*/}
+                                                {/*<p className="slider round"></p>*/}
                                                 {/*</label>*/}
                                             </div>
                                             {
@@ -648,6 +663,23 @@ class BackgroundCheck extends Component {
                                         }
                                     </div>
                                 </form>
+                                <div className="col-md-8 offset-md-2">
+                                    <br/><br/>
+                                    <h5>In connection with this request, I hereby release the aforesaid parties from any liability and responsibility for obtaining my investigative background inquiry.</h5>
+                                    <br/><br/>
+                                    {/*{renderHTML(`*/}
+                                            {/*<p>&nbsp;</p>*/}
+                                            {/*<table style="border-collapse: collapse; width: 100%; height: 67px;" border="1">*/}
+                                                {/*<tbody>*/}
+                                                {/*<tr style="height: 67px;">*/}
+                                                    {/*<td style="width: 50%; height: 67px; text-align: left;">&nbsp;</td>*/}
+                                                    {/*<td style="width: 50%; height: 67px;">&nbsp;</td>*/}
+                                                {/*</tr>*/}
+                                                {/*</tbody>*/}
+                                            {/*</table>*/}
+                                            {/*<p>&nbsp;</p>*/}
+                                    {/*`)}*/}
+                                </div>
                             </div>
                         </div>
                     </div>
