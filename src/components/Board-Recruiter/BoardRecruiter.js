@@ -168,7 +168,10 @@ class BoardRecruiter extends Component {
                                 id: 'lane1',
                                 title: 'Openings',
                                 label: ' ',
-                                cards: this.state.Openings
+                                cards: this.state.Openings,
+                                droppable: false,
+                                draggable: false,
+                                editable: false
                             },
                             {
                                 id: 'Leads',
@@ -214,7 +217,10 @@ class BoardRecruiter extends Component {
                         id: 'lane1',
                         title: 'Openings',
                         label: ' ',
-                        cards: this.state.Openings
+                        cards: this.state.Openings,
+                        droppable: false,
+                        draggable: false,
+                        editable: false
                     },
                     {
                         id: 'Leads',
@@ -416,7 +422,10 @@ class BoardRecruiter extends Component {
                     id: 'lane1',
                     title: 'Openings',
                     label: ' ',
-                    cards: this.state.Openings
+                    cards: this.state.Openings,
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Leads',
@@ -689,7 +698,10 @@ class BoardRecruiter extends Component {
                                                 id: 'lane1',
                                                 title: 'Openings',
                                                 label: ' ',
-                                                cards: this.state.Openings
+                                                cards: this.state.Openings,
+                                                droppable: false,
+                                                draggable: false,
+                                                editable: false
                                             },
                                             {
                                                 id: 'Leads',
@@ -827,7 +839,10 @@ class BoardRecruiter extends Component {
                     id: 'lane1',
                     title: 'Openings',
                     label: ' ',
-                    cards: this.state.Openings
+                    cards: this.state.Openings,
+                    droppable: false,
+                    draggable: false,
+                    editable: false
                 },
                 {
                     id: 'Leads',

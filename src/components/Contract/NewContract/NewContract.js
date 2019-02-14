@@ -572,7 +572,7 @@ class NewContract extends Component {
                             this.setState({
                                 loadingUpdate: false
                             });
-                            this.props.update(id);
+                            // this.props.update(id);
                         })
                         .catch((err) => {
                             this.props.handleOpenSnackbar('error', 'Error: Updating Contract: ' + err);
