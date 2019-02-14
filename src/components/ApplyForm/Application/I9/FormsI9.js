@@ -130,6 +130,44 @@ class FormsI9 extends Component {
             });
     };
 
+    insertI9 = (item) => {
+        let harassmentObject = Object.assign({}, item);
+        delete harassmentObject.openSignature;
+        delete harassmentObject.id;
+        delete harassmentObject.accept;
+
+
+        this.props.client
+            .mutate({
+                mutation: ADD_ANTI_HARASSMENT,
+                variables: {
+                    harassmentPolicy: harassmentObject
+                }
+            })
+            .then(({ data }) => {
+                console.log("entro al data ", data);
+                this.props.handleOpenSnackbar(
+                    'success',
+                    'Successfully signed!',
+                    'bottom',
+                    'right'
+                );
+
+                this.setState({
+                    id: data.addHarassmentPolicy[0].id
+                })
+            })
+            .catch(error => {
+                // If there's an error show a snackbar with a error message
+                this.props.handleOpenSnackbar(
+                    'error',
+                    'Error to sign Anti Harrasment information. Please, try again!',
+                    'bottom',
+                    'right'
+                );
+            });
+    };
+
     createDocumentsPDF = () => {
         this.setState(
             {
@@ -218,7 +256,7 @@ class FormsI9 extends Component {
                     <div className="col-12">
                         <div className="applicant-card">
                             <div className="applicant-card__header">
-                                <span className="applicant-card__title">{applyTabs[4].label}</span>
+                                <span className="applicant-card__title">{applyTabs[6].label}</span>
                                 {
                                     this.state.id !== null ? (
                                         <button className="applicant-card__edit-button" onClick={() => {
