@@ -20,13 +20,12 @@ class FormsW4 extends Component {
         this.state = {
             signature: '',
             openSignature: false,
-            id: '',
+            id: null,
             content: '',
             date: '',
             applicantName: '',
             companyPhoneNumber: '',
             ApplicationId: this.props.applicationId
-
         }
     }
 
@@ -210,18 +209,57 @@ class FormsW4 extends Component {
 
 
     componentWillMount() {
-        this.getHarrasmentInformation(this.props.applicationId);
+        //this.getHarrasmentInformation(this.props.applicationId);
         this.getApplicantInformation(this.props.applicationId);
     }
 
-    componentDidMount() {
+    saveW4 = () => {
         let firstName = document.getElementById('firstName');
         let lastName = document.getElementById('lastName');
         let socialSecurityNumber = document.getElementById('socialSecurityNumber');
+        let idNumber = document.getElementById('idNumber');
+        let firstEmployeeDate = document.getElementById('firstEmployeeDate');
+        let employeer = document.getElementById('employeer');
+        let excention = document.getElementById('excention');
+        let payCheck = document.getElementById('payCheck');
+        let excentionYear = document.getElementById('excention-year');
+        let address = document.getElementById('address');
+        let postalCode = document.getElementById('postalCode');
+        let socialSecurityExtention = document.getElementById('socialSecurityExtention');
 
-        console.log("firstName: ", firstName.value);
-        console.log("lastName: ", lastName.value);
-    }
+        console.log(firstName.value);
+        console.log(lastName.value);
+        console.log(socialSecurityNumber.value);
+        console.log(idNumber.value);
+        console.log(firstEmployeeDate.value);
+        console.log(employeer.value);
+        console.log(excention.value);
+        console.log(payCheck.value);
+        console.log(excentionYear.value);
+        console.log(address.value);
+        console.log(postalCode.value);
+        console.log(socialSecurityExtention.value);
+
+
+        // TODO - Mutation to save
+        // this.props.client
+        //     .mutate({
+        //         mutation: ,
+        //         variables:
+        //     })
+        //     .then(({ data }) => {
+        //
+        //     })
+        //     .catch(error => {
+        //         // If there's an error show a snackbar with a error message
+        //         this.props.handleOpenSnackbar(
+        //             'error',
+        //             'Error to save W4. Please, try again!',
+        //             'bottom',
+        //             'right'
+        //         );
+        //     });
+    };
 
     sleep() {
         return new Promise((resolve) => setTimeout(resolve, 5000));
@@ -284,10 +322,8 @@ class FormsW4 extends Component {
                                         </button>
                                     ) : (
                                             <button className="applicant-card__edit-button" onClick={() => {
-                                                this.setState({
-                                                    openSignature: true
-                                                })
-                                            }}>{actions[8].label} <i className="far fa-edit" />
+                                                this.saveW4()
+                                            }}>{actions[4].label} <i className="far fa-save" />
                                             </button>
                                         )
                                 }
@@ -295,313 +331,313 @@ class FormsW4 extends Component {
                             <div className="row pdf-container">
                                 <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<div style="width: 800px; margin:0 auto">
-    <table style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; border: 0px #FFF; border-collapse: collapse; width: 100%;" border="1">
-        <tbody>
-            <tr>
-                <td style="width: 50%; vertical-align: top;">
-                    <h1 style="text-decoration:underline"><strong>Form W-4 (2019) </strong></h1>
-                    <p>Acontecimientos futuros. Toda información sobre acontecimientos futuros que afecten al
-                        Formulario W-4(SP) (como legislación aprobada después de que el formulario ha sido
-                        publicado) será anunciada en <a href="www.irs.gov/FormW4SP.Prop">www.irs.gov/FormW4SP.</a>
-                    </p>
-                    <p>Propósito. Complete el Formulario W-4(SP) para que su empleador pueda retener la cantidad
-                        correcta del impuesto federal sobre los ingresos de su paga. Considere completar un nuevo
-                        Formulario
-                        W-4(SP) cada año y cuando su situación personal o financiera cambie.</p>
-                    <p>Exención de la retención. Puede reclamar la exención de la retención
-                        para
-                        2019 si ambas de las siguientes situaciones le corresponde:</p>
-                    <ul>
-                        <li>Para 2018 tenía derecho a un reembolso de todo el impuesto federal sobre los ingresos
-                            retenido porque notenía obligación tributaria y</li>
-                        <li>Para 2019 espera un reembolso de todo el impuesto federal sobre ingreso retenido porque
-                            usted
-                            espera notener obligación tributaria.</li>
-                        <li>Si está exento, complete sólo las líneas 1,2,3,4 y 7 y firme el
-                            formulario
-                            para validarlo. Su exención para 2019 vence el 17 de febrero de 2020. Vea la
-                            Publicación 505, Tax Withholding and Estimated Tax (Retención de impuestos e
-                            impuesto estimado), en inglés, para saber más sobre si reúne los
-                            requisitos
-                            para la exención de la retención.</li>
-                    </ul>
-                    <p>Instrucciones Generales</p>
-                    <p>Si no está exento, siga el resto de estas instrucciones para determinar el número
-                        de
-                        retenciones que debe reclamar para propósitos de la retención para 2019 y
-                        cualquier
-                        cantidad adicional de impuestos a ser retenida. Para los salarios normales, la retención
-                        tiene que basarse en los descuentos que reclamó y no puede ser una cantidad fija ni un
-                        porcentaje de los salarios.</p>
-                    <p>También puede usar la calculadora en <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a>
-                        para determinar su retención de impuestos con mayor precisión. Considere usar esta
-                        calculadora si</p>
-                </td>
-                <td style="width: 49.9468%; vertical-align: top;">
-                    <p style="text-align: left;">tiene una situación tributaria más complicada, como por
-                        ejemplo, si tiene un cónyuge que trabaja, si tiene más de un trabajo o tiene una
-                        cantidad alta de ingresos no derivados del trabajo no sujetos a retención aparte de su
-                        trabajo. Después de que su Formulario W-4(SP) entre en vigencia, también puede
-                        usar
-                        esta calculadora para ver cómo la cantidad de impuestos que tiene retenida se compara con
-                        su
-                        impuesto total previsto para 2019. Si usa la calculadora, no necesita completar ninguna de las
-                        hojas
-                        de trabajo para el Formulario W-4(SP).</p>
-                    <p style="text-align: left;">Tenga en cuenta que si retiene demasiados impuestos recibirá un
-                        reembolso cuando presente su declaración de impuestos. Si no retiene suficientes
-                        impuestos,
-                        adeudará impuestos cuando presente su declaración de impuestos y podría
-                        estar
-                        sujeto a una multa.</p>
-                    <p style="text-align: left;">Personas con múltiples trabajos o con cónyuges que
-                        trabajan.
-                        Si tiene más de un trabajo a la vez, o si es casado que presenta una declaración
-                        conjunta y su cónyuge trabaja, lea todas las instrucciones, incluyendo las instrucciones
-                        para
-                        la Hoja de Trabajo para Dos Asalariados o Múltiples Empleos antes de comenzar.</p>
-                    <p style="text-align: left;">Ingresos no derivados del trabajo. Si tiene una cantidad alta de
-                        ingresos
-                        no derivados del trabajo no sujetos a retención, tales como intereses o dividendos,
-                        considere
-                        hacer pagos de impuestos estimados usando el Formulario 1040-ES, Estimated Tax for Individuals
-                        (Impuesto estimado para personas físicas), en inglés. De lo contrario, puede
-                        adeudar
-                        impuestos adicionales. O bien, puede usar la Hoja de Trabajo para Deducciones, Ajustes e Ingreso
-                        Adicional en la página 4 o la calculadora en <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a> para asegurarse de tener suficientes
-                        impuestos retenidos de su cheque de paga. Si tiene ingresos por concepto de pensión o
-                        anualidad, vea la Publicación 505 o utilice la calculadora en <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a> para saber si tiene que ajustar su
-                        retención en el Formulario W-4(SP) o el Formulario W-4P, en inglés.</p>
-                    <p style="text-align: left;">Extranjero no residente. Si es extranjero no residente, vea el Aviso
-                        1392,
-                        Supplemental Form W-4 Instructions for Nonresident Aliens (Instrucciones complementarias para el
-                        Formulario W-4 para extranjeros no residentes), en inglés, antes de completar este
-                        formulario.</p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <p><img src="https://i.imgur.com/wJ2ancW.png" style="width:100% !important">
-    </p>
-    <table style="border-collapse: collapse; width: 100%;" border="1">
-        <tbody>
-            <tr>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
-                    1 Su primer nombre e inicial del segundo
-                    <input type="text" style="width:100%; border:0" id="firstName">
-                </td>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;" id="lastName">
-                    Apellido
-                    <input type="text" style="width:100%; border:0">
-                </td>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;" >
-                    2 Su número de Seguro Social
-                    <input type="text" style="width:100%; border:0" id="socialSecurityNumber">
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table style="border-collapse: collapse; width: 100%; border-top: 0; border-collapse: collapse;" border="1">
-        <tbody>
-            <tr>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 100%; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-                    5 Número total de exenciones que reclama (de la hoja de trabajo que le corresponda en las
-                    siguientes páginas)<br>
-                    6 Cantidad adicional, si la hay, que desea que se le retenga de cada cheque de paga<br>
-                    7 Reclamo exención de la retención para 2019 y certifico que cumplo con ambas condiciones, a continuación, para la exención:<br>
-                    <ul>
-                        <li>
-                            El año pasado tuve derecho a un reembolso de todos los impuestos federales sobre el ingreso retenidos porque no tuve obligación tributaria alguna y
-                        </li>
-                        <li>
-                            Este año tengo previsto un reembolso de todos los impuestos federales sobre los ingresos retenidos porque tengo previsto no tener una obligación tributaria
-                        </li>
-                    </ul>
-                    Si cumple con ambas condiciones, escriba “Exempt” (Exento) aquí
-                </td>
-                <td style="vertical-align: top; border-collapse: collapse;">
-                    <table style="border-collapse: collapse;">
-                        <tbody><tr>
-                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">
-                                5
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">6</td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top; height: 68px; background: #CCC; border-collapse: collapse; border-bottom: solid 1px #000"></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top; border-collapse: collapse; ">7</td>
-                        </tr>
-                    </tbody></table>
-                </td>
-                <td style="vertical-align: top; border-collapse: collapse;">
-                    <table>
-                        <tbody><tr>
-                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">
-                                <input type="text" style="border:0; height: 16.5px;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">
-                                <input type="text" style="border:0; height: 16.5px;">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top; height: 66px; background: #CCC; border-collapse: collapse; border-bottom: solid 1px #000"></td>
-                        </tr>
-                        <tr>
-                            <td style="vertical-align: top;">
-                                <input type="text" style="border:0; height: 16.5px;">
-                            </td>
-                        </tr>
-                    </tbody></table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table style="border-collapse: collapse; width: 100%; height: 51px; border-top: 0;" border="1">
-        <tbody>
-            <tr style="height: 17px;">
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 50%; border-top: 0px #ffffff; height: 17px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-                    Dirección (número de casa y
-                    calle o ruta rural)
-                    <input type="text" style="width:100%; border:0">
-                </td>
-                <td style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 50%; border-top: 0px #ffffff; height: 17px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
-                    &nbsp;</td>
-            </tr>
-            <tr style="height: 34px;">
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 50%; border-top: 0px #ffffff; height: 34px;">
-                    <div data-font-name="g_d8_f3" data-angle="0" data-canvas-width="218.47000000000006">Ciudad o pueblo,
-                        estado y código postal (ZIP)
-                        <input type="text" style="width:100%; border:0">
-                    </div>
-                </td>
-                <td style="font-size: 11px; width: 50%; border-top: 0px #ffffff; height: 34px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top;">
-                    <div data-font-name="g_d8_f2" data-angle="0" data-canvas-width="408.9536499999999"><strong>4 Si su
-                            apellido es distinto al que aparece en su tarjeta de Seguro Social, marque este recuadro.
-                            Debe llamar al 800-772-1213 para recibir una tarjeta de reemplazo. ▶
-                            <input type="checkbox">
-                        </strong></div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table style="border-collapse: collapse; width: 100%;" border="1">
-        <tbody>
-            <tr>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
-                    8 Nombre y dirección del empleador (Empleador: Complete las líneas 8 y 10 si
-                    envía este
-                    certificado
-                    alIRS y complete las líneas 8, 9 y 10 si lo envía al State Directory of New Hires
-                    (Directorio
-                    estatal de personas recién empleadas).
-                    <input type="text" style="width:100%; border:0">
-                </td>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
-                    9 Primera fecha de empleo
-                    <input type="text" style="width:100%; border:0; height: 65px;">
-                </td>
-                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
-                    10 Número de identificación del empleador(EIN)
-                    <input type="text" style="width:100%; border:0; height: 65px;">
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <p>&nbsp;</p>
-    <table style="border-collapse: collapse;  border: 0px #FFF; width: 100%; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px;" border="1">
-        <tbody>
-            <tr>
-                <td style="width: 50%; vertical-align: top;">
-                    <p><strong>Instrucciones Específicas.</strong></p>
-                    <p>Hoja de Trabajo para Descuentos Personales Complete esta hoja de trabajo en la página 4
-                        primero para determinar el número de descuentos personales de retención que debe
-                        reclamar.</p>
-                    <p><strong>Línea C. Cabeza de familia, tenga en cuenta:</strong> Por lo general, usted
-                        podría reclamar el estado de cabeza de familia para efectos de la declaración de
-                        impuestos sólo si no está casado y paga más del 50% de los costos de
-                        mantener
-                        el hogar para usted y otro individuo calificado. Vea la Publicación 501, en
-                        inglés,
-                        para más información acerca del estado civil para efectos de la
-                        declaración.
-                    </p>
-                    <p>Línea E. Crédito tributario por hijos. Cuando presente su declaración de
-                        impuestos, usted podría reunir los requisitos para reclamar el crédito tributario
-                        por
-                        hijos por cada uno de sus hijos calificados. Para ser considerado hijo calificado, el hijo tiene
-                        que
-                        ser menor de 17 años de edad a partir del 31 de diciembre, tiene que ser su dependiente
-                        que
-                        viva con usted por más de la mitad del año y tiene que tener un número de
-                        Seguro Social válido. Para obtener más información acerca de este
-                        crédito, consulte la Publicación 972, Child Tax Credit (Crédito tributario
-                        por
-                        hijos), en inglés. Para reducir el impuesto retenido de su paga teniendo en cuenta este
-                        crédito, siga las instrucciones en la línea E de la hoja de trabajo. En la hoja de
-                        trabajo se le preguntará acerca de su ingreso total. Para este propósito, el
-                        ingreso
-                        total incluye todos sus salarios y otros ingresos, incluyendo los ingresos obtenidos por un
-                        cónyuge si presenta una declaración conjunta.</p>
-                    <p><strong>Línea F. Crédito para otros dependientes.</strong> Cuando presente su
-                        declaración de impuestos, usted podría reunir los requisitos para reclamar un
-                        crédito por otros dependientes por los cuales no se puede reclamar un crédito
-                        tributario por hijos, tal como un hijo calificado que no cumple con el requisito de edad o de
-                        tener
-                        un número de Seguro Social para el crédito tributario por hijos o tal como un
-                        pariente
-                        calificado. Para obtener más información sobre este crédito, consulte la
-                        Publicación 972, en inglés.</p>
-                </td>
-                <td style="width: 50%; vertical-align: top;">
-                    <p>Para reducir el impuesto retenido de su paga teniendo en cuenta este crédito, siga las
-                        instrucciones en la línea F de la hoja de trabajo. En la hoja de trabajo, se le
-                        preguntará acerca de su ingreso total. Para este propósito, el ingreso total
-                        incluye
-                        todos sus salarios y otros ingresos, incluyendo los ingresos obtenidos por un cónyuge si
-                        presenta una declaración conjunta.</p>
-                    <p><strong>Línea G. Otros créditos.</strong> Usted podría reducir el impuesto
-                        retenido de su cheque de paga si espera reclamar otros créditos tributarios, tales como
-                        los
-                        créditos tributarios por estudios (vea la Publicación 970, en inglés). Si
-                        lo
-                        hace, su cheque de paga será mayor, pero la cantidad de cualquier reembolso que reciba
-                        cuando
-                        presente su declaración de impuestos será menor. Siga las instrucciones para la
-                        Hoja
-                        de Trabajo 1-6 en la Publicación 505, en inglés, si desea reducir su
-                        retención
-                        para tener en cuenta estos créditos. Si usa la Hoja de Trabajo 1-6, anote
-                        “-0-”
-                        en las líneas E y F.</p>
-                    <p><strong>Hoja de Trabajo para Deducciones, Ajustes e Ingreso Adicional</strong></p>
-                    <p>Complete esta hoja de trabajo para determinar si puede reducir los impuestos retenidos de su
-                        cheque
-                        de paga para contabilizar sus deducciones detalladas y otros ajustes a los ingresos, tales como
-                        las
-                        contribuciones a los arreglos IRA. Si lo hace, su reembolso al final del año será
-                        menor, pero su cheque de paga será más grande. No está obligado a completar
-                        esta hoja de trabajo ni a reducir su retención si no desea hacerlo.</p>
-                    <p>También puede usar esta hoja de trabajo para calcular por cuánto aumentar el
-                        impuesto
-                        retenido de su cheque de paga si tiene una cantidad alta de ingresos no derivados del trabajo no
-                        sujetos a retención, tales como intereses o dividendos.</p>
-                    <p>Otra opción es tomar estas partidas en cuenta y hacer que su retención sea
-                        más
-                        precisa al usar la calculadora en <a href="www.irs.gov/W4AppSP.">www.irs.gov/W4AppSP.</a> Si usa
-                        la
-                        calculadora, no necesita completar ninguna de las hojas de trabajo para el Formulario W-4(SP).
-                    </p>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>`)}</div>
+                                    <table style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; border: 0px #FFF; border-collapse: collapse; width: 100%;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 50%; vertical-align: top;">
+                                                    <h1 style="text-decoration:underline"><strong>Form W-4 (2019) </strong></h1>
+                                                    <p>Acontecimientos futuros. Toda información sobre acontecimientos futuros que afecten al
+                                                        Formulario W-4(SP) (como legislación aprobada después de que el formulario ha sido
+                                                        publicado) será anunciada en <a href="www.irs.gov/FormW4SP.Prop">www.irs.gov/FormW4SP.</a>
+                                                    </p>
+                                                    <p>Propósito. Complete el Formulario W-4(SP) para que su empleador pueda retener la cantidad
+                                                        correcta del impuesto federal sobre los ingresos de su paga. Considere completar un nuevo
+                                                        Formulario
+                                                        W-4(SP) cada año y cuando su situación personal o financiera cambie.</p>
+                                                    <p>Exención de la retención. Puede reclamar la exención de la retención
+                                                        para
+                                                        2019 si ambas de las siguientes situaciones le corresponde:</p>
+                                                    <ul>
+                                                        <li>Para 2018 tenía derecho a un reembolso de todo el impuesto federal sobre los ingresos
+                                                            retenido porque notenía obligación tributaria y</li>
+                                                        <li>Para 2019 espera un reembolso de todo el impuesto federal sobre ingreso retenido porque
+                                                            usted
+                                                            espera notener obligación tributaria.</li>
+                                                        <li>Si está exento, complete sólo las líneas 1,2,3,4 y 7 y firme el
+                                                            formulario
+                                                            para validarlo. Su exención para 2019 vence el 17 de febrero de 2020. Vea la
+                                                            Publicación 505, Tax Withholding and Estimated Tax (Retención de impuestos e
+                                                            impuesto estimado), en inglés, para saber más sobre si reúne los
+                                                            requisitos
+                                                            para la exención de la retención.</li>
+                                                    </ul>
+                                                    <p>Instrucciones Generales</p>
+                                                    <p>Si no está exento, siga el resto de estas instrucciones para determinar el número
+                                                        de
+                                                        retenciones que debe reclamar para propósitos de la retención para 2019 y
+                                                        cualquier
+                                                        cantidad adicional de impuestos a ser retenida. Para los salarios normales, la retención
+                                                        tiene que basarse en los descuentos que reclamó y no puede ser una cantidad fija ni un
+                                                        porcentaje de los salarios.</p>
+                                                    <p>También puede usar la calculadora en <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a>
+                                                        para determinar su retención de impuestos con mayor precisión. Considere usar esta
+                                                        calculadora si</p>
+                                                </td>
+                                                <td style="width: 49.9468%; vertical-align: top;">
+                                                    <p style="text-align: left;">tiene una situación tributaria más complicada, como por
+                                                        ejemplo, si tiene un cónyuge que trabaja, si tiene más de un trabajo o tiene una
+                                                        cantidad alta de ingresos no derivados del trabajo no sujetos a retención aparte de su
+                                                        trabajo. Después de que su Formulario W-4(SP) entre en vigencia, también puede
+                                                        usar
+                                                        esta calculadora para ver cómo la cantidad de impuestos que tiene retenida se compara con
+                                                        su
+                                                        impuesto total previsto para 2019. Si usa la calculadora, no necesita completar ninguna de las
+                                                        hojas
+                                                        de trabajo para el Formulario W-4(SP).</p>
+                                                    <p style="text-align: left;">Tenga en cuenta que si retiene demasiados impuestos recibirá un
+                                                        reembolso cuando presente su declaración de impuestos. Si no retiene suficientes
+                                                        impuestos,
+                                                        adeudará impuestos cuando presente su declaración de impuestos y podría
+                                                        estar
+                                                        sujeto a una multa.</p>
+                                                    <p style="text-align: left;">Personas con múltiples trabajos o con cónyuges que
+                                                        trabajan.
+                                                        Si tiene más de un trabajo a la vez, o si es casado que presenta una declaración
+                                                        conjunta y su cónyuge trabaja, lea todas las instrucciones, incluyendo las instrucciones
+                                                        para
+                                                        la Hoja de Trabajo para Dos Asalariados o Múltiples Empleos antes de comenzar.</p>
+                                                    <p style="text-align: left;">Ingresos no derivados del trabajo. Si tiene una cantidad alta de
+                                                        ingresos
+                                                        no derivados del trabajo no sujetos a retención, tales como intereses o dividendos,
+                                                        considere
+                                                        hacer pagos de impuestos estimados usando el Formulario 1040-ES, Estimated Tax for Individuals
+                                                        (Impuesto estimado para personas físicas), en inglés. De lo contrario, puede
+                                                        adeudar
+                                                        impuestos adicionales. O bien, puede usar la Hoja de Trabajo para Deducciones, Ajustes e Ingreso
+                                                        Adicional en la página 4 o la calculadora en <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a> para asegurarse de tener suficientes
+                                                        impuestos retenidos de su cheque de paga. Si tiene ingresos por concepto de pensión o
+                                                        anualidad, vea la Publicación 505 o utilice la calculadora en <a href="www.irs.gov/W4AppSP">www.irs.gov/W4AppSP</a> para saber si tiene que ajustar su
+                                                        retención en el Formulario W-4(SP) o el Formulario W-4P, en inglés.</p>
+                                                    <p style="text-align: left;">Extranjero no residente. Si es extranjero no residente, vea el Aviso
+                                                        1392,
+                                                        Supplemental Form W-4 Instructions for Nonresident Aliens (Instrucciones complementarias para el
+                                                        Formulario W-4 para extranjeros no residentes), en inglés, antes de completar este
+                                                        formulario.</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p><img src="https://i.imgur.com/wJ2ancW.png" style="width:100% !important">
+                                    </p>
+                                    <table style="border-collapse: collapse; width: 100%;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
+                                                    1 Su primer nombre e inicial del segundo
+                                                    <input type="text" style="width:100%; border:0" id="firstName">
+                                                </td>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
+                                                    Apellido
+                                                    <input type="text" style="width:100%; border:0" id="lastName">
+                                                </td>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;" >
+                                                    2 Su número de Seguro Social
+                                                    <input type="text" style="width:100%; border:0" id="socialSecurityNumber">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table style="border-collapse: collapse; width: 100%; border-top: 0; border-collapse: collapse;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 100%; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+                                                    5 Número total de exenciones que reclama (de la hoja de trabajo que le corresponda en las
+                                                    siguientes páginas)<br>
+                                                    6 Cantidad adicional, si la hay, que desea que se le retenga de cada cheque de paga<br>
+                                                    7 Reclamo exención de la retención para 2019 y certifico que cumplo con ambas condiciones, a continuación, para la exención:<br>
+                                                    <ul>
+                                                        <li>
+                                                            El año pasado tuve derecho a un reembolso de todos los impuestos federales sobre el ingreso retenidos porque no tuve obligación tributaria alguna y
+                                                        </li>
+                                                        <li>
+                                                            Este año tengo previsto un reembolso de todos los impuestos federales sobre los ingresos retenidos porque tengo previsto no tener una obligación tributaria
+                                                        </li>
+                                                    </ul>
+                                                    Si cumple con ambas condiciones, escriba “Exempt” (Exento) aquí
+                                                </td>
+                                                <td style="vertical-align: top; border-collapse: collapse;">
+                                                    <table style="border-collapse: collapse;">
+                                                        <tbody><tr>
+                                                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">
+                                                                5
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">6</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top; height: 68px; background: #CCC; border-collapse: collapse; border-bottom: solid 1px #000"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top; border-collapse: collapse; ">7</td>
+                                                        </tr>
+                                                    </tbody></table>
+                                                </td>
+                                                <td style="vertical-align: top; border-collapse: collapse;">
+                                                    <table>
+                                                        <tbody><tr>
+                                                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">
+                                                                <input type="text" style="border:0; height: 16.5px;" id="excention">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top; border-collapse: collapse; border-bottom: solid 1px #000">
+                                                                <input type="text" style="border:0; height: 16.5px;" id="payCheck">
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top; height: 66px; background: #CCC; border-collapse: collapse; border-bottom: solid 1px #000"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top;">
+                                                                <input type="text" style="border:0; height: 16.5px;" id="excention-year">
+                                                            </td>
+                                                        </tr>
+                                                    </tbody></table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table style="border-collapse: collapse; width: 100%; height: 51px; border-top: 0;" border="1">
+                                        <tbody>
+                                            <tr style="height: 17px;">
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 50%; border-top: 0px #ffffff; height: 17px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+                                                    Dirección (número de casa y
+                                                    calle o ruta rural)
+                                                    <input type="text" style="width:100%; border:0" id="address">
+                                                </td>
+                                                <td style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 50%; border-top: 0px #ffffff; height: 17px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;">
+                                                    &nbsp;</td>
+                                            </tr>
+                                            <tr style="height: 34px;">
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top; width: 50%; border-top: 0px #ffffff; height: 34px;">
+                                                    <div data-font-name="g_d8_f3" data-angle="0" data-canvas-width="218.47000000000006">Ciudad o pueblo,
+                                                        estado y código postal (ZIP)
+                                                        <input type="text" style="width:100%; border:0" id="postalCode">
+                                                    </div>
+                                                </td>
+                                                <td style="font-size: 11px; width: 50%; border-top: 0px #ffffff; height: 34px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; vertical-align: top;">
+                                                    <div data-font-name="g_d8_f2" data-angle="0" data-canvas-width="408.9536499999999"><strong>4 Si su
+                                                            apellido es distinto al que aparece en su tarjeta de Seguro Social, marque este recuadro.
+                                                            Debe llamar al 800-772-1213 para recibir una tarjeta de reemplazo. ▶
+                                                            <input type="checkbox" id="socialSecurityExtention">
+                                                        </strong></div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table style="border-collapse: collapse; width: 100%;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
+                                                    8 Nombre y dirección del empleador (Empleador: Complete las líneas 8 y 10 si
+                                                    envía este
+                                                    certificado
+                                                    alIRS y complete las líneas 8, 9 y 10 si lo envía al State Directory of New Hires
+                                                    (Directorio
+                                                    estatal de personas recién empleadas).
+                                                    <input type="text" style="width:100%; border:0" id="employeer">
+                                                </td>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
+                                                    9 Primera fecha de empleo
+                                                    <input type="text" style="width:100%; border:0; height: 65px;" id="firstEmployeeDate">
+                                                </td>
+                                                <td style="font-size: 11px; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; width: 33.3333%; vertical-align: top;">
+                                                    10 Número de identificación del empleador(EIN)
+                                                    <input type="text" style="width:100%; border:0; height: 65px;" id="idNumber">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <p>&nbsp;</p>
+                                    <table style="border-collapse: collapse;  border: 0px #FFF; width: 100%; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px;" border="1">
+                                        <tbody>
+                                            <tr>
+                                                <td style="width: 50%; vertical-align: top;">
+                                                    <p><strong>Instrucciones Específicas.</strong></p>
+                                                    <p>Hoja de Trabajo para Descuentos Personales Complete esta hoja de trabajo en la página 4
+                                                        primero para determinar el número de descuentos personales de retención que debe
+                                                        reclamar.</p>
+                                                    <p><strong>Línea C. Cabeza de familia, tenga en cuenta:</strong> Por lo general, usted
+                                                        podría reclamar el estado de cabeza de familia para efectos de la declaración de
+                                                        impuestos sólo si no está casado y paga más del 50% de los costos de
+                                                        mantener
+                                                        el hogar para usted y otro individuo calificado. Vea la Publicación 501, en
+                                                        inglés,
+                                                        para más información acerca del estado civil para efectos de la
+                                                        declaración.
+                                                    </p>
+                                                    <p>Línea E. Crédito tributario por hijos. Cuando presente su declaración de
+                                                        impuestos, usted podría reunir los requisitos para reclamar el crédito tributario
+                                                        por
+                                                        hijos por cada uno de sus hijos calificados. Para ser considerado hijo calificado, el hijo tiene
+                                                        que
+                                                        ser menor de 17 años de edad a partir del 31 de diciembre, tiene que ser su dependiente
+                                                        que
+                                                        viva con usted por más de la mitad del año y tiene que tener un número de
+                                                        Seguro Social válido. Para obtener más información acerca de este
+                                                        crédito, consulte la Publicación 972, Child Tax Credit (Crédito tributario
+                                                        por
+                                                        hijos), en inglés. Para reducir el impuesto retenido de su paga teniendo en cuenta este
+                                                        crédito, siga las instrucciones en la línea E de la hoja de trabajo. En la hoja de
+                                                        trabajo se le preguntará acerca de su ingreso total. Para este propósito, el
+                                                        ingreso
+                                                        total incluye todos sus salarios y otros ingresos, incluyendo los ingresos obtenidos por un
+                                                        cónyuge si presenta una declaración conjunta.</p>
+                                                    <p><strong>Línea F. Crédito para otros dependientes.</strong> Cuando presente su
+                                                        declaración de impuestos, usted podría reunir los requisitos para reclamar un
+                                                        crédito por otros dependientes por los cuales no se puede reclamar un crédito
+                                                        tributario por hijos, tal como un hijo calificado que no cumple con el requisito de edad o de
+                                                        tener
+                                                        un número de Seguro Social para el crédito tributario por hijos o tal como un
+                                                        pariente
+                                                        calificado. Para obtener más información sobre este crédito, consulte la
+                                                        Publicación 972, en inglés.</p>
+                                                </td>
+                                                <td style="width: 50%; vertical-align: top;">
+                                                    <p>Para reducir el impuesto retenido de su paga teniendo en cuenta este crédito, siga las
+                                                        instrucciones en la línea F de la hoja de trabajo. En la hoja de trabajo, se le
+                                                        preguntará acerca de su ingreso total. Para este propósito, el ingreso total
+                                                        incluye
+                                                        todos sus salarios y otros ingresos, incluyendo los ingresos obtenidos por un cónyuge si
+                                                        presenta una declaración conjunta.</p>
+                                                    <p><strong>Línea G. Otros créditos.</strong> Usted podría reducir el impuesto
+                                                        retenido de su cheque de paga si espera reclamar otros créditos tributarios, tales como
+                                                        los
+                                                        créditos tributarios por estudios (vea la Publicación 970, en inglés). Si
+                                                        lo
+                                                        hace, su cheque de paga será mayor, pero la cantidad de cualquier reembolso que reciba
+                                                        cuando
+                                                        presente su declaración de impuestos será menor. Siga las instrucciones para la
+                                                        Hoja
+                                                        de Trabajo 1-6 en la Publicación 505, en inglés, si desea reducir su
+                                                        retención
+                                                        para tener en cuenta estos créditos. Si usa la Hoja de Trabajo 1-6, anote
+                                                        “-0-”
+                                                        en las líneas E y F.</p>
+                                                    <p><strong>Hoja de Trabajo para Deducciones, Ajustes e Ingreso Adicional</strong></p>
+                                                    <p>Complete esta hoja de trabajo para determinar si puede reducir los impuestos retenidos de su
+                                                        cheque
+                                                        de paga para contabilizar sus deducciones detalladas y otros ajustes a los ingresos, tales como
+                                                        las
+                                                        contribuciones a los arreglos IRA. Si lo hace, su reembolso al final del año será
+                                                        menor, pero su cheque de paga será más grande. No está obligado a completar
+                                                        esta hoja de trabajo ni a reducir su retención si no desea hacerlo.</p>
+                                                    <p>También puede usar esta hoja de trabajo para calcular por cuánto aumentar el
+                                                        impuesto
+                                                        retenido de su cheque de paga si tiene una cantidad alta de ingresos no derivados del trabajo no
+                                                        sujetos a retención, tales como intereses o dividendos.</p>
+                                                    <p>Otra opción es tomar estas partidas en cuenta y hacer que su retención sea
+                                                        más
+                                                        precisa al usar la calculadora en <a href="www.irs.gov/W4AppSP.">www.irs.gov/W4AppSP.</a> Si usa
+                                                        la
+                                                        calculadora, no necesita completar ninguna de las hojas de trabajo para el Formulario W-4(SP).
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>`)}</div>
                             </div>
                         </div>
                     </div>
