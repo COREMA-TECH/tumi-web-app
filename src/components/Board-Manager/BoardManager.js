@@ -368,11 +368,11 @@ class BoardManager extends Component {
                     .mutate({
                         mutation: UPDATE_APPLICANT,
                         variables: {
-
                             id: id,
                             isLead: isLead,
                             idRecruiter: this.state.userId,
-                            idWorkOrder: this.state.Intopening
+                            idWorkOrder: this.state.Intopening,
+                            positionApplyingFor: this.state.Intopening
 
                         }
                     })
