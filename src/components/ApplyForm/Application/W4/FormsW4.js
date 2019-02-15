@@ -328,7 +328,7 @@ class FormsW4 extends Component {
                                         )
                                 }
                             </div>
-                            <div className="row pdf-container">
+                            <div className="row pdf-container--i9-w4">
                                 <div id="DocumentPDF" className="signature-information">
                                     {renderHTML(`<div style="width: 800px; margin:0 auto">
                                     <table style="font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 14px; border: 0px #FFF; border-collapse: collapse; width: 100%;" border="1">

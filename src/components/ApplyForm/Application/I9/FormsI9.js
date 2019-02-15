@@ -20,7 +20,7 @@ class FormsI9 extends Component {
         this.state = {
             signature: '',
             openSignature: false,
-            id: '',
+            id: null,
             content: '',
             date: '',
             applicantName: '',
@@ -278,216 +278,498 @@ class FormsI9 extends Component {
                                                 this.setState({
                                                     openSignature: true
                                                 })
-                                            }}>{actions[8].label} <i className="far fa-edit" />
+                                            }}>{actions[4].label} <i className="far fa-save" />
                                             </button>
                                         )
                                 }
                             </div>
-                            <div className="row pdf-container">
+                            <div className="row pdf-container--i9-w4">
                                 <div id="DocumentPDF" className="signature-information">
-                                    {renderHTML(`<div class="WordSection1">
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 18.0pt; font-family: Time New Roman;">Anti-Harassment Policy</span></p>
-<h1 style="margin: 15.7pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';"><u>Policy statement</u></h1>
-<p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">TUMI STAFFING, INC. employees, contractors and others acting on behalf of TUMI STAFFING, INC. are entitled to respectful treatment in the workplace. Being respected means being treated honestly and professionally, with your unique talents and perspectives valued. A respectful workplace is about more than compliance with the law. It is a working environment that is free of inappropriate behavior of all kinds and harassment because of age, disability, marital status, race or color, national origin, religion, sex, sexual orientation or gender identity.</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 5.55pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">TUMI STAFFING, INC. employees, strive to create and maintain a work environment in which people are treated with dignity, decency and respect. The environment of the company should be characterized by mutual trust and the absence of intimidation, oppression and exploitation. Employees should be able to work and learn in a safe, yet stimulating atmosphere. The accomplishment of this goal is essential to the mission of the company. For that reason, TUMI STAFFING, INC. will not tolerate unlawful discrimination or harassment of any kind. Through enforcement of this policy and by education of employees, the company will seek to prevent, correct and discipline behavior that violates this policy.</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">All employees, regardless of their positions, are covered by and are expected to comply with this policy and to take appropriate measures to ensure that prohibited conduct does not occur. Appropriate disciplinary action will be taken against any employee who violates this policy. Based upon the seriousness of the offense, disciplinary action may include verbal or written reprimand, suspension or termination of employment.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>What it means:</u></h1>
-<p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">A respectful workplace</p>
-<p style="margin: 0.7pt 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">TUMI STAFFING, INC. is committed to providing a workplace in which the dignity of every individual is respected. Each of us should understand that incidents of harassment and inappropriate behavior will not be tolerated at TUMI STAFFING, INC. or on our worksites.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="margin: 0in 284.85pt 0.0001pt 5.2pt; line-height: 206%; font-size: 12pt; font-family: 'Trebuchet MS';">Prohibited Conduct under this Policy Discrimination</h1>
-<p style="margin: 0.05pt 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">It is a violation of this policy to discriminate in the provision of employment opportunities, benefits or privileges; to create discriminatory work conditions; or to use discriminatory evaluative standards in employment if the basis of that discriminatory treatment is, in whole or in part, the person's race, color, national origin, age, religion, disability status, gender, sexual orientation, gender identity, genetic information or marital status.</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 5.55pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Discrimination of this kind also may be strictly prohibited by a variety of federal, state and local laws, including Title VII of the Civil Rights Act 1964, the Age Discrimination Act of 1975, and the Americans With Disabilities Act of 1990. This policy is intended to comply with the prohibitions stated in these antidiscrimination laws.</p>
-<p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">Discrimination in violation of this policy will be subject to severe sanctions up to and including termination.</p>
-<p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 12.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>Harassment</u></h1>
-<p style="margin: 4.25pt 83.2pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Harassment is unwelcome conduct toward an individual because of his or her age, disability, marital status, national origin, race or color, religion, sex, sexual orientation or gender identity, when the conduct creates an intimidating, hostile or offensive work environment that:</p>
-<p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<ul style="margin-bottom: 0in; margin-top: 0px;">
-<li style="margin: 0in 0in 0.0001pt 6.9333px; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt;">Causes work performance to suffer; or</span></li>
-<li style="margin: 0.45pt 0in 0.0001pt 6.9333px; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt;">Negatively affects job opportunities.</span></li>
-</ul>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 13.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 107.75pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Harassment is against the law in the United States and many other countries. Examples of harassment that may violate the law and will violate this policy include:</p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<ul style="margin-bottom: 0in; margin-top: 0px;">
-<li style="margin: 0in 90.8pt 0.0001pt 6.9333px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Or</span><span style="font-size: 12.0pt; line-height: 105%;">al</span> <span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">r</span> <span style="font-size: 12.0pt; line-height: 105%;">w</span><span style="font-size: 12.0pt; line-height: 105%;">r</span><span style="font-size: 12.0pt; line-height: 105%;">i</span><span style="font-size: 12.0pt; line-height: 105%;">tte</span><span style="font-size: 12.0pt; line-height: 105%;">n</span> <span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">mmuni</span><span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">ati</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">n</span><span style="font-size: 12.0pt; line-height: 105%;">s</span> <span style="font-size: 12.0pt; line-height: 105%;">th</span><span style="font-size: 12.0pt; line-height: 105%;">at</span> <span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">n</span><span style="font-size: 12.0pt; line-height: 105%;">tai</span><span style="font-size: 12.0pt; line-height: 105%;">n</span> <span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">ff</span><span style="font-size: 12.0pt; line-height: 105%;">e</span><span style="font-size: 12.0pt; line-height: 105%;">n</span><span style="font-size: 12.0pt; line-height: 105%;">s</span><span style="font-size: 12.0pt; line-height: 105%;">i</span><span style="font-size: 12.0pt; line-height: 105%;">v</span><span style="font-size: 12.0pt; line-height: 105%;">e</span> <span style="font-size: 12.0pt; line-height: 105%;">n</span><span style="font-size: 12.0pt; line-height: 105%;">ame</span><span style="font-size: 12.0pt; line-height: 105%;">-</span><span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">al</span><span style="font-size: 12.0pt; line-height: 105%;">lin</span><span style="font-size: 12.0pt; line-height: 105%;">g</span><span style="font-size: 12.0pt; line-height: 105%;">,</span> <span style="font-size: 12.0pt; line-height: 105%;">jo</span><span style="font-size: 12.0pt; line-height: 105%;">k</span><span style="font-size: 12.0pt; line-height: 105%;">e</span><span style="font-size: 12.0pt; line-height: 105%;">s</span><span style="font-size: 12.0pt; line-height: 105%;">,</span> <span style="font-size: 12.0pt; line-height: 105%;">s</span><span style="font-size: 12.0pt; line-height: 105%;">lu</span><span style="font-size: 12.0pt; line-height: 105%;">r</span><span style="font-size: 12.0pt; line-height: 105%;">s</span><span style="font-size: 12.0pt; line-height: 105%;">, </span><span style="font-size: 12.0pt; line-height: 105%;">negative stereotyping, or threats. This includes comments or jokes that are distasteful or targeted at individuals or groups based on age, disability, marital status, national </span><span style="font-size: 12.0pt; line-height: 105%;">origin, race or color, religion, sex, sexual orientation or gender identity.</span></li>
-<li style="margin: 0in 5.65pt 0.0001pt 6.9333px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Nonverbal conduct, such as staring, leering and giving inappropriate gifts. Physical conduct, such as </span><span style="font-size: 12.0pt; line-height: 105%;">assault or unwanted touching.</span></li>
-<li style="margin: 0in 83.85pt 0.0001pt 6.9333px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Visual images, such as derogatory or offensive pictures, cartoons, drawings or gestures. </span><span style="font-size: 12.0pt; line-height: 105%;">Such prohibited images include those in hard copy or electronic form.</span></li>
-</ul>
-<p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Harassment, including sexual harassment, is prohibited by federal and state laws. This policy prohibits harassment of any kind, and the company will take appropriate action swiftly to address any violations of this policy. The definition of harassment is verbal or physical conduct designed to threaten, intimidate or coerce. Also, verbal taunting (including racial and ethnic slurs) that, in the employee's opinion, impairs his or her ability to perform his or her job.</p>
-<p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><em><span style="font-size: 12.0pt; font-family: 'Trebuchet MS';">Examples of harassment are</span></em><span style="font-size: 12.0pt;">:</span></p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 12.5pt;">&nbsp;</span></p>
-<p style="margin: 0.05pt 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Verbal: Comments that are not flattering or are unwelcome regarding a person's nationality, origin, race, color, religion, gender, sexual orientation, age, body disability or appearance. Epithets, slurs, negative stereotyping.</p>
-<p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Nonverbal: Distribution, display or discussion of any written or graphic material that ridicules, denigrates, insults, belittles, or shows hostility or aversion toward an individual or group because of national origin, race color, religion, age, gender, sexual orientation, pregnancy, appearance disability, gender identity, marital or other protected status.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>Sexual harassment</u></h1>
-<p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">Sexual harassment is a form of harassment that is based on a person&apos;s sex or that is sex-based</p>
-<p style="margin: 0.7pt 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">behavior. It is also sexual harassment for anyone in a position of authority to tie hiring, promotion, termination or any other condition of employment to a request or demand for</p>
-<p style="margin: 0in 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">sexual favors. Although having a consensual romantic relationship with another TUMI STAFFING, INC. employee is not harassment, harassment may occur as a result of the relationship if either person in the relationship engages in conduct in the workplace that is inappropriate or unwelcome.</p>
-<p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">Sexual Harassment</h1>
-<h1 style="margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">&nbsp;</h1>
-<h1 style="margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><span style="font-family: 'Time New Roman'; font-weight: normal;">Sexual harassment in any form is prohibited under this policy. Sexual harassment is a form of discrimination and is unlawful under Title VII of the Civil Rights Act of 1964.</span></h1>
-<p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 4.9pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Sexual harassment includes unsolicited and unwelcome sexual advances, requests for sexual favors, or other verbal or physical conduct of a sexual nature, when such conduct:</p>
-<p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<ul style="margin-top: 0in; margin-bottom: .0001pt;">
-<li style="list-style: outside none none; margin: 0in 0in 0.0001pt 0px; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';">
-<ul style="margin-top: 0in; margin-bottom: .0001pt;">
-<li style="margin: 0in 0in 0.0001pt 0px; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt;">Is made explicitly or implicitly a term or condition of employment.</span></li>
-<li style="margin: 0.45pt 0in 0.0001pt 0px; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt;">Is used as a basis for an employment decision.</span></li>
-<li style="margin: 0.25pt 16.35pt 0.0001pt 0px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Unreasonably interferes with an employee's work performance or creates an intimidating, hostile </span><span style="font-size: 12.0pt; line-height: 105%;">or otherwise offensive environment.</span></li>
-</ul>
-</li>
-</ul>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Sexual harassment does not refer to behavior or occasional compliments of a socially acceptable nature. It refers to behavior that is unwelcome, that is personally offensive, that lowers morale and therefore interferes with work effectiveness. Sexual harassment may take different forms.</p>
-<p style="margin: 0.55pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 11pt; font-family: 'Time New Roman';"><em><span style="font-size: 12.0pt; font-family: 'Trebuchet MS';">Examples of conduct that may constitute sexual harassment are:</span></em></p>
-<p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><em><span style="font-family: 'Trebuchet MS';">&nbsp;</span></em></p>
-<ul style="margin-top: 0.05pt; margin-bottom: 0in;">
-<li style="margin: 0.05pt 5.6pt 0.0001pt 6.9333px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Verbal: Sexual innuendoes, suggestive comments, jokes of a sexual nature, sexual propositions, lewd remarks, threats. Requests for any type of sexual favor (this includes repeated, unwelcome requests </span><span style="font-size: 12.0pt; line-height: 105%;">for dates). Verbal abuse or "kidding" that is oriented toward a prohibitive form of harassment, including that which is sex oriented and considered unwelcome.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Nonverbal: The distribution, display or discussion of any written or graphic material, including </span><span style="font-size: 12.0pt; line-height: 105%;">calendars, posters and cartoons that are sexually suggestive or show hostility toward an individual or group because of sex; suggestive or insulting sounds; leering; staring; whistling; obscene gestures; content in letters and notes, facsimiles, email, photos, text messages, Internet postings, etc., that is </span><span style="font-size: 12.0pt; line-height: 105%;">sexual in nature.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Physical: Unwelcome, unwanted physical contact, including but not limited to touching, tickling, pinching, patting, brushing up against, hugging, cornering, kissing, fondling; forced sexual intercourse </span><span style="font-size: 12.0pt; line-height: 105%;">or assault.</span></li>
-</ul>
-<p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Normal, courteous, mutually respectful, pleasant, non-coercive interactions between employees, including men and women, that are acceptable to and welcomed by both parties, are not considered to be harassment, including sexual harassment.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>Inappropriate behavior</u></h1>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Our goal is to have a work environment where we all treat each other respectfully and professionally. Any unprofessional or disrespectful behavior, even if not illegal, interferes with that goal and will not be tolerated. TUMI STAFFING, INC. reserves the right to respond to inappropriate behavior even where no one has complained or indicated they have been offended.</p>
-<p style="margin: 0.55pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">Performance feedback is not harassment or inappropriate behavior</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 13.0pt;">&nbsp;</span></p>
-<p style="text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Effective leadership requires that managers talk with their employees about their job performance. Managers should be clear about how each employee is performing and how the employee &apos;s overall behavior contributes to the workgroup &apos;s ability to deliver results consistent</p>
-</div>
-<p><span style="font-size: 11.0pt; line-height: 105%; font-family: 'Time New Roman';">&nbsp;</span></p>
-<div class="WordSection2">
-<p style="margin: 4.6pt 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">with the values of TUMI STAFFING, INC.. Such discussions may be difficult and they always should be done professionally and respectfully. However, constructive criticism and supervisory actions regarding performance deficiencies or other workplace issues are not harassment or retaliation.</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 12.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 80.1pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Every TUMI STAFFING, INC. employee and contractor has a role to play in achieving a respectful workplace:</p>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<ul style="margin-bottom: 0in; margin-top: 0px;">
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">TUMI STAFFING, INC. expects respectful and professional behavior at all times, no matter the situation. Remember that your actions reflect upon you, and potentially reflect upon TUMI STAFFING, INC. Be sensitive to how others may perceive your actions. Just because someone does not complain to you </span><span style="font-size: 12.0pt; line-height: 105%;">does not mean that they don&apos;t object to your behavior.</span></li>
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">There is no reason to ever engage in unwelcome behavior that has the purpose or effect of harassing others. Report any unwelcome behavior you think might be harassment </span><span style="font-size: 12.0pt; line-height: 105%;">under this policy.</span></li>
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Be open to constructive feedback regarding performance deficiencies. Recognize that </span><span style="font-size: 12.0pt; line-height: 105%;">respectful supervisory actions regarding workplace issues are a necessary and </span><span style="font-size: 12.0pt; line-height: 105%;">appropriate step in performance feedback.</span></li>
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">If someone offends you, let that person know so that it won&apos;t happen again. If you have offended someone, understand his or her perspective, apologize and don &apos;t let it happen </span><span style="font-size: 12.0pt; line-height: 105%;">again.</span></li>
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">If you are aware of any behavior that might violate this policy, report it to your manager </span><span style="font-size: 12.0pt; line-height: 105%;">or supervisor or to the TUMI STAFFING, INC. Human Resources Department.</span></li>
-</ul>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>What to avoid</u></h1>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 9.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<ul style="margin-top: 4.35pt; margin-bottom: .0001pt;">
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Any behavior that is unprofessional or disrespectful, or that has the purpose or effect of </span><span style="font-size: 12.0pt; line-height: 105%;">harassing anyone.</span></li>
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Any retaliation against someone who raises a concern or potential violation under this </span><span style="font-size: 12.0pt; line-height: 105%;">policy.</span></li>
-<li style="text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Missed opportunities to respectfully communicate to someone that you found his or her </span><span style="font-size: 12.0pt; line-height: 105%;">behavior offensive.</span></li>
-<li style="text-align: justify; line-height: 14.35pt; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt;">Unreported concerns or violations of this policy.</span></li>
-</ul>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>How to report a violation</u></h1>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Most reports of suspected violations of this policy are made to TUMI STAFFING, INC.&apos;s Human Resources. You can contact your local Manager, or go to someone higher in the organization. You can also use any of the additional reporting options listed in the If You Have a Business Conduct Concern section of this website/manual, if you prefer.</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>How TUMI STAFFING, INC. will respond</u></h1>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">Investigation and response</p>
-<p style="margin: 0.15pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 13.0pt;">&nbsp;</span></p>
-<p style="margin: 0.05pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">If you report a complaint of harassment or inappropriate behavior, TUMI STAFFING, INC. will</p>
-</div>
-<div class="WordSection3">
-<p style="margin: 4.6pt 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">investigate your concerns. Where there has been a violation of policy, TUMI STAFFING, INC. will take appropriate action to try to avoid future violations. In appropriate cases, TUMI STAFFING, INC. may take disciplinary action (up to and including immediate termination) against those violating the Harassment Policy.</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 12.5pt;">&nbsp;</span></p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">TUMI STAFFING, INC. will inform parties about the status of reviewing their complaints. To respect the privacy and confidentiality of all people involved, 3M might not share specific details of the discipline or other action taken.</p>
-<p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';"><u>TUMI STAFFING, INC. management responsibility</u></h1>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 5.65pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Every TUMI STAFFING, INC. supervisor and manager is responsible for ensuring that TUMI STAFFING, INC. provides a workplace free of harassment and inappropriate behavior and that complaints are handled promptly and effectively. With the assistance of Human Resources, TUMI STAFFING, INC. management must inform their organizations about the policy, promptly investigate allegations of harassment, take appropriate disciplinary action, and take steps to assure retaliation is prohibited.</p>
-<p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">Confidentiality</h1>
-<p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 12.5pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 5.55pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">During the complaint process, while the confidentiality of the information received, the privacy of the individuals involved, and the wishes of the complaining person regarding action by the office cannot be guaranteed in every instance, they will be protected to as great a degree as is legally possible. The expressed wishes of the complaining person for confidentiality will be considered in the context of the company&apos;s legal obligation to act upon the charge and the right of the charged party to obtain information. In most cases, however, confidentiality will be strictly maintained by the company and those involved in the investigation. In addition, any notes or documents written by or received by the person(s) conducting the investigation will be kept confidential to the extent possible and according to any existing state or federal law.</p>
-<p style="margin: 0.4pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<h1 style="margin: 0.05pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';">Complaint Procedure</h1>
-<p style="margin: 0.2pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 12.5pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 0in 5.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">The following complaint procedure will be followed in order to address a complaint regarding harassment, discrimination or retaliation.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.5pt;">&nbsp;</span></p>
-<ul style="margin-bottom: 0in; margin-top: 0px;">
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">A person who feels harassed, discriminated or retaliated against may initiate the complaint process by filing a written and signed complaint with the HR director. No formal action will be taken against any person under this policy unless a written and signed complaint is on file containing sufficient details to </span><span style="font-size: 12.0pt; line-height: 105%;">allow the HR director to determine if the policy may have been violated. The complainant (the employee making the complaint) may use the complaint form, which is attached to this policy. If a </span><span style="font-size: 12.0pt; line-height: 105%;">supervisor or manager becomes aware that harassment or discrimination is occurring, either from personal observation or as a result of an employee coming forward, the supervisor or manager should </span><span style="font-size: 12.0pt; line-height: 105%;">immediately report it to the HR director.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Upon receiving the complaint, or being advised by a supervisor or manager that violation of this policy </span><span style="font-size: 12.0pt; line-height: 105%;">may be occurring, the HR director will notify the company, and review the complaint with the company&apos;s legal counsel.</span></li>
-<li style="margin: 0in 0in 0.0001pt 6.9333px; text-align: justify; line-height: 14.35pt; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt;">Within five (5) working days of receiving the complaint, the HR director will:</span></li>
-</ul>
-<p style="margin: 0.45pt 0in 0.0001pt 41.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">- Notify the person(s) charged [hereafter referred to as "respondent(s)"] of a complaint.</p>
-<p style="margin: 0.65pt 5.55pt 0.0001pt 59.2pt; text-align: justify; text-indent: -0.25in; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">- Initiate the investigation to determine whether there is a reasonable basis for believing that the alleged violation of this policy occurred.</p>
-</div>
-<div class="WordSection4">
-<ul style="margin-top: 3.15pt; margin-bottom: 0in;">
-<li style="margin: 3.15pt 5.6pt 0.0001pt 6.9333px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">During the investigation, the HR director, together with legal counsel or other management employee, will interview the complainant, the respondent and any witnesses to determine whether the alleged </span><span style="font-size: 12.0pt; line-height: 105%;">conduct occurred.</span></li>
-<li style="margin: 0in 5.55pt 0.0001pt 6.9333px; text-align: justify; line-height: 105%; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Within 15 business days of the complaint being filed (or the matter being referred to the HR director), the HR director or other person conducting the investigation will conclude the investigation and submit </span><span style="font-size: 12.0pt; line-height: 105%;">a report of his or her findings to the company.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">If it is determined that harassment or discrimination in violation of this company&apos;s policy has occurred, the HR director will recommend appropriate disciplinary action. The appropriate action will depend on the following factors: (i) The severity, frequency and pervasiveness of the conduct; (ii) Prior complaints made by the complainant; (iii) Prior complaints made against the respondent; (iv) The quality of the </span><span style="font-size: 12.0pt; line-height: 105%;">evi</span><span style="font-size: 12.0pt; line-height: 105%;">d</span><span style="font-size: 12.0pt; line-height: 105%;">en</span><span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">e</span> <span style="font-size: 12.0pt; line-height: 105%;">(</span><span style="font-size: 12.0pt; line-height: 105%;">f</span><span style="font-size: 12.0pt; line-height: 105%;">i</span><span style="font-size: 12.0pt; line-height: 105%;">rs</span><span style="font-size: 12.0pt; line-height: 105%;">t</span><span style="font-size: 12.0pt; line-height: 105%;">-</span><span style="font-size: 12.0pt; line-height: 105%;">h</span><span style="font-size: 12.0pt; line-height: 105%;">an</span><span style="font-size: 12.0pt; line-height: 105%;">d</span> <span style="font-size: 12.0pt; line-height: 105%;">k</span><span style="font-size: 12.0pt; line-height: 105%;">n</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">w</span><span style="font-size: 12.0pt; line-height: 105%;">l</span><span style="font-size: 12.0pt; line-height: 105%;">e</span><span style="font-size: 12.0pt; line-height: 105%;">d</span><span style="font-size: 12.0pt; line-height: 105%;">g</span><span style="font-size: 12.0pt; line-height: 105%;">e</span><span style="font-size: 12.0pt; line-height: 105%;">,</span> <span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">r</span><span style="font-size: 12.0pt; line-height: 105%;">e</span><span style="font-size: 12.0pt; line-height: 105%;">dibl</span><span style="font-size: 12.0pt; line-height: 105%;">e</span> <span style="font-size: 12.0pt; line-height: 105%;">c</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">rr</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">b</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">r</span><span style="font-size: 12.0pt; line-height: 105%;">ati</span><span style="font-size: 12.0pt; line-height: 105%;">o</span><span style="font-size: 12.0pt; line-height: 105%;">n</span> <span style="font-size: 12.0pt; line-height: 105%;">etc</span><span style="font-size: 12.0pt; line-height: 105%;">.</span><span style="font-size: 12.0pt; line-height: 105%;">)</span><span style="font-size: 12.0pt; line-height: 105%;">.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">If the investigation is inconclusive or it is determined that there has been no harassment or discrimination in violation of this policy, but some potentially problematic conduct is revealed, preventative action may be taken.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Within five (5) days after the investigation is concluded, the HR director will meet with the complainant and the respondent separately in order to notify them in person of the findings of the investigation and </span><span style="font-size: 12.0pt; line-height: 105%;">to inform them of the action being recommended by the HR director.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">The complainant and the respondent may submit statements to the HR director challenging the factual basis of the findings. Any such statement must be submitted no later than five (5) working days after </span><span style="font-size: 12.0pt; line-height: 105%;">the meeting with the HR director in which the findings of the investigation is discussed.</span></li>
-<li style="text-align: justify; line-height: 105%; margin: 0in 5.6pt 0.0001pt 6.9333px; font-size: 11pt; font-family: 'Time New Roman';"><span style="font-size: 12.0pt; line-height: 105%;">Within 10 days from the date the HR director meets with the complainant and respondent, the </span><span style="font-size: 12.0pt; line-height: 105%;">company will review the investigative report and any statements submitted by the complainant or respondent, discuss results of the investigation with the HR director and other management staff as </span><span style="font-size: 12.0pt; line-height: 105%;">may be appropriate and decide what action, if any, will be taken. The HR director will report the </span><span style="font-size: 12.0pt; line-height: 105%;">company&apos;s decision to the complainant, the respondent and the appropriate management assigned to the department(s) in which the complainant and the respondent work. The company&apos;s decision will be </span><span style="font-size: 12.0pt; line-height: 105%;">in writing and will include finding of fact and a statement for or against disciplinary action. If disciplinary action is to be taken, the sanction will be stated.</span></li>
-</ul>
-<h1 style="margin: 11.55pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';"><u>Retaliation is prohibited</u></h1>
-<p style="margin: 0.35pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 13.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">This policy strictly prohibits any retaliation against an employee or other person who reports a concern about harassment or other inappropriate behavior.</p>
-<p style="margin: 0.45pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<h1 style="margin: 0in 0in 0.0001pt 7.95pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';">Our Policy:</h1>
-<p style="margin: 0.85pt 10.6pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">TUMI STAFFING, INC. strictly prohibits any form of retaliation against an employee who in good faith makes a complaint, raises a concern, provides information or otherwise assists in an investigation or proceeding regarding any conduct that he or she reasonably believes to be in violation of TUMI STAFFING, INC. Code of Conduct or policies, or applicable laws, rules or regulations. This policy is designed to ensure that all employees feel comfortable speaking up when they see or suspect illegal or unethical conduct without fear of retaliation. It is also intended to encourage all employees to cooperate with TUMI STAFFING, INC. in the internal investigation of any matter by providing honest, truthful and complete information without fear of retaliation.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<h1 style="margin: 0.05pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';">Details:</h1>
-<p style="margin: 1.05pt 24.5pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">No employee should be discharged, demoted, suspended, threatened, harassed, intimidated, coerced, or retaliated against in any other manner as a result of his or her making a good faith complaint or assisting in the handling or investigation of a good faith complaint, that a TUMI STAFFING, INC. policy, the Code of</p>
-</div>
-<p><span style="font-size: 11.0pt; line-height: 105%; font-family: 'Time New Roman';">&nbsp;</span></p>
-<p style="margin: 4.6pt 11.05pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">Conduct, or an applicable law, rule or regulation has been violated. Employees who in good faith make a complaint or participate in an investigation or proceeding under this policy, however, remain subject to the same standards of performance and conduct as other employees. Company prohibits employees from being retaliated against even if their complaints are proven unfounded by an investigation, unless the employee knowingly made a false allegation, provided false or misleading information in the course of an investigation, or otherwise acted in bad faith. Employees have an obligation to participate in good faith in any internal investigation of retaliation. Company takes all complaints of retaliation very seriously. All such complaints will be reviewed promptly and, where appropriate, investigated.</p>
-<p style="margin: 0.3pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">&nbsp;</p>
-<h1 style="margin: 0.05pt 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Trebuchet MS';">Reporting Violations:</h1>
-<p style="margin: 0.8pt 11.15pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">If you believe you have been retaliated against or that any other violation of this policy has occurred, or if you have questions concerning this policy, you must immediately notify Human Resources, your immediate manager, or any other person as outlined in the Open Door policy. You may also call the Company phone line at<u> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </u>.</p>
-<p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 12.5pt;">&nbsp;</span></p>
-<h1 style="text-align: justify; margin: 0in 0in 0.0001pt 5.2pt; font-size: 12pt; font-family: 'Trebuchet MS';">Remedy:</h1>
-<p style="margin: 0.85pt 34.85pt 0.0001pt 5.2pt; text-align: justify; line-height: 118%; font-size: 12pt; font-family: 'Time New Roman';">Any employee who violates this policy is subject to disciplinary action, up to and including termination of employment.</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 14.0pt;">&nbsp;</span></p>
-<p style="margin: 0.25pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 17.5pt;">&nbsp;</span></p>
-<h1 style="text-align: center;  font-size: 12pt; font-family: 'Trebuchet MS';"><u>Employee Acknowledgment</u></h1>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><strong><span style="font-size: 9.0pt; font-family: 'Trebuchet MS';">&nbsp;</span></strong></p>
-<p style="margin: 5.3pt 83.2pt 0.0001pt 5.2pt; text-align: justify; line-height: 105%; font-size: 12pt; font-family: 'Time New Roman';">I understand compliance with the Non-Discrimination policy is a condition of my employment with TUMI STAFFING, INC., and I agree to abide by the above policy.</p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 14.0pt;">&nbsp;</span></p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 14.0pt;">&nbsp;</span></p>
-<p style="margin: 0.1pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt;">&nbsp;</span></p>
-<p style="margin: 0in 0in 0.0001pt 5.2pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';">Employee Name (printed)&nbsp;&nbsp;&nbsp; <u>` + this.state.applicantName + `</u></p>
-<p style="text-align: justify; margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 10.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
-<p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
-<p style="margin: 0.5pt 0in 0.0001pt; text-align: justify; font-size: 12pt; font-family: 'Time New Roman';"><span style="font-size: 11.0pt; font-family: 'Times New Roman', serif;">&nbsp;</span></p>
-
-<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;<u><img src="` + this.state.signature + `" alt="" width="150" height="auto" /></u> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></p>
-<p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;">Signature of Employee&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
-<p style="margin: 0in 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 10.0pt;">&nbsp;</span></p>
-<p style="margin: 0.15pt 0in 0.0001pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"><span style="font-size: 9.5pt;">&nbsp;&nbsp;&nbsp;&nbsp; <u>` + this.state.date.substring(0, 10) + `</u></span></p>
-<p style="margin: 0in 0in 0.0001pt 5pt; line-height: 13.7pt; font-size: 12pt; font-family: 'Time New Roman'; text-align: justify;"> Date Signed</p>`)}</div>
+                                    {renderHTML(`<div style="width: 800px; margin: 0 auto;">
+    <img src="https://i.imgur.com/EXoWtMF.png" width="100%" alt="">
+    <div data-font-name="g_d0_f3" data-angle="0" data-canvas-width="16.334999999999997"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>►&nbsp;START
+                HERE:</strong> Read instructions carefully before completing this form. The instructions must be
+            available, either in paper or electronically, during completion of this form. Employers are liable for
+            errors in the completion of this form.</span></div>
+    <div data-font-name="Helvetica" data-angle="0" data-canvas-width="234.99000000000004"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>ANTI-DISCRIMINATION
+                NOTICE:&nbsp;</strong>It is illegal to discriminate against work-authorized individuals. Employers
+            <strong>CANNOT</strong> specify which document(s) an employee may present to establish employment
+            authorization and identity. The refusal to hire or continue to employ an individual because the
+            documentation presented has a future expiration date may also constitute illegal discrimination.</span>
+    </div>
+    <div data-font-name="Helvetica" data-angle="0" data-canvas-width="234.99000000000004">&nbsp;</div>
+    <div data-font-name="Helvetica" data-angle="0" data-canvas-width="234.99000000000004">
+        <table style="border-collapse: collapse; width: 100%; height: 17px; background-color: #bec1c3;" border="1">
+            <tbody>
+                <tr style="height: 17px;">
+                    <td style="width: 100%; height: 17px;">
+                        <div data-font-name="Helvetica" data-angle="0" data-canvas-width="422.76666666666665"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Section
+                                <strong>1. Employee Information and Attestation</strong>&nbsp;(Employees must complete
+                                and sign Section 1 of Form I-9 no later than the<em><strong> first day of
+                                        employment</strong> </em>, but not before accepting a job offer.)</span></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 25%;">
+                        <div data-font-name="g_d0_f5" data-angle="0" data-canvas-width="68.17333333333332"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Last
+                                Name&nbsp;(Family Name) <input style="border: 0; width: 100%;" type="text" id="lastName"></span>
+                        </div>
+                    </td>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">First
+                            Name (Given Name) <input style="border: 0; width: 100%;" type="text" id="firstName"></span></td>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Middle
+                            Initial <input style="border: 0; width: 100%;" type="text" id="middleInitia"></span></td>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Other
+                            Last Names Used (if any) <input style="border: 0; width: 100%;" type="text" id="otherLastName"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%; height: 17px;" border="1">
+            <tbody>
+                <tr style="height: 17px;">
+                    <td style="width: 20%; height: 17px; vertical-align: top;">
+                        <div data-font-name="g_d0_f5" data-angle="0" data-canvas-width="52.61333333333333"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Address
+                                (Street Number and Name) <input style="border: 0; width: 100%;" type="text" id="address"></span>
+                        </div>
+                    </td>
+                    <td style="width: 20%; height: 17px; vertical-align: top;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Apt.
+                            Number <input style="border: 0; width: 100%;" type="text" id="aptNumber"></span></td>
+                    <td style="width: 20%; height: 17px; vertical-align: top;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">City or
+                            Town <input style="border: 0; width: 100%;" type="text" id="city"></span></td>
+                    <td style="width: 20%; height: 17px; vertical-align: top;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">State
+                            <input style="border: 0; width: 100%;" type="text" id="state"></span></td>
+                    <td style="width: 20%; height: 17px; vertical-align: top;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">ZIP Code
+                            <input style="border: 0; width: 100%;" type="text" id="zipCode"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Date of
+                            Birth (mm/dd/yyyy) <input style="border: 0; width: 100%;" type="text" id="dateOfBirth"></span></td>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">U.S.
+                            Social Security Number <input style="border: 0; width: 100%;" type="text" id="socialSecurityNumber"></span></td>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Employee's
+                            E-mail Address <input style="border: 0; width: 100%;" type="text" id="email"></span></td>
+                    <td style="width: 25%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Employee's
+                            Telephone Number <input style="border: 0; width: 100%;" type="text" id="telephone"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>I am aware
+                    that federal law provides for imprisonment and/or fines for false statements or use of false
+                    documents in connection with the completion of this form.</strong></span></p>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>I attest,
+                    under penalty of perjury, that I am (check one of the following boxes):</strong></span></p>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"> <input type="checkbox" id="citizen"> 1. A citizen of the United States</span></td>
+                </tr>
+                <tr>
+                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"> <input type="checkbox" id="non-citizen"> 2. A noncitizen national of the United States (See
+                            instructions)</span></td>
+                </tr>
+                <tr>
+                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"> <input type="checkbox" id="lowful-permanent-resident"> 3. A lawful permanent resident (Alien Registration Number/USCIS
+                            Number):&nbsp; &nbsp; <input id="resident-explain" style="border: 0; border-bottom: 1px solid #000;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%; border-right: 0; border-bottom: 0; border-top: 0;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 70%; border-right: solid 1px #000; border-bottom: solid 1px #000;">
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">
+                                <input type="checkbox" id="alien"> 4. An alien authorized to work until (expiration date, if
+                                applicable, mm/dd/yyyy): <input id="alien-explain" style="border: 0; border-bottom: 1px solid #000;" type="text"></span></p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">&nbsp;
+                                &nbsp; Some aliens may write "N/A" in the expiration date field. (See
+                                instructions)</span></p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><em>Aliens
+                                    authorized to work must provide only one of the following document numbers to
+                                    complete Form I-9: An Alien Registration Number/USCIS Number OR Form I-94 Admission
+                                    Number OR Foreign Passport&nbsp; &nbsp; &nbsp; Number.</em></span></p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">1.Alien
+                                Registration Number/USCIS Number: <input style="border: 0; border-bottom: 1px solid #000;" type="text" id="alien-register-number"></span></p>
+                        <p style="padding-left: 80px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>OR</strong></span>
+                        </p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">2.Form
+                                I-94 Admission Number: <input style="border: 0; border-bottom: 1px solid #000;" type="text" id="admision-number"></span></p>
+                        <p style="padding-left: 80px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>OR</strong>
+                            </span></p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">3.Foreign
+                                Passport Number: <input style="border: 0; border-bottom: 1px solid #000;" type="text" id="foreign-passport-number"></span></p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">&nbsp;
+                                &nbsp; Country of Issuance: <input style="border: 0; border-bottom: 1px solid #000;" type="text" id="country-issuance"></span></p>
+                        <p>&nbsp;</p>
+                    </td>
+                    <td style="width: 30%; border: solid 1px #FFF; padding: 10px;">
+                        <table style="border-collapse: collapse; width: 100%; height: 195px;" border="1">
+                            <tbody>
+                                <tr style="height: 195px;">
+                                    <td style="width: 100%; height: 195px; vertical-align: top; text-align: center;">
+                                        <span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">QR
+                                            Code - Section 1 Do Not Write In This Space</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">&nbsp;</span></p>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Signature
+                            of Employee<input style="border: 0; width: 100%;" type="text" id="signature"></span></td>
+                    <td style="width: 50%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Today's
+                            Date (mm/dd/yyyy) <input id="today-date" style="border: 0; width: 100%;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">&nbsp;</span></p>
+        <table style="border-collapse: collapse; width: 100%; height: 17px; background-color: #bec1c3;" border="1">
+            <tbody>
+                <tr style="height: 17px;">
+                    <td style="width: 100%; height: 17px;">
+                        <h3><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>Preparer
+                                    and/or Translator Certification (check one):</strong></span></h3>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">
+                                <input type="checkbox" id="preparer-0">I did not use a preparer or translator. <input type="checkbox" id="preparer-1">I A preparer(s) and/or translator(s) assisted the employee in
+                                completing Section 1.</span></p>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><em>(Fields
+                                    below must be completed and signed when preparers and/or translators assist an
+                                    employee in completing Section 1.)</em></span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>I attest,
+                    under penalty of perjury, that I have assisted in the completion of Section 1 of this form and that
+                    to the best of my knowledge the information is true and correct.</strong></span></p>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 65.2979%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Signature
+                            of Preparer or Translator <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 34.7021%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Today's
+                            Date (mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%; height: 17px; border-top: 0;" border="1">
+            <tbody>
+                <tr style="height: 17px;">
+                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Last
+                            Name (Family Name) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">First
+                            Name (Given Name) <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%; border-top: 0;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 31.9243%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Address
+                            (Street Number and Name) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 41.2641%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">City or
+                            Town <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 6.80349%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">State
+                            <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 20.0081%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">ZIP Code
+                            <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <img src="https://i.imgur.com/yP3pq57.png" width="100%" alt="">
+        <img src="https://i.imgur.com/EXoWtMF.png" width="100%" alt="">
+        <table style="border-collapse: collapse; width: 100%; background-color: #bec1c3;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 100%;">
+                        <h3><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>Section
+                                    2. Employer or Authorized Representative Review and Verification </strong></span>
+                        </h3>
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">(Employers
+                                or their authorized representative must complete and sign Section 2 within 3 business
+                                days of the employee's first day of employment. You must physically examine one document
+                                from List A OR a combination of one document from List B and one document from List C as
+                                listed on the "Lists of Acceptable Documents.")</span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 18.438%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>Employee
+                                Info from Section 1</strong></span></td>
+                    <td style="width: 25.7381%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Last
+                            Name (Family Name)</span></td>
+                    <td style="width: 32.9576%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">First
+                            Name (Given Name)</span></td>
+                    <td style="width: 6.19971%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">M.I.</span>
+                    </td>
+                    <td style="width: 16.6667%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Citizenship/Immigration
+                            Status</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+        <table style="border-collapse: collapse; width: 100%; height: 98px;" border="1">
+            <tbody>
+                <tr style="height: 98px;">
+                    <td style="width: 33.3333%; height: 98px;">
+                        <table style="border-collapse: collapse; width: 100%;" border="1">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Title <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Issuing
+                                            Authority <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Number <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 100%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">
+                                            Expiration Date (if any)(mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="border-collapse: collapse; width: 100%; height: 72px;" border="1">
+                            <tbody>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Title <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Issuing
+                                            Authority <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Number <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">
+                                            Expiration Date (if any)(mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="border-collapse: collapse; width: 100%; height: 72px;" border="1">
+                            <tbody>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Title <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Issuing
+                                            Authority <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Number <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 18px;">
+                                    <td style="width: 100%; height: 18px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">
+                                            Expiration Date (if any)(mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td style="width: 1.0735%; height: 98px; background-color: #bec1c3;">&nbsp;</td>
+                    <td style="width: 65.5931%; height: 98px; vertical-align: top;">
+                        <table style="border-collapse: collapse; width: 100%; height: 68px;" border="0">
+                            <tbody>
+                                <tr style="height: 17px;">
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Title <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Title <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 17px;">
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Issuing
+                                            Authority <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Issuing
+                                            Authority <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 17px;">
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Number <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Document
+                                            Number<input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                </tr>
+                                <tr style="height: 17px;">
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Expiration
+                                            Date (if any)(mm/dd/yyyy) <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                    <td style="width: 50%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Expiration
+                                            Date (if any)(mm/dd/yyyy) <input style="width: 100%; border: 0; border-bottom: solid 1px #000;" type="text"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table style="border-collapse: collapse; width: 100%; height: 297px;" border="0">
+                            <tbody>
+                                <tr style="height: 297px; vertical-align: top;">
+                                    <td style="width: 62.476%; height: 297px;">
+                                        <div style="width: 250px; height: 250px; border: solid 1px #000;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Additional
+                                                Information</span></div>
+                                    </td>
+                                    <td style="width: 37.524%; height: 297px;">
+                                        <div style="width: 150px; height: 150px; border: solid 1px #000;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">QR
+                                                Code - Sections 2 &amp; 3</span></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>Certification:
+                    I attest, under penalty of perjury, that (1) I have examined the document(s) presented by the
+                    above-named employee, (2) the above-listed document(s) appear to be genuine and to relate to the
+                    employee named, and (3) to the best of my knowledge the employee is authorized to work in the United
+                    States.</strong></span></p>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>The
+                    employee's first day of employment (mm/dd/yyyy):&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (See instructions for exemptions)</strong></span></p>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 39.6135%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Signature
+                            of Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 19.431%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Today's
+                            Date(mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 40.9554%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Title of
+                            Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 33.3333%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Last
+                            Name of Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 33.3333%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">First
+                            Name of Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 33.3333%;">
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Employer's
+                                Business or Organization Name</span></p>
+                        <p style="padding-left: 40px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>Tummi
+                                    Staffing, Inc.</strong></span></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 35.5207%;">
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Employer's
+                                Business or Organization Address (Street Number and Name)</span></p>
+                        <p style="padding-left: 40px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>PO
+                                    Box 592715</strong></span></p>
+                    </td>
+                    <td style="width: 45.2361%;">
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">City
+                                or Town</span></p>
+                        <p style="padding-left: 40px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>
+                                    San Antonio </strong></span></p>
+                    </td>
+                    <td style="width: 6.3205%;">
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">State</span>
+                        </p>
+                        <p style="padding-left: 40px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>TX</strong></span>
+                        </p>
+                    </td>
+                    <td style="width: 12.9227%;">
+                        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Zip
+                                Code</span></p>
+                        <p style="padding-left: 40px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>78259</strong></span>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+        <table style="border-collapse: collapse; width: 100%; height: 51px;" border="1">
+            <tbody>
+                <tr style="height: 17px;">
+                    <td style="width: 25%; height: 17px; background-color: #bec1c3;" colspan="4"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>Section
+                                3. Reverification and Rehires (To be completed and signed by employer or authorized
+                                representative.)</strong></span></td>
+                </tr>
+                <tr style="height: 17px;">
+                    <td style="width: 25%; height: 17px;" colspan="2"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>A.</strong>
+                            New Name (if applicable)</span></td>
+                    <td style="width: 25%; height: 17px;">&nbsp;</td>
+                    <td style="width: 25%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>B.</strong>
+                            Date of Rehire (if applicable)</span></td>
+                </tr>
+                <tr style="height: 17px;">
+                    <td style="width: 25%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Last
+                            Name (Family Name) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 25%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">First
+                            Name (Given Name) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 25%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Middle
+                            Initial <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 25%; height: 17px;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Date
+                            (mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">&nbsp;</span></p>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 99.9999%; background-color: #bec1c3;" colspan="3"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>C.</strong>
+                            If the employee's previous grant of employment authorization has expired, provide the
+                            information for the document or receipt that establishes continuing employment authorization
+                            in the space provided below.</span></td>
+                </tr>
+                <tr>
+                    <td style="width: 37.5841%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Signature
+                            of Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 28.3386%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Today's
+                            Date (mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 34.0772%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Name of
+                            Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;"><strong>I attest,
+                    under penalty of perjury, that to the best of my knowledge, this employee is authorized to work in
+                    the United States, and if the employee presented document(s), the document(s) I have examined appear
+                    to be genuine and to relate to the individual.</strong></span></p>
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+            <tbody>
+                <tr>
+                    <td style="width: 37.5841%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Signature
+                            of Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 27.0634%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Today's
+                            Date (mm/dd/yyyy) <input style="width: 100%; border: 0;" type="text"></span></td>
+                    <td style="width: 35.3524%;"><span style="color: #000000; font-family: arial, helvetica, sans-serif; font-size: 10pt;">Name of
+                            Employer or Authorized Representative <input style="width: 100%; border: 0;" type="text"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <img src="https://i.imgur.com/yP3pq57.png" width="100%" alt="">
+</div>`)}</div>
                             </div>
                         </div>
                     </div>
