@@ -648,6 +648,14 @@ class BoardManager extends Component {
                             });
                         });
 
+                        if(data.applicationsByMatches.length === 0 ){
+                            this.props.handleOpenSnackbar(
+                                'warning',
+                                'No matches were found',
+                                'bottom',
+                                'right'
+                            );
+                        }
                         this.setState({
                             loading: false
                         })
@@ -908,7 +916,7 @@ class BoardManager extends Component {
                                                             onChange={(event) => {
                                                                 this.updateHotel(event.target.value);
                                                             }}
-                                                            value={this.state.IdEntity}
+                                                            value={this.state.hotel}
                                                             //disabled={!isAdmin}
                                                             onBlur={this.handleValidate}
                                                         >
@@ -998,9 +1006,10 @@ class BoardManager extends Component {
                                                     <div className="col-md-1">
                                                         <button className="btn btn-danger" onClick={() => {
                                                             this.setState({
-                                                                IdEntity: 0,
+                                                                hotel: 0,
                                                                 state: 0,
                                                                 city: 0,
+                                                                status: null
                                                             }, () => {
                                                                 this.getWorkOrders();
                                                             })
