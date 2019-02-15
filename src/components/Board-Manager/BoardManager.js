@@ -648,6 +648,9 @@ class BoardManager extends Component {
                             });
                         });
 
+                        this.setState({
+                            loading: false
+                        })
                     }).catch(error => {
                         this.setState({
                             loading: false,
@@ -888,7 +891,6 @@ class BoardManager extends Component {
                 <div className="App">
                     {isLoading && <LinearProgress />}
 
-
                     <div className="App-header">
                         <div className="row">
                             <div className="col-md-12 col-lg-12">
@@ -982,7 +984,7 @@ class BoardManager extends Component {
                                                             <option value={3}>Closed work orders</option>
                                                         </select>
                                                     </div>
-                                                    <div className="col-md-2">
+                                                    <div className="col-md-1">
                                                         <a
                                                             className="link-board" onClick={(e) => {
                                                                 e.preventDefault();
@@ -993,9 +995,20 @@ class BoardManager extends Component {
                                                             Advanced
                                                     </a>
                                                     </div>
+                                                    <div className="col-md-1">
+                                                        <button className="btn btn-danger" onClick={() => {
+                                                            this.setState({
+                                                                IdEntity: 0,
+                                                                state: 0,
+                                                                city: 0,
+                                                            }, () => {
+                                                                this.getWorkOrders();
+                                                            })
+                                                        }}>Clear</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="col-12 col-md-4"></div>
+                                            <div className="col-12 col-md-2"></div>
                                         </div>
                                     </div>
                                 </div>
