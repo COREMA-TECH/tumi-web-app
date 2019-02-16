@@ -9544,15 +9544,19 @@ tbody[class^="MuiTableBody-"] td, tbody[class^="MuiTableBody-"] th {
 
 .HotelCard-controls {
   position: absolute;
-  top: -15px;
-  right: -15px; }
+  top: -5px;
+  right: -5px; }
   .HotelCard-controls .btn {
     background: #f50057;
+    border-radius: 20px;
     color: #FFF;
-    height: 35px;
-    padding-left: 5px;
-    padding-right: 5px;
-    width: 35px; }
+    height: 20px;
+    line-height: 1;
+    padding: 0;
+    width: 20px; }
+    .HotelCard-controls .btn .fas {
+      font-size: .7rem;
+      line-height: 20px; }
 
 .HotelCard-img {
   background: url(https://intellihr.com.au/wp-content/uploads/2017/06/avatar_placeholder_temporary.png) center center;
